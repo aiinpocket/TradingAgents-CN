@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-工具调用日志装饰器
-为所有工具调用添加统一的日志记录
+工具調用日誌裝饰器
+為所有工具調用添加統一的日誌記錄
 """
 
 import time
@@ -11,49 +11,49 @@ from datetime import datetime
 
 from tradingagents.utils.logging_init import get_logger
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('agents')
 
-# 工具调用日志器
+# 工具調用日誌器
 tool_logger = get_logger("tools")
 
 
 def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_result: bool = False):
     """
-    工具调用日志装饰器
+    工具調用日誌裝饰器
     
     Args:
-        tool_name: 工具名称，如果不提供则使用函数名
-        log_args: 是否记录参数
-        log_result: 是否记录返回结果（注意：可能包含大量数据）
+        tool_name: 工具名稱，如果不提供則使用函數名
+        log_args: 是否記錄參數
+        log_result: 是否記錄返回結果（註意：可能包含大量數據）
     """
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # 确定工具名称
+            # 確定工具名稱
             name = tool_name or getattr(func, '__name__', 'unknown_tool')
             
-            # 记录开始时间
+            # 記錄開始時間
             start_time = time.time()
             
-            # 准备参数信息
+            # 準备參數信息
             args_info = {}
             if log_args:
-                # 记录位置参数
+                # 記錄位置參數
                 if args:
                     args_info['args'] = [str(arg)[:100] + '...' if len(str(arg)) > 100 else str(arg) for arg in args]
                 
-                # 记录关键字参数
+                # 記錄關键字參數
                 if kwargs:
                     args_info['kwargs'] = {
                         k: str(v)[:100] + '...' if len(str(v)) > 100 else str(v) 
                         for k, v in kwargs.items()
                     }
             
-            # 记录工具调用开始
+            # 記錄工具調用開始
             tool_logger.info(
-                f"🔧 [工具调用] {name} - 开始",
+                f"🔧 [工具調用] {name} - 開始",
                 extra={
                     'tool_name': name,
                     'event_type': 'tool_call_start',
@@ -63,21 +63,21 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
             )
             
             try:
-                # 执行工具函数
+                # 執行工具函數
                 result = func(*args, **kwargs)
                 
-                # 计算执行时间
+                # 計算執行時間
                 duration = time.time() - start_time
                 
-                # 准备结果信息
+                # 準备結果信息
                 result_info = None
                 if log_result and result is not None:
                     result_str = str(result)
                     result_info = result_str[:200] + '...' if len(result_str) > 200 else result_str
                 
-                # 记录工具调用成功
+                # 記錄工具調用成功
                 tool_logger.info(
-                    f"✅ [工具调用] {name} - 完成 (耗时: {duration:.2f}s)",
+                    f"✅ [工具調用] {name} - 完成 (耗時: {duration:.2f}s)",
                     extra={
                         'tool_name': name,
                         'event_type': 'tool_call_success',
@@ -90,12 +90,12 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                 return result
                 
             except Exception as e:
-                # 计算执行时间
+                # 計算執行時間
                 duration = time.time() - start_time
                 
-                # 记录工具调用失败
+                # 記錄工具調用失败
                 tool_logger.error(
-                    f"❌ [工具调用] {name} - 失败 (耗时: {duration:.2f}s): {str(e)}",
+                    f"❌ [工具調用] {name} - 失败 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'tool_name': name,
                         'event_type': 'tool_call_error',
@@ -106,7 +106,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                     exc_info=True
                 )
                 
-                # 重新抛出异常
+                # 重新抛出異常
                 raise
         
         return wrapper
@@ -115,22 +115,22 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
 
 def log_data_source_call(source_name: str):
     """
-    数据源调用专用日志装饰器
+    數據源調用專用日誌裝饰器
     
     Args:
-        source_name: 数据源名称（如：tushare、akshare、yfinance等）
+        source_name: 數據源名稱（如：tushare、akshare、yfinance等）
     """
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             start_time = time.time()
             
-            # 提取股票代码（通常是第一个参数）
+            # 提取股票代碼（通常是第一個參數）
             symbol = args[0] if args else kwargs.get('symbol', kwargs.get('ticker', 'unknown'))
             
-            # 记录数据源调用开始
+            # 記錄數據源調用開始
             tool_logger.info(
-                f"📊 [数据源] {source_name} - 获取 {symbol} 数据",
+                f"📊 [數據源] {source_name} - 獲取 {symbol} 數據",
                 extra={
                     'data_source': source_name,
                     'symbol': symbol,
@@ -143,12 +143,12 @@ def log_data_source_call(source_name: str):
                 result = func(*args, **kwargs)
                 duration = time.time() - start_time
                 
-                # 检查结果是否成功
-                success = result and "❌" not in str(result) and "错误" not in str(result)
+                # 檢查結果是否成功
+                success = result and "❌" not in str(result) and "錯誤" not in str(result)
                 
                 if success:
                     tool_logger.info(
-                        f"✅ [数据源] {source_name} - {symbol} 数据获取成功 (耗时: {duration:.2f}s)",
+                        f"✅ [數據源] {source_name} - {symbol} 數據獲取成功 (耗時: {duration:.2f}s)",
                         extra={
                             'data_source': source_name,
                             'symbol': symbol,
@@ -160,7 +160,7 @@ def log_data_source_call(source_name: str):
                     )
                 else:
                     tool_logger.warning(
-                        f"⚠️ [数据源] {source_name} - {symbol} 数据获取失败 (耗时: {duration:.2f}s)",
+                        f"⚠️ [數據源] {source_name} - {symbol} 數據獲取失败 (耗時: {duration:.2f}s)",
                         extra={
                             'data_source': source_name,
                             'symbol': symbol,
@@ -176,7 +176,7 @@ def log_data_source_call(source_name: str):
                 duration = time.time() - start_time
                 
                 tool_logger.error(
-                    f"❌ [数据源] {source_name} - {symbol} 数据获取异常 (耗时: {duration:.2f}s): {str(e)}",
+                    f"❌ [數據源] {source_name} - {symbol} 數據獲取異常 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'data_source': source_name,
                         'symbol': symbol,
@@ -196,20 +196,20 @@ def log_data_source_call(source_name: str):
 
 def log_llm_call(provider: str, model: str):
     """
-    LLM调用专用日志装饰器
+    LLM調用專用日誌裝饰器
     
     Args:
         provider: LLM提供商（如：openai、deepseek、tongyi等）
-        model: 模型名称
+        model: 模型名稱
     """
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             start_time = time.time()
             
-            # 记录LLM调用开始
+            # 記錄LLM調用開始
             tool_logger.info(
-                f"🤖 [LLM调用] {provider}/{model} - 开始",
+                f"🤖 [LLM調用] {provider}/{model} - 開始",
                 extra={
                     'llm_provider': provider,
                     'llm_model': model,
@@ -223,7 +223,7 @@ def log_llm_call(provider: str, model: str):
                 duration = time.time() - start_time
                 
                 tool_logger.info(
-                    f"✅ [LLM调用] {provider}/{model} - 完成 (耗时: {duration:.2f}s)",
+                    f"✅ [LLM調用] {provider}/{model} - 完成 (耗時: {duration:.2f}s)",
                     extra={
                         'llm_provider': provider,
                         'llm_model': model,
@@ -239,7 +239,7 @@ def log_llm_call(provider: str, model: str):
                 duration = time.time() - start_time
                 
                 tool_logger.error(
-                    f"❌ [LLM调用] {provider}/{model} - 失败 (耗时: {duration:.2f}s): {str(e)}",
+                    f"❌ [LLM調用] {provider}/{model} - 失败 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'llm_provider': provider,
                         'llm_model': model,
@@ -257,15 +257,15 @@ def log_llm_call(provider: str, model: str):
     return decorator
 
 
-# 便捷函数
+# 便捷函數
 def log_tool_usage(tool_name: str, symbol: str = None, **extra_data):
     """
-    记录工具使用情况的便捷函数
+    記錄工具使用情况的便捷函數
     
     Args:
-        tool_name: 工具名称
-        symbol: 股票代码（可选）
-        **extra_data: 额外的数据
+        tool_name: 工具名稱
+        symbol: 股票代碼（可選）
+        **extra_data: 額外的數據
     """
     extra = {
         'tool_name': tool_name,
@@ -282,12 +282,12 @@ def log_tool_usage(tool_name: str, symbol: str = None, **extra_data):
 
 def log_analysis_step(step_name: str, symbol: str, **extra_data):
     """
-    记录分析步骤的便捷函数
+    記錄分析步骤的便捷函數
 
     Args:
-        step_name: 步骤名称
-        symbol: 股票代码
-        **extra_data: 额外的数据
+        step_name: 步骤名稱
+        symbol: 股票代碼
+        **extra_data: 額外的數據
     """
     extra = {
         'step_name': step_name,
@@ -302,51 +302,51 @@ def log_analysis_step(step_name: str, symbol: str, **extra_data):
 
 def log_analysis_module(module_name: str, session_id: str = None):
     """
-    分析模块日志装饰器
-    自动记录模块的开始和结束
+    分析模塊日誌裝饰器
+    自動記錄模塊的開始和結束
 
     Args:
-        module_name: 模块名称（如：market_analyst、fundamentals_analyst等）
-        session_id: 会话ID（可选）
+        module_name: 模塊名稱（如：market_analyst、fundamentals_analyst等）
+        session_id: 會話ID（可選）
     """
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # 尝试从参数中提取股票代码
+            # 嘗試從參數中提取股票代碼
             symbol = None
 
-            # 特殊处理：信号处理模块的参数结构
+            # 特殊處理：信號處理模塊的參數結構
             if module_name == "graph_signal_processing":
-                # 信号处理模块：process_signal(self, full_signal, stock_symbol=None)
+                # 信號處理模塊：process_signal(self, full_signal, stock_symbol=None)
                 if len(args) >= 3:  # self, full_signal, stock_symbol
                     symbol = str(args[2]) if args[2] else None
                 elif 'stock_symbol' in kwargs:
                     symbol = str(kwargs['stock_symbol']) if kwargs['stock_symbol'] else None
             else:
                 if args:
-                    # 检查第一个参数是否是state字典（分析师节点的情况）
+                    # 檢查第一個參數是否是state字典（分析師節點的情况）
                     first_arg = args[0]
                     if isinstance(first_arg, dict) and 'company_of_interest' in first_arg:
                         symbol = str(first_arg['company_of_interest'])
-                    # 检查第一个参数是否是股票代码
+                    # 檢查第一個參數是否是股票代碼
                     elif isinstance(first_arg, str) and len(first_arg) <= 10:
                         symbol = first_arg
 
-            # 从kwargs中查找股票代码
+            # 從kwargs中查找股票代碼
             if not symbol:
                 for key in ['symbol', 'ticker', 'stock_code', 'stock_symbol', 'company_of_interest']:
                     if key in kwargs:
                         symbol = str(kwargs[key])
                         break
 
-            # 如果还是没找到，使用默认值
+            # 如果还是没找到，使用默認值
             if not symbol:
                 symbol = 'unknown'
 
-            # 生成会话ID
+            # 生成會話ID
             actual_session_id = session_id or f"session_{int(time.time())}"
 
-            # 记录模块开始
+            # 記錄模塊開始
             logger_manager = get_logger_manager()
 
             start_time = time.time()
@@ -359,13 +359,13 @@ def log_analysis_module(module_name: str, session_id: str = None):
             )
 
             try:
-                # 执行分析函数
+                # 執行分析函數
                 result = func(*args, **kwargs)
 
-                # 计算执行时间
+                # 計算執行時間
                 duration = time.time() - start_time
 
-                # 记录模块完成
+                # 記錄模塊完成
                 result_length = len(str(result)) if result else 0
                 logger_manager.log_module_complete(
                     tool_logger, module_name, symbol, actual_session_id,
@@ -376,17 +376,17 @@ def log_analysis_module(module_name: str, session_id: str = None):
                 return result
 
             except Exception as e:
-                # 计算执行时间
+                # 計算執行時間
                 duration = time.time() - start_time
 
-                # 记录模块错误
+                # 記錄模塊錯誤
                 logger_manager.log_module_error(
                     tool_logger, module_name, symbol, actual_session_id,
                     duration, str(e),
                     function_name=func.__name__
                 )
 
-                # 重新抛出异常
+                # 重新抛出異常
                 raise
 
         return wrapper
@@ -395,29 +395,29 @@ def log_analysis_module(module_name: str, session_id: str = None):
 
 def log_analyst_module(analyst_type: str):
     """
-    分析师模块专用装饰器
+    分析師模塊專用裝饰器
 
     Args:
-        analyst_type: 分析师类型（如：market、fundamentals、technical、sentiment等）
+        analyst_type: 分析師類型（如：market、fundamentals、technical、sentiment等）
     """
     return log_analysis_module(f"{analyst_type}_analyst")
 
 
 def log_graph_module(graph_type: str):
     """
-    图处理模块专用装饰器
+    圖處理模塊專用裝饰器
 
     Args:
-        graph_type: 图处理类型（如：signal_processing、workflow等）
+        graph_type: 圖處理類型（如：signal_processing、workflow等）
     """
     return log_analysis_module(f"graph_{graph_type}")
 
 
 def log_dataflow_module(dataflow_type: str):
     """
-    数据流模块专用装饰器
+    數據流模塊專用裝饰器
 
     Args:
-        dataflow_type: 数据流类型（如：cache、interface、provider等）
+        dataflow_type: 數據流類型（如：cache、interface、provider等）
     """
     return log_analysis_module(f"dataflow_{dataflow_type}")

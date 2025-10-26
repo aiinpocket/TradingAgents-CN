@@ -2,64 +2,64 @@
 
 ## 概述
 
-阿里百炼（DashScope）是阿里云推出的大模型服务平台，提供通义千问系列模型。本指南详细介绍如何在 TradingAgents 中配置和使用阿里百炼大模型。
+阿里百炼（DashScope）是阿里云推出的大模型服務平台，提供通義千問系列模型。本指南詳細介紹如何在 TradingAgents 中配置和使用阿里百炼大模型。
 
 ## 🎉 v0.1.6 重大更新
 
-### OpenAI兼容适配器
-TradingAgents现在提供了全新的阿里百炼OpenAI兼容适配器，解决了之前的工具调用问题：
+### OpenAI兼容適配器
+TradingAgents現在提供了全新的阿里百炼OpenAI兼容適配器，解決了之前的工具調用問題：
 
-- ✅ **新增**: `ChatDashScopeOpenAI` 兼容适配器
-- ✅ **支持**: 原生Function Calling和工具调用
-- ✅ **修复**: 技术面分析报告长度问题（从30字符提升到完整报告）
-- ✅ **统一**: 与其他LLM使用相同的标准模式
-- ✅ **强化**: 自动强制工具调用机制确保数据获取
+- ✅ **新增**: `ChatDashScopeOpenAI` 兼容適配器
+- ✅ **支持**: 原生Function Calling和工具調用
+- ✅ **修複**: 技術面分析報告長度問題（從30字符提升到完整報告）
+- ✅ **統一**: 与其他LLM使用相同的標準模式
+- ✅ **强化**: 自動强制工具調用機制確保數據獲取
 
-### 架构改进
-- 🔧 **移除**: 复杂的ReAct Agent模式
-- 🔧 **统一**: 所有LLM使用标准分析师模式
-- 🔧 **简化**: 代码逻辑更清晰，维护更容易
+### 架構改進
+- 🔧 **移除**: 複雜的ReAct Agent模式
+- 🔧 **統一**: 所有LLM使用標準分析師模式
+- 🔧 **簡化**: 代碼逻辑更清晰，維護更容易
 
-## 为什么选择阿里百炼？
+## 為什么選擇阿里百炼？
 
-### 🇨🇳 **国产化优势**
-- **无需翻墙**: 国内直接访问，网络稳定
-- **中文优化**: 专门针对中文场景优化
-- **合规安全**: 符合国内数据安全要求
-- **本土化服务**: 中文客服和技术支持
+### 🇨🇳 **國產化優势**
+- **無需翻墙**: 國內直接訪問，網絡穩定
+- **中文優化**: 專門针對中文場景優化
+- **合規安全**: 符合國內數據安全要求
+- **本土化服務**: 中文客服和技術支持
 
-### 💰 **成本优势**
-- **价格透明**: 按量计费，价格公开透明
-- **免费额度**: 新用户有免费试用额度
-- **性价比高**: 相比国外模型成本更低
+### 💰 **成本優势**
+- **價格透明**: 按量計費，價格公開透明
+- **免費額度**: 新用戶有免費試用額度
+- **性價比高**: 相比國外模型成本更低
 
-### 🧠 **技术优势**
-- **中文理解**: 在中文理解和生成方面表现优秀
-- **金融知识**: 对中国金融市场有更好的理解
-- **推理能力**: 通义千问系列在推理任务上表现出色
+### 🧠 **技術優势**
+- **中文理解**: 在中文理解和生成方面表現優秀
+- **金融知识**: 對中國金融市場有更好的理解
+- **推理能力**: 通義千問系列在推理任務上表現出色
 
-## 快速开始
+## 快速開始
 
-### 1. 获取API密钥
+### 1. 獲取API密鑰
 
-#### 步骤1: 注册阿里云账号
-1. 访问 [阿里云官网](https://www.aliyun.com/)
-2. 点击"免费注册"
-3. 完成账号注册和实名认证
+#### 步骤1: 註冊阿里云账號
+1. 訪問 [阿里云官網](https://www.aliyun.com/)
+2. 點擊"免費註冊"
+3. 完成账號註冊和實名認證
 
-#### 步骤2: 开通百炼服务
-1. 访问 [百炼控制台](https://dashscope.console.aliyun.com/)
-2. 点击"立即开通"
-3. 选择合适的套餐（建议先选择按量付费）
+#### 步骤2: 開通百炼服務
+1. 訪問 [百炼控制台](https://dashscope.console.aliyun.com/)
+2. 點擊"立即開通"
+3. 選擇合適的套餐（建议先選擇按量付費）
 
-#### 步骤3: 获取API密钥
-1. 在百炼控制台中，点击"API-KEY管理"
-2. 点击"创建新的API-KEY"
-3. 复制生成的API密钥
+#### 步骤3: 獲取API密鑰
+1. 在百炼控制台中，點擊"API-KEY管理"
+2. 點擊"創建新的API-KEY"
+3. 複制生成的API密鑰
 
-### 2. 配置环境变量
+### 2. 配置環境變量
 
-#### 方法1: 使用环境变量
+#### 方法1: 使用環境變量
 ```bash
 # Windows
 set DASHSCOPE_API_KEY=your_dashscope_api_key_here
@@ -72,59 +72,59 @@ export FINNHUB_API_KEY=your_finnhub_api_key_here
 
 #### 方法2: 使用 .env 文件
 ```bash
-# 复制示例文件
+# 複制示例文件
 cp .env.example .env
 
-# 编辑 .env 文件，填入真实的API密钥
+# 編辑 .env 文件，填入真實的API密鑰
 DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 FINNHUB_API_KEY=your_finnhub_api_key_here
 ```
 
-### 3. 运行演示
+### 3. 運行演示
 
 ```bash
-# 使用专门的阿里百炼演示脚本
+# 使用專門的阿里百炼演示腳本
 python demo_dashscope.py
 ```
 
 ## 支持的模型
 
-### 通义千问系列模型
+### 通義千問系列模型
 
-| 模型名称 | 模型ID | 特点 | 适用场景 |
+| 模型名稱 | 模型ID | 特點 | 適用場景 |
 |---------|--------|------|----------|
-| **通义千问 Turbo** | `qwen-turbo` | 快速响应，成本低 | 快速任务、日常对话 |
-| **通义千问 Plus** | `qwen-plus-latest` | 平衡性能和成本 | 复杂分析、专业任务 |
-| **通义千问 Max** | `qwen-max` | 最强性能 | 最复杂任务、高质量输出 |
-| **通义千问 Max 长文本** | `qwen-max-longcontext` | 超长上下文 | 长文档分析、大量数据处理 |
+| **通義千問 Turbo** | `qwen-turbo` | 快速響應，成本低 | 快速任務、日常對話 |
+| **通義千問 Plus** | `qwen-plus-latest` | 平衡性能和成本 | 複雜分析、專業任務 |
+| **通義千問 Max** | `qwen-max` | 最强性能 | 最複雜任務、高质量輸出 |
+| **通義千問 Max 長文本** | `qwen-max-longcontext` | 超長上下文 | 長文档分析、大量數據處理 |
 
-### 推荐配置
+### 推薦配置
 
-#### 经济型配置（成本优先）
+#### 經濟型配置（成本優先）
 ```python
 config = {
     "llm_provider": "dashscope",
     "deep_think_llm": "qwen-plus-latest",      # 深度思考使用Plus
-    "quick_think_llm": "qwen-turbo",    # 快速任务使用Turbo
-    "max_debate_rounds": 1,             # 减少辩论轮次
+    "quick_think_llm": "qwen-turbo",    # 快速任務使用Turbo
+    "max_debate_rounds": 1,             # 减少辩論轮次
 }
 ```
 
-#### 性能型配置（质量优先）
+#### 性能型配置（质量優先）
 ```python
 config = {
     "llm_provider": "dashscope", 
     "deep_think_llm": "qwen-max",       # 深度思考使用Max
-    "quick_think_llm": "qwen-plus",     # 快速任务使用Plus
-    "max_debate_rounds": 2,             # 增加辩论轮次
+    "quick_think_llm": "qwen-plus",     # 快速任務使用Plus
+    "max_debate_rounds": 2,             # 增加辩論轮次
 }
 ```
 
-#### 长文本配置（处理大量数据）
+#### 長文本配置（處理大量數據）
 ```python
 config = {
     "llm_provider": "dashscope",
-    "deep_think_llm": "qwen-max-longcontext",  # 使用长文本版本
+    "deep_think_llm": "qwen-max-longcontext",  # 使用長文本版本
     "quick_think_llm": "qwen-plus",
     "max_debate_rounds": 1,
 }
@@ -137,7 +137,7 @@ config = {
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
 
-# 创建阿里百炼配置
+# 創建阿里百炼配置
 config = DEFAULT_CONFIG.copy()
 config["llm_provider"] = "dashscope"
 config["deep_think_llm"] = "qwen-plus-latest"
@@ -146,14 +146,14 @@ config["quick_think_llm"] = "qwen-turbo"
 # 初始化
 ta = TradingAgentsGraph(debug=True, config=config)
 
-# 运行分析
+# 運行分析
 state, decision = ta.propagate("AAPL", "2024-05-10")
 print(decision)
 ```
 
-### 高级配置
+### 高級配置
 ```python
-# 自定义模型参数
+# 自定義模型參數
 config = DEFAULT_CONFIG.copy()
 config.update({
     "llm_provider": "dashscope",
@@ -164,7 +164,7 @@ config.update({
     "online_tools": True,
 })
 
-# 使用自定义参数创建LLM
+# 使用自定義參數創建LLM
 from tradingagents.llm_adapters import ChatDashScope
 
 custom_llm = ChatDashScope(
@@ -178,52 +178,52 @@ custom_llm = ChatDashScope(
 ## 成本控制
 
 ### 典型使用成本
-- **经济模式**: ¥0.01-0.05/次分析 (使用 qwen-turbo)
-- **标准模式**: ¥0.05-0.15/次分析 (使用 qwen-plus)
+- **經濟模式**: ¥0.01-0.05/次分析 (使用 qwen-turbo)
+- **標準模式**: ¥0.05-0.15/次分析 (使用 qwen-plus)
 - **高精度模式**: ¥0.10-0.30/次分析 (使用 qwen-max)
 
-### 成本优化建议
-1. **合理选择模型**: 根据任务复杂度选择合适的模型
-2. **控制辩论轮次**: 减少 `max_debate_rounds` 参数
-3. **使用缓存**: 启用数据缓存减少重复调用
-4. **监控使用量**: 定期检查API调用量和费用
+### 成本優化建议
+1. **合理選擇模型**: 根據任務複雜度選擇合適的模型
+2. **控制辩論轮次**: 减少 `max_debate_rounds` 參數
+3. **使用緩存**: 啟用數據緩存减少重複調用
+4. **監控使用量**: 定期檢查API調用量和費用
 
 ## 故障排除
 
-### 常见问题
+### 常见問題
 
-#### 1. API密钥错误
+#### 1. API密鑰錯誤
 ```
 Error: Invalid API key
 ```
-**解决方案**: 检查API密钥是否正确，确认已开通百炼服务
+**解決方案**: 檢查API密鑰是否正確，確認已開通百炼服務
 
-#### 2. 额度不足
+#### 2. 額度不足
 ```
 Error: Insufficient quota
 ```
-**解决方案**: 在百炼控制台充值或升级套餐
+**解決方案**: 在百炼控制台充值或升級套餐
 
-#### 3. 网络连接问题
+#### 3. 網絡連接問題
 ```
 Error: Connection timeout
 ```
-**解决方案**: 检查网络连接，确认可以访问阿里云服务
+**解決方案**: 檢查網絡連接，確認可以訪問阿里云服務
 
 #### 4. 模型不存在
 ```
 Error: Model not found
 ```
-**解决方案**: 检查模型名称是否正确，确认模型已开通
+**解決方案**: 檢查模型名稱是否正確，確認模型已開通
 
-### 调试技巧
+### 調試技巧
 
-1. **启用调试模式**:
+1. **啟用調試模式**:
    ```python
    ta = TradingAgentsGraph(debug=True, config=config)
    ```
 
-2. **检查API连接**:
+2. **檢查API連接**:
    ```python
    import dashscope
    dashscope.api_key = "your_api_key"
@@ -236,76 +236,76 @@ Error: Model not found
    print(response)
    ```
 
-## 技术实现详解
+## 技術實現詳解
 
-### OpenAI兼容适配器架构
+### OpenAI兼容適配器架構
 
-#### 1. 适配器类层次结构
+#### 1. 適配器類層次結構
 ```python
-# 新的OpenAI兼容适配器
+# 新的OpenAI兼容適配器
 from tradingagents.llm_adapters import ChatDashScopeOpenAI
 
-# 继承关系
+# 繼承關系
 ChatDashScopeOpenAI -> ChatOpenAI -> BaseChatModel
 ```
 
 #### 2. 核心特性
-- **标准接口**: 完全兼容LangChain的ChatOpenAI接口
-- **工具调用**: 支持原生Function Calling
-- **自动回退**: 强制工具调用机制确保数据获取
-- **Token追踪**: 自动记录使用量和成本
+- **標準接口**: 完全兼容LangChain的ChatOpenAI接口
+- **工具調用**: 支持原生Function Calling
+- **自動回退**: 强制工具調用機制確保數據獲取
+- **Token追蹤**: 自動記錄使用量和成本
 
-#### 3. 工具调用流程
+#### 3. 工具調用流程
 ```
-用户请求 → LLM分析 → 尝试工具调用
+用戶請求 → LLM分析 → 嘗試工具調用
     ↓
-如果工具调用失败 → 强制调用数据工具 → 重新生成分析
+如果工具調用失败 → 强制調用數據工具 → 重新生成分析
     ↓
-返回完整的基于真实数据的分析报告
+返回完整的基於真實數據的分析報告
 ```
 
-### 与旧版本的对比
+### 与旧版本的對比
 
 | 特性 | 旧版本 (ReAct模式) | 新版本 (OpenAI兼容) |
 |------|-------------------|---------------------|
-| **架构复杂度** | 复杂的ReAct循环 | 简单的标准模式 |
-| **API调用次数** | 多次调用 | 单次调用 |
-| **工具调用稳定性** | 不稳定 | 稳定 |
-| **报告长度** | 30字符 | 完整报告 |
-| **维护难度** | 高 | 低 |
-| **性能** | 较慢 | 快速 |
+| **架構複雜度** | 複雜的ReAct循環 | 簡單的標準模式 |
+| **API調用次數** | 多次調用 | 單次調用 |
+| **工具調用穩定性** | 不穩定 | 穩定 |
+| **報告長度** | 30字符 | 完整報告 |
+| **維護難度** | 高 | 低 |
+| **性能** | 較慢 | 快速 |
 
-### 最佳实践
+### 最佳實踐
 
-#### 1. 模型选择建议
+#### 1. 模型選擇建议
 ```python
-# 推荐配置
+# 推薦配置
 config = {
     "llm_provider": "dashscope",
-    "deep_think_llm": "qwen-plus-latest",  # 复杂分析
-    "quick_think_llm": "qwen-turbo",       # 快速响应
+    "deep_think_llm": "qwen-plus-latest",  # 複雜分析
+    "quick_think_llm": "qwen-turbo",       # 快速響應
 }
 ```
 
-#### 2. 参数优化
+#### 2. 參數優化
 ```python
-# 最佳参数设置
+# 最佳參數設置
 llm = ChatDashScopeOpenAI(
     model="qwen-plus-latest",
-    temperature=0.1,        # 降低随机性
-    max_tokens=2000,        # 确保完整输出
+    temperature=0.1,        # 降低隨機性
+    max_tokens=2000,        # 確保完整輸出
 )
 ```
 
-#### 3. 错误处理
-系统自动处理以下情况：
-- 工具调用失败 → 强制调用数据工具
-- 网络超时 → 自动重试
-- API限制 → 优雅降级
+#### 3. 錯誤處理
+系統自動處理以下情况：
+- 工具調用失败 → 强制調用數據工具
+- 網絡超時 → 自動重試
+- API限制 → 優雅降級
 
-### 开发者指南
+### 開發者指南
 
-#### 1. 自定义适配器
+#### 1. 自定義適配器
 ```python
 from tradingagents.llm_adapters.openai_compatible_base import OpenAICompatibleBase
 
@@ -320,47 +320,47 @@ class CustomDashScopeAdapter(OpenAICompatibleBase):
         )
 ```
 
-#### 2. 工具调用测试
+#### 2. 工具調用測試
 ```python
 from tradingagents.llm_adapters import ChatDashScopeOpenAI
 from langchain_core.tools import tool
 
 @tool
 def test_tool(query: str) -> str:
-    """测试工具"""
-    return f"查询结果: {query}"
+    """測試工具"""
+    return f"查詢結果: {query}"
 
 llm = ChatDashScopeOpenAI(model="qwen-turbo")
 llm_with_tools = llm.bind_tools([test_tool])
 
-# 测试工具调用
+# 測試工具調用
 response = llm_with_tools.invoke([
-    {"role": "user", "content": "请调用test_tool查询股票信息"}
+    {"role": "user", "content": "請調用test_tool查詢股票信息"}
 ])
 ```
 
-## 总结
+## 总結
 
-阿里百炼OpenAI兼容适配器的引入标志着TradingAgents在LLM集成方面的重大进步：
+阿里百炼OpenAI兼容適配器的引入標誌着TradingAgents在LLM集成方面的重大進步：
 
-- 🎯 **统一架构**: 所有LLM使用相同的标准模式
-- 🔧 **简化维护**: 减少代码复杂度，提高可维护性
-- 🚀 **提升性能**: 更快的响应速度和更稳定的工具调用
-- 📊 **完整分析**: 生成基于真实数据的详细分析报告
+- 🎯 **統一架構**: 所有LLM使用相同的標準模式
+- 🔧 **簡化維護**: 减少代碼複雜度，提高可維護性
+- 🚀 **提升性能**: 更快的響應速度和更穩定的工具調用
+- 📊 **完整分析**: 生成基於真實數據的詳細分析報告
 
-现在阿里百炼与DeepSeek、OpenAI等其他LLM在功能上完全一致，为用户提供了更好的选择和体验。
+現在阿里百炼与DeepSeek、OpenAI等其他LLM在功能上完全一致，為用戶提供了更好的選擇和體驗。
 
-## 最佳实践
+## 最佳實踐
 
-1. **模型选择**: 根据任务复杂度选择合适的模型
-2. **参数调优**: 根据具体需求调整温度、最大token数等参数
-3. **错误处理**: 实现适当的错误处理和重试机制
-4. **监控使用**: 定期监控API使用量和成本
-5. **缓存策略**: 合理使用缓存减少API调用
+1. **模型選擇**: 根據任務複雜度選擇合適的模型
+2. **參數調優**: 根據具體需求調整溫度、最大token數等參數
+3. **錯誤處理**: 實現適當的錯誤處理和重試機制
+4. **監控使用**: 定期監控API使用量和成本
+5. **緩存策略**: 合理使用緩存减少API調用
 
-## 相关链接
+## 相關鏈接
 
-- [阿里百炼官网](https://dashscope.aliyun.com/)
+- [阿里百炼官網](https://dashscope.aliyun.com/)
 - [百炼控制台](https://dashscope.console.aliyun.com/)
 - [API文档](https://help.aliyun.com/zh/dashscope/)
-- [价格说明](https://help.aliyun.com/zh/dashscope/product-overview/billing-overview)
+- [價格說明](https://help.aliyun.com/zh/dashscope/product-overview/billing-overview)

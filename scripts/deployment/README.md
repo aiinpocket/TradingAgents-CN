@@ -1,27 +1,27 @@
 # Deployment Scripts
 
-## 目录说明
+## 目錄說明
 
-部署和发布相关脚本
+部署和發布相關腳本
 
-## 脚本列表
+## 腳本列表
 
-- `create_github_release.py - 创建GitHub发布`
-- `release_v0.1.2.py - 发布v0.1.2版本`
-- `release_v0.1.3.py - 发布v0.1.3版本`
+- `create_github_release.py - 創建GitHub發布`
+- `release_v0.1.2.py - 發布v0.1.2版本`
+- `release_v0.1.3.py - 發布v0.1.3版本`
 
 ## 使用方法
 
 ```bash
-# 进入项目根目录
+# 進入項目根目錄
 cd C:\code\TradingAgentsCN
 
-# 运行脚本
+# 運行腳本
 python scripts/deployment/script_name.py
 ```
 
-## 注意事项
+## 註意事項
 
-- 确保在项目根目录下运行脚本
-- 检查脚本的依赖要求
-- 某些脚本可能需要特殊权限
+- 確保在項目根目錄下運行腳本
+- 檢查腳本的依賴要求
+- 某些腳本可能需要特殊權限

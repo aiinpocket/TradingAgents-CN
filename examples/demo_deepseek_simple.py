@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-简化的DeepSeek演示 - 避免所有复杂导入
+簡化的DeepSeek演示 - 避免所有複雜導入
 """
 
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# 加载环境变量
+# 加載環境變量
 load_dotenv()
 
 class SimpleDeepSeekAdapter:
-    """简化的DeepSeek适配器"""
+    """簡化的DeepSeek適配器"""
     
     def __init__(self):
         api_key = os.getenv("DEEPSEEK_API_KEY")
@@ -24,7 +24,7 @@ class SimpleDeepSeekAdapter:
         )
     
     def chat(self, message: str) -> str:
-        """简单聊天"""
+        """簡單聊天"""
         response = self.client.chat.completions.create(
             model="deepseek-chat",
             messages=[{"role": "user", "content": message}],
@@ -34,18 +34,18 @@ class SimpleDeepSeekAdapter:
         return response.choices[0].message.content
 
 def demo_simple_chat():
-    """演示简单对话"""
-    print("\n🤖 演示DeepSeek简单对话...")
+    """演示簡單對話"""
+    print("\n🤖 演示DeepSeek簡單對話...")
     
     try:
         adapter = SimpleDeepSeekAdapter()
         
         message = """
-        请简要介绍股票投资的基本概念，包括：
+        請簡要介紹股票投資的基本概念，包括：
         1. 什么是股票
-        2. 股票投资的风险
-        3. 基本的投资策略
-        请用中文回答，控制在200字以内。
+        2. 股票投資的風險
+        3. 基本的投資策略
+        請用中文回答，控制在200字以內。
         """
         
         print("💭 正在生成回答...")
@@ -55,7 +55,7 @@ def demo_simple_chat():
         return True
         
     except Exception as e:
-        print(f"❌ 简单对话演示失败: {e}")
+        print(f"❌ 簡單對話演示失败: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -68,26 +68,26 @@ def demo_stock_analysis():
         adapter = SimpleDeepSeekAdapter()
         
         query = """
-        假设你是一个专业的股票分析师，请分析以下情况：
+        假設你是一個專業的股票分析師，請分析以下情况：
         
         公司A：
         - 市盈率：15倍
-        - 营收增长率：20%
+        - 營收增長率：20%
         - 负债率：30%
-        - 行业：科技
+        - 行業：科技
         
         公司B：
         - 市盈率：25倍
-        - 营收增长率：8%
+        - 營收增長率：8%
         - 负债率：50%
-        - 行业：传统制造
+        - 行業：傳統制造
         
-        请从投资价值角度比较这两家公司，并给出投资建议。
+        請從投資價值角度比較這两家公司，並給出投資建议。
         """
         
-        print("🧠 正在进行股票分析...")
+        print("🧠 正在進行股票分析...")
         response = adapter.chat(query)
-        print(f"📈 分析结果:\n{response}")
+        print(f"📈 分析結果:\n{response}")
         
         return True
         
@@ -98,28 +98,28 @@ def demo_stock_analysis():
         return False
 
 def main():
-    """主函数"""
-    print("🚀 开始DeepSeek演示...")
+    """主函數"""
+    print("🚀 開始DeepSeek演示...")
     
-    # 检查API密钥
+    # 檢查API密鑰
     api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key:
-        print("❌ 未找到DEEPSEEK_API_KEY环境变量")
-        print("请在.env文件中配置DEEPSEEK_API_KEY")
+        print("❌ 未找到DEEPSEEK_API_KEY環境變量")
+        print("請在.env文件中配置DEEPSEEK_API_KEY")
         return
     
-    print(f"✅ 找到API密钥: {api_key[:10]}...")
+    print(f"✅ 找到API密鑰: {api_key[:10]}...")
     
-    # 运行演示
+    # 運行演示
     demos = [
-        ("简单对话", demo_simple_chat),
+        ("簡單對話", demo_simple_chat),
         ("股票分析", demo_stock_analysis)
     ]
     
     results = []
     for name, demo_func in demos:
         print(f"\n{'='*50}")
-        print(f"🎯 运行演示: {name}")
+        print(f"🎯 運行演示: {name}")
         print(f"{'='*50}")
         
         success = demo_func()
@@ -130,9 +130,9 @@ def main():
         else:
             print(f"❌ {name} 演示失败")
     
-    # 总结
+    # 总結
     print(f"\n{'='*50}")
-    print(f"📊 演示总结")
+    print(f"📊 演示总結")
     print(f"{'='*50}")
     
     for name, success in results:

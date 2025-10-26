@@ -1,7 +1,7 @@
 """
-比较 requirements.txt 和 pyproject.toml 中的依赖是否一致
+比較 requirements.txt 和 pyproject.toml 中的依賴是否一致
 
-确保两个文件中声明的依赖包保持同步
+確保两個文件中聲明的依賴包保持同步
 """
 
 import re
@@ -19,7 +19,7 @@ def parse_requirements_txt() -> Dict[str, str]:
     with open(requirements_file, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip()
-            # 跳过注释和空行
+            # 跳過註釋和空行
             if not line or line.startswith('#'):
                 continue
             
@@ -61,22 +61,22 @@ def parse_pyproject_toml() -> Dict[str, str]:
 
 
 def main():
-    """主函数"""
+    """主函數"""
     print("=" * 80)
-    print("🔍 比较 requirements.txt 和 pyproject.toml")
+    print("🔍 比較 requirements.txt 和 pyproject.toml")
     print("=" * 80)
     
-    # 解析两个文件
+    # 解析两個文件
     print("\n📋 解析 requirements.txt...")
     req_packages = parse_requirements_txt()
-    print(f"✅ 发现 {len(req_packages)} 个包")
+    print(f"✅ 發現 {len(req_packages)} 個包")
     
     print("\n📋 解析 pyproject.toml...")
     pyproject_packages = parse_pyproject_toml()
-    print(f"✅ 发现 {len(pyproject_packages)} 个包")
+    print(f"✅ 發現 {len(pyproject_packages)} 個包")
     
-    # 比较差异
-    print("\n🔎 检查差异...")
+    # 比較差異
+    print("\n🔎 檢查差異...")
     
     # 在 pyproject.toml 中但不在 requirements.txt 中
     missing_in_req = set(pyproject_packages.keys()) - set(req_packages.keys())
@@ -94,47 +94,47 @@ def main():
                 pyproject_packages[package]
             ))
     
-    # 输出结果
+    # 輸出結果
     if not missing_in_req and not missing_in_pyproject and not version_mismatch:
-        print("\n✅ 两个文件完全一致！")
+        print("\n✅ 两個文件完全一致！")
     else:
         if missing_in_req:
-            print(f"\n❌ 在 pyproject.toml 中但不在 requirements.txt 中 ({len(missing_in_req)} 个):")
+            print(f"\n❌ 在 pyproject.toml 中但不在 requirements.txt 中 ({len(missing_in_req)} 個):")
             print("-" * 80)
             for package in sorted(missing_in_req):
                 version = pyproject_packages[package]
                 print(f"  • {package}{version}")
-            print("\n💡 建议在 requirements.txt 中添加这些包")
+            print("\n💡 建议在 requirements.txt 中添加這些包")
         
         if missing_in_pyproject:
-            print(f"\n❌ 在 requirements.txt 中但不在 pyproject.toml 中 ({len(missing_in_pyproject)} 个):")
+            print(f"\n❌ 在 requirements.txt 中但不在 pyproject.toml 中 ({len(missing_in_pyproject)} 個):")
             print("-" * 80)
             for package in sorted(missing_in_pyproject):
                 version = req_packages[package]
                 print(f"  • {package}{version}")
-            print("\n💡 建议在 pyproject.toml 中添加这些包")
+            print("\n💡 建议在 pyproject.toml 中添加這些包")
         
         if version_mismatch:
-            print(f"\n⚠️  版本不一致 ({len(version_mismatch)} 个):")
+            print(f"\n⚠️  版本不一致 ({len(version_mismatch)} 個):")
             print("-" * 80)
             for package, req_ver, pyproject_ver in sorted(version_mismatch):
                 print(f"  • {package}")
-                print(f"    requirements.txt: {req_ver or '(无版本限制)'}")
-                print(f"    pyproject.toml:   {pyproject_ver or '(无版本限制)'}")
+                print(f"    requirements.txt: {req_ver or '(無版本限制)'}")
+                print(f"    pyproject.toml:   {pyproject_ver or '(無版本限制)'}")
     
-    # 显示统计
-    print("\n📊 统计信息:")
+    # 顯示統計
+    print("\n📊 統計信息:")
     print("-" * 80)
-    print(f"  requirements.txt:  {len(req_packages)} 个包")
-    print(f"  pyproject.toml:    {len(pyproject_packages)} 个包")
-    print(f"  共同包:            {len(set(req_packages.keys()) & set(pyproject_packages.keys()))} 个")
-    print(f"  仅在 req:          {len(missing_in_pyproject)} 个")
-    print(f"  仅在 pyproject:    {len(missing_in_req)} 个")
-    print(f"  版本不一致:        {len(version_mismatch)} 个")
+    print(f"  requirements.txt:  {len(req_packages)} 個包")
+    print(f"  pyproject.toml:    {len(pyproject_packages)} 個包")
+    print(f"  共同包:            {len(set(req_packages.keys()) & set(pyproject_packages.keys()))} 個")
+    print(f"  仅在 req:          {len(missing_in_pyproject)} 個")
+    print(f"  仅在 pyproject:    {len(missing_in_req)} 個")
+    print(f"  版本不一致:        {len(version_mismatch)} 個")
     
     print("\n" + "=" * 80)
     
-    # 返回状态码
+    # 返回狀態碼
     if missing_in_req or missing_in_pyproject or version_mismatch:
         return 1
     return 0

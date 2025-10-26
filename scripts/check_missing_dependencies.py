@@ -1,7 +1,7 @@
 """
-检查 pyproject.toml 中缺失的依赖包
+檢查 pyproject.toml 中缺失的依賴包
 
-扫描代码中实际使用的第三方包，与 pyproject.toml 中声明的依赖进行对比
+扫描代碼中實际使用的第三方包，与 pyproject.toml 中聲明的依賴進行對比
 """
 
 import os
@@ -10,10 +10,10 @@ import sys
 from pathlib import Path
 from typing import Set
 
-# 项目根目录
+# 項目根目錄
 project_root = Path(__file__).parent.parent
 
-# 标准库模块（Python 3.10）
+# 標準庫模塊（Python 3.10）
 STDLIB_MODULES = {
     'abc', 'aifc', 'argparse', 'array', 'ast', 'asynchat', 'asyncio', 'asyncore',
     'atexit', 'audioop', 'base64', 'bdb', 'binascii', 'binhex', 'bisect', 'builtins',
@@ -45,14 +45,14 @@ STDLIB_MODULES = {
     'xmlrpc', 'zipapp', 'zipfile', 'zipimport', 'zlib', '__future__', '__main__',
 }
 
-# 项目内部模块（包括子模块和组件）
+# 項目內部模塊（包括子模塊和組件）
 INTERNAL_MODULES = {
     'tradingagents', 'web', 'cli', 'app', 'tests', 'scripts', 'examples',
-    'auth_manager', 'components', 'modules', 'utils',  # web/ 下的内部模块
-    'enhanced_stock_list_fetcher', 'stock_data_service',  # 内部服务模块
+    'auth_manager', 'components', 'modules', 'utils',  # web/ 下的內部模塊
+    'enhanced_stock_list_fetcher', 'stock_data_service',  # 內部服務模塊
 }
 
-# 已知的包名映射（import 名称 -> PyPI 包名）
+# 已知的包名映射（import 名稱 -> PyPI 包名）
 PACKAGE_NAME_MAPPING = {
     'bs4': 'beautifulsoup4',
     'cv2': 'opencv-python',
@@ -64,14 +64,14 @@ PACKAGE_NAME_MAPPING = {
     'langchain_anthropic': 'langchain-anthropic',
     'langchain_google_genai': 'langchain-google-genai',
     'langchain_experimental': 'langchain-experimental',
-    'google': 'google-generativeai',  # 可能是多个包
+    'google': 'google-generativeai',  # 可能是多個包
     'dateutil': 'python-dateutil',
     'finnhub': 'finnhub-python',
 }
 
 
 def extract_imports_from_file(file_path: Path) -> Set[str]:
-    """从 Python 文件中提取导入的包名"""
+    """從 Python 文件中提取導入的包名"""
     imports = set()
     
     try:
@@ -87,17 +87,17 @@ def extract_imports_from_file(file_path: Path) -> Set[str]:
             imports.add(match.group(1))
             
     except Exception as e:
-        print(f"⚠️  读取文件失败 {file_path}: {e}")
+        print(f"⚠️  讀取文件失败 {file_path}: {e}")
     
     return imports
 
 
 def scan_directory(directory: Path) -> Set[str]:
-    """扫描目录中所有 Python 文件的导入"""
+    """扫描目錄中所有 Python 文件的導入"""
     all_imports = set()
     
     for py_file in directory.rglob('*.py'):
-        # 跳过一些目录
+        # 跳過一些目錄
         if any(part in py_file.parts for part in ['.venv', 'env', '__pycache__', '.git', 'node_modules']):
             continue
         
@@ -108,7 +108,7 @@ def scan_directory(directory: Path) -> Set[str]:
 
 
 def get_declared_dependencies() -> Set[str]:
-    """从 pyproject.toml 中获取已声明的依赖"""
+    """從 pyproject.toml 中獲取已聲明的依賴"""
     pyproject_file = project_root / 'pyproject.toml'
     dependencies = set()
     
@@ -125,35 +125,35 @@ def get_declared_dependencies() -> Set[str]:
             if in_dependencies:
                 if ']' in line:
                     break
-                # 提取包名（去除版本号）
+                # 提取包名（去除版本號）
                 match = re.search(r'"([a-zA-Z0-9_-]+)', line)
                 if match:
                     dependencies.add(match.group(1).lower())
     
     except Exception as e:
-        print(f"❌ 读取 pyproject.toml 失败: {e}")
+        print(f"❌ 讀取 pyproject.toml 失败: {e}")
     
     return dependencies
 
 
 def normalize_package_name(import_name: str) -> str:
-    """标准化包名"""
+    """標準化包名"""
     # 使用映射表
     if import_name in PACKAGE_NAME_MAPPING:
         return PACKAGE_NAME_MAPPING[import_name]
     
-    # 默认转小写并替换下划线为连字符
+    # 默認轉小寫並替換下劃線為連字符
     return import_name.lower().replace('_', '-')
 
 
 def main():
-    """主函数"""
+    """主函數"""
     print("=" * 80)
-    print("🔍 检查 pyproject.toml 中缺失的依赖包")
+    print("🔍 檢查 pyproject.toml 中缺失的依賴包")
     print("=" * 80)
     
-    # 扫描代码中的导入
-    print("\n📂 扫描代码目录...")
+    # 扫描代碼中的導入
+    print("\n📂 扫描代碼目錄...")
     directories_to_scan = [
         project_root / 'tradingagents',
         project_root / 'web',
@@ -167,35 +167,35 @@ def main():
             imports = scan_directory(directory)
             all_imports.update(imports)
     
-    # 过滤掉标准库和内部模块
+    # 過濾掉標準庫和內部模塊
     third_party_imports = {
         imp for imp in all_imports
         if imp not in STDLIB_MODULES and imp not in INTERNAL_MODULES
     }
     
-    print(f"\n✅ 发现 {len(third_party_imports)} 个第三方包导入")
+    print(f"\n✅ 發現 {len(third_party_imports)} 個第三方包導入")
     
-    # 获取已声明的依赖
-    print("\n📋 读取 pyproject.toml 中的依赖...")
+    # 獲取已聲明的依賴
+    print("\n📋 讀取 pyproject.toml 中的依賴...")
     declared_deps = get_declared_dependencies()
-    print(f"✅ pyproject.toml 中声明了 {len(declared_deps)} 个依赖")
+    print(f"✅ pyproject.toml 中聲明了 {len(declared_deps)} 個依賴")
     
-    # 查找缺失的依赖
-    print("\n🔎 检查缺失的依赖...")
+    # 查找缺失的依賴
+    print("\n🔎 檢查缺失的依賴...")
     missing_deps = set()
     
     for import_name in sorted(third_party_imports):
         package_name = normalize_package_name(import_name)
         
-        # 检查是否在已声明的依赖中
+        # 檢查是否在已聲明的依賴中
         if package_name not in declared_deps:
-            # 也检查原始名称
+            # 也檢查原始名稱
             if import_name.lower() not in declared_deps:
                 missing_deps.add((import_name, package_name))
     
-    # 输出结果
+    # 輸出結果
     if missing_deps:
-        print(f"\n❌ 发现 {len(missing_deps)} 个可能缺失的依赖:")
+        print(f"\n❌ 發現 {len(missing_deps)} 個可能缺失的依賴:")
         print("-" * 80)
         for import_name, package_name in sorted(missing_deps):
             print(f"  • {import_name:25s} → 建议添加: {package_name}")
@@ -205,10 +205,10 @@ def main():
         for import_name, package_name in sorted(missing_deps):
             print(f'    "{package_name}",')
     else:
-        print("\n✅ 所有第三方包都已在 pyproject.toml 中声明！")
+        print("\n✅ 所有第三方包都已在 pyproject.toml 中聲明！")
     
-    # 显示所有发现的第三方导入
-    print("\n📦 所有第三方包导入列表:")
+    # 顯示所有發現的第三方導入
+    print("\n📦 所有第三方包導入列表:")
     print("-" * 80)
     for imp in sorted(third_party_imports):
         status = "✅" if normalize_package_name(imp) in declared_deps or imp.lower() in declared_deps else "❌"

@@ -1,16 +1,16 @@
-# TradingAgents-CN API接口规范
+# TradingAgents-CN API接口規範
 
 ## 📋 概述
 
-本文档详细描述了TradingAgents-CN系统中各个模块的API接口规范，包括输入参数、输出格式、错误处理等。
+本文档詳細描述了TradingAgents-CN系統中各個模塊的API接口規範，包括輸入參數、輸出格式、錯誤處理等。
 
 ---
 
 ## 🔧 核心API接口
 
-### 1. 统一基本面分析工具
+### 1. 統一基本面分析工具
 
-#### 接口定义
+#### 接口定義
 ```python
 def get_stock_fundamentals_unified(
     ticker: str,
@@ -20,29 +20,29 @@ def get_stock_fundamentals_unified(
 ) -> str
 ```
 
-#### 输入参数
+#### 輸入參數
 ```json
 {
-    "ticker": "002027",           // 股票代码 (必填)
-    "start_date": "2025-06-01",   // 开始日期 (必填)
-    "end_date": "2025-07-15",     // 结束日期 (必填)
-    "curr_date": "2025-07-15"     // 当前日期 (必填)
+    "ticker": "002027",           // 股票代碼 (必填)
+    "start_date": "2025-06-01",   // 開始日期 (必填)
+    "end_date": "2025-07-15",     // 結束日期 (必填)
+    "curr_date": "2025-07-15"     // 當前日期 (必填)
 }
 ```
 
-#### 输出格式
+#### 輸出格式
 ```markdown
-# 中国A股基本面分析报告 - 002027
+# 中國A股基本面分析報告 - 002027
 
 ## 📊 股票基本信息
-- **股票代码**: 002027
-- **股票名称**: 分众传媒
-- **所属行业**: 广告包装
-- **当前股价**: ¥7.67
+- **股票代碼**: 002027
+- **股票名稱**: 分眾傳媒
+- **所屬行業**: 廣告包裝
+- **當前股價**: ¥7.67
 - **涨跌幅**: -1.41%
 
-## 💰 财务数据分析
-### 估值指标
+## 💰 財務數據分析
+### 估值指標
 - **PE比率**: 18.5倍
 - **PB比率**: 1.8倍
 - **股息收益率**: 2.5%
@@ -52,14 +52,14 @@ def get_stock_fundamentals_unified(
 - **ROA**: 6.2%
 - **毛利率**: 25.5%
 
-## 📈 投资建议
-综合评分: 6.5/10
+## 📈 投資建议
+综合評分: 6.5/10
 建议: 谨慎持有
 ```
 
-### 2. 市场技术分析工具
+### 2. 市場技術分析工具
 
-#### 接口定义
+#### 接口定義
 ```python
 def get_stock_market_analysis(
     ticker: str,
@@ -68,7 +68,7 @@ def get_stock_market_analysis(
 ) -> str
 ```
 
-#### 输入参数
+#### 輸入參數
 ```json
 {
     "ticker": "002027",
@@ -77,28 +77,28 @@ def get_stock_market_analysis(
 }
 ```
 
-#### 输出格式
+#### 輸出格式
 ```markdown
-# 市场技术分析报告 - 002027
+# 市場技術分析報告 - 002027
 
-## 📈 价格趋势分析
-- **当前趋势**: 震荡下行
+## 📈 價格趋势分析
+- **當前趋势**: 震荡下行
 - **支撑位**: ¥7.12
 - **阻力位**: ¥7.87
 
-## 📊 技术指标
+## 📊 技術指標
 - **RSI(14)**: 45.2 (中性)
 - **MACD**: -0.05 (看跌)
-- **布林带**: 价格接近下轨
+- **布林帶**: 價格接近下轨
 
-## 🎯 技术面建议
-短期: 观望
+## 🎯 技術面建议
+短期: 觀望
 中期: 谨慎
 ```
 
-### 3. 新闻情绪分析工具
+### 3. 新聞情绪分析工具
 
-#### 接口定义
+#### 接口定義
 ```python
 def get_stock_news_analysis(
     ticker: str,
@@ -107,48 +107,48 @@ def get_stock_news_analysis(
 ) -> str
 ```
 
-#### 输入参数
+#### 輸入參數
 ```json
 {
     "ticker": "002027",
-    "company_name": "分众传媒",
+    "company_name": "分眾傳媒",
     "date_range": "7d"
 }
 ```
 
-#### 输出格式
+#### 輸出格式
 ```markdown
-# 新闻分析报告 - 002027
+# 新聞分析報告 - 002027
 
-## 📰 新闻概览
-- **新闻总数**: 15条
-- **正面新闻**: 8条 (53%)
-- **负面新闻**: 3条 (20%)
-- **中性新闻**: 4条 (27%)
+## 📰 新聞概覽
+- **新聞总數**: 15條
+- **正面新聞**: 8條 (53%)
+- **负面新聞**: 3條 (20%)
+- **中性新聞**: 4條 (27%)
 
-## 🔥 热点事件
-1. Q2财报发布，业绩超预期
-2. 新增重要客户合作
-3. 行业政策调整影响
+## 🔥 熱點事件
+1. Q2財報發布，業绩超預期
+2. 新增重要客戶合作
+3. 行業政策調整影響
 
-## 📊 情绪指数
-- **整体情绪**: 偏正面 (65%)
-- **关注热度**: 中等
-- **影响评估**: 短期正面
+## 📊 情绪指數
+- **整體情绪**: 偏正面 (65%)
+- **關註熱度**: 中等
+- **影響評估**: 短期正面
 ```
 
 ---
 
-## 🤖 智能体API接口
+## 🤖 智能體API接口
 
-### 1. 基本面分析师
+### 1. 基本面分析師
 
-#### 接口定义
+#### 接口定義
 ```python
 def fundamentals_analyst(state: Dict[str, Any]) -> Dict[str, Any]
 ```
 
-#### 输入状态
+#### 輸入狀態
 ```json
 {
     "company_of_interest": "002027",
@@ -158,24 +158,24 @@ def fundamentals_analyst(state: Dict[str, Any]) -> Dict[str, Any]
 }
 ```
 
-#### 输出状态
+#### 輸出狀態
 ```json
 {
     "company_of_interest": "002027",
     "trade_date": "2025-07-15",
     "messages": [...],
-    "fundamentals_report": "详细的基本面分析报告..."
+    "fundamentals_report": "詳細的基本面分析報告..."
 }
 ```
 
-### 2. 市场分析师
+### 2. 市場分析師
 
-#### 接口定义
+#### 接口定義
 ```python
 def market_analyst(state: Dict[str, Any]) -> Dict[str, Any]
 ```
 
-#### 输入状态
+#### 輸入狀態
 ```json
 {
     "company_of_interest": "002027",
@@ -185,31 +185,31 @@ def market_analyst(state: Dict[str, Any]) -> Dict[str, Any]
 }
 ```
 
-#### 输出状态
+#### 輸出狀態
 ```json
 {
     "company_of_interest": "002027",
     "trade_date": "2025-07-15",
     "messages": [...],
-    "market_report": "详细的市场分析报告..."
+    "market_report": "詳細的市場分析報告..."
 }
 ```
 
-### 3. 看涨/看跌研究员
+### 3. 看涨/看跌研究員
 
-#### 接口定义
+#### 接口定義
 ```python
 def bull_researcher(state: Dict[str, Any]) -> Dict[str, Any]
 def bear_researcher(state: Dict[str, Any]) -> Dict[str, Any]
 ```
 
-#### 输入状态
+#### 輸入狀態
 ```json
 {
     "company_of_interest": "002027",
     "trade_date": "2025-07-15",
-    "fundamentals_report": "基本面分析报告...",
-    "market_report": "市场分析报告...",
+    "fundamentals_report": "基本面分析報告...",
+    "market_report": "市場分析報告...",
     "investment_debate_state": {
         "history": "",
         "current_response": "",
@@ -218,60 +218,60 @@ def bear_researcher(state: Dict[str, Any]) -> Dict[str, Any]
 }
 ```
 
-#### 输出状态
+#### 輸出狀態
 ```json
 {
     "investment_debate_state": {
-        "history": "辩论历史...",
-        "current_response": "当前回应...",
+        "history": "辩論歷史...",
+        "current_response": "當前回應...",
         "count": 1
     }
 }
 ```
 
-### 4. 交易员
+### 4. 交易員
 
-#### 接口定义
+#### 接口定義
 ```python
 def trader(state: Dict[str, Any]) -> Dict[str, Any]
 ```
 
-#### 输入状态
+#### 輸入狀態
 ```json
 {
     "company_of_interest": "002027",
     "trade_date": "2025-07-15",
     "fundamentals_report": "基本面分析...",
-    "market_report": "市场分析...",
-    "news_report": "新闻分析...",
+    "market_report": "市場分析...",
+    "news_report": "新聞分析...",
     "sentiment_report": "情绪分析...",
     "investment_debate_state": {
-        "history": "研究员辩论历史..."
+        "history": "研究員辩論歷史..."
     }
 }
 ```
 
-#### 输出状态
+#### 輸出狀態
 ```json
 {
-    "trader_signal": "详细的交易决策信号...",
+    "trader_signal": "詳細的交易決策信號...",
     "final_decision": {
         "action": "买入",
         "target_price": 8.50,
         "confidence": 0.75,
         "risk_score": 0.4,
-        "reasoning": "基于综合分析的投资理由..."
+        "reasoning": "基於综合分析的投資理由..."
     }
 }
 ```
 
 ---
 
-## 📊 数据源API接口
+## 📊 數據源API接口
 
-### 1. Tushare数据接口
+### 1. Tushare數據接口
 
-#### 股票基本数据
+#### 股票基本數據
 ```python
 def get_china_stock_data_tushare(
     ticker: str,
@@ -285,9 +285,9 @@ def get_china_stock_data_tushare(
 def get_china_stock_info_tushare(ticker: str) -> Dict[str, Any]
 ```
 
-### 2. 统一数据接口
+### 2. 統一數據接口
 
-#### 中国股票数据
+#### 中國股票數據
 ```python
 def get_china_stock_data_unified(
     symbol: str,
@@ -296,7 +296,7 @@ def get_china_stock_data_unified(
 ) -> str
 ```
 
-#### 数据源切换
+#### 數據源切換
 ```python
 def switch_china_data_source(source: str) -> bool
 ```
@@ -305,9 +305,9 @@ def switch_china_data_source(source: str) -> bool
 
 ## 🔧 工具API接口
 
-### 1. 股票工具类
+### 1. 股票工具類
 
-#### 市场信息获取
+#### 市場信息獲取
 ```python
 def get_market_info(ticker: str) -> Dict[str, Any]
 ```
@@ -317,7 +317,7 @@ def get_market_info(ticker: str) -> Dict[str, Any]
 {
     "ticker": "002027",
     "market": "china_a",
-    "market_name": "中国A股",
+    "market_name": "中國A股",
     "currency_name": "人民币",
     "currency_symbol": "¥",
     "is_china": true,
@@ -326,9 +326,9 @@ def get_market_info(ticker: str) -> Dict[str, Any]
 }
 ```
 
-### 2. 缓存管理API
+### 2. 緩存管理API
 
-#### 缓存操作
+#### 緩存操作
 ```python
 def get_cache(key: str) -> Any
 def set_cache(key: str, value: Any, ttl: int = 3600) -> bool
@@ -337,84 +337,84 @@ def clear_cache(pattern: str = "*") -> int
 
 ---
 
-## ⚠️ 错误处理
+## ⚠️ 錯誤處理
 
-### 错误代码规范
+### 錯誤代碼規範
 
-| 错误代码 | 错误类型 | 描述 |
+| 錯誤代碼 | 錯誤類型 | 描述 |
 |---------|---------|------|
-| 1001 | 参数错误 | 必填参数缺失或格式错误 |
-| 1002 | 股票代码错误 | 股票代码不存在或格式错误 |
-| 2001 | 数据源错误 | 外部API调用失败 |
-| 2002 | 缓存错误 | 缓存系统异常 |
-| 3001 | LLM错误 | 语言模型调用失败 |
-| 3002 | 分析错误 | 分析过程异常 |
-| 4001 | 系统错误 | 系统内部错误 |
+| 1001 | 參數錯誤 | 必填參數缺失或格式錯誤 |
+| 1002 | 股票代碼錯誤 | 股票代碼不存在或格式錯誤 |
+| 2001 | 數據源錯誤 | 外部API調用失败 |
+| 2002 | 緩存錯誤 | 緩存系統異常 |
+| 3001 | LLM錯誤 | 語言模型調用失败 |
+| 3002 | 分析錯誤 | 分析過程異常 |
+| 4001 | 系統錯誤 | 系統內部錯誤 |
 
-### 错误响应格式
+### 錯誤響應格式
 ```json
 {
     "success": false,
     "error_code": 1002,
-    "error_message": "股票代码格式错误",
-    "error_details": "股票代码应为6位数字",
+    "error_message": "股票代碼格式錯誤",
+    "error_details": "股票代碼應為6位數字",
     "timestamp": "2025-07-16T01:30:00Z"
 }
 ```
 
 ---
 
-## 🔒 安全规范
+## 🔒 安全規範
 
-### 1. API密钥管理
-- 所有API密钥通过环境变量配置
-- 支持密钥轮换和失效检测
-- 密钥格式验证和安全存储
+### 1. API密鑰管理
+- 所有API密鑰通過環境變量配置
+- 支持密鑰轮換和失效檢測
+- 密鑰格式驗證和安全存储
 
-### 2. 访问控制
-- 基于角色的访问控制 (RBAC)
-- API调用频率限制
-- 请求来源验证
+### 2. 訪問控制
+- 基於角色的訪問控制 (RBAC)
+- API調用頻率限制
+- 請求來源驗證
 
-### 3. 数据安全
-- 传输数据加密 (HTTPS)
-- 敏感数据脱敏处理
-- 审计日志记录
-
----
-
-## 📈 性能规范
-
-### 1. 响应时间要求
-- 数据获取: < 5秒
-- 单个分析师: < 30秒
-- 完整分析流程: < 3分钟
-
-### 2. 并发处理
-- 支持最多10个并发分析请求
-- 智能队列管理
-- 资源使用监控
-
-### 3. 缓存策略
-- 热数据缓存: 1小时
-- 温数据缓存: 24小时
-- 冷数据缓存: 7天
+### 3. 數據安全
+- 傳輸數據加密 (HTTPS)
+- 敏感數據脫敏處理
+- 審計日誌記錄
 
 ---
 
-## 🧪 测试规范
+## 📈 性能規範
 
-### 1. 单元测试
-- 每个API接口都有对应的单元测试
-- 测试覆盖率要求 > 80%
-- 包含正常和异常情况测试
+### 1. 響應時間要求
+- 數據獲取: < 5秒
+- 單個分析師: < 30秒
+- 完整分析流程: < 3分鐘
 
-### 2. 集成测试
-- 端到端流程测试
-- 数据源集成测试
-- LLM集成测试
+### 2. 並發處理
+- 支持最多10個並發分析請求
+- 智能隊列管理
+- 資源使用監控
 
-### 3. 性能测试
-- 负载测试
-- 压力测试
-- 稳定性测试
+### 3. 緩存策略
+- 熱數據緩存: 1小時
+- 溫數據緩存: 24小時
+- 冷數據緩存: 7天
+
+---
+
+## 🧪 測試規範
+
+### 1. 單元測試
+- 每個API接口都有對應的單元測試
+- 測試覆蓋率要求 > 80%
+- 包含正常和異常情况測試
+
+### 2. 集成測試
+- 端到端流程測試
+- 數據源集成測試
+- LLM集成測試
+
+### 3. 性能測試
+- 负載測試
+- 壓力測試
+- 穩定性測試

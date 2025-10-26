@@ -1,22 +1,22 @@
-# Windows 11 ChromaDB 优化配置
+# Windows 11 ChromaDB 優化配置
 import os
 import platform
 import chromadb
 from chromadb.config import Settings
 
 def is_windows_11():
-    '''检测是否为Windows 11'''
+    '''檢測是否為Windows 11'''
     if platform.system() != "Windows":
         return False
     
-    # Windows 11的版本号通常是10.0.22000或更高
+    # Windows 11的版本號通常是10.0.22000或更高
     version = platform.version()
     try:
-        # 提取版本号，格式通常是 "10.0.26100"
+        # 提取版本號，格式通常是 "10.0.26100"
         version_parts = version.split('.')
         if len(version_parts) >= 3:
             build_number = int(version_parts[2])
-            # Windows 11的构建号从22000开始
+            # Windows 11的構建號從22000開始
             return build_number >= 22000
     except (ValueError, IndexError):
         pass
@@ -24,36 +24,36 @@ def is_windows_11():
     return False
 
 def get_win11_chromadb_client():
-    '''获取Windows 11优化的ChromaDB客户端'''
-    # Windows 11 对 ChromaDB 支持更好，可以使用更现代的配置
+    '''獲取Windows 11優化的ChromaDB客戶端'''
+    # Windows 11 對 ChromaDB 支持更好，可以使用更現代的配置
     settings = Settings(
         allow_reset=True,
-        anonymized_telemetry=False,  # 禁用遥测避免posthog错误
+        anonymized_telemetry=False,  # 禁用遥測避免posthog錯誤
         is_persistent=False,
-        # Windows 11 可以使用默认实现，性能更好
+        # Windows 11 可以使用默認實現，性能更好
         chroma_db_impl="duckdb+parquet",
         chroma_api_impl="chromadb.api.segment.SegmentAPI"
-        # 移除persist_directory=None，让它使用默认值
+        # 移除persist_directory=None，让它使用默認值
     )
     
     try:
         client = chromadb.Client(settings)
         return client
     except Exception as e:
-        # 如果还有问题，使用最简配置
+        # 如果还有問題，使用最簡配置
         minimal_settings = Settings(
             allow_reset=True,
-            anonymized_telemetry=False,  # 关键：禁用遥测
+            anonymized_telemetry=False,  # 關键：禁用遥測
             is_persistent=False
         )
         return chromadb.Client(minimal_settings)
 
 def get_optimal_chromadb_client():
-    '''根据Windows版本自动选择最优ChromaDB配置'''
+    '''根據Windows版本自動選擇最優ChromaDB配置'''
     system = platform.system()
     
     if system == "Windows":
-        # 使用更准确的Windows 11检测
+        # 使用更準確的Windows 11檢測
         if is_windows_11():
             # Windows 11 或更新版本
             return get_win11_chromadb_client()
@@ -62,7 +62,7 @@ def get_optimal_chromadb_client():
             from .chromadb_win10_config import get_win10_chromadb_client
             return get_win10_chromadb_client()
     else:
-        # 非Windows系统，使用标准配置
+        # 非Windows系統，使用標準配置
         settings = Settings(
             allow_reset=True,
             anonymized_telemetry=False,
@@ -70,5 +70,5 @@ def get_optimal_chromadb_client():
         )
         return chromadb.Client(settings)
 
-# 导出配置
+# 導出配置
 __all__ = ['get_win11_chromadb_client', 'get_optimal_chromadb_client', 'is_windows_11']

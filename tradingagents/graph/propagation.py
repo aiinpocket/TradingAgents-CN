@@ -2,7 +2,7 @@
 
 from typing import Dict, Any
 
-# 导入统一日志系统
+# 導入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 from tradingagents.agents.utils.agent_states import (

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-准备向上游项目贡献代码的工具脚本
-自动化处理代码清理、文档生成、测试验证等任务
+準备向上游項目贡献代碼的工具腳本
+自動化處理代碼清理、文档生成、測試驗證等任務
 """
 
 import os
@@ -12,20 +12,20 @@ from pathlib import Path
 from typing import List, Dict, Set
 import json
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 
 class UpstreamContributionPreparer:
-    """上游贡献准备工具"""
+    """上游贡献準备工具"""
     
     def __init__(self, source_dir: str = ".", target_dir: str = "./upstream_contribution"):
         self.source_dir = Path(source_dir)
         self.target_dir = Path(target_dir)
         self.chinese_pattern = re.compile(r'[\u4e00-\u9fff]+')
         
-        # 定义贡献批次
+        # 定義贡献批次
         self.contribution_batches = {
             "batch1_caching": {
                 "name": "Intelligent Caching System",
@@ -59,7 +59,7 @@ class UpstreamContributionPreparer:
         }
     
     def analyze_chinese_content(self) -> Dict[str, List[str]]:
-        """分析代码中的中文内容"""
+        """分析代碼中的中文內容"""
         chinese_files = {}
         
         for file_path in self.source_dir.rglob("*.py"):
@@ -84,32 +84,32 @@ class UpstreamContributionPreparer:
         return chinese_files
     
     def clean_chinese_content(self, file_path: Path, target_path: Path):
-        """清理文件中的中文内容"""
+        """清理文件中的中文內容"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # 替换中文注释
+            # 替換中文註釋
             content = re.sub(r'#\s*[\u4e00-\u9fff].*', '# TODO: Add English comment', content)
             
-            # 替换中文字符串（保留在print语句中的，改为英文）
+            # 替換中文字符串（保留在print語句中的，改為英文）
             chinese_strings = {
-                '获取': 'Getting',
+                '獲取': 'Getting',
                 '成功': 'Success',
                 '失败': 'Failed',
-                '错误': 'Error',
+                '錯誤': 'Error',
                 '警告': 'Warning',
-                '数据': 'Data',
-                '缓存': 'Cache',
+                '數據': 'Data',
+                '緩存': 'Cache',
                 '分析': 'Analysis',
                 '股票': 'Stock',
                 '美股': 'US Stock',
                 'A股': 'China Stock',
-                '连接': 'Connection',
+                '連接': 'Connection',
                 '初始化': 'Initialize',
                 '配置': 'Configuration',
-                '测试': 'Test',
-                '启动': 'Starting',
+                '測試': 'Test',
+                '啟動': 'Starting',
                 '停止': 'Stopping'
             }
             
@@ -117,7 +117,7 @@ class UpstreamContributionPreparer:
                 content = content.replace(f'"{chinese}"', f'"{english}"')
                 content = content.replace(f"'{chinese}'", f"'{english}'")
             
-            # 确保目标目录存在
+            # 確保目標目錄存在
             target_path.parent.mkdir(parents=True, exist_ok=True)
             
             with open(target_path, 'w', encoding='utf-8') as f:
@@ -129,7 +129,7 @@ class UpstreamContributionPreparer:
             logger.error(f"❌ Error cleaning {file_path}: {e}")
     
     def extract_generic_improvements(self, batch_name: str):
-        """提取通用改进代码"""
+        """提取通用改進代碼"""
         batch = self.contribution_batches[batch_name]
         batch_dir = self.target_dir / batch_name
         batch_dir.mkdir(parents=True, exist_ok=True)
@@ -145,7 +145,7 @@ class UpstreamContributionPreparer:
             else:
                 logger.warning(f"⚠️ File not found: {source_file}")
         
-        # 生成批次说明文档
+        # 生成批次說明文档
         self.generate_batch_documentation(batch_name, batch_dir)
     
     def generate_batch_documentation(self, batch_name: str, batch_dir: Path):
@@ -243,12 +243,12 @@ Any additional context or notes for reviewers...
         logger.info(f"📋 Generated PR template: {batch_dir / 'PR_TEMPLATE.md'}")
     
     def validate_contribution(self, batch_name: str) -> bool:
-        """验证贡献代码质量"""
+        """驗證贡献代碼质量"""
         batch_dir = self.target_dir / batch_name
         
         logger.debug(f"\n🔍 Validating {batch_name}...")
         
-        # 检查是否还有中文内容
+        # 檢查是否还有中文內容
         chinese_content = {}
         for file_path in batch_dir.rglob("*.py"):
             try:
@@ -269,7 +269,7 @@ Any additional context or notes for reviewers...
         return True
     
     def generate_contribution_summary(self):
-        """生成贡献总结"""
+        """生成贡献总結"""
         summary = {
             "total_batches": len(self.contribution_batches),
             "batches": {},
@@ -294,13 +294,13 @@ Any additional context or notes for reviewers...
         logger.info(f"📊 Generated summary: {self.target_dir / 'contribution_summary.json'}")
     
     def prepare_all_batches(self):
-        """准备所有批次"""
+        """準备所有批次"""
         logger.info(f"🚀 Starting upstream contribution preparation...")
         
-        # 创建目标目录
+        # 創建目標目錄
         self.target_dir.mkdir(parents=True, exist_ok=True)
         
-        # 分析中文内容
+        # 分析中文內容
         logger.info(f"\n📊 Analyzing Chinese content...")
         chinese_files = self.analyze_chinese_content()
         
@@ -309,20 +309,20 @@ Any additional context or notes for reviewers...
             with open(self.target_dir / "chinese_content_analysis.json", 'w', encoding='utf-8') as f:
                 json.dump(chinese_files, f, indent=2, ensure_ascii=False)
         
-        # 准备各个批次
+        # 準备各個批次
         for batch_name in sorted(self.contribution_batches.keys()):
             self.extract_generic_improvements(batch_name)
             self.generate_pr_template(batch_name)
             self.validate_contribution(batch_name)
         
-        # 生成总结
+        # 生成总結
         self.generate_contribution_summary()
         
         logger.info(f"\n🎉 Preparation completed! Check {self.target_dir} for results.")
 
 
 def main():
-    """主函数"""
+    """主函數"""
     preparer = UpstreamContributionPreparer()
     preparer.prepare_all_batches()
 

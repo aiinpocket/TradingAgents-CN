@@ -1,6 +1,6 @@
 """
-智能会话管理器 - 自动选择最佳存储方案
-优先级：Redis > 文件存储
+智能會話管理器 - 自動選擇最佳存储方案
+優先級：Redis > 文件存储
 """
 
 import streamlit as st
@@ -8,7 +8,7 @@ import os
 from typing import Optional, Dict, Any
 
 class SmartSessionManager:
-    """智能会话管理器"""
+    """智能會話管理器"""
     
     def __init__(self):
         self.redis_manager = None
@@ -17,11 +17,11 @@ class SmartSessionManager:
         self._init_file_manager()
         
     def _init_redis_manager(self) -> bool:
-        """尝试初始化Redis管理器"""
+        """嘗試初始化Redis管理器"""
         try:
             from .redis_session_manager import redis_session_manager
             
-            # 测试Redis连接
+            # 測試Redis連接
             if redis_session_manager.use_redis:
                 self.redis_manager = redis_session_manager
                 return True
@@ -37,25 +37,25 @@ class SmartSessionManager:
             from .file_session_manager import file_session_manager
             self.file_manager = file_session_manager
         except Exception as e:
-            st.error(f"❌ 文件会话管理器初始化失败: {e}")
+            st.error(f"❌ 文件會話管理器初始化失败: {e}")
     
     def save_analysis_state(self, analysis_id: str, status: str = "running",
                            stock_symbol: str = "", market_type: str = "",
                            form_config: Dict[str, Any] = None):
-        """保存分析状态和表单配置"""
+        """保存分析狀態和表單配置"""
         success = False
         
-        # 优先使用Redis
+        # 優先使用Redis
         if self.use_redis and self.redis_manager:
             try:
                 success = self.redis_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type, form_config)
                 if success:
                     return True
             except Exception as e:
-                st.warning(f"⚠️ Redis保存失败，切换到文件存储: {e}")
+                st.warning(f"⚠️ Redis保存失败，切換到文件存储: {e}")
                 self.use_redis = False
 
-        # 使用文件存储作为fallback
+        # 使用文件存储作為fallback
         if self.file_manager:
             try:
                 success = self.file_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type, form_config)
@@ -67,37 +67,37 @@ class SmartSessionManager:
         return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
-        """加载分析状态"""
-        # 优先从Redis加载
+        """加載分析狀態"""
+        # 優先從Redis加載
         if self.use_redis and self.redis_manager:
             try:
                 data = self.redis_manager.load_analysis_state()
                 if data:
                     return data
             except Exception as e:
-                st.warning(f"⚠️ Redis加载失败，切换到文件存储: {e}")
+                st.warning(f"⚠️ Redis加載失败，切換到文件存储: {e}")
                 self.use_redis = False
         
-        # 从文件存储加载
+        # 從文件存储加載
         if self.file_manager:
             try:
                 return self.file_manager.load_analysis_state()
             except Exception as e:
-                st.error(f"❌ 文件存储加载失败: {e}")
+                st.error(f"❌ 文件存储加載失败: {e}")
                 return None
         
         return None
     
     def clear_analysis_state(self):
-        """清除分析状态"""
-        # 清除Redis中的数据
+        """清除分析狀態"""
+        # 清除Redis中的數據
         if self.use_redis and self.redis_manager:
             try:
                 self.redis_manager.clear_analysis_state()
             except Exception:
                 pass
         
-        # 清除文件中的数据
+        # 清除文件中的數據
         if self.file_manager:
             try:
                 self.file_manager.clear_analysis_state()
@@ -105,7 +105,7 @@ class SmartSessionManager:
                 pass
     
     def get_debug_info(self) -> Dict[str, Any]:
-        """获取调试信息"""
+        """獲取調試信息"""
         debug_info = {
             "storage_type": "Redis" if self.use_redis else "文件存储",
             "redis_available": self.redis_manager is not None,
@@ -113,7 +113,7 @@ class SmartSessionManager:
             "use_redis": self.use_redis
         }
         
-        # 获取当前使用的管理器的调试信息
+        # 獲取當前使用的管理器的調試信息
         if self.use_redis and self.redis_manager:
             try:
                 redis_debug = self.redis_manager.get_debug_info()
@@ -130,29 +130,29 @@ class SmartSessionManager:
         
         return debug_info
 
-# 全局智能会话管理器实例
+# 全局智能會話管理器實例
 smart_session_manager = SmartSessionManager()
 
 def get_persistent_analysis_id() -> Optional[str]:
-    """获取持久化的分析ID"""
+    """獲取持久化的分析ID"""
     try:
-        # 1. 首先检查session state
+        # 1. 首先檢查session state
         if st.session_state.get('current_analysis_id'):
             return st.session_state.current_analysis_id
         
-        # 2. 从会话存储加载
+        # 2. 從會話存储加載
         session_data = smart_session_manager.load_analysis_state()
         if session_data:
             analysis_id = session_data.get('analysis_id')
             if analysis_id:
-                # 恢复到session state
+                # 恢複到session state
                 st.session_state.current_analysis_id = analysis_id
                 st.session_state.analysis_running = (session_data.get('status') == 'running')
                 st.session_state.last_stock_symbol = session_data.get('stock_symbol', '')
                 st.session_state.last_market_type = session_data.get('market_type', '')
                 return analysis_id
         
-        # 3. 最后从分析数据恢复最新分析
+        # 3. 最後從分析數據恢複最新分析
         try:
             from .async_progress_tracker import get_latest_analysis_id
             latest_id = get_latest_analysis_id()
@@ -165,30 +165,30 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 获取持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 獲取持久化分析ID失败: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running",
                               stock_symbol: str = "", market_type: str = "",
                               form_config: Dict[str, Any] = None):
-    """设置持久化的分析ID和表单配置"""
+    """設置持久化的分析ID和表單配置"""
     try:
-        # 设置到session state
+        # 設置到session state
         st.session_state.current_analysis_id = analysis_id
         st.session_state.analysis_running = (status == 'running')
         st.session_state.last_stock_symbol = stock_symbol
         st.session_state.last_market_type = market_type
 
-        # 保存表单配置到session state
+        # 保存表單配置到session state
         if form_config:
             st.session_state.form_config = form_config
 
-        # 保存到会话存储
+        # 保存到會話存储
         smart_session_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type, form_config)
 
     except Exception as e:
-        st.warning(f"⚠️ 设置持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 設置持久化分析ID失败: {e}")
 
 def get_session_debug_info() -> Dict[str, Any]:
-    """获取会话管理器调试信息"""
+    """獲取會話管理器調試信息"""
     return smart_session_manager.get_debug_info()

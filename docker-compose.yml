@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  # Streamlit Web 应用服务
+  # Streamlit Web 應用服務
   web:
     build: .
     image: tradingagents-cn:latest
@@ -10,32 +8,32 @@ services:
       - "8501:8501"
     volumes:
       - .env:/app/.env
-      # 开发环境代码映射
+      # 開發環境代碼映射
       - ./web:/app/web
       - ./tradingagents:/app/tradingagents
       - ./scripts:/app/scripts
-      # 日志目录映射 - 重要：将容器内日志映射到当前项目的logs目录
+      # 日誌目錄映射 - 重要：将容器內日誌映射到當前項目的logs目錄
       - ./logs:/app/logs
-      # 配置目录映射 - 重要：持久化token统计和其他配置数据
+      # 配置目錄映射 - 重要：持久化token統計和其他配置數據
       - ./config:/app/config
     env_file:
       - .env
     environment:
       PYTHONUNBUFFERED: 1
       PYTHONDONTWRITEBYTECODE: 1
-      # 时区配置
+      # 時区配置
       TZ: "Asia/Shanghai"
-      # 日志配置
+      # 日誌配置
       TRADINGAGENTS_LOG_LEVEL: "INFO"
       TRADINGAGENTS_LOG_DIR: "/app/logs"
       TRADINGAGENTS_LOG_FILE: "/app/logs/tradingagents.log"
       TRADINGAGENTS_LOG_MAX_SIZE: "100MB"
       TRADINGAGENTS_LOG_BACKUP_COUNT: "5"
-      # Docker专用数据库配置（覆盖.env中的本地配置）
+      # Docker專用數據庫配置（覆蓋.env中的本地配置）
       TRADINGAGENTS_MONGODB_URL: mongodb://admin:tradingagents123@mongodb:27017/tradingagents?authSource=admin
       TRADINGAGENTS_REDIS_URL: redis://:tradingagents123@redis:6379
       TRADINGAGENTS_CACHE_TYPE: redis
-      # Docker环境标识和PDF支持
+      # Docker環境標识和PDF支持
       DOCKER_CONTAINER: "true"
       DISPLAY: ":99"
     command: /usr/local/bin/start-xvfb.sh python -m streamlit run web/app.py --server.address=0.0.0.0 --server.port=8501
@@ -44,23 +42,23 @@ services:
       - redis
     networks:
       - tradingagents-network
-    # 健康检查
+    # 健康檢查
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
-    # 重启策略
+    # 重啟策略
     restart: unless-stopped
-    # 日志配置
+    # 日誌配置
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "3"
 
-  # MongoDB数据库服务
+  # MongoDB數據庫服務
   mongodb:
     image: mongo:4.4
     container_name: tradingagents-mongodb
@@ -83,7 +81,7 @@ services:
       retries: 3
       start_period: 40s
 
-  # Redis缓存服务
+  # Redis緩存服務
   redis:
     image: redis:latest
     container_name: tradingagents-redis
@@ -122,7 +120,7 @@ services:
       retries: 3
       start_period: 30s
 
-  # Mongo Express管理界面 (可选)
+  # Mongo Express管理界面 (可選)
   mongo-express:
     image: mongo-express:latest
     container_name: tradingagents-mongo-express
@@ -140,9 +138,9 @@ services:
     depends_on:
       - mongodb
     profiles:
-      - management  # 使用 --profile management 启动
+      - management  # 使用 --profile management 啟動
 
-# 数据卷定义
+# 數據卷定義
 volumes:
   mongodb_data:
     driver: local
@@ -151,7 +149,7 @@ volumes:
     driver: local
     name: tradingagents_redis_data
 
-# 网络定义
+# 網絡定義
 networks:
   tradingagents-network:
     driver: bridge

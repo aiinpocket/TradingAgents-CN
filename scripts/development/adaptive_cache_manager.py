@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-自适应缓存管理器 - 根据可用服务自动选择最佳缓存策略
-支持文件缓存、Redis缓存、MongoDB缓存的智能切换
+自適應緩存管理器 - 根據可用服務自動選擇最佳緩存策略
+支持文件緩存、Redis緩存、MongoDB緩存的智能切換
 """
 
 import os
@@ -14,11 +14,11 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 import pandas as pd
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
-# 导入智能配置
+# 導入智能配置
 try:
     from smart_config import get_smart_config, get_config
     SMART_CONFIG_AVAILABLE = True
@@ -26,26 +26,26 @@ except ImportError:
     SMART_CONFIG_AVAILABLE = False
 
 class AdaptiveCacheManager:
-    """自适应缓存管理器 - 智能选择缓存后端"""
+    """自適應緩存管理器 - 智能選擇緩存後端"""
     
     def __init__(self, cache_dir: str = "data_cache"):
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         
-        # 设置日志
+        # 設置日誌
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         
-        # 获取智能配置
+        # 獲取智能配置
         self._load_smart_config()
         
-        # 初始化缓存后端
+        # 初始化緩存後端
         self._init_backends()
         
-        self.logger.info(f"缓存管理器初始化完成，主要后端: {self.primary_backend}")
+        self.logger.info(f"緩存管理器初始化完成，主要後端: {self.primary_backend}")
     
     def _load_smart_config(self):
-        """加载智能配置"""
+        """加載智能配置"""
         if SMART_CONFIG_AVAILABLE:
             try:
                 config_manager = get_smart_config()
@@ -56,12 +56,12 @@ class AdaptiveCacheManager:
                 self.fallback_enabled = self.config["cache"]["fallback_enabled"]
                 self.ttl_settings = self.config["cache"]["ttl_settings"]
                 
-                self.logger.info("✅ 智能配置加载成功")
+                self.logger.info("✅ 智能配置加載成功")
                 return
             except Exception as e:
-                self.logger.warning(f"智能配置加载失败: {e}")
+                self.logger.warning(f"智能配置加載失败: {e}")
         
-        # 默认配置（纯文件缓存）
+        # 默認配置（純文件緩存）
         self.config = {
             "cache": {
                 "primary_backend": "file",
@@ -82,10 +82,10 @@ class AdaptiveCacheManager:
         self.fallback_enabled = True
         self.ttl_settings = self.config["cache"]["ttl_settings"]
         
-        self.logger.info("使用默认配置（纯文件缓存）")
+        self.logger.info("使用默認配置（純文件緩存）")
     
     def _init_backends(self):
-        """初始化缓存后端"""
+        """初始化緩存後端"""
         self.mongodb_client = None
         self.redis_client = None
         
@@ -97,10 +97,10 @@ class AdaptiveCacheManager:
                     'localhost', 27017, 
                     serverSelectionTimeoutMS=2000
                 )
-                # 测试连接
+                # 測試連接
                 self.mongodb_client.server_info()
                 self.mongodb_db = self.mongodb_client.tradingagents
-                self.logger.info("✅ MongoDB后端初始化成功")
+                self.logger.info("✅ MongoDB後端初始化成功")
             except Exception as e:
                 self.logger.warning(f"MongoDB初始化失败: {e}")
                 self.mongodb_enabled = False
@@ -115,52 +115,52 @@ class AdaptiveCacheManager:
                     host='localhost', port=6379, 
                     socket_timeout=2
                 )
-                # 测试连接
+                # 測試連接
                 self.redis_client.ping()
-                self.logger.info("✅ Redis后端初始化成功")
+                self.logger.info("✅ Redis後端初始化成功")
             except Exception as e:
                 self.logger.warning(f"Redis初始化失败: {e}")
                 self.redis_enabled = False
                 self.redis_client = None
         
-        # 如果主要后端不可用，自动降级
+        # 如果主要後端不可用，自動降級
         if self.primary_backend == "redis" and not self.redis_enabled:
             if self.mongodb_enabled:
                 self.primary_backend = "mongodb"
-                self.logger.info("Redis不可用，降级到MongoDB")
+                self.logger.info("Redis不可用，降級到MongoDB")
             else:
                 self.primary_backend = "file"
-                self.logger.info("Redis不可用，降级到文件缓存")
+                self.logger.info("Redis不可用，降級到文件緩存")
         
         elif self.primary_backend == "mongodb" and not self.mongodb_enabled:
             if self.redis_enabled:
                 self.primary_backend = "redis"
-                self.logger.info("MongoDB不可用，降级到Redis")
+                self.logger.info("MongoDB不可用，降級到Redis")
             else:
                 self.primary_backend = "file"
-                self.logger.info("MongoDB不可用，降级到文件缓存")
+                self.logger.info("MongoDB不可用，降級到文件緩存")
     
     def _get_cache_key(self, symbol: str, start_date: str, end_date: str, 
                       data_source: str = "default") -> str:
-        """生成缓存键"""
+        """生成緩存键"""
         key_data = f"{symbol}_{start_date}_{end_date}_{data_source}"
         return hashlib.md5(key_data.encode()).hexdigest()
     
     def _get_ttl_seconds(self, symbol: str, data_type: str = "stock_data") -> int:
-        """获取TTL秒数"""
-        # 判断市场类型
+        """獲取TTL秒數"""
+        # 判斷市場類型
         if len(symbol) == 6 and symbol.isdigit():
             market = "china"
         else:
             market = "us"
         
-        # 获取TTL配置
+        # 獲取TTL配置
         ttl_key = f"{market}_{data_type}"
-        ttl_hours = self.ttl_settings.get(ttl_key, 7200)  # 默认2小时
+        ttl_hours = self.ttl_settings.get(ttl_key, 7200)  # 默認2小時
         return ttl_hours
     
     def _is_cache_valid(self, cache_time: datetime, ttl_seconds: int) -> bool:
-        """检查缓存是否有效"""
+        """檢查緩存是否有效"""
         if cache_time is None:
             return False
         
@@ -168,7 +168,7 @@ class AdaptiveCacheManager:
         return datetime.now() < expiry_time
     
     def _save_to_file(self, cache_key: str, data: Any, metadata: Dict) -> bool:
-        """保存到文件缓存"""
+        """保存到文件緩存"""
         try:
             cache_file = self.cache_dir / f"{cache_key}.pkl"
             cache_data = {
@@ -182,11 +182,11 @@ class AdaptiveCacheManager:
             
             return True
         except Exception as e:
-            self.logger.error(f"文件缓存保存失败: {e}")
+            self.logger.error(f"文件緩存保存失败: {e}")
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
-        """从文件缓存加载"""
+        """從文件緩存加載"""
         try:
             cache_file = self.cache_dir / f"{cache_key}.pkl"
             if not cache_file.exists():
@@ -197,11 +197,11 @@ class AdaptiveCacheManager:
             
             return cache_data
         except Exception as e:
-            self.logger.error(f"文件缓存加载失败: {e}")
+            self.logger.error(f"文件緩存加載失败: {e}")
             return None
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
-        """保存到Redis缓存"""
+        """保存到Redis緩存"""
         if not self.redis_client:
             return False
         
@@ -216,11 +216,11 @@ class AdaptiveCacheManager:
             self.redis_client.setex(cache_key, ttl_seconds, serialized_data)
             return True
         except Exception as e:
-            self.logger.error(f"Redis缓存保存失败: {e}")
+            self.logger.error(f"Redis緩存保存失败: {e}")
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
-        """从Redis缓存加载"""
+        """從Redis緩存加載"""
         if not self.redis_client:
             return None
         
@@ -230,22 +230,22 @@ class AdaptiveCacheManager:
                 return None
             
             cache_data = pickle.loads(serialized_data)
-            # 转换时间戳
+            # 轉換時間戳
             if isinstance(cache_data['timestamp'], str):
                 cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
             
             return cache_data
         except Exception as e:
-            self.logger.error(f"Redis缓存加载失败: {e}")
+            self.logger.error(f"Redis緩存加載失败: {e}")
             return None
     
     def save_stock_data(self, symbol: str, data: Any, start_date: str = None, 
                        end_date: str = None, data_source: str = "default") -> str:
-        """保存股票数据到缓存"""
-        # 生成缓存键
+        """保存股票數據到緩存"""
+        # 生成緩存键
         cache_key = self._get_cache_key(symbol, start_date or "", end_date or "", data_source)
         
-        # 准备元数据
+        # 準备元數據
         metadata = {
             'symbol': symbol,
             'start_date': start_date,
@@ -254,75 +254,75 @@ class AdaptiveCacheManager:
             'data_type': 'stock_data'
         }
         
-        # 获取TTL
+        # 獲取TTL
         ttl_seconds = self._get_ttl_seconds(symbol, 'stock_data')
         
-        # 根据主要后端保存
+        # 根據主要後端保存
         success = False
         
         if self.primary_backend == "redis":
             success = self._save_to_redis(cache_key, data, metadata, ttl_seconds)
         elif self.primary_backend == "mongodb":
-            # MongoDB保存逻辑（简化版）
+            # MongoDB保存逻辑（簡化版）
             success = self._save_to_file(cache_key, data, metadata)
         
-        # 如果主要后端失败，使用文件缓存作为备用
+        # 如果主要後端失败，使用文件緩存作為备用
         if not success and self.fallback_enabled:
             success = self._save_to_file(cache_key, data, metadata)
             if success:
-                self.logger.info(f"使用文件缓存备用保存: {cache_key}")
+                self.logger.info(f"使用文件緩存备用保存: {cache_key}")
         
         if success:
-            self.logger.info(f"数据保存成功: {symbol} -> {cache_key}")
+            self.logger.info(f"數據保存成功: {symbol} -> {cache_key}")
         else:
-            self.logger.error(f"数据保存失败: {symbol}")
+            self.logger.error(f"數據保存失败: {symbol}")
         
         return cache_key
     
     def load_stock_data(self, cache_key: str) -> Optional[Any]:
-        """从缓存加载股票数据"""
+        """從緩存加載股票數據"""
         cache_data = None
         
-        # 根据主要后端加载
+        # 根據主要後端加載
         if self.primary_backend == "redis":
             cache_data = self._load_from_redis(cache_key)
         elif self.primary_backend == "mongodb":
-            # MongoDB加载逻辑（简化版）
+            # MongoDB加載逻辑（簡化版）
             cache_data = self._load_from_file(cache_key)
         
-        # 如果主要后端失败，尝试文件缓存
+        # 如果主要後端失败，嘗試文件緩存
         if not cache_data and self.fallback_enabled:
             cache_data = self._load_from_file(cache_key)
             if cache_data:
-                self.logger.info(f"使用文件缓存备用加载: {cache_key}")
+                self.logger.info(f"使用文件緩存备用加載: {cache_key}")
         
         if not cache_data:
             return None
         
-        # 检查缓存是否有效
+        # 檢查緩存是否有效
         symbol = cache_data['metadata'].get('symbol', '')
         data_type = cache_data['metadata'].get('data_type', 'stock_data')
         ttl_seconds = self._get_ttl_seconds(symbol, data_type)
         
         if not self._is_cache_valid(cache_data['timestamp'], ttl_seconds):
-            self.logger.info(f"缓存已过期: {cache_key}")
+            self.logger.info(f"緩存已過期: {cache_key}")
             return None
         
         return cache_data['data']
     
     def find_cached_stock_data(self, symbol: str, start_date: str = None, 
                               end_date: str = None, data_source: str = "default") -> Optional[str]:
-        """查找缓存的股票数据"""
+        """查找緩存的股票數據"""
         cache_key = self._get_cache_key(symbol, start_date or "", end_date or "", data_source)
         
-        # 检查缓存是否存在且有效
+        # 檢查緩存是否存在且有效
         if self.load_stock_data(cache_key) is not None:
             return cache_key
         
         return None
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """获取缓存统计信息"""
+        """獲取緩存統計信息"""
         stats = {
             'primary_backend': self.primary_backend,
             'mongodb_enabled': self.mongodb_enabled,
@@ -332,7 +332,7 @@ class AdaptiveCacheManager:
             'file_cache_count': len(list(self.cache_dir.glob("*.pkl"))),
         }
         
-        # Redis统计
+        # Redis統計
         if self.redis_client:
             try:
                 redis_info = self.redis_client.info()
@@ -344,11 +344,11 @@ class AdaptiveCacheManager:
         return stats
 
 
-# 全局缓存管理器实例
+# 全局緩存管理器實例
 _cache_manager = None
 
 def get_cache() -> AdaptiveCacheManager:
-    """获取全局自适应缓存管理器"""
+    """獲取全局自適應緩存管理器"""
     global _cache_manager
     if _cache_manager is None:
         _cache_manager = AdaptiveCacheManager()
@@ -356,23 +356,23 @@ def get_cache() -> AdaptiveCacheManager:
 
 
 def main():
-    """测试自适应缓存管理器"""
-    logger.info(f"🔧 测试自适应缓存管理器")
+    """測試自適應緩存管理器"""
+    logger.info(f"🔧 測試自適應緩存管理器")
     logger.info(f"=")
     
-    # 创建缓存管理器
+    # 創建緩存管理器
     cache = get_cache()
     
-    # 显示状态
+    # 顯示狀態
     stats = cache.get_cache_stats()
-    logger.info(f"\n📊 缓存状态:")
+    logger.info(f"\n📊 緩存狀態:")
     for key, value in stats.items():
         logger.info(f"  {key}: {value}")
     
-    # 测试缓存功能
-    logger.info(f"\n💾 测试缓存功能...")
+    # 測試緩存功能
+    logger.info(f"\n💾 測試緩存功能...")
     
-    test_data = "测试股票数据 - AAPL"
+    test_data = "測試股票數據 - AAPL"
     cache_key = cache.save_stock_data(
         symbol="AAPL",
         data=test_data,
@@ -380,16 +380,16 @@ def main():
         end_date="2024-12-31",
         data_source="test"
     )
-    logger.info(f"✅ 数据保存: {cache_key}")
+    logger.info(f"✅ 數據保存: {cache_key}")
     
-    # 加载数据
+    # 加載數據
     loaded_data = cache.load_stock_data(cache_key)
     if loaded_data == test_data:
-        logger.info(f"✅ 数据加载成功")
+        logger.info(f"✅ 數據加載成功")
     else:
-        logger.error(f"❌ 数据加载失败")
+        logger.error(f"❌ 數據加載失败")
     
-    # 查找缓存
+    # 查找緩存
     found_key = cache.find_cached_stock_data(
         symbol="AAPL",
         start_date="2024-01-01",
@@ -398,11 +398,11 @@ def main():
     )
     
     if found_key:
-        logger.info(f"✅ 缓存查找成功: {found_key}")
+        logger.info(f"✅ 緩存查找成功: {found_key}")
     else:
-        logger.error(f"❌ 缓存查找失败")
+        logger.error(f"❌ 緩存查找失败")
     
-    logger.info(f"\n🎉 自适应缓存管理器测试完成!")
+    logger.info(f"\n🎉 自適應緩存管理器測試完成!")
 
 
 if __name__ == "__main__":

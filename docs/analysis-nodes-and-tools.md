@@ -1,415 +1,415 @@
-# 📊 TradingAgents 分析节点和工具完整指南
+# 📊 TradingAgents 分析節點和工具完整指南
 
 ## 📋 概述
 
-TradingAgents 采用多智能体协作架构，通过专业分工和结构化流程实现全面的股票分析。本文档详细介绍了系统中的所有分析节点、工具配置以及数据流转过程。
+TradingAgents 採用多智能體協作架構，通過專業分工和結構化流程實現全面的股票分析。本文档詳細介紹了系統中的所有分析節點、工具配置以及數據流轉過程。
 
 ## 🔄 完整分析流程
 
-### 流程图
+### 流程圖
 ```mermaid
 graph TD
-    A[🚀 开始分析] --> B[🔍 数据验证]
-    B --> C[🔧 环境准备]
-    C --> D[💰 成本预估]
-    D --> E[⚙️ 参数配置]
+    A[🚀 開始分析] --> B[🔍 數據驗證]
+    B --> C[🔧 環境準备]
+    C --> D[💰 成本預估]
+    D --> E[⚙️ 參數配置]
     E --> F[🏗️ 引擎初始化]
     
-    F --> G[👥 分析师团队]
+    F --> G[👥 分析師团隊]
     
-    G --> H1[📈 市场分析师]
-    G --> H2[📊 基本面分析师]
-    G --> H3[📰 新闻分析师]
-    G --> H4[💬 社交媒体分析师]
+    G --> H1[📈 市場分析師]
+    G --> H2[📊 基本面分析師]
+    G --> H3[📰 新聞分析師]
+    G --> H4[💬 社交媒體分析師]
     
-    H1 --> I[🎯 研究员辩论]
+    H1 --> I[🎯 研究員辩論]
     H2 --> I
     H3 --> I
     H4 --> I
     
-    I --> J1[🐂 看涨研究员]
-    I --> J2[🐻 看跌研究员]
-    J1 --> K[👔 研究经理]
+    I --> J1[🐂 看涨研究員]
+    I --> J2[🐻 看跌研究員]
+    J1 --> K[👔 研究經理]
     J2 --> K
     
-    K --> L[💼 交易员]
-    L --> M[⚠️ 风险评估团队]
+    K --> L[💼 交易員]
+    L --> M[⚠️ 風險評估团隊]
     
-    M --> N1[🔥 激进风险评估]
-    M --> N2[🛡️ 保守风险评估]
-    M --> N3[⚖️ 中性风险评估]
+    M --> N1[🔥 激進風險評估]
+    M --> N2[🛡️ 保守風險評估]
+    M --> N3[⚖️ 中性風險評估]
     
-    N1 --> O[🎯 风险经理]
+    N1 --> O[🎯 風險經理]
     N2 --> O
     N3 --> O
     
-    O --> P[📡 信号处理]
-    P --> Q[✅ 最终决策]
+    O --> P[📡 信號處理]
+    P --> Q[✅ 最终決策]
 ```
 
-### 执行顺序
-1. **初始化阶段** (步骤1-5): 系统准备和配置
-2. **分析师阶段** (步骤6): 并行数据分析
-3. **研究阶段** (步骤7-8): 观点辩论和共识形成
-4. **决策阶段** (步骤9-11): 交易决策和风险评估
-5. **输出阶段** (步骤12-13): 信号处理和最终决策
+### 執行顺序
+1. **初始化階段** (步骤1-5): 系統準备和配置
+2. **分析師階段** (步骤6): 並行數據分析
+3. **研究階段** (步骤7-8): 觀點辩論和共识形成
+4. **決策階段** (步骤9-11): 交易決策和風險評估
+5. **輸出階段** (步骤12-13): 信號處理和最终決策
 
-## 👥 分析节点详细说明
+## 👥 分析節點詳細說明
 
-### 🔍 1. 分析师团队 (Analysts)
+### 🔍 1. 分析師团隊 (Analysts)
 
-#### 📈 市场分析师 (Market Analyst)
-**职责**: 技术分析、价格趋势、市场情绪
+#### 📈 市場分析師 (Market Analyst)
+**職责**: 技術分析、價格趋势、市場情绪
 
 **核心功能**:
-- 技术指标计算 (MA, RSI, MACD, 布林带)
-- 价格趋势识别
+- 技術指標計算 (MA, RSI, MACD, 布林帶)
+- 價格趋势识別
 - 支撑阻力位分析
 - 成交量分析
-- 交易信号生成
+- 交易信號生成
 
 **使用工具**:
 ```python
 # 主要工具
-- get_stock_market_data_unified    # 统一市场数据 (推荐)
-- get_YFin_data_online            # Yahoo Finance 在线数据
-- get_stockstats_indicators_report_online  # 在线技术指标
+- get_stock_market_data_unified    # 統一市場數據 (推薦)
+- get_YFin_data_online            # Yahoo Finance 在線數據
+- get_stockstats_indicators_report_online  # 在線技術指標
 
 # 备用工具
-- get_YFin_data                   # Yahoo Finance 离线数据
-- get_stockstats_indicators_report # 离线技术指标
+- get_YFin_data                   # Yahoo Finance 離線數據
+- get_stockstats_indicators_report # 離線技術指標
 ```
 
-**数据源映射**:
-- **A股**: Tushare + AKShare 技术指标
+**數據源映射**:
+- **A股**: Tushare + AKShare 技術指標
 - **港股**: AKShare + Yahoo Finance
 - **美股**: Yahoo Finance + FinnHub
 
-#### 📊 基本面分析师 (Fundamentals Analyst)
-**职责**: 财务分析、估值模型、基本面指标
+#### 📊 基本面分析師 (Fundamentals Analyst)
+**職责**: 財務分析、估值模型、基本面指標
 
 **核心功能**:
-- 财务报表分析
+- 財務報表分析
 - DCF估值模型
-- 比较估值法 (P/E, P/B, EV/EBITDA)
-- 行业基准对比
-- 盈利质量评估
+- 比較估值法 (P/E, P/B, EV/EBITDA)
+- 行業基準對比
+- 盈利质量評估
 
 **使用工具**:
 ```python
 # 主要工具
-- get_stock_fundamentals_unified   # 统一基本面分析 (推荐)
+- get_stock_fundamentals_unified   # 統一基本面分析 (推薦)
 
-# 补充工具
-- get_finnhub_company_insider_sentiment      # 内部人士情绪
-- get_finnhub_company_insider_transactions   # 内部人士交易
-- get_simfin_balance_sheet        # 资产负债表
-- get_simfin_cashflow            # 现金流量表
+# 補充工具
+- get_finnhub_company_insider_sentiment      # 內部人士情绪
+- get_finnhub_company_insider_transactions   # 內部人士交易
+- get_simfin_balance_sheet        # 資產负债表
+- get_simfin_cashflow            # 現金流量表
 - get_simfin_income_stmt         # 利润表
 ```
 
-**数据源映射**:
-- **A股**: Tushare 财务数据 + AKShare 基本面
-- **港股**: AKShare 基本面数据
-- **美股**: FinnHub + SimFin 财务数据
+**數據源映射**:
+- **A股**: Tushare 財務數據 + AKShare 基本面
+- **港股**: AKShare 基本面數據
+- **美股**: FinnHub + SimFin 財務數據
 
-#### 📰 新闻分析师 (News Analyst)
-**职责**: 新闻事件分析、宏观经济影响评估
+#### 📰 新聞分析師 (News Analyst)
+**職责**: 新聞事件分析、宏觀經濟影響評估
 
 **核心功能**:
-- 实时新闻监控
-- 事件影响评估
-- 宏观经济分析
-- 政策影响分析
-- 行业动态跟踪
+- 實時新聞監控
+- 事件影響評估
+- 宏觀經濟分析
+- 政策影響分析
+- 行業動態跟蹤
 
 **使用工具**:
 ```python
-# 在线工具
-- get_realtime_stock_news         # 实时股票新闻
-- get_global_news_openai         # 全球新闻 (OpenAI)
-- get_google_news               # Google 新闻
+# 在線工具
+- get_realtime_stock_news         # 實時股票新聞
+- get_global_news_openai         # 全球新聞 (OpenAI)
+- get_google_news               # Google 新聞
 
-# 离线工具
-- get_finnhub_news              # FinnHub 新闻
-- get_reddit_news               # Reddit 新闻
+# 離線工具
+- get_finnhub_news              # FinnHub 新聞
+- get_reddit_news               # Reddit 新聞
 ```
 
-#### 💬 社交媒体分析师 (Social Media Analyst)
-**职责**: 社交媒体情绪、投资者情绪分析
+#### 💬 社交媒體分析師 (Social Media Analyst)
+**職责**: 社交媒體情绪、投資者情绪分析
 
 **核心功能**:
-- 投资者情绪监控
-- 社交媒体热度分析
-- 意见领袖观点跟踪
-- 散户情绪评估
-- 情绪价格影响分析
+- 投資者情绪監控
+- 社交媒體熱度分析
+- 意见領袖觀點跟蹤
+- 散戶情绪評估
+- 情绪價格影響分析
 
 **使用工具**:
 ```python
-# 在线工具
-- get_stock_news_openai          # 股票新闻情绪 (OpenAI)
+# 在線工具
+- get_stock_news_openai          # 股票新聞情绪 (OpenAI)
 
-# 离线工具
-- get_reddit_stock_info          # Reddit 股票讨论
-- get_chinese_social_sentiment   # 中国社交媒体情绪
+# 離線工具
+- get_reddit_stock_info          # Reddit 股票討論
+- get_chinese_social_sentiment   # 中國社交媒體情绪
 ```
 
-### 🎯 2. 研究员团队 (Researchers)
+### 🎯 2. 研究員团隊 (Researchers)
 
-#### 🐂 看涨研究员 (Bull Researcher)
-**职责**: 从乐观角度评估投资机会
+#### 🐂 看涨研究員 (Bull Researcher)
+**職责**: 從乐觀角度評估投資機會
 
-**分析重点**:
-- 增长潜力和市场机会
-- 竞争优势和护城河
-- 积极催化剂识别
-- 估值吸引力评估
-- 反驳看跌观点
+**分析重點**:
+- 增長潜力和市場機會
+- 競爭優势和護城河
+- 積極催化剂识別
+- 估值吸引力評估
+- 反驳看跌觀點
 
-**工作方式**: 基于LLM推理，结合历史记忆和经验
+**工作方式**: 基於LLM推理，結合歷史記忆和經驗
 
-#### 🐻 看跌研究员 (Bear Researcher)
-**职责**: 从悲观角度评估投资风险
+#### 🐻 看跌研究員 (Bear Researcher)
+**職责**: 從悲觀角度評估投資風險
 
-**分析重点**:
-- 潜在风险因素识别
-- 市场威胁和挑战
-- 负面催化剂评估
-- 估值过高风险
-- 反驳看涨观点
+**分析重點**:
+- 潜在風險因素识別
+- 市場威胁和挑战
+- 负面催化剂評估
+- 估值過高風險
+- 反驳看涨觀點
 
-**工作方式**: 基于LLM推理，结合历史记忆和经验
+**工作方式**: 基於LLM推理，結合歷史記忆和經驗
 
-### 👔 3. 管理层 (Managers)
+### 👔 3. 管理層 (Managers)
 
-#### 🎯 研究经理 (Research Manager)
-**职责**: 协调研究员辩论，形成研究共识
+#### 🎯 研究經理 (Research Manager)
+**職责**: 協調研究員辩論，形成研究共识
 
 **核心功能**:
-- 主持看涨/看跌研究员辩论
-- 评估双方论点质量和说服力
-- 平衡不同观点
-- 形成综合投资建议
-- 质量控制和标准制定
+- 主持看涨/看跌研究員辩論
+- 評估雙方論點质量和說服力
+- 平衡不同觀點
+- 形成综合投資建议
+- 质量控制和標準制定
 
-**决策逻辑**:
+**決策逻辑**:
 ```python
-# 评估标准
-- 论点逻辑性和证据支持
-- 数据质量和可靠性
-- 风险收益平衡
-- 市场时机判断
-- 历史经验参考
+# 評估標準
+- 論點逻辑性和證據支持
+- 數據质量和可靠性
+- 風險收益平衡
+- 市場時機判斷
+- 歷史經驗參考
 ```
 
-#### ⚖️ 风险经理 (Risk Manager)
-**职责**: 管理整体风险控制流程
+#### ⚖️ 風險經理 (Risk Manager)
+**職责**: 管理整體風險控制流程
 
 **核心功能**:
-- 协调风险评估团队工作
-- 制定风险管理政策
-- 监控关键风险指标
-- 做出最终风险决策
-- 风险限额管理
+- 協調風險評估团隊工作
+- 制定風險管理政策
+- 監控關键風險指標
+- 做出最终風險決策
+- 風險限額管理
 
-### 💰 4. 交易执行 (Trading)
+### 💰 4. 交易執行 (Trading)
 
-#### 💼 交易员 (Trader)
-**职责**: 制定最终交易决策
+#### 💼 交易員 (Trader)
+**職责**: 制定最终交易決策
 
-**决策输入**:
-- 所有分析师报告
-- 研究员辩论结果
-- 风险评估结论
-- 市场条件评估
-- 历史交易经验
+**決策輸入**:
+- 所有分析師報告
+- 研究員辩論結果
+- 風險評估結論
+- 市場條件評估
+- 歷史交易經驗
 
-**输出内容**:
+**輸出內容**:
 ```python
 # 交易建议格式
 {
     "action": "买入/持有/卖出",
     "confidence": "置信度 (1-10)",
-    "target_price": "目标价格",
-    "stop_loss": "止损价格",
+    "target_price": "目標價格",
+    "stop_loss": "止損價格",
     "position_size": "建议仓位",
-    "time_horizon": "投资期限",
-    "reasoning": "决策理由"
+    "time_horizon": "投資期限",
+    "reasoning": "決策理由"
 }
 ```
 
-### ⚠️ 5. 风险管理团队 (Risk Management)
+### ⚠️ 5. 風險管理团隊 (Risk Management)
 
-#### 🔥 激进风险评估 (Risky Analyst)
-**风险偏好**: 高风险高收益
-**关注点**: 最大化收益潜力，接受较高波动
+#### 🔥 激進風險評估 (Risky Analyst)
+**風險偏好**: 高風險高收益
+**關註點**: 最大化收益潜力，接受較高波動
 
-#### 🛡️ 保守风险评估 (Safe Analyst)
-**风险偏好**: 低风险稳健
-**关注点**: 资本保护，风险最小化
+#### 🛡️ 保守風險評估 (Safe Analyst)
+**風險偏好**: 低風險穩健
+**關註點**: 資本保護，風險最小化
 
-#### ⚖️ 中性风险评估 (Neutral Analyst)
-**风险偏好**: 平衡风险收益
-**关注点**: 理性评估，适中风险
+#### ⚖️ 中性風險評估 (Neutral Analyst)
+**風險偏好**: 平衡風險收益
+**關註點**: 理性評估，適中風險
 
-### 🔧 6. 信号处理 (Signal Processing)
+### 🔧 6. 信號處理 (Signal Processing)
 
-#### 📡 信号处理器 (Signal Processor)
-**职责**: 整合所有智能体输出，生成最终决策
+#### 📡 信號處理器 (Signal Processor)
+**職责**: 整合所有智能體輸出，生成最终決策
 
-**处理流程**:
-1. 收集所有智能体输出
-2. 权重分配和重要性评估
-3. 冲突解决和一致性检查
-4. 生成结构化投资信号
-5. 输出最终决策建议
+**處理流程**:
+1. 收集所有智能體輸出
+2. 權重分配和重要性評估
+3. 冲突解決和一致性檢查
+4. 生成結構化投資信號
+5. 輸出最终決策建议
 
-## 🔧 统一工具架构
+## 🔧 統一工具架構
 
-### 🎯 核心优势
+### 🎯 核心優势
 
 #### 智能路由
 ```python
-# 自动识别股票类型并路由到最佳数据源
+# 自動识別股票類型並路由到最佳數據源
 get_stock_market_data_unified(ticker, start_date, end_date)
 get_stock_fundamentals_unified(ticker, start_date, end_date)
 ```
 
-#### 数据源映射
-| 股票类型 | 市场数据 | 基本面数据 | 新闻数据 |
+#### 數據源映射
+| 股票類型 | 市場數據 | 基本面數據 | 新聞數據 |
 |---------|---------|-----------|---------|
-| **A股** | Tushare + AKShare | Tushare + AKShare | 财联社 + 新浪财经 |
+| **A股** | Tushare + AKShare | Tushare + AKShare | 財聯社 + 新浪財經 |
 | **港股** | AKShare + Yahoo | AKShare | Google News |
 | **美股** | Yahoo + FinnHub | FinnHub + SimFin | FinnHub + Google |
 
-### 🔄 工具调用机制
+### 🔄 工具調用機制
 
-每个分析师都遵循LangGraph的工具调用循环：
+每個分析師都遵循LangGraph的工具調用循環：
 
 ```python
-# 工具调用循环
-分析师节点 → 条件判断 → 工具节点 → 回到分析师节点
+# 工具調用循環
+分析師節點 → 條件判斷 → 工具節點 → 回到分析師節點
     ↓           ↓           ↓           ↓
-  决定调用工具  → 检查工具调用 → 执行数据获取 → 处理数据生成报告
+  決定調用工具  → 檢查工具調用 → 執行數據獲取 → 處理數據生成報告
 ```
 
-**循环说明**:
-1. **第一轮**: 分析师决定需要什么数据 → 调用相应工具
-2. **第二轮**: 分析师处理获取的数据 → 生成分析报告
-3. **完成**: 没有更多工具调用需求 → 进入下一个分析师
+**循環說明**:
+1. **第一轮**: 分析師決定需要什么數據 → 調用相應工具
+2. **第二轮**: 分析師處理獲取的數據 → 生成分析報告
+3. **完成**: 没有更多工具調用需求 → 進入下一個分析師
 
-## 🧠 LLM工具选择逻辑
+## 🧠 LLM工具選擇逻辑
 
-### 🎯 核心选择机制
+### 🎯 核心選擇機制
 
-LLM并不会调用ToolNode中的所有工具，而是基于以下逻辑智能选择：
+LLM並不會調用ToolNode中的所有工具，而是基於以下逻辑智能選擇：
 
-#### 1️⃣ 系统提示词的明确指导
+#### 1️⃣ 系統提示詞的明確指導
 ```python
-# 市场分析师的系统提示词
-**工具调用指令：**
-你有一个工具叫做get_stock_market_data_unified，你必须立即调用这个工具来获取{company_name}（{ticker}）的市场数据。
-不要说你将要调用工具，直接调用工具。
+# 市場分析師的系統提示詞
+**工具調用指令：**
+你有一個工具叫做get_stock_market_data_unified，你必须立即調用這個工具來獲取{company_name}（{ticker}）的市場數據。
+不要說你将要調用工具，直接調用工具。
 ```
 
 #### 2️⃣ 工具描述的匹配度
-| 工具名称 | 描述 | 参数复杂度 | 匹配度 |
+| 工具名稱 | 描述 | 參數複雜度 | 匹配度 |
 |---------|------|-----------|--------|
-| `get_stock_market_data_unified` | **统一的股票市场数据工具，自动识别股票类型** | 简单(3个参数) | ⭐⭐⭐⭐⭐ |
-| `get_YFin_data_online` | Retrieve stock price data from Yahoo Finance | 简单(3个参数) | ⭐⭐⭐ |
-| `get_stockstats_indicators_report_online` | Retrieve stock stats indicators | 复杂(4个参数) | ⭐⭐ |
+| `get_stock_market_data_unified` | **統一的股票市場數據工具，自動识別股票類型** | 簡單(3個參數) | ⭐⭐⭐⭐⭐ |
+| `get_YFin_data_online` | Retrieve stock price data from Yahoo Finance | 簡單(3個參數) | ⭐⭐⭐ |
+| `get_stockstats_indicators_report_online` | Retrieve stock stats indicators | 複雜(4個參數) | ⭐⭐ |
 
-#### 3️⃣ 工具名称的语义理解
-- `unified` = 统一的，全面的
-- `online` = 在线的，实时的
-- `indicators` = 指标，更专业
+#### 3️⃣ 工具名稱的語義理解
+- `unified` = 統一的，全面的
+- `online` = 在線的，實時的
+- `indicators` = 指標，更專業
 
-#### 4️⃣ 参数简洁性偏好
+#### 4️⃣ 參數簡潔性偏好
 ```python
-# 统一工具 - 3个参数，简单明了
+# 統一工具 - 3個參數，簡單明了
 get_stock_market_data_unified(ticker, start_date, end_date)
 
-# 技术指标工具 - 4个参数，需要额外指定indicator
+# 技術指標工具 - 4個參數，需要額外指定indicator
 get_stockstats_indicators_report_online(symbol, indicator, curr_date, look_back_days)
 ```
 
-### 🔍 LLM的决策过程
+### 🔍 LLM的決策過程
 
 ```
-1. 任务理解: "需要对股票进行技术分析"
-2. 工具扫描: 查看可用的5个工具
-3. 描述匹配: "统一工具"最符合"全面分析"需求
-4. 指令遵循: 系统提示明确要求调用unified工具
-5. 参数简单: unified工具参数最简洁
-6. 决策结果: 选择get_stock_market_data_unified
+1. 任務理解: "需要對股票進行技術分析"
+2. 工具扫描: 查看可用的5個工具
+3. 描述匹配: "統一工具"最符合"全面分析"需求
+4. 指令遵循: 系統提示明確要求調用unified工具
+5. 參數簡單: unified工具參數最簡潔
+6. 決策結果: 選擇get_stock_market_data_unified
 ```
 
-### 🎯 工具池的分层设计
+### 🎯 工具池的分層設計
 
-ToolNode中的多个工具形成**分层备用体系**：
+ToolNode中的多個工具形成**分層备用體系**：
 
 ```
-第1层: get_stock_market_data_unified (首选)
-第2层: get_YFin_data_online (在线备用)
-第3层: get_stockstats_indicators_report_online (专业备用)
-第4层: get_YFin_data (离线备用)
-第5层: get_stockstats_indicators_report (最后备用)
+第1層: get_stock_market_data_unified (首選)
+第2層: get_YFin_data_online (在線备用)
+第3層: get_stockstats_indicators_report_online (專業备用)
+第4層: get_YFin_data (離線备用)
+第5層: get_stockstats_indicators_report (最後备用)
 ```
 
-### 📊 实际调用验证
+### 📊 實际調用驗證
 
-**A股分析日志示例**:
+**A股分析日誌示例**:
 ```
-📊 [DEBUG] 选择的工具: ['get_stock_market_data_unified']
-📊 [市场分析师] 工具调用: ['get_stock_market_data_unified']
-📈 [统一市场工具] 分析股票: 000858
-📈 [统一市场工具] 股票类型: 中国A股
-🇨🇳 [统一市场工具] 处理A股市场数据...
+📊 [DEBUG] 選擇的工具: ['get_stock_market_data_unified']
+📊 [市場分析師] 工具調用: ['get_stock_market_data_unified']
+📈 [統一市場工具] 分析股票: 000858
+📈 [統一市場工具] 股票類型: 中國A股
+🇨🇳 [統一市場工具] 處理A股市場數據...
 ```
 
-**结论**: LLM实际只调用1个工具，而非所有5个工具！
+**結論**: LLM實际只調用1個工具，而非所有5個工具！
 
-## 🔄 基本面分析师的多轮调用机制
+## 🔄 基本面分析師的多轮調用機制
 
-### ❓ 为什么基本面分析师会多轮调用？
+### ❓ 為什么基本面分析師會多轮調用？
 
-与市场分析师不同，基本面分析师有一个特殊的**强制工具调用机制**，这是为了解决某些LLM（特别是阿里百炼）不调用工具的问题。
+与市場分析師不同，基本面分析師有一個特殊的**强制工具調用機制**，這是為了解決某些LLM（特別是阿里百炼）不調用工具的問題。
 
-### 🔧 多轮调用的具体流程
+### 🔧 多轮調用的具體流程
 
-#### 第1轮：正常工具调用尝试
+#### 第1轮：正常工具調用嘗試
 ```python
-# 基本面分析师首先尝试让LLM自主调用工具
+# 基本面分析師首先嘗試让LLM自主調用工具
 result = chain.invoke(state["messages"])
 
 if hasattr(result, 'tool_calls') and len(result.tool_calls) > 0:
-    # ✅ LLM成功调用了工具
-    logger.info(f"📊 [基本面分析师] 工具调用: {tool_calls_info}")
-    return {"messages": [result]}  # 进入工具执行阶段
+    # ✅ LLM成功調用了工具
+    logger.info(f"📊 [基本面分析師] 工具調用: {tool_calls_info}")
+    return {"messages": [result]}  # 進入工具執行階段
 ```
 
-#### 第2轮：工具执行
+#### 第2轮：工具執行
 ```python
-# LangGraph执行工具调用，获取数据
+# LangGraph執行工具調用，獲取數據
 tool_result = get_stock_fundamentals_unified.invoke(args)
-# 返回到分析师节点处理数据
+# 返回到分析師節點處理數據
 ```
 
-#### 第3轮：数据处理和报告生成
+#### 第3轮：數據處理和報告生成
 ```python
-# 分析师处理工具返回的数据，生成最终报告
+# 分析師處理工具返回的數據，生成最终報告
 final_result = llm.invoke(messages_with_tool_data)
 return {"fundamentals_report": final_result.content}
 ```
 
-#### 🚨 强制工具调用机制（备用方案）
+#### 🚨 强制工具調用機制（备用方案）
 ```python
 else:
-    # ❌ LLM没有调用工具，启动强制机制
-    logger.debug(f"📊 [DEBUG] 检测到模型未调用工具，启用强制工具调用模式")
+    # ❌ LLM没有調用工具，啟動强制機制
+    logger.debug(f"📊 [DEBUG] 檢測到模型未調用工具，啟用强制工具調用模式")
 
-    # 直接调用工具获取数据
+    # 直接調用工具獲取數據
     unified_tool = find_tool('get_stock_fundamentals_unified')
     combined_data = unified_tool.invoke({
         'ticker': ticker,
@@ -418,125 +418,125 @@ else:
         'curr_date': current_date
     })
 
-    # 使用获取的数据重新生成分析报告
-    analysis_prompt = f"基于以下真实数据，对{company_name}进行详细的基本面分析：\n{combined_data}"
+    # 使用獲取的數據重新生成分析報告
+    analysis_prompt = f"基於以下真實數據，對{company_name}進行詳細的基本面分析：\n{combined_data}"
     final_result = llm.invoke(analysis_prompt)
 
     return {"fundamentals_report": final_result.content}
 ```
 
-### 📊 多轮调用的日志示例
+### 📊 多轮調用的日誌示例
 
 **正常情况（3轮）**:
 ```
-📊 [模块开始] fundamentals_analyst - 股票: 000858
-📊 [基本面分析师] 工具调用: ['get_stock_fundamentals_unified']  # 第1轮：决定调用工具
-📊 [统一基本面工具] 分析股票: 000858                           # 第2轮：执行工具
-📊 [模块完成] fundamentals_analyst - ✅ 成功 - 耗时: 45.32s    # 第3轮：生成报告
+📊 [模塊開始] fundamentals_analyst - 股票: 000858
+📊 [基本面分析師] 工具調用: ['get_stock_fundamentals_unified']  # 第1轮：決定調用工具
+📊 [統一基本面工具] 分析股票: 000858                           # 第2轮：執行工具
+📊 [模塊完成] fundamentals_analyst - ✅ 成功 - 耗時: 45.32s    # 第3轮：生成報告
 ```
 
-**强制调用情况（可能更多轮）**:
+**强制調用情况（可能更多轮）**:
 ```
-📊 [模块开始] fundamentals_analyst - 股票: 000858
-📊 [DEBUG] 检测到模型未调用工具，启用强制工具调用模式          # 第1轮：LLM未调用工具
-📊 [DEBUG] 强制调用 get_stock_fundamentals_unified...        # 第2轮：强制调用工具
-📊 [统一基本面工具] 分析股票: 000858                         # 第3轮：执行工具
-📊 [基本面分析师] 强制工具调用完成，报告长度: 1847            # 第4轮：重新生成报告
-📊 [模块完成] fundamentals_analyst - ✅ 成功 - 耗时: 52.18s  # 完成
+📊 [模塊開始] fundamentals_analyst - 股票: 000858
+📊 [DEBUG] 檢測到模型未調用工具，啟用强制工具調用模式          # 第1轮：LLM未調用工具
+📊 [DEBUG] 强制調用 get_stock_fundamentals_unified...        # 第2轮：强制調用工具
+📊 [統一基本面工具] 分析股票: 000858                         # 第3轮：執行工具
+📊 [基本面分析師] 强制工具調用完成，報告長度: 1847            # 第4轮：重新生成報告
+📊 [模塊完成] fundamentals_analyst - ✅ 成功 - 耗時: 52.18s  # 完成
 ```
 
-### 🎯 为什么需要强制工具调用？
+### 🎯 為什么需要强制工具調用？
 
-#### 1️⃣ LLM模型差异
-不同LLM对工具调用的理解和执行能力不同：
-- **GPT系列**: 工具调用能力强，很少需要强制调用
-- **Claude系列**: 工具调用稳定，偶尔需要强制调用
-- **阿里百炼**: 早期版本工具调用不稳定，经常需要强制调用
-- **DeepSeek**: 工具调用能力中等，偶尔需要强制调用
+#### 1️⃣ LLM模型差異
+不同LLM對工具調用的理解和執行能力不同：
+- **GPT系列**: 工具調用能力强，很少需要强制調用
+- **Claude系列**: 工具調用穩定，偶爾需要强制調用
+- **阿里百炼**: 早期版本工具調用不穩定，經常需要强制調用
+- **DeepSeek**: 工具調用能力中等，偶爾需要强制調用
 
-#### 2️⃣ 提示词复杂度
-基本面分析的提示词比市场分析更复杂，包含更多约束条件，可能导致LLM"忘记"调用工具。
+#### 2️⃣ 提示詞複雜度
+基本面分析的提示詞比市場分析更複雜，包含更多約束條件，可能導致LLM"忘記"調用工具。
 
-#### 3️⃣ 数据质量保证
-强制工具调用确保即使LLM不主动调用工具，也能获取真实数据进行分析，避免"编造"数据。
+#### 3️⃣ 數據质量保證
+强制工具調用確保即使LLM不主動調用工具，也能獲取真實數據進行分析，避免"編造"數據。
 
-### 🔧 优化建议
+### 🔧 優化建议
 
-#### 1️⃣ 提示词优化
+#### 1️⃣ 提示詞優化
 ```python
-# 更明确的工具调用指令
-"🔴 立即调用 get_stock_fundamentals_unified 工具"
-"📊 分析要求：基于真实数据进行深度基本面分析"
-"🚫 严格禁止：不允许假设任何数据"
+# 更明確的工具調用指令
+"🔴 立即調用 get_stock_fundamentals_unified 工具"
+"📊 分析要求：基於真實數據進行深度基本面分析"
+"🚫 嚴格禁止：不允許假設任何數據"
 ```
 
-#### 2️⃣ 模型选择
-- 优先使用工具调用能力强的模型
-- 为不同模型配置不同的提示词策略
+#### 2️⃣ 模型選擇
+- 優先使用工具調用能力强的模型
+- 為不同模型配置不同的提示詞策略
 
-#### 3️⃣ 监控和日志
-- 记录强制工具调用的频率
-- 分析哪些模型需要更多强制调用
-- 优化提示词减少强制调用需求
+#### 3️⃣ 監控和日誌
+- 記錄强制工具調用的頻率
+- 分析哪些模型需要更多强制調用
+- 優化提示詞减少强制調用需求
 
-## 📊 配置和自定义
+## 📊 配置和自定義
 
-### 分析师选择
+### 分析師選擇
 ```python
-# 可选的分析师类型
+# 可選的分析師類型
 selected_analysts = [
-    "market",        # 市场分析师
-    "fundamentals",  # 基本面分析师  
-    "news",         # 新闻分析师
-    "social"        # 社交媒体分析师
+    "market",        # 市場分析師
+    "fundamentals",  # 基本面分析師  
+    "news",         # 新聞分析師
+    "social"        # 社交媒體分析師
 ]
 ```
 
 ### 研究深度配置
 ```python
-# 研究深度级别
+# 研究深度級別
 research_depth = {
-    1: "快速分析",    # 减少工具调用，使用快速模型
-    2: "基础分析",    # 标准配置
-    3: "深度分析"     # 增加辩论轮次，使用深度思考模型
+    1: "快速分析",    # 减少工具調用，使用快速模型
+    2: "基础分析",    # 標準配置
+    3: "深度分析"     # 增加辩論轮次，使用深度思考模型
 }
 ```
 
-### 风险管理配置
+### 風險管理配置
 ```python
-# 风险管理参数
+# 風險管理參數
 risk_config = {
-    "max_debate_rounds": 2,           # 最大辩论轮次
-    "max_risk_discuss_rounds": 1,     # 最大风险讨论轮次
-    "memory_enabled": True,           # 启用历史记忆
-    "online_tools": True              # 使用在线工具
+    "max_debate_rounds": 2,           # 最大辩論轮次
+    "max_risk_discuss_rounds": 1,     # 最大風險討論轮次
+    "memory_enabled": True,           # 啟用歷史記忆
+    "online_tools": True              # 使用在線工具
 }
 ```
 
-## 🎯 流程合理性评估
+## 🎯 流程合理性評估
 
-### ✅ 优点
-1. **专业分工明确**: 每个智能体职责清晰，避免重复工作
-2. **多角度全覆盖**: 技术面、基本面、情绪面、新闻面全方位分析
-3. **辩论机制平衡**: 看涨/看跌研究员提供对立观点，避免偏见
-4. **分层风险控制**: 多层次风险评估，确保决策稳健性
-5. **统一工具架构**: 自动适配不同市场，简化维护
-6. **记忆学习机制**: 从历史决策中学习，持续改进
+### ✅ 優點
+1. **專業分工明確**: 每個智能體職责清晰，避免重複工作
+2. **多角度全覆蓋**: 技術面、基本面、情绪面、新聞面全方位分析
+3. **辩論機制平衡**: 看涨/看跌研究員提供對立觀點，避免偏见
+4. **分層風險控制**: 多層次風險評估，確保決策穩健性
+5. **統一工具架構**: 自動適配不同市場，簡化維護
+6. **記忆學习機制**: 從歷史決策中學习，持续改進
 
-### ⚠️ 改进建议
-1. **并行化优化**: 某些分析师可以并行执行，提高效率
-2. **缓存机制**: 避免重复API调用，降低成本
-3. **时间控制**: 为每个节点设置超时机制
-4. **动态权重**: 根据市场条件动态调整各分析师权重
-5. **实时监控**: 增加分析过程的实时监控和干预机制
+### ⚠️ 改進建议
+1. **並行化優化**: 某些分析師可以並行執行，提高效率
+2. **緩存機制**: 避免重複API調用，降低成本
+3. **時間控制**: 為每個節點設置超時機制
+4. **動態權重**: 根據市場條件動態調整各分析師權重
+5. **實時監控**: 增加分析過程的實時監控和干預機制
 
-## 🛠️ 实际使用示例
+## 🛠️ 實际使用示例
 
 ### 基本使用
 ```python
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 
-# 创建分析图
+# 創建分析圖
 graph = TradingAgentsGraph(
     selected_analysts=["market", "fundamentals"],
     config={
@@ -546,35 +546,35 @@ graph = TradingAgentsGraph(
     }
 )
 
-# 执行分析
+# 執行分析
 state, decision = graph.propagate("000858", "2025-01-17")
-print(f"投资建议: {decision['action']}")
+print(f"投資建议: {decision['action']}")
 ```
 
-### 自定义分析师组合
+### 自定義分析師組合
 ```python
-# 快速技术分析
+# 快速技術分析
 quick_analysis = ["market"]
 
 # 全面基本面分析
 fundamental_analysis = ["fundamentals", "news"]
 
-# 完整分析 (推荐)
+# 完整分析 (推薦)
 complete_analysis = ["market", "fundamentals", "news", "social"]
 ```
 
-## 🔍 工具调用示例
+## 🔍 工具調用示例
 
-### 统一工具调用
+### 統一工具調用
 ```python
-# 市场数据获取
+# 市場數據獲取
 market_data = toolkit.get_stock_market_data_unified.invoke({
     'ticker': '000858',
     'start_date': '2025-01-01',
     'end_date': '2025-01-17'
 })
 
-# 基本面数据获取
+# 基本面數據獲取
 fundamentals = toolkit.get_stock_fundamentals_unified.invoke({
     'ticker': '000858',
     'start_date': '2025-01-01',
@@ -583,117 +583,117 @@ fundamentals = toolkit.get_stock_fundamentals_unified.invoke({
 })
 ```
 
-### 工具调用日志示例
+### 工具調用日誌示例
 ```
-📊 [模块开始] market_analyst - 股票: 000858
-📊 [市场分析师] 工具调用: ['get_stock_market_data_unified']
-📊 [统一市场工具] 检测到A股代码: 000858
-📊 [统一市场工具] 使用Tushare数据源
-📊 [模块完成] market_analyst - ✅ 成功 - 耗时: 41.73s
+📊 [模塊開始] market_analyst - 股票: 000858
+📊 [市場分析師] 工具調用: ['get_stock_market_data_unified']
+📊 [統一市場工具] 檢測到A股代碼: 000858
+📊 [統一市場工具] 使用Tushare數據源
+📊 [模塊完成] market_analyst - ✅ 成功 - 耗時: 41.73s
 ```
 
-## ❓ 常见问题
+## ❓ 常见問題
 
-### Q: 为什么会看到重复的分析师调用？
-A: 这是LangGraph的正常工作机制。每个分析师遵循"分析师→工具→分析师"的循环，直到完成所有必要的数据获取和分析。
+### Q: 為什么會看到重複的分析師調用？
+A: 這是LangGraph的正常工作機制。每個分析師遵循"分析師→工具→分析師"的循環，直到完成所有必要的數據獲取和分析。
 
-### Q: 如何选择合适的分析师组合？
+### Q: 如何選擇合適的分析師組合？
 A:
-- **快速分析**: 只选择market分析师
-- **基本面重点**: fundamentals + news
+- **快速分析**: 只選擇market分析師
+- **基本面重點**: fundamentals + news
 - **全面分析**: market + fundamentals + news + social
 
-### Q: 统一工具如何选择数据源？
-A: 系统自动识别股票代码格式：
-- 6位数字 → A股 → Tushare/AKShare
-- .HK后缀 → 港股 → AKShare/Yahoo
-- 字母代码 → 美股 → FinnHub/Yahoo
+### Q: 統一工具如何選擇數據源？
+A: 系統自動识別股票代碼格式：
+- 6位數字 → A股 → Tushare/AKShare
+- .HK後缀 → 港股 → AKShare/Yahoo
+- 字母代碼 → 美股 → FinnHub/Yahoo
 
-### Q: 分析时间过长怎么办？
+### Q: 分析時間過長怎么办？
 A:
-1. 降低research_depth (1=快速, 2=标准, 3=深度)
-2. 减少分析师数量
-3. 检查网络连接和API限额
+1. 降低research_depth (1=快速, 2=標準, 3=深度)
+2. 减少分析師數量
+3. 檢查網絡連接和API限額
 
-### Q: 如何理解最终决策输出？
-A: 最终决策包含：
+### Q: 如何理解最终決策輸出？
+A: 最终決策包含：
 - **action**: 买入/持有/卖出
 - **confidence**: 置信度(1-10分)
-- **target_price**: 目标价格
-- **reasoning**: 详细分析理由
+- **target_price**: 目標價格
+- **reasoning**: 詳細分析理由
 
-### Q: DashScope API密钥未配置会有什么影响？
+### Q: DashScope API密鑰未配置會有什么影響？
 A:
-- **记忆功能被禁用**: 看涨/看跌研究员无法使用历史经验
-- **系统仍可正常运行**: 所有分析功能正常，只是没有历史记忆
-- **自动降级**: 系统会自动检测并优雅降级，不会崩溃
-- **建议**: 配置DASHSCOPE_API_KEY以获得完整功能
+- **記忆功能被禁用**: 看涨/看跌研究員無法使用歷史經驗
+- **系統仍可正常運行**: 所有分析功能正常，只是没有歷史記忆
+- **自動降級**: 系統會自動檢測並優雅降級，不會崩潰
+- **建议**: 配置DASHSCOPE_API_KEY以獲得完整功能
 
-### Q: DashScope API调用异常时如何处理？
-A: 系统具有完善的异常处理机制：
-- **网络错误**: 自动降级，返回空向量
-- **API限额超出**: 优雅降级，记忆功能禁用
-- **密钥无效**: 自动检测，切换到降级模式
-- **服务不可用**: 系统继续运行，不影响分析功能
-- **包未安装**: 自动检测dashscope包，缺失时禁用记忆功能
+### Q: DashScope API調用異常時如何處理？
+A: 系統具有完善的異常處理機制：
+- **網絡錯誤**: 自動降級，返回空向量
+- **API限額超出**: 優雅降級，記忆功能禁用
+- **密鑰無效**: 自動檢測，切換到降級模式
+- **服務不可用**: 系統繼续運行，不影響分析功能
+- **包未安裝**: 自動檢測dashscope包，缺失時禁用記忆功能
 
-### Q: 如何测试记忆系统的降级机制？
-A: 运行降级测试工具：
+### Q: 如何測試記忆系統的降級機制？
+A: 運行降級測試工具：
 ```bash
 python test_memory_fallback.py
 ```
-该工具会测试各种异常情况下的系统行为。
+该工具會測試各種異常情况下的系統行為。
 
-### Q: 如何检查API配置状态？
-A: 运行配置检查工具：
+### Q: 如何檢查API配置狀態？
+A: 運行配置檢查工具：
 ```bash
 python scripts/check_api_config.py
 ```
-该工具会检查所有API密钥配置状态并提供建议。
+该工具會檢查所有API密鑰配置狀態並提供建议。
 
-## 📈 性能优化建议
+## 📈 性能優化建议
 
-### 1. 缓存策略
+### 1. 緩存策略
 ```python
-# 启用数据缓存
+# 啟用數據緩存
 config = {
     "cache_enabled": True,
-    "cache_duration": 3600,  # 1小时
+    "cache_duration": 3600,  # 1小時
     "force_refresh": False
 }
 ```
 
-### 2. 并行执行
+### 2. 並行執行
 ```python
-# 某些分析师可以并行执行
-parallel_analysts = ["news", "social"]  # 可并行
+# 某些分析師可以並行執行
+parallel_analysts = ["news", "social"]  # 可並行
 sequential_analysts = ["market", "fundamentals"]  # 需顺序
 ```
 
-### 3. 超时控制
+### 3. 超時控制
 ```python
-# 设置超时时间
+# 設置超時時間
 config = {
-    "max_execution_time": 300,  # 5分钟
-    "tool_timeout": 30,         # 工具调用30秒超时
-    "llm_timeout": 60          # LLM调用60秒超时
+    "max_execution_time": 300,  # 5分鐘
+    "tool_timeout": 30,         # 工具調用30秒超時
+    "llm_timeout": 60          # LLM調用60秒超時
 }
 ```
 
-## 📊 监控和调试
+## 📊 監控和調試
 
-### 日志级别配置
+### 日誌級別配置
 ```python
 import logging
 
-# 设置详细日志
+# 設置詳細日誌
 logging.getLogger('agents').setLevel(logging.DEBUG)
 logging.getLogger('tools').setLevel(logging.INFO)
 ```
 
-### 进度监控
+### 進度監控
 ```python
-# 使用异步进度跟踪
+# 使用異步進度跟蹤
 from web.utils.async_progress_tracker import AsyncProgressTracker
 
 tracker = AsyncProgressTracker(
@@ -704,32 +704,32 @@ tracker = AsyncProgressTracker(
 )
 ```
 
-## 🔮 未来发展方向
+## 🔮 未來發展方向
 
-### 1. 智能体扩展
-- **量化分析师**: 基于数学模型的量化分析
-- **宏观分析师**: 宏观经济和政策分析
-- **行业分析师**: 特定行业深度分析
+### 1. 智能體擴展
+- **量化分析師**: 基於數學模型的量化分析
+- **宏觀分析師**: 宏觀經濟和政策分析
+- **行業分析師**: 特定行業深度分析
 
 ### 2. 工具增强
-- **实时数据流**: WebSocket实时数据推送
-- **多语言支持**: 支持更多国际市场
-- **AI增强**: 集成更先进的AI模型
+- **實時數據流**: WebSocket實時數據推送
+- **多語言支持**: 支持更多國际市場
+- **AI增强**: 集成更先進的AI模型
 
-### 3. 性能优化
-- **分布式执行**: 支持多机器并行分析
-- **智能缓存**: 基于AI的智能缓存策略
-- **自适应配置**: 根据市场条件自动调整参数
+### 3. 性能優化
+- **分布式執行**: 支持多機器並行分析
+- **智能緩存**: 基於AI的智能緩存策略
+- **自適應配置**: 根據市場條件自動調整參數
 
-## 📚 相关文档
+## 📚 相關文档
 
-- [系统架构文档](./architecture/system-architecture.md)
-- [智能体架构文档](./architecture/agent-architecture.md)
-- [进度跟踪说明](./progress-tracking-explanation.md)
-- [API参考文档](./api/api-reference.md)
+- [系統架構文档](./architecture/system-architecture.md)
+- [智能體架構文档](./architecture/agent-architecture.md)
+- [進度跟蹤說明](./progress-tracking-explanation.md)
+- [API參考文档](./api/api-reference.md)
 - [部署指南](./deployment/deployment-guide.md)
 - [故障排除](./troubleshooting/common-issues.md)
 
 ---
 
-*本文档描述了TradingAgents v0.1.7的分析节点和工具配置。系统持续更新中，最新信息请参考GitHub仓库。*
+*本文档描述了TradingAgents v0.1.7的分析節點和工具配置。系統持续更新中，最新信息請參考GitHub仓庫。*

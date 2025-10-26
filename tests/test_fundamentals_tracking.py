@@ -1,110 +1,110 @@
 #!/usr/bin/env python3
 """
-基本面分析股票代码追踪测试
+基本面分析股票代碼追蹤測試
 """
 
 import os
 import sys
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 def test_fundamentals_analyst():
-    """测试基本面分析师的股票代码处理"""
-    print("\n🔍 基本面分析师股票代码追踪测试")
+    """測試基本面分析師的股票代碼處理"""
+    print("\n🔍 基本面分析師股票代碼追蹤測試")
     print("=" * 80)
     
-    # 测试分众传媒 002027
+    # 測試分眾傳媒 002027
     test_ticker = "002027"
-    print(f"📊 测试股票代码: {test_ticker} (分众传媒)")
+    print(f"📊 測試股票代碼: {test_ticker} (分眾傳媒)")
     
     try:
-        # 设置日志级别
+        # 設置日誌級別
         from tradingagents.utils.logging_init import get_logger
         logger = get_logger("default")
         logger.setLevel("INFO")
         
-        # 创建模拟状态
+        # 創建模擬狀態
         state = {
             "company_of_interest": test_ticker,
             "trade_date": "2025-07-15",
             "messages": []
         }
         
-        print(f"\n🔧 开始调用基本面分析师...")
+        print(f"\n🔧 開始調用基本面分析師...")
         
-        # 导入基本面分析师
+        # 導入基本面分析師
         from tradingagents.agents.analysts.fundamentals_analyst import fundamentals_analyst
         from tradingagents.agents.utils.agent_utils import AgentUtils
         
-        # 创建工具包
+        # 創建工具包
         toolkit = AgentUtils()
         
-        # 调用基本面分析师
+        # 調用基本面分析師
         result = fundamentals_analyst(state, toolkit)
         
-        print(f"\n✅ 基本面分析师调用完成")
-        print(f"📊 返回状态类型: {type(result)}")
+        print(f"\n✅ 基本面分析師調用完成")
+        print(f"📊 返回狀態類型: {type(result)}")
         
-        # 检查返回的状态
+        # 檢查返回的狀態
         if isinstance(result, dict):
             if 'fundamentals_report' in result:
                 report = result['fundamentals_report']
-                print(f"📄 基本面报告长度: {len(report) if report else 0}")
+                print(f"📄 基本面報告長度: {len(report) if report else 0}")
                 
-                # 检查报告中的股票代码
+                # 檢查報告中的股票代碼
                 if report:
-                    print(f"\n🔍 检查报告中的股票代码...")
+                    print(f"\n🔍 檢查報告中的股票代碼...")
                     if "002027" in report:
-                        print("✅ 报告中包含正确的股票代码 002027")
+                        print("✅ 報告中包含正確的股票代碼 002027")
                     else:
-                        print("❌ 报告中不包含正确的股票代码 002027")
+                        print("❌ 報告中不包含正確的股票代碼 002027")
                         
                     if "002021" in report:
-                        print("⚠️ 报告中包含错误的股票代码 002021")
+                        print("⚠️ 報告中包含錯誤的股票代碼 002021")
                     else:
-                        print("✅ 报告中不包含错误的股票代码 002021")
+                        print("✅ 報告中不包含錯誤的股票代碼 002021")
                         
-                    # 显示报告的前500字符
-                    print(f"\n📄 报告前500字符:")
+                    # 顯示報告的前500字符
+                    print(f"\n📄 報告前500字符:")
                     print("-" * 60)
                     print(report[:500])
                     print("-" * 60)
             else:
-                print("❌ 返回状态中没有 fundamentals_report")
+                print("❌ 返回狀態中没有 fundamentals_report")
         else:
-            print(f"❌ 返回结果类型不正确: {type(result)}")
+            print(f"❌ 返回結果類型不正確: {type(result)}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_unified_tool_direct():
-    """直接测试统一基本面工具"""
-    print("\n🔧 直接测试统一基本面工具")
+    """直接測試統一基本面工具"""
+    print("\n🔧 直接測試統一基本面工具")
     print("=" * 80)
     
     test_ticker = "002027"
     
     try:
-        # 设置日志级别
+        # 設置日誌級別
         from tradingagents.utils.logging_init import get_logger
         logger.setLevel("INFO")
         
-        # 导入工具包
+        # 導入工具包
         from tradingagents.agents.utils.agent_utils import AgentUtils
         
-        # 创建工具包实例
+        # 創建工具包實例
         toolkit = AgentUtils()
         
-        print(f"\n🔧 调用统一基本面工具...")
+        print(f"\n🔧 調用統一基本面工具...")
         
-        # 直接调用统一基本面工具
+        # 直接調用統一基本面工具
         result = toolkit.get_stock_fundamentals_unified.invoke({
             'ticker': test_ticker,
             'start_date': '2025-06-01',
@@ -112,24 +112,24 @@ def test_unified_tool_direct():
             'curr_date': '2025-07-15'
         })
         
-        print(f"\n✅ 统一基本面工具调用完成")
-        print(f"📊 返回结果长度: {len(result) if result else 0}")
+        print(f"\n✅ 統一基本面工具調用完成")
+        print(f"📊 返回結果長度: {len(result) if result else 0}")
         
-        # 检查结果中的股票代码
+        # 檢查結果中的股票代碼
         if result:
-            print(f"\n🔍 检查结果中的股票代码...")
+            print(f"\n🔍 檢查結果中的股票代碼...")
             if "002027" in result:
-                print("✅ 结果中包含正确的股票代码 002027")
+                print("✅ 結果中包含正確的股票代碼 002027")
             else:
-                print("❌ 结果中不包含正确的股票代码 002027")
+                print("❌ 結果中不包含正確的股票代碼 002027")
                 
             if "002021" in result:
-                print("⚠️ 结果中包含错误的股票代码 002021")
+                print("⚠️ 結果中包含錯誤的股票代碼 002021")
             else:
-                print("✅ 结果中不包含错误的股票代码 002021")
+                print("✅ 結果中不包含錯誤的股票代碼 002021")
                 
-            # 显示结果的前500字符
-            print(f"\n📄 结果前500字符:")
+            # 顯示結果的前500字符
+            print(f"\n📄 結果前500字符:")
             print("-" * 60)
             print(result[:500])
             print("-" * 60)
@@ -137,21 +137,21 @@ def test_unified_tool_direct():
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 if __name__ == "__main__":
-    print("🚀 开始基本面分析股票代码追踪测试")
+    print("🚀 開始基本面分析股票代碼追蹤測試")
     
-    # 测试1: 直接测试统一工具
+    # 測試1: 直接測試統一工具
     success1 = test_unified_tool_direct()
     
-    # 测试2: 测试基本面分析师
+    # 測試2: 測試基本面分析師
     success2 = test_fundamentals_analyst()
     
     if success1 and success2:
-        print("\n✅ 所有测试通过")
+        print("\n✅ 所有測試通過")
     else:
-        print("\n❌ 部分测试失败")
+        print("\n❌ 部分測試失败")

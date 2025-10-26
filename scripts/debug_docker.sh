@@ -3,29 +3,29 @@
 
 echo "=== Docker容器排查工具 ==="
 
-# 1. 检查Docker服务状态
-echo -e "\n1. 检查Docker服务状态:"
+# 1. 檢查Docker服務狀態
+echo -e "\n1. 檢查Docker服務狀態:"
 if docker version > /dev/null 2>&1; then
-    echo "✅ Docker服务正常运行"
+    echo "✅ Docker服務正常運行"
 else
-    echo "❌ Docker服务未运行或有问题"
+    echo "❌ Docker服務未運行或有問題"
     exit 1
 fi
 
-# 2. 检查容器状态
-echo -e "\n2. 检查容器状态:"
+# 2. 檢查容器狀態
+echo -e "\n2. 檢查容器狀態:"
 docker-compose ps -a
 
-# 3. 检查网络状态
-echo -e "\n3. 检查Docker网络:"
+# 3. 檢查網絡狀態
+echo -e "\n3. 檢查Docker網絡:"
 docker network ls | grep tradingagents
 
-# 4. 检查数据卷状态
-echo -e "\n4. 检查数据卷:"
+# 4. 檢查數據卷狀態
+echo -e "\n4. 檢查數據卷:"
 docker volume ls | grep tradingagents
 
-# 5. 检查端口占用
-echo -e "\n5. 检查端口占用:"
+# 5. 檢查端口占用
+echo -e "\n5. 檢查端口占用:"
 ports=(8501 27017 6379 8081 8082)
 for port in "${ports[@]}"; do
     if lsof -i :$port > /dev/null 2>&1; then
@@ -36,11 +36,11 @@ for port in "${ports[@]}"; do
     fi
 done
 
-# 6. 检查磁盘空间
-echo -e "\n6. 检查磁盘空间:"
+# 6. 檢查磁盘空間
+echo -e "\n6. 檢查磁盘空間:"
 docker system df
 
 echo -e "\n=== 排查完成 ==="
-echo "如需查看详细日志，请运行:"
-echo "docker-compose logs [服务名]"
+echo "如需查看詳細日誌，請運行:"
+echo "docker-compose logs [服務名]"
 echo "例如: docker-compose logs web"

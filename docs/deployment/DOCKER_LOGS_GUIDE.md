@@ -1,23 +1,23 @@
-# 🐳 TradingAgents Docker 日志管理指南
+# 🐳 TradingAgents Docker 日誌管理指南
 
 ## 📋 概述
 
-本指南介绍如何在Docker环境中管理和获取TradingAgents的日志文件。
+本指南介紹如何在Docker環境中管理和獲取TradingAgents的日誌文件。
 
-## 🔧 改进内容
+## 🔧 改進內容
 
-### 1. **Docker Compose 配置优化**
+### 1. **Docker Compose 配置優化**
 
-在 `docker-compose.yml` 中添加了日志目录映射：
+在 `docker-compose.yml` 中添加了日誌目錄映射：
 
 ```yaml
 volumes:
-  - ./logs:/app/logs  # 将容器内日志映射到本地logs目录
+  - ./logs:/app/logs  # 将容器內日誌映射到本地logs目錄
 ```
 
-### 2. **环境变量配置**
+### 2. **環境變量配置**
 
-添加了详细的日志配置环境变量：
+添加了詳細的日誌配置環境變量：
 
 ```yaml
 environment:
@@ -28,9 +28,9 @@ environment:
   TRADINGAGENTS_LOG_BACKUP_COUNT: "5"
 ```
 
-### 3. **Docker 日志配置**
+### 3. **Docker 日誌配置**
 
-添加了Docker级别的日志轮转：
+添加了Docker級別的日誌轮轉：
 
 ```yaml
 logging:
@@ -42,215 +42,215 @@ logging:
 
 ## 🚀 使用方法
 
-### **方法1: 使用启动脚本 (推荐)**
+### **方法1: 使用啟動腳本 (推薦)**
 
 #### Linux/macOS:
 ```bash
-# 给脚本执行权限
+# 給腳本執行權限
 chmod +x start_docker.sh
 
-# 启动Docker服务
+# 啟動Docker服務
 ./start_docker.sh
 ```
 
 #### Windows PowerShell:
 ```powershell
-# 启动Docker服务
+# 啟動Docker服務
 .\start_docker.ps1
 ```
 
-### **方法2: 手动启动**
+### **方法2: 手動啟動**
 
 ```bash
-# 1. 确保logs目录存在
+# 1. 確保logs目錄存在
 python ensure_logs_dir.py
 
-# 2. 启动Docker容器
+# 2. 啟動Docker容器
 docker-compose up -d
 
-# 3. 检查容器状态
+# 3. 檢查容器狀態
 docker-compose ps
 ```
 
-## 📄 日志文件位置
+## 📄 日誌文件位置
 
-### **本地日志文件**
-- **位置**: `./logs/` 目录
-- **主日志**: `logs/tradingagents.log`
-- **错误日志**: `logs/tradingagents_error.log` (如果有错误)
-- **轮转日志**: `logs/tradingagents.log.1`, `logs/tradingagents.log.2` 等
+### **本地日誌文件**
+- **位置**: `./logs/` 目錄
+- **主日誌**: `logs/tradingagents.log`
+- **錯誤日誌**: `logs/tradingagents_error.log` (如果有錯誤)
+- **轮轉日誌**: `logs/tradingagents.log.1`, `logs/tradingagents.log.2` 等
 
-### **Docker 标准日志**
+### **Docker 標準日誌**
 - **查看命令**: `docker-compose logs web`
-- **实时跟踪**: `docker-compose logs -f web`
+- **實時跟蹤**: `docker-compose logs -f web`
 
-## 🔍 日志查看方法
+## 🔍 日誌查看方法
 
-### **1. 使用日志查看工具**
+### **1. 使用日誌查看工具**
 ```bash
-# 交互式日志查看工具
+# 交互式日誌查看工具
 python view_logs.py
 ```
 
 功能包括：
-- 📋 显示所有日志文件
-- 👀 查看日志文件内容
-- 📺 实时跟踪日志
-- 🔍 搜索日志内容
-- 🐳 查看Docker日志
+- 📋 顯示所有日誌文件
+- 👀 查看日誌文件內容
+- 📺 實時跟蹤日誌
+- 🔍 搜索日誌內容
+- 🐳 查看Docker日誌
 
 ### **2. 直接查看文件**
 
 #### Linux/macOS:
 ```bash
-# 查看最新日志
+# 查看最新日誌
 tail -f logs/tradingagents.log
 
-# 查看最后100行
+# 查看最後100行
 tail -100 logs/tradingagents.log
 
-# 搜索错误
+# 搜索錯誤
 grep -i error logs/tradingagents.log
 ```
 
 #### Windows PowerShell:
 ```powershell
-# 实时查看日志
+# 實時查看日誌
 Get-Content logs\tradingagents.log -Wait
 
-# 查看最后50行
+# 查看最後50行
 Get-Content logs\tradingagents.log -Tail 50
 
-# 搜索错误
+# 搜索錯誤
 Select-String -Path logs\tradingagents.log -Pattern "error" -CaseSensitive:$false
 ```
 
-### **3. Docker 日志命令**
+### **3. Docker 日誌命令**
 ```bash
-# 查看容器日志
+# 查看容器日誌
 docker logs TradingAgents-web
 
-# 实时跟踪容器日志
+# 實時跟蹤容器日誌
 docker logs -f TradingAgents-web
 
-# 查看最近1小时的日志
+# 查看最近1小時的日誌
 docker logs --since 1h TradingAgents-web
 
-# 查看最后100行日志
+# 查看最後100行日誌
 docker logs --tail 100 TradingAgents-web
 ```
 
-## 📤 获取日志文件
+## 📤 獲取日誌文件
 
-### **发送给开发者的文件**
+### **發送給開發者的文件**
 
-当遇到问题需要技术支持时，请发送以下文件：
+當遇到問題需要技術支持時，請發送以下文件：
 
-1. **主日志文件**: `logs/tradingagents.log`
-2. **错误日志文件**: `logs/tradingagents_error.log` (如果存在)
-3. **Docker日志**: 
+1. **主日誌文件**: `logs/tradingagents.log`
+2. **錯誤日誌文件**: `logs/tradingagents_error.log` (如果存在)
+3. **Docker日誌**: 
    ```bash
    docker logs TradingAgents-web > docker_logs.txt 2>&1
    ```
 
-### **快速打包日志**
+### **快速打包日誌**
 
 #### Linux/macOS:
 ```bash
-# 创建日志压缩包
+# 創建日誌壓縮包
 tar -czf tradingagents_logs_$(date +%Y%m%d_%H%M%S).tar.gz logs/ docker_logs.txt
 ```
 
 #### Windows PowerShell:
 ```powershell
-# 创建日志压缩包
+# 創建日誌壓縮包
 $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 Compress-Archive -Path logs\*,docker_logs.txt -DestinationPath "tradingagents_logs_$timestamp.zip"
 ```
 
 ## 🔧 故障排除
 
-### **问题1: logs目录为空**
+### **問題1: logs目錄為空**
 
-**原因**: 容器内应用可能将日志输出到stdout而不是文件
+**原因**: 容器內應用可能将日誌輸出到stdout而不是文件
 
-**解决方案**:
-1. 检查Docker日志: `docker-compose logs web`
-2. 确认环境变量配置正确
-3. 重启容器: `docker-compose restart web`
+**解決方案**:
+1. 檢查Docker日誌: `docker-compose logs web`
+2. 確認環境變量配置正確
+3. 重啟容器: `docker-compose restart web`
 
-### **问题2: 权限问题**
+### **問題2: 權限問題**
 
 **Linux/macOS**:
 ```bash
-# 修复目录权限
+# 修複目錄權限
 sudo chown -R $USER:$USER logs/
 chmod 755 logs/
 ```
 
-**Windows**: 通常无权限问题
+**Windows**: 通常無權限問題
 
-### **问题3: 日志文件过大**
+### **問題3: 日誌文件過大**
 
-**自动轮转**: 配置了自动轮转，主日志文件最大100MB
-**手动清理**:
+**自動轮轉**: 配置了自動轮轉，主日誌文件最大100MB
+**手動清理**:
 ```bash
-# 备份并清空日志
+# 备份並清空日誌
 cp logs/tradingagents.log logs/tradingagents.log.backup
 > logs/tradingagents.log
 ```
 
-### **问题4: 容器无法启动**
+### **問題4: 容器無法啟動**
 
-**检查步骤**:
-1. 检查Docker状态: `docker info`
-2. 检查端口占用: `netstat -tlnp | grep 8501`
-3. 查看启动日志: `docker-compose logs web`
-4. 检查配置文件: `.env` 文件是否存在
+**檢查步骤**:
+1. 檢查Docker狀態: `docker info`
+2. 檢查端口占用: `netstat -tlnp | grep 8501`
+3. 查看啟動日誌: `docker-compose logs web`
+4. 檢查配置文件: `.env` 文件是否存在
 
-## 📊 日志级别说明
+## 📊 日誌級別說明
 
-- **DEBUG**: 详细的调试信息，包含函数调用、变量值等
-- **INFO**: 一般信息，程序正常运行的关键步骤
-- **WARNING**: 警告信息，程序可以继续运行但需要注意
-- **ERROR**: 错误信息，程序遇到错误但可以恢复
-- **CRITICAL**: 严重错误，程序可能无法继续运行
+- **DEBUG**: 詳細的調試信息，包含函數調用、變量值等
+- **INFO**: 一般信息，程序正常運行的關键步骤
+- **WARNING**: 警告信息，程序可以繼续運行但需要註意
+- **ERROR**: 錯誤信息，程序遇到錯誤但可以恢複
+- **CRITICAL**: 嚴重錯誤，程序可能無法繼续運行
 
-## 🎯 最佳实践
+## 🎯 最佳實踐
 
-### **1. 定期检查日志**
+### **1. 定期檢查日誌**
 ```bash
-# 每天检查错误日志
+# 每天檢查錯誤日誌
 grep -i error logs/tradingagents.log | tail -20
 ```
 
-### **2. 监控日志大小**
+### **2. 監控日誌大小**
 ```bash
-# 检查日志文件大小
+# 檢查日誌文件大小
 ls -lh logs/
 ```
 
-### **3. 备份重要日志**
+### **3. 备份重要日誌**
 ```bash
-# 定期备份日志
+# 定期备份日誌
 cp logs/tradingagents.log backups/tradingagents_$(date +%Y%m%d).log
 ```
 
-### **4. 实时监控**
+### **4. 實時監控**
 ```bash
-# 在另一个终端实时监控日志
+# 在另一個终端實時監控日誌
 tail -f logs/tradingagents.log | grep -i "error\|warning"
 ```
 
-## 📞 技术支持
+## 📞 技術支持
 
-如果遇到问题：
+如果遇到問題：
 
-1. **收集日志**: 使用上述方法收集完整日志
-2. **描述问题**: 详细描述问题现象和重现步骤
-3. **环境信息**: 提供操作系统、Docker版本等信息
-4. **发送文件**: 将日志文件发送给开发者
+1. **收集日誌**: 使用上述方法收集完整日誌
+2. **描述問題**: 詳細描述問題現象和重現步骤
+3. **環境信息**: 提供操作系統、Docker版本等信息
+4. **發送文件**: 将日誌文件發送給開發者
 
 ---
 
-**通过这些改进，现在可以方便地获取和管理TradingAgents的日志文件了！** 🎉
+**通過這些改進，現在可以方便地獲取和管理TradingAgents的日誌文件了！** 🎉

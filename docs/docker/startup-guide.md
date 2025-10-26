@@ -1,33 +1,33 @@
-# Docker启动指南
+# Docker啟動指南
 
-## 🚀 快速启动
+## 🚀 快速啟動
 
-### 📋 基本启动命令
+### 📋 基本啟動命令
 
 ```bash
-# 日常启动（推荐）- 使用现有镜像
+# 日常啟動（推薦）- 使用現有鏡像
 docker-compose up -d
 
-# 首次启动或代码变更 - 重新构建镜像
+# 首次啟動或代碼變更 - 重新構建鏡像
 docker-compose up -d --build
 ```
 
-### 🧠 智能启动（推荐）
+### 🧠 智能啟動（推薦）
 
-智能启动脚本会自动判断是否需要重新构建镜像：
+智能啟動腳本會自動判斷是否需要重新構建鏡像：
 
-#### Windows环境
+#### Windows環境
 ```powershell
-# 方法1：直接运行
+# 方法1：直接運行
 powershell -ExecutionPolicy Bypass -File scripts\smart_start.ps1
 
-# 方法2：在PowerShell中运行
+# 方法2：在PowerShell中運行
 .\scripts\smart_start.ps1
 ```
 
-#### Linux/Mac环境
+#### Linux/Mac環境
 ```bash
-# 添加执行权限并运行
+# 添加執行權限並運行
 chmod +x scripts/smart_start.sh
 ./scripts/smart_start.sh
 
@@ -35,50 +35,50 @@ chmod +x scripts/smart_start.sh
 chmod +x scripts/smart_start.sh && ./scripts/smart_start.sh
 ```
 
-## 🔧 启动参数说明
+## 🔧 啟動參數說明
 
-### `--build` 参数使用场景
+### `--build` 參數使用場景
 
-| 场景 | 是否需要 `--build` | 原因 |
+| 場景 | 是否需要 `--build` | 原因 |
 |------|-------------------|------|
-| 首次启动 | ✅ 需要 | 镜像不存在，需要构建 |
-| 代码修改后 | ✅ 需要 | 需要将新代码打包到镜像 |
-| 依赖更新后 | ✅ 需要 | requirements.txt变化 |
-| Dockerfile修改 | ✅ 需要 | 构建配置变化 |
-| 日常重启 | ❌ 不需要 | 镜像已存在且无变化 |
-| 容器异常重启 | ❌ 不需要 | 问题通常不在镜像层面 |
+| 首次啟動 | ✅ 需要 | 鏡像不存在，需要構建 |
+| 代碼修改後 | ✅ 需要 | 需要将新代碼打包到鏡像 |
+| 依賴更新後 | ✅ 需要 | requirements.txt變化 |
+| Dockerfile修改 | ✅ 需要 | 構建配置變化 |
+| 日常重啟 | ❌ 不需要 | 鏡像已存在且無變化 |
+| 容器異常重啟 | ❌ 不需要 | 問題通常不在鏡像層面 |
 
-### 智能启动判断逻辑
+### 智能啟動判斷逻辑
 
-1. **检查镜像存在性**
-   - 镜像不存在 → 执行 `docker-compose up -d --build`
+1. **檢查鏡像存在性**
+   - 鏡像不存在 → 執行 `docker-compose up -d --build`
    
-2. **检查代码变化**
-   - 有未提交的代码变化 → 执行 `docker-compose up -d --build`
-   - 无代码变化 → 执行 `docker-compose up -d`
+2. **檢查代碼變化**
+   - 有未提交的代碼變化 → 執行 `docker-compose up -d --build`
+   - 無代碼變化 → 執行 `docker-compose up -d`
 
 ## 🛠️ 故障排除
 
-### 常见启动问题
+### 常见啟動問題
 
 1. **端口冲突**
    ```bash
-   # 检查端口占用
+   # 檢查端口占用
    netstat -ano | findstr :8501  # Windows
    lsof -i :8501                 # Linux/Mac
    ```
 
-2. **镜像构建失败**
+2. **鏡像構建失败**
    ```bash
-   # 清理并重新构建
+   # 清理並重新構建
    docker-compose down
    docker system prune -f
    docker-compose up -d --build
    ```
 
-3. **容器启动失败**
+3. **容器啟動失败**
    ```bash
-   # 查看详细日志
+   # 查看詳細日誌
    docker-compose logs web
    docker-compose logs mongodb
    docker-compose logs redis
@@ -86,7 +86,7 @@ chmod +x scripts/smart_start.sh && ./scripts/smart_start.sh
 
 ### 排查工具
 
-使用项目提供的排查脚本：
+使用項目提供的排查腳本：
 
 ```bash
 # Windows
@@ -96,17 +96,17 @@ powershell -ExecutionPolicy Bypass -File scripts\debug_docker.ps1
 chmod +x scripts/debug_docker.sh && ./scripts/debug_docker.sh
 ```
 
-## 📊 性能对比
+## 📊 性能對比
 
-| 启动方式 | 首次启动时间 | 后续启动时间 | 适用场景 |
+| 啟動方式 | 首次啟動時間 | 後续啟動時間 | 適用場景 |
 |----------|-------------|-------------|----------|
-| `docker-compose up -d --build` | ~3-5分钟 | ~3-5分钟 | 开发环境，代码频繁变更 |
-| `docker-compose up -d` | ~3-5分钟 | ~10-30秒 | 生产环境，稳定运行 |
-| 智能启动脚本 | ~3-5分钟 | ~10-30秒 | 推荐，自动优化 |
+| `docker-compose up -d --build` | ~3-5分鐘 | ~3-5分鐘 | 開發環境，代碼頻繁變更 |
+| `docker-compose up -d` | ~3-5分鐘 | ~10-30秒 | 生產環境，穩定運行 |
+| 智能啟動腳本 | ~3-5分鐘 | ~10-30秒 | 推薦，自動優化 |
 
-## 🎯 最佳实践
+## 🎯 最佳實踐
 
-1. **开发环境**：使用智能启动脚本
-2. **生产环境**：首次部署用 `--build`，后续用普通启动
-3. **CI/CD**：始终使用 `--build` 确保最新代码
-4. **故障排除**：先尝试普通重启，再考虑重新构建
+1. **開發環境**：使用智能啟動腳本
+2. **生產環境**：首次部署用 `--build`，後续用普通啟動
+3. **CI/CD**：始终使用 `--build` 確保最新代碼
+4. **故障排除**：先嘗試普通重啟，再考慮重新構建

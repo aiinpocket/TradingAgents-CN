@@ -1,6 +1,6 @@
 """
 持久化工具
-使用URL参数和session state结合的方式来持久化用户选择
+使用URL參數和session state結合的方式來持久化用戶選擇
 """
 
 import streamlit as st
@@ -11,7 +11,7 @@ import json
 logger = logging.getLogger(__name__)
 
 class ModelPersistence:
-    """模型选择持久化管理器"""
+    """模型選擇持久化管理器"""
     
     def __init__(self):
         self.storage_key = "model_config"
@@ -27,7 +27,7 @@ class ModelPersistence:
         # 保存到session state
         st.session_state[self.storage_key] = config
         
-        # 保存到URL参数（通过query_params）
+        # 保存到URL參數（通過query_params）
         try:
             st.query_params.update({
                 'provider': provider,
@@ -36,11 +36,11 @@ class ModelPersistence:
             })
             logger.debug(f"💾 [Persistence] 配置已保存: {config}")
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] URL参数保存失败: {e}")
+            logger.warning(f"⚠️ [Persistence] URL參數保存失败: {e}")
     
     def load_config(self):
-        """从session state或URL加载配置"""
-        # 首先尝试从URL参数加载
+        """從session state或URL加載配置"""
+        # 首先嘗試從URL參數加載
         try:
             query_params = st.query_params
             if 'provider' in query_params:
@@ -49,24 +49,24 @@ class ModelPersistence:
                     'category': query_params.get('category', 'openai'),
                     'model': query_params.get('model', '')
                 }
-                logger.debug(f"📥 [Persistence] 从URL加载配置: {config}")
+                logger.debug(f"📥 [Persistence] 從URL加載配置: {config}")
                 return config
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] URL参数加载失败: {e}")
+            logger.warning(f"⚠️ [Persistence] URL參數加載失败: {e}")
         
-        # 然后尝试从session state加载
+        # 然後嘗試從session state加載
         if self.storage_key in st.session_state:
             config = st.session_state[self.storage_key]
-            logger.debug(f"📥 [Persistence] 从Session State加载配置: {config}")
+            logger.debug(f"📥 [Persistence] 從Session State加載配置: {config}")
             return config
         
-        # 返回默认配置
+        # 返回默認配置
         default_config = {
             'provider': 'dashscope',
             'category': 'openai',
             'model': ''
         }
-        logger.debug(f"📥 [Persistence] 使用默认配置: {default_config}")
+        logger.debug(f"📥 [Persistence] 使用默認配置: {default_config}")
         return default_config
     
     def clear_config(self):
@@ -80,17 +80,17 @@ class ModelPersistence:
         except Exception as e:
             logger.warning(f"⚠️ [Persistence] 清除失败: {e}")
 
-# 全局实例
+# 全局實例
 persistence = ModelPersistence()
 
 def save_model_selection(provider, category="", model=""):
-    """保存模型选择"""
+    """保存模型選擇"""
     persistence.save_config(provider, category, model)
 
 def load_model_selection():
-    """加载模型选择"""
+    """加載模型選擇"""
     return persistence.load_config()
 
 def clear_model_selection():
-    """清除模型选择"""
+    """清除模型選擇"""
     persistence.clear_config()

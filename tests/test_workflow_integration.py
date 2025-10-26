@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-验证统一新闻工具在整体流程中的使用情况
+驗證統一新聞工具在整體流程中的使用情况
 """
 
 import sys
@@ -8,7 +8,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 class MockLLM:
-    """模拟LLM"""
+    """模擬LLM"""
     def __init__(self):
         self.bound_tools = []
         self.__class__.__name__ = "MockLLM"
@@ -19,97 +19,97 @@ class MockLLM:
         return self
     
     def invoke(self, message):
-        """模拟调用"""
+        """模擬調用"""
         class MockResult:
             def __init__(self):
-                self.content = "模拟分析结果"
+                self.content = "模擬分析結果"
                 self.tool_calls = []
         return MockResult()
 
 class MockToolkit:
-    """模拟工具包"""
+    """模擬工具包"""
     def get_realtime_stock_news(self, params):
-        return "模拟A股新闻"
+        return "模擬A股新聞"
     def get_google_news(self, params):
-        return "模拟Google新闻"
+        return "模擬Google新聞"
     def get_global_news_openai(self, params):
-        return "模拟OpenAI新闻"
+        return "模擬OpenAI新聞"
 
 def test_news_analyst_integration():
-    """测试新闻分析师的统一工具集成"""
-    print(f"🔍 验证统一新闻工具在整体流程中的使用情况")
+    """測試新聞分析師的統一工具集成"""
+    print(f"🔍 驗證統一新聞工具在整體流程中的使用情况")
     print("=" * 70)
     
     try:
-        # 1. 检查新闻分析师的工具绑定
-        print(f"\n📰 第一步：检查新闻分析师的工具绑定...")
+        # 1. 檢查新聞分析師的工具绑定
+        print(f"\n📰 第一步：檢查新聞分析師的工具绑定...")
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         
-        # 创建模拟工具包
+        # 創建模擬工具包
         mock_toolkit = MockToolkit()
         mock_llm = MockLLM()
         
-        # 创建新闻分析师
+        # 創建新聞分析師
         news_analyst = create_news_analyst(mock_llm, mock_toolkit)
-        print(f"  ✅ 新闻分析师创建成功")
+        print(f"  ✅ 新聞分析師創建成功")
         
-        # 2. 检查统一新闻工具的导入和使用
-        print(f"\n🔧 第二步：检查统一新闻工具的集成...")
+        # 2. 檢查統一新聞工具的導入和使用
+        print(f"\n🔧 第二步：檢查統一新聞工具的集成...")
         
-        # 检查统一新闻工具是否能正常导入
+        # 檢查統一新聞工具是否能正常導入
         try:
             from tradingagents.tools.unified_news_tool import create_unified_news_tool
             test_tool = create_unified_news_tool(mock_toolkit)
-            print(f"  ✅ 统一新闻工具导入成功")
-            print(f"  📝 工具名称: {getattr(test_tool, 'name', '未设置')}")
+            print(f"  ✅ 統一新聞工具導入成功")
+            print(f"  📝 工具名稱: {getattr(test_tool, 'name', '未設置')}")
             print(f"  📝 工具描述: {test_tool.description[:100]}...")
         except Exception as e:
-            print(f"  ❌ 统一新闻工具导入失败: {e}")
+            print(f"  ❌ 統一新聞工具導入失败: {e}")
         
-        # 3. 检查新闻分析师源码中的集成情况
-        print(f"\n💬 第三步：检查新闻分析师源码集成...")
+        # 3. 檢查新聞分析師源碼中的集成情况
+        print(f"\n💬 第三步：檢查新聞分析師源碼集成...")
         
-        # 读取新闻分析师源码
+        # 讀取新聞分析師源碼
         news_analyst_file = "tradingagents/agents/analysts/news_analyst.py"
         try:
             with open(news_analyst_file, "r", encoding="utf-8") as f:
                 source_code = f.read()
             
-            # 检查关键集成点
+            # 檢查關键集成點
             integration_checks = [
-                ("统一新闻工具导入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
-                ("工具创建", "unified_news_tool = create_unified_news_tool(toolkit)"),
-                ("工具名称设置", 'unified_news_tool.name = "get_stock_news_unified"'),
+                ("統一新聞工具導入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
+                ("工具創建", "unified_news_tool = create_unified_news_tool(toolkit)"),
+                ("工具名稱設置", 'unified_news_tool.name = "get_stock_news_unified"'),
                 ("工具列表", "tools = [unified_news_tool]"),
-                ("系统提示词包含工具", "get_stock_news_unified"),
-                ("强制工具调用", "您的第一个动作必须是调用 get_stock_news_unified 工具"),
-                ("DashScope预处理", "DashScope预处理：强制获取新闻数据"),
-                ("预处理工具调用", "pre_fetched_news = unified_news_tool(stock_code=ticker"),
+                ("系統提示詞包含工具", "get_stock_news_unified"),
+                ("强制工具調用", "您的第一個動作必须是調用 get_stock_news_unified 工具"),
+                ("DashScope預處理", "DashScope預處理：强制獲取新聞數據"),
+                ("預處理工具調用", "pre_fetched_news = unified_news_tool(stock_code=ticker"),
                 ("LLM工具绑定", "llm.bind_tools(tools)")
             ]
             
             for check_name, check_pattern in integration_checks:
                 if check_pattern in source_code:
-                    print(f"  ✅ {check_name}: 已正确集成")
+                    print(f"  ✅ {check_name}: 已正確集成")
                 else:
                     print(f"  ❌ {check_name}: 未找到")
                     
         except Exception as e:
-            print(f"  ❌ 无法读取新闻分析师源码: {e}")
+            print(f"  ❌ 無法讀取新聞分析師源碼: {e}")
         
-        # 4. 验证工作流程中的使用
-        print(f"\n🔄 第四步：验证工作流程中的使用...")
+        # 4. 驗證工作流程中的使用
+        print(f"\n🔄 第四步：驗證工作流程中的使用...")
         
-        # 检查工作流程设置文件
+        # 檢查工作流程設置文件
         setup_file = "tradingagents/graph/setup.py"
         try:
             with open(setup_file, "r", encoding="utf-8") as f:
                 setup_code = f.read()
             
             workflow_checks = [
-                ("新闻分析师导入", "from tradingagents.agents.analysts.news_analyst import create_news_analyst"),
-                ("新闻分析师节点创建", 'analyst_nodes["news"] = create_news_analyst'),
-                ("工作流程节点添加", "workflow.add_node")
+                ("新聞分析師導入", "from tradingagents.agents.analysts.news_analyst import create_news_analyst"),
+                ("新聞分析師節點創建", 'analyst_nodes["news"] = create_news_analyst'),
+                ("工作流程節點添加", "workflow.add_node")
             ]
             
             for check_name, check_pattern in workflow_checks:
@@ -119,13 +119,13 @@ def test_news_analyst_integration():
                     print(f"  ❌ {check_name}: 未在工作流程中找到")
                     
         except Exception as e:
-            print(f"  ❌ 无法读取工作流程设置文件: {e}")
+            print(f"  ❌ 無法讀取工作流程設置文件: {e}")
         
-        # 5. 测试工具调用
-        print(f"\n🧪 第五步：测试工具调用...")
+        # 5. 測試工具調用
+        print(f"\n🧪 第五步：測試工具調用...")
         
         try:
-            # 模拟状态
+            # 模擬狀態
             mock_state = {
                 "messages": [],
                 "company_of_interest": "000001",
@@ -133,39 +133,39 @@ def test_news_analyst_integration():
                 "session_id": "test_session"
             }
             
-            # 测试新闻分析师调用（会因为LLM配置问题失败，但可以验证工具加载）
-            print(f"  🔧 测试新闻分析师节点调用...")
+            # 測試新聞分析師調用（會因為LLM配置問題失败，但可以驗證工具加載）
+            print(f"  🔧 測試新聞分析師節點調用...")
             
-            # 这里只是验证能否正常创建，不实际调用
-            print(f"  ✅ 新闻分析师节点可以正常创建")
+            # 這里只是驗證能否正常創建，不實际調用
+            print(f"  ✅ 新聞分析師節點可以正常創建")
             
         except Exception as e:
-            print(f"  ⚠️ 新闻分析师节点测试遇到问题: {e}")
+            print(f"  ⚠️ 新聞分析師節點測試遇到問題: {e}")
         
-        print(f"\n✅ 验证完成！")
+        print(f"\n✅ 驗證完成！")
         
-        # 总结
-        print(f"\n📊 集成状态总结:")
-        print(f"  🎯 统一新闻工具: 已创建并集成到新闻分析师")
-        print(f"  🤖 新闻分析师: 已使用统一工具替代原有多个工具")
-        print(f"  🔧 工具绑定: 已实现LLM工具绑定机制")
-        print(f"  💬 系统提示词: 已更新为强制调用统一工具")
-        print(f"  🛡️ 补救机制: 已针对DashScope等模型优化")
-        print(f"  🔄 工作流程: 已集成到整体交易智能体流程")
+        # 总結
+        print(f"\n📊 集成狀態总結:")
+        print(f"  🎯 統一新聞工具: 已創建並集成到新聞分析師")
+        print(f"  🤖 新聞分析師: 已使用統一工具替代原有多個工具")
+        print(f"  🔧 工具绑定: 已實現LLM工具绑定機制")
+        print(f"  💬 系統提示詞: 已更新為强制調用統一工具")
+        print(f"  🛡️ 補救機制: 已针對DashScope等模型優化")
+        print(f"  🔄 工作流程: 已集成到整體交易智能體流程")
         
-        print(f"\n🚀 在整体流程中的使用情况：")
-        print(f"  1. 当用户选择包含'news'的分析师时，系统会自动加载新闻分析师")
-        print(f"  2. 新闻分析师会创建并绑定统一新闻工具到LLM")
-        print(f"  3. LLM在分析时会调用 get_stock_news_unified 工具")
-        print(f"  4. 统一工具会自动识别股票类型（A股/港股/美股）并获取相应新闻")
-        print(f"  5. 对于DashScope等模型，会预先获取新闻数据以提高成功率")
-        print(f"  6. 分析结果会传递给后续的研究员和管理员节点")
+        print(f"\n🚀 在整體流程中的使用情况：")
+        print(f"  1. 當用戶選擇包含'news'的分析師時，系統會自動加載新聞分析師")
+        print(f"  2. 新聞分析師會創建並绑定統一新聞工具到LLM")
+        print(f"  3. LLM在分析時會調用 get_stock_news_unified 工具")
+        print(f"  4. 統一工具會自動识別股票類型（A股/港股/美股）並獲取相應新聞")
+        print(f"  5. 對於DashScope等模型，會預先獲取新聞數據以提高成功率")
+        print(f"  6. 分析結果會傳遞給後续的研究員和管理員節點")
         
-        print(f"\n✨ 确认：统一新闻工具已完全集成到整体交易智能体流程中！")
-        print(f"✨ 大模型已通过 llm.bind_tools(tools) 绑定了统一新闻工具！")
+        print(f"\n✨ 確認：統一新聞工具已完全集成到整體交易智能體流程中！")
+        print(f"✨ 大模型已通過 llm.bind_tools(tools) 绑定了統一新聞工具！")
         
     except Exception as e:
-        print(f"❌ 验证过程中出现错误: {str(e)}")
+        print(f"❌ 驗證過程中出現錯誤: {str(e)}")
         import traceback
         traceback.print_exc()
 

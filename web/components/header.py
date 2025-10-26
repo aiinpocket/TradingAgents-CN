@@ -1,5 +1,5 @@
 """
-页面头部组件
+页面头部組件
 """
 
 import streamlit as st
@@ -7,11 +7,11 @@ import streamlit as st
 def render_header():
     """渲染页面头部"""
     
-    # 主标题
+    # 主標題
     st.markdown("""
     <div class="main-header">
         <h1>🚀 TradingAgents-CN 股票分析平台</h1>
-        <p>基于多智能体大语言模型的中文金融交易决策框架</p>
+        <p>基於多智能體大語言模型的中文金融交易決策框架</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -21,34 +21,34 @@ def render_header():
     with col1:
         st.markdown("""
         <div class="metric-card">
-            <h4>🤖 智能体协作</h4>
-            <p>专业分析师团队协同工作</p>
+            <h4>🤖 智能體協作</h4>
+            <p>專業分析師团隊協同工作</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <h4>🇨🇳 中文优化</h4>
-            <p>针对中文用户优化的模型</p>
+            <h4>🇨🇳 中文優化</h4>
+            <p>针對中文用戶優化的模型</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <h4>📊 实时数据</h4>
-            <p>获取最新的股票市场数据</p>
+            <h4>📊 實時數據</h4>
+            <p>獲取最新的股票市場數據</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col4:
         st.markdown("""
         <div class="metric-card">
-            <h4>🎯 专业建议</h4>
-            <p>基于AI的投资决策建议</p>
+            <h4>🎯 專業建议</h4>
+            <p>基於AI的投資決策建议</p>
         </div>
         """, unsafe_allow_html=True)
     
-    # 分隔线
+    # 分隔線
     st.markdown("---")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-数据库环境设置脚本
-自动安装和配置MongoDB + Redis
+數據庫環境設置腳本
+自動安裝和配置MongoDB + Redis
 """
 
 import os
@@ -10,14 +10,14 @@ import subprocess
 import platform
 from pathlib import Path
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 def run_command(command, description=""):
-    """运行命令并处理错误"""
+    """運行命令並處理錯誤"""
     logger.info(f"🔄 {description}")
-    logger.info(f"   执行: {command}")
+    logger.info(f"   執行: {command}")
     
     try:
         result = subprocess.run(command, shell=True, check=True, 
@@ -26,12 +26,12 @@ def run_command(command, description=""):
         return True
     except subprocess.CalledProcessError as e:
         logger.error(f"❌ {description} 失败")
-        logger.error(f"   错误: {e.stderr}")
+        logger.error(f"   錯誤: {e.stderr}")
         return False
 
 def install_python_packages():
-    """安装Python依赖包"""
-    logger.info(f"\n📦 安装Python数据库依赖包...")
+    """安裝Python依賴包"""
+    logger.info(f"\n📦 安裝Python數據庫依賴包...")
     
     packages = [
         "pymongo>=4.6.0",
@@ -42,68 +42,68 @@ def install_python_packages():
     for package in packages:
         success = run_command(
             f"pip install {package}",
-            f"安装 {package}"
+            f"安裝 {package}"
         )
         if not success:
-            logger.error(f"⚠️ {package} 安装失败，请手动安装")
+            logger.error(f"⚠️ {package} 安裝失败，請手動安裝")
 
 def setup_mongodb_windows():
-    """Windows环境MongoDB设置"""
-    logger.info(f"\n🍃 Windows MongoDB 设置指南:")
+    """Windows環境MongoDB設置"""
+    logger.info(f"\n🍃 Windows MongoDB 設置指南:")
     print("""
-    请按以下步骤手动安装MongoDB:
+    請按以下步骤手動安裝MongoDB:
     
-    1. 下载MongoDB Community Server:
+    1. 下載MongoDB Community Server:
        https://www.mongodb.com/try/download/community
     
-    2. 安装MongoDB:
-       - 选择 "Complete" 安装
-       - 勾选 "Install MongoDB as a Service"
-       - 勾选 "Install MongoDB Compass" (可选的图形界面)
+    2. 安裝MongoDB:
+       - 選擇 "Complete" 安裝
+       - 勾選 "Install MongoDB as a Service"
+       - 勾選 "Install MongoDB Compass" (可選的圖形界面)
     
-    3. 启动MongoDB服务:
-       - 打开服务管理器 (services.msc)
-       - 找到 "MongoDB" 服务并启动
+    3. 啟動MongoDB服務:
+       - 打開服務管理器 (services.msc)
+       - 找到 "MongoDB" 服務並啟動
        
-    4. 验证安装:
-       - 打开命令行，运行: mongosh
-       - 如果连接成功，说明安装正确
+    4. 驗證安裝:
+       - 打開命令行，運行: mongosh
+       - 如果連接成功，說明安裝正確
     
-    默认连接地址: mongodb://localhost:27017
+    默認連接地址: mongodb://localhost:27017
     """)
 
 def setup_redis_windows():
-    """Windows环境Redis设置"""
-    logger.info(f"\n🔴 Windows Redis 设置指南:")
+    """Windows環境Redis設置"""
+    logger.info(f"\n🔴 Windows Redis 設置指南:")
     print("""
-    请按以下步骤手动安装Redis:
+    請按以下步骤手動安裝Redis:
     
-    1. 下载Redis for Windows:
+    1. 下載Redis for Windows:
        https://github.com/microsoftarchive/redis/releases
        
-    2. 解压到目录 (如 C:\\Redis)
+    2. 解壓到目錄 (如 C:\\Redis)
     
-    3. 启动Redis服务器:
-       - 打开命令行，进入Redis目录
-       - 运行: redis-server.exe
+    3. 啟動Redis服務器:
+       - 打開命令行，進入Redis目錄
+       - 運行: redis-server.exe
        
-    4. 测试Redis连接:
-       - 新开命令行窗口
-       - 运行: redis-cli.exe
-       - 输入: ping
-       - 应该返回: PONG
+    4. 測試Redis連接:
+       - 新開命令行窗口
+       - 運行: redis-cli.exe
+       - 輸入: ping
+       - 應该返回: PONG
     
     或者使用Docker:
     docker run -d -p 6379:6379 --name redis redis:latest
     
-    默认连接地址: redis://localhost:6379
+    默認連接地址: redis://localhost:6379
     """)
 
 def setup_mongodb_linux():
-    """Linux环境MongoDB设置"""
-    logger.info(f"\n🍃 Linux MongoDB 设置...")
+    """Linux環境MongoDB設置"""
+    logger.info(f"\n🍃 Linux MongoDB 設置...")
     
-    # 检测Linux发行版
+    # 檢測Linux發行版
     if os.path.exists("/etc/ubuntu-release") or os.path.exists("/etc/debian_version"):
         # Ubuntu/Debian
         commands = [
@@ -120,17 +120,17 @@ def setup_mongodb_linux():
             "sudo systemctl enable mongod"
         ]
     else:
-        logger.warning(f"⚠️ 未识别的Linux发行版，请手动安装MongoDB")
+        logger.warning(f"⚠️ 未识別的Linux發行版，請手動安裝MongoDB")
         return
     
     for cmd in commands:
-        run_command(cmd, f"执行: {cmd}")
+        run_command(cmd, f"執行: {cmd}")
 
 def setup_redis_linux():
-    """Linux环境Redis设置"""
-    logger.info(f"\n🔴 Linux Redis 设置...")
+    """Linux環境Redis設置"""
+    logger.info(f"\n🔴 Linux Redis 設置...")
     
-    # 检测Linux发行版
+    # 檢測Linux發行版
     if os.path.exists("/etc/ubuntu-release") or os.path.exists("/etc/debian_version"):
         # Ubuntu/Debian
         commands = [
@@ -147,50 +147,50 @@ def setup_redis_linux():
             "sudo systemctl enable redis"
         ]
     else:
-        logger.warning(f"⚠️ 未识别的Linux发行版，请手动安装Redis")
+        logger.warning(f"⚠️ 未识別的Linux發行版，請手動安裝Redis")
         return
     
     for cmd in commands:
-        run_command(cmd, f"执行: {cmd}")
+        run_command(cmd, f"執行: {cmd}")
 
 def setup_docker_option():
-    """Docker方式设置"""
-    logger.info(f"\n🐳 Docker 方式设置 (推荐):")
+    """Docker方式設置"""
+    logger.info(f"\n🐳 Docker 方式設置 (推薦):")
     print("""
-    如果您已安装Docker，可以使用以下命令快速启动:
+    如果您已安裝Docker，可以使用以下命令快速啟動:
     
-    # 启动MongoDB
+    # 啟動MongoDB
     docker run -d \\
       --name mongodb \\
       -p 27017:27017 \\
       -v mongodb_data:/data/db \\
       mongo:latest
     
-    # 启动Redis
+    # 啟動Redis
     docker run -d \\
       --name redis \\
       -p 6379:6379 \\
       -v redis_data:/data \\
       redis:latest
     
-    # 查看运行状态
+    # 查看運行狀態
     docker ps
     
-    # 停止服务
+    # 停止服務
     docker stop mongodb redis
     
-    # 重新启动
+    # 重新啟動
     docker start mongodb redis
     """)
 
 def create_env_template():
-    """创建环境变量模板"""
-    logger.info(f"📄 数据库配置已整合到主要的 .env 文件中")
-    logger.info(f"请参考 .env.example 文件进行配置")
+    """創建環境變量模板"""
+    logger.info(f"📄 數據庫配置已整合到主要的 .env 文件中")
+    logger.info(f"請參考 .env.example 文件進行配置")
 
 def test_connections():
-    """测试数据库连接"""
-    logger.debug(f"\n🔍 测试数据库连接...")
+    """測試數據庫連接"""
+    logger.debug(f"\n🔍 測試數據庫連接...")
     
     try:
         from tradingagents.config.database_manager import get_database_manager
@@ -198,42 +198,42 @@ def test_connections():
 
         db_manager = get_database_manager()
         
-        # 测试基本功能
+        # 測試基本功能
         if db_manager.is_mongodb_available() and db_manager.is_redis_available():
-            logger.info(f"🎉 MongoDB + Redis 连接成功！")
+            logger.info(f"🎉 MongoDB + Redis 連接成功！")
 
-            # 获取统计信息
+            # 獲取統計信息
             stats = db_manager.get_cache_stats()
-            logger.info(f"📊 缓存统计: {stats}")
+            logger.info(f"📊 緩存統計: {stats}")
 
         elif db_manager.is_mongodb_available():
-            logger.info(f"✅ MongoDB 连接成功，Redis 未连接")
+            logger.info(f"✅ MongoDB 連接成功，Redis 未連接")
         elif db_manager.is_redis_available():
-            logger.info(f"✅ Redis 连接成功，MongoDB 未连接")
+            logger.info(f"✅ Redis 連接成功，MongoDB 未連接")
         else:
-            logger.error(f"❌ 数据库连接失败")
+            logger.error(f"❌ 數據庫連接失败")
             
         db_manager.close()
         
     except ImportError as e:
-        logger.error(f"❌ 导入失败: {e}")
-        logger.info(f"请先安装依赖包: pip install -r requirements_db.txt")
+        logger.error(f"❌ 導入失败: {e}")
+        logger.info(f"請先安裝依賴包: pip install -r requirements_db.txt")
     except Exception as e:
-        logger.error(f"❌ 连接测试失败: {e}")
+        logger.error(f"❌ 連接測試失败: {e}")
 
 def main():
-    """主函数"""
-    logger.info(f"🚀 TradingAgents 数据库环境设置")
+    """主函數"""
+    logger.info(f"🚀 TradingAgents 數據庫環境設置")
     logger.info(f"=")
     
-    # 检测操作系统
+    # 檢測操作系統
     system = platform.system().lower()
-    logger.info(f"🖥️ 检测到操作系统: {system}")
+    logger.info(f"🖥️ 檢測到操作系統: {system}")
     
-    # 安装Python依赖
+    # 安裝Python依賴
     install_python_packages()
     
-    # 根据操作系统提供设置指南
+    # 根據操作系統提供設置指南
     if system == "windows":
         setup_mongodb_windows()
         setup_redis_windows()
@@ -241,19 +241,19 @@ def main():
         setup_mongodb_linux()
         setup_redis_linux()
     else:
-        logger.warning(f"⚠️ 不支持的操作系统: {system}")
+        logger.warning(f"⚠️ 不支持的操作系統: {system}")
     
-    # Docker选项
+    # Docker選項
     setup_docker_option()
     
-    # 创建配置文件
+    # 創建配置文件
     create_env_template()
     
     logger.info(f"\n")
-    logger.info(f"📋 设置完成后，请运行以下命令测试连接:")
+    logger.info(f"📋 設置完成後，請運行以下命令測試連接:")
     logger.info(f"python scripts/setup_databases.py --test")
     
-    # 如果指定了测试参数
+    # 如果指定了測試參數
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         test_connections()
 

@@ -1,29 +1,29 @@
-# 数据缓存策略
+# 數據緩存策略
 
 ## 概述
 
-TradingAgents 框架采用多层次的缓存策略来优化数据访问性能，减少API调用成本，并提高系统响应速度。本文档详细介绍了缓存架构、策略、实现和最佳实践。
+TradingAgents 框架採用多層次的緩存策略來優化數據訪問性能，减少API調用成本，並提高系統響應速度。本文档詳細介紹了緩存架構、策略、實現和最佳實踐。
 
-## 缓存架构
+## 緩存架構
 
-### 多层缓存设计
+### 多層緩存設計
 
 ```mermaid
 graph TB
-    subgraph "应用层"
-        AGENT1[分析师智能体]
-        AGENT2[研究员智能体]
-        AGENT3[交易员智能体]
+    subgraph "應用層"
+        AGENT1[分析師智能體]
+        AGENT2[研究員智能體]
+        AGENT3[交易員智能體]
     end
     
-    subgraph "缓存层次"
-        L1[L1: 内存缓存<br/>最快访问]
-        L2[L2: 本地文件缓存<br/>持久化存储]
-        L3[L3: Redis缓存<br/>分布式共享]
-        L4[L4: 数据库缓存<br/>长期存储]
+    subgraph "緩存層次"
+        L1[L1: 內存緩存<br/>最快訪問]
+        L2[L2: 本地文件緩存<br/>持久化存储]
+        L3[L3: Redis緩存<br/>分布式共享]
+        L4[L4: 數據庫緩存<br/>長期存储]
     end
     
-    subgraph "数据源"
+    subgraph "數據源"
         API1[FinnHub API]
         API2[Yahoo Finance]
         API3[Reddit API]
@@ -44,12 +44,12 @@ graph TB
     L4 --> API4
 ```
 
-## 1. 缓存管理器
+## 1. 緩存管理器
 
-### 核心缓存类
+### 核心緩存類
 ```python
 class CacheManager:
-    """缓存管理器 - 统一管理多层缓存"""
+    """緩存管理器 - 統一管理多層緩存"""
     
     def __init__(self, config: Dict):
         self.config = config
@@ -58,42 +58,42 @@ class CacheManager:
         self.redis_cache = RedisCache(config.get("redis_cache", {})) if config.get("redis_enabled") else None
         self.db_cache = DatabaseCache(config.get("db_cache", {})) if config.get("db_enabled") else None
         
-        # 缓存策略配置
+        # 緩存策略配置
         self.cache_strategies = self._load_cache_strategies()
         self.ttl_config = self._load_ttl_config()
         
     def get(self, key: str, data_type: str = "default") -> Optional[Any]:
-        """获取缓存数据 - 按层次查找"""
+        """獲取緩存數據 - 按層次查找"""
         
-        # L1: 内存缓存
+        # L1: 內存緩存
         data = self.memory_cache.get(key)
         if data is not None:
             self._record_cache_hit("memory", key, data_type)
             return data
         
-        # L2: 文件缓存
+        # L2: 文件緩存
         data = self.file_cache.get(key)
         if data is not None:
-            # 回填到内存缓存
+            # 回填到內存緩存
             self.memory_cache.set(key, data, self._get_ttl(data_type))
             self._record_cache_hit("file", key, data_type)
             return data
         
-        # L3: Redis缓存
+        # L3: Redis緩存
         if self.redis_cache:
             data = self.redis_cache.get(key)
             if data is not None:
-                # 回填到上层缓存
+                # 回填到上層緩存
                 self.file_cache.set(key, data, self._get_ttl(data_type))
                 self.memory_cache.set(key, data, self._get_ttl(data_type))
                 self._record_cache_hit("redis", key, data_type)
                 return data
         
-        # L4: 数据库缓存
+        # L4: 數據庫緩存
         if self.db_cache:
             data = self.db_cache.get(key)
             if data is not None:
-                # 回填到所有上层缓存
+                # 回填到所有上層緩存
                 if self.redis_cache:
                     self.redis_cache.set(key, data, self._get_ttl(data_type))
                 self.file_cache.set(key, data, self._get_ttl(data_type))
@@ -101,61 +101,61 @@ class CacheManager:
                 self._record_cache_hit("database", key, data_type)
                 return data
         
-        # 缓存未命中
+        # 緩存未命中
         self._record_cache_miss(key, data_type)
         return None
     
     def set(self, key: str, data: Any, data_type: str = "default", ttl: Optional[int] = None) -> None:
-        """设置缓存数据 - 写入所有层次"""
+        """設置緩存數據 - 寫入所有層次"""
         
         if ttl is None:
             ttl = self._get_ttl(data_type)
         
-        # 根据数据类型和大小决定缓存策略
+        # 根據數據類型和大小決定緩存策略
         cache_strategy = self._determine_cache_strategy(data, data_type)
         
-        # L1: 内存缓存 (总是缓存小数据)
+        # L1: 內存緩存 (总是緩存小數據)
         if cache_strategy["memory"]:
             self.memory_cache.set(key, data, ttl)
         
-        # L2: 文件缓存 (缓存中等大小数据)
+        # L2: 文件緩存 (緩存中等大小數據)
         if cache_strategy["file"]:
             self.file_cache.set(key, data, ttl)
         
-        # L3: Redis缓存 (缓存共享数据)
+        # L3: Redis緩存 (緩存共享數據)
         if cache_strategy["redis"] and self.redis_cache:
             self.redis_cache.set(key, data, ttl)
         
-        # L4: 数据库缓存 (缓存重要数据)
+        # L4: 數據庫緩存 (緩存重要數據)
         if cache_strategy["database"] and self.db_cache:
             self.db_cache.set(key, data, ttl)
     
     def _determine_cache_strategy(self, data: Any, data_type: str) -> Dict[str, bool]:
-        """确定缓存策略"""
+        """確定緩存策略"""
         
         data_size = self._estimate_data_size(data)
         data_importance = self._assess_data_importance(data_type)
         
         strategy = {
-            "memory": data_size < 1024 * 1024,  # 小于1MB
-            "file": data_size < 10 * 1024 * 1024,  # 小于10MB
-            "redis": data_importance >= 0.7,  # 重要数据
+            "memory": data_size < 1024 * 1024,  # 小於1MB
+            "file": data_size < 10 * 1024 * 1024,  # 小於10MB
+            "redis": data_importance >= 0.7,  # 重要數據
             "database": data_importance >= 0.8 or data_type in ["fundamental_data", "company_profile"]
         }
         
         return strategy
     
     def _get_ttl(self, data_type: str) -> int:
-        """获取数据类型的TTL"""
+        """獲取數據類型的TTL"""
         return self.ttl_config.get(data_type, self.ttl_config["default"])
 ```
 
-## 2. 内存缓存 (L1)
+## 2. 內存緩存 (L1)
 
-### 高速内存缓存
+### 高速內存緩存
 ```python
 class MemoryCache:
-    """内存缓存 - 最快的缓存层"""
+    """內存緩存 - 最快的緩存層"""
     
     def __init__(self, config: Dict):
         self.config = config
@@ -165,31 +165,31 @@ class MemoryCache:
         self.cleanup_threshold = config.get("cleanup_threshold", 0.8)
         
     def get(self, key: str) -> Optional[Any]:
-        """获取缓存项"""
+        """獲取緩存項"""
         if key in self.cache:
             item = self.cache[key]
             
-            # 检查是否过期
+            # 檢查是否過期
             if self._is_expired(item):
                 del self.cache[key]
                 if key in self.access_times:
                     del self.access_times[key]
                 return None
             
-            # 更新访问时间
+            # 更新訪問時間
             self.access_times[key] = time.time()
             return item["data"]
         
         return None
     
     def set(self, key: str, data: Any, ttl: int) -> None:
-        """设置缓存项"""
+        """設置緩存項"""
         
-        # 检查是否需要清理
+        # 檢查是否需要清理
         if len(self.cache) >= self.max_size * self.cleanup_threshold:
             self._cleanup_cache()
         
-        # 存储数据
+        # 存储數據
         self.cache[key] = {
             "data": data,
             "timestamp": time.time(),
@@ -198,11 +198,11 @@ class MemoryCache:
         self.access_times[key] = time.time()
     
     def _cleanup_cache(self) -> None:
-        """清理过期和最少使用的缓存项"""
+        """清理過期和最少使用的緩存項"""
         
         current_time = time.time()
         
-        # 首先清理过期项
+        # 首先清理過期項
         expired_keys = []
         for key, item in self.cache.items():
             if self._is_expired(item):
@@ -215,9 +215,9 @@ class MemoryCache:
         
         # 如果还是太多，使用LRU策略清理
         if len(self.cache) >= self.max_size * self.cleanup_threshold:
-            # 按访问时间排序，删除最少使用的
+            # 按訪問時間排序，刪除最少使用的
             sorted_keys = sorted(self.access_times.keys(), key=lambda k: self.access_times[k])
-            keys_to_remove = sorted_keys[:len(sorted_keys) // 4]  # 删除25%
+            keys_to_remove = sorted_keys[:len(sorted_keys) // 4]  # 刪除25%
             
             for key in keys_to_remove:
                 if key in self.cache:
@@ -226,16 +226,16 @@ class MemoryCache:
                     del self.access_times[key]
     
     def _is_expired(self, item: Dict) -> bool:
-        """检查缓存项是否过期"""
+        """檢查緩存項是否過期"""
         return time.time() - item["timestamp"] > item["ttl"]
 ```
 
-## 3. 文件缓存 (L2)
+## 3. 文件緩存 (L2)
 
-### 持久化文件缓存
+### 持久化文件緩存
 ```python
 class FileCache:
-    """文件缓存 - 持久化存储"""
+    """文件緩存 - 持久化存储"""
     
     def __init__(self, config: Dict):
         self.config = config
@@ -245,7 +245,7 @@ class FileCache:
         self.max_file_size = config.get("max_file_size", 50 * 1024 * 1024)  # 50MB
         
     def get(self, key: str) -> Optional[Any]:
-        """从文件获取缓存数据"""
+        """從文件獲取緩存數據"""
         
         cache_file = self._get_cache_file_path(key)
         
@@ -253,12 +253,12 @@ class FileCache:
             return None
         
         try:
-            # 检查文件修改时间
+            # 檢查文件修改時間
             if self._is_file_expired(cache_file, key):
-                cache_file.unlink()  # 删除过期文件
+                cache_file.unlink()  # 刪除過期文件
                 return None
             
-            # 读取数据
+            # 讀取數據
             with open(cache_file, 'rb') as f:
                 if self.compression_enabled:
                     compressed_data = f.read()
@@ -270,24 +270,24 @@ class FileCache:
             
         except Exception as e:
             print(f"Error reading cache file {cache_file}: {e}")
-            # 删除损坏的缓存文件
+            # 刪除損坏的緩存文件
             if cache_file.exists():
                 cache_file.unlink()
             return None
     
     def set(self, key: str, data: Any, ttl: int) -> None:
-        """将数据写入文件缓存"""
+        """将數據寫入文件緩存"""
         
         cache_file = self._get_cache_file_path(key)
         
         try:
-            # 检查数据大小
+            # 檢查數據大小
             data_size = self._estimate_data_size(data)
             if data_size > self.max_file_size:
                 print(f"Data too large for file cache: {data_size} bytes")
                 return
             
-            # 创建缓存元数据
+            # 創建緩存元數據
             cache_data = {
                 "data": data,
                 "timestamp": time.time(),
@@ -295,7 +295,7 @@ class FileCache:
                 "key": key
             }
             
-            # 写入文件
+            # 寫入文件
             with open(cache_file, 'wb') as f:
                 if self.compression_enabled:
                     compressed_data = self._compress_data(cache_data)
@@ -307,13 +307,13 @@ class FileCache:
             print(f"Error writing cache file {cache_file}: {e}")
     
     def _get_cache_file_path(self, key: str) -> Path:
-        """获取缓存文件路径"""
-        # 使用哈希避免文件名过长或包含特殊字符
+        """獲取緩存文件路徑"""
+        # 使用哈希避免文件名過長或包含特殊字符
         key_hash = hashlib.md5(key.encode()).hexdigest()
         return self.cache_dir / f"{key_hash}.cache"
     
     def _is_file_expired(self, cache_file: Path, key: str) -> bool:
-        """检查缓存文件是否过期"""
+        """檢查緩存文件是否過期"""
         try:
             with open(cache_file, 'rb') as f:
                 if self.compression_enabled:
@@ -325,22 +325,22 @@ class FileCache:
             return time.time() - cache_data["timestamp"] > cache_data["ttl"]
             
         except Exception:
-            return True  # 如果无法读取，认为已过期
+            return True  # 如果無法讀取，認為已過期
     
     def _compress_data(self, data: Any) -> bytes:
-        """压缩数据"""
+        """壓縮數據"""
         import gzip
         pickled_data = pickle.dumps(data)
         return gzip.compress(pickled_data)
     
     def _decompress_data(self, compressed_data: bytes) -> Any:
-        """解压数据"""
+        """解壓數據"""
         import gzip
         pickled_data = gzip.decompress(compressed_data)
         return pickle.loads(pickled_data)
     
     def cleanup_expired_files(self) -> None:
-        """清理过期的缓存文件"""
+        """清理過期的緩存文件"""
         for cache_file in self.cache_dir.glob("*.cache"):
             try:
                 if self._is_file_expired(cache_file, ""):
@@ -349,12 +349,12 @@ class FileCache:
                 print(f"Error checking cache file {cache_file}: {e}")
 ```
 
-## 4. Redis缓存 (L3)
+## 4. Redis緩存 (L3)
 
-### 分布式共享缓存
+### 分布式共享緩存
 ```python
 class RedisCache:
-    """Redis缓存 - 分布式共享缓存"""
+    """Redis緩存 - 分布式共享緩存"""
     
     def __init__(self, config: Dict):
         self.config = config
@@ -363,7 +363,7 @@ class RedisCache:
         self.serialization_format = config.get("serialization", "pickle")  # pickle, json, msgpack
         
     def _initialize_redis_client(self):
-        """初始化Redis客户端"""
+        """初始化Redis客戶端"""
         try:
             import redis
             
@@ -383,7 +383,7 @@ class RedisCache:
             
             client = redis.Redis(**redis_config)
             
-            # 测试连接
+            # 測試連接
             client.ping()
             print("Redis connection established")
             
@@ -394,7 +394,7 @@ class RedisCache:
             return None
     
     def get(self, key: str) -> Optional[Any]:
-        """从Redis获取数据"""
+        """從Redis獲取數據"""
         if not self.redis_client:
             return None
         
@@ -405,7 +405,7 @@ class RedisCache:
             if data is None:
                 return None
             
-            # 反序列化数据
+            # 反序列化數據
             return self._deserialize_data(data)
             
         except Exception as e:
@@ -413,24 +413,24 @@ class RedisCache:
             return None
     
     def set(self, key: str, data: Any, ttl: int) -> None:
-        """向Redis设置数据"""
+        """向Redis設置數據"""
         if not self.redis_client:
             return
         
         try:
             full_key = self.key_prefix + key
             
-            # 序列化数据
+            # 序列化數據
             serialized_data = self._serialize_data(data)
             
-            # 设置数据和TTL
+            # 設置數據和TTL
             self.redis_client.setex(full_key, ttl, serialized_data)
             
         except Exception as e:
             print(f"Error setting data to Redis: {e}")
     
     def _serialize_data(self, data: Any) -> bytes:
-        """序列化数据"""
+        """序列化數據"""
         if self.serialization_format == "pickle":
             return pickle.dumps(data)
         elif self.serialization_format == "json":
@@ -443,7 +443,7 @@ class RedisCache:
             raise ValueError(f"Unsupported serialization format: {self.serialization_format}")
     
     def _deserialize_data(self, data: bytes) -> Any:
-        """反序列化数据"""
+        """反序列化數據"""
         if self.serialization_format == "pickle":
             return pickle.loads(data)
         elif self.serialization_format == "json":
@@ -456,7 +456,7 @@ class RedisCache:
             raise ValueError(f"Unsupported serialization format: {self.serialization_format}")
     
     def delete(self, key: str) -> None:
-        """删除Redis中的数据"""
+        """刪除Redis中的數據"""
         if not self.redis_client:
             return
         
@@ -467,29 +467,29 @@ class RedisCache:
             print(f"Error deleting data from Redis: {e}")
     
     def clear_expired(self) -> None:
-        """清理过期的键（Redis自动处理TTL）"""
-        # Redis会自动清理过期键，这里可以添加额外的清理逻辑
+        """清理過期的键（Redis自動處理TTL）"""
+        # Redis會自動清理過期键，這里可以添加額外的清理逻辑
         pass
 ```
 
-## 5. 缓存策略配置
+## 5. 緩存策略配置
 
 ### TTL配置
 ```python
-# 不同数据类型的TTL配置
+# 不同數據類型的TTL配置
 TTL_CONFIG = {
-    "price_data": 60,           # 1分钟 - 价格数据变化快
-    "fundamental_data": 3600,   # 1小时 - 基本面数据相对稳定
-    "company_profile": 86400,   # 24小时 - 公司信息变化很少
-    "news_data": 1800,          # 30分钟 - 新闻数据中等频率
-    "social_data": 900,         # 15分钟 - 社交媒体数据变化较快
-    "technical_indicators": 300, # 5分钟 - 技术指标需要较新数据
-    "market_data": 600,         # 10分钟 - 市场数据中等频率
-    "historical_data": 7200,    # 2小时 - 历史数据相对稳定
-    "default": 1800             # 30分钟 - 默认TTL
+    "price_data": 60,           # 1分鐘 - 價格數據變化快
+    "fundamental_data": 3600,   # 1小時 - 基本面數據相對穩定
+    "company_profile": 86400,   # 24小時 - 公司信息變化很少
+    "news_data": 1800,          # 30分鐘 - 新聞數據中等頻率
+    "social_data": 900,         # 15分鐘 - 社交媒體數據變化較快
+    "technical_indicators": 300, # 5分鐘 - 技術指標需要較新數據
+    "market_data": 600,         # 10分鐘 - 市場數據中等頻率
+    "historical_data": 7200,    # 2小時 - 歷史數據相對穩定
+    "default": 1800             # 30分鐘 - 默認TTL
 }
 
-# 缓存重要性评分
+# 緩存重要性評分
 DATA_IMPORTANCE = {
     "price_data": 0.9,          # 高重要性
     "fundamental_data": 0.8,    # 高重要性
@@ -502,12 +502,12 @@ DATA_IMPORTANCE = {
 }
 ```
 
-## 6. 缓存监控和优化
+## 6. 緩存監控和優化
 
-### 缓存性能监控
+### 緩存性能監控
 ```python
 class CacheMonitor:
-    """缓存性能监控"""
+    """緩存性能監控"""
     
     def __init__(self):
         self.metrics = {
@@ -519,7 +519,7 @@ class CacheMonitor:
         }
         
     def record_hit(self, cache_level: str, key: str, data_type: str, response_time: float = None):
-        """记录缓存命中"""
+        """記錄緩存命中"""
         self.metrics["hits"][cache_level] += 1
         if response_time:
             self.metrics["response_times"][cache_level].append(response_time)
@@ -527,7 +527,7 @@ class CacheMonitor:
         self._update_hit_rate(cache_level)
     
     def record_miss(self, key: str, data_type: str):
-        """记录缓存未命中"""
+        """記錄緩存未命中"""
         self.metrics["misses"]["total"] += 1
         self._update_hit_rate("total")
     
@@ -541,7 +541,7 @@ class CacheMonitor:
             self.metrics["hit_rates"][cache_level] = hits / total
     
     def get_performance_report(self) -> Dict:
-        """获取性能报告"""
+        """獲取性能報告"""
         return {
             "hit_rates": dict(self.metrics["hit_rates"]),
             "total_hits": sum(self.metrics["hits"].values()),
@@ -554,30 +554,30 @@ class CacheMonitor:
         }
     
     def _calculate_cache_efficiency(self) -> float:
-        """计算缓存效率"""
+        """計算緩存效率"""
         total_hits = sum(self.metrics["hits"].values())
         total_requests = total_hits + sum(self.metrics["misses"].values())
         
         return total_hits / total_requests if total_requests > 0 else 0.0
 ```
 
-## 7. 缓存最佳实践
+## 7. 緩存最佳實踐
 
 ### 使用建议
 ```python
 class CacheBestPractices:
-    """缓存最佳实践指南"""
+    """緩存最佳實踐指南"""
     
     @staticmethod
     def generate_cache_key(symbol: str, data_type: str, date: str = None, **kwargs) -> str:
-        """生成标准化的缓存键"""
+        """生成標準化的緩存键"""
         
         key_parts = [symbol.upper(), data_type]
         
         if date:
             key_parts.append(date)
         
-        # 添加其他参数
+        # 添加其他參數
         for k, v in sorted(kwargs.items()):
             key_parts.append(f"{k}:{v}")
         
@@ -585,17 +585,17 @@ class CacheBestPractices:
     
     @staticmethod
     def should_cache_data(data: Any, data_type: str) -> bool:
-        """判断是否应该缓存数据"""
+        """判斷是否應该緩存數據"""
         
-        # 不缓存空数据
+        # 不緩存空數據
         if not data:
             return False
         
-        # 不缓存错误数据
+        # 不緩存錯誤數據
         if isinstance(data, dict) and "error" in data:
             return False
         
-        # 不缓存过大的数据
+        # 不緩存過大的數據
         data_size = CacheBestPractices._estimate_size(data)
         if data_size > 100 * 1024 * 1024:  # 100MB
             return False
@@ -604,11 +604,11 @@ class CacheBestPractices:
     
     @staticmethod
     def _estimate_size(obj: Any) -> int:
-        """估算对象大小"""
+        """估算對象大小"""
         try:
             return len(pickle.dumps(obj))
         except:
             return 0
 ```
 
-通过这套完整的缓存策略，TradingAgents 能够显著提高数据访问性能，减少API调用成本，并提供更好的用户体验。
+通過這套完整的緩存策略，TradingAgents 能夠顯著提高數據訪問性能，减少API調用成本，並提供更好的用戶體驗。

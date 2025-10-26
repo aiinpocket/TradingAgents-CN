@@ -1,39 +1,39 @@
-# 🐳 Docker环境配置指南
+# 🐳 Docker環境配置指南
 
 ## 📋 概述
 
-本文档详细介绍TradingAgents-CN在Docker环境中的配置方法，包括环境变量设置、服务配置、网络配置和数据持久化配置。
+本文档詳細介紹TradingAgents-CN在Docker環境中的配置方法，包括環境變量設置、服務配置、網絡配置和數據持久化配置。
 
-## 🎯 Docker配置特点
+## 🎯 Docker配置特點
 
-### 与本地部署的区别
+### 与本地部署的区別
 
-| 配置项 | 本地部署 | Docker部署 |
+| 配置項 | 本地部署 | Docker部署 |
 |-------|---------|-----------|
-| **数据库连接** | localhost | 容器服务名 |
+| **數據庫連接** | localhost | 容器服務名 |
 | **端口配置** | 直接端口 | 端口映射 |
-| **文件路径** | 绝对路径 | 容器内路径 |
-| **环境隔离** | 系统环境 | 容器环境 |
+| **文件路徑** | 絕對路徑 | 容器內路徑 |
+| **環境隔離** | 系統環境 | 容器環境 |
 
-### 配置优势
+### 配置優势
 
-- ✅ **环境一致性**: 开发、测试、生产环境完全一致
-- ✅ **自动服务发现**: 容器间自动DNS解析
-- ✅ **网络隔离**: 安全的内部网络通信
-- ✅ **数据持久化**: 数据卷保证数据安全
+- ✅ **環境一致性**: 開發、測試、生產環境完全一致
+- ✅ **自動服務發現**: 容器間自動DNS解析
+- ✅ **網絡隔離**: 安全的內部網絡通信
+- ✅ **數據持久化**: 數據卷保證數據安全
 
-## 🔧 环境变量配置
+## 🔧 環境變量配置
 
-### 基础环境变量
+### 基础環境變量
 
 ```bash
-# === Docker环境基础配置 ===
-# 应用配置
+# === Docker環境基础配置 ===
+# 應用配置
 APP_NAME=TradingAgents-CN
 APP_VERSION=0.1.7
 APP_ENV=production
 
-# 服务端口配置
+# 服務端口配置
 WEB_PORT=8501
 MONGODB_PORT=27017
 REDIS_PORT=6379
@@ -41,32 +41,32 @@ MONGO_EXPRESS_PORT=8081
 REDIS_COMMANDER_PORT=8082
 ```
 
-### 数据库连接配置
+### 數據庫連接配置
 
 ```bash
-# === 数据库连接配置 ===
-# MongoDB配置 (使用容器服务名)
+# === 數據庫連接配置 ===
+# MongoDB配置 (使用容器服務名)
 MONGODB_URL=mongodb://mongodb:27017/tradingagents
 MONGODB_HOST=mongodb
 MONGODB_PORT=27017
 MONGODB_DATABASE=tradingagents
 
-# MongoDB认证 (生产环境)
+# MongoDB認證 (生產環境)
 MONGODB_USERNAME=admin
 MONGODB_PASSWORD=${MONGO_PASSWORD}
 MONGODB_AUTH_SOURCE=admin
 
-# Redis配置 (使用容器服务名)
+# Redis配置 (使用容器服務名)
 REDIS_URL=redis://redis:6379
 REDIS_HOST=redis
 REDIS_PORT=6379
 REDIS_DB=0
 
-# Redis认证 (生产环境)
+# Redis認證 (生產環境)
 REDIS_PASSWORD=${REDIS_PASSWORD}
 ```
 
-### LLM服务配置
+### LLM服務配置
 
 ```bash
 # === LLM模型配置 ===
@@ -93,7 +93,7 @@ LLM_PRIORITY_ORDER=deepseek,qwen,gemini
 
 ## 📊 Docker Compose配置
 
-### 主应用服务配置
+### 主應用服務配置
 
 ```yaml
 # docker-compose.yml
@@ -106,7 +106,7 @@ services:
     ports:
       - "${WEB_PORT:-8501}:8501"
     environment:
-      # 数据库连接
+      # 數據庫連接
       - MONGODB_URL=mongodb://mongodb:27017/tradingagents
       - REDIS_URL=redis://redis:6379
       
@@ -115,7 +115,7 @@ services:
       - QWEN_API_KEY=${QWEN_API_KEY}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       
-      # 应用配置
+      # 應用配置
       - APP_ENV=docker
       - EXPORT_ENABLED=true
       - EXPORT_DEFAULT_FORMAT=word,pdf
@@ -123,11 +123,11 @@ services:
       # 配置文件
       - .env:/app/.env
       
-      # 开发环境代码同步 (可选)
+      # 開發環境代碼同步 (可選)
       - ./web:/app/web
       - ./tradingagents:/app/tradingagents
       
-      # 导出文件存储
+      # 導出文件存储
       - ./exports:/app/exports
     depends_on:
       - mongodb
@@ -137,7 +137,7 @@ services:
     restart: unless-stopped
 ```
 
-### 数据库服务配置
+### 數據庫服務配置
 
 ```yaml
   mongodb:
@@ -147,7 +147,7 @@ services:
       - "${MONGODB_PORT:-27017}:27017"
     environment:
       - MONGO_INITDB_DATABASE=tradingagents
-      # 生产环境认证
+      # 生產環境認證
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME:-admin}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     volumes:
@@ -205,9 +205,9 @@ services:
     restart: unless-stopped
 ```
 
-## 🌐 网络配置
+## 🌐 網絡配置
 
-### 网络定义
+### 網絡定義
 
 ```yaml
 networks:
@@ -219,15 +219,15 @@ networks:
         - subnet: 172.20.0.0/16
 ```
 
-### 服务发现
+### 服務發現
 
 ```bash
-# 容器内服务访问
+# 容器內服務訪問
 # MongoDB: mongodb:27017
 # Redis: redis:6379
-# Web应用: web:8501
+# Web應用: web:8501
 
-# 外部访问
+# 外部訪問
 # Web界面: localhost:8501
 # MongoDB: localhost:27017
 # Redis: localhost:6379
@@ -235,9 +235,9 @@ networks:
 # Redis Commander: localhost:8082
 ```
 
-## 💾 数据持久化配置
+## 💾 數據持久化配置
 
-### 数据卷定义
+### 數據卷定義
 
 ```yaml
 volumes:
@@ -259,40 +259,40 @@ volumes:
 ### 备份配置
 
 ```bash
-# === 数据备份配置 ===
-# 备份路径
+# === 數據备份配置 ===
+# 备份路徑
 BACKUP_PATH=./backups
 BACKUP_RETENTION_DAYS=30
 
-# 自动备份
+# 自動备份
 ENABLE_AUTO_BACKUP=true
-BACKUP_SCHEDULE="0 2 * * *"  # 每天凌晨2点
+BACKUP_SCHEDULE="0 2 * * *"  # 每天凌晨2點
 
-# 备份压缩
+# 备份壓縮
 BACKUP_COMPRESS=true
 BACKUP_ENCRYPTION=false
 ```
 
 ## 🔒 安全配置
 
-### 生产环境安全
+### 生產環境安全
 
 ```bash
 # === 安全配置 ===
-# 管理员认证
+# 管理員認證
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=${ADMIN_PASSWORD}
 
-# 数据库认证
+# 數據庫認證
 MONGO_USERNAME=admin
 MONGO_PASSWORD=${MONGO_PASSWORD}
 REDIS_PASSWORD=${REDIS_PASSWORD}
 
-# API密钥加密
+# API密鑰加密
 ENCRYPT_API_KEYS=true
 ENCRYPTION_KEY=${ENCRYPTION_KEY}
 
-# 网络安全
+# 網絡安全
 ENABLE_FIREWALL=true
 ALLOWED_IPS=127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 ```
@@ -300,7 +300,7 @@ ALLOWED_IPS=127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 ### SSL/TLS配置
 
 ```yaml
-# HTTPS配置 (可选)
+# HTTPS配置 (可選)
   nginx:
     image: nginx:alpine
     ports:
@@ -313,9 +313,9 @@ ALLOWED_IPS=127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       - web
 ```
 
-## 📊 监控配置
+## 📊 監控配置
 
-### 健康检查
+### 健康檢查
 
 ```yaml
 healthcheck:
@@ -326,7 +326,7 @@ healthcheck:
   start_period: 40s
 ```
 
-### 日志配置
+### 日誌配置
 
 ```yaml
 logging:
@@ -338,20 +338,20 @@ logging:
 
 ## 🚀 部署配置
 
-### 开发环境
+### 開發環境
 
 ```bash
-# 开发环境配置
+# 開發環境配置
 APP_ENV=development
 DEBUG=true
 LOG_LEVEL=DEBUG
 ENABLE_HOT_RELOAD=true
 ```
 
-### 生产环境
+### 生產環境
 
 ```bash
-# 生产环境配置
+# 生產環境配置
 APP_ENV=production
 DEBUG=false
 LOG_LEVEL=INFO
@@ -365,30 +365,30 @@ MAX_CPU=2.0
 
 ## 🔧 故障排除
 
-### 常见问题
+### 常见問題
 
-1. **服务连接失败**
+1. **服務連接失败**
    ```bash
-   # 检查网络连接
+   # 檢查網絡連接
    docker exec TradingAgents-web ping mongodb
    docker exec TradingAgents-web ping redis
    ```
 
-2. **数据持久化问题**
+2. **數據持久化問題**
    ```bash
-   # 检查数据卷
+   # 檢查數據卷
    docker volume ls
    docker volume inspect mongodb_data
    ```
 
-3. **环境变量问题**
+3. **環境變量問題**
    ```bash
-   # 检查环境变量
+   # 檢查環境變量
    docker exec TradingAgents-web env | grep MONGODB
    ```
 
 ---
 
-*最后更新: 2025-07-13*  
+*最後更新: 2025-07-13*  
 *版本: cn-0.1.7*  
 *贡献者: [@breeze303](https://github.com/breeze303)*

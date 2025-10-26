@@ -1,7 +1,7 @@
 import time
 import json
 
-# 导入统一日志系统
+# 導入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
@@ -21,87 +21,87 @@ def create_risk_manager(llm, memory):
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
 
-        # 安全检查：确保memory不为None
+        # 安全檢查：確保memory不為None
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"⚠️ [DEBUG] memory为None，跳过历史记忆检索")
+            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記忆檢索")
             past_memories = []
 
         past_memory_str = ""
         for i, rec in enumerate(past_memories, 1):
             past_memory_str += rec["recommendation"] + "\n\n"
 
-        prompt = f"""作为风险管理委员会主席和辩论主持人，您的目标是评估三位风险分析师——激进、中性和安全/保守——之间的辩论，并确定交易员的最佳行动方案。您的决策必须产生明确的建议：买入、卖出或持有。只有在有具体论据强烈支持时才选择持有，而不是在所有方面都似乎有效时作为后备选择。力求清晰和果断。
+        prompt = f"""作為風險管理委員會主席和辩論主持人，您的目標是評估三位風險分析師——激進、中性和安全/保守——之間的辩論，並確定交易員的最佳行動方案。您的決策必须產生明確的建议：买入、卖出或持有。只有在有具體論據强烈支持時才選擇持有，而不是在所有方面都似乎有效時作為後备選擇。力求清晰和果斷。
 
-决策指导原则：
-1. **总结关键论点**：提取每位分析师的最强观点，重点关注与背景的相关性。
-2. **提供理由**：用辩论中的直接引用和反驳论点支持您的建议。
-3. **完善交易员计划**：从交易员的原始计划**{trader_plan}**开始，根据分析师的见解进行调整。
-4. **从过去的错误中学习**：使用**{past_memory_str}**中的经验教训来解决先前的误判，改进您现在做出的决策，确保您不会做出错误的买入/卖出/持有决定而亏损。
+決策指導原則：
+1. **总結關键論點**：提取每位分析師的最强觀點，重點關註与背景的相關性。
+2. **提供理由**：用辩論中的直接引用和反驳論點支持您的建议。
+3. **完善交易員計劃**：從交易員的原始計劃**{trader_plan}**開始，根據分析師的见解進行調整。
+4. **從過去的錯誤中學习**：使用**{past_memory_str}**中的經驗教训來解決先前的誤判，改進您現在做出的決策，確保您不會做出錯誤的买入/卖出/持有決定而亏損。
 
 交付成果：
-- 明确且可操作的建议：买入、卖出或持有。
-- 基于辩论和过去反思的详细推理。
+- 明確且可操作的建议：买入、卖出或持有。
+- 基於辩論和過去反思的詳細推理。
 
 ---
 
-**分析师辩论历史：**
+**分析師辩論歷史：**
 {history}
 
 ---
 
-专注于可操作的见解和持续改进。建立在过去经验教训的基础上，批判性地评估所有观点，确保每个决策都能带来更好的结果。请用中文撰写所有分析内容和建议。"""
+專註於可操作的见解和持续改進。建立在過去經驗教训的基础上，批判性地評估所有觀點，確保每個決策都能帶來更好的結果。請用中文撰寫所有分析內容和建议。"""
 
-        # 增强的LLM调用，包含错误处理和重试机制
+        # 增强的LLM調用，包含錯誤處理和重試機制
         max_retries = 3
         retry_count = 0
         response_content = ""
         
         while retry_count < max_retries:
             try:
-                logger.info(f"🔄 [Risk Manager] 调用LLM生成交易决策 (尝试 {retry_count + 1}/{max_retries})")
+                logger.info(f"🔄 [Risk Manager] 調用LLM生成交易決策 (嘗試 {retry_count + 1}/{max_retries})")
                 response = llm.invoke(prompt)
                 
                 if response and hasattr(response, 'content') and response.content:
                     response_content = response.content.strip()
-                    if len(response_content) > 10:  # 确保响应有实质内容
-                        logger.info(f"✅ [Risk Manager] LLM调用成功，生成决策长度: {len(response_content)} 字符")
+                    if len(response_content) > 10:  # 確保響應有實质內容
+                        logger.info(f"✅ [Risk Manager] LLM調用成功，生成決策長度: {len(response_content)} 字符")
                         break
                     else:
-                        logger.warning(f"⚠️ [Risk Manager] LLM响应内容过短: {len(response_content)} 字符")
+                        logger.warning(f"⚠️ [Risk Manager] LLM響應內容過短: {len(response_content)} 字符")
                         response_content = ""
                 else:
-                    logger.warning(f"⚠️ [Risk Manager] LLM响应为空或无效")
+                    logger.warning(f"⚠️ [Risk Manager] LLM響應為空或無效")
                     response_content = ""
                     
             except Exception as e:
-                logger.error(f"❌ [Risk Manager] LLM调用失败 (尝试 {retry_count + 1}): {str(e)}")
+                logger.error(f"❌ [Risk Manager] LLM調用失败 (嘗試 {retry_count + 1}): {str(e)}")
                 response_content = ""
             
             retry_count += 1
             if retry_count < max_retries and not response_content:
-                logger.info(f"🔄 [Risk Manager] 等待2秒后重试...")
+                logger.info(f"🔄 [Risk Manager] 等待2秒後重試...")
                 time.sleep(2)
         
-        # 如果所有重试都失败，生成默认决策
+        # 如果所有重試都失败，生成默認決策
         if not response_content:
-            logger.error(f"❌ [Risk Manager] 所有LLM调用尝试失败，使用默认决策")
-            response_content = f"""**默认建议：持有**
+            logger.error(f"❌ [Risk Manager] 所有LLM調用嘗試失败，使用默認決策")
+            response_content = f"""**默認建议：持有**
 
-由于技术原因无法生成详细分析，基于当前市场状况和风险控制原则，建议对{company_name}采取持有策略。
+由於技術原因無法生成詳細分析，基於當前市場狀况和風險控制原則，建议對{company_name}採取持有策略。
 
 **理由：**
-1. 市场信息不足，避免盲目操作
-2. 保持现有仓位，等待更明确的市场信号
-3. 控制风险，避免在不确定性高的情况下做出激进决策
+1. 市場信息不足，避免盲目操作
+2. 保持現有仓位，等待更明確的市場信號
+3. 控制風險，避免在不確定性高的情况下做出激進決策
 
 **建议：**
-- 密切关注市场动态和公司基本面变化
-- 设置合理的止损和止盈位
-- 等待更好的入场或出场时机
+- 密切關註市場動態和公司基本面變化
+- 設置合理的止損和止盈位
+- 等待更好的入場或出場時機
 
-注意：此为系统默认建议，建议结合人工分析做出最终决策。"""
+註意：此為系統默認建议，建议結合人工分析做出最终決策。"""
 
         new_risk_debate_state = {
             "judge_decision": response_content,
@@ -116,7 +116,7 @@ def create_risk_manager(llm, memory):
             "count": risk_debate_state["count"],
         }
 
-        logger.info(f"📋 [Risk Manager] 最终决策生成完成，内容长度: {len(response_content)} 字符")
+        logger.info(f"📋 [Risk Manager] 最终決策生成完成，內容長度: {len(response_content)} 字符")
         
         return {
             "risk_debate_state": new_risk_debate_state,

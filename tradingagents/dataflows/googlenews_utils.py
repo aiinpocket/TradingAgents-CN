@@ -12,7 +12,7 @@ from tenacity import (
     retry_if_result,
 )
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -31,8 +31,8 @@ def make_request(url, headers):
     """Make a request with retry logic for rate limiting and connection issues"""
     # Random delay before each request to avoid detection
     time.sleep(random.uniform(2, 6))
-    # 添加超时参数，设置连接超时和读取超时
-    response = requests.get(url, headers=headers, timeout=(10, 30))  # 连接超时10秒，读取超时30秒
+    # 添加超時參數，設置連接超時和讀取超時
+    response = requests.get(url, headers=headers, timeout=(10, 30))  # 連接超時10秒，讀取超時30秒
     return response
 
 
@@ -107,23 +107,23 @@ def getNewsData(query, start_date, end_date):
             page += 1
 
         except requests.exceptions.Timeout as e:
-            logger.error(f"连接超时: {e}")
-            # 不立即中断，记录错误后继续尝试下一页
+            logger.error(f"連接超時: {e}")
+            # 不立即中斷，記錄錯誤後繼续嘗試下一页
             page += 1
-            if page > 3:  # 如果连续多页都超时，则退出循环
-                logger.error("多次连接超时，停止获取Google新闻")
+            if page > 3:  # 如果連续多页都超時，則退出循環
+                logger.error("多次連接超時，停止獲取Google新聞")
                 break
             continue
         except requests.exceptions.ConnectionError as e:
-            logger.error(f"连接错误: {e}")
-            # 不立即中断，记录错误后继续尝试下一页
+            logger.error(f"連接錯誤: {e}")
+            # 不立即中斷，記錄錯誤後繼续嘗試下一页
             page += 1
-            if page > 3:  # 如果连续多页都连接错误，则退出循环
-                logger.error("多次连接错误，停止获取Google新闻")
+            if page > 3:  # 如果連续多页都連接錯誤，則退出循環
+                logger.error("多次連接錯誤，停止獲取Google新聞")
                 break
             continue
         except Exception as e:
-            logger.error(f"获取Google新闻失败: {e}")
+            logger.error(f"獲取Google新聞失败: {e}")
             break
 
     return news_results

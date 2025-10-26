@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-简单的系统测试 - 验证配置和缓存系统
+簡單的系統測試 - 驗證配置和緩存系統
 """
 
 import sys
@@ -8,12 +8,12 @@ import os
 from pathlib import Path
 
 def test_basic_system():
-    """测试基本系统功能"""
-    print("🔧 TradingAgents 基本系统测试")
+    """測試基本系統功能"""
+    print("🔧 TradingAgents 基本系統測試")
     print("=" * 40)
     
-    # 1. 检查配置文件
-    print("\n📁 检查配置文件...")
+    # 1. 檢查配置文件
+    print("\n📁 檢查配置文件...")
     config_file = Path("config/database_config.json")
     if config_file.exists():
         print(f"✅ 配置文件存在: {config_file}")
@@ -22,70 +22,70 @@ def test_basic_system():
             import json
             with open(config_file, 'r', encoding='utf-8') as f:
                 config = json.load(f)
-            print("✅ 配置文件格式正确")
-            print(f"  主要缓存后端: {config['cache']['primary_backend']}")
-            print(f"  MongoDB启用: {config['database']['mongodb']['enabled']}")
-            print(f"  Redis启用: {config['database']['redis']['enabled']}")
+            print("✅ 配置文件格式正確")
+            print(f"  主要緩存後端: {config['cache']['primary_backend']}")
+            print(f"  MongoDB啟用: {config['database']['mongodb']['enabled']}")
+            print(f"  Redis啟用: {config['database']['redis']['enabled']}")
         except Exception as e:
             print(f"❌ 配置文件解析失败: {e}")
     else:
         print(f"❌ 配置文件不存在: {config_file}")
     
-    # 2. 检查数据库包
-    print("\n📦 检查数据库包...")
+    # 2. 檢查數據庫包
+    print("\n📦 檢查數據庫包...")
     
-    # 检查pymongo
+    # 檢查pymongo
     try:
         import pymongo
-        print("✅ pymongo 已安装")
+        print("✅ pymongo 已安裝")
         
-        # 尝试连接MongoDB
+        # 嘗試連接MongoDB
         try:
             client = pymongo.MongoClient('localhost', 27017, serverSelectionTimeoutMS=2000)
             client.server_info()
             client.close()
-            print("✅ MongoDB 连接成功")
+            print("✅ MongoDB 連接成功")
             mongodb_available = True
         except Exception:
-            print("❌ MongoDB 连接失败（正常，如果没有安装MongoDB）")
+            print("❌ MongoDB 連接失败（正常，如果没有安裝MongoDB）")
             mongodb_available = False
     except ImportError:
-        print("❌ pymongo 未安装")
+        print("❌ pymongo 未安裝")
         mongodb_available = False
     
-    # 检查redis
+    # 檢查redis
     try:
         import redis
-        print("✅ redis 已安装")
+        print("✅ redis 已安裝")
         
-        # 尝试连接Redis
+        # 嘗試連接Redis
         try:
             r = redis.Redis(host='localhost', port=6379, socket_timeout=2)
             r.ping()
-            print("✅ Redis 连接成功")
+            print("✅ Redis 連接成功")
             redis_available = True
         except Exception:
-            print("❌ Redis 连接失败（正常，如果没有安装Redis）")
+            print("❌ Redis 連接失败（正常，如果没有安裝Redis）")
             redis_available = False
     except ImportError:
-        print("❌ redis 未安装")
+        print("❌ redis 未安裝")
         redis_available = False
     
-    # 3. 测试缓存系统
-    print("\n💾 测试缓存系统...")
+    # 3. 測試緩存系統
+    print("\n💾 測試緩存系統...")
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
-        print("✅ 缓存系统初始化成功")
+        print("✅ 緩存系統初始化成功")
         
-        # 获取缓存信息
+        # 獲取緩存信息
         backend_info = cache.get_cache_backend_info()
-        print(f"  缓存系统: {backend_info['system']}")
-        print(f"  主要后端: {backend_info['primary_backend']}")
+        print(f"  緩存系統: {backend_info['system']}")
+        print(f"  主要後端: {backend_info['primary_backend']}")
         
-        # 测试基本功能
-        test_data = "测试数据 - 系统简单测试"
+        # 測試基本功能
+        test_data = "測試數據 - 系統簡單測試"
         cache_key = cache.save_stock_data(
             symbol="TEST_SIMPLE",
             data=test_data,
@@ -93,80 +93,80 @@ def test_basic_system():
             end_date="2024-12-31",
             data_source="simple_test"
         )
-        print(f"✅ 数据保存成功: {cache_key}")
+        print(f"✅ 數據保存成功: {cache_key}")
         
-        # 加载数据
+        # 加載數據
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print("✅ 数据加载成功")
+            print("✅ 數據加載成功")
         else:
-            print("❌ 数据加载失败")
+            print("❌ 數據加載失败")
             return False
         
     except Exception as e:
-        print(f"❌ 缓存系统测试失败: {e}")
+        print(f"❌ 緩存系統測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
     
-    # 4. 测试数据库管理器
-    print("\n🔧 测试数据库管理器...")
+    # 4. 測試數據庫管理器
+    print("\n🔧 測試數據庫管理器...")
     try:
         from tradingagents.config.database_manager import get_database_manager
         
         db_manager = get_database_manager()
-        print("✅ 数据库管理器创建成功")
+        print("✅ 數據庫管理器創建成功")
         
-        # 获取状态报告
+        # 獲取狀態報告
         status = db_manager.get_status_report()
         
-        print("📊 数据库状态:")
-        print(f"  数据库可用: {'✅ 是' if status['database_available'] else '❌ 否'}")
+        print("📊 數據庫狀態:")
+        print(f"  數據庫可用: {'✅ 是' if status['database_available'] else '❌ 否'}")
         print(f"  MongoDB: {'✅ 可用' if status['mongodb']['available'] else '❌ 不可用'}")
         print(f"  Redis: {'✅ 可用' if status['redis']['available'] else '❌ 不可用'}")
-        print(f"  缓存后端: {status['cache_backend']}")
+        print(f"  緩存後端: {status['cache_backend']}")
         
     except Exception as e:
-        print(f"❌ 数据库管理器测试失败: {e}")
+        print(f"❌ 數據庫管理器測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
     
-    # 5. 总结
-    print("\n📊 系统测试总结:")
-    print("✅ 缓存系统正常工作")
-    print("✅ 数据库管理器正常工作")
+    # 5. 总結
+    print("\n📊 系統測試总結:")
+    print("✅ 緩存系統正常工作")
+    print("✅ 數據庫管理器正常工作")
     
     if mongodb_available or redis_available:
-        print("✅ 数据库可用，系统运行在高性能模式")
+        print("✅ 數據庫可用，系統運行在高性能模式")
     else:
-        print("✅ 数据库不可用，系统运行在文件缓存模式")
-        print("💡 这是正常的，系统可以完全使用文件缓存工作")
+        print("✅ 數據庫不可用，系統運行在文件緩存模式")
+        print("💡 這是正常的，系統可以完全使用文件緩存工作")
     
-    print("\n🎯 系统特性:")
-    print("✅ 智能缓存：自动选择最佳缓存后端")
-    print("✅ 降级支持：数据库不可用时自动使用文件缓存")
-    print("✅ 配置灵活：支持多种数据库配置")
-    print("✅ 性能优化：根据可用资源自动调整")
+    print("\n🎯 系統特性:")
+    print("✅ 智能緩存：自動選擇最佳緩存後端")
+    print("✅ 降級支持：數據庫不可用時自動使用文件緩存")
+    print("✅ 配置灵活：支持多種數據庫配置")
+    print("✅ 性能優化：根據可用資源自動調整")
     
     return True
 
 def main():
-    """主函数"""
+    """主函數"""
     try:
         success = test_basic_system()
         
         if success:
-            print("\n🎉 系统测试完成!")
+            print("\n🎉 系統測試完成!")
             print("\n💡 下一步:")
-            print("1. 如需高性能，可以安装并启动MongoDB/Redis")
-            print("2. 运行完整的股票分析测试")
-            print("3. 使用Web界面进行交互式分析")
+            print("1. 如需高性能，可以安裝並啟動MongoDB/Redis")
+            print("2. 運行完整的股票分析測試")
+            print("3. 使用Web界面進行交互式分析")
         
         return success
         
     except Exception as e:
-        print(f"❌ 系统测试失败: {e}")
+        print(f"❌ 系統測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False

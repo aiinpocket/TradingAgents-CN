@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-统一的股票数据获取服务
-实现MongoDB -> Tushare数据接口的完整降级机制
+統一的股票數據獲取服務
+實現MongoDB -> Tushare數據接口的完整降級機制
 """
 
 import pandas as pd
@@ -10,7 +10,7 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 import logging
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -23,7 +23,7 @@ except ImportError:
 try:
     import sys
     import os
-    # 添加utils目录到路径
+    # 添加utils目錄到路徑
     utils_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'utils')
     if utils_path not in sys.path:
         sys.path.append(utils_path)
@@ -36,8 +36,8 @@ logger = logging.getLogger(__name__)
 
 class StockDataService:
     """
-    统一的股票数据获取服务
-    实现完整的降级机制：MongoDB -> Tushare数据接口 -> 缓存 -> 错误处理
+    統一的股票數據獲取服務
+    實現完整的降級機制：MongoDB -> Tushare數據接口 -> 緩存 -> 錯誤處理
     """
     
     def __init__(self):
@@ -45,60 +45,60 @@ class StockDataService:
         self._init_services()
     
     def _init_services(self):
-        """初始化服务"""
-        # 尝试初始化数据库管理器
+        """初始化服務"""
+        # 嘗試初始化數據庫管理器
         if DATABASE_MANAGER_AVAILABLE:
             try:
                 self.db_manager = get_database_manager()
                 if self.db_manager.is_mongodb_available():
-                    logger.info(f"✅ MongoDB连接成功")
+                    logger.info(f"✅ MongoDB連接成功")
                 else:
-                    logger.error(f"⚠️ MongoDB连接失败，将使用其他数据源")
+                    logger.error(f"⚠️ MongoDB連接失败，将使用其他數據源")
             except Exception as e:
-                logger.error(f"⚠️ 数据库管理器初始化失败: {e}")
+                logger.error(f"⚠️ 數據庫管理器初始化失败: {e}")
                 self.db_manager = None
     
     def get_stock_basic_info(self, stock_code: str = None) -> Optional[Dict[str, Any]]:
         """
-        获取股票基础信息（单个股票或全部股票）
+        獲取股票基础信息（單個股票或全部股票）
         
         Args:
-            stock_code: 股票代码，如果为None则返回所有股票
+            stock_code: 股票代碼，如果為None則返回所有股票
         
         Returns:
             Dict: 股票基础信息
         """
-        logger.info(f"📊 获取股票基础信息: {stock_code or '全部股票'}")
+        logger.info(f"📊 獲取股票基础信息: {stock_code or '全部股票'}")
         
-        # 1. 优先从MongoDB获取
+        # 1. 優先從MongoDB獲取
         if self.db_manager and self.db_manager.is_mongodb_available():
             try:
                 result = self._get_from_mongodb(stock_code)
                 if result:
-                    logger.info(f"✅ 从MongoDB获取成功: {len(result) if isinstance(result, list) else 1}条记录")
+                    logger.info(f"✅ 從MongoDB獲取成功: {len(result) if isinstance(result, list) else 1}條記錄")
                     return result
             except Exception as e:
-                logger.error(f"⚠️ MongoDB查询失败: {e}")
+                logger.error(f"⚠️ MongoDB查詢失败: {e}")
         
-        # 2. 降级到增强获取器
-        logger.info(f"🔄 MongoDB不可用，降级到增强获取器")
+        # 2. 降級到增强獲取器
+        logger.info(f"🔄 MongoDB不可用，降級到增强獲取器")
         if ENHANCED_FETCHER_AVAILABLE:
             try:
                 result = self._get_from_enhanced_fetcher(stock_code)
                 if result:
-                    logger.info(f"✅ 从增强获取器获取成功: {len(result) if isinstance(result, list) else 1}条记录")
-                    # 尝试缓存到MongoDB（如果可用）
+                    logger.info(f"✅ 從增强獲取器獲取成功: {len(result) if isinstance(result, list) else 1}條記錄")
+                    # 嘗試緩存到MongoDB（如果可用）
                     self._cache_to_mongodb(result)
                     return result
             except Exception as e:
-                logger.error(f"⚠️ 增强获取器查询失败: {e}")
+                logger.error(f"⚠️ 增强獲取器查詢失败: {e}")
         
-        # 3. 最后的降级方案
-        logger.error(f"❌ 所有数据源都不可用")
+        # 3. 最後的降級方案
+        logger.error(f"❌ 所有數據源都不可用")
         return self._get_fallback_data(stock_code)
     
     def _get_from_mongodb(self, stock_code: str = None) -> Optional[Dict[str, Any]]:
-        """从MongoDB获取数据"""
+        """從MongoDB獲取數據"""
         try:
             mongodb_client = self.db_manager.get_mongodb_client()
             if not mongodb_client:
@@ -108,24 +108,24 @@ class StockDataService:
             collection = db['stock_basic_info']
 
             if stock_code:
-                # 获取单个股票
+                # 獲取單個股票
                 result = collection.find_one({'code': stock_code})
                 return result if result else None
             else:
-                # 获取所有股票
+                # 獲取所有股票
                 cursor = collection.find({})
                 results = list(cursor)
                 return results if results else None
 
         except Exception as e:
-            logger.error(f"MongoDB查询失败: {e}")
+            logger.error(f"MongoDB查詢失败: {e}")
             return None
     
     def _get_from_enhanced_fetcher(self, stock_code: str = None) -> Optional[Dict[str, Any]]:
-        """从增强获取器获取数据"""
+        """從增强獲取器獲取數據"""
         try:
             if stock_code:
-                # 获取单个股票信息 - 使用增强获取器获取所有股票然后筛选
+                # 獲取單個股票信息 - 使用增强獲取器獲取所有股票然後筛選
                 stock_df = enhanced_fetch_stock_list(
                     type_='stock',
                     enable_server_failover=True,
@@ -133,7 +133,7 @@ class StockDataService:
                 )
                 
                 if stock_df is not None and not stock_df.empty:
-                    # 查找指定股票代码
+                    # 查找指定股票代碼
                     stock_row = stock_df[stock_df['code'] == stock_code]
                     if not stock_row.empty:
                         row = stock_row.iloc[0]
@@ -156,7 +156,7 @@ class StockDataService:
                             'updated_at': datetime.now().isoformat()
                         }
             else:
-                # 获取所有股票列表
+                # 獲取所有股票列表
                 stock_df = enhanced_fetch_stock_list(
                     type_='stock',
                     enable_server_failover=True,
@@ -164,7 +164,7 @@ class StockDataService:
                 )
                 
                 if stock_df is not None and not stock_df.empty:
-                    # 转换为字典列表
+                    # 轉換為字典列表
                     results = []
                     for _, row in stock_df.iterrows():
                         results.append({
@@ -178,11 +178,11 @@ class StockDataService:
                     return results
                     
         except Exception as e:
-            logger.error(f"增强获取器查询失败: {e}")
+            logger.error(f"增强獲取器查詢失败: {e}")
             return None
     
     def _cache_to_mongodb(self, data: Any) -> bool:
-        """将数据缓存到MongoDB"""
+        """将數據緩存到MongoDB"""
         if not self.db_manager or not self.db_manager.mongodb_db:
             return False
         
@@ -197,24 +197,24 @@ class StockDataService:
                         {'$set': item},
                         upsert=True
                     )
-                logger.info(f"💾 已缓存{len(data)}条记录到MongoDB")
+                logger.info(f"💾 已緩存{len(data)}條記錄到MongoDB")
             elif isinstance(data, dict):
-                # 单条插入
+                # 單條插入
                 collection.update_one(
                     {'code': data['code']},
                     {'$set': data},
                     upsert=True
                 )
-                logger.info(f"💾 已缓存股票{data['code']}到MongoDB")
+                logger.info(f"💾 已緩存股票{data['code']}到MongoDB")
             
             return True
             
         except Exception as e:
-            logger.error(f"缓存到MongoDB失败: {e}")
+            logger.error(f"緩存到MongoDB失败: {e}")
             return False
     
     def _get_fallback_data(self, stock_code: str = None) -> Dict[str, Any]:
-        """最后的降级数据"""
+        """最後的降級數據"""
         if stock_code:
             return {
                 'code': stock_code,
@@ -223,16 +223,16 @@ class StockDataService:
                 'category': '未知',
                 'source': 'fallback',
                 'updated_at': datetime.now().isoformat(),
-                'error': '所有数据源都不可用'
+                'error': '所有數據源都不可用'
             }
         else:
             return {
-                'error': '无法获取股票列表，请检查网络连接和数据库配置',
-                'suggestion': '请确保MongoDB已配置或网络连接正常以访问Tushare数据接口'
+                'error': '無法獲取股票列表，請檢查網絡連接和數據庫配置',
+                'suggestion': '請確保MongoDB已配置或網絡連接正常以訪問Tushare數據接口'
             }
     
     def _get_market_name(self, stock_code: str) -> str:
-        """根据股票代码判断市场"""
+        """根據股票代碼判斷市場"""
         if stock_code.startswith(('60', '68', '90')):
             return '上海'
         elif stock_code.startswith(('00', '30', '20')):
@@ -241,15 +241,15 @@ class StockDataService:
             return '未知'
     
     def _get_stock_category(self, stock_code: str) -> str:
-        """根据股票代码判断类别"""
+        """根據股票代碼判斷類別"""
         if stock_code.startswith('60'):
             return '沪市主板'
         elif stock_code.startswith('68'):
-            return '科创板'
+            return '科創板'
         elif stock_code.startswith('00'):
             return '深市主板'
         elif stock_code.startswith('30'):
-            return '创业板'
+            return '創業板'
         elif stock_code.startswith('20'):
             return '深市B股'
         else:
@@ -257,29 +257,29 @@ class StockDataService:
     
     def get_stock_data_with_fallback(self, stock_code: str, start_date: str, end_date: str) -> str:
         """
-        获取股票数据（带降级机制）
-        这是对现有get_china_stock_data函数的增强
+        獲取股票數據（帶降級機制）
+        這是對現有get_china_stock_data函數的增强
         """
-        logger.info(f"📊 获取股票数据: {stock_code} ({start_date} 到 {end_date})")
+        logger.info(f"📊 獲取股票數據: {stock_code} ({start_date} 到 {end_date})")
         
-        # 首先确保股票基础信息可用
+        # 首先確保股票基础信息可用
         stock_info = self.get_stock_basic_info(stock_code)
         if stock_info and 'error' in stock_info:
-            return f"❌ 无法获取股票{stock_code}的基础信息: {stock_info.get('error', '未知错误')}"
+            return f"❌ 無法獲取股票{stock_code}的基础信息: {stock_info.get('error', '未知錯誤')}"
         
-        # 调用统一的中国股票数据接口
+        # 調用統一的中國股票數據接口
         try:
             from .interface import get_china_stock_data_unified
 
             return get_china_stock_data_unified(stock_code, start_date, end_date)
         except Exception as e:
-            return f"❌ 获取股票数据失败: {str(e)}\n\n💡 建议：\n1. 检查网络连接\n2. 确认股票代码格式正确\n3. 检查MongoDB配置"
+            return f"❌ 獲取股票數據失败: {str(e)}\n\n💡 建议：\n1. 檢查網絡連接\n2. 確認股票代碼格式正確\n3. 檢查MongoDB配置"
 
-# 全局服务实例
+# 全局服務實例
 _stock_data_service = None
 
 def get_stock_data_service() -> StockDataService:
-    """获取股票数据服务实例（单例模式）"""
+    """獲取股票數據服務實例（單例模式）"""
     global _stock_data_service
     if _stock_data_service is None:
         _stock_data_service = StockDataService()

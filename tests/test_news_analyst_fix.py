@@ -1,94 +1,94 @@
 #!/usr/bin/env python3
 """
-测试新闻分析师工具调用参数修复
-验证强制调用和备用工具调用是否正确传递了所需参数
+測試新聞分析師工具調用參數修複
+驗證强制調用和备用工具調用是否正確傳遞了所需參數
 """
 
 import sys
 import os
 from datetime import datetime
 
-# 添加项目路径
+# 添加項目路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from tradingagents.agents.utils.agent_utils import Toolkit
 
 def test_tool_parameters():
-    """测试工具参数是否正确"""
-    print("🔧 测试新闻分析师工具调用参数修复")
+    """測試工具參數是否正確"""
+    print("🔧 測試新聞分析師工具調用參數修複")
     print("=" * 50)
     
     # 初始化工具包
     toolkit = Toolkit()
     
-    # 测试参数
+    # 測試參數
     ticker = "600036"
     curr_date = "2025-07-28"
     
-    print(f"📊 测试参数:")
+    print(f"📊 測試參數:")
     print(f"   - ticker: {ticker}")
     print(f"   - curr_date: {curr_date}")
     print()
     
-    # 测试 get_realtime_stock_news 工具
-    print("🔍 测试 get_realtime_stock_news 工具调用...")
+    # 測試 get_realtime_stock_news 工具
+    print("🔍 測試 get_realtime_stock_news 工具調用...")
     try:
-        # 模拟修复后的调用方式
+        # 模擬修複後的調用方式
         params = {"ticker": ticker, "curr_date": curr_date}
-        print(f"   参数: {params}")
+        print(f"   參數: {params}")
         
-        # 检查工具是否接受这些参数
+        # 檢查工具是否接受這些參數
         result = toolkit.get_realtime_stock_news.invoke(params)
-        print(f"   ✅ get_realtime_stock_news 调用成功")
-        print(f"   📝 返回数据长度: {len(result) if result else 0} 字符")
+        print(f"   ✅ get_realtime_stock_news 調用成功")
+        print(f"   📝 返回數據長度: {len(result) if result else 0} 字符")
         
     except Exception as e:
-        print(f"   ❌ get_realtime_stock_news 调用失败: {e}")
+        print(f"   ❌ get_realtime_stock_news 調用失败: {e}")
     
     print()
     
-    # 测试 get_google_news 工具
-    print("🔍 测试 get_google_news 工具调用...")
+    # 測試 get_google_news 工具
+    print("🔍 測試 get_google_news 工具調用...")
     try:
-        # 模拟修复后的调用方式
-        params = {"query": f"{ticker} 股票 新闻", "curr_date": curr_date}
-        print(f"   参数: {params}")
+        # 模擬修複後的調用方式
+        params = {"query": f"{ticker} 股票 新聞", "curr_date": curr_date}
+        print(f"   參數: {params}")
         
-        # 检查工具是否接受这些参数
+        # 檢查工具是否接受這些參數
         result = toolkit.get_google_news.invoke(params)
-        print(f"   ✅ get_google_news 调用成功")
-        print(f"   📝 返回数据长度: {len(result) if result else 0} 字符")
+        print(f"   ✅ get_google_news 調用成功")
+        print(f"   📝 返回數據長度: {len(result) if result else 0} 字符")
         
     except Exception as e:
-        print(f"   ❌ get_google_news 调用失败: {e}")
+        print(f"   ❌ get_google_news 調用失败: {e}")
     
     print()
     
-    # 测试修复前的错误调用方式（应该失败）
-    print("🚫 测试修复前的错误调用方式（应该失败）...")
+    # 測試修複前的錯誤調用方式（應该失败）
+    print("🚫 測試修複前的錯誤調用方式（應该失败）...")
     
-    print("   测试 get_realtime_stock_news 缺少 curr_date:")
+    print("   測試 get_realtime_stock_news 缺少 curr_date:")
     try:
         params = {"ticker": ticker}  # 缺少 curr_date
         result = toolkit.get_realtime_stock_news.invoke(params)
-        print(f"   ⚠️ 意外成功（可能有默认值处理）")
+        print(f"   ⚠️ 意外成功（可能有默認值處理）")
     except Exception as e:
-        print(f"   ✅ 正确失败: {e}")
+        print(f"   ✅ 正確失败: {e}")
     
-    print("   测试 get_google_news 缺少 query 和 curr_date:")
+    print("   測試 get_google_news 缺少 query 和 curr_date:")
     try:
         params = {"ticker": ticker}  # 缺少 query 和 curr_date
         result = toolkit.get_google_news.invoke(params)
-        print(f"   ⚠️ 意外成功（可能有默认值处理）")
+        print(f"   ⚠️ 意外成功（可能有默認值處理）")
     except Exception as e:
-        print(f"   ✅ 正确失败: {e}")
+        print(f"   ✅ 正確失败: {e}")
     
     print()
-    print("🎯 修复总结:")
-    print("   1. ✅ get_realtime_stock_news 现在正确传递 ticker 和 curr_date")
-    print("   2. ✅ get_google_news 现在正确传递 query 和 curr_date")
-    print("   3. ✅ 修复了 Pydantic 验证错误")
-    print("   4. ✅ 新闻分析师应该能够正常获取新闻数据")
+    print("🎯 修複总結:")
+    print("   1. ✅ get_realtime_stock_news 現在正確傳遞 ticker 和 curr_date")
+    print("   2. ✅ get_google_news 現在正確傳遞 query 和 curr_date")
+    print("   3. ✅ 修複了 Pydantic 驗證錯誤")
+    print("   4. ✅ 新聞分析師應该能夠正常獲取新聞數據")
 
 if __name__ == "__main__":
     test_tool_parameters()

@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 """
-简单的.env配置测试
+簡單的.env配置測試
 """
 
 import os
 
 def test_env_reading():
-    """测试.env文件读取"""
-    print("🔧 测试.env配置读取")
+    """測試.env文件讀取"""
+    print("🔧 測試.env配置讀取")
     print("=" * 30)
     
-    # 检查.env文件
+    # 檢查.env文件
     if os.path.exists('.env'):
         print("✅ .env文件存在")
     else:
         print("❌ .env文件不存在")
         return False
     
-    # 读取环境变量
-    print("\n📊 数据库配置:")
+    # 讀取環境變量
+    print("\n📊 數據庫配置:")
     
     # MongoDB配置
     mongodb_host = os.getenv("MONGODB_HOST", "localhost")
@@ -30,8 +30,8 @@ def test_env_reading():
     print(f"MongoDB:")
     print(f"  Host: {mongodb_host}")
     print(f"  Port: {mongodb_port}")
-    print(f"  Username: {mongodb_username or '未设置'}")
-    print(f"  Password: {'***' if mongodb_password else '未设置'}")
+    print(f"  Username: {mongodb_username or '未設置'}")
+    print(f"  Password: {'***' if mongodb_password else '未設置'}")
     print(f"  Database: {mongodb_database}")
     
     # Redis配置
@@ -43,13 +43,13 @@ def test_env_reading():
     print(f"\nRedis:")
     print(f"  Host: {redis_host}")
     print(f"  Port: {redis_port}")
-    print(f"  Password: {'***' if redis_password else '未设置'}")
+    print(f"  Password: {'***' if redis_password else '未設置'}")
     print(f"  DB: {redis_db}")
     
-    # 测试数据库连接
-    print("\n🧪 测试数据库连接...")
+    # 測試數據庫連接
+    print("\n🧪 測試數據庫連接...")
     
-    # 测试MongoDB
+    # 測試MongoDB
     mongodb_available = False
     try:
         import pymongo
@@ -64,13 +64,13 @@ def test_env_reading():
         client.server_info()
         client.close()
         mongodb_available = True
-        print("✅ MongoDB 连接成功")
+        print("✅ MongoDB 連接成功")
     except ImportError:
-        print("❌ pymongo 未安装")
+        print("❌ pymongo 未安裝")
     except Exception as e:
-        print(f"❌ MongoDB 连接失败: {e}")
+        print(f"❌ MongoDB 連接失败: {e}")
     
-    # 测试Redis
+    # 測試Redis
     redis_available = False
     try:
         import redis
@@ -83,22 +83,22 @@ def test_env_reading():
         )
         r.ping()
         redis_available = True
-        print("✅ Redis 连接成功")
+        print("✅ Redis 連接成功")
     except ImportError:
-        print("❌ redis 未安装")
+        print("❌ redis 未安裝")
     except Exception as e:
-        print(f"❌ Redis 连接失败: {e}")
+        print(f"❌ Redis 連接失败: {e}")
     
-    # 总结
-    print(f"\n📊 总结:")
+    # 总結
+    print(f"\n📊 总結:")
     print(f"MongoDB: {'✅ 可用' if mongodb_available else '❌ 不可用'}")
     print(f"Redis: {'✅ 可用' if redis_available else '❌ 不可用'}")
     
     if mongodb_available or redis_available:
-        print("🚀 数据库可用，系统将使用高性能模式")
+        print("🚀 數據庫可用，系統将使用高性能模式")
     else:
-        print("📁 数据库不可用，系统将使用文件缓存模式")
-        print("💡 这是正常的，系统可以正常工作")
+        print("📁 數據庫不可用，系統将使用文件緩存模式")
+        print("💡 這是正常的，系統可以正常工作")
     
     return True
 

@@ -1,11 +1,11 @@
 
-# 日志导入位置修复报告
+# 日誌導入位置修複報告
 
-## 修复统计
-- 成功修复文件: 103
-- 错误数量: 0
+## 修複統計
+- 成功修複文件: 103
+- 錯誤數量: 0
 
-## 修复的文件
+## 修複的文件
 - C:\code\TradingAgentsCN\fix_stock_code_issue.py
 - C:\code\TradingAgentsCN\main.py
 - C:\code\TradingAgentsCN\quick_syntax_check.py

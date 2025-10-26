@@ -1,292 +1,292 @@
-# 分析师团队
+# 分析師团隊
 
 ## 概述
 
-分析师团队是 TradingAgents 框架的核心分析组件，负责从不同维度对股票进行专业分析。团队由四类专业分析师组成，每个分析师都专注于特定的分析领域，通过协作为投资决策提供全面的数据支持。
+分析師团隊是 TradingAgents 框架的核心分析組件，负责從不同維度對股票進行專業分析。团隊由四類專業分析師組成，每個分析師都專註於特定的分析領域，通過協作為投資決策提供全面的數據支持。
 
-## 分析师架构
+## 分析師架構
 
-### 基础分析师设计
+### 基础分析師設計
 
-所有分析师都基于统一的架构设计，使用相同的工具接口和日志系统：
+所有分析師都基於統一的架構設計，使用相同的工具接口和日誌系統：
 
 ```python
-# 统一的分析师模块日志装饰器
+# 統一的分析師模塊日誌裝饰器
 from tradingagents.utils.tool_logging import log_analyst_module
 
-# 统一日志系统
+# 統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 @log_analyst_module("analyst_type")
 def analyst_node(state):
-    # 分析师逻辑实现
+    # 分析師逻辑實現
     pass
 ```
 
-### 智能体状态管理
+### 智能體狀態管理
 
-分析师通过 `AgentState` 进行状态管理：
+分析師通過 `AgentState` 進行狀態管理：
 
 ```python
 class AgentState:
-    company_of_interest: str      # 股票代码
+    company_of_interest: str      # 股票代碼
     trade_date: str              # 交易日期
-    fundamentals_report: str     # 基本面报告
-    market_report: str           # 市场分析报告
-    news_report: str             # 新闻分析报告
-    sentiment_report: str        # 情绪分析报告
-    messages: List              # 消息历史
+    fundamentals_report: str     # 基本面報告
+    market_report: str           # 市場分析報告
+    news_report: str             # 新聞分析報告
+    sentiment_report: str        # 情绪分析報告
+    messages: List              # 消息歷史
 ```
 
-## 分析师团队成员
+## 分析師团隊成員
 
-### 1. 基本面分析师 (Fundamentals Analyst)
+### 1. 基本面分析師 (Fundamentals Analyst)
 
 **文件位置**: `tradingagents/agents/analysts/fundamentals_analyst.py`
 
-**核心职责**:
-- 分析公司财务数据和基本面指标
-- 评估公司估值和财务健康度
-- 提供基于财务数据的投资建议
+**核心職责**:
+- 分析公司財務數據和基本面指標
+- 評估公司估值和財務健康度
+- 提供基於財務數據的投資建议
 
-**技术特性**:
-- 使用统一工具架构自动识别股票类型
+**技術特性**:
+- 使用統一工具架構自動识別股票類型
 - 支持A股、港股、美股的基本面分析
-- 智能选择合适的数据源（在线/离线模式）
+- 智能選擇合適的數據源（在線/離線模式）
 
-**核心实现**:
+**核心實現**:
 ```python
 def create_fundamentals_analyst(llm, toolkit):
     @log_analyst_module("fundamentals")
     def fundamentals_analyst_node(state):
         ticker = state["company_of_interest"]
         
-        # 获取股票市场信息
+        # 獲取股票市場信息
         from tradingagents.utils.stock_utils import StockUtils
         market_info = StockUtils.get_market_info(ticker)
         
-        # 获取公司名称
+        # 獲取公司名稱
         company_name = _get_company_name_for_fundamentals(ticker, market_info)
         
-        # 选择合适的工具
+        # 選擇合適的工具
         if toolkit.config["online_tools"]:
             tools = [toolkit.get_stock_fundamentals_unified]
         else:
-            # 离线模式工具选择
+            # 離線模式工具選擇
             tools = [...]
 ```
 
-**支持的数据源**:
-- **A股**: 统一接口获取中国股票信息
-- **港股**: 改进的港股工具
-- **美股**: FinnHub、SimFin等数据源
+**支持的數據源**:
+- **A股**: 統一接口獲取中國股票信息
+- **港股**: 改進的港股工具
+- **美股**: FinnHub、SimFin等數據源
 
-### 2. 市场分析师 (Market Analyst)
+### 2. 市場分析師 (Market Analyst)
 
 **文件位置**: `tradingagents/agents/analysts/market_analyst.py`
 
-**核心职责**:
-- 技术指标分析（RSI、MACD、布林带等）
-- 价格趋势和图表模式识别
+**核心職责**:
+- 技術指標分析（RSI、MACD、布林帶等）
+- 價格趋势和圖表模式识別
 - 支撑阻力位分析
-- 交易信号生成
+- 交易信號生成
 
-**分析维度**:
-- 短期技术指标
-- 中长期趋势分析
+**分析維度**:
+- 短期技術指標
+- 中長期趋势分析
 - 成交量分析
-- 价格动量评估
+- 價格動量評估
 
-### 3. 新闻分析师 (News Analyst)
+### 3. 新聞分析師 (News Analyst)
 
 **文件位置**: `tradingagents/agents/analysts/news_analyst.py`
 
-**核心职责**:
-- 新闻事件影响分析
-- 宏观经济数据解读
-- 政策影响评估
-- 行业动态分析
+**核心職责**:
+- 新聞事件影響分析
+- 宏觀經濟數據解讀
+- 政策影響評估
+- 行業動態分析
 
-**数据来源**:
+**數據來源**:
 - Google News API
-- FinnHub新闻数据
-- 实时新闻流
-- 经济数据发布
+- FinnHub新聞數據
+- 實時新聞流
+- 經濟數據發布
 
 **特殊功能**:
-- 新闻过滤和质量评估
-- 情感分析和影响评级
-- 时效性评估
+- 新聞過濾和质量評估
+- 情感分析和影響評級
+- 時效性評估
 
-### 4. 社交媒体分析师 (Social Media Analyst)
+### 4. 社交媒體分析師 (Social Media Analyst)
 
 **文件位置**: `tradingagents/agents/analysts/social_media_analyst.py`
 
-**核心职责**:
-- 社交媒体情绪分析
-- 投资者情绪监测
-- 舆论趋势识别
-- 热点话题追踪
+**核心職责**:
+- 社交媒體情绪分析
+- 投資者情绪監測
+- 舆論趋势识別
+- 熱點話題追蹤
 
-**数据来源**:
-- Reddit讨论数据
-- Twitter情感数据
-- 金融论坛讨论
-- 社交媒体热度指标
+**數據來源**:
+- Reddit討論數據
+- Twitter情感數據
+- 金融論坛討論
+- 社交媒體熱度指標
 
-### 5. 中国市场分析师 (China Market Analyst)
+### 5. 中國市場分析師 (China Market Analyst)
 
 **文件位置**: `tradingagents/agents/analysts/china_market_analyst.py`
 
-**核心职责**:
-- 专门针对中国A股市场的分析
-- 中国特色的市场因素分析
-- 政策环境影响评估
-- 本土化的投资逻辑
+**核心職责**:
+- 專門针對中國A股市場的分析
+- 中國特色的市場因素分析
+- 政策環境影響評估
+- 本土化的投資逻辑
 
 ## 工具集成
 
-### 统一工具架构
+### 統一工具架構
 
-分析师使用统一的工具接口，支持自动股票类型识别：
+分析師使用統一的工具接口，支持自動股票類型识別：
 
 ```python
-# 统一基本面分析工具
+# 統一基本面分析工具
 tools = [toolkit.get_stock_fundamentals_unified]
 
-# 工具内部自动识别股票类型并调用相应数据源
-# - A股: 使用中国股票数据接口
-# - 港股: 使用港股专用接口
-# - 美股: 使用FinnHub等国际数据源
+# 工具內部自動识別股票類型並調用相應數據源
+# - A股: 使用中國股票數據接口
+# - 港股: 使用港股專用接口
+# - 美股: 使用FinnHub等國际數據源
 ```
 
-### 在线/离线模式
+### 在線/離線模式
 
-**在线模式** (`online_tools=True`):
-- 使用实时API数据
-- 数据最新但成本较高
-- 适合生产环境
+**在線模式** (`online_tools=True`):
+- 使用實時API數據
+- 數據最新但成本較高
+- 適合生產環境
 
-**离线模式** (`online_tools=False`):
-- 使用缓存数据
-- 成本低但数据可能滞后
-- 适合开发和测试
+**離線模式** (`online_tools=False`):
+- 使用緩存數據
+- 成本低但數據可能滞後
+- 適合開發和測試
 
-## 股票类型支持
+## 股票類型支持
 
-### 市场识别机制
+### 市場识別機制
 
 ```python
 from tradingagents.utils.stock_utils import StockUtils
 market_info = StockUtils.get_market_info(ticker)
 
 # 返回信息包括：
-# - is_china: 是否为A股
-# - is_hk: 是否为港股
-# - is_us: 是否为美股
-# - market_name: 市场名称
-# - currency_name: 货币名称
-# - currency_symbol: 货币符号
+# - is_china: 是否為A股
+# - is_hk: 是否為港股
+# - is_us: 是否為美股
+# - market_name: 市場名稱
+# - currency_name: 貨币名稱
+# - currency_symbol: 貨币符號
 ```
 
-### 支持的市场
+### 支持的市場
 
-1. **中国A股**
-   - 股票代码格式：000001, 600000等
-   - 货币单位：人民币(CNY)
-   - 数据源：统一中国股票接口
+1. **中國A股**
+   - 股票代碼格式：000001, 600000等
+   - 貨币單位：人民币(CNY)
+   - 數據源：統一中國股票接口
 
 2. **香港股市**
-   - 股票代码格式：0700.HK, 00700等
-   - 货币单位：港币(HKD)
-   - 数据源：改进的港股工具
+   - 股票代碼格式：0700.HK, 00700等
+   - 貨币單位：港币(HKD)
+   - 數據源：改進的港股工具
 
-3. **美国股市**
-   - 股票代码格式：AAPL, TSLA等
-   - 货币单位：美元(USD)
-   - 数据源：FinnHub, Yahoo Finance等
+3. **美國股市**
+   - 股票代碼格式：AAPL, TSLA等
+   - 貨币單位：美元(USD)
+   - 數據源：FinnHub, Yahoo Finance等
 
 ## 分析流程
 
-### 1. 数据获取阶段
+### 1. 數據獲取階段
 ```mermaid
 graph LR
-    A[股票代码] --> B[市场类型识别]
-    B --> C[选择数据源]
-    C --> D[获取原始数据]
-    D --> E[数据预处理]
+    A[股票代碼] --> B[市場類型识別]
+    B --> C[選擇數據源]
+    C --> D[獲取原始數據]
+    D --> E[數據預處理]
 ```
 
-### 2. 分析执行阶段
+### 2. 分析執行階段
 ```mermaid
 graph TB
-    A[原始数据] --> B[基本面分析师]
-    A --> C[市场分析师]
-    A --> D[新闻分析师]
-    A --> E[社交媒体分析师]
+    A[原始數據] --> B[基本面分析師]
+    A --> C[市場分析師]
+    A --> D[新聞分析師]
+    A --> E[社交媒體分析師]
     
-    B --> F[基本面报告]
-    C --> G[市场分析报告]
-    D --> H[新闻分析报告]
-    E --> I[情绪分析报告]
+    B --> F[基本面報告]
+    C --> G[市場分析報告]
+    D --> H[新聞分析報告]
+    E --> I[情绪分析報告]
 ```
 
-### 3. 报告生成阶段
+### 3. 報告生成階段
 ```mermaid
 graph LR
-    A[各分析师报告] --> B[状态更新]
-    B --> C[传递给研究员团队]
-    C --> D[进入辩论阶段]
+    A[各分析師報告] --> B[狀態更新]
+    B --> C[傳遞給研究員团隊]
+    C --> D[進入辩論階段]
 ```
 
-## 配置选项
+## 配置選項
 
-### 分析师选择
+### 分析師選擇
 ```python
-# 可选择的分析师类型
+# 可選擇的分析師類型
 selected_analysts = [
-    "market",        # 市场分析师
-    "social",        # 社交媒体分析师
-    "news",          # 新闻分析师
-    "fundamentals"   # 基本面分析师
+    "market",        # 市場分析師
+    "social",        # 社交媒體分析師
+    "news",          # 新聞分析師
+    "fundamentals"   # 基本面分析師
 ]
 ```
 
 ### 工具配置
 ```python
 toolkit_config = {
-    "online_tools": True,     # 是否使用在线工具
-    "cache_enabled": True,    # 是否启用缓存
-    "timeout": 30,           # API超时时间
-    "retry_count": 3         # 重试次数
+    "online_tools": True,     # 是否使用在線工具
+    "cache_enabled": True,    # 是否啟用緩存
+    "timeout": 30,           # API超時時間
+    "retry_count": 3         # 重試次數
 }
 ```
 
-## 日志和监控
+## 日誌和監控
 
-### 统一日志系统
+### 統一日誌系統
 ```python
-# 每个分析师都使用统一的日志系统
+# 每個分析師都使用統一的日誌系統
 logger = get_logger("default")
 
-# 详细的调试日志
-logger.debug(f"📊 [DEBUG] 基本面分析师节点开始")
-logger.info(f"📊 [基本面分析师] 正在分析股票: {ticker}")
-logger.warning(f"⚠️ [DEBUG] memory为None，跳过历史记忆检索")
+# 詳細的調試日誌
+logger.debug(f"📊 [DEBUG] 基本面分析師節點開始")
+logger.info(f"📊 [基本面分析師] 正在分析股票: {ticker}")
+logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記忆檢索")
 ```
 
-### 性能监控
-- 分析耗时统计
-- API调用次数追踪
-- 错误率监控
-- 缓存命中率统计
+### 性能監控
+- 分析耗時統計
+- API調用次數追蹤
+- 錯誤率監控
+- 緩存命中率統計
 
-## 扩展指南
+## 擴展指南
 
-### 添加新的分析师
+### 添加新的分析師
 
-1. **创建分析师文件**
+1. **創建分析師文件**
 ```python
 # tradingagents/agents/analysts/custom_analyst.py
 from tradingagents.utils.tool_logging import log_analyst_module
@@ -295,79 +295,79 @@ from tradingagents.utils.logging_init import get_logger
 def create_custom_analyst(llm, toolkit):
     @log_analyst_module("custom")
     def custom_analyst_node(state):
-        # 自定义分析逻辑
+        # 自定義分析逻辑
         pass
     return custom_analyst_node
 ```
 
-2. **注册到系统**
+2. **註冊到系統**
 ```python
 # 在trading_graph.py中添加
 selected_analysts.append("custom")
 ```
 
-### 添加新的数据源
+### 添加新的數據源
 
-1. **实现数据接口**
+1. **實現數據接口**
 2. **添加到工具集**
-3. **更新配置选项**
+3. **更新配置選項**
 
-## 最佳实践
+## 最佳實踐
 
-### 1. 错误处理
-- 使用try-catch包装API调用
-- 提供降级方案
-- 记录详细错误信息
+### 1. 錯誤處理
+- 使用try-catch包裝API調用
+- 提供降級方案
+- 記錄詳細錯誤信息
 
-### 2. 性能优化
-- 启用数据缓存
-- 合理设置超时时间
-- 避免重复API调用
+### 2. 性能優化
+- 啟用數據緩存
+- 合理設置超時時間
+- 避免重複API調用
 
-### 3. 数据质量
-- 验证数据完整性
-- 处理异常值
-- 提供数据质量评分
+### 3. 數據质量
+- 驗證數據完整性
+- 處理異常值
+- 提供數據质量評分
 
-### 4. 可维护性
-- 使用统一的代码结构
-- 添加详细的注释
-- 遵循命名规范
+### 4. 可維護性
+- 使用統一的代碼結構
+- 添加詳細的註釋
+- 遵循命名規範
 
 ## 故障排除
 
-### 常见问题
+### 常见問題
 
-1. **API调用失败**
-   - 检查网络连接
-   - 验证API密钥
+1. **API調用失败**
+   - 檢查網絡連接
+   - 驗證API密鑰
    - 查看速率限制
 
-2. **数据格式错误**
-   - 检查股票代码格式
-   - 验证市场类型识别
-   - 查看数据源兼容性
+2. **數據格式錯誤**
+   - 檢查股票代碼格式
+   - 驗證市場類型识別
+   - 查看數據源兼容性
 
-3. **性能问题**
-   - 启用缓存机制
-   - 优化并发设置
-   - 减少不必要的API调用
+3. **性能問題**
+   - 啟用緩存機制
+   - 優化並發設置
+   - 减少不必要的API調用
 
-### 调试技巧
+### 調試技巧
 
-1. **启用详细日志**
+1. **啟用詳細日誌**
 ```python
 logger.setLevel(logging.DEBUG)
 ```
 
-2. **检查状态传递**
+2. **檢查狀態傳遞**
 ```python
-logger.debug(f"当前状态: {state}")
+logger.debug(f"當前狀態: {state}")
 ```
 
-3. **验证工具配置**
+3. **驗證工具配置**
 ```python
 logger.debug(f"工具配置: {toolkit.config}")
 ```
 
-分析师团队是整个TradingAgents框架的基础，通过专业化分工和协作，为后续的研究辩论和交易决策提供高质量的数据支持。
+分析師团隊是整個TradingAgents框架的基础，通過專業化分工和協作，為後续的研究辩論和交易決策提供高质量的數據支持。

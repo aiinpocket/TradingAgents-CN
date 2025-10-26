@@ -1,34 +1,34 @@
 """
-测试港股功能
-验证港股代码识别、数据获取和处理功能
+測試港股功能
+驗證港股代碼识別、數據獲取和處理功能
 """
 
 import sys
 import os
 import traceback
 
-# 添加项目根目录到路径
+# 添加項目根目錄到路徑
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
 
 def test_stock_utils():
-    """测试股票工具类"""
-    print("\n🧪 测试股票工具类...")
+    """測試股票工具類"""
+    print("\n🧪 測試股票工具類...")
     
     try:
         from tradingagents.utils.stock_utils import StockUtils
         
-        # 测试港股代码识别
+        # 測試港股代碼识別
         test_cases = [
             ("0700.HK", "港股"),
             ("9988.HK", "港股"),
             ("3690.HK", "港股"),
-            ("000001", "中国A股"),
-            ("600036", "中国A股"),
+            ("000001", "中國A股"),
+            ("600036", "中國A股"),
             ("AAPL", "美股"),
             ("TSLA", "美股"),
-            ("invalid", "未知市场")
+            ("invalid", "未知市場")
         ]
         
         for ticker, expected in test_cases:
@@ -36,34 +36,34 @@ def test_stock_utils():
             print(f"  {ticker}: {market_info['market_name']} ({market_info['currency_name']}) - {'✅' if expected in market_info['market_name'] else '❌'}")
             
             if expected == "港股" and not market_info['is_hk']:
-                print(f"❌ {ticker} 应该被识别为港股")
+                print(f"❌ {ticker} 應该被识別為港股")
                 return False
-            elif expected == "中国A股" and not market_info['is_china']:
-                print(f"❌ {ticker} 应该被识别为中国A股")
+            elif expected == "中國A股" and not market_info['is_china']:
+                print(f"❌ {ticker} 應该被识別為中國A股")
                 return False
             elif expected == "美股" and not market_info['is_us']:
-                print(f"❌ {ticker} 应该被识别为美股")
+                print(f"❌ {ticker} 應该被识別為美股")
                 return False
         
-        print("✅ 股票工具类测试通过")
+        print("✅ 股票工具類測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 股票工具类测试失败: {e}")
+        print(f"❌ 股票工具類測試失败: {e}")
         traceback.print_exc()
         return False
 
 
 def test_hk_stock_provider():
-    """测试港股数据提供器"""
-    print("\n🧪 测试港股数据提供器...")
+    """測試港股數據提供器"""
+    print("\n🧪 測試港股數據提供器...")
     
     try:
         from tradingagents.dataflows.hk_stock_utils import get_hk_stock_provider
         
         provider = get_hk_stock_provider()
         
-        # 测试港股代码标准化
+        # 測試港股代碼標準化
         test_symbols = [
             ("0700", "0700.HK"),
             ("0700.HK", "0700.HK"),
@@ -73,119 +73,119 @@ def test_hk_stock_provider():
         
         for input_symbol, expected in test_symbols:
             normalized = provider._normalize_hk_symbol(input_symbol)
-            print(f"  标准化: {input_symbol} -> {normalized} {'✅' if normalized == expected else '❌'}")
+            print(f"  標準化: {input_symbol} -> {normalized} {'✅' if normalized == expected else '❌'}")
             
             if normalized != expected:
-                print(f"❌ 港股代码标准化失败: {input_symbol} -> {normalized}, 期望: {expected}")
+                print(f"❌ 港股代碼標準化失败: {input_symbol} -> {normalized}, 期望: {expected}")
                 return False
         
-        print("✅ 港股数据提供器测试通过")
+        print("✅ 港股數據提供器測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 港股数据提供器测试失败: {e}")
+        print(f"❌ 港股數據提供器測試失败: {e}")
         traceback.print_exc()
         return False
 
 
 def test_hk_stock_info():
-    """测试港股信息获取"""
-    print("\n🧪 测试港股信息获取...")
+    """測試港股信息獲取"""
+    print("\n🧪 測試港股信息獲取...")
     
     try:
         from tradingagents.dataflows.hk_stock_utils import get_hk_stock_info
         
-        # 测试腾讯港股信息
+        # 測試腾讯港股信息
         hk_symbol = "0700.HK"
-        print(f"  获取 {hk_symbol} 信息...")
+        print(f"  獲取 {hk_symbol} 信息...")
         
         info = get_hk_stock_info(hk_symbol)
         
         if info and 'symbol' in info:
-            print(f"  ✅ 股票代码: {info['symbol']}")
-            print(f"  ✅ 股票名称: {info['name']}")
-            print(f"  ✅ 货币: {info['currency']}")
+            print(f"  ✅ 股票代碼: {info['symbol']}")
+            print(f"  ✅ 股票名稱: {info['name']}")
+            print(f"  ✅ 貨币: {info['currency']}")
             print(f"  ✅ 交易所: {info['exchange']}")
-            print(f"  ✅ 数据源: {info['source']}")
+            print(f"  ✅ 數據源: {info['source']}")
             
-            # 验证基本字段
+            # 驗證基本字段
             if info['currency'] != 'HKD':
-                print(f"⚠️ 港股货币应为HKD，实际为: {info['currency']}")
+                print(f"⚠️ 港股貨币應為HKD，實际為: {info['currency']}")
             
             if info['exchange'] != 'HKG':
-                print(f"⚠️ 港股交易所应为HKG，实际为: {info['exchange']}")
+                print(f"⚠️ 港股交易所應為HKG，實际為: {info['exchange']}")
             
-            print("✅ 港股信息获取测试通过")
+            print("✅ 港股信息獲取測試通過")
             return True
         else:
-            print("❌ 港股信息获取失败")
+            print("❌ 港股信息獲取失败")
             return False
             
     except Exception as e:
-        print(f"❌ 港股信息获取测试失败: {e}")
+        print(f"❌ 港股信息獲取測試失败: {e}")
         traceback.print_exc()
         return False
 
 
 def test_hk_stock_data():
-    """测试港股数据获取（简单测试）"""
-    print("\n🧪 测试港股数据获取...")
+    """測試港股數據獲取（簡單測試）"""
+    print("\n🧪 測試港股數據獲取...")
     
     try:
         from tradingagents.dataflows.hk_stock_utils import get_hk_stock_data
         from datetime import datetime, timedelta
         
-        # 设置测试日期范围（最近30天）
+        # 設置測試日期範围（最近30天）
         end_date = datetime.now().strftime('%Y-%m-%d')
         start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
         
-        # 测试腾讯港股数据
+        # 測試腾讯港股數據
         hk_symbol = "0700.HK"
-        print(f"  获取 {hk_symbol} 数据 ({start_date} 到 {end_date})...")
+        print(f"  獲取 {hk_symbol} 數據 ({start_date} 到 {end_date})...")
         
         data_text = get_hk_stock_data(hk_symbol, start_date, end_date)
         
-        if data_text and "港股数据报告" in data_text:
-            print("  ✅ 港股数据格式正确")
-            print(f"  ✅ 数据长度: {len(data_text)}字符")
+        if data_text and "港股數據報告" in data_text:
+            print("  ✅ 港股數據格式正確")
+            print(f"  ✅ 數據長度: {len(data_text)}字符")
             
-            # 检查关键信息
+            # 檢查關键信息
             if "HK$" in data_text:
-                print("  ✅ 包含港币价格信息")
+                print("  ✅ 包含港币價格信息")
             else:
-                print("  ⚠️ 缺少港币价格信息")
+                print("  ⚠️ 缺少港币價格信息")
             
             if "香港交易所" in data_text:
                 print("  ✅ 包含交易所信息")
             
-            print("✅ 港股数据获取测试通过")
+            print("✅ 港股數據獲取測試通過")
             return True
         else:
-            print("❌ 港股数据获取失败或格式错误")
-            print(f"返回数据: {data_text[:200]}...")
+            print("❌ 港股數據獲取失败或格式錯誤")
+            print(f"返回數據: {data_text[:200]}...")
             return False
             
     except Exception as e:
-        print(f"❌ 港股数据获取测试失败: {e}")
+        print(f"❌ 港股數據獲取測試失败: {e}")
         traceback.print_exc()
         return False
 
 
 def test_optimized_us_data_hk_support():
-    """测试优化美股数据模块的港股支持"""
-    print("\n🧪 测试优化数据模块港股支持...")
+    """測試優化美股數據模塊的港股支持"""
+    print("\n🧪 測試優化數據模塊港股支持...")
     
     try:
         from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
         from datetime import datetime, timedelta
         
-        # 设置测试日期范围
+        # 設置測試日期範围
         end_date = datetime.now().strftime('%Y-%m-%d')
         start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
         
-        # 测试港股数据获取
+        # 測試港股數據獲取
         hk_symbol = "0700.HK"
-        print(f"  通过优化模块获取 {hk_symbol} 数据...")
+        print(f"  通過優化模塊獲取 {hk_symbol} 數據...")
         
         data_text = get_us_stock_data_cached(
             symbol=hk_symbol,
@@ -194,33 +194,33 @@ def test_optimized_us_data_hk_support():
             force_refresh=True
         )
         
-        if data_text and "数据分析" in data_text:
-            print("  ✅ 数据获取成功")
+        if data_text and "數據分析" in data_text:
+            print("  ✅ 數據獲取成功")
             
-            # 检查港股特有信息
+            # 檢查港股特有信息
             if "港股" in data_text:
-                print("  ✅ 正确识别为港股")
+                print("  ✅ 正確识別為港股")
             
             if "HK$" in data_text:
-                print("  ✅ 使用港币符号")
+                print("  ✅ 使用港币符號")
             else:
-                print("  ⚠️ 未使用港币符号")
+                print("  ⚠️ 未使用港币符號")
             
-            print("✅ 优化数据模块港股支持测试通过")
+            print("✅ 優化數據模塊港股支持測試通過")
             return True
         else:
-            print("❌ 优化数据模块港股支持测试失败")
+            print("❌ 優化數據模塊港股支持測試失败")
             return False
             
     except Exception as e:
-        print(f"❌ 优化数据模块港股支持测试失败: {e}")
+        print(f"❌ 優化數據模塊港股支持測試失败: {e}")
         traceback.print_exc()
         return False
 
 
 def main():
-    """运行所有港股功能测试"""
-    print("🇭🇰 开始港股功能测试")
+    """運行所有港股功能測試"""
+    print("🇭🇰 開始港股功能測試")
     print("=" * 50)
     
     tests = [
@@ -239,16 +239,16 @@ def main():
             if test_func():
                 passed += 1
         except Exception as e:
-            print(f"❌ 测试 {test_func.__name__} 异常: {e}")
+            print(f"❌ 測試 {test_func.__name__} 異常: {e}")
     
     print("\n" + "=" * 50)
-    print(f"🇭🇰 港股功能测试完成: {passed}/{total} 通过")
+    print(f"🇭🇰 港股功能測試完成: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有测试通过！港股功能正常")
+        print("🎉 所有測試通過！港股功能正常")
         return True
     else:
-        print("⚠️ 部分测试失败，需要进一步调试")
+        print("⚠️ 部分測試失败，需要進一步調試")
         return False
 
 

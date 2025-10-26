@@ -1,8 +1,8 @@
 #!/bin/bash
-# 分支备份脚本
-echo "🔄 创建分支备份..."
+# 分支备份腳本
+echo "🔄 創建分支备份..."
 
-# 创建备份分支
+# 創建备份分支
 git checkout feature/akshare-integration 2>/dev/null && git checkout -b backup/akshare-integration-$(date +%Y%m%d)
 git checkout feature/akshare-integration-clean 2>/dev/null && git checkout -b backup/akshare-integration-clean-$(date +%Y%m%d)
 

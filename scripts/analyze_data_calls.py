@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-数据获取调用分析工具
-专门分析数据获取相关的日志，提供详细的调用统计和性能分析
+數據獲取調用分析工具
+專門分析數據獲取相關的日誌，提供詳細的調用統計和性能分析
 """
 
 import json
@@ -13,14 +13,14 @@ from typing import Dict, List, Any, Optional
 from collections import defaultdict, Counter
 import argparse
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 
 
 class DataCallAnalyzer:
-    """数据获取调用分析器"""
+    """數據獲取調用分析器"""
     
     def __init__(self, log_file: Path):
         self.log_file = log_file
@@ -29,12 +29,12 @@ class DataCallAnalyzer:
         self.data_source_calls = []
         
     def parse_logs(self):
-        """解析日志文件"""
+        """解析日誌文件"""
         if not self.log_file.exists():
-            logger.error(f"❌ 日志文件不存在: {self.log_file}")
+            logger.error(f"❌ 日誌文件不存在: {self.log_file}")
             return
             
-        logger.info(f"📖 解析数据获取日志: {self.log_file}")
+        logger.info(f"📖 解析數據獲取日誌: {self.log_file}")
         
         with open(self.log_file, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
@@ -42,7 +42,7 @@ class DataCallAnalyzer:
                 if not line:
                     continue
                     
-                # 尝试解析结构化日志（JSON）
+                # 嘗試解析結構化日誌（JSON）
                 if line.startswith('{'):
                     try:
                         entry = json.loads(line)
@@ -51,13 +51,13 @@ class DataCallAnalyzer:
                     except json.JSONDecodeError:
                         pass
                 
-                # 解析普通日志
+                # 解析普通日誌
                 self._process_regular_log(line, line_num)
         
-        logger.info(f"✅ 解析完成: {len(self.data_calls)} 条数据调用, {len(self.tool_calls)} 条工具调用, {len(self.data_source_calls)} 条数据源调用")
+        logger.info(f"✅ 解析完成: {len(self.data_calls)} 條數據調用, {len(self.tool_calls)} 條工具調用, {len(self.data_source_calls)} 條數據源調用")
     
     def _process_structured_entry(self, entry: Dict[str, Any], line_num: int):
-        """处理结构化日志条目"""
+        """處理結構化日誌條目"""
         event_type = entry.get('event_type', '')
         
         if 'data_fetch' in event_type:
@@ -109,19 +109,19 @@ class DataCallAnalyzer:
             })
     
     def _process_regular_log(self, line: str, line_num: int):
-        """处理普通日志行"""
-        # 匹配数据获取相关的日志
+        """處理普通日誌行"""
+        # 匹配數據獲取相關的日誌
         patterns = [
-            (r'📊.*\[数据获取\].*symbol=(\w+).*start_date=([^,]+).*end_date=([^,]+)', 'data_fetch'),
-            (r'🔧.*\[工具调用\].*(\w+)', 'tool_call'),
-            (r'📊.*\[统一接口\].*获取(\w+)股票数据', 'unified_call'),
-            (r'📊.*\[(Tushare|AKShare|BaoStock|TDX)\].*调用参数.*symbol=(\w+)', 'data_source_call')
+            (r'📊.*\[數據獲取\].*symbol=(\w+).*start_date=([^,]+).*end_date=([^,]+)', 'data_fetch'),
+            (r'🔧.*\[工具調用\].*(\w+)', 'tool_call'),
+            (r'📊.*\[統一接口\].*獲取(\w+)股票數據', 'unified_call'),
+            (r'📊.*\[(Tushare|AKShare|BaoStock|TDX)\].*調用參數.*symbol=(\w+)', 'data_source_call')
         ]
         
         for pattern, call_type in patterns:
             match = re.search(pattern, line)
             if match:
-                # 提取时间戳
+                # 提取時間戳
                 timestamp_match = re.match(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3})', line)
                 timestamp = timestamp_match.group(1) if timestamp_match else None
                 
@@ -155,8 +155,8 @@ class DataCallAnalyzer:
                 break
     
     def analyze_data_calls(self) -> Dict[str, Any]:
-        """分析数据获取调用"""
-        logger.info(f"\n📊 数据获取调用分析")
+        """分析數據獲取調用"""
+        logger.info(f"\n📊 數據獲取調用分析")
         logger.info(f"=")
         
         analysis = {
@@ -181,17 +181,17 @@ class DataCallAnalyzer:
         durations = []
         
         for call in self.data_calls:
-            # 统计股票代码
+            # 統計股票代碼
             symbol = call.get('symbol')
             if symbol:
                 analysis['by_symbol'][symbol] += 1
             
-            # 统计数据源
+            # 統計數據源
             data_source = call.get('data_source')
             if data_source:
                 analysis['by_data_source'][data_source] += 1
             
-            # 统计日期范围
+            # 統計日期範围
             start_date = call.get('start_date')
             end_date = call.get('end_date')
             if start_date and end_date:
@@ -204,14 +204,14 @@ class DataCallAnalyzer:
                 durations.append(duration)
                 analysis['performance']['total_duration'] += duration
                 
-                if duration > 5.0:  # 超过5秒的慢调用
+                if duration > 5.0:  # 超過5秒的慢調用
                     analysis['performance']['slow_calls'].append({
                         'symbol': symbol,
                         'duration': duration,
                         'data_source': data_source,
                         'line_num': call.get('line_num')
                     })
-                elif duration < 1.0:  # 小于1秒的快调用
+                elif duration < 1.0:  # 小於1秒的快調用
                     analysis['performance']['fast_calls'].append({
                         'symbol': symbol,
                         'duration': duration,
@@ -230,42 +230,42 @@ class DataCallAnalyzer:
             
             analysis['success_rate']['total'] += 1
         
-        # 计算平均时间
+        # 計算平均時間
         if durations:
             analysis['performance']['avg_duration'] = sum(durations) / len(durations)
         
-        # 输出分析结果
-        logger.info(f"📈 总调用次数: {analysis['total_calls']}")
+        # 輸出分析結果
+        logger.info(f"📈 总調用次數: {analysis['total_calls']}")
         
         if analysis['by_symbol']:
-            logger.info(f"\n📊 按股票代码统计 (前10):")
+            logger.info(f"\n📊 按股票代碼統計 (前10):")
             for symbol, count in Counter(analysis['by_symbol']).most_common(10):
                 logger.info(f"  - {symbol}: {count} 次")
         
         if analysis['by_data_source']:
-            logger.info(f"\n🔧 按数据源统计:")
+            logger.info(f"\n🔧 按數據源統計:")
             for source, count in Counter(analysis['by_data_source']).most_common():
                 logger.info(f"  - {source}: {count} 次")
         
         if durations:
-            logger.info(f"\n⏱️  性能统计:")
-            logger.info(f"  - 总耗时: {analysis['performance']['total_duration']:.2f}s")
-            logger.info(f"  - 平均耗时: {analysis['performance']['avg_duration']:.2f}s")
-            logger.info(f"  - 慢调用 (>5s): {len(analysis['performance']['slow_calls'])} 次")
-            logger.info(f"  - 快调用 (<1s): {len(analysis['performance']['fast_calls'])} 次")
+            logger.info(f"\n⏱️  性能統計:")
+            logger.info(f"  - 总耗時: {analysis['performance']['total_duration']:.2f}s")
+            logger.info(f"  - 平均耗時: {analysis['performance']['avg_duration']:.2f}s")
+            logger.info(f"  - 慢調用 (>5s): {len(analysis['performance']['slow_calls'])} 次")
+            logger.info(f"  - 快調用 (<1s): {len(analysis['performance']['fast_calls'])} 次")
         
         if analysis['success_rate']['total'] > 0:
             success_pct = (analysis['success_rate']['success'] / analysis['success_rate']['total']) * 100
-            logger.info(f"\n✅ 成功率统计:")
+            logger.info(f"\n✅ 成功率統計:")
             logger.info(f"  - 成功: {analysis['success_rate']['success']} ({success_pct:.1f}%)")
             logger.warning(f"  - 警告: {analysis['success_rate']['warning']}")
-            logger.error(f"  - 错误: {analysis['success_rate']['error']}")
+            logger.error(f"  - 錯誤: {analysis['success_rate']['error']}")
         
         return analysis
     
     def analyze_tool_calls(self) -> Dict[str, Any]:
-        """分析工具调用"""
-        logger.info(f"\n🔧 工具调用分析")
+        """分析工具調用"""
+        logger.info(f"\n🔧 工具調用分析")
         logger.info(f"=")
         
         analysis = {
@@ -289,72 +289,72 @@ class DataCallAnalyzer:
             elif 'error' in event_type:
                 analysis['success_rate'][f"{tool_name}_error"] += 1
         
-        # 输出结果
-        logger.info(f"🔧 总工具调用: {analysis['total_calls']}")
+        # 輸出結果
+        logger.info(f"🔧 总工具調用: {analysis['total_calls']}")
         
         if analysis['by_tool']:
-            logger.info(f"\n📊 按工具统计:")
+            logger.info(f"\n📊 按工具統計:")
             for tool, count in Counter(analysis['by_tool']).most_common():
                 logger.info(f"  - {tool}: {count} 次")
                 
-                # 性能统计
+                # 性能統計
                 if tool in analysis['performance']:
                     durations = analysis['performance'][tool]
                     avg_duration = sum(durations) / len(durations)
-                    logger.info(f"    平均耗时: {avg_duration:.2f}s")
+                    logger.info(f"    平均耗時: {avg_duration:.2f}s")
         
         return analysis
     
     def generate_report(self) -> str:
-        """生成分析报告"""
-        logger.info(f"\n📋 生成数据获取分析报告")
+        """生成分析報告"""
+        logger.info(f"\n📋 生成數據獲取分析報告")
         logger.info(f"=")
         
         data_analysis = self.analyze_data_calls()
         tool_analysis = self.analyze_tool_calls()
         
         report = f"""
-# 数据获取调用分析报告
+# 數據獲取調用分析報告
 
-生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-日志文件: {self.log_file}
+生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+日誌文件: {self.log_file}
 
-## 概览
-- 数据获取调用: {data_analysis['total_calls']}
-- 工具调用: {tool_analysis['total_calls']}
-- 数据源调用: {len(self.data_source_calls)}
+## 概覽
+- 數據獲取調用: {data_analysis['total_calls']}
+- 工具調用: {tool_analysis['total_calls']}
+- 數據源調用: {len(self.data_source_calls)}
 
-## 数据获取性能
-- 总耗时: {data_analysis['performance']['total_duration']:.2f}s
-- 平均耗时: {data_analysis['performance']['avg_duration']:.2f}s
-- 慢调用数量: {len(data_analysis['performance']['slow_calls'])}
+## 數據獲取性能
+- 总耗時: {data_analysis['performance']['total_duration']:.2f}s
+- 平均耗時: {data_analysis['performance']['avg_duration']:.2f}s
+- 慢調用數量: {len(data_analysis['performance']['slow_calls'])}
 
 ## 成功率
-- 成功调用: {data_analysis['success_rate']['success']}
-- 警告调用: {data_analysis['success_rate']['warning']}
-- 错误调用: {data_analysis['success_rate']['error']}
+- 成功調用: {data_analysis['success_rate']['success']}
+- 警告調用: {data_analysis['success_rate']['warning']}
+- 錯誤調用: {data_analysis['success_rate']['error']}
 
 ## 建议
 """
         
         # 添加建议
         if data_analysis['performance']['avg_duration'] > 3.0:
-            report += "- ⚠️ 平均数据获取时间较长，建议优化缓存策略\n"
+            report += "- ⚠️ 平均數據獲取時間較長，建议優化緩存策略\n"
         
         if data_analysis['success_rate']['error'] > 0:
-            report += f"- ❌ 发现 {data_analysis['success_rate']['error']} 个数据获取错误，建议检查数据源配置\n"
+            report += f"- ❌ 發現 {data_analysis['success_rate']['error']} 個數據獲取錯誤，建议檢查數據源配置\n"
         
         if len(data_analysis['performance']['slow_calls']) > 5:
-            report += "- 🐌 慢调用较多，建议分析网络连接和API限制\n"
+            report += "- 🐌 慢調用較多，建议分析網絡連接和API限制\n"
         
         return report
 
 
 def main():
-    parser = argparse.ArgumentParser(description='数据获取调用分析工具')
-    parser.add_argument('log_file', help='日志文件路径')
-    parser.add_argument('--output', '-o', help='输出报告文件路径')
-    parser.add_argument('--format', choices=['text', 'json'], default='text', help='输出格式')
+    parser = argparse.ArgumentParser(description='數據獲取調用分析工具')
+    parser.add_argument('log_file', help='日誌文件路徑')
+    parser.add_argument('--output', '-o', help='輸出報告文件路徑')
+    parser.add_argument('--format', choices=['text', 'json'], default='text', help='輸出格式')
     
     args = parser.parse_args()
     
@@ -368,7 +368,7 @@ def main():
         if args.output:
             with open(args.output, 'w', encoding='utf-8') as f:
                 f.write(report)
-            logger.info(f"📄 报告已保存到: {args.output}")
+            logger.info(f"📄 報告已保存到: {args.output}")
         else:
             print(report)
             

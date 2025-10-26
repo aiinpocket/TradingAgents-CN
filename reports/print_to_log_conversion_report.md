@@ -1,11 +1,11 @@
 
-# Print语句转换报告
+# Print語句轉換報告
 
-## 转换统计
-- 成功转换文件: 100
-- 错误数量: 0
+## 轉換統計
+- 成功轉換文件: 100
+- 錯誤數量: 0
 
-## 转换的文件
+## 轉換的文件
 - C:\code\TradingAgentsCN\fix_stock_code_issue.py
 - C:\code\TradingAgentsCN\main.py
 - C:\code\TradingAgentsCN\quick_syntax_check.py

@@ -1,13 +1,13 @@
 @echo off
 chcp 65001 >nul
-REM TradingAgents Docker服务启动脚本
-REM 启动MongoDB、Redis和Redis Commander
+REM TradingAgents Docker服務啟動腳本
+REM 啟動MongoDB、Redis和Redis Commander
 
 echo ========================================
 echo TradingAgents Docker Service Startup
 echo ========================================
 
-REM 检查Docker是否运行
+REM 檢查Docker是否運行
 echo Checking Docker service status...
 docker version >nul 2>&1
 if %errorlevel% neq 0 (
@@ -21,7 +21,7 @@ echo [OK] Docker service is running
 echo.
 echo Starting database services...
 
-REM 启动MongoDB
+REM 啟動MongoDB
 echo Starting MongoDB...
 docker run -d ^
     --name tradingagents-mongodb ^
@@ -39,7 +39,7 @@ if %errorlevel% equ 0 (
     echo [WARN] MongoDB may already be running or failed to start
 )
 
-REM 启动Redis
+REM 啟動Redis
 echo Starting Redis...
 docker run -d ^
     --name tradingagents-redis ^
@@ -54,11 +54,11 @@ if %errorlevel% equ 0 (
     echo [WARN] Redis may already be running or failed to start
 )
 
-REM 等待服务启动
+REM 等待服務啟動
 echo Waiting for services to start...
 timeout /t 5 /nobreak >nul
 
-REM 启动Redis Commander (可选的Redis管理界面)
+REM 啟動Redis Commander (可選的Redis管理界面)
 echo Starting Redis Commander...
 docker run -d ^
     --name tradingagents-redis-commander ^

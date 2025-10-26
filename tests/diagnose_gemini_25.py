@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-诊断Gemini 2.5模型问题
+診斷Gemini 2.5模型問題
 """
 
 import os
@@ -8,16 +8,16 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-# 加载环境变量
+# 加載環境變量
 load_dotenv(project_root / ".env", override=True)
 
 def test_gemini_models():
-    """测试不同的Gemini模型"""
-    print("🧪 诊断Gemini模型问题")
+    """測試不同的Gemini模型"""
+    print("🧪 診斷Gemini模型問題")
     print("=" * 60)
     
     models_to_test = [
@@ -30,31 +30,31 @@ def test_gemini_models():
     
     google_api_key = os.getenv('GOOGLE_API_KEY')
     if not google_api_key:
-        print("❌ Google API密钥未配置")
+        print("❌ Google API密鑰未配置")
         return
     
-    print(f"✅ Google API密钥已配置: {google_api_key[:20]}...")
+    print(f"✅ Google API密鑰已配置: {google_api_key[:20]}...")
     
     working_models = []
     
     for model_name in models_to_test:
-        print(f"\n🔍 测试模型: {model_name}")
+        print(f"\n🔍 測試模型: {model_name}")
         print("-" * 40)
         
         try:
-            # 测试直接API
-            print("📝 测试直接Google API...")
+            # 測試直接API
+            print("📝 測試直接Google API...")
             import google.generativeai as genai
             genai.configure(api_key=google_api_key)
             
             model = genai.GenerativeModel(model_name)
-            response = model.generate_content("请用中文说：你好，我是Gemini模型")
+            response = model.generate_content("請用中文說：你好，我是Gemini模型")
             
             if response and response.text:
                 print(f"✅ 直接API成功: {response.text[:100]}...")
                 direct_success = True
             else:
-                print("❌ 直接API失败：无响应")
+                print("❌ 直接API失败：無響應")
                 direct_success = False
                 
         except Exception as e:
@@ -62,8 +62,8 @@ def test_gemini_models():
             direct_success = False
         
         try:
-            # 测试LangChain
-            print("📝 测试LangChain集成...")
+            # 測試LangChain
+            print("📝 測試LangChain集成...")
             from langchain_google_genai import ChatGoogleGenerativeAI
             
             llm = ChatGoogleGenerativeAI(
@@ -73,20 +73,20 @@ def test_gemini_models():
                 google_api_key=google_api_key
             )
             
-            response = llm.invoke("请用中文简单介绍一下你自己")
+            response = llm.invoke("請用中文簡單介紹一下你自己")
             
             if response and response.content:
                 print(f"✅ LangChain成功: {response.content[:100]}...")
                 langchain_success = True
             else:
-                print("❌ LangChain失败：无响应")
+                print("❌ LangChain失败：無響應")
                 langchain_success = False
                 
         except Exception as e:
             print(f"❌ LangChain失败: {e}")
             langchain_success = False
         
-        # 记录结果
+        # 記錄結果
         if direct_success or langchain_success:
             working_models.append({
                 'name': model_name,
@@ -100,30 +100,30 @@ def test_gemini_models():
     return working_models
 
 def test_best_working_model(working_models):
-    """测试最佳可用模型"""
+    """測試最佳可用模型"""
     if not working_models:
         print("\n❌ 没有找到可用的模型")
         return None
     
-    # 选择最佳模型（优先选择2.5版本，然后是LangChain可用的）
+    # 選擇最佳模型（優先選擇2.5版本，然後是LangChain可用的）
     best_model = None
     for model in working_models:
         if model['langchain']:  # LangChain可用
-            if '2.5' in model['name']:  # 优先2.5版本
+            if '2.5' in model['name']:  # 優先2.5版本
                 best_model = model['name']
                 break
-            elif best_model is None:  # 如果还没有选择，就选这个
+            elif best_model is None:  # 如果还没有選擇，就選這個
                 best_model = model['name']
     
     if best_model is None:
-        # 如果没有LangChain可用的，选择直接API可用的
+        # 如果没有LangChain可用的，選擇直接API可用的
         for model in working_models:
             if model['direct']:
                 best_model = model['name']
                 break
     
     if best_model:
-        print(f"\n🎯 选择最佳模型进行详细测试: {best_model}")
+        print(f"\n🎯 選擇最佳模型進行詳細測試: {best_model}")
         print("=" * 60)
         
         try:
@@ -136,69 +136,69 @@ def test_best_working_model(working_models):
                 google_api_key=os.getenv('GOOGLE_API_KEY')
             )
             
-            # 测试股票分析
-            print("📊 测试股票分析能力...")
+            # 測試股票分析
+            print("📊 測試股票分析能力...")
             response = llm.invoke("""
-            请用中文分析苹果公司(AAPL)的投资价值。
-            请简要分析：
-            1. 公司优势
-            2. 主要风险
-            3. 投资建议
+            請用中文分析苹果公司(AAPL)的投資價值。
+            請簡要分析：
+            1. 公司優势
+            2. 主要風險
+            3. 投資建议
             """)
             
             if response and response.content and len(response.content) > 100:
-                print("✅ 股票分析测试成功")
-                print(f"   响应长度: {len(response.content)} 字符")
-                print(f"   响应预览: {response.content[:200]}...")
+                print("✅ 股票分析測試成功")
+                print(f"   響應長度: {len(response.content)} 字符")
+                print(f"   響應預覽: {response.content[:200]}...")
                 return best_model
             else:
-                print("❌ 股票分析测试失败")
+                print("❌ 股票分析測試失败")
                 return None
                 
         except Exception as e:
-            print(f"❌ 详细测试失败: {e}")
+            print(f"❌ 詳細測試失败: {e}")
             return None
     
     return None
 
 def main():
-    """主函数"""
-    print("🧪 Gemini模型诊断")
+    """主函數"""
+    print("🧪 Gemini模型診斷")
     print("=" * 70)
     
-    # 测试所有模型
+    # 測試所有模型
     working_models = test_gemini_models()
     
-    # 显示结果
-    print(f"\n📊 测试结果总结:")
+    # 顯示結果
+    print(f"\n📊 測試結果总結:")
     print("=" * 50)
     
     if working_models:
-        print(f"✅ 找到 {len(working_models)} 个可用模型:")
+        print(f"✅ 找到 {len(working_models)} 個可用模型:")
         for model in working_models:
             direct_status = "✅" if model['direct'] else "❌"
             langchain_status = "✅" if model['langchain'] else "❌"
             print(f"   {model['name']}: 直接API {direct_status} | LangChain {langchain_status}")
         
-        # 测试最佳模型
+        # 測試最佳模型
         best_model = test_best_working_model(working_models)
         
         if best_model:
-            print(f"\n🎉 推荐使用模型: {best_model}")
+            print(f"\n🎉 推薦使用模型: {best_model}")
             print(f"\n💡 配置建议:")
-            print(f"   1. 在Web界面中选择'Google'作为LLM提供商")
-            print(f"   2. 使用模型名称: {best_model}")
-            print(f"   3. 该模型已通过股票分析测试")
+            print(f"   1. 在Web界面中選擇'Google'作為LLM提供商")
+            print(f"   2. 使用模型名稱: {best_model}")
+            print(f"   3. 该模型已通過股票分析測試")
         else:
-            print(f"\n⚠️ 虽然找到可用模型，但详细测试失败")
+            print(f"\n⚠️ 虽然找到可用模型，但詳細測試失败")
             print(f"   建议使用: {working_models[0]['name']}")
     else:
         print("❌ 没有找到任何可用的Gemini模型")
         print("💡 可能的原因:")
-        print("   1. API密钥权限不足")
-        print("   2. 网络连接问题")
-        print("   3. 模型名称已更新")
-        print("   4. API配额限制")
+        print("   1. API密鑰權限不足")
+        print("   2. 網絡連接問題")
+        print("   3. 模型名稱已更新")
+        print("   4. API配額限制")
 
 if __name__ == "__main__":
     main()

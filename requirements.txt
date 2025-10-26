@@ -1,25 +1,25 @@
-# ⚠️ 注意：此文件保留用于兼容性，但推荐使用 pyproject.toml
+# ⚠️ 註意：此文件保留用於兼容性，但推薦使用 pyproject.toml
 #
-# 推荐安装方式：
+# 推薦安裝方式：
 #   pip install -e .
 #
-# 国内用户推荐使用镜像加速（详见 docs/installation-mirror.md）：
+# 國內用戶推薦使用鏡像加速（詳见 docs/installation-mirror.md）：
 #   pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
 #
-# 或永久配置镜像：
+# 或永久配置鏡像：
 #   pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 #
 # 此文件与 pyproject.toml 保持同步
-# 最后更新：2025-10-21
+# 最後更新：2025-10-21
 #
-# 移除了以下间接依赖（会被其他包自动安装）：
-# - pydantic (langchain 依赖)
-# - numpy (pandas/streamlit 依赖)
-# - python-dateutil (pandas 依赖)
-# - typing-extensions (langchain-core/streamlit 依赖)
-# - tenacity (langchain-core/streamlit 依赖)
-# - toml (streamlit 依赖)
-# - urllib3 (requests 依赖)
+# 移除了以下間接依賴（會被其他包自動安裝）：
+# - pydantic (langchain 依賴)
+# - numpy (pandas/streamlit 依賴)
+# - python-dateutil (pandas 依賴)
+# - typing-extensions (langchain-core/streamlit 依賴)
+# - tenacity (langchain-core/streamlit 依賴)
+# - toml (streamlit 依賴)
+# - urllib3 (requests 依賴)
 
 # ==================== 核心框架 ====================
 langchain>=0.3.0
@@ -31,18 +31,18 @@ langchain-google-genai>=2.1.5
 langgraph>=0.4.8
 typer>=0.9.0
 
-# ==================== LLM API 客户端 ====================
+# ==================== LLM API 客戶端 ====================
 openai>=1.0.0,<2.0.0
 dashscope>=1.20.0
 google-genai>=0.1.0
 google-generativeai>=0.8.0
 
-# ==================== 数据处理 ====================
+# ==================== 數據處理 ====================
 pandas>=2.3.0
 pytz>=2025.2
 beautifulsoup4>=4.12.0
 
-# ==================== 数据源 ====================
+# ==================== 數據源 ====================
 akshare>=1.16.98
 tushare>=1.4.21
 yfinance>=0.2.63
@@ -53,7 +53,7 @@ feedparser>=6.0.11
 parsel>=1.10.0
 praw>=7.8.1
 
-# ==================== 数据库 ====================
+# ==================== 數據庫 ====================
 pymongo>=4.0.0
 redis>=6.2.0
 
@@ -68,18 +68,18 @@ sentence-transformers>=2.2.0
 torch>=2.0.0
 transformers>=4.30.0
 
-# ==================== 回测框架 ====================
+# ==================== 回測框架 ====================
 backtrader>=1.9.78.123
 stockstats>=0.6.5
 
-# ==================== 网络请求 ====================
+# ==================== 網絡請求 ====================
 requests>=2.32.4
 
 # ==================== CLI 工具 ====================
 rich>=14.0.0
 questionary>=2.1.0
 
-# ==================== 工具库 ====================
+# ==================== 工具庫 ====================
 python-dotenv>=1.0.0
 tqdm>=4.67.1
 psutil>=6.1.0

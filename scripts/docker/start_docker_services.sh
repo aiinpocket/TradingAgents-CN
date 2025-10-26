@@ -1,24 +1,24 @@
 #!/bin/bash
-# TradingAgents Docker服务启动脚本
-# 启动MongoDB、Redis和Redis Commander
+# TradingAgents Docker服務啟動腳本
+# 啟動MongoDB、Redis和Redis Commander
 
 echo "========================================"
-echo "TradingAgents Docker服务启动脚本"
+echo "TradingAgents Docker服務啟動腳本"
 echo "========================================"
 
-# 检查Docker是否运行
-echo "检查Docker服务状态..."
+# 檢查Docker是否運行
+echo "檢查Docker服務狀態..."
 if ! docker version >/dev/null 2>&1; then
-    echo "❌ Docker未运行或未安装，请先启动Docker"
+    echo "❌ Docker未運行或未安裝，請先啟動Docker"
     exit 1
 fi
-echo "✅ Docker服务正常"
+echo "✅ Docker服務正常"
 
 echo ""
-echo "🚀 启动数据库服务..."
+echo "🚀 啟動數據庫服務..."
 
-# 启动MongoDB
-echo "📊 启动MongoDB..."
+# 啟動MongoDB
+echo "📊 啟動MongoDB..."
 docker run -d \
     --name tradingagents-mongodb \
     -p 27017:27017 \
@@ -30,13 +30,13 @@ docker run -d \
     mongo:4.4
 
 if [ $? -eq 0 ]; then
-    echo "✅ MongoDB启动成功 - 端口: 27017"
+    echo "✅ MongoDB啟動成功 - 端口: 27017"
 else
-    echo "⚠️ MongoDB可能已在运行或启动失败"
+    echo "⚠️ MongoDB可能已在運行或啟動失败"
 fi
 
-# 启动Redis
-echo "📦 启动Redis..."
+# 啟動Redis
+echo "📦 啟動Redis..."
 docker run -d \
     --name tradingagents-redis \
     -p 6379:6379 \
@@ -45,17 +45,17 @@ docker run -d \
     redis:latest redis-server --appendonly yes --requirepass tradingagents123
 
 if [ $? -eq 0 ]; then
-    echo "✅ Redis启动成功 - 端口: 6379"
+    echo "✅ Redis啟動成功 - 端口: 6379"
 else
-    echo "⚠️ Redis可能已在运行或启动失败"
+    echo "⚠️ Redis可能已在運行或啟動失败"
 fi
 
-# 等待服务启动
-echo "⏳ 等待服务启动..."
+# 等待服務啟動
+echo "⏳ 等待服務啟動..."
 sleep 5
 
-# 启动Redis Commander (可选的Redis管理界面)
-echo "🖥️ 启动Redis Commander..."
+# 啟動Redis Commander (可選的Redis管理界面)
+echo "🖥️ 啟動Redis Commander..."
 docker run -d \
     --name tradingagents-redis-commander \
     -p 8081:8081 \
@@ -65,36 +65,36 @@ docker run -d \
     rediscommander/redis-commander:latest
 
 if [ $? -eq 0 ]; then
-    echo "✅ Redis Commander启动成功 - 访问地址: http://localhost:8081"
+    echo "✅ Redis Commander啟動成功 - 訪問地址: http://localhost:8081"
 else
-    echo "⚠️ Redis Commander可能已在运行或启动失败"
+    echo "⚠️ Redis Commander可能已在運行或啟動失败"
 fi
 
 echo ""
-echo "📋 服务状态检查..."
+echo "📋 服務狀態檢查..."
 docker ps --filter "name=tradingagents-" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 echo ""
 echo "========================================"
-echo "🎉 Docker服务启动完成！"
+echo "🎉 Docker服務啟動完成！"
 echo "========================================"
 echo ""
 echo "📊 MongoDB:"
-echo "   - 连接地址: mongodb://admin:tradingagents123@localhost:27017/tradingagents"
+echo "   - 連接地址: mongodb://admin:tradingagents123@localhost:27017/tradingagents"
 echo "   - 端口: 27017"
-echo "   - 用户名: admin"
-echo "   - 密码: tradingagents123"
+echo "   - 用戶名: admin"
+echo "   - 密碼: tradingagents123"
 echo ""
 echo "📦 Redis:"
-echo "   - 连接地址: redis://localhost:6379"
+echo "   - 連接地址: redis://localhost:6379"
 echo "   - 端口: 6379"
-echo "   - 密码: tradingagents123"
+echo "   - 密碼: tradingagents123"
 echo ""
 echo "🖥️ Redis Commander:"
 echo "   - 管理界面: http://localhost:8081"
 echo ""
 echo "💡 提示:"
-echo "   - 使用 ./stop_docker_services.sh 停止所有服务"
-echo "   - 使用 docker logs [容器名] 查看日志"
-echo "   - 数据将持久化保存在Docker卷中"
+echo "   - 使用 ./stop_docker_services.sh 停止所有服務"
+echo "   - 使用 docker logs [容器名] 查看日誌"
+echo "   - 數據将持久化保存在Docker卷中"
 echo ""

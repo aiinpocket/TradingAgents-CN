@@ -1,18 +1,18 @@
-﻿# ==================== 锁定版本依赖文件 ====================
+﻿# ==================== 鎖定版本依賴文件 ====================
 #
-# 此文件包含所有依赖的精确版本号，确保：
-# ✅ 安装速度极快（无需依赖解析）
-# ✅ 环境完全可重现
+# 此文件包含所有依賴的精確版本號，確保：
+# ✅ 安裝速度極快（無需依賴解析）
+# ✅ 環境完全可重現
 # ✅ 避免版本冲突
 #
-# 推荐安装方式（最快）：
+# 推薦安裝方式（最快）：
 #   pip install -r requirements-lock.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 #
-# 如需更新依赖版本，请使用 requirements.txt 或 pyproject.toml
+# 如需更新依賴版本，請使用 requirements.txt 或 pyproject.toml
 #
-# 生成时间：2025-10-21
+# 生成時間：2025-10-21
 # Python 版本：3.10.8
-# ==================== 依赖列表 ====================
+# ==================== 依賴列表 ====================
 
 aiofiles==24.1.0
 aiohappyeyeballs==2.6.1
@@ -278,7 +278,7 @@ tomli==2.2.1
 tornado==6.5.2
 tqdm==4.67.1
 traceloop-sdk==0.47.3
-# tradingagents - 本项目，需要单独安装：pip install -e .
+# tradingagents - 本項目，需要單獨安裝：pip install -e .
 tushare==1.4.24
 typer==0.19.1
 typing-inspect==0.9.0

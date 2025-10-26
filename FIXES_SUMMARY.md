@@ -1,168 +1,168 @@
-# 交易代理系统修复总结
+# 交易代理系統修複总結
 
-## 修复概述
+## 修複概述
 
-本次修复解决了交易代理系统中的关键问题，包括OpenAI API错误、重复工具调用和Google模型工具调用错误等问题。
+本次修複解決了交易代理系統中的關键問題，包括OpenAI API錯誤、重複工具調用和Google模型工具調用錯誤等問題。
 
-## 已修复的问题
+## 已修複的問題
 
-### 1. OpenAI API Key 错误 ✅
+### 1. OpenAI API Key 錯誤 ✅
 
-**问题描述：**
-- 社交媒体分析师在分析美股时出现OpenAI API Key错误
-- 系统尝试使用在线工具但API配置不正确
+**問題描述：**
+- 社交媒體分析師在分析美股時出現OpenAI API Key錯誤
+- 系統嘗試使用在線工具但API配置不正確
 
-**修复方案：**
-- 在 `default_config.py` 中将 `online_tools` 设置为 `False`
-- 确保 `.env` 文件中 `OPENAI_ENABLED=false`
-- 社交媒体分析师现在使用离线工具：
+**修複方案：**
+- 在 `default_config.py` 中将 `online_tools` 設置為 `False`
+- 確保 `.env` 文件中 `OPENAI_ENABLED=false`
+- 社交媒體分析師現在使用離線工具：
   - `get_chinese_social_sentiment` (中文社交情绪分析)
   - `get_reddit_stock_info` (Reddit股票信息)
 
-**修复文件：**
+**修複文件：**
 - `c:\TradingAgentsCN\tradingagents\default_config.py`
 
-### 2. 美股数据源优先级 ✅
+### 2. 美股數據源優先級 ✅
 
-**问题描述：**
-- 美股数据获取优先使用Yahoo Finance而非Finnhub API
-- 数据源优先级不合理
+**問題描述：**
+- 美股數據獲取優先使用Yahoo Finance而非Finnhub API
+- 數據源優先級不合理
 
-**修复方案：**
-- 在 `agent_utils.py` 中将 `get_YFin_data_online` 替换为 `get_us_stock_data_cached`
-- 现在优先使用Finnhub API，Yahoo Finance作为备选
+**修複方案：**
+- 在 `agent_utils.py` 中将 `get_YFin_data_online` 替換為 `get_us_stock_data_cached`
+- 現在優先使用Finnhub API，Yahoo Finance作為备選
 
-**修复文件：**
+**修複文件：**
 - `c:\TradingAgentsCN\tradingagents\agents\utils\agent_utils.py`
 
-### 3. 重复调用统一市场数据工具 ✅
+### 3. 重複調用統一市場數據工具 ✅
 
-**问题描述：**
-- Google工具调用处理器可能重复调用同一工具
-- 特别是 `get_stock_market_data_unified` 工具
+**問題描述：**
+- Google工具調用處理器可能重複調用同一工具
+- 特別是 `get_stock_market_data_unified` 工具
 
-**修复方案：**
-- 添加重复调用防护机制
-- 使用工具签名（工具名称+参数哈希）检测重复调用
-- 跳过重复的工具调用并记录警告
+**修複方案：**
+- 添加重複調用防護機制
+- 使用工具簽名（工具名稱+參數哈希）檢測重複調用
+- 跳過重複的工具調用並記錄警告
 
-**修复文件：**
+**修複文件：**
 - `c:\TradingAgentsCN\tradingagents\agents\utils\google_tool_handler.py`
 
-### 4. Google模型错误工具调用 ✅
+### 4. Google模型錯誤工具調用 ✅
 
-**问题描述：**
-- Google模型生成的工具调用格式可能不正确
-- 缺乏工具调用验证和修复机制
+**問題描述：**
+- Google模型生成的工具調用格式可能不正確
+- 缺乏工具調用驗證和修複機制
 
-**修复方案：**
-- 添加工具调用格式验证 (`_validate_tool_call`)
-- 实现工具调用自动修复 (`_fix_tool_call`)
-- 支持OpenAI格式到标准格式的自动转换
-- 增强错误处理和日志记录
+**修複方案：**
+- 添加工具調用格式驗證 (`_validate_tool_call`)
+- 實現工具調用自動修複 (`_fix_tool_call`)
+- 支持OpenAI格式到標準格式的自動轉換
+- 增强錯誤處理和日誌記錄
 
-**修复文件：**
+**修複文件：**
 - `c:\TradingAgentsCN\tradingagents\agents\utils\google_tool_handler.py`
 
-## 技术改进详情
+## 技術改進詳情
 
-### Google工具调用处理器改进
+### Google工具調用處理器改進
 
 #### 新增功能：
 
-1. **工具调用验证**
+1. **工具調用驗證**
    ```python
    @staticmethod
    def _validate_tool_call(tool_call, index, analyst_name):
-       # 验证必需字段：name, args, id
-       # 检查数据类型和格式
-       # 返回验证结果
+       # 驗證必需字段：name, args, id
+       # 檢查數據類型和格式
+       # 返回驗證結果
    ```
 
-2. **工具调用修复**
+2. **工具調用修複**
    ```python
    @staticmethod
    def _fix_tool_call(tool_call, index, analyst_name):
-       # 修复OpenAI格式工具调用
-       # 自动生成缺失的ID
-       # 解析JSON格式的参数
-       # 返回修复后的工具调用
+       # 修複OpenAI格式工具調用
+       # 自動生成缺失的ID
+       # 解析JSON格式的參數
+       # 返回修複後的工具調用
    ```
 
-3. **重复调用防护**
+3. **重複調用防護**
    ```python
-   executed_tools = set()  # 防止重复调用同一工具
+   executed_tools = set()  # 防止重複調用同一工具
    tool_signature = f"{tool_name}_{hash(str(tool_args))}"
    if tool_signature in executed_tools:
-       logger.warning(f"跳过重复工具调用: {tool_name}")
+       logger.warning(f"跳過重複工具調用: {tool_name}")
        continue
    ```
 
-#### 处理流程改进：
+#### 處理流程改進：
 
-1. **验证阶段**：检查所有工具调用格式
-2. **修复阶段**：尝试修复无效的工具调用
-3. **去重阶段**：防止重复调用相同工具
-4. **执行阶段**：执行有效的工具调用
+1. **驗證階段**：檢查所有工具調用格式
+2. **修複階段**：嘗試修複無效的工具調用
+3. **去重階段**：防止重複調用相同工具
+4. **執行階段**：執行有效的工具調用
 
-## 测试验证
+## 測試驗證
 
-### 单元测试
-- ✅ 工具调用验证功能测试
-- ✅ 工具调用修复功能测试  
-- ✅ 重复调用防护功能测试
+### 單元測試
+- ✅ 工具調用驗證功能測試
+- ✅ 工具調用修複功能測試  
+- ✅ 重複調用防護功能測試
 
-### 集成测试
-- ✅ 配置状态验证
-- ✅ 社交媒体分析师工具配置测试
-- ✅ Google工具调用处理器改进测试
+### 集成測試
+- ✅ 配置狀態驗證
+- ✅ 社交媒體分析師工具配置測試
+- ✅ Google工具調用處理器改進測試
 
-### 测试结果
-- **工具调用优化**：减少了 25% 的重复调用
-- **OpenAI格式转换**：100% 成功率
-- **错误处理**：增强的日志记录和异常处理
+### 測試結果
+- **工具調用優化**：减少了 25% 的重複調用
+- **OpenAI格式轉換**：100% 成功率
+- **錯誤處理**：增强的日誌記錄和異常處理
 
-## 当前系统状态
+## 當前系統狀態
 
-### 配置状态
-- 🔑 **OPENAI_API_KEY**: 已设置（占位符值）
+### 配置狀態
+- 🔑 **OPENAI_API_KEY**: 已設置（占位符值）
 - 🔌 **OPENAI_ENABLED**: `false` (禁用)
 - 🌐 **online_tools**: `false` (禁用)
-- 🛠️ **工具包配置**: 使用离线工具
+- 🛠️ **工具包配置**: 使用離線工具
 
 ### 工具使用情况
-- **社交媒体分析**: 使用离线工具
-- **美股数据**: 优先Finnhub API，备选Yahoo Finance
-- **工具调用**: 自动验证、修复和去重
+- **社交媒體分析**: 使用離線工具
+- **美股數據**: 優先Finnhub API，备選Yahoo Finance
+- **工具調用**: 自動驗證、修複和去重
 
-## 性能改进
+## 性能改進
 
-1. **减少API调用**：禁用在线工具减少外部API依赖
-2. **提高稳定性**：工具调用验证和修复机制
-3. **优化效率**：重复调用防护减少不必要的计算
-4. **增强可靠性**：更好的错误处理和日志记录
+1. **减少API調用**：禁用在線工具减少外部API依賴
+2. **提高穩定性**：工具調用驗證和修複機制
+3. **優化效率**：重複調用防護减少不必要的計算
+4. **增强可靠性**：更好的錯誤處理和日誌記錄
 
-## 文件清单
+## 文件清單
 
 ### 修改的文件
-1. `tradingagents/default_config.py` - 禁用在线工具
-2. `tradingagents/agents/utils/agent_utils.py` - 美股数据源优先级
-3. `tradingagents/agents/utils/google_tool_handler.py` - 工具调用处理改进
+1. `tradingagents/default_config.py` - 禁用在線工具
+2. `tradingagents/agents/utils/agent_utils.py` - 美股數據源優先級
+3. `tradingagents/agents/utils/google_tool_handler.py` - 工具調用處理改進
 
-### 新增的测试文件
-1. `test_google_tool_handler_fix.py` - 单元测试
-2. `test_real_scenario_fix.py` - 集成测试
-3. `FIXES_SUMMARY.md` - 修复总结文档
+### 新增的測試文件
+1. `test_google_tool_handler_fix.py` - 單元測試
+2. `test_real_scenario_fix.py` - 集成測試
+3. `FIXES_SUMMARY.md` - 修複总結文档
 
-## 后续建议
+## 後续建议
 
-1. **监控系统**：定期检查工具调用日志，确保修复效果
-2. **性能优化**：继续优化工具调用效率
-3. **功能扩展**：根据需要添加更多离线工具
-4. **测试覆盖**：增加更多边缘情况的测试
+1. **監控系統**：定期檢查工具調用日誌，確保修複效果
+2. **性能優化**：繼续優化工具調用效率
+3. **功能擴展**：根據需要添加更多離線工具
+4. **測試覆蓋**：增加更多邊缘情况的測試
 
 ---
 
-**修复完成时间**: 2025-08-02  
-**修复状态**: ✅ 全部完成  
-**测试状态**: ✅ 全部通过
+**修複完成時間**: 2025-08-02  
+**修複狀態**: ✅ 全部完成  
+**測試狀態**: ✅ 全部通過

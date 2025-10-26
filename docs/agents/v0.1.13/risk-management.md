@@ -1,71 +1,71 @@
-# 风险管理团队
+# 風險管理团隊
 
 ## 概述
 
-风险管理团队是 TradingAgents 框架的风险控制核心，负责从多个角度评估和质疑投资决策，确保投资组合的风险可控性。团队由不同风险偏好的分析师组成，通过多角度的风险评估和反驳机制，为投资决策提供全面的风险视角和保护措施。
+風險管理团隊是 TradingAgents 框架的風險控制核心，负责從多個角度評估和质疑投資決策，確保投資組合的風險可控性。团隊由不同風險偏好的分析師組成，通過多角度的風險評估和反驳機制，為投資決策提供全面的風險視角和保護措施。
 
-## 风险管理架构
+## 風險管理架構
 
-### 基础设计
+### 基础設計
 
-风险管理团队基于统一的架构设计，专注于风险识别、评估和控制：
+風險管理团隊基於統一的架構設計，專註於風險识別、評估和控制：
 
 ```python
-# 统一的风险管理模块日志装饰器
+# 統一的風險管理模塊日誌裝饰器
 from tradingagents.utils.tool_logging import log_risk_module
 
-# 统一日志系统
+# 統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 @log_risk_module("risk_type")
 def risk_node(state):
-    # 风险管理逻辑实现
+    # 風險管理逻辑實現
     pass
 ```
 
-### 智能体状态管理
+### 智能體狀態管理
 
-风险管理团队通过 `AgentState` 获取完整的投资决策信息：
+風險管理团隊通過 `AgentState` 獲取完整的投資決策信息：
 
 ```python
 class AgentState:
-    company_of_interest: str      # 股票代码
+    company_of_interest: str      # 股票代碼
     trade_date: str              # 交易日期
-    fundamentals_report: str     # 基本面报告
-    market_report: str           # 市场分析报告
-    news_report: str             # 新闻分析报告
-    sentiment_report: str        # 情绪分析报告
-    trader_recommendation: str   # 交易员建议
-    messages: List              # 消息历史
+    fundamentals_report: str     # 基本面報告
+    market_report: str           # 市場分析報告
+    news_report: str             # 新聞分析報告
+    sentiment_report: str        # 情绪分析報告
+    trader_recommendation: str   # 交易員建议
+    messages: List              # 消息歷史
 ```
 
-## 风险管理团队成员
+## 風險管理团隊成員
 
-### 1. 保守风险分析师 (Conservative Risk Analyst)
+### 1. 保守風險分析師 (Conservative Risk Analyst)
 
 **文件位置**: `tradingagents/agents/risk_mgmt/conservative_debator.py`
 
-**核心职责**:
-- 作为安全/保守风险分析师
-- 积极反驳激进和中性分析师的论点
-- 指出潜在风险并提出更谨慎的替代方案
-- 保护资产、最小化波动性并确保稳定增长
+**核心職责**:
+- 作為安全/保守風險分析師
+- 積極反驳激進和中性分析師的論點
+- 指出潜在風險並提出更谨慎的替代方案
+- 保護資產、最小化波動性並確保穩定增長
 
-**核心实现**:
+**核心實現**:
 ```python
 def create_safe_debator(llm):
     @log_risk_module("conservative")
     def safe_node(state):
-        # 获取基础信息
+        # 獲取基础信息
         company_name = state["company_of_interest"]
         trader_recommendation = state.get("trader_recommendation", "")
         
-        # 获取股票市场信息
+        # 獲取股票市場信息
         from tradingagents.utils.stock_utils import StockUtils
         market_info = StockUtils.get_market_info(company_name)
         
-        # 确定股票类型和货币信息
+        # 確定股票類型和貨币信息
         if market_info.get("is_china"):
             stock_type = "A股"
             currency_unit = "人民币"
@@ -76,150 +76,150 @@ def create_safe_debator(llm):
             stock_type = "美股"
             currency_unit = "美元"
         else:
-            stock_type = "未知市场"
-            currency_unit = "未知货币"
+            stock_type = "未知市場"
+            currency_unit = "未知貨币"
         
-        # 获取各类分析报告
+        # 獲取各類分析報告
         market_report = state.get("market_report", "")
         sentiment_report = state.get("sentiment_report", "")
         news_report = state.get("news_report", "")
         fundamentals_report = state.get("fundamentals_report", "")
         
-        # 构建保守风险分析提示
+        # 構建保守風險分析提示
         safe_prompt = f"""
-        作为安全/保守风险分析师，请对以下投资决策进行风险评估：
+        作為安全/保守風險分析師，請對以下投資決策進行風險評估：
         
-        公司名称: {company_name}
-        股票类型: {stock_type}
-        货币单位: {currency_unit}
+        公司名稱: {company_name}
+        股票類型: {stock_type}
+        貨币單位: {currency_unit}
         
-        交易员建议: {trader_recommendation}
+        交易員建议: {trader_recommendation}
         
-        市场研究报告: {market_report}
-        情绪报告: {sentiment_report}
-        新闻报告: {news_report}
-        基本面报告: {fundamentals_report}
+        市場研究報告: {market_report}
+        情绪報告: {sentiment_report}
+        新聞報告: {news_report}
+        基本面報告: {fundamentals_report}
         
-        请从保守角度分析：
-        1. 识别所有潜在风险因素
-        2. 质疑乐观假设的合理性
+        請從保守角度分析：
+        1. 识別所有潜在風險因素
+        2. 质疑乐觀假設的合理性
         3. 提出更谨慎的替代方案
-        4. 建议风险控制措施
-        5. 评估最坏情况下的损失
+        4. 建议風險控制措施
+        5. 評估最坏情况下的損失
         """
         
-        # 调用LLM生成风险分析
+        # 調用LLM生成風險分析
         response = llm.invoke(safe_prompt)
         
         return {"conservative_risk_analysis": response.content}
 ```
 
-**分析特点**:
-- **风险优先**: 优先识别和强调各类风险因素
-- **保守估值**: 倾向于更保守的估值和预期
-- **防御策略**: 重点关注资本保护和风险控制
-- **质疑乐观**: 对乐观预期和假设保持质疑态度
+**分析特點**:
+- **風險優先**: 優先识別和强調各類風險因素
+- **保守估值**: 倾向於更保守的估值和預期
+- **防御策略**: 重點關註資本保護和風險控制
+- **质疑乐觀**: 對乐觀預期和假設保持质疑態度
 
-## 风险评估维度
+## 風險評估維度
 
-### 1. 市场风险
+### 1. 市場風險
 
-**系统性风险**:
-- 宏观经济风险
-- 政策监管风险
-- 利率汇率风险
-- 地缘政治风险
+**系統性風險**:
+- 宏觀經濟風險
+- 政策監管風險
+- 利率汇率風險
+- 地缘政治風險
 
-**非系统性风险**:
-- 行业周期风险
-- 公司特定风险
-- 管理层风险
-- 竞争环境风险
+**非系統性風險**:
+- 行業周期風險
+- 公司特定風險
+- 管理層風險
+- 競爭環境風險
 
-### 2. 流动性风险
+### 2. 流動性風險
 
-**市场流动性**:
+**市場流動性**:
 - 交易量分析
-- 买卖价差评估
-- 市场深度分析
-- 冲击成本评估
+- 买卖價差評估
+- 市場深度分析
+- 冲擊成本評估
 
-**资金流动性**:
-- 现金流分析
-- 融资能力评估
-- 债务到期分析
-- 营运资金管理
+**資金流動性**:
+- 現金流分析
+- 融資能力評估
+- 债務到期分析
+- 營運資金管理
 
-### 3. 信用风险
+### 3. 信用風險
 
-**财务风险**:
-- 债务负担评估
+**財務風險**:
+- 债務负擔評估
 - 偿债能力分析
-- 现金流稳定性
-- 盈利质量评估
+- 現金流穩定性
+- 盈利质量評估
 
-**运营风险**:
-- 业务模式风险
-- 管理层风险
-- 内控制度风险
-- 合规风险
+**運營風險**:
+- 業務模式風險
+- 管理層風險
+- 內控制度風險
+- 合規風險
 
-### 4. 估值风险
+### 4. 估值風險
 
-**估值方法风险**:
-- 估值模型选择
-- 参数敏感性分析
-- 假设条件评估
-- 比较基准选择
+**估值方法風險**:
+- 估值模型選擇
+- 參數敏感性分析
+- 假設條件評估
+- 比較基準選擇
 
-**市场估值风险**:
-- 市场情绪影响
-- 估值泡沫风险
-- 价格发现效率
-- 投资者结构影响
+**市場估值風險**:
+- 市場情绪影響
+- 估值泡沫風險
+- 價格發現效率
+- 投資者結構影響
 
-## 配置选项
+## 配置選項
 
-### 风险管理配置
+### 風險管理配置
 
 ```python
 risk_config = {
-    "risk_tolerance": "moderate",      # 风险容忍度
-    "max_portfolio_var": 0.05,         # 最大组合VaR
-    "max_single_position": 0.05,       # 最大单一仓位
-    "max_sector_exposure": 0.20,       # 最大行业敞口
-    "correlation_threshold": 0.70,     # 相关性阈值
-    "rebalance_trigger": 0.05,         # 再平衡触发阈值
-    "stress_test_frequency": "weekly"  # 压力测试频率
+    "risk_tolerance": "moderate",      # 風險容忍度
+    "max_portfolio_var": 0.05,         # 最大組合VaR
+    "max_single_position": 0.05,       # 最大單一仓位
+    "max_sector_exposure": 0.20,       # 最大行業敞口
+    "correlation_threshold": 0.70,     # 相關性阈值
+    "rebalance_trigger": 0.05,         # 再平衡觸發阈值
+    "stress_test_frequency": "weekly"  # 壓力測試頻率
 }
 ```
 
-## 日志和监控
+## 日誌和監控
 
-### 详细日志记录
+### 詳細日誌記錄
 
 ```python
-# 风险管理活动日志
-logger.info(f"🛡️ [风险管理] 开始风险评估: {company_name}")
-logger.info(f"📊 [风险分析] 股票类型: {stock_type}, 货币: {currency_unit}")
-logger.debug(f"⚠️ [风险因素] 识别到 {len(risk_factors)} 个风险因素")
-logger.warning(f"🚨 [风险预警] 发现高风险因素: {high_risk_factors}")
-logger.info(f"✅ [风险评估] 风险分析完成，风险等级: {risk_level}")
+# 風險管理活動日誌
+logger.info(f"🛡️ [風險管理] 開始風險評估: {company_name}")
+logger.info(f"📊 [風險分析] 股票類型: {stock_type}, 貨币: {currency_unit}")
+logger.debug(f"⚠️ [風險因素] 识別到 {len(risk_factors)} 個風險因素")
+logger.warning(f"🚨 [風險預警] 發現高風險因素: {high_risk_factors}")
+logger.info(f"✅ [風險評估] 風險分析完成，風險等級: {risk_level}")
 ```
 
-### 风险监控指标
+### 風險監控指標
 
-- 风险评估准确性
-- 风险预警及时性
-- 风险控制有效性
-- 损失预测精度
-- 风险调整收益
+- 風險評估準確性
+- 風險預警及時性
+- 風險控制有效性
+- 損失預測精度
+- 風險調整收益
 
-## 扩展指南
+## 擴展指南
 
-### 添加新的风险分析师
+### 添加新的風險分析師
 
-1. **创建新的风险分析师文件**
+1. **創建新的風險分析師文件**
 ```python
 # tradingagents/agents/risk_mgmt/new_risk_analyst.py
 from tradingagents.utils.tool_logging import log_risk_module
@@ -230,82 +230,82 @@ logger = get_logger("default")
 def create_new_risk_analyst(llm):
     @log_risk_module("new_risk_type")
     def new_risk_node(state):
-        # 新的风险分析逻辑
+        # 新的風險分析逻辑
         pass
     
     return new_risk_node
 ```
 
-2. **集成到风险管理系统**
+2. **集成到風險管理系統**
 ```python
-# 在相应的图配置中添加新的风险分析师
+# 在相應的圖配置中添加新的風險分析師
 from tradingagents.agents.risk_mgmt.new_risk_analyst import create_new_risk_analyst
 
 new_risk_analyst = create_new_risk_analyst(llm)
 ```
 
-## 最佳实践
+## 最佳實踐
 
-### 1. 全面风险识别
-- 系统性识别各类风险
-- 定期更新风险清单
-- 关注新兴风险因素
-- 建立风险分类体系
+### 1. 全面風險识別
+- 系統性识別各類風險
+- 定期更新風險清單
+- 關註新兴風險因素
+- 建立風險分類體系
 
-### 2. 量化风险管理
-- 使用多种风险指标
-- 定期校准风险模型
-- 进行回测验证
-- 持续优化参数
+### 2. 量化風險管理
+- 使用多種風險指標
+- 定期校準風險模型
+- 進行回測驗證
+- 持续優化參數
 
-### 3. 动态风险控制
-- 实时监控风险水平
-- 及时调整风险敞口
-- 灵活应对市场变化
-- 保持风险预算平衡
+### 3. 動態風險控制
+- 實時監控風險水平
+- 及時調整風險敞口
+- 灵活應對市場變化
+- 保持風險預算平衡
 
-### 4. 透明风险沟通
-- 清晰传达风险信息
-- 定期发布风险报告
-- 及时发出风险预警
-- 提供风险教育培训
+### 4. 透明風險沟通
+- 清晰傳達風險信息
+- 定期發布風險報告
+- 及時發出風險預警
+- 提供風險教育培训
 
 ## 故障排除
 
-### 常见问题
+### 常见問題
 
-1. **风险分析失败**
-   - 检查输入数据完整性
-   - 验证LLM连接状态
-   - 确认股票市场信息获取
-   - 检查日志记录
+1. **風險分析失败**
+   - 檢查輸入數據完整性
+   - 驗證LLM連接狀態
+   - 確認股票市場信息獲取
+   - 檢查日誌記錄
 
-2. **风险评估不准确**
-   - 更新风险模型参数
-   - 增加历史数据样本
-   - 调整风险因子权重
-   - 优化评估算法
+2. **風險評估不準確**
+   - 更新風險模型參數
+   - 增加歷史數據樣本
+   - 調整風險因子權重
+   - 優化評估算法
 
-3. **风险控制过度保守**
-   - 调整风险容忍度参数
-   - 平衡风险与收益目标
-   - 优化仓位管理策略
-   - 考虑市场环境变化
+3. **風險控制過度保守**
+   - 調整風險容忍度參數
+   - 平衡風險与收益目標
+   - 優化仓位管理策略
+   - 考慮市場環境變化
 
-### 调试技巧
+### 調試技巧
 
-1. **风险分析调试**
+1. **風險分析調試**
 ```python
-logger.debug(f"风险分析输入: 公司={company_name}, 类型={stock_type}")
-logger.debug(f"风险因素识别: {risk_factors}")
-logger.debug(f"风险评估结果: {risk_assessment}")
+logger.debug(f"風險分析輸入: 公司={company_name}, 類型={stock_type}")
+logger.debug(f"風險因素识別: {risk_factors}")
+logger.debug(f"風險評估結果: {risk_assessment}")
 ```
 
-2. **状态验证**
+2. **狀態驗證**
 ```python
-logger.debug(f"状态检查: 基本面报告长度={len(fundamentals_report)}")
-logger.debug(f"状态检查: 市场报告长度={len(market_report)}")
-logger.debug(f"状态检查: 交易员建议={trader_recommendation[:100]}...")
+logger.debug(f"狀態檢查: 基本面報告長度={len(fundamentals_report)}")
+logger.debug(f"狀態檢查: 市場報告長度={len(market_report)}")
+logger.debug(f"狀態檢查: 交易員建议={trader_recommendation[:100]}...")
 ```
 
-风险管理团队作为TradingAgents框架的安全守护者，通过全面的风险识别、评估和控制，确保投资决策在可控风险范围内进行，为投资组合的长期稳健增长提供重要保障。
+風險管理团隊作為TradingAgents框架的安全守護者，通過全面的風險识別、評估和控制，確保投資決策在可控風險範围內進行，為投資組合的長期穩健增長提供重要保障。

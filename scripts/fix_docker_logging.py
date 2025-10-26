@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-修复Docker环境下的日志文件生成问题
+修複Docker環境下的日誌文件生成問題
 """
 
 import os
@@ -8,19 +8,19 @@ import shutil
 from pathlib import Path
 
 def fix_docker_logging_config():
-    """修复Docker日志配置"""
-    print("🔧 修复Docker环境日志配置...")
+    """修複Docker日誌配置"""
+    print("🔧 修複Docker環境日誌配置...")
     
     # 1. 修改 logging_docker.toml
     docker_config_file = Path("config/logging_docker.toml")
     if docker_config_file.exists():
         print(f"📝 修改 {docker_config_file}")
         
-        # 读取现有配置
+        # 讀取現有配置
         with open(docker_config_file, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # 修改配置：启用文件日志
+        # 修改配置：啟用文件日誌
         new_content = content.replace(
             '[logging.handlers.file]\nenabled = false',
             '[logging.handlers.file]\nenabled = true\nlevel = "DEBUG"\nmax_size = "100MB"\nbackup_count = 5\ndirectory = "/app/logs"'
@@ -36,19 +36,19 @@ def fix_docker_logging_config():
             'stdout_only = false'
         )
         
-        # 写回文件
+        # 寫回文件
         with open(docker_config_file, 'w', encoding='utf-8') as f:
             f.write(new_content)
         
-        print("✅ Docker日志配置已修复")
+        print("✅ Docker日誌配置已修複")
     else:
-        print("⚠️ Docker日志配置文件不存在，创建新的...")
+        print("⚠️ Docker日誌配置文件不存在，創建新的...")
         create_docker_logging_config()
 
 def create_docker_logging_config():
-    """创建新的Docker日志配置"""
-    docker_config_content = '''# Docker环境专用日志配置 - 修复版
-# 同时支持控制台输出和文件日志
+    """創建新的Docker日誌配置"""
+    docker_config_content = '''# Docker環境專用日誌配置 - 修複版
+# 同時支持控制台輸出和文件日誌
 
 [logging]
 level = "INFO"
@@ -60,13 +60,13 @@ structured = "json"
 
 [logging.handlers]
 
-# 控制台输出
+# 控制台輸出
 [logging.handlers.console]
 enabled = true
 colored = false
 level = "INFO"
 
-# 文件输出 - 启用！
+# 文件輸出 - 啟用！
 [logging.handlers.file]
 enabled = true
 level = "DEBUG"
@@ -74,7 +74,7 @@ max_size = "100MB"
 backup_count = 5
 directory = "/app/logs"
 
-# 结构化日志
+# 結構化日誌
 [logging.handlers.structured]
 enabled = true
 level = "INFO"
@@ -96,11 +96,11 @@ level = "WARNING"
 [logging.loggers.requests]
 level = "WARNING"
 
-# Docker配置 - 修复版
+# Docker配置 - 修複版
 [logging.docker]
 enabled = true
-stdout_only = false  # 不只输出到stdout
-disable_file_logging = false  # 不禁用文件日志
+stdout_only = false  # 不只輸出到stdout
+disable_file_logging = false  # 不禁用文件日誌
 
 [logging.performance]
 enabled = true
@@ -120,20 +120,20 @@ log_user_actions = true
 log_export_events = true
 '''
     
-    # 确保config目录存在
+    # 確保config目錄存在
     config_dir = Path("config")
     config_dir.mkdir(exist_ok=True)
     
-    # 写入配置文件
+    # 寫入配置文件
     docker_config_file = config_dir / "logging_docker.toml"
     with open(docker_config_file, 'w', encoding='utf-8') as f:
         f.write(docker_config_content)
     
-    print(f"✅ 创建新的Docker日志配置: {docker_config_file}")
+    print(f"✅ 創建新的Docker日誌配置: {docker_config_file}")
 
 def update_docker_compose():
-    """更新docker-compose.yml环境变量"""
-    print("\n🐳 检查docker-compose.yml配置...")
+    """更新docker-compose.yml環境變量"""
+    print("\n🐳 檢查docker-compose.yml配置...")
     
     compose_file = Path("docker-compose.yml")
     if not compose_file.exists():
@@ -143,7 +143,7 @@ def update_docker_compose():
     with open(compose_file, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # 检查是否已有正确的环境变量
+    # 檢查是否已有正確的環境變量
     required_vars = [
         'TRADINGAGENTS_LOG_DIR: "/app/logs"',
         'TRADINGAGENTS_LOG_FILE: "/app/logs/tradingagents.log"'
@@ -155,73 +155,73 @@ def update_docker_compose():
             missing_vars.append(var)
     
     if missing_vars:
-        print(f"⚠️ 缺少环境变量: {missing_vars}")
-        print("💡 请确保docker-compose.yml包含以下环境变量:")
+        print(f"⚠️ 缺少環境變量: {missing_vars}")
+        print("💡 請確保docker-compose.yml包含以下環境變量:")
         for var in required_vars:
             print(f"   {var}")
     else:
-        print("✅ docker-compose.yml环境变量配置正确")
+        print("✅ docker-compose.yml環境變量配置正確")
 
 def create_test_script():
-    """创建测试脚本"""
-    print("\n📝 创建日志测试脚本...")
+    """創建測試腳本"""
+    print("\n📝 創建日誌測試腳本...")
     
     test_script_content = '''#!/usr/bin/env python3
 """
-测试Docker环境下的日志功能
+測試Docker環境下的日誌功能
 """
 
 import os
 import sys
 from pathlib import Path
 
-# 添加项目路径
+# 添加項目路徑
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 def test_logging():
-    """测试日志功能"""
-    print("🧪 测试Docker环境日志功能")
+    """測試日誌功能"""
+    print("🧪 測試Docker環境日誌功能")
     print("=" * 50)
     
     try:
-        # 设置Docker环境变量
+        # 設置Docker環境變量
         os.environ['DOCKER_CONTAINER'] = 'true'
         os.environ['TRADINGAGENTS_LOG_DIR'] = '/app/logs'
         
-        # 导入日志模块
+        # 導入日誌模塊
         from tradingagents.utils.logging_init import init_logging, get_logger
         
-        # 初始化日志
-        print("📋 初始化日志系统...")
+        # 初始化日誌
+        print("📋 初始化日誌系統...")
         init_logging()
         
-        # 获取日志器
+        # 獲取日誌器
         logger = get_logger('test')
         
-        # 测试各种级别的日志
-        print("📝 写入测试日志...")
-        logger.debug("🔍 这是DEBUG级别日志")
-        logger.info("ℹ️ 这是INFO级别日志")
-        logger.warning("⚠️ 这是WARNING级别日志")
-        logger.error("❌ 这是ERROR级别日志")
+        # 測試各種級別的日誌
+        print("📝 寫入測試日誌...")
+        logger.debug("🔍 這是DEBUG級別日誌")
+        logger.info("ℹ️ 這是INFO級別日誌")
+        logger.warning("⚠️ 這是WARNING級別日誌")
+        logger.error("❌ 這是ERROR級別日誌")
         
-        # 检查日志文件
+        # 檢查日誌文件
         log_dir = Path("/app/logs")
         if log_dir.exists():
             log_files = list(log_dir.glob("*.log*"))
-            print(f"📄 找到日志文件: {len(log_files)} 个")
+            print(f"📄 找到日誌文件: {len(log_files)} 個")
             for log_file in log_files:
                 size = log_file.stat().st_size
-                print(f"   📄 {log_file.name}: {size} 字节")
+                print(f"   📄 {log_file.name}: {size} 字節")
         else:
-            print("❌ 日志目录不存在")
+            print("❌ 日誌目錄不存在")
         
-        print("✅ 日志测试完成")
+        print("✅ 日誌測試完成")
         return True
         
     except Exception as e:
-        print(f"❌ 日志测试失败: {e}")
+        print(f"❌ 日誌測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -235,35 +235,35 @@ if __name__ == "__main__":
     with open(test_file, 'w', encoding='utf-8') as f:
         f.write(test_script_content)
     
-    print(f"✅ 创建测试脚本: {test_file}")
+    print(f"✅ 創建測試腳本: {test_file}")
 
 def main():
-    """主函数"""
-    print("🚀 TradingAgents Docker日志修复工具")
+    """主函數"""
+    print("🚀 TradingAgents Docker日誌修複工具")
     print("=" * 60)
     
-    # 1. 修复Docker日志配置
+    # 1. 修複Docker日誌配置
     fix_docker_logging_config()
     
-    # 2. 检查docker-compose配置
+    # 2. 檢查docker-compose配置
     update_docker_compose()
     
-    # 3. 创建测试脚本
+    # 3. 創建測試腳本
     create_test_script()
     
     print("\n" + "=" * 60)
-    print("🎉 Docker日志修复完成！")
-    print("\n💡 接下来的步骤:")
-    print("1. 重新构建Docker镜像: docker-compose build")
-    print("2. 重启容器: docker-compose down && docker-compose up -d")
-    print("3. 测试日志: docker exec TradingAgents-web python test_docker_logging.py")
-    print("4. 检查日志文件: ls -la logs/")
-    print("5. 实时查看: tail -f logs/tradingagents.log")
+    print("🎉 Docker日誌修複完成！")
+    print("\n💡 接下來的步骤:")
+    print("1. 重新構建Docker鏡像: docker-compose build")
+    print("2. 重啟容器: docker-compose down && docker-compose up -d")
+    print("3. 測試日誌: docker exec TradingAgents-web python test_docker_logging.py")
+    print("4. 檢查日誌文件: ls -la logs/")
+    print("5. 實時查看: tail -f logs/tradingagents.log")
     
-    print("\n🔧 如果仍然没有日志文件，请检查:")
-    print("- 容器是否正常启动: docker-compose ps")
-    print("- 应用是否正常运行: docker-compose logs web")
-    print("- 日志目录权限: ls -la logs/")
+    print("\n🔧 如果仍然没有日誌文件，請檢查:")
+    print("- 容器是否正常啟動: docker-compose ps")
+    print("- 應用是否正常運行: docker-compose logs web")
+    print("- 日誌目錄權限: ls -la logs/")
 
 if __name__ == "__main__":
     main()

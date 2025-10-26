@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-测试数据结构脚本
+測試數據結構腳本
 """
 
 import sys
@@ -8,20 +8,20 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def test_data_structure():
-    """测试分析结果数据结构"""
+    """測試分析結果數據結構"""
     try:
         from web.components.analysis_results import load_analysis_results
         
-        print("🔍 测试分析结果数据结构...")
+        print("🔍 測試分析結果數據結構...")
         
-        # 加载分析结果
+        # 加載分析結果
         results = load_analysis_results(limit=5)
         
-        print(f"📊 找到 {len(results)} 个分析结果")
+        print(f"📊 找到 {len(results)} 個分析結果")
         
         if results:
             result = results[0]
-            print(f"\n📋 第一个结果的数据结构:")
+            print(f"\n📋 第一個結果的數據結構:")
             print(f"   analysis_id: {result.get('analysis_id', 'missing')}")
             print(f"   source: {result.get('source', 'missing')}")
             print(f"   stock_symbol: {result.get('stock_symbol', 'missing')}")
@@ -29,13 +29,13 @@ def test_data_structure():
             
             if 'reports' in result:
                 reports = result['reports']
-                print(f"   reports内容: {list(reports.keys())}")
+                print(f"   reports內容: {list(reports.keys())}")
                 
-                # 显示第一个报告的前100个字符
+                # 顯示第一個報告的前100個字符
                 if reports:
                     first_report_key = list(reports.keys())[0]
                     first_report_content = reports[first_report_key]
-                    print(f"   {first_report_key} 内容预览:")
+                    print(f"   {first_report_key} 內容預覽:")
                     print(f"   {first_report_content[:200]}...")
             else:
                 print("   ❌ reports字段不存在")
@@ -44,7 +44,7 @@ def test_data_structure():
         return results
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         import traceback
         traceback.print_exc()
         return None

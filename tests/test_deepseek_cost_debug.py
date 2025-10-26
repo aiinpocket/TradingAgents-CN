@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-测试DeepSeek成本计算详细调试
+測試DeepSeek成本計算詳細調試
 """
 
 import os
@@ -8,71 +8,71 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 加载环境变量
+# 加載環境變量
 load_dotenv()
 
 def test_deepseek_cost_debug():
-    """测试DeepSeek成本计算，观察详细日志"""
-    print("🔬 DeepSeek成本计算详细调试")
+    """測試DeepSeek成本計算，觀察詳細日誌"""
+    print("🔬 DeepSeek成本計算詳細調試")
     print("=" * 60)
     
-    # 检查API密钥
+    # 檢查API密鑰
     if not os.getenv("DEEPSEEK_API_KEY"):
-        print("❌ 未找到DEEPSEEK_API_KEY，无法测试")
+        print("❌ 未找到DEEPSEEK_API_KEY，無法測試")
         return False
     
     try:
         from tradingagents.llm_adapters.deepseek_adapter import ChatDeepSeek
         
-        print("🔧 创建DeepSeek实例...")
+        print("🔧 創建DeepSeek實例...")
         
-        # 创建DeepSeek实例
+        # 創建DeepSeek實例
         deepseek_llm = ChatDeepSeek(
             model="deepseek-chat",
             temperature=0.1,
-            max_tokens=50  # 限制token数量，减少输出
+            max_tokens=50  # 限制token數量，减少輸出
         )
         
-        print(f"📊 模型名称: {deepseek_llm.model_name}")
+        print(f"📊 模型名稱: {deepseek_llm.model_name}")
         print("\n" + "="*80)
-        print("开始调用DeepSeek，观察详细的成本计算日志：")
+        print("開始調用DeepSeek，觀察詳細的成本計算日誌：")
         print("="*80)
         
-        # 测试调用
+        # 測試調用
         result = deepseek_llm.invoke("你好")
         
         print("="*80)
-        print("调用完成！")
+        print("調用完成！")
         print("="*80)
         
-        print(f"📊 响应内容: {result.content}")
+        print(f"📊 響應內容: {result.content}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def main():
-    """主函数"""
-    print("🔬 DeepSeek成本计算详细调试测试")
+    """主函數"""
+    print("🔬 DeepSeek成本計算詳細調試測試")
     print("=" * 80)
-    print("📝 这个测试将显示成本计算的每个步骤")
+    print("📝 這個測試将顯示成本計算的每個步骤")
     print("=" * 80)
     
     success = test_deepseek_cost_debug()
     
     if success:
-        print("\n🎉 测试完成！")
-        print("请查看上面的详细日志，找出成本计算为0的原因。")
+        print("\n🎉 測試完成！")
+        print("請查看上面的詳細日誌，找出成本計算為0的原因。")
     else:
-        print("\n❌ 测试失败")
+        print("\n❌ 測試失败")
     
     return success
 

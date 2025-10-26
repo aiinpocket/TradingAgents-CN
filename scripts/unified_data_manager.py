@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-统一数据目录配置管理器
+統一數據目錄配置管理器
 Unified Data Directory Configuration Manager
 
-提供统一的数据目录配置管理功能
+提供統一的數據目錄配置管理功能
 """
 
 import os
@@ -14,22 +14,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 class UnifiedDataDirectoryManager:
-    """统一数据目录管理器"""
+    """統一數據目錄管理器"""
     
     def __init__(self, project_root: Optional[Union[str, Path]] = None):
         """
-        初始化数据目录管理器
+        初始化數據目錄管理器
         
         Args:
-            project_root: 项目根目录，默认为当前文件的上级目录
+            project_root: 項目根目錄，默認為當前文件的上級目錄
         """
         if project_root is None:
-            # 假设此文件在 scripts/ 目录下
+            # 假設此文件在 scripts/ 目錄下
             self.project_root = Path(__file__).parent.parent
         else:
             self.project_root = Path(project_root)
         
-        # 默认数据目录配置
+        # 默認數據目錄配置
         self._default_config = {
             'data_root': 'data',
             'cache': 'data/cache',
@@ -40,7 +40,7 @@ class UnifiedDataDirectoryManager:
             'config': 'data/config',
             'temp': 'data/temp',
             
-            # 子目录
+            # 子目錄
             'cache_stock_data': 'data/cache/stock_data',
             'cache_news_data': 'data/cache/news_data',
             'cache_fundamentals': 'data/cache/fundamentals',
@@ -67,7 +67,7 @@ class UnifiedDataDirectoryManager:
             'temp_processing': 'data/temp/processing',
         }
         
-        # 环境变量映射
+        # 環境變量映射
         self._env_mapping = {
             'data_root': 'TRADINGAGENTS_DATA_DIR',
             'cache': 'TRADINGAGENTS_CACHE_DIR',
@@ -80,32 +80,32 @@ class UnifiedDataDirectoryManager:
     
     def get_path(self, key: str, create: bool = True) -> Path:
         """
-        获取指定数据目录的路径
+        獲取指定數據目錄的路徑
         
         Args:
-            key: 目录键名
-            create: 是否自动创建目录
+            key: 目錄键名
+            create: 是否自動創建目錄
             
         Returns:
-            Path: 目录路径对象
+            Path: 目錄路徑對象
         """
-        # 首先检查环境变量
+        # 首先檢查環境變量
         env_key = self._env_mapping.get(key)
         if env_key and os.getenv(env_key):
             path_str = os.getenv(env_key)
         else:
-            # 使用默认配置
+            # 使用默認配置
             path_str = self._default_config.get(key)
             if not path_str:
-                raise ValueError(f"未知的目录键: {key}")
+                raise ValueError(f"未知的目錄键: {key}")
         
-        # 处理路径
+        # 處理路徑
         if os.path.isabs(path_str):
             path = Path(path_str)
         else:
             path = self.project_root / path_str
         
-        # 创建目录
+        # 創建目錄
         if create:
             path.mkdir(parents=True, exist_ok=True)
         
@@ -113,48 +113,48 @@ class UnifiedDataDirectoryManager:
     
     def get_all_paths(self, create: bool = True) -> Dict[str, Path]:
         """
-        获取所有数据目录路径
+        獲取所有數據目錄路徑
         
         Args:
-            create: 是否自动创建目录
+            create: 是否自動創建目錄
             
         Returns:
-            Dict[str, Path]: 所有目录路径的字典
+            Dict[str, Path]: 所有目錄路徑的字典
         """
         paths = {}
         for key in self._default_config.keys():
             try:
                 paths[key] = self.get_path(key, create=create)
             except Exception as e:
-                logger.warning(f"获取路径失败 {key}: {e}")
+                logger.warning(f"獲取路徑失败 {key}: {e}")
         
         return paths
     
     def create_all_directories(self) -> bool:
         """
-        创建所有数据目录
+        創建所有數據目錄
         
         Returns:
-            bool: 是否成功创建所有目录
+            bool: 是否成功創建所有目錄
         """
         try:
-            logger.info("🔄 创建统一数据目录结构...")
+            logger.info("🔄 創建統一數據目錄結構...")
             
             paths = self.get_all_paths(create=True)
             
             for key, path in paths.items():
                 logger.info(f"  ✅ {key}: {path}")
             
-            logger.info("✅ 统一数据目录结构创建完成")
+            logger.info("✅ 統一數據目錄結構創建完成")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 创建目录结构失败: {e}")
+            logger.error(f"❌ 創建目錄結構失败: {e}")
             return False
     
     def get_config_summary(self) -> Dict[str, str]:
         """
-        获取配置摘要
+        獲取配置摘要
         
         Returns:
             Dict[str, str]: 配置摘要
@@ -164,19 +164,19 @@ class UnifiedDataDirectoryManager:
             'data_root': str(self.get_path('data_root', create=False)),
         }
         
-        # 添加环境变量状态
+        # 添加環境變量狀態
         for key, env_key in self._env_mapping.items():
             env_value = os.getenv(env_key)
-            summary[f'env_{key}'] = env_value if env_value else '未设置'
+            summary[f'env_{key}'] = env_value if env_value else '未設置'
         
         return summary
     
     def validate_structure(self) -> Dict[str, bool]:
         """
-        验证目录结构
+        驗證目錄結構
         
         Returns:
-            Dict[str, bool]: 验证结果
+            Dict[str, bool]: 驗證結果
         """
         results = {}
         
@@ -190,21 +190,21 @@ class UnifiedDataDirectoryManager:
         return results
     
     def print_structure(self):
-        """打印目录结构"""
-        print("📁 统一数据目录结构:")
-        print(f"📂 项目根目录: {self.project_root}")
+        """打印目錄結構"""
+        print("📁 統一數據目錄結構:")
+        print(f"📂 項目根目錄: {self.project_root}")
         print()
         
-        # 按层级组织显示
+        # 按層級組織顯示
         structure = {
-            '📊 数据根目录': ['data_root'],
-            '💾 缓存目录': ['cache', 'cache_stock_data', 'cache_news_data', 'cache_fundamentals', 'cache_metadata'],
-            '📈 分析结果': ['analysis_results', 'results_summary', 'results_detailed', 'results_exports'],
-            '🗄️ 数据库': ['databases', 'db_mongodb', 'db_redis'],
-            '📝 会话数据': ['sessions', 'sessions_web', 'sessions_cli'],
-            '📋 日志文件': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
+            '📊 數據根目錄': ['data_root'],
+            '💾 緩存目錄': ['cache', 'cache_stock_data', 'cache_news_data', 'cache_fundamentals', 'cache_metadata'],
+            '📈 分析結果': ['analysis_results', 'results_summary', 'results_detailed', 'results_exports'],
+            '🗄️ 數據庫': ['databases', 'db_mongodb', 'db_redis'],
+            '📝 會話數據': ['sessions', 'sessions_web', 'sessions_cli'],
+            '📋 日誌文件': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
             '🔧 配置文件': ['config', 'config_user', 'config_system'],
-            '📦 临时文件': ['temp', 'temp_downloads', 'temp_processing'],
+            '📦 臨時文件': ['temp', 'temp_downloads', 'temp_processing'],
         }
         
         for category, keys in structure.items():
@@ -216,22 +216,22 @@ class UnifiedDataDirectoryManager:
                     relative_path = path.relative_to(self.project_root)
                     print(f"  {exists} {key}: {relative_path}")
                 except Exception as e:
-                    print(f"  ❌ {key}: 错误 - {e}")
+                    print(f"  ❌ {key}: 錯誤 - {e}")
             print()
 
 
-# 全局实例
+# 全局實例
 _data_manager = None
 
 def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> UnifiedDataDirectoryManager:
     """
-    获取全局数据目录管理器实例
+    獲取全局數據目錄管理器實例
     
     Args:
-        project_root: 项目根目录
+        project_root: 項目根目錄
         
     Returns:
-        UnifiedDataDirectoryManager: 数据目录管理器实例
+        UnifiedDataDirectoryManager: 數據目錄管理器實例
     """
     global _data_manager
     if _data_manager is None:
@@ -240,31 +240,31 @@ def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> Unified
 
 def get_data_path(key: str, create: bool = True) -> Path:
     """
-    便捷函数：获取数据目录路径
+    便捷函數：獲取數據目錄路徑
     
     Args:
-        key: 目录键名
-        create: 是否自动创建目录
+        key: 目錄键名
+        create: 是否自動創建目錄
         
     Returns:
-        Path: 目录路径
+        Path: 目錄路徑
     """
     return get_data_manager().get_path(key, create=create)
 
 def main():
-    """命令行工具主函数"""
+    """命令行工具主函數"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='统一数据目录配置管理器')
-    parser.add_argument('--project-root', help='项目根目录路径')
-    parser.add_argument('--create', action='store_true', help='创建所有目录')
-    parser.add_argument('--validate', action='store_true', help='验证目录结构')
-    parser.add_argument('--show-config', action='store_true', help='显示配置摘要')
-    parser.add_argument('--show-structure', action='store_true', help='显示目录结构')
+    parser = argparse.ArgumentParser(description='統一數據目錄配置管理器')
+    parser.add_argument('--project-root', help='項目根目錄路徑')
+    parser.add_argument('--create', action='store_true', help='創建所有目錄')
+    parser.add_argument('--validate', action='store_true', help='驗證目錄結構')
+    parser.add_argument('--show-config', action='store_true', help='顯示配置摘要')
+    parser.add_argument('--show-structure', action='store_true', help='顯示目錄結構')
     
     args = parser.parse_args()
     
-    # 设置日志
+    # 設置日誌
     logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
     
     manager = UnifiedDataDirectoryManager(args.project_root)
@@ -273,7 +273,7 @@ def main():
         manager.create_all_directories()
     
     if args.validate:
-        print("🔍 验证目录结构:")
+        print("🔍 驗證目錄結構:")
         results = manager.validate_structure()
         for key, exists in results.items():
             status = "✅" if exists else "❌"
@@ -281,7 +281,7 @@ def main():
         
         total = len(results)
         existing = sum(results.values())
-        print(f"\n📊 统计: {existing}/{total} 个目录存在")
+        print(f"\n📊 統計: {existing}/{total} 個目錄存在")
     
     if args.show_config:
         print("⚙️ 配置摘要:")
@@ -292,7 +292,7 @@ def main():
     if args.show_structure:
         manager.print_structure()
     
-    # 如果没有指定任何操作，显示帮助
+    # 如果没有指定任何操作，顯示幫助
     if not any([args.create, args.validate, args.show_config, args.show_structure]):
         parser.print_help()
 

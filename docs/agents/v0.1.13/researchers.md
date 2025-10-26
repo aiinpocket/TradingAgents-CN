@@ -1,79 +1,79 @@
-# 研究员团队
+# 研究員团隊
 
 ## 概述
 
-研究员团队是 TradingAgents 框架的核心决策组件，负责基于分析师提供的数据进行深度研究和投资辩论。团队由看涨研究员和看跌研究员组成，通过对立观点的辩论来全面评估投资机会和风险，为最终的投资决策提供平衡的视角。
+研究員团隊是 TradingAgents 框架的核心決策組件，负责基於分析師提供的數據進行深度研究和投資辩論。团隊由看涨研究員和看跌研究員組成，通過對立觀點的辩論來全面評估投資機會和風險，為最终的投資決策提供平衡的視角。
 
-## 研究员架构
+## 研究員架構
 
-### 基础研究员设计
+### 基础研究員設計
 
-所有研究员都基于统一的架构设计，使用相同的状态管理和日志系统：
+所有研究員都基於統一的架構設計，使用相同的狀態管理和日誌系統：
 
 ```python
-# 统一的研究员模块日志装饰器
+# 統一的研究員模塊日誌裝饰器
 from tradingagents.utils.tool_logging import log_researcher_module
 
-# 统一日志系统
+# 統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 @log_researcher_module("researcher_type")
 def researcher_node(state):
-    # 研究员逻辑实现
+    # 研究員逻辑實現
     pass
 ```
 
-### 智能体状态管理
+### 智能體狀態管理
 
-研究员通过 `AgentState` 进行状态管理，包含辩论历史和分析报告：
+研究員通過 `AgentState` 進行狀態管理，包含辩論歷史和分析報告：
 
 ```python
 class AgentState:
-    company_of_interest: str      # 股票代码
+    company_of_interest: str      # 股票代碼
     trade_date: str              # 交易日期
-    fundamentals_report: str     # 基本面报告
-    market_report: str           # 市场分析报告
-    news_report: str             # 新闻分析报告
-    sentiment_report: str        # 情绪分析报告
-    debate_state: str            # 辩论状态
-    messages: List              # 消息历史
-    memory: Any                 # 历史记忆
+    fundamentals_report: str     # 基本面報告
+    market_report: str           # 市場分析報告
+    news_report: str             # 新聞分析報告
+    sentiment_report: str        # 情绪分析報告
+    debate_state: str            # 辩論狀態
+    messages: List              # 消息歷史
+    memory: Any                 # 歷史記忆
 ```
 
-## 研究员团队成员
+## 研究員团隊成員
 
-### 1. 看涨研究员 (Bull Researcher)
+### 1. 看涨研究員 (Bull Researcher)
 
 **文件位置**: `tradingagents/agents/researchers/bull_researcher.py`
 
-**核心职责**:
-- 寻找和强调投资机会的积极因素
-- 提出看涨观点和支持论据
-- 反驳看跌观点中的薄弱环节
-- 推动积极的投资决策
+**核心職责**:
+- 寻找和强調投資機會的積極因素
+- 提出看涨觀點和支持論據
+- 反驳看跌觀點中的薄弱環節
+- 推動積極的投資決策
 
-**核心实现**:
+**核心實現**:
 ```python
 def create_bull_researcher(llm, memory=None):
     @log_researcher_module("bull")
     def bull_node(state):
-        # 获取基础信息
+        # 獲取基础信息
         company_name = state["company_of_interest"]
         debate_state = state.get("debate_state", "")
         
-        # 获取股票市场信息
+        # 獲取股票市場信息
         from tradingagents.utils.stock_utils import StockUtils
         market_info = StockUtils.get_market_info(company_name)
         
-        # 安全检查
+        # 安全檢查
         if memory is None:
-            logger.warning(f"⚠️ [DEBUG] memory为None，跳过历史记忆检索")
+            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記忆檢索")
         
-        # 构建看涨论证
+        # 構建看涨論證
         messages = state.get("messages", [])
         
-        # 分析各类报告并提出看涨观点
+        # 分析各類報告並提出看涨觀點
         market_report = state.get("market_report", "")
         sentiment_report = state.get("sentiment_report", "")
         news_report = state.get("news_report", "")
@@ -81,42 +81,42 @@ def create_bull_researcher(llm, memory=None):
 ```
 
 **分析策略**:
-- **积极解读数据**: 从乐观角度解释市场数据和财务指标
-- **机会识别**: 发现被市场低估的价值和增长潜力
-- **风险最小化**: 论证风险的可控性和临时性
-- **催化剂分析**: 识别可能推动股价上涨的因素
+- **積極解讀數據**: 從乐觀角度解釋市場數據和財務指標
+- **機會识別**: 發現被市場低估的價值和增長潜力
+- **風險最小化**: 論證風險的可控性和臨時性
+- **催化剂分析**: 识別可能推動股價上涨的因素
 
-### 2. 看跌研究员 (Bear Researcher)
+### 2. 看跌研究員 (Bear Researcher)
 
 **文件位置**: `tradingagents/agents/researchers/bear_researcher.py`
 
-**核心职责**:
-- 识别和强调投资风险和负面因素
-- 提出看跌观点和警示论据
-- 质疑看涨观点中的乐观假设
-- 推动谨慎的投资决策
+**核心職责**:
+- 识別和强調投資風險和负面因素
+- 提出看跌觀點和警示論據
+- 质疑看涨觀點中的乐觀假設
+- 推動谨慎的投資決策
 
-**核心实现**:
+**核心實現**:
 ```python
 def create_bear_researcher(llm, memory=None):
     @log_researcher_module("bear")
     def bear_node(state):
-        # 获取基础信息
+        # 獲取基础信息
         company_name = state["company_of_interest"]
         debate_state = state.get("debate_state", "")
         
-        # 获取股票市场信息
+        # 獲取股票市場信息
         from tradingagents.utils.stock_utils import StockUtils
         market_info = StockUtils.get_market_info(company_name)
         
-        # 安全检查
+        # 安全檢查
         if memory is None:
-            logger.warning(f"⚠️ [DEBUG] memory为None，跳过历史记忆检索")
+            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記忆檢索")
         
-        # 构建看跌论证
+        # 構建看跌論證
         messages = state.get("messages", [])
         
-        # 分析各类报告并提出看跌观点
+        # 分析各類報告並提出看跌觀點
         market_report = state.get("market_report", "")
         sentiment_report = state.get("sentiment_report", "")
         news_report = state.get("news_report", "")
@@ -124,45 +124,45 @@ def create_bear_researcher(llm, memory=None):
 ```
 
 **分析策略**:
-- **风险放大**: 深入分析潜在风险和负面因素
-- **估值质疑**: 质疑当前估值的合理性
-- **趋势反转**: 识别可能的负面趋势转折点
-- **竞争威胁**: 分析行业竞争和市场变化风险
+- **風險放大**: 深入分析潜在風險和负面因素
+- **估值质疑**: 质疑當前估值的合理性
+- **趋势反轉**: 识別可能的负面趋势轉折點
+- **競爭威胁**: 分析行業競爭和市場變化風險
 
-## 辩论机制
+## 辩論機制
 
-### 辩论流程
+### 辩論流程
 
 ```mermaid
 graph TB
-    A[分析师报告] --> B[看涨研究员分析]
-    A --> C[看跌研究员分析]
+    A[分析師報告] --> B[看涨研究員分析]
+    A --> C[看跌研究員分析]
     
-    B --> D[看涨观点]
-    C --> E[看跌观点]
+    B --> D[看涨觀點]
+    C --> E[看跌觀點]
     
-    D --> F[辩论交锋]
+    D --> F[辩論交锋]
     E --> F
     
-    F --> G[观点完善]
-    G --> H[最终辩论结果]
+    F --> G[觀點完善]
+    G --> H[最终辩論結果]
     
-    H --> I[传递给管理层]
+    H --> I[傳遞給管理層]
 ```
 
-### 辩论状态管理
+### 辩論狀態管理
 
 ```python
-# 辩论状态类型
+# 辩論狀態類型
 DEBATE_STATES = {
-    "initial": "初始状态",
-    "bull_turn": "看涨方发言",
-    "bear_turn": "看跌方发言",
-    "rebuttal": "反驳阶段",
-    "conclusion": "总结阶段"
+    "initial": "初始狀態",
+    "bull_turn": "看涨方發言",
+    "bear_turn": "看跌方發言",
+    "rebuttal": "反驳階段",
+    "conclusion": "总結階段"
 }
 
-# 状态转换逻辑
+# 狀態轉換逻辑
 def update_debate_state(current_state, participant):
     if current_state == "initial":
         return "bull_turn" if participant == "bull" else "bear_turn"
@@ -173,39 +173,39 @@ def update_debate_state(current_state, participant):
     return current_state
 ```
 
-### 记忆系统集成
+### 記忆系統集成
 
-研究员支持历史记忆功能，能够：
+研究員支持歷史記忆功能，能夠：
 
-1. **历史辩论回顾**: 参考之前的辩论结果和观点
-2. **学习改进**: 从历史决策的成败中学习
-3. **一致性维护**: 保持观点的逻辑一致性
-4. **经验积累**: 积累特定股票或行业的分析经验
+1. **歷史辩論回顧**: 參考之前的辩論結果和觀點
+2. **學习改進**: 從歷史決策的成败中學习
+3. **一致性維護**: 保持觀點的逻辑一致性
+4. **經驗積累**: 積累特定股票或行業的分析經驗
 
 ```python
-# 记忆检索示例
+# 記忆檢索示例
 if memory is not None:
     historical_debates = memory.get_relevant_debates(company_name)
     previous_analysis = memory.get_analysis_history(company_name)
 else:
-    logger.warning(f"⚠️ [DEBUG] memory为None，跳过历史记忆检索")
+    logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記忆檢索")
 ```
 
-## 股票类型支持
+## 股票類型支持
 
-### 多市场分析能力
+### 多市場分析能力
 
-研究员团队支持全球主要股票市场的分析：
+研究員团隊支持全球主要股票市場的分析：
 
 ```python
-# 市场信息获取
+# 市場信息獲取
 from tradingagents.utils.stock_utils import StockUtils
 market_info = StockUtils.get_market_info(ticker)
 
-# 根据市场类型调整分析策略
+# 根據市場類型調整分析策略
 if market_info.get("is_china"):
     # A股特有的分析逻辑
-    analysis_context = "中国A股市场"
+    analysis_context = "中國A股市場"
     currency = "人民币"
 elif market_info.get("is_hk"):
     # 港股特有的分析逻辑
@@ -213,151 +213,151 @@ elif market_info.get("is_hk"):
     currency = "港币"
 elif market_info.get("is_us"):
     # 美股特有的分析逻辑
-    analysis_context = "美国股市"
+    analysis_context = "美國股市"
     currency = "美元"
 ```
 
 ### 本土化分析
 
-1. **A股市场**:
-   - 政策影响分析
-   - 监管环境评估
-   - 国内经济周期考量
-   - 投资者结构特点
+1. **A股市場**:
+   - 政策影響分析
+   - 監管環境評估
+   - 國內經濟周期考量
+   - 投資者結構特點
 
-2. **港股市场**:
-   - 中港两地联动
-   - 汇率风险评估
-   - 国际资本流动
-   - 估值差异分析
+2. **港股市場**:
+   - 中港两地聯動
+   - 汇率風險評估
+   - 國际資本流動
+   - 估值差異分析
 
-3. **美股市场**:
-   - 美联储政策影响
-   - 全球经济环境
-   - 行业竞争格局
-   - 技术创新趋势
+3. **美股市場**:
+   - 美聯储政策影響
+   - 全球經濟環境
+   - 行業競爭格局
+   - 技術創新趋势
 
-## 分析维度
+## 分析維度
 
-### 看涨研究员关注点
+### 看涨研究員關註點
 
-1. **增长潜力**:
-   - 收入增长趋势
-   - 市场份额扩张
-   - 新产品/服务机会
-   - 国际化进展
+1. **增長潜力**:
+   - 收入增長趋势
+   - 市場份額擴张
+   - 新產品/服務機會
+   - 國际化進展
 
-2. **估值优势**:
-   - 相对估值吸引力
-   - 历史估值比较
-   - 同行业估值对比
-   - 资产价值重估
+2. **估值優势**:
+   - 相對估值吸引力
+   - 歷史估值比較
+   - 同行業估值對比
+   - 資產價值重估
 
 3. **催化因素**:
    - 政策利好
-   - 行业景气度提升
-   - 技术突破
-   - 管理层变化
+   - 行業景气度提升
+   - 技術突破
+   - 管理層變化
 
-4. **财务健康**:
-   - 现金流改善
+4. **財務健康**:
+   - 現金流改善
    - 盈利能力提升
-   - 债务结构优化
+   - 债務結構優化
    - 分红政策
 
-### 看跌研究员关注点
+### 看跌研究員關註點
 
-1. **风险因素**:
-   - 行业衰退风险
-   - 竞争加剧威胁
-   - 监管政策风险
-   - 技术替代风险
+1. **風險因素**:
+   - 行業衰退風險
+   - 競爭加剧威胁
+   - 監管政策風險
+   - 技術替代風險
 
-2. **估值风险**:
-   - 估值过高警示
-   - 泡沫风险评估
-   - 盈利预期过于乐观
-   - 市场情绪过热
+2. **估值風險**:
+   - 估值過高警示
+   - 泡沫風險評估
+   - 盈利預期過於乐觀
+   - 市場情绪過熱
 
-3. **财务问题**:
-   - 现金流恶化
-   - 债务负担过重
+3. **財務問題**:
+   - 現金流恶化
+   - 债務负擔過重
    - 盈利质量下降
-   - 会计问题质疑
+   - 會計問題质疑
 
-4. **宏观环境**:
-   - 经济周期下行
-   - 利率上升影响
-   - 汇率波动风险
-   - 地缘政治风险
+4. **宏觀環境**:
+   - 經濟周期下行
+   - 利率上升影響
+   - 汇率波動風險
+   - 地缘政治風險
 
-## 辩论质量评估
+## 辩論质量評估
 
-### 论证强度指标
+### 論證强度指標
 
-1. **数据支撑度**:
-   - 引用数据的准确性
-   - 数据来源的可靠性
-   - 数据分析的深度
-   - 数据解读的合理性
+1. **數據支撑度**:
+   - 引用數據的準確性
+   - 數據來源的可靠性
+   - 數據分析的深度
+   - 數據解讀的合理性
 
 2. **逻辑一致性**:
-   - 论证链条的完整性
-   - 推理过程的严密性
-   - 结论与前提的一致性
+   - 論證鏈條的完整性
+   - 推理過程的嚴密性
+   - 結論与前提的一致性
    - 反驳的有效性
 
-3. **风险识别**:
-   - 风险因素的全面性
-   - 风险评估的准确性
-   - 风险应对的可行性
-   - 风险权衡的合理性
+3. **風險识別**:
+   - 風險因素的全面性
+   - 風險評估的準確性
+   - 風險應對的可行性
+   - 風險權衡的合理性
 
-### 辩论输出质量
+### 辩論輸出质量
 
 ```python
-# 辩论结果结构
+# 辩論結果結構
 class DebateResult:
-    bull_arguments: List[str]     # 看涨论点
-    bear_arguments: List[str]     # 看跌论点
+    bull_arguments: List[str]     # 看涨論點
+    bear_arguments: List[str]     # 看跌論點
     key_disagreements: List[str]  # 主要分歧
-    consensus_points: List[str]   # 共识观点
+    consensus_points: List[str]   # 共识觀點
     confidence_level: float       # 置信度
     recommendation_strength: str  # 建议强度
 ```
 
-## 配置选项
+## 配置選項
 
-### 研究员配置
+### 研究員配置
 
 ```python
 researcher_config = {
-    "enable_memory": True,        # 是否启用记忆功能
-    "debate_rounds": 3,           # 辩论轮数
-    "argument_depth": "deep",     # 论证深度
-    "risk_tolerance": "moderate", # 风险容忍度
-    "analysis_style": "balanced" # 分析风格
+    "enable_memory": True,        # 是否啟用記忆功能
+    "debate_rounds": 3,           # 辩論轮數
+    "argument_depth": "deep",     # 論證深度
+    "risk_tolerance": "moderate", # 風險容忍度
+    "analysis_style": "balanced" # 分析風格
 }
 ```
 
-### 辩论参数
+### 辩論參數
 
 ```python
 debate_params = {
-    "max_rounds": 5,              # 最大辩论轮数
-    "time_limit": 300,            # 单轮时间限制(秒)
-    "evidence_weight": 0.7,       # 证据权重
-    "logic_weight": 0.3,          # 逻辑权重
+    "max_rounds": 5,              # 最大辩論轮數
+    "time_limit": 300,            # 單轮時間限制(秒)
+    "evidence_weight": 0.7,       # 證據權重
+    "logic_weight": 0.3,          # 逻辑權重
     "consensus_threshold": 0.8    # 共识阈值
 }
 ```
 
-## 性能优化
+## 性能優化
 
-### 并行处理
+### 並行處理
 
 ```python
-# 并行执行看涨和看跌分析
+# 並行執行看涨和看跌分析
 import asyncio
 
 async def parallel_research(state):
@@ -368,43 +368,43 @@ async def parallel_research(state):
     return bull_result, bear_result
 ```
 
-### 缓存机制
+### 緩存機制
 
 ```python
-# 分析结果缓存
+# 分析結果緩存
 from functools import lru_cache
 
 @lru_cache(maxsize=100)
 def cached_analysis(ticker, date, report_hash):
-    # 缓存分析结果
+    # 緩存分析結果
     pass
 ```
 
-## 日志和监控
+## 日誌和監控
 
-### 详细日志记录
+### 詳細日誌記錄
 
 ```python
-# 研究员活动日志
-logger.info(f"🐂 [看涨研究员] 开始分析股票: {company_name}")
-logger.info(f"🐻 [看跌研究员] 开始分析股票: {company_name}")
-logger.debug(f"📊 [辩论状态] 当前状态: {debate_state}")
-logger.warning(f"⚠️ [记忆系统] memory为None，跳过历史记忆检索")
+# 研究員活動日誌
+logger.info(f"🐂 [看涨研究員] 開始分析股票: {company_name}")
+logger.info(f"🐻 [看跌研究員] 開始分析股票: {company_name}")
+logger.debug(f"📊 [辩論狀態] 當前狀態: {debate_state}")
+logger.warning(f"⚠️ [記忆系統] memory為None，跳過歷史記忆檢索")
 ```
 
-### 性能指标
+### 性能指標
 
-- 辩论完成时间
-- 论证质量评分
-- 预测准确率
-- 风险识别率
-- 共识达成率
+- 辩論完成時間
+- 論證质量評分
+- 預測準確率
+- 風險识別率
+- 共识達成率
 
-## 扩展指南
+## 擴展指南
 
-### 添加新的研究员类型
+### 添加新的研究員類型
 
-1. **创建研究员文件**
+1. **創建研究員文件**
 ```python
 # tradingagents/agents/researchers/neutral_researcher.py
 from tradingagents.utils.tool_logging import log_researcher_module
@@ -412,12 +412,12 @@ from tradingagents.utils.tool_logging import log_researcher_module
 def create_neutral_researcher(llm, memory=None):
     @log_researcher_module("neutral")
     def neutral_node(state):
-        # 中性研究员逻辑
+        # 中性研究員逻辑
         pass
     return neutral_node
 ```
 
-2. **集成到辩论流程**
+2. **集成到辩論流程**
 ```python
 # 在trading_graph.py中添加
 researchers = {
@@ -427,9 +427,9 @@ researchers = {
 }
 ```
 
-### 自定义辩论策略
+### 自定義辩論策略
 
-1. **实现策略接口**
+1. **實現策略接口**
 ```python
 class DebateStrategy:
     def generate_arguments(self, reports, market_info):
@@ -442,7 +442,7 @@ class DebateStrategy:
         pass
 ```
 
-2. **注册策略**
+2. **註冊策略**
 ```python
 strategy_registry = {
     "aggressive_bull": AggressiveBullStrategy(),
@@ -451,76 +451,76 @@ strategy_registry = {
 }
 ```
 
-## 最佳实践
+## 最佳實踐
 
-### 1. 平衡性维护
-- 确保看涨和看跌观点的平衡
-- 避免极端偏见
-- 基于数据而非情绪
-- 保持客观分析态度
+### 1. 平衡性維護
+- 確保看涨和看跌觀點的平衡
+- 避免極端偏见
+- 基於數據而非情绪
+- 保持客觀分析態度
 
 ### 2. 质量控制
-- 验证数据来源
-- 检查逻辑一致性
-- 评估论证强度
-- 识别认知偏差
+- 驗證數據來源
+- 檢查逻辑一致性
+- 評估論證强度
+- 识別認知偏差
 
-### 3. 效率优化
-- 并行执行分析
-- 缓存重复计算
-- 优化内存使用
+### 3. 效率優化
+- 並行執行分析
+- 緩存重複計算
+- 優化內存使用
 - 减少冗余操作
 
-### 4. 可解释性
-- 提供清晰的推理路径
-- 标注关键假设
-- 量化不确定性
-- 记录决策依据
+### 4. 可解釋性
+- 提供清晰的推理路徑
+- 標註關键假設
+- 量化不確定性
+- 記錄決策依據
 
 ## 故障排除
 
-### 常见问题
+### 常见問題
 
-1. **辩论陷入僵局**
-   - 引入新的分析维度
-   - 调整权重参数
+1. **辩論陷入僵局**
+   - 引入新的分析維度
+   - 調整權重參數
    - 增加外部信息
-   - 设置超时机制
+   - 設置超時機制
 
-2. **观点过于极端**
-   - 调整风险容忍度
-   - 增加平衡机制
-   - 引入中性观点
-   - 强化数据验证
+2. **觀點過於極端**
+   - 調整風險容忍度
+   - 增加平衡機制
+   - 引入中性觀點
+   - 强化數據驗證
 
-3. **性能问题**
-   - 启用并行处理
-   - 优化缓存策略
+3. **性能問題**
+   - 啟用並行處理
+   - 優化緩存策略
    - 减少分析深度
-   - 限制辩论轮数
+   - 限制辩論轮數
 
-### 调试技巧
+### 調試技巧
 
-1. **辩论过程追踪**
+1. **辩論過程追蹤**
 ```python
-logger.debug(f"辩论轮次: {round_number}")
-logger.debug(f"当前发言方: {current_speaker}")
-logger.debug(f"论点数量: {len(arguments)}")
+logger.debug(f"辩論轮次: {round_number}")
+logger.debug(f"當前發言方: {current_speaker}")
+logger.debug(f"論點數量: {len(arguments)}")
 ```
 
-2. **状态检查**
+2. **狀態檢查**
 ```python
-logger.debug(f"状态完整性: {validate_state(state)}")
-logger.debug(f"报告可用性: {check_reports_availability(state)}")
+logger.debug(f"狀態完整性: {validate_state(state)}")
+logger.debug(f"報告可用性: {check_reports_availability(state)}")
 ```
 
-3. **性能监控**
+3. **性能監控**
 ```python
 import time
 start_time = time.time()
-# 执行分析
+# 執行分析
 end_time = time.time()
-logger.debug(f"分析耗时: {end_time - start_time:.2f}秒")
+logger.debug(f"分析耗時: {end_time - start_time:.2f}秒")
 ```
 
-研究员团队通过结构化的辩论机制，确保投资决策的全面性和客观性，是TradingAgents框架中连接数据分析和最终决策的关键环节。
+研究員团隊通過結構化的辩論機制，確保投資決策的全面性和客觀性，是TradingAgents框架中連接數據分析和最终決策的關键環節。

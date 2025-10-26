@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-测试DataFrame Arrow转换修复
+測試DataFrame Arrow轉換修複
 """
 
 import sys
@@ -8,198 +8,198 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-# 添加项目根目录到路径
+# 添加項目根目錄到路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_safe_dataframe():
-    """测试安全DataFrame函数"""
+    """測試安全DataFrame函數"""
     try:
         from web.components.analysis_results import safe_dataframe
         import pandas as pd
         
-        print("🔍 测试安全DataFrame函数...")
+        print("🔍 測試安全DataFrame函數...")
         
-        # 测试混合数据类型
+        # 測試混合數據類型
         mixed_data = {
-            '项目': ['股票代码', '分析时间', '分析师数量', '研究深度'],
-            '结果A': ['000001', '2025-07-31 12:00', 3, 5],  # 混合字符串和整数
-            '结果B': ['000002', '2025-07-31 13:00', 2, 4]
+            '項目': ['股票代碼', '分析時間', '分析師數量', '研究深度'],
+            '結果A': ['000001', '2025-07-31 12:00', 3, 5],  # 混合字符串和整數
+            '結果B': ['000002', '2025-07-31 13:00', 2, 4]
         }
         
-        # 使用安全函数创建DataFrame
+        # 使用安全函數創建DataFrame
         df = safe_dataframe(mixed_data)
-        print(f"✅ 安全DataFrame创建成功，形状: {df.shape}")
+        print(f"✅ 安全DataFrame創建成功，形狀: {df.shape}")
         
-        # 检查数据类型
-        print("📊 数据类型检查:")
+        # 檢查數據類型
+        print("📊 數據類型檢查:")
         for col in df.columns:
             dtype = df[col].dtype
             print(f"   {col}: {dtype}")
             if dtype == 'object':
-                print(f"   ✅ {col} 是字符串类型")
+                print(f"   ✅ {col} 是字符串類型")
             else:
-                print(f"   ⚠️ {col} 不是字符串类型")
+                print(f"   ⚠️ {col} 不是字符串類型")
         
-        # 测试列表数据
+        # 測試列表數據
         list_data = [
-            {'股票': '000001', '价格': 10.5, '数量': 100},
-            {'股票': '000002', '价格': 20.3, '数量': 200}
+            {'股票': '000001', '價格': 10.5, '數量': 100},
+            {'股票': '000002', '價格': 20.3, '數量': 200}
         ]
         
         df_list = safe_dataframe(list_data)
-        print(f"✅ 列表数据DataFrame创建成功，形状: {df_list.shape}")
+        print(f"✅ 列表數據DataFrame創建成功，形狀: {df_list.shape}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         return False
 
 
 def test_comparison_data():
-    """测试对比数据创建"""
+    """測試對比數據創建"""
     try:
         from web.components.analysis_results import safe_dataframe
         
-        print("\n🔍 测试对比数据创建...")
+        print("\n🔍 測試對比數據創建...")
         
-        # 模拟对比数据
+        # 模擬對比數據
         comparison_data = {
-            "项目": ["股票代码", "分析时间", "分析师数量", "研究深度", "状态", "标签数量"],
-            "分析结果 A": [
+            "項目": ["股票代碼", "分析時間", "分析師數量", "研究深度", "狀態", "標簽數量"],
+            "分析結果 A": [
                 '000001',
                 '2025-07-31 12:00',
-                3,  # 整数
-                5,  # 整数
+                3,  # 整數
+                5,  # 整數
                 "✅ 完成",
-                2   # 整数
+                2   # 整數
             ],
-            "分析结果 B": [
+            "分析結果 B": [
                 '000002',
                 '2025-07-31 13:00',
-                2,  # 整数
-                4,  # 整数
+                2,  # 整數
+                4,  # 整數
                 "❌ 失败",
-                1   # 整数
+                1   # 整數
             ]
         }
         
         df = safe_dataframe(comparison_data)
-        print(f"✅ 对比数据DataFrame创建成功")
+        print(f"✅ 對比數據DataFrame創建成功")
         
-        # 验证所有数据都是字符串
+        # 驗證所有數據都是字符串
         all_string = all(df[col].dtype == 'object' for col in df.columns)
         if all_string:
-            print("✅ 所有列都是字符串类型")
+            print("✅ 所有列都是字符串類型")
         else:
-            print("❌ 存在非字符串类型的列")
+            print("❌ 存在非字符串類型的列")
             
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         return False
 
 
 def test_timeline_data():
-    """测试时间线数据创建"""
+    """測試時間線數據創建"""
     try:
         from web.components.analysis_results import safe_dataframe
         
-        print("\n🔍 测试时间线数据创建...")
+        print("\n🔍 測試時間線數據創建...")
         
-        # 模拟时间线数据
+        # 模擬時間線數據
         timeline_data = []
         for i in range(3):
             timeline_data.append({
-                '序号': i + 1,  # 整数
-                '分析时间': datetime.now().strftime('%Y-%m-%d %H:%M'),
-                '分析师': 'analyst1, analyst2',
-                '研究深度': 5,  # 整数
-                '状态': '✅' if i % 2 == 0 else '❌'
+                '序號': i + 1,  # 整數
+                '分析時間': datetime.now().strftime('%Y-%m-%d %H:%M'),
+                '分析師': 'analyst1, analyst2',
+                '研究深度': 5,  # 整數
+                '狀態': '✅' if i % 2 == 0 else '❌'
             })
         
         df = safe_dataframe(timeline_data)
-        print(f"✅ 时间线数据DataFrame创建成功，行数: {len(df)}")
+        print(f"✅ 時間線數據DataFrame創建成功，行數: {len(df)}")
         
-        # 检查序号列是否为字符串
-        if df['序号'].dtype == 'object':
-            print("✅ 序号列已转换为字符串类型")
+        # 檢查序號列是否為字符串
+        if df['序號'].dtype == 'object':
+            print("✅ 序號列已轉換為字符串類型")
         else:
-            print(f"❌ 序号列类型: {df['序号'].dtype}")
+            print(f"❌ 序號列類型: {df['序號'].dtype}")
             
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         return False
 
 
 def test_arrow_conversion():
-    """测试Arrow转换"""
+    """測試Arrow轉換"""
     try:
         from web.components.analysis_results import safe_dataframe
         import pyarrow as pa
         
-        print("\n🔍 测试Arrow转换...")
+        print("\n🔍 測試Arrow轉換...")
         
-        # 创建可能导致Arrow错误的数据
+        # 創建可能導致Arrow錯誤的數據
         problematic_data = {
             '文本列': ['text1', 'text2', 'text3'],
-            '数字列': [1, 2, 3],  # 整数
-            '浮点列': [1.1, 2.2, 3.3],  # 浮点数
-            '布尔列': [True, False, True],  # 布尔值
-            '混合列': ['text', 123, 45.6]  # 混合类型
+            '數字列': [1, 2, 3],  # 整數
+            '浮點列': [1.1, 2.2, 3.3],  # 浮點數
+            '布爾列': [True, False, True],  # 布爾值
+            '混合列': ['text', 123, 45.6]  # 混合類型
         }
         
-        # 使用安全函数
+        # 使用安全函數
         df = safe_dataframe(problematic_data)
         
-        # 尝试转换为Arrow
+        # 嘗試轉換為Arrow
         table = pa.Table.from_pandas(df)
-        print("✅ Arrow转换成功")
-        print(f"   表格形状: {table.shape}")
+        print("✅ Arrow轉換成功")
+        print(f"   表格形狀: {table.shape}")
         print(f"   列名: {table.column_names}")
         
         return True
         
     except Exception as e:
-        print(f"❌ Arrow转换失败: {e}")
+        print(f"❌ Arrow轉換失败: {e}")
         return False
 
 
 def main():
-    """主测试函数"""
-    print("🚀 开始测试DataFrame Arrow转换修复")
+    """主測試函數"""
+    print("🚀 開始測試DataFrame Arrow轉換修複")
     print("=" * 50)
     
     tests = [
-        ("安全DataFrame函数", test_safe_dataframe),
-        ("对比数据创建", test_comparison_data),
-        ("时间线数据创建", test_timeline_data),
-        ("Arrow转换", test_arrow_conversion)
+        ("安全DataFrame函數", test_safe_dataframe),
+        ("對比數據創建", test_comparison_data),
+        ("時間線數據創建", test_timeline_data),
+        ("Arrow轉換", test_arrow_conversion)
     ]
     
     passed = 0
     total = len(tests)
     
     for test_name, test_func in tests:
-        print(f"\n📋 测试: {test_name}")
+        print(f"\n📋 測試: {test_name}")
         if test_func():
             passed += 1
-            print(f"✅ {test_name} 通过")
+            print(f"✅ {test_name} 通過")
         else:
             print(f"❌ {test_name} 失败")
     
     print("\n" + "=" * 50)
-    print(f"📊 测试结果: {passed}/{total} 通过")
+    print(f"📊 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有测试通过！DataFrame Arrow转换问题已修复")
+        print("🎉 所有測試通過！DataFrame Arrow轉換問題已修複")
         return True
     else:
-        print("⚠️ 部分测试失败，需要进一步检查")
+        print("⚠️ 部分測試失败，需要進一步檢查")
         return False
 
 

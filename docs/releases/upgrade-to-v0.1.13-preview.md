@@ -1,82 +1,82 @@
-# 📈 升级指南: v0.1.12 → v0.1.13
+# 📈 升級指南: v0.1.12 → v0.1.13
 
-## 🎯 升级概述
+## 🎯 升級概述
 
-本指南将帮助您从 TradingAgents-CN v0.1.12 升级到 v0.1.13，享受原生OpenAI支持和Google AI全面集成的新功能。
+本指南将幫助您從 TradingAgents-CN v0.1.12 升級到 v0.1.13，享受原生OpenAI支持和Google AI全面集成的新功能。
 
-## ⏰ 预计升级时间
+## ⏰ 預計升級時間
 
-- **简单升级**: 5-10分钟 (仅更新代码和依赖)
-- **完整配置**: 15-20分钟 (包含Google AI配置和测试)
-- **深度定制**: 30-45分钟 (包含自定义端点配置)
+- **簡單升級**: 5-10分鐘 (仅更新代碼和依賴)
+- **完整配置**: 15-20分鐘 (包含Google AI配置和測試)
+- **深度定制**: 30-45分鐘 (包含自定義端點配置)
 
-## 📋 升级前检查
+## 📋 升級前檢查
 
-### 1. 环境要求
+### 1. 環境要求
 ```bash
-# 检查Python版本 (需要 >= 3.10)
+# 檢查Python版本 (需要 >= 3.10)
 python --version
 
-# 检查当前版本
+# 檢查當前版本
 cat VERSION
-# 应该显示: cn-0.1.12
+# 應该顯示: cn-0.1.12
 ```
 
-### 2. 备份重要数据
+### 2. 备份重要數據
 ```bash
 # 备份配置文件
 cp .env .env.backup
 cp -r reports reports_backup
 
-# 备份自定义配置 (如果有)
+# 备份自定義配置 (如果有)
 cp -r config config_backup
 ```
 
-### 3. 检查当前分支
+### 3. 檢查當前分支
 ```bash
 git branch
-# 确认当前在合适的分支
+# 確認當前在合適的分支
 ```
 
-## 🚀 升级步骤
+## 🚀 升級步骤
 
-### 步骤 1: 切换到预览版分支
+### 步骤 1: 切換到預覽版分支
 ```bash
-# 切换到预览版分支
+# 切換到預覽版分支
 git checkout feature/native-openai-support
 
-# 拉取最新代码
+# 拉取最新代碼
 git pull origin feature/native-openai-support
 
-# 确认版本
+# 確認版本
 cat VERSION
-# 应该显示: cn-0.1.13-preview
+# 應该顯示: cn-0.1.13-preview
 ```
 
-### 步骤 2: 更新依赖包
+### 步骤 2: 更新依賴包
 ```bash
 # 方法1: 使用requirements.txt
 pip install -r requirements.txt
 
-# 方法2: 使用pyproject.toml (推荐)
+# 方法2: 使用pyproject.toml (推薦)
 pip install -e .
 
-# 验证新增的Google AI包
+# 驗證新增的Google AI包
 pip list | grep -E "(google-genai|google-generativeai|langchain-google-genai)"
 ```
 
-### 步骤 3: 配置Google AI (可选但推荐)
+### 步骤 3: 配置Google AI (可選但推薦)
 ```bash
-# 在 .env 文件中添加Google API密钥
+# 在 .env 文件中添加Google API密鑰
 echo "GOOGLE_API_KEY=your_google_api_key_here" >> .env
 
-# 如果没有Google API密钥，可以从以下地址获取:
+# 如果没有Google API密鑰，可以從以下地址獲取:
 # https://makersuite.google.com/app/apikey
 ```
 
-### 步骤 4: 验证安装
+### 步骤 4: 驗證安裝
 ```bash
-# 测试Google AI包导入
+# 測試Google AI包導入
 python -c "
 import google.generativeai as genai
 import langchain_google_genai
@@ -84,27 +84,27 @@ import google.genai
 print('✅ All Google AI packages imported successfully')
 "
 
-# 运行简单测试
+# 運行簡單測試
 python tests/test_gemini_simple.py
 ```
 
-### 步骤 5: 启动和测试
+### 步骤 5: 啟動和測試
 ```bash
-# 启动Web界面
+# 啟動Web界面
 streamlit run web/app.py
 
-# 在浏览器中访问 http://localhost:8501
-# 测试新的模型选择功能
+# 在浏覽器中訪問 http://localhost:8501
+# 測試新的模型選擇功能
 ```
 
 ## 🔧 配置新功能
 
 ### 1. Google AI 配置
 
-#### 获取API密钥
-1. 访问 [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. 创建新的API密钥
-3. 复制密钥到 `.env` 文件
+#### 獲取API密鑰
+1. 訪問 [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. 創建新的API密鑰
+3. 複制密鑰到 `.env` 文件
 
 #### 配置示例
 ```bash
@@ -112,188 +112,188 @@ streamlit run web/app.py
 GOOGLE_API_KEY=AIzaSyC...your_key_here
 ```
 
-#### 测试配置
+#### 測試配置
 ```python
-# 测试脚本
+# 測試腳本
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-# 检查API密钥
+# 檢查API密鑰
 api_key = os.getenv('GOOGLE_API_KEY')
 if api_key:
-    print("✅ Google API密钥已配置")
+    print("✅ Google API密鑰已配置")
     
-    # 测试模型
+    # 測試模型
     llm = ChatGoogleGenerativeAI(
         model="gemini-1.5-flash",
         google_api_key=api_key
     )
-    print("✅ Google AI模型创建成功")
+    print("✅ Google AI模型創建成功")
 else:
-    print("⚠️ 请配置GOOGLE_API_KEY环境变量")
+    print("⚠️ 請配置GOOGLE_API_KEY環境變量")
 ```
 
-### 2. 原生OpenAI端点配置
+### 2. 原生OpenAI端點配置
 
-#### 配置自定义端点
+#### 配置自定義端點
 ```bash
 # .env 文件中添加
 OPENAI_API_BASE=https://your-custom-endpoint.com/v1
 OPENAI_API_KEY=your_custom_api_key
 ```
 
-#### 支持的端点格式
+#### 支持的端點格式
 - OpenAI官方: `https://api.openai.com/v1`
-- 自建服务: `https://your-domain.com/v1`
-- 代理服务: `https://proxy.example.com/v1`
+- 自建服務: `https://your-domain.com/v1`
+- 代理服務: `https://proxy.example.com/v1`
 
 ### 3. Web界面新功能
 
-#### 智能模型选择
-- 🎯 自动检测可用模型
-- 🔄 智能降级机制
-- ⚡ 快速模型切换
-- 🛡️ 错误恢复
+#### 智能模型選擇
+- 🎯 自動檢測可用模型
+- 🔄 智能降級機制
+- ⚡ 快速模型切換
+- 🛡️ 錯誤恢複
 
 #### 使用方法
-1. 打开Web界面
-2. 在侧边栏选择"Google AI"提供商
-3. 选择具体的Google AI模型
-4. 开始分析任务
+1. 打開Web界面
+2. 在侧邊栏選擇"Google AI"提供商
+3. 選擇具體的Google AI模型
+4. 開始分析任務
 
-## 🧪 功能测试
+## 🧪 功能測試
 
-### 1. 基础功能测试
+### 1. 基础功能測試
 ```bash
-# 测试CLI功能
+# 測試CLI功能
 python cli/main.py --help
 
-# 测试Web界面
+# 測試Web界面
 streamlit run web/app.py
 ```
 
-### 2. Google AI功能测试
+### 2. Google AI功能測試
 ```bash
-# 运行Google AI测试套件
+# 運行Google AI測試套件
 python tests/test_gemini_simple.py
 python tests/test_gemini_final.py
 python tests/test_google_memory_fix.py
 ```
 
-### 3. 集成测试
+### 3. 集成測試
 ```bash
-# 运行完整的股票分析测试
+# 運行完整的股票分析測試
 python tests/test_analysis.py
 
-# 测试新闻分析功能
+# 測試新聞分析功能
 python tests/test_web_fix.py
 ```
 
-## ⚠️ 常见问题和解决方案
+## ⚠️ 常见問題和解決方案
 
-### 问题 1: 依赖冲突
+### 問題 1: 依賴冲突
 ```bash
-# 症状: pip安装时出现依赖冲突
-# 解决方案:
+# 症狀: pip安裝時出現依賴冲突
+# 解決方案:
 pip install --upgrade pip
 pip install --force-reinstall -r requirements.txt
 ```
 
-### 问题 2: Google AI包导入失败
+### 問題 2: Google AI包導入失败
 ```bash
-# 症状: ImportError: No module named 'google.generativeai'
-# 解决方案:
+# 症狀: ImportError: No module named 'google.generativeai'
+# 解決方案:
 pip install google-generativeai>=0.8.0
 pip install google-genai>=0.1.0
 pip install langchain-google-genai>=2.1.5
 ```
 
-### 问题 3: API密钥配置问题
+### 問題 3: API密鑰配置問題
 ```bash
-# 症状: Google API密钥无效
-# 解决方案:
-# 1. 检查密钥格式 (应以AIzaSy开头)
-# 2. 确认密钥权限
-# 3. 检查API配额
+# 症狀: Google API密鑰無效
+# 解決方案:
+# 1. 檢查密鑰格式 (應以AIzaSy開头)
+# 2. 確認密鑰權限
+# 3. 檢查API配額
 ```
 
-### 问题 4: Web界面模型选择错误
+### 問題 4: Web界面模型選擇錯誤
 ```bash
-# 症状: KeyError in model selection
-# 解决方案:
-# 1. 清除浏览器缓存
-# 2. 重启Streamlit应用
-# 3. 检查模型配置文件
+# 症狀: KeyError in model selection
+# 解決方案:
+# 1. 清除浏覽器緩存
+# 2. 重啟Streamlit應用
+# 3. 檢查模型配置文件
 ```
 
-## 📊 升级验证清单
+## 📊 升級驗證清單
 
-### ✅ 基础验证
-- [ ] 版本号显示为 `cn-0.1.13-preview`
-- [ ] 所有依赖包安装成功
-- [ ] Web界面正常启动
+### ✅ 基础驗證
+- [ ] 版本號顯示為 `cn-0.1.13-preview`
+- [ ] 所有依賴包安裝成功
+- [ ] Web界面正常啟動
 - [ ] CLI功能正常工作
 
-### ✅ Google AI验证
-- [ ] Google AI包导入成功
-- [ ] API密钥配置正确
-- [ ] 模型创建和调用成功
-- [ ] Web界面显示Google AI选项
+### ✅ Google AI驗證
+- [ ] Google AI包導入成功
+- [ ] API密鑰配置正確
+- [ ] 模型創建和調用成功
+- [ ] Web界面顯示Google AI選項
 
-### ✅ 功能验证
+### ✅ 功能驗證
 - [ ] 股票分析功能正常
-- [ ] 新闻分析功能正常
-- [ ] 模型切换功能正常
-- [ ] 错误处理机制正常
+- [ ] 新聞分析功能正常
+- [ ] 模型切換功能正常
+- [ ] 錯誤處理機制正常
 
-### ✅ 性能验证
-- [ ] 响应速度正常或更快
-- [ ] 内存使用稳定
-- [ ] 错误恢复正常
-- [ ] 日志记录清晰
+### ✅ 性能驗證
+- [ ] 響應速度正常或更快
+- [ ] 內存使用穩定
+- [ ] 錯誤恢複正常
+- [ ] 日誌記錄清晰
 
 ## 🔄 回滚方案
 
-如果升级过程中遇到问题，可以回滚到v0.1.12：
+如果升級過程中遇到問題，可以回滚到v0.1.12：
 
 ```bash
 # 回滚到v0.1.12
-git checkout main  # 或之前的稳定分支
+git checkout main  # 或之前的穩定分支
 git pull origin main
 
-# 恢复依赖
+# 恢複依賴
 pip install -r requirements.txt
 
-# 恢复配置文件
+# 恢複配置文件
 cp .env.backup .env
 cp -r reports_backup reports
 ```
 
-## 📞 获取帮助
+## 📞 獲取幫助
 
-### 🐛 问题报告
-- **GitHub Issues**: 创建详细的问题报告
-- **错误日志**: 提供完整的错误信息和日志
-- **环境信息**: 包含Python版本、操作系统等信息
+### 🐛 問題報告
+- **GitHub Issues**: 創建詳細的問題報告
+- **錯誤日誌**: 提供完整的錯誤信息和日誌
+- **環境信息**: 包含Python版本、操作系統等信息
 
 ### 💡 功能建议
-- **功能描述**: 详细描述期望的功能
-- **使用场景**: 说明具体的使用需求
-- **优先级**: 标明功能的重要性
+- **功能描述**: 詳細描述期望的功能
+- **使用場景**: 說明具體的使用需求
+- **優先級**: 標明功能的重要性
 
-### 📚 文档资源
+### 📚 文档資源
 - **配置指南**: `docs/configuration/google-ai-setup.md`
 - **模型指南**: `docs/google_models_guide.md`
 - **故障排除**: `docs/troubleshooting/`
 
-## 🎉 升级完成
+## 🎉 升級完成
 
-恭喜！您已成功升级到 TradingAgents-CN v0.1.13。
+恭喜！您已成功升級到 TradingAgents-CN v0.1.13。
 
-现在您可以：
-- 🤖 使用原生OpenAI端点支持
-- 🧠 体验Google AI模型的强大功能
-- 🔧 享受优化的LLM适配器架构
-- 🎨 使用改进的Web界面
+現在您可以：
+- 🤖 使用原生OpenAI端點支持
+- 🧠 體驗Google AI模型的强大功能
+- 🔧 享受優化的LLM適配器架構
+- 🎨 使用改進的Web界面
 
-感谢您选择 TradingAgents-CN，祝您使用愉快！
+感谢您選擇 TradingAgents-CN，祝您使用愉快！

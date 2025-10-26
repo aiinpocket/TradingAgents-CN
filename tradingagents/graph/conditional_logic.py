@@ -2,7 +2,7 @@
 
 from tradingagents.agents.utils.agent_states import AgentState
 
-# 导入统一日志系统
+# 導入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
@@ -20,7 +20,7 @@ class ConditionalLogic:
         messages = state["messages"]
         last_message = messages[-1]
 
-        # 只有AIMessage才有tool_calls属性
+        # 只有AIMessage才有tool_calls屬性
         if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
             return "tools_market"
         return "Msg Clear Market"
@@ -30,7 +30,7 @@ class ConditionalLogic:
         messages = state["messages"]
         last_message = messages[-1]
 
-        # 只有AIMessage才有tool_calls属性
+        # 只有AIMessage才有tool_calls屬性
         if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
             return "tools_social"
         return "Msg Clear Social"
@@ -40,7 +40,7 @@ class ConditionalLogic:
         messages = state["messages"]
         last_message = messages[-1]
 
-        # 只有AIMessage才有tool_calls属性
+        # 只有AIMessage才有tool_calls屬性
         if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
             return "tools_news"
         return "Msg Clear News"
@@ -50,7 +50,7 @@ class ConditionalLogic:
         messages = state["messages"]
         last_message = messages[-1]
 
-        # 只有AIMessage才有tool_calls属性
+        # 只有AIMessage才有tool_calls屬性
         if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
             return "tools_fundamentals"
         return "Msg Clear Fundamentals"

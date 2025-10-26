@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-将项目中的print语句转换为日志输出
-排除tests和env目录
+将項目中的print語句轉換為日誌輸出
+排除tests和env目錄
 """
 
 import os
@@ -11,14 +11,14 @@ from typing import List, Dict, Tuple
 
 
 class PrintToLogConverter:
-    """Print语句到日志转换器"""
+    """Print語句到日誌轉換器"""
     
     def __init__(self, project_root: Path):
         self.project_root = project_root
         self.converted_files = []
         self.errors = []
         
-        # 需要排除的目录
+        # 需要排除的目錄
         self.exclude_dirs = {'tests', 'env', '.env', '__pycache__', '.git', '.github'}
         
         # 需要排除的文件模式
@@ -31,13 +31,13 @@ class PrintToLogConverter:
         }
     
     def should_skip_file(self, file_path: Path) -> bool:
-        """判断是否应该跳过文件"""
-        # 检查是否在排除目录中
+        """判斷是否應该跳過文件"""
+        # 檢查是否在排除目錄中
         for part in file_path.parts:
             if part in self.exclude_dirs:
                 return True
         
-        # 检查文件名模式
+        # 檢查文件名模式
         for pattern in self.exclude_patterns:
             if file_path.match(pattern):
                 return True
@@ -45,18 +45,18 @@ class PrintToLogConverter:
         return False
     
     def get_log_level_from_message(self, message: str) -> str:
-        """根据消息内容确定日志级别"""
+        """根據消息內容確定日誌級別"""
         message_lower = message.lower()
         
-        # 错误级别
-        if any(indicator in message for indicator in ['❌', '错误', 'ERROR', 'Error', '失败', 'Failed', 'Exception']):
+        # 錯誤級別
+        if any(indicator in message for indicator in ['❌', '錯誤', 'ERROR', 'Error', '失败', 'Failed', 'Exception']):
             return 'error'
         
-        # 警告级别
-        elif any(indicator in message for indicator in ['⚠️', '警告', 'WARNING', 'Warning', '注意']):
+        # 警告級別
+        elif any(indicator in message for indicator in ['⚠️', '警告', 'WARNING', 'Warning', '註意']):
             return 'warning'
         
-        # 调试级别
+        # 調試級別
         elif any(indicator in message for indicator in ['🔍', 'DEBUG', 'Debug', '[DEBUG]']):
             return 'debug'
         
@@ -64,13 +64,13 @@ class PrintToLogConverter:
         elif any(indicator in message for indicator in ['✅', '成功', '完成', 'Success', 'Complete']):
             return 'info'
         
-        # 默认信息级别
+        # 默認信息級別
         else:
             return 'info'
     
     def add_logging_import(self, content: str, file_path: Path) -> str:
-        """添加日志导入"""
-        # 检查是否已经有日志导入
+        """添加日誌導入"""
+        # 檢查是否已經有日誌導入
         if 'from tradingagents.utils.logging_manager import get_logger' in content:
             return content
         
@@ -79,11 +79,11 @@ class PrintToLogConverter:
         in_docstring = False
         docstring_char = None
         
-        # 找到所有import语句的结束位置
+        # 找到所有import語句的結束位置
         for i, line in enumerate(lines):
             stripped = line.strip()
             
-            # 处理文档字符串
+            # 處理文档字符串
             if not in_docstring:
                 if stripped.startswith('"""') or stripped.startswith("'''"):
                     docstring_char = stripped[:3]
@@ -95,18 +95,18 @@ class PrintToLogConverter:
                     in_docstring = False
                 continue
             
-            # 跳过空行和注释
+            # 跳過空行和註釋
             if not stripped or stripped.startswith('#'):
                 continue
             
-            # 如果是import语句，更新插入位置
+            # 如果是import語句，更新插入位置
             if stripped.startswith(('import ', 'from ')) and 'logging_manager' not in line:
                 insert_pos = i + 1
-            # 如果遇到非import语句，停止搜索
+            # 如果遇到非import語句，停止搜索
             elif insert_pos > 0:
                 break
         
-        # 确定日志器名称
+        # 確定日誌器名稱
         relative_path = file_path.relative_to(self.project_root)
         if 'web' in str(relative_path):
             logger_name = 'web'
@@ -128,27 +128,27 @@ class PrintToLogConverter:
         else:
             logger_name = 'default'
         
-        # 插入日志导入
+        # 插入日誌導入
         lines.insert(insert_pos, "")
-        lines.insert(insert_pos + 1, "# 导入日志模块")
+        lines.insert(insert_pos + 1, "# 導入日誌模塊")
         lines.insert(insert_pos + 2, "from tradingagents.utils.logging_manager import get_logger")
         lines.insert(insert_pos + 3, f"logger = get_logger('{logger_name}')")
         
         return '\n'.join(lines)
     
     def convert_print_statements(self, content: str) -> str:
-        """转换print语句为日志调用"""
+        """轉換print語句為日誌調用"""
         lines = content.split('\n')
         modified_lines = []
         
         for line in lines:
-            # 跳过注释行
+            # 跳過註釋行
             if line.strip().startswith('#'):
                 modified_lines.append(line)
                 continue
             
-            # 查找print语句
-            # 匹配各种print格式：print("..."), print(f"..."), print('...'), print(f'...')
+            # 查找print語句
+            # 匹配各種print格式：print("..."), print(f"..."), print('...'), print(f'...')
             print_patterns = [
                 r'print\s*\(\s*f?"([^"]*?)"([^)]*)\)',  # print("...")
                 r"print\s*\(\s*f?'([^']*?)'([^)]*)\)",   # print('...')
@@ -163,18 +163,18 @@ class PrintToLogConverter:
                     message = match.group(1)
                     rest = match.group(2).strip()
                     
-                    # 确定日志级别
+                    # 確定日誌級別
                     log_level = self.get_log_level_from_message(message)
                     
-                    # 获取缩进
+                    # 獲取縮進
                     indent = len(line) - len(line.lstrip())
                     
-                    # 构建新的日志语句
+                    # 構建新的日誌語句
                     if rest and rest.startswith(','):
-                        # 有额外参数
+                        # 有額外參數
                         new_line = f"{' ' * indent}logger.{log_level}(f\"{message}\"{rest})"
                     else:
-                        # 没有额外参数
+                        # 没有額外參數
                         new_line = f"{' ' * indent}logger.{log_level}(f\"{message}\")"
                     
                     line = new_line
@@ -186,47 +186,47 @@ class PrintToLogConverter:
         return '\n'.join(modified_lines)
     
     def convert_file(self, file_path: Path) -> bool:
-        """转换单个文件"""
+        """轉換單個文件"""
         try:
-            print(f"🔄 转换文件: {file_path}")
+            print(f"🔄 轉換文件: {file_path}")
             
-            # 读取文件内容
+            # 讀取文件內容
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # 检查是否包含print语句
+            # 檢查是否包含print語句
             if 'print(' not in content:
-                print(f"⏭️ 跳过文件（无print语句）: {file_path}")
+                print(f"⏭️ 跳過文件（無print語句）: {file_path}")
                 return False
             
             original_content = content
             
-            # 添加日志导入
+            # 添加日誌導入
             content = self.add_logging_import(content, file_path)
             
-            # 转换print语句
+            # 轉換print語句
             content = self.convert_print_statements(content)
             
-            # 如果内容有变化，写回文件
+            # 如果內容有變化，寫回文件
             if content != original_content:
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(content)
                 
                 self.converted_files.append(str(file_path))
-                print(f"✅ 转换完成: {file_path}")
+                print(f"✅ 轉換完成: {file_path}")
                 return True
             else:
-                print(f"⏭️ 无需修改: {file_path}")
+                print(f"⏭️ 無需修改: {file_path}")
                 return False
                 
         except Exception as e:
-            error_msg = f"❌ 转换失败 {file_path}: {e}"
+            error_msg = f"❌ 轉換失败 {file_path}: {e}"
             print(error_msg)
             self.errors.append(error_msg)
             return False
     
     def convert_project(self) -> Dict[str, int]:
-        """转换整个项目"""
+        """轉換整個項目"""
         stats = {'converted': 0, 'skipped': 0, 'errors': 0}
         
         # 查找所有Python文件
@@ -245,21 +245,21 @@ class PrintToLogConverter:
         return stats
     
     def generate_report(self) -> str:
-        """生成转换报告"""
+        """生成轉換報告"""
         report = f"""
-# Print语句转换报告
+# Print語句轉換報告
 
-## 转换统计
-- 成功转换文件: {len(self.converted_files)}
-- 错误数量: {len(self.errors)}
+## 轉換統計
+- 成功轉換文件: {len(self.converted_files)}
+- 錯誤數量: {len(self.errors)}
 
-## 转换的文件
+## 轉換的文件
 """
         for file_path in self.converted_files:
             report += f"- {file_path}\n"
         
         if self.errors:
-            report += "\n## 错误列表\n"
+            report += "\n## 錯誤列表\n"
             for error in self.errors:
                 report += f"- {error}\n"
         
@@ -267,41 +267,41 @@ class PrintToLogConverter:
 
 
 def main():
-    """主函数"""
-    print("🚀 开始将print语句转换为日志输出")
+    """主函數"""
+    print("🚀 開始将print語句轉換為日誌輸出")
     print("=" * 50)
     
-    # 确定项目根目录
+    # 確定項目根目錄
     project_root = Path(__file__).parent
     
-    # 创建转换器
+    # 創建轉換器
     converter = PrintToLogConverter(project_root)
     
-    # 执行转换
+    # 執行轉換
     stats = converter.convert_project()
     
-    # 显示结果
+    # 顯示結果
     print("\n" + "=" * 50)
-    print("📊 转换结果汇总:")
-    print(f"   转换文件: {stats['converted']}")
-    print(f"   跳过文件: {stats['skipped']}")
-    print(f"   错误文件: {stats['errors']}")
+    print("📊 轉換結果汇总:")
+    print(f"   轉換文件: {stats['converted']}")
+    print(f"   跳過文件: {stats['skipped']}")
+    print(f"   錯誤文件: {stats['errors']}")
     
     if stats['converted'] > 0:
-        print(f"\n🎉 成功转换 {stats['converted']} 个文件的print语句为日志输出！")
+        print(f"\n🎉 成功轉換 {stats['converted']} 個文件的print語句為日誌輸出！")
     
     if converter.errors:
-        print(f"\n⚠️ 有 {len(converter.errors)} 个文件转换失败")
+        print(f"\n⚠️ 有 {len(converter.errors)} 個文件轉換失败")
         for error in converter.errors:
             print(f"   {error}")
     
-    # 生成报告
+    # 生成報告
     report = converter.generate_report()
     report_file = project_root / 'print_to_log_conversion_report.md'
     with open(report_file, 'w', encoding='utf-8') as f:
         f.write(report)
     
-    print(f"\n📄 详细报告已保存到: {report_file}")
+    print(f"\n📄 詳細報告已保存到: {report_file}")
 
 
 if __name__ == '__main__':

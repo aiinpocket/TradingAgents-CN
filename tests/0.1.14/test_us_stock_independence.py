@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-测试美股数据获取独立性
-验证美股数据获取不再依赖OpenAI配置
+測試美股數據獲取獨立性
+驗證美股數據獲取不再依賴OpenAI配置
 """
 
 import os
 import sys
 from pathlib import Path
 
-# 添加项目根目录到路径
+# 添加項目根目錄到路徑
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
@@ -16,19 +16,19 @@ try:
     from tradingagents.agents.utils.agent_utils import Toolkit
     from tradingagents.default_config import DEFAULT_CONFIG
 except ImportError:
-    print("❌ 无法导入Toolkit，请检查项目结构")
+    print("❌ 無法導入Toolkit，請檢查項目結構")
     sys.exit(1)
 
 def test_us_stock_data_independence():
-    """测试美股数据获取独立性"""
-    print("🇺🇸 测试美股数据获取独立性")
+    """測試美股數據獲取獨立性"""
+    print("🇺🇸 測試美股數據獲取獨立性")
     print("=" * 60)
     
-    # 测试场景1: OpenAI禁用，实时数据启用
-    print("\n📋 场景1: OpenAI禁用 + 实时数据启用")
+    # 測試場景1: OpenAI禁用，實時數據啟用
+    print("\n📋 場景1: OpenAI禁用 + 實時數據啟用")
     print("-" * 40)
     
-    # 设置环境变量
+    # 設置環境變量
     os.environ['OPENAI_ENABLED'] = 'false'
     os.environ['REALTIME_DATA_ENABLED'] = 'true'
     
@@ -37,7 +37,7 @@ def test_us_stock_data_independence():
         config["realtime_data"] = True
         toolkit = Toolkit(config=config)
         
-        # 检查美股数据工具
+        # 檢查美股數據工具
         us_tools = [
             'get_YFin_data_online',
             'get_YFin_data',
@@ -50,25 +50,25 @@ def test_us_stock_data_independence():
             else:
                 print(f"   ❌ {tool_name} 不可用")
                 
-        # 测试实际调用
+        # 測試實际調用
         try:
-            # 测试获取苹果股票数据
+            # 測試獲取苹果股票數據
             result = toolkit.get_us_stock_data_cached("AAPL", "1d", "1mo")
             if result and "error" not in str(result).lower():
-                print("   ✅ 美股数据获取成功")
+                print("   ✅ 美股數據獲取成功")
             else:
-                print("   ⚠️ 美股数据获取返回错误或空结果")
+                print("   ⚠️ 美股數據獲取返回錯誤或空結果")
         except Exception as e:
-            print(f"   ⚠️ 美股数据获取异常: {e}")
+            print(f"   ⚠️ 美股數據獲取異常: {e}")
             
     except Exception as e:
-        print(f"   ❌ Toolkit创建失败: {e}")
+        print(f"   ❌ Toolkit創建失败: {e}")
     
-    # 测试场景2: OpenAI启用，实时数据禁用
-    print("\n📋 场景2: OpenAI启用 + 实时数据禁用")
+    # 測試場景2: OpenAI啟用，實時數據禁用
+    print("\n📋 場景2: OpenAI啟用 + 實時數據禁用")
     print("-" * 40)
     
-    # 设置环境变量
+    # 設置環境變量
     os.environ['OPENAI_ENABLED'] = 'true'
     os.environ['REALTIME_DATA_ENABLED'] = 'false'
     
@@ -77,7 +77,7 @@ def test_us_stock_data_independence():
         config["realtime_data"] = False
         toolkit = Toolkit(config=config)
         
-        # 检查美股数据工具
+        # 檢查美股數據工具
         for tool_name in us_tools:
             if hasattr(toolkit, tool_name):
                 print(f"   ✅ {tool_name} 可用")
@@ -85,13 +85,13 @@ def test_us_stock_data_independence():
                 print(f"   ❌ {tool_name} 不可用")
                 
     except Exception as e:
-        print(f"   ❌ Toolkit创建失败: {e}")
+        print(f"   ❌ Toolkit創建失败: {e}")
     
-    print("\n💡 结论:")
-    print("   美股数据获取现在基于 REALTIME_DATA_ENABLED 配置")
-    print("   不再依赖 OPENAI_ENABLED 配置")
-    print("   实现了真正的功能独立性！")
+    print("\n💡 結論:")
+    print("   美股數據獲取現在基於 REALTIME_DATA_ENABLED 配置")
+    print("   不再依賴 OPENAI_ENABLED 配置")
+    print("   實現了真正的功能獨立性！")
 
 if __name__ == "__main__":
     test_us_stock_data_independence()
-    print("\n🎉 测试完成！")
+    print("\n🎉 測試完成！")

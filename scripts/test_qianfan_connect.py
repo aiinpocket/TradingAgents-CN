@@ -36,10 +36,10 @@ def getenv_stripped(key: str) -> Optional[str]:
 
 
 def main() -> int:
-    # 检查新的API Key环境变量
+    # 檢查新的API Key環境變量
     api_key = getenv_stripped("QIANFAN_API_KEY")
     
-    # 兼容检查旧的环境变量
+    # 兼容檢查旧的環境變量
     ak = getenv_stripped("QIANFAN_ACCESS_KEY")
     sk = getenv_stripped("QIANFAN_SECRET_KEY")
     model = getenv_stripped("QIANFAN_MODEL") or "ernie-3.5-8k"
@@ -70,7 +70,7 @@ def main() -> int:
 
     try:
         # Send a minimal prompt to verify connectivity
-        prompt = "请只回复：连接成功"
+        prompt = "請只回複：連接成功"
         print("Sending test prompt to Qianfan ...")
         t0 = time.time()
         resp = llm.invoke([HumanMessage(content=prompt)])  # type: ignore

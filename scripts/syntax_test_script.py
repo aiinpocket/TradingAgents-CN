@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-语法检查脚本 - 检查除env目录外的所有Python文件
+語法檢查腳本 - 檢查除env目錄外的所有Python文件
 Syntax Check Script - Check all Python files except env directory
 """
 
@@ -13,7 +13,7 @@ from typing import List, Tuple
 
 def find_python_files(root_dir: str, exclude_dirs: List[str] = None) -> List[str]:
     """
-    查找所有Python文件，排除指定目录
+    查找所有Python文件，排除指定目錄
     Find all Python files, excluding specified directories
     """
     if exclude_dirs is None:
@@ -23,7 +23,7 @@ def find_python_files(root_dir: str, exclude_dirs: List[str] = None) -> List[str
     root_path = Path(root_dir)
     
     for file_path in root_path.rglob('*.py'):
-        # 检查是否在排除目录中
+        # 檢查是否在排除目錄中
         should_exclude = False
         for exclude_dir in exclude_dirs:
             if exclude_dir in file_path.parts:
@@ -37,45 +37,45 @@ def find_python_files(root_dir: str, exclude_dirs: List[str] = None) -> List[str
 
 def check_syntax(file_path: str) -> Tuple[bool, str]:
     """
-    检查单个Python文件的语法
+    檢查單個Python文件的語法
     Check syntax of a single Python file
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # 尝试解析AST
+        # 嘗試解析AST
         ast.parse(content, filename=file_path)
         return True, "OK"
     
     except SyntaxError as e:
-        error_msg = f"语法错误 | Syntax Error: Line {e.lineno}, Column {e.offset}: {e.msg}"
+        error_msg = f"語法錯誤 | Syntax Error: Line {e.lineno}, Column {e.offset}: {e.msg}"
         return False, error_msg
     
     except UnicodeDecodeError as e:
-        error_msg = f"编码错误 | Encoding Error: {e}"
+        error_msg = f"編碼錯誤 | Encoding Error: {e}"
         return False, error_msg
     
     except Exception as e:
-        error_msg = f"其他错误 | Other Error: {e}"
+        error_msg = f"其他錯誤 | Other Error: {e}"
         return False, error_msg
 
 def main():
     """
-    主函数
+    主函數
     Main function
     """
-    print("\n🔍 开始语法检查 | Starting syntax check...")
+    print("\n🔍 開始語法檢查 | Starting syntax check...")
     
-    # 获取当前目录
+    # 獲取當前目錄
     current_dir = os.getcwd()
-    print(f"📁 检查目录 | Checking directory: {current_dir}")
+    print(f"📁 檢查目錄 | Checking directory: {current_dir}")
     
     # 查找所有Python文件
     python_files = find_python_files(current_dir)
-    print(f"📄 找到 {len(python_files)} 个Python文件 | Found {len(python_files)} Python files")
+    print(f"📄 找到 {len(python_files)} 個Python文件 | Found {len(python_files)} Python files")
     
-    # 检查语法
+    # 檢查語法
     success_count = 0
     error_count = 0
     error_files = []
@@ -92,20 +92,20 @@ def main():
             error_files.append((relative_path, message))
             print(f"❌ {relative_path}: {message}")
     
-    # 输出总结
-    print(f"\n📊 检查完成 | Check completed:")
+    # 輸出总結
+    print(f"\n📊 檢查完成 | Check completed:")
     print(f"✅ 成功文件 | Successful files: {success_count}")
-    print(f"❌ 错误文件 | Error files: {error_count}")
+    print(f"❌ 錯誤文件 | Error files: {error_count}")
     
     if error_files:
-        print(f"\n🚨 错误详情 | Error details:")
+        print(f"\n🚨 錯誤詳情 | Error details:")
         for file_path, error_msg in error_files:
             print(f"  {file_path}: {error_msg}")
         
-        # 返回错误代码
+        # 返回錯誤代碼
         sys.exit(1)
     else:
-        print(f"\n🎉 所有文件语法检查通过！| All files passed syntax check!")
+        print(f"\n🎉 所有文件語法檢查通過！| All files passed syntax check!")
         sys.exit(0)
 
 if __name__ == "__main__":

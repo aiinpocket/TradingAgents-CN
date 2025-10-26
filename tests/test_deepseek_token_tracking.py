@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DeepSeek Token统计功能测试
+DeepSeek Token統計功能測試
 """
 
 import os
@@ -9,55 +9,55 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import datetime
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 加载环境变量
+# 加載環境變量
 load_dotenv(project_root / ".env", override=True)
 
 def test_deepseek_adapter():
-    """测试DeepSeek适配器的Token统计功能"""
-    print("🧪 测试DeepSeek适配器Token统计...")
+    """測試DeepSeek適配器的Token統計功能"""
+    print("🧪 測試DeepSeek適配器Token統計...")
     
-    # 检查DeepSeek配置
+    # 檢查DeepSeek配置
     deepseek_key = os.getenv("DEEPSEEK_API_KEY")
     if not deepseek_key:
-        print("⚠️ 未找到DEEPSEEK_API_KEY，跳过测试")
-        return True  # 跳过而不是失败
+        print("⚠️ 未找到DEEPSEEK_API_KEY，跳過測試")
+        return True  # 跳過而不是失败
     
     try:
         from tradingagents.llm_adapters.deepseek_adapter import ChatDeepSeek
         from tradingagents.config.config_manager import config_manager, token_tracker
         
-        # 获取初始统计
+        # 獲取初始統計
         initial_stats = config_manager.get_usage_statistics(1)
         initial_cost = initial_stats.get("total_cost", 0)
         
-        # 创建DeepSeek实例
+        # 創建DeepSeek實例
         llm = ChatDeepSeek(
             model="deepseek-chat",
             temperature=0.1,
             max_tokens=100
         )
         
-        # 生成会话ID
+        # 生成會話ID
         session_id = f"test_deepseek_{int(datetime.now().timestamp())}"
         
-        # 测试调用
+        # 測試調用
         response = llm.invoke(
-            "请简单说明什么是股票，不超过50字。",
+            "請簡單說明什么是股票，不超過50字。",
             session_id=session_id,
             analysis_type="test_analysis"
         )
         
-        print(f"   ✅ 响应接收成功，长度: {len(response.content)}")
+        print(f"   ✅ 響應接收成功，長度: {len(response.content)}")
         
-        # 等待统计更新
+        # 等待統計更新
         import time
         time.sleep(1)
         
-        # 检查统计更新
+        # 檢查統計更新
         updated_stats = config_manager.get_usage_statistics(1)
         updated_cost = updated_stats.get("total_cost", 0)
         
@@ -65,28 +65,28 @@ def test_deepseek_adapter():
         
         print(f"   💰 成本增加: ¥{cost_increase:.4f}")
         
-        # 检查DeepSeek统计
+        # 檢查DeepSeek統計
         provider_stats = updated_stats.get("provider_stats", {})
         deepseek_stats = provider_stats.get("deepseek", {})
         
         if deepseek_stats:
-            print(f"   📊 DeepSeek统计存在: ✅")
+            print(f"   📊 DeepSeek統計存在: ✅")
             return True
         else:
-            print(f"   📊 DeepSeek统计缺失: ❌")
+            print(f"   📊 DeepSeek統計缺失: ❌")
             return False
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         return False
 
 def test_trading_graph_integration():
-    """测试TradingGraph中的DeepSeek集成"""
-    print("\n🧪 测试TradingGraph DeepSeek集成...")
+    """測試TradingGraph中的DeepSeek集成"""
+    print("\n🧪 測試TradingGraph DeepSeek集成...")
     
     deepseek_key = os.getenv("DEEPSEEK_API_KEY")
     if not deepseek_key:
-        print("⚠️ 未找到DEEPSEEK_API_KEY，跳过测试")
+        print("⚠️ 未找到DEEPSEEK_API_KEY，跳過測試")
         return True
     
     try:
@@ -105,27 +105,27 @@ def test_trading_graph_integration():
             "max_debate_rounds": 1,
         })
         
-        # 创建TradingAgentsGraph
+        # 創建TradingAgentsGraph
         ta = TradingAgentsGraph(
             selected_analysts=["fundamentals"],
             config=config,
-            debug=False  # 减少输出
+            debug=False  # 减少輸出
         )
         
-        print(f"   ✅ TradingAgentsGraph创建成功")
+        print(f"   ✅ TradingAgentsGraph創建成功")
         return True
         
     except Exception as e:
-        print(f"❌ 集成测试失败: {e}")
+        print(f"❌ 集成測試失败: {e}")
         return False
 
 def main():
-    """主测试函数"""
-    print("🧪 DeepSeek Token统计功能测试")
+    """主測試函數"""
+    print("🧪 DeepSeek Token統計功能測試")
     print("=" * 50)
     
     tests = [
-        ("DeepSeek适配器", test_deepseek_adapter),
+        ("DeepSeek適配器", test_deepseek_adapter),
         ("TradingGraph集成", test_trading_graph_integration),
     ]
     
@@ -136,22 +136,22 @@ def main():
             result = test_func()
             results.append((test_name, result))
         except Exception as e:
-            print(f"❌ {test_name}测试异常: {e}")
+            print(f"❌ {test_name}測試異常: {e}")
             results.append((test_name, False))
     
-    # 总结结果
+    # 总結結果
     print("\n" + "="*50)
-    print("📋 测试结果总结:")
+    print("📋 測試結果总結:")
     print("="*50)
     
     passed = 0
     for test_name, result in results:
-        status = "✅ 通过" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失败"
         print(f"{test_name}: {status}")
         if result:
             passed += 1
     
-    print(f"\n总计: {passed}/{len(results)} 项测试通过")
+    print(f"\n总計: {passed}/{len(results)} 項測試通過")
     
     return passed >= len(results) // 2
 

@@ -1,6 +1,6 @@
 """
-基本面分析师 - 统一工具架构版本
-使用统一工具自动识别股票类型并调用相应数据源
+基本面分析師 - 統一工具架構版本
+使用統一工具自動识別股票類型並調用相應數據源
 """
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -9,32 +9,32 @@ from langchain_core.messages import AIMessage
 
 def create_fundamentals_analyst(llm, toolkit):
     def fundamentals_analyst_node(state):
-        print(f"📊 [DEBUG] ===== 基本面分析师节点开始 =====")
+        print(f"📊 [DEBUG] ===== 基本面分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
         start_date = '2025-05-28'
 
-        print(f"📊 [DEBUG] 输入参数: ticker={ticker}, date={current_date}")
-        print(f"📊 [DEBUG] 当前状态中的消息数量: {len(state.get('messages', []))}")
-        print(f"📊 [DEBUG] 现有基本面报告: {state.get('fundamentals_report', 'None')[:100]}...")
+        print(f"📊 [DEBUG] 輸入參數: ticker={ticker}, date={current_date}")
+        print(f"📊 [DEBUG] 當前狀態中的消息數量: {len(state.get('messages', []))}")
+        print(f"📊 [DEBUG] 現有基本面報告: {state.get('fundamentals_report', 'None')[:100]}...")
 
-        # 获取股票市场信息
+        # 獲取股票市場信息
         from tradingagents.utils.stock_utils import StockUtils
-        print(f"📊 [基本面分析师] 正在分析股票: {ticker}")
+        print(f"📊 [基本面分析師] 正在分析股票: {ticker}")
 
         market_info = StockUtils.get_market_info(ticker)
-        print(f"📊 [DEBUG] 股票类型检查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
-        print(f"📊 [DEBUG] 详细市场信息: is_china={market_info['is_china']}, is_hk={market_info['is_hk']}, is_us={market_info['is_us']}")
-        print(f"📊 [DEBUG] 工具配置检查: online_tools={toolkit.config['online_tools']}")
+        print(f"📊 [DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
+        print(f"📊 [DEBUG] 詳細市場信息: is_china={market_info['is_china']}, is_hk={market_info['is_hk']}, is_us={market_info['is_us']}")
+        print(f"📊 [DEBUG] 工具配置檢查: online_tools={toolkit.config['online_tools']}")
 
-        # 选择工具
+        # 選擇工具
         if toolkit.config["online_tools"]:
-            # 使用统一的基本面分析工具，工具内部会自动识别股票类型
-            print(f"📊 [基本面分析师] 使用统一基本面分析工具，自动识别股票类型")
+            # 使用統一的基本面分析工具，工具內部會自動识別股票類型
+            print(f"📊 [基本面分析師] 使用統一基本面分析工具，自動识別股票類型")
             tools = [toolkit.get_stock_fundamentals_unified]
-            print(f"📊 [DEBUG] 选择的工具: {[tool.name for tool in tools]}")
-            print(f"📊 [DEBUG] 🔧 统一工具将自动处理: {market_info['market_name']}")
+            print(f"📊 [DEBUG] 選擇的工具: {[tool.name for tool in tools]}")
+            print(f"📊 [DEBUG] 🔧 統一工具将自動處理: {market_info['market_name']}")
         else:
             tools = [
                 toolkit.get_finnhub_company_insider_sentiment,
@@ -44,51 +44,51 @@ def create_fundamentals_analyst(llm, toolkit):
                 toolkit.get_simfin_income_stmt,
             ]
 
-        # 统一的系统提示，适用于所有股票类型
+        # 統一的系統提示，適用於所有股票類型
         system_message = (
-            f"你是一位专业的股票基本面分析师。"
-            f"⚠️ 绝对强制要求：你必须调用工具获取真实数据！不允许任何假设或编造！"
-            f"任务：分析股票代码 {ticker} ({market_info['market_name']})"
-            f"🔴 立即调用 get_stock_fundamentals_unified 工具"
-            f"参数：ticker='{ticker}', start_date='{start_date}', end_date='{current_date}', curr_date='{current_date}'"
+            f"你是一位專業的股票基本面分析師。"
+            f"⚠️ 絕對强制要求：你必须調用工具獲取真實數據！不允許任何假設或編造！"
+            f"任務：分析股票代碼 {ticker} ({market_info['market_name']})"
+            f"🔴 立即調用 get_stock_fundamentals_unified 工具"
+            f"參數：ticker='{ticker}', start_date='{start_date}', end_date='{current_date}', curr_date='{current_date}'"
             "📊 分析要求："
-            "- 基于真实数据进行深度基本面分析"
-            f"- 计算并提供合理价位区间（使用{market_info['currency_name']}{market_info['currency_symbol']}）"
-            "- 分析当前股价是否被低估或高估"
-            "- 提供基于基本面的目标价位建议"
-            "- 包含PE、PB、PEG等估值指标分析"
-            "- 结合市场特点进行分析"
-            "🌍 语言和货币要求："
-            "- 所有分析内容必须使用中文"
-            "- 投资建议必须使用中文：买入、持有、卖出"
-            "- 绝对不允许使用英文：buy、hold、sell"
-            f"- 货币单位使用：{market_info['currency_name']}（{market_info['currency_symbol']}）"
-            "🚫 严格禁止："
-            "- 不允许说'我将调用工具'"
-            "- 不允许假设任何数据"
-            "- 不允许编造公司信息"
-            "- 不允许直接回答而不调用工具"
-            "- 不允许回复'无法确定价位'或'需要更多信息'"
-            "- 不允许使用英文投资建议（buy/hold/sell）"
+            "- 基於真實數據進行深度基本面分析"
+            f"- 計算並提供合理價位区間（使用{market_info['currency_name']}{market_info['currency_symbol']}）"
+            "- 分析當前股價是否被低估或高估"
+            "- 提供基於基本面的目標價位建议"
+            "- 包含PE、PB、PEG等估值指標分析"
+            "- 結合市場特點進行分析"
+            "🌍 語言和貨币要求："
+            "- 所有分析內容必须使用中文"
+            "- 投資建议必须使用中文：买入、持有、卖出"
+            "- 絕對不允許使用英文：buy、hold、sell"
+            f"- 貨币單位使用：{market_info['currency_name']}（{market_info['currency_symbol']}）"
+            "🚫 嚴格禁止："
+            "- 不允許說'我将調用工具'"
+            "- 不允許假設任何數據"
+            "- 不允許編造公司信息"
+            "- 不允許直接回答而不調用工具"
+            "- 不允許回複'無法確定價位'或'需要更多信息'"
+            "- 不允許使用英文投資建议（buy/hold/sell）"
             "✅ 你必须："
-            "- 立即调用统一基本面分析工具"
-            "- 等待工具返回真实数据"
-            "- 基于真实数据进行分析"
-            "- 提供具体的价位区间和目标价"
-            "- 使用中文投资建议（买入/持有/卖出）"
-            "现在立即开始调用工具！不要说任何其他话！"
+            "- 立即調用統一基本面分析工具"
+            "- 等待工具返回真實數據"
+            "- 基於真實數據進行分析"
+            "- 提供具體的價位区間和目標價"
+            "- 使用中文投資建议（买入/持有/卖出）"
+            "現在立即開始調用工具！不要說任何其他話！"
         )
 
-        # 系统提示模板
+        # 系統提示模板
         system_prompt = (
-            "🔴 强制要求：你必须调用工具获取真实数据！"
-            "🚫 绝对禁止：不允许假设、编造或直接回答任何问题！"
-            "✅ 你必须：立即调用提供的工具获取真实数据，然后基于真实数据进行分析。"
+            "🔴 强制要求：你必须調用工具獲取真實數據！"
+            "🚫 絕對禁止：不允許假設、編造或直接回答任何問題！"
+            "✅ 你必须：立即調用提供的工具獲取真實數據，然後基於真實數據進行分析。"
             "可用工具：{tool_names}。\n{system_message}"
-            "当前日期：{current_date}。分析目标：{ticker}。"
+            "當前日期：{current_date}。分析目標：{ticker}。"
         )
 
-        # 创建提示模板
+        # 創建提示模板
         prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),
             MessagesPlaceholder(variable_name="messages"),
@@ -99,9 +99,9 @@ def create_fundamentals_analyst(llm, toolkit):
         prompt = prompt.partial(current_date=current_date)
         prompt = prompt.partial(ticker=ticker)
 
-        # 检测阿里百炼模型并创建新实例
+        # 檢測阿里百炼模型並創建新實例
         if hasattr(llm, '__class__') and 'DashScope' in llm.__class__.__name__:
-            print(f"📊 [DEBUG] 检测到阿里百炼模型，创建新实例以避免工具缓存")
+            print(f"📊 [DEBUG] 檢測到阿里百炼模型，創建新實例以避免工具緩存")
             from tradingagents.llm_adapters import ChatDashScopeOpenAI
             llm = ChatDashScopeOpenAI(
                 model=llm.model_name,
@@ -109,52 +109,52 @@ def create_fundamentals_analyst(llm, toolkit):
                 max_tokens=getattr(llm, 'max_tokens', 2000)
             )
 
-        print(f"📊 [DEBUG] 创建LLM链，工具数量: {len(tools)}")
+        print(f"📊 [DEBUG] 創建LLM鏈，工具數量: {len(tools)}")
         print(f"📊 [DEBUG] 绑定的工具列表: {[tool.name for tool in tools]}")
-        print(f"📊 [DEBUG] 创建工具链，让模型自主决定是否调用工具")
+        print(f"📊 [DEBUG] 創建工具鏈，让模型自主決定是否調用工具")
 
         try:
             chain = prompt | llm.bind_tools(tools)
-            print(f"📊 [DEBUG] ✅ 工具绑定成功，绑定了 {len(tools)} 个工具")
+            print(f"📊 [DEBUG] ✅ 工具绑定成功，绑定了 {len(tools)} 個工具")
         except Exception as e:
             print(f"📊 [DEBUG] ❌ 工具绑定失败: {e}")
             raise e
 
-        print(f"📊 [DEBUG] 调用LLM链...")
+        print(f"📊 [DEBUG] 調用LLM鏈...")
         result = chain.invoke(state["messages"])
-        print(f"📊 [DEBUG] LLM调用完成")
+        print(f"📊 [DEBUG] LLM調用完成")
 
-        print(f"📊 [DEBUG] 结果类型: {type(result)}")
-        print(f"📊 [DEBUG] 工具调用数量: {len(result.tool_calls) if hasattr(result, 'tool_calls') else 0}")
-        print(f"📊 [DEBUG] 内容长度: {len(result.content) if hasattr(result, 'content') else 0}")
+        print(f"📊 [DEBUG] 結果類型: {type(result)}")
+        print(f"📊 [DEBUG] 工具調用數量: {len(result.tool_calls) if hasattr(result, 'tool_calls') else 0}")
+        print(f"📊 [DEBUG] 內容長度: {len(result.content) if hasattr(result, 'content') else 0}")
 
-        # 检查工具调用
+        # 檢查工具調用
         expected_tools = [tool.name for tool in tools]
         actual_tools = [tc['name'] for tc in result.tool_calls] if hasattr(result, 'tool_calls') and result.tool_calls else []
         
         print(f"📊 [DEBUG] 期望的工具: {expected_tools}")
-        print(f"📊 [DEBUG] 实际调用的工具: {actual_tools}")
+        print(f"📊 [DEBUG] 實际調用的工具: {actual_tools}")
 
-        # 处理基本面分析报告
+        # 處理基本面分析報告
         if hasattr(result, 'tool_calls') and len(result.tool_calls) > 0:
-            # 有工具调用，记录工具调用信息
+            # 有工具調用，記錄工具調用信息
             tool_calls_info = []
             for tc in result.tool_calls:
                 tool_calls_info.append(tc['name'])
-                print(f"📊 [DEBUG] 工具调用 {len(tool_calls_info)}: {tc}")
+                print(f"📊 [DEBUG] 工具調用 {len(tool_calls_info)}: {tc}")
             
-            print(f"📊 [基本面分析师] 工具调用: {tool_calls_info}")
+            print(f"📊 [基本面分析師] 工具調用: {tool_calls_info}")
             
-            # 返回状态，让工具执行
+            # 返回狀態，让工具執行
             return {"messages": [result]}
         
         else:
-            # 没有工具调用，使用阿里百炼强制工具调用修复
-            print(f"📊 [DEBUG] 检测到模型未调用工具，启用强制工具调用模式")
+            # 没有工具調用，使用阿里百炼强制工具調用修複
+            print(f"📊 [DEBUG] 檢測到模型未調用工具，啟用强制工具調用模式")
             
-            # 强制调用统一基本面分析工具
+            # 强制調用統一基本面分析工具
             try:
-                print(f"📊 [DEBUG] 强制调用 get_stock_fundamentals_unified...")
+                print(f"📊 [DEBUG] 强制調用 get_stock_fundamentals_unified...")
                 unified_tool = next((tool for tool in tools if tool.name == 'get_stock_fundamentals_unified'), None)
                 if unified_tool:
                     combined_data = unified_tool.invoke({
@@ -163,38 +163,38 @@ def create_fundamentals_analyst(llm, toolkit):
                         'end_date': current_date,
                         'curr_date': current_date
                     })
-                    print(f"📊 [DEBUG] 统一工具数据获取成功，长度: {len(combined_data)}字符")
+                    print(f"📊 [DEBUG] 統一工具數據獲取成功，長度: {len(combined_data)}字符")
                 else:
-                    combined_data = "统一基本面分析工具不可用"
-                    print(f"📊 [DEBUG] 统一工具未找到")
+                    combined_data = "統一基本面分析工具不可用"
+                    print(f"📊 [DEBUG] 統一工具未找到")
             except Exception as e:
-                combined_data = f"统一基本面分析工具调用失败: {e}"
-                print(f"📊 [DEBUG] 统一工具调用异常: {e}")
+                combined_data = f"統一基本面分析工具調用失败: {e}"
+                print(f"📊 [DEBUG] 統一工具調用異常: {e}")
             
             currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
             
-            # 生成基于真实数据的分析报告
-            analysis_prompt = f"""基于以下真实数据，对股票{ticker}进行详细的基本面分析：
+            # 生成基於真實數據的分析報告
+            analysis_prompt = f"""基於以下真實數據，對股票{ticker}進行詳細的基本面分析：
 
 {combined_data}
 
-请提供：
+請提供：
 1. 公司基本信息分析
-2. 财务状况评估
+2. 財務狀况評估
 3. 盈利能力分析
 4. 估值分析（使用{currency_info}）
-5. 投资建议（买入/持有/卖出）
+5. 投資建议（买入/持有/卖出）
 
 要求：
-- 基于提供的真实数据进行分析
-- 价格使用{currency_info}
-- 投资建议使用中文
-- 分析要详细且专业"""
+- 基於提供的真實數據進行分析
+- 價格使用{currency_info}
+- 投資建议使用中文
+- 分析要詳細且專業"""
 
             try:
-                # 创建简单的分析链
+                # 創建簡單的分析鏈
                 analysis_prompt_template = ChatPromptTemplate.from_messages([
-                    ("system", "你是专业的股票基本面分析师，基于提供的真实数据进行分析。"),
+                    ("system", "你是專業的股票基本面分析師，基於提供的真實數據進行分析。"),
                     ("human", "{analysis_request}")
                 ])
                 
@@ -206,16 +206,16 @@ def create_fundamentals_analyst(llm, toolkit):
                 else:
                     report = str(analysis_result)
                     
-                print(f"📊 [基本面分析师] 强制工具调用完成，报告长度: {len(report)}")
+                print(f"📊 [基本面分析師] 强制工具調用完成，報告長度: {len(report)}")
                 
             except Exception as e:
-                print(f"❌ [DEBUG] 强制工具调用分析失败: {e}")
+                print(f"❌ [DEBUG] 强制工具調用分析失败: {e}")
                 report = f"基本面分析失败：{str(e)}"
             
             return {"fundamentals_report": report}
 
-        # 这里不应该到达，但作为备用
-        print(f"📊 [DEBUG] 返回状态: fundamentals_report长度={len(result.content) if hasattr(result, 'content') else 0}")
+        # 這里不應该到達，但作為备用
+        print(f"📊 [DEBUG] 返回狀態: fundamentals_report長度={len(result.content) if hasattr(result, 'content') else 0}")
         return {"messages": [result]}
 
     return fundamentals_analyst_node

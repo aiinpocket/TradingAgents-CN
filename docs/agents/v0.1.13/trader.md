@@ -1,73 +1,73 @@
-# 交易员
+# 交易員
 
 ## 概述
 
-交易员是 TradingAgents 框架的执行层核心，负责基于研究员团队的辩论结果和管理层的投资计划，生成具体的投资建议和交易决策。交易员将所有前期分析和决策转化为可执行的投资行动，包括具体的目标价位、置信度评估和风险评分。
+交易員是 TradingAgents 框架的執行層核心，负责基於研究員团隊的辩論結果和管理層的投資計劃，生成具體的投資建议和交易決策。交易員将所有前期分析和決策轉化為可執行的投資行動，包括具體的目標價位、置信度評估和風險評分。
 
-## 交易员架构
+## 交易員架構
 
-### 基础设计
+### 基础設計
 
-交易员基于统一的架构设计，集成了多维度分析能力和决策执行功能：
+交易員基於統一的架構設計，集成了多維度分析能力和決策執行功能：
 
 ```python
-# 统一的交易员模块日志装饰器
+# 統一的交易員模塊日誌裝饰器
 from tradingagents.utils.tool_logging import log_trader_module
 
-# 统一日志系统
+# 統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 @log_trader_module("trader")
 def trader_node(state):
-    # 交易员逻辑实现
+    # 交易員逻辑實現
     pass
 ```
 
-### 智能体状态管理
+### 智能體狀態管理
 
-交易员通过 `AgentState` 获取完整的分析链条信息：
+交易員通過 `AgentState` 獲取完整的分析鏈條信息：
 
 ```python
 class AgentState:
-    company_of_interest: str      # 股票代码
+    company_of_interest: str      # 股票代碼
     trade_date: str              # 交易日期
-    fundamentals_report: str     # 基本面报告
-    market_report: str           # 市场分析报告
-    news_report: str             # 新闻分析报告
-    sentiment_report: str        # 情绪分析报告
-    investment_plan: str         # 投资计划
-    messages: List              # 消息历史
+    fundamentals_report: str     # 基本面報告
+    market_report: str           # 市場分析報告
+    news_report: str             # 新聞分析報告
+    sentiment_report: str        # 情绪分析報告
+    investment_plan: str         # 投資計劃
+    messages: List              # 消息歷史
 ```
 
-## 交易员实现
+## 交易員實現
 
 ### 核心功能
 
 **文件位置**: `tradingagents/agents/trader/trader.py`
 
-**核心职责**:
-- 综合分析所有输入信息
-- 生成具体的投资建议
-- 提供目标价位和置信度
-- 评估投资风险等级
-- 制定执行策略
+**核心職责**:
+- 综合分析所有輸入信息
+- 生成具體的投資建议
+- 提供目標價位和置信度
+- 評估投資風險等級
+- 制定執行策略
 
-### 核心实现逻辑
+### 核心實現逻辑
 
 ```python
 def create_trader(llm):
     @log_trader_module("trader")
     def trader_node(state):
-        # 获取基础信息
+        # 獲取基础信息
         company_name = state["company_of_interest"]
         investment_plan = state.get("investment_plan", "")
         
-        # 获取股票市场信息
+        # 獲取股票市場信息
         from tradingagents.utils.stock_utils import StockUtils
         market_info = StockUtils.get_market_info(company_name)
         
-        # 确定股票类型和货币信息
+        # 確定股票類型和貨币信息
         if market_info.get("is_china"):
             stock_type = "A股"
             currency_unit = "人民币"
@@ -78,288 +78,288 @@ def create_trader(llm):
             stock_type = "美股"
             currency_unit = "美元"
         else:
-            stock_type = "未知市场"
-            currency_unit = "未知货币"
+            stock_type = "未知市場"
+            currency_unit = "未知貨币"
         
-        # 获取各类分析报告
+        # 獲取各類分析報告
         market_report = state.get("market_report", "")
         sentiment_report = state.get("sentiment_report", "")
         news_report = state.get("news_report", "")
         fundamentals_report = state.get("fundamentals_report", "")
         
-        # 构建交易决策提示
+        # 構建交易決策提示
         trader_prompt = f"""
-        作为专业交易员，请基于以下信息生成投资建议：
+        作為專業交易員，請基於以下信息生成投資建议：
         
-        公司名称: {company_name}
-        股票类型: {stock_type}
-        货币单位: {currency_unit}
+        公司名稱: {company_name}
+        股票類型: {stock_type}
+        貨币單位: {currency_unit}
         
-        投资计划: {investment_plan}
+        投資計劃: {investment_plan}
         
-        市场研究报告: {market_report}
-        情绪报告: {sentiment_report}
-        新闻报告: {news_report}
-        基本面报告: {fundamentals_report}
+        市場研究報告: {market_report}
+        情绪報告: {sentiment_report}
+        新聞報告: {news_report}
+        基本面報告: {fundamentals_report}
         
-        请提供：
-        1. 明确的投资建议（买入/卖出/持有）
-        2. 具体目标价位（以{currency_unit}计价）
-        3. 置信度评估（0-100%）
-        4. 风险评分（1-10分）
-        5. 详细推理过程
+        請提供：
+        1. 明確的投資建议（买入/卖出/持有）
+        2. 具體目標價位（以{currency_unit}計價）
+        3. 置信度評估（0-100%）
+        4. 風險評分（1-10分）
+        5. 詳細推理過程
         """
         
-        # 调用LLM生成交易决策
+        # 調用LLM生成交易決策
         response = llm.invoke(trader_prompt)
         
         return {"trader_recommendation": response.content}
 ```
 
-## 决策输入分析
+## 決策輸入分析
 
-### 多维度信息整合
+### 多維度信息整合
 
-交易员需要综合处理来自多个源头的信息：
+交易員需要综合處理來自多個源头的信息：
 
-1. **投资计划** (`investment_plan`)
-   - 来源：研究管理员的综合决策
-   - 内容：基于辩论结果的投资建议
-   - 作用：提供决策框架和方向指导
+1. **投資計劃** (`investment_plan`)
+   - 來源：研究管理員的综合決策
+   - 內容：基於辩論結果的投資建议
+   - 作用：提供決策框架和方向指導
 
-2. **市场研究报告** (`market_report`)
-   - 来源：市场分析师
-   - 内容：技术指标、价格趋势、交易信号
-   - 作用：提供技术面分析支持
+2. **市場研究報告** (`market_report`)
+   - 來源：市場分析師
+   - 內容：技術指標、價格趋势、交易信號
+   - 作用：提供技術面分析支持
 
-3. **情绪报告** (`sentiment_report`)
-   - 来源：社交媒体分析师
-   - 内容：投资者情绪、舆论趋势
-   - 作用：评估市场情绪影响
+3. **情绪報告** (`sentiment_report`)
+   - 來源：社交媒體分析師
+   - 內容：投資者情绪、舆論趋势
+   - 作用：評估市場情绪影響
 
-4. **新闻报告** (`news_report`)
-   - 来源：新闻分析师
-   - 内容：重要新闻事件、政策影响
-   - 作用：识别催化因素和风险事件
+4. **新聞報告** (`news_report`)
+   - 來源：新聞分析師
+   - 內容：重要新聞事件、政策影響
+   - 作用：识別催化因素和風險事件
 
-5. **基本面报告** (`fundamentals_report`)
-   - 来源：基本面分析师
-   - 内容：财务数据、估值分析
-   - 作用：提供价值投资依据
+5. **基本面報告** (`fundamentals_report`)
+   - 來源：基本面分析師
+   - 內容：財務數據、估值分析
+   - 作用：提供價值投資依據
 
-### 信息权重分配
+### 信息權重分配
 
 ```python
-# 信息权重配置示例
+# 信息權重配置示例
 info_weights = {
-    "investment_plan": 0.35,      # 投资计划权重最高
+    "investment_plan": 0.35,      # 投資計劃權重最高
     "fundamentals_report": 0.25,  # 基本面分析
-    "market_report": 0.20,        # 技术分析
-    "news_report": 0.15,          # 新闻影响
+    "market_report": 0.20,        # 技術分析
+    "news_report": 0.15,          # 新聞影響
     "sentiment_report": 0.05       # 情绪分析
 }
 ```
 
-## 股票类型支持
+## 股票類型支持
 
-### 多市场交易能力
+### 多市場交易能力
 
-交易员支持全球主要股票市场的交易决策：
+交易員支持全球主要股票市場的交易決策：
 
 ```python
-# 市场信息获取和处理
+# 市場信息獲取和處理
 from tradingagents.utils.stock_utils import StockUtils
 market_info = StockUtils.get_market_info(company_name)
 
-# 根据市场类型调整交易策略
+# 根據市場類型調整交易策略
 if market_info.get("is_china"):
-    # A股交易特点
-    trading_hours = "09:30-15:00 (北京时间)"
+    # A股交易特點
+    trading_hours = "09:30-15:00 (北京時間)"
     price_limit = "±10% (ST股票±5%)"
     settlement = "T+1"
     currency = "人民币(CNY)"
     
 elif market_info.get("is_hk"):
-    # 港股交易特点
-    trading_hours = "09:30-16:00 (香港时间)"
-    price_limit = "无涨跌停限制"
+    # 港股交易特點
+    trading_hours = "09:30-16:00 (香港時間)"
+    price_limit = "無涨跌停限制"
     settlement = "T+2"
     currency = "港币(HKD)"
     
 elif market_info.get("is_us"):
-    # 美股交易特点
+    # 美股交易特點
     trading_hours = "09:30-16:00 (EST)"
-    price_limit = "无涨跌停限制"
+    price_limit = "無涨跌停限制"
     settlement = "T+2"
     currency = "美元(USD)"
 ```
 
 ### 本土化交易策略
 
-1. **A股市场特色**:
-   - 涨跌停板制度考虑
-   - T+1交易制度影响
+1. **A股市場特色**:
+   - 涨跌停板制度考慮
+   - T+1交易制度影響
    - 政策敏感性分析
-   - 散户投资者行为特点
+   - 散戶投資者行為特點
 
-2. **港股市场特色**:
-   - 中港资金流动
-   - 汇率风险管理
-   - 国际投资者参与
-   - 估值差异套利
+2. **港股市場特色**:
+   - 中港資金流動
+   - 汇率風險管理
+   - 國际投資者參与
+   - 估值差異套利
 
-3. **美股市场特色**:
-   - 盘前盘后交易
-   - 期权策略考虑
-   - 机构投资者主导
-   - 全球经济影响
+3. **美股市場特色**:
+   - 盘前盘後交易
+   - 期權策略考慮
+   - 機構投資者主導
+   - 全球經濟影響
 
-## 决策输出规范
+## 決策輸出規範
 
-### 标准输出格式
+### 標準輸出格式
 
-交易员必须提供结构化的投资建议：
+交易員必须提供結構化的投資建议：
 
 ```python
 class TradingRecommendation:
-    action: str              # 投资行动 (买入/卖出/持有)
-    target_price: float      # 目标价位
+    action: str              # 投資行動 (买入/卖出/持有)
+    target_price: float      # 目標價位
     confidence: float        # 置信度 (0-100%)
-    risk_score: int          # 风险评分 (1-10)
-    reasoning: str           # 详细推理
-    time_horizon: str        # 投资时间框架
-    stop_loss: float         # 止损价位
-    take_profit: float       # 止盈价位
+    risk_score: int          # 風險評分 (1-10)
+    reasoning: str           # 詳細推理
+    time_horizon: str        # 投資時間框架
+    stop_loss: float         # 止損價位
+    take_profit: float       # 止盈價位
 ```
 
 ### 强制要求
 
-根据代码实现，交易员必须提供：
+根據代碼實現，交易員必须提供：
 
-1. **具体目标价位**
-   - 必须以相应货币单位计价
-   - 基于综合分析的合理估值
-   - 考虑市场流动性和交易成本
+1. **具體目標價位**
+   - 必须以相應貨币單位計價
+   - 基於综合分析的合理估值
+   - 考慮市場流動性和交易成本
 
-2. **置信度评估**
-   - 0-100%的数值范围
-   - 反映决策的确定性程度
-   - 基于信息质量和分析深度
+2. **置信度評估**
+   - 0-100%的數值範围
+   - 反映決策的確定性程度
+   - 基於信息质量和分析深度
 
-3. **风险评分**
-   - 1-10分的评分体系
-   - 1分为最低风险，10分为最高风险
-   - 综合考虑各类风险因素
+3. **風險評分**
+   - 1-10分的評分體系
+   - 1分為最低風險，10分為最高風險
+   - 综合考慮各類風險因素
 
-4. **详细推理**
-   - 完整的决策逻辑链条
-   - 关键假设和依据说明
-   - 风险因素识别和应对
+4. **詳細推理**
+   - 完整的決策逻辑鏈條
+   - 關键假設和依據說明
+   - 風險因素识別和應對
 
-## 决策流程
+## 決策流程
 
-### 1. 信息收集阶段
+### 1. 信息收集階段
 
 ```mermaid
 graph LR
-    A[投资计划] --> E[信息整合]
-    B[基本面报告] --> E
-    C[市场报告] --> E
-    D[新闻&情绪报告] --> E
+    A[投資計劃] --> E[信息整合]
+    B[基本面報告] --> E
+    C[市場報告] --> E
+    D[新聞&情绪報告] --> E
     E --> F[综合分析]
 ```
 
-### 2. 分析处理阶段
+### 2. 分析處理階段
 
 ```mermaid
 graph TB
-    A[综合信息] --> B[市场类型识别]
-    B --> C[交易规则适配]
-    C --> D[风险评估]
-    D --> E[价格目标计算]
-    E --> F[置信度评估]
+    A[综合信息] --> B[市場類型识別]
+    B --> C[交易規則適配]
+    C --> D[風險評估]
+    D --> E[價格目標計算]
+    E --> F[置信度評估]
 ```
 
-### 3. 决策生成阶段
+### 3. 決策生成階段
 
 ```mermaid
 graph LR
-    A[分析结果] --> B[投资建议]
-    B --> C[目标价位]
-    B --> D[风险评分]
-    B --> E[执行策略]
-    C --> F[最终决策]
+    A[分析結果] --> B[投資建议]
+    B --> C[目標價位]
+    B --> D[風險評分]
+    B --> E[執行策略]
+    C --> F[最终決策]
     D --> F
     E --> F
 ```
 
-## 风险管理
+## 風險管理
 
-### 风险评估维度
+### 風險評估維度
 
-1. **市场风险**:
-   - 系统性风险评估
-   - 行业周期风险
-   - 流动性风险
-   - 波动率风险
+1. **市場風險**:
+   - 系統性風險評估
+   - 行業周期風險
+   - 流動性風險
+   - 波動率風險
 
-2. **信用风险**:
-   - 公司财务风险
-   - 债务违约风险
-   - 管理层风险
-   - 治理结构风险
+2. **信用風險**:
+   - 公司財務風險
+   - 债務违約風險
+   - 管理層風險
+   - 治理結構風險
 
-3. **操作风险**:
-   - 交易执行风险
-   - 技术系统风险
-   - 人为操作风险
-   - 合规风险
+3. **操作風險**:
+   - 交易執行風險
+   - 技術系統風險
+   - 人為操作風險
+   - 合規風險
 
-4. **特殊风险**:
-   - 政策监管风险
-   - 汇率风险
-   - 地缘政治风险
+4. **特殊風險**:
+   - 政策監管風險
+   - 汇率風險
+   - 地缘政治風險
    - 黑天鹅事件
 
-### 风险控制措施
+### 風險控制措施
 
 ```python
-# 风险控制参数
+# 風險控制參數
 risk_controls = {
     "max_position_size": 0.05,    # 最大仓位比例
-    "stop_loss_ratio": 0.08,      # 止损比例
+    "stop_loss_ratio": 0.08,      # 止損比例
     "take_profit_ratio": 0.15,    # 止盈比例
     "max_drawdown": 0.10,         # 最大回撤
-    "correlation_limit": 0.70     # 相关性限制
+    "correlation_limit": 0.70     # 相關性限制
 }
 ```
 
-## 性能评估
+## 性能評估
 
-### 关键指标
+### 關键指標
 
-1. **准确性指标**:
-   - 预测准确率
-   - 目标价位达成率
-   - 方向判断正确率
-   - 时间框架准确性
+1. **準確性指標**:
+   - 預測準確率
+   - 目標價位達成率
+   - 方向判斷正確率
+   - 時間框架準確性
 
-2. **收益指标**:
-   - 绝对收益率
-   - 相对基准收益
-   - 风险调整收益
+2. **收益指標**:
+   - 絕對收益率
+   - 相對基準收益
+   - 風險調整收益
    - 夏普比率
 
-3. **风险指标**:
+3. **風險指標**:
    - 最大回撤
-   - 波动率
+   - 波動率
    - VaR值
-   - 风险评分准确性
+   - 風險評分準確性
 
-### 性能监控
+### 性能監控
 
 ```python
-# 交易性能追踪
+# 交易性能追蹤
 class TradingPerformance:
     def __init__(self):
         self.trades = []
@@ -369,29 +369,29 @@ class TradingPerformance:
         self.sharpe_ratio = 0.0
     
     def update_performance(self, trade_result):
-        # 更新性能指标
+        # 更新性能指標
         pass
     
     def generate_report(self):
-        # 生成性能报告
+        # 生成性能報告
         pass
 ```
 
-## 配置选项
+## 配置選項
 
-### 交易员配置
+### 交易員配置
 
 ```python
 trader_config = {
-    "risk_tolerance": "moderate",     # 风险容忍度
-    "investment_style": "balanced",   # 投资风格
-    "time_horizon": "medium",         # 投资时间框架
+    "risk_tolerance": "moderate",     # 風險容忍度
+    "investment_style": "balanced",   # 投資風格
+    "time_horizon": "medium",         # 投資時間框架
     "position_sizing": "kelly",       # 仓位管理方法
-    "rebalance_frequency": "weekly"   # 再平衡频率
+    "rebalance_frequency": "weekly"   # 再平衡頻率
 }
 ```
 
-### 市场配置
+### 市場配置
 
 ```python
 market_config = {
@@ -413,22 +413,22 @@ market_config = {
 }
 ```
 
-## 日志和监控
+## 日誌和監控
 
-### 详细日志记录
+### 詳細日誌記錄
 
 ```python
-# 交易员活动日志
-logger.info(f"💼 [交易员] 开始分析股票: {company_name}")
-logger.info(f"📈 [交易员] 股票类型: {stock_type}, 货币: {currency_unit}")
-logger.debug(f"📊 [交易员] 投资计划: {investment_plan[:100]}...")
-logger.info(f"🎯 [交易员] 生成投资建议完成")
+# 交易員活動日誌
+logger.info(f"💼 [交易員] 開始分析股票: {company_name}")
+logger.info(f"📈 [交易員] 股票類型: {stock_type}, 貨币: {currency_unit}")
+logger.debug(f"📊 [交易員] 投資計劃: {investment_plan[:100]}...")
+logger.info(f"🎯 [交易員] 生成投資建议完成")
 ```
 
-### 决策追踪
+### 決策追蹤
 
 ```python
-# 决策过程记录
+# 決策過程記錄
 decision_log = {
     "timestamp": datetime.now(),
     "ticker": company_name,
@@ -448,28 +448,28 @@ decision_log = {
 }
 ```
 
-## 扩展指南
+## 擴展指南
 
 ### 添加新的交易策略
 
-1. **创建策略类**
+1. **創建策略類**
 ```python
 class CustomTradingStrategy:
     def __init__(self, config):
         self.config = config
     
     def generate_recommendation(self, state):
-        # 自定义交易逻辑
+        # 自定義交易逻辑
         pass
     
     def calculate_position_size(self, confidence, risk_score):
-        # 仓位计算逻辑
+        # 仓位計算逻辑
         pass
 ```
 
-2. **集成到交易员**
+2. **集成到交易員**
 ```python
-# 在trader.py中添加策略选择
+# 在trader.py中添加策略選擇
 strategy_map = {
     "conservative": ConservativeStrategy(),
     "aggressive": AggressiveStrategy(),
@@ -479,9 +479,9 @@ strategy_map = {
 strategy = strategy_map.get(config.get("strategy", "balanced"))
 ```
 
-### 添加新的风险模型
+### 添加新的風險模型
 
-1. **实现风险模型接口**
+1. **實現風險模型接口**
 ```python
 class RiskModel:
     def calculate_risk_score(self, market_data, fundamentals):
@@ -494,7 +494,7 @@ class RiskModel:
         pass
 ```
 
-2. **注册风险模型**
+2. **註冊風險模型**
 ```python
 risk_models = {
     "var": VaRRiskModel(),
@@ -503,76 +503,76 @@ risk_models = {
 }
 ```
 
-## 最佳实践
+## 最佳實踐
 
-### 1. 决策一致性
-- 保持决策逻辑的一致性
-- 避免情绪化决策
-- 基于数据和分析
-- 记录决策依据
+### 1. 決策一致性
+- 保持決策逻辑的一致性
+- 避免情绪化決策
+- 基於數據和分析
+- 記錄決策依據
 
-### 2. 风险控制
-- 严格执行止损策略
-- 分散投资风险
-- 定期评估风险敞口
-- 及时调整仓位
+### 2. 風險控制
+- 嚴格執行止損策略
+- 分散投資風險
+- 定期評估風險敞口
+- 及時調整仓位
 
-### 3. 性能优化
-- 持续监控交易表现
-- 定期回测策略效果
-- 优化决策模型
-- 学习市场变化
+### 3. 性能優化
+- 持续監控交易表現
+- 定期回測策略效果
+- 優化決策模型
+- 學习市場變化
 
-### 4. 合规管理
-- 遵守交易规则
-- 满足监管要求
+### 4. 合規管理
+- 遵守交易規則
+- 满足監管要求
 - 保持透明度
-- 记录完整审计轨迹
+- 記錄完整審計轨迹
 
 ## 故障排除
 
-### 常见问题
+### 常见問題
 
-1. **决策质量问题**
-   - 检查输入数据质量
-   - 验证分析逻辑
-   - 调整权重配置
-   - 增加验证步骤
+1. **決策质量問題**
+   - 檢查輸入數據质量
+   - 驗證分析逻辑
+   - 調整權重配置
+   - 增加驗證步骤
 
-2. **风险控制失效**
-   - 检查风险参数设置
-   - 验证止损机制
-   - 评估相关性计算
-   - 更新风险模型
+2. **風險控制失效**
+   - 檢查風險參數設置
+   - 驗證止損機制
+   - 評估相關性計算
+   - 更新風險模型
 
-3. **性能问题**
-   - 优化决策算法
-   - 减少计算复杂度
-   - 启用结果缓存
-   - 并行处理分析
+3. **性能問題**
+   - 優化決策算法
+   - 减少計算複雜度
+   - 啟用結果緩存
+   - 並行處理分析
 
-### 调试技巧
+### 調試技巧
 
-1. **决策过程追踪**
+1. **決策過程追蹤**
 ```python
-logger.debug(f"输入信息完整性: {check_input_completeness(state)}")
-logger.debug(f"市场信息: {market_info}")
-logger.debug(f"决策权重: {info_weights}")
+logger.debug(f"輸入信息完整性: {check_input_completeness(state)}")
+logger.debug(f"市場信息: {market_info}")
+logger.debug(f"決策權重: {info_weights}")
 ```
 
-2. **结果验证**
+2. **結果驗證**
 ```python
-logger.debug(f"目标价位合理性: {validate_target_price(target_price)}")
-logger.debug(f"风险评分一致性: {validate_risk_score(risk_score)}")
+logger.debug(f"目標價位合理性: {validate_target_price(target_price)}")
+logger.debug(f"風險評分一致性: {validate_risk_score(risk_score)}")
 ```
 
-3. **性能监控**
+3. **性能監控**
 ```python
 import time
 start_time = time.time()
-# 执行交易决策
+# 執行交易決策
 end_time = time.time()
-logger.debug(f"决策耗时: {end_time - start_time:.2f}秒")
+logger.debug(f"決策耗時: {end_time - start_time:.2f}秒")
 ```
 
-交易员作为TradingAgents框架的最终执行层，承担着将所有分析和研究转化为具体投资行动的重要职责，其决策质量直接影响整个系统的投资表现。
+交易員作為TradingAgents框架的最终執行層，承擔着将所有分析和研究轉化為具體投資行動的重要職责，其決策质量直接影響整個系統的投資表現。

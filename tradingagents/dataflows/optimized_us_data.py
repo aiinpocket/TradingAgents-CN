@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-优化的美股数据获取工具
-集成缓存策略，减少API调用，提高响应速度
+優化的美股數據獲取工具
+集成緩存策略，减少API調用，提高響應速度
 """
 
 import os
@@ -14,21 +14,21 @@ import pandas as pd
 from .cache_manager import get_cache
 from .config import get_config
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
 
 class OptimizedUSDataProvider:
-    """优化的美股数据提供器 - 集成缓存和API限制处理"""
+    """優化的美股數據提供器 - 集成緩存和API限制處理"""
     
     def __init__(self):
         self.cache = get_cache()
         self.config = get_config()
         self.last_api_call = 0
-        self.min_api_interval = 1.0  # 最小API调用间隔（秒）
+        self.min_api_interval = 1.0  # 最小API調用間隔（秒）
         
-        logger.info(f"📊 优化美股数据提供器初始化完成")
+        logger.info(f"📊 優化美股數據提供器初始化完成")
     
     def _wait_for_rate_limit(self):
         """等待API限制"""
@@ -45,22 +45,22 @@ class OptimizedUSDataProvider:
     def get_stock_data(self, symbol: str, start_date: str, end_date: str, 
                       force_refresh: bool = False) -> str:
         """
-        获取美股数据 - 优先使用缓存
+        獲取美股數據 - 優先使用緩存
         
         Args:
-            symbol: 股票代码
-            start_date: 开始日期 (YYYY-MM-DD)
-            end_date: 结束日期 (YYYY-MM-DD)
-            force_refresh: 是否强制刷新缓存
+            symbol: 股票代碼
+            start_date: 開始日期 (YYYY-MM-DD)
+            end_date: 結束日期 (YYYY-MM-DD)
+            force_refresh: 是否强制刷新緩存
         
         Returns:
-            格式化的股票数据字符串
+            格式化的股票數據字符串
         """
-        logger.info(f"📈 获取美股数据: {symbol} ({start_date} 到 {end_date})")
+        logger.info(f"📈 獲取美股數據: {symbol} ({start_date} 到 {end_date})")
         
-        # 检查缓存（除非强制刷新）
+        # 檢查緩存（除非强制刷新）
         if not force_refresh:
-            # 优先查找FINNHUB缓存
+            # 優先查找FINNHUB緩存
             cache_key = self.cache.find_cached_stock_data(
                 symbol=symbol,
                 start_date=start_date,
@@ -68,7 +68,7 @@ class OptimizedUSDataProvider:
                 data_source="finnhub"
             )
 
-            # 如果没有FINNHUB缓存，查找Yahoo Finance缓存
+            # 如果没有FINNHUB緩存，查找Yahoo Finance緩存
             if not cache_key:
                 cache_key = self.cache.find_cached_stock_data(
                     symbol=symbol,
@@ -80,40 +80,40 @@ class OptimizedUSDataProvider:
             if cache_key:
                 cached_data = self.cache.load_stock_data(cache_key)
                 if cached_data:
-                    logger.info(f"⚡ 从缓存加载美股数据: {symbol}")
+                    logger.info(f"⚡ 從緩存加載美股數據: {symbol}")
                     return cached_data
         
-        # 缓存未命中，从API获取 - 优先使用FINNHUB
+        # 緩存未命中，從API獲取 - 優先使用FINNHUB
         formatted_data = None
         data_source = None
 
-        # 尝试FINNHUB API（优先）
+        # 嘗試FINNHUB API（優先）
         try:
-            logger.info(f"🌐 从FINNHUB API获取数据: {symbol}")
+            logger.info(f"🌐 從FINNHUB API獲取數據: {symbol}")
             self._wait_for_rate_limit()
 
             formatted_data = self._get_data_from_finnhub(symbol, start_date, end_date)
             if formatted_data and "❌" not in formatted_data:
                 data_source = "finnhub"
-                logger.info(f"✅ FINNHUB数据获取成功: {symbol}")
+                logger.info(f"✅ FINNHUB數據獲取成功: {symbol}")
             else:
-                logger.error(f"⚠️ FINNHUB数据获取失败，尝试备用方案")
+                logger.error(f"⚠️ FINNHUB數據獲取失败，嘗試备用方案")
                 formatted_data = None
 
         except Exception as e:
-            logger.error(f"❌ FINNHUB API调用失败: {e}")
+            logger.error(f"❌ FINNHUB API調用失败: {e}")
             formatted_data = None
 
-        # 备用方案：根据股票类型选择合适的数据源
+        # 备用方案：根據股票類型選擇合適的數據源
         if not formatted_data:
             try:
-                # 检测股票类型
+                # 檢測股票類型
                 from tradingagents.utils.stock_utils import StockUtils
                 market_info = StockUtils.get_market_info(symbol)
 
                 if market_info['is_hk']:
-                    # 港股优先使用AKShare数据源
-                    logger.info(f"🇭🇰 尝试使用AKShare获取港股数据: {symbol}")
+                    # 港股優先使用AKShare數據源
+                    logger.info(f"🇭🇰 嘗試使用AKShare獲取港股數據: {symbol}")
                     try:
                         from tradingagents.dataflows.interface import get_hk_stock_data_unified
                         hk_data_text = get_hk_stock_data_unified(symbol, start_date, end_date)
@@ -121,54 +121,54 @@ class OptimizedUSDataProvider:
                         if hk_data_text and "❌" not in hk_data_text:
                             formatted_data = hk_data_text
                             data_source = "akshare_hk"
-                            logger.info(f"✅ AKShare港股数据获取成功: {symbol}")
+                            logger.info(f"✅ AKShare港股數據獲取成功: {symbol}")
                         else:
-                            raise Exception("AKShare港股数据获取失败")
+                            raise Exception("AKShare港股數據獲取失败")
 
                     except Exception as e:
-                        logger.error(f"⚠️ AKShare港股数据获取失败: {e}")
+                        logger.error(f"⚠️ AKShare港股數據獲取失败: {e}")
                         # 备用方案：Yahoo Finance
-                        logger.info(f"🔄 使用Yahoo Finance备用方案获取港股数据: {symbol}")
+                        logger.info(f"🔄 使用Yahoo Finance备用方案獲取港股數據: {symbol}")
 
                         self._wait_for_rate_limit()
-                        ticker = yf.Ticker(symbol)  # 港股代码保持原格式
+                        ticker = yf.Ticker(symbol)  # 港股代碼保持原格式
                         data = ticker.history(start=start_date, end=end_date)
 
                         if not data.empty:
                             formatted_data = self._format_stock_data(symbol, data, start_date, end_date)
                             data_source = "yfinance_hk"
-                            logger.info(f"✅ Yahoo Finance港股数据获取成功: {symbol}")
+                            logger.info(f"✅ Yahoo Finance港股數據獲取成功: {symbol}")
                         else:
-                            logger.error(f"❌ Yahoo Finance港股数据为空: {symbol}")
+                            logger.error(f"❌ Yahoo Finance港股數據為空: {symbol}")
                 else:
                     # 美股使用Yahoo Finance
-                    logger.info(f"🇺🇸 从Yahoo Finance API获取美股数据: {symbol}")
+                    logger.info(f"🇺🇸 從Yahoo Finance API獲取美股數據: {symbol}")
                     self._wait_for_rate_limit()
 
-                    # 获取数据
+                    # 獲取數據
                     ticker = yf.Ticker(symbol.upper())
                     data = ticker.history(start=start_date, end=end_date)
 
                     if data.empty:
-                        error_msg = f"未找到股票 '{symbol}' 在 {start_date} 到 {end_date} 期间的数据"
+                        error_msg = f"未找到股票 '{symbol}' 在 {start_date} 到 {end_date} 期間的數據"
                         logger.error(f"❌ {error_msg}")
                     else:
-                        # 格式化数据
+                        # 格式化數據
                         formatted_data = self._format_stock_data(symbol, data, start_date, end_date)
                         data_source = "yfinance"
-                        logger.info(f"✅ Yahoo Finance美股数据获取成功: {symbol}")
+                        logger.info(f"✅ Yahoo Finance美股數據獲取成功: {symbol}")
 
             except Exception as e:
-                logger.error(f"❌ 数据获取失败: {e}")
+                logger.error(f"❌ 數據獲取失败: {e}")
                 formatted_data = None
 
-        # 如果所有API都失败，生成备用数据
+        # 如果所有API都失败，生成备用數據
         if not formatted_data:
-            error_msg = "所有美股数据源都不可用"
+            error_msg = "所有美股數據源都不可用"
             logger.error(f"❌ {error_msg}")
             return self._generate_fallback_data(symbol, start_date, end_date, error_msg)
 
-        # 保存到缓存
+        # 保存到緩存
         self.cache.save_stock_data(
             symbol=symbol,
             data=formatted_data,
@@ -181,69 +181,69 @@ class OptimizedUSDataProvider:
     
     def _format_stock_data(self, symbol: str, data: pd.DataFrame, 
                           start_date: str, end_date: str) -> str:
-        """格式化股票数据为字符串"""
+        """格式化股票數據為字符串"""
         
-        # 移除时区信息
+        # 移除時区信息
         if data.index.tz is not None:
             data.index = data.index.tz_localize(None)
         
-        # 四舍五入数值
+        # 四舍五入數值
         numeric_columns = ["Open", "High", "Low", "Close", "Adj Close"]
         for col in numeric_columns:
             if col in data.columns:
                 data[col] = data[col].round(2)
         
-        # 获取最新价格和统计信息
+        # 獲取最新價格和統計信息
         latest_price = data['Close'].iloc[-1]
         price_change = data['Close'].iloc[-1] - data['Close'].iloc[0]
         price_change_pct = (price_change / data['Close'].iloc[0]) * 100
         
-        # 计算技术指标
+        # 計算技術指標
         data['MA5'] = data['Close'].rolling(window=5).mean()
         data['MA10'] = data['Close'].rolling(window=10).mean()
         data['MA20'] = data['Close'].rolling(window=20).mean()
         
-        # 计算RSI
+        # 計算RSI
         delta = data['Close'].diff()
         gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
         rs = gain / loss
         rsi = 100 - (100 / (1 + rs))
         
-        # 格式化输出
-        result = f"""# {symbol} 美股数据分析
+        # 格式化輸出
+        result = f"""# {symbol} 美股數據分析
 
 ## 📊 基本信息
-- 股票代码: {symbol}
-- 数据期间: {start_date} 至 {end_date}
-- 数据条数: {len(data)}条
-- 最新价格: ${latest_price:.2f}
-- 期间涨跌: ${price_change:+.2f} ({price_change_pct:+.2f}%)
+- 股票代碼: {symbol}
+- 數據期間: {start_date} 至 {end_date}
+- 數據條數: {len(data)}條
+- 最新價格: ${latest_price:.2f}
+- 期間涨跌: ${price_change:+.2f} ({price_change_pct:+.2f}%)
 
-## 📈 价格统计
-- 期间最高: ${data['High'].max():.2f}
-- 期间最低: ${data['Low'].min():.2f}
+## 📈 價格統計
+- 期間最高: ${data['High'].max():.2f}
+- 期間最低: ${data['Low'].min():.2f}
 - 平均成交量: {data['Volume'].mean():,.0f}
 
-## 🔍 技术指标
+## 🔍 技術指標
 - MA5: ${data['MA5'].iloc[-1]:.2f}
 - MA10: ${data['MA10'].iloc[-1]:.2f}
 - MA20: ${data['MA20'].iloc[-1]:.2f}
 - RSI: {rsi.iloc[-1]:.2f}
 
-## 📋 最近5日数据
+## 📋 最近5日數據
 {data.tail().to_string()}
 
-数据来源: Yahoo Finance API
-更新时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+數據來源: Yahoo Finance API
+更新時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         
         return result
     
     def _try_get_old_cache(self, symbol: str, start_date: str, end_date: str) -> Optional[str]:
-        """尝试获取过期的缓存数据作为备用"""
+        """嘗試獲取過期的緩存數據作為备用"""
         try:
-            # 查找任何相关的缓存，不考虑TTL
+            # 查找任何相關的緩存，不考慮TTL
             for metadata_file in self.cache.metadata_dir.glob(f"*_meta.json"):
                 try:
                     import json
@@ -257,7 +257,7 @@ class OptimizedUSDataProvider:
                         cache_key = metadata_file.stem.replace('_meta', '')
                         cached_data = self.cache.load_stock_data(cache_key)
                         if cached_data:
-                            return cached_data + "\n\n⚠️ 注意: 使用的是过期缓存数据"
+                            return cached_data + "\n\n⚠️ 註意: 使用的是過期緩存數據"
                 except Exception:
                     continue
         except Exception:
@@ -266,88 +266,88 @@ class OptimizedUSDataProvider:
         return None
 
     def _get_data_from_finnhub(self, symbol: str, start_date: str, end_date: str) -> str:
-        """从FINNHUB API获取股票数据"""
+        """從FINNHUB API獲取股票數據"""
         try:
             import finnhub
             import os
             from datetime import datetime, timedelta
 
 
-            # 获取API密钥
+            # 獲取API密鑰
             api_key = os.getenv('FINNHUB_API_KEY')
             if not api_key:
                 return None
 
             client = finnhub.Client(api_key=api_key)
 
-            # 获取实时报价
+            # 獲取實時報價
             quote = client.quote(symbol.upper())
             if not quote or 'c' not in quote:
                 return None
 
-            # 获取公司信息
+            # 獲取公司信息
             profile = client.company_profile2(symbol=symbol.upper())
             company_name = profile.get('name', symbol.upper()) if profile else symbol.upper()
 
-            # 格式化数据
+            # 格式化數據
             current_price = quote.get('c', 0)
             change = quote.get('d', 0)
             change_percent = quote.get('dp', 0)
 
-            formatted_data = f"""# {symbol.upper()} 美股数据分析
+            formatted_data = f"""# {symbol.upper()} 美股數據分析
 
-## 📊 实时行情
-- 股票名称: {company_name}
-- 当前价格: ${current_price:.2f}
-- 涨跌额: ${change:+.2f}
+## 📊 實時行情
+- 股票名稱: {company_name}
+- 當前價格: ${current_price:.2f}
+- 涨跌額: ${change:+.2f}
 - 涨跌幅: {change_percent:+.2f}%
-- 开盘价: ${quote.get('o', 0):.2f}
-- 最高价: ${quote.get('h', 0):.2f}
-- 最低价: ${quote.get('l', 0):.2f}
+- 開盘價: ${quote.get('o', 0):.2f}
+- 最高價: ${quote.get('h', 0):.2f}
+- 最低價: ${quote.get('l', 0):.2f}
 - 前收盘: ${quote.get('pc', 0):.2f}
-- 更新时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- 更新時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## 📈 数据概览
-- 数据期间: {start_date} 至 {end_date}
-- 数据来源: FINNHUB API (实时数据)
-- 当前价位相对位置: {((current_price - quote.get('l', current_price)) / max(quote.get('h', current_price) - quote.get('l', current_price), 0.01) * 100):.1f}%
-- 日内振幅: {((quote.get('h', 0) - quote.get('l', 0)) / max(quote.get('pc', 1), 0.01) * 100):.2f}%
+## 📈 數據概覽
+- 數據期間: {start_date} 至 {end_date}
+- 數據來源: FINNHUB API (實時數據)
+- 當前價位相對位置: {((current_price - quote.get('l', current_price)) / max(quote.get('h', current_price) - quote.get('l', current_price), 0.01) * 100):.1f}%
+- 日內振幅: {((quote.get('h', 0) - quote.get('l', 0)) / max(quote.get('pc', 1), 0.01) * 100):.2f}%
 
-生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
 
             return formatted_data
 
         except Exception as e:
-            logger.error(f"❌ FINNHUB数据获取失败: {e}")
+            logger.error(f"❌ FINNHUB數據獲取失败: {e}")
             return None
 
     def _generate_fallback_data(self, symbol: str, start_date: str, end_date: str, error_msg: str) -> str:
-        """生成备用数据"""
-        return f"""# {symbol} 美股数据获取失败
+        """生成备用數據"""
+        return f"""# {symbol} 美股數據獲取失败
 
-## ❌ 错误信息
+## ❌ 錯誤信息
 {error_msg}
 
-## 📊 模拟数据（仅供演示）
-- 股票代码: {symbol}
-- 数据期间: {start_date} 至 {end_date}
-- 最新价格: ${random.uniform(100, 300):.2f}
-- 模拟涨跌: {random.uniform(-5, 5):+.2f}%
+## 📊 模擬數據（仅供演示）
+- 股票代碼: {symbol}
+- 數據期間: {start_date} 至 {end_date}
+- 最新價格: ${random.uniform(100, 300):.2f}
+- 模擬涨跌: {random.uniform(-5, 5):+.2f}%
 
 ## ⚠️ 重要提示
-由于API限制或网络问题，无法获取实时数据。
-建议稍后重试或检查网络连接。
+由於API限制或網絡問題，無法獲取實時數據。
+建议稍後重試或檢查網絡連接。
 
-生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
 
 
-# 全局实例
+# 全局實例
 _us_data_provider = None
 
 def get_optimized_us_data_provider() -> OptimizedUSDataProvider:
-    """获取全局美股数据提供器实例"""
+    """獲取全局美股數據提供器實例"""
     global _us_data_provider
     if _us_data_provider is None:
         _us_data_provider = OptimizedUSDataProvider()
@@ -357,16 +357,16 @@ def get_optimized_us_data_provider() -> OptimizedUSDataProvider:
 def get_us_stock_data_cached(symbol: str, start_date: str, end_date: str, 
                            force_refresh: bool = False) -> str:
     """
-    获取美股数据的便捷函数
+    獲取美股數據的便捷函數
     
     Args:
-        symbol: 股票代码
-        start_date: 开始日期 (YYYY-MM-DD)
-        end_date: 结束日期 (YYYY-MM-DD)
-        force_refresh: 是否强制刷新缓存
+        symbol: 股票代碼
+        start_date: 開始日期 (YYYY-MM-DD)
+        end_date: 結束日期 (YYYY-MM-DD)
+        force_refresh: 是否强制刷新緩存
     
     Returns:
-        格式化的股票数据字符串
+        格式化的股票數據字符串
     """
     provider = get_optimized_us_data_provider()
     return provider.get_stock_data(symbol, start_date, end_date, force_refresh)

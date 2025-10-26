@@ -1,39 +1,39 @@
 #!/usr/bin/env python3
 """
-TradingAgents 简化演示脚本 - 使用阿里百炼大模型
-这个脚本展示了如何使用阿里百炼大模型进行简单的LLM测试
+TradingAgents 簡化演示腳本 - 使用阿里百炼大模型
+這個腳本展示了如何使用阿里百炼大模型進行簡單的LLM測試
 """
 
 import os
 import sys
 from pathlib import Path
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('default')
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from dotenv import load_dotenv
 
-# 加载 .env 文件
+# 加載 .env 文件
 load_dotenv()
 
 def test_simple_llm():
-    """测试简单的LLM调用"""
-    logger.info(f"🚀 阿里百炼大模型简单测试")
+    """測試簡單的LLM調用"""
+    logger.info(f"🚀 阿里百炼大模型簡單測試")
     logger.info(f"=")
     
-    # 检查API密钥
+    # 檢查API密鑰
     dashscope_key = os.getenv('DASHSCOPE_API_KEY')
     
     if not dashscope_key:
-        logger.error(f"❌ 错误: 未找到 DASHSCOPE_API_KEY 环境变量")
+        logger.error(f"❌ 錯誤: 未找到 DASHSCOPE_API_KEY 環境變量")
         return
     
-    logger.info(f"✅ 阿里百炼 API 密钥: {dashscope_key[:10]}...")
+    logger.info(f"✅ 阿里百炼 API 密鑰: {dashscope_key[:10]}...")
     print()
     
     try:
@@ -42,7 +42,7 @@ def test_simple_llm():
         
         logger.info(f"🤖 正在初始化阿里百炼模型...")
         
-        # 创建模型实例
+        # 創建模型實例
         llm = ChatDashScope(
             model="qwen-plus",
             temperature=0.1,
@@ -52,58 +52,58 @@ def test_simple_llm():
         logger.info(f"✅ 模型初始化成功!")
         print()
         
-        # 测试金融分析能力
-        logger.info(f"📈 测试金融分析能力...")
+        # 測試金融分析能力
+        logger.info(f"📈 測試金融分析能力...")
         
         messages = [HumanMessage(content="""
-请分析特斯拉公司(TSLA)的投资价值，从以下几个角度：
-1. 公司基本面 - 财务状况、盈利能力、现金流
-2. 技术面分析 - 股价趋势、技术指标、支撑阻力位
-3. 市场前景 - 电动车市场、自动驾驶、能源业务
-4. 风险因素 - 竞争风险、监管风险、执行风险
-5. 投资建议 - 评级、目标价、投资时间框架
+請分析特斯拉公司(TSLA)的投資價值，從以下几個角度：
+1. 公司基本面 - 財務狀况、盈利能力、現金流
+2. 技術面分析 - 股價趋势、技術指標、支撑阻力位
+3. 市場前景 - 电動車市場、自動驾驶、能源業務
+4. 風險因素 - 競爭風險、監管風險、執行風險
+5. 投資建议 - 評級、目標價、投資時間框架
 
-请用中文回答，提供具体的数据和分析，保持专业和客观。
+請用中文回答，提供具體的數據和分析，保持專業和客觀。
 """)]
         
-        logger.info(f"⏳ 正在生成分析报告...")
+        logger.info(f"⏳ 正在生成分析報告...")
         response = llm.invoke(messages)
         
-        logger.info(f"🎯 分析结果:")
+        logger.info(f"🎯 分析結果:")
         logger.info(f"=")
         print(response.content)
         logger.info(f"=")
         
-        logger.info(f"✅ 测试完成!")
+        logger.info(f"✅ 測試完成!")
         print()
         logger.info(f"🌟 阿里百炼大模型特色:")
         logger.info(f"  - 中文理解能力强")
-        logger.info(f"  - 金融领域知识丰富")
+        logger.info(f"  - 金融領域知识丰富")
         logger.info(f"  - 推理能力出色")
-        logger.info(f"  - 响应速度快")
+        logger.info(f"  - 響應速度快")
         
     except Exception as e:
-        logger.error(f"❌ 测试失败: {str(e)}")
+        logger.error(f"❌ 測試失败: {str(e)}")
         import traceback
-        logger.error(f"🔍 详细错误信息:")
+        logger.error(f"🔍 詳細錯誤信息:")
         traceback.print_exc()
 
 def test_multiple_models():
-    """测试多个模型"""
-    logger.info(f"\n🔄 测试不同的通义千问模型")
+    """測試多個模型"""
+    logger.info(f"\n🔄 測試不同的通義千問模型")
     logger.info(f"=")
     
     models = [
-        ("qwen-turbo", "通义千问 Turbo - 快速响应"),
-        ("qwen-plus-latest", "通义千问 Plus - 平衡性能"),
-        ("qwen-max", "通义千问 Max - 最强性能")
+        ("qwen-turbo", "通義千問 Turbo - 快速響應"),
+        ("qwen-plus-latest", "通義千問 Plus - 平衡性能"),
+        ("qwen-max", "通義千問 Max - 最强性能")
     ]
     
-    question = "请用一句话总结苹果公司的核心竞争优势。"
+    question = "請用一句話总結苹果公司的核心競爭優势。"
     
     for model_id, model_name in models:
         try:
-            logger.info(f"\n🧠 测试 {model_name}...")
+            logger.info(f"\n🧠 測試 {model_name}...")
             
             from tradingagents.llm_adapters import ChatDashScope
             from langchain_core.messages import HumanMessage
@@ -115,17 +115,17 @@ def test_multiple_models():
             logger.info(f"✅ {model_name}: {response.content}")
             
         except Exception as e:
-            logger.error(f"❌ {model_name} 测试失败: {str(e)}")
+            logger.error(f"❌ {model_name} 測試失败: {str(e)}")
 
 def main():
-    """主函数"""
+    """主函數"""
     test_simple_llm()
     test_multiple_models()
     
     logger.info(f"\n💡 下一步:")
-    logger.info(f"  1. 如果测试成功，说明阿里百炼集成正常")
-    logger.info(f"  2. 完整的TradingAgents需要解决记忆系统的兼容性")
-    logger.info(f"  3. 可以考虑为阿里百炼添加嵌入模型支持")
+    logger.info(f"  1. 如果測試成功，說明阿里百炼集成正常")
+    logger.info(f"  2. 完整的TradingAgents需要解決記忆系統的兼容性")
+    logger.info(f"  3. 可以考慮為阿里百炼添加嵌入模型支持")
 
 if __name__ == "__main__":
     main()

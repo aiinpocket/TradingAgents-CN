@@ -1,6 +1,6 @@
 ---
-name: ✨ 功能请求 / Feature Request
-about: 建议一个新功能或改进 / Suggest a new feature or improvement
+name: ✨ 功能請求 / Feature Request
+about: 建議一个新功能或改進 / Suggest a new feature or improvement
 title: '[FEATURE] '
 labels: ['enhancement', 'needs-discussion']
 assignees: ''
@@ -8,7 +8,7 @@ assignees: ''
 
 ## ✨ 功能描述 / Feature Description
 
-**简要描述 / Brief description:**
+**簡要描述 / Brief description:**
 清晰简洁地描述您想要的功能。
 
 **详细说明 / Detailed description:**
@@ -17,7 +17,7 @@ assignees: ''
 ## 🎯 使用场景 / Use Case
 
 **问题背景 / Problem:**
-这个功能请求是否与某个问题相关？请描述。
+这个功能請求是否与某个问题相关？请描述。
 Is your feature request related to a problem? Please describe.
 
 **解决方案 / Solution:**
@@ -31,7 +31,7 @@ Describe the solution you'd like.
 example_code_here()
 ```
 
-## 💡 实现建议 / Implementation Suggestions
+## 💡 实现建議 / Implementation Suggestions
 
 **技术方案 / Technical Approach:**
 如果您有技术实现的想法，请分享。
@@ -58,7 +58,7 @@ example_code_here()
 
 **重要性 / Importance:**
 - [ ] 🔥 高优先级 / High Priority - 核心功能缺失
-- [ ] 🟡 中优先级 / Medium Priority - 重要改进
+- [ ] 🟡 中优先级 / Medium Priority - 重要改進
 - [ ] 🟢 低优先级 / Low Priority - 便利性功能
 
 **紧急性 / Urgency:**
@@ -97,11 +97,11 @@ example_code_here()
 
 **相关Issues / Related Issues:**
 - 关联的bug报告 / Related bug reports: #
-- 相关功能请求 / Related feature requests: #
+- 相关功能請求 / Related feature requests: #
 
 ## 📝 额外信息 / Additional Context
 
-添加任何其他有关功能请求的上下文、截图或示例。
+添加任何其他有关功能請求的上下文、截图或示例。
 Add any other context, screenshots, or examples about the feature request here.
 
 ## ✅ 检查清单 / Checklist
@@ -115,5 +115,5 @@ Add any other context, screenshots, or examples about the feature request here.
 
 ---
 
-**感谢您的建议！我们会认真考虑这个功能请求。**
+**感谢您的建議！我们会认真考虑这个功能請求。**
 **Thank you for your suggestion! We will carefully consider this feature request.**

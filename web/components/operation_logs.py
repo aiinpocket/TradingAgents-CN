@@ -1,6 +1,6 @@
 """
-操作日志管理组件
-提供用户操作日志的查看和管理功能
+操作日誌管理組件
+提供用戶操作日誌的查看和管理功能
 """
 
 import streamlit as st
@@ -14,21 +14,21 @@ import os
 from pathlib import Path
 
 def get_operation_logs_dir():
-    """获取操作日志目录"""
+    """獲取操作日誌目錄"""
     logs_dir = Path(__file__).parent.parent / "data" / "operation_logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     return logs_dir
 
 def get_user_activities_dir():
-    """获取用户活动日志目录"""
+    """獲取用戶活動日誌目錄"""
     logs_dir = Path(__file__).parent.parent / "data" / "user_activities"
     return logs_dir
 
 def load_operation_logs(start_date=None, end_date=None, username=None, action_type=None, limit=1000):
-    """加载操作日志（包含用户活动日志）"""
+    """加載操作日誌（包含用戶活動日誌）"""
     all_logs = []
     
-    # 1. 加载新的操作日志（operation_logs目录）
+    # 1. 加載新的操作日誌（operation_logs目錄）
     logs_dir = get_operation_logs_dir()
     for log_file in logs_dir.glob("*.json"):
         try:
@@ -39,7 +39,7 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                 elif isinstance(logs, dict):
                     all_logs.append(logs)
         except Exception as e:
-            st.error(f"读取日志文件失败: {log_file.name} - {e}")
+            st.error(f"讀取日誌文件失败: {log_file.name} - {e}")
     
     for log_file in logs_dir.glob("*.jsonl"):
         try:
@@ -49,9 +49,9 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                         log_entry = json.loads(line.strip())
                         all_logs.append(log_entry)
         except Exception as e:
-            st.error(f"读取JSONL日志文件失败: {log_file.name} - {e}")
+            st.error(f"讀取JSONL日誌文件失败: {log_file.name} - {e}")
     
-    # 2. 加载用户活动日志（user_activities目录）
+    # 2. 加載用戶活動日誌（user_activities目錄）
     user_activities_dir = get_user_activities_dir()
     if user_activities_dir.exists():
         for log_file in user_activities_dir.glob("*.jsonl"):
@@ -60,7 +60,7 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                     for line in f:
                         if line.strip():
                             log_entry = json.loads(line.strip())
-                            # 转换用户活动日志格式以兼容操作日志格式
+                            # 轉換用戶活動日誌格式以兼容操作日誌格式
                             converted_log = {
                                 'timestamp': log_entry.get('timestamp'),
                                 'username': log_entry.get('username'),
@@ -79,22 +79,22 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                             }
                             all_logs.append(converted_log)
             except Exception as e:
-                st.error(f"读取用户活动日志文件失败: {log_file.name} - {e}")
+                st.error(f"讀取用戶活動日誌文件失败: {log_file.name} - {e}")
     
-    # 过滤日志
+    # 過濾日誌
     filtered_logs = []
     for log in all_logs:
-        # 时间过滤
+        # 時間過濾
         if start_date or end_date:
             try:
-                # 处理时间戳，支持字符串和数字格式
+                # 處理時間戳，支持字符串和數字格式
                 timestamp = log.get('timestamp', 0)
                 if isinstance(timestamp, str):
-                    # 如果是字符串，尝试转换为浮点数
+                    # 如果是字符串，嘗試轉換為浮點數
                     try:
                         timestamp = float(timestamp)
                     except (ValueError, TypeError):
-                        # 如果转换失败，尝试解析ISO格式的日期时间
+                        # 如果轉換失败，嘗試解析ISO格式的日期時間
                         try:
                             from datetime import datetime
                             dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
@@ -108,22 +108,22 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                 if end_date and log_date > end_date:
                     continue
             except Exception as e:
-                # 如果时间戳处理失败，跳过时间过滤
+                # 如果時間戳處理失败，跳過時間過濾
                 pass
         
-        # 用户名过滤
+        # 用戶名過濾
         if username and log.get('username', '').lower() != username.lower():
             continue
         
-        # 操作类型过滤
+        # 操作類型過濾
         if action_type and log.get('action_type', '') != action_type:
             continue
         
         filtered_logs.append(log)
     
-    # 定义安全的时间戳转换函数
+    # 定義安全的時間戳轉換函數
     def safe_timestamp(log_entry):
-        """安全地获取时间戳，确保返回数字类型"""
+        """安全地獲取時間戳，確保返回數字類型"""
         timestamp = log_entry.get('timestamp', 0)
         if isinstance(timestamp, str):
             try:
@@ -137,16 +137,16 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                     return 0
         return timestamp if isinstance(timestamp, (int, float)) else 0
     
-    # 按时间戳排序（最新的在前）
+    # 按時間戳排序（最新的在前）
     filtered_logs.sort(key=safe_timestamp, reverse=True)
     
-    # 限制数量
+    # 限制數量
     return filtered_logs[:limit]
 
 def render_operation_logs():
-    """渲染操作日志管理界面"""
+    """渲染操作日誌管理界面"""
     
-    # 检查权限
+    # 檢查權限
     try:
         import sys
         import os
@@ -154,48 +154,48 @@ def render_operation_logs():
         from utils.auth_manager import auth_manager
         
         if not auth_manager or not auth_manager.check_permission("admin"):
-            st.error("❌ 您没有权限访问操作日志")
-            st.info("💡 提示：操作日志功能需要 'admin' 权限")
+            st.error("❌ 您没有權限訪問操作日誌")
+            st.info("💡 提示：操作日誌功能需要 'admin' 權限")
             return
     except Exception as e:
-        st.error(f"❌ 权限检查失败: {e}")
+        st.error(f"❌ 權限檢查失败: {e}")
         return
     
-    st.title("📋 操作日志管理")
+    st.title("📋 操作日誌管理")
     
-    # 侧边栏过滤选项
+    # 侧邊栏過濾選項
     with st.sidebar:
-        st.header("🔍 过滤选项")
+        st.header("🔍 過濾選項")
         
-        # 日期范围选择
+        # 日期範围選擇
         date_range = st.selectbox(
-            "📅 时间范围",
-            ["最近1天", "最近3天", "最近7天", "最近30天", "自定义"],
+            "📅 時間範围",
+            ["最近1天", "最近3天", "最近7天", "最近30天", "自定義"],
             index=2
         )
         
-        if date_range == "自定义":
-            start_date = st.date_input("开始日期", datetime.now() - timedelta(days=7))
-            end_date = st.date_input("结束日期", datetime.now())
+        if date_range == "自定義":
+            start_date = st.date_input("開始日期", datetime.now() - timedelta(days=7))
+            end_date = st.date_input("結束日期", datetime.now())
         else:
             days_map = {"最近1天": 1, "最近3天": 3, "最近7天": 7, "最近30天": 30}
             days = days_map[date_range]
             end_date = datetime.now().date()
             start_date = (datetime.now() - timedelta(days=days)).date()
         
-        # 用户过滤
-        username_filter = st.text_input("👤 用户名过滤", placeholder="留空显示所有用户")
+        # 用戶過濾
+        username_filter = st.text_input("👤 用戶名過濾", placeholder="留空顯示所有用戶")
         
-        # 操作类型过滤
+        # 操作類型過濾
         action_type_filter = st.selectbox(
-            "🔧 操作类型",
+            "🔧 操作類型",
             ["全部", "auth", "analysis", "navigation", "config", "data_export", "user_management", "system", "login", "logout", "export", "admin"]
         )
         
         if action_type_filter == "全部":
             action_type_filter = None
     
-    # 加载操作日志
+    # 加載操作日誌
     logs = load_operation_logs(
         start_date=start_date,
         end_date=end_date,
@@ -205,18 +205,18 @@ def render_operation_logs():
     )
     
     if not logs:
-        st.warning("📭 未找到符合条件的操作日志")
+        st.warning("📭 未找到符合條件的操作日誌")
         return
     
-    # 显示统计概览
+    # 顯示統計概覽
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📊 总操作数", len(logs))
+        st.metric("📊 总操作數", len(logs))
     
     with col2:
         unique_users = len(set(log.get('username', 'unknown') for log in logs))
-        st.metric("👥 活跃用户", unique_users)
+        st.metric("👥 活躍用戶", unique_users)
     
     with col3:
         successful_ops = sum(1 for log in logs if log.get('success', True))
@@ -224,7 +224,7 @@ def render_operation_logs():
         st.metric("✅ 成功率", f"{success_rate:.1f}%")
     
     with col4:
-        # 安全处理近1小时的日志统计
+        # 安全處理近1小時的日誌統計
         recent_logs = []
         for log in logs:
             try:
@@ -242,10 +242,10 @@ def render_operation_logs():
                     recent_logs.append(log)
             except:
                 continue
-        st.metric("🕐 近1小时", len(recent_logs))
+        st.metric("🕐 近1小時", len(recent_logs))
     
-    # 标签页
-    tab1, tab2, tab3 = st.tabs(["📈 统计图表", "📋 日志列表", "📤 导出数据"])
+    # 標簽页
+    tab1, tab2, tab3 = st.tabs(["📈 統計圖表", "📋 日誌列表", "📤 導出數據"])
     
     with tab1:
         render_logs_charts(logs)
@@ -257,10 +257,10 @@ def render_operation_logs():
         render_logs_export(logs)
 
 def render_logs_charts(logs: List[Dict[str, Any]]):
-    """渲染日志统计图表"""
+    """渲染日誌統計圖表"""
     
-    # 按操作类型统计
-    st.subheader("📊 按操作类型统计")
+    # 按操作類型統計
+    st.subheader("📊 按操作類型統計")
     action_types = {}
     for log in logs:
         action_type = log.get('action_type', 'unknown')
@@ -270,15 +270,15 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
         fig_pie = px.pie(
             values=list(action_types.values()),
             names=list(action_types.keys()),
-            title="操作类型分布"
+            title="操作類型分布"
         )
         st.plotly_chart(fig_pie, use_container_width=True)
     
-    # 按时间统计
-    st.subheader("📅 按时间统计")
+    # 按時間統計
+    st.subheader("📅 按時間統計")
     daily_logs = {}
     for log in logs:
-        # 安全处理时间戳
+        # 安全處理時間戳
         try:
             timestamp = log.get('timestamp', 0)
             if isinstance(timestamp, str):
@@ -306,26 +306,26 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
             x=dates,
             y=counts,
             mode='lines+markers',
-            name='每日操作数',
+            name='每日操作數',
             line=dict(color='#1f77b4', width=2),
             marker=dict(size=6)
         ))
         fig_line.update_layout(
             title="每日操作趋势",
             xaxis_title="日期",
-            yaxis_title="操作数量"
+            yaxis_title="操作數量"
         )
         st.plotly_chart(fig_line, use_container_width=True)
     
-    # 按用户统计
-    st.subheader("👥 按用户统计")
+    # 按用戶統計
+    st.subheader("👥 按用戶統計")
     user_logs = {}
     for log in logs:
         username = log.get('username', 'unknown')
         user_logs[username] = user_logs.get(username, 0) + 1
     
     if user_logs:
-        # 只显示前10个最活跃的用户
+        # 只顯示前10個最活躍的用戶
         top_users = sorted(user_logs.items(), key=lambda x: x[1], reverse=True)[:10]
         usernames = [item[0] for item in top_users]
         counts = [item[1] for item in top_users]
@@ -334,38 +334,38 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
             x=counts,
             y=usernames,
             orientation='h',
-            title="用户操作排行榜 (前10名)",
-            labels={'x': '操作数量', 'y': '用户名'}
+            title="用戶操作排行榜 (前10名)",
+            labels={'x': '操作數量', 'y': '用戶名'}
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
 def render_logs_list(logs: List[Dict[str, Any]]):
-    """渲染日志列表"""
+    """渲染日誌列表"""
     
-    st.subheader("📋 操作日志列表")
+    st.subheader("📋 操作日誌列表")
     
-    # 分页设置
-    page_size = st.selectbox("每页显示", [10, 25, 50, 100], index=1)
+    # 分页設置
+    page_size = st.selectbox("每页顯示", [10, 25, 50, 100], index=1)
     total_pages = (len(logs) + page_size - 1) // page_size
     
     if total_pages > 1:
-        page = st.number_input("页码", min_value=1, max_value=total_pages, value=1) - 1
+        page = st.number_input("页碼", min_value=1, max_value=total_pages, value=1) - 1
     else:
         page = 0
     
-    # 获取当前页数据
+    # 獲取當前页數據
     start_idx = page * page_size
     end_idx = min(start_idx + page_size, len(logs))
     page_logs = logs[start_idx:end_idx]
     
-    # 转换为DataFrame显示
+    # 轉換為DataFrame顯示
     if page_logs:
         df_data = []
         for log in page_logs:
-            # 获取操作描述，兼容不同格式
+            # 獲取操作描述，兼容不同格式
             action_desc = log.get('action') or log.get('action_name', 'unknown')
             
-            # 处理时间戳显示
+            # 處理時間戳顯示
             try:
                 timestamp = log.get('timestamp', 0)
                 if isinstance(timestamp, str):
@@ -383,46 +383,46 @@ def render_logs_list(logs: List[Dict[str, Any]]):
                 time_str = 'unknown'
             
             df_data.append({
-                '时间': time_str,
-                '用户': log.get('username', 'unknown'),
+                '時間': time_str,
+                '用戶': log.get('username', 'unknown'),
                 '角色': log.get('user_role', 'unknown'),
-                '操作类型': log.get('action_type', 'unknown'),
+                '操作類型': log.get('action_type', 'unknown'),
                 '操作描述': action_desc,
-                '状态': '✅ 成功' if log.get('success', True) else '❌ 失败',
-                '详情': str(log.get('details', ''))[:50] + '...' if len(str(log.get('details', ''))) > 50 else str(log.get('details', ''))
+                '狀態': '✅ 成功' if log.get('success', True) else '❌ 失败',
+                '詳情': str(log.get('details', ''))[:50] + '...' if len(str(log.get('details', ''))) > 50 else str(log.get('details', ''))
             })
         
         df = pd.DataFrame(df_data)
         st.dataframe(df, use_container_width=True)
         
-        # 显示分页信息
+        # 顯示分页信息
         if total_pages > 1:
-            st.info(f"第 {page + 1} 页，共 {total_pages} 页，总计 {len(logs)} 条记录")
+            st.info(f"第 {page + 1} 页，共 {total_pages} 页，总計 {len(logs)} 條記錄")
     else:
-        st.info("当前页没有数据")
+        st.info("當前页没有數據")
 
 def render_logs_export(logs: List[Dict[str, Any]]):
-    """渲染日志导出功能"""
+    """渲染日誌導出功能"""
     
-    st.subheader("📤 导出操作日志")
+    st.subheader("📤 導出操作日誌")
     
     if not logs:
-        st.warning("没有可导出的日志数据")
+        st.warning("没有可導出的日誌數據")
         return
     
-    # 导出格式选择
-    export_format = st.selectbox("选择导出格式", ["CSV", "JSON", "Excel"])
+    # 導出格式選擇
+    export_format = st.selectbox("選擇導出格式", ["CSV", "JSON", "Excel"])
     
-    if st.button("📥 导出日志"):
+    if st.button("📥 導出日誌"):
         try:
             if export_format == "CSV":
-                # 转换为DataFrame
+                # 轉換為DataFrame
                 df_data = []
                 for log in logs:
-                    # 获取操作描述，兼容不同格式
+                    # 獲取操作描述，兼容不同格式
                     action_desc = log.get('action') or log.get('action_name', 'unknown')
                     
-                    # 处理时间戳显示
+                    # 處理時間戳顯示
                     try:
                         timestamp = log.get('timestamp', 0)
                         if isinstance(timestamp, str):
@@ -440,20 +440,20 @@ def render_logs_export(logs: List[Dict[str, Any]]):
                         time_str = 'unknown'
                     
                     df_data.append({
-                        '时间': time_str,
-                        '用户': log.get('username', 'unknown'),
+                        '時間': time_str,
+                        '用戶': log.get('username', 'unknown'),
                         '角色': log.get('user_role', 'unknown'),
-                        '操作类型': log.get('action_type', 'unknown'),
+                        '操作類型': log.get('action_type', 'unknown'),
                         '操作描述': action_desc,
-                        '状态': '成功' if log.get('success', True) else '失败',
-                        '详情': str(log.get('details', ''))
+                        '狀態': '成功' if log.get('success', True) else '失败',
+                        '詳情': str(log.get('details', ''))
                     })
                 
                 df = pd.DataFrame(df_data)
                 csv_data = df.to_csv(index=False, encoding='utf-8-sig')
                 
                 st.download_button(
-                    label="下载 CSV 文件",
+                    label="下載 CSV 文件",
                     data=csv_data,
                     file_name=f"operation_logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                     mime="text/csv"
@@ -463,20 +463,20 @@ def render_logs_export(logs: List[Dict[str, Any]]):
                 json_data = json.dumps(logs, ensure_ascii=False, indent=2)
                 
                 st.download_button(
-                    label="下载 JSON 文件",
+                    label="下載 JSON 文件",
                     data=json_data,
                     file_name=f"operation_logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                     mime="application/json"
                 )
             
             elif export_format == "Excel":
-                # 转换为DataFrame
+                # 轉換為DataFrame
                 df_data = []
                 for log in logs:
-                    # 获取操作描述，兼容不同格式
+                    # 獲取操作描述，兼容不同格式
                     action_desc = log.get('action') or log.get('action_name', 'unknown')
                     
-                    # 处理时间戳显示
+                    # 處理時間戳顯示
                     try:
                         timestamp = log.get('timestamp', 0)
                         if isinstance(timestamp, str):
@@ -494,47 +494,47 @@ def render_logs_export(logs: List[Dict[str, Any]]):
                         time_str = 'unknown'
                     
                     df_data.append({
-                        '时间': time_str,
-                        '用户': log.get('username', 'unknown'),
+                        '時間': time_str,
+                        '用戶': log.get('username', 'unknown'),
                         '角色': log.get('user_role', 'unknown'),
-                        '操作类型': log.get('action_type', 'unknown'),
+                        '操作類型': log.get('action_type', 'unknown'),
                         '操作描述': action_desc,
-                        '状态': '成功' if log.get('success', True) else '失败',
-                        '详情': str(log.get('details', ''))
+                        '狀態': '成功' if log.get('success', True) else '失败',
+                        '詳情': str(log.get('details', ''))
                     })
                 
                 df = pd.DataFrame(df_data)
                 
-                # 使用BytesIO创建Excel文件
+                # 使用BytesIO創建Excel文件
                 from io import BytesIO
                 output = BytesIO()
                 with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    df.to_excel(writer, index=False, sheet_name='操作日志')
+                    df.to_excel(writer, index=False, sheet_name='操作日誌')
                 
                 excel_data = output.getvalue()
                 
                 st.download_button(
-                    label="下载 Excel 文件",
+                    label="下載 Excel 文件",
                     data=excel_data,
                     file_name=f"operation_logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
             
-            st.success(f"✅ {export_format} 文件准备完成，请点击下载按钮")
+            st.success(f"✅ {export_format} 文件準备完成，請點擊下載按钮")
             
         except Exception as e:
-            st.error(f"❌ 导出失败: {e}")
+            st.error(f"❌ 導出失败: {e}")
 
 def log_operation(username: str, action_type: str, action: str, details: Dict = None, success: bool = True):
-    """记录操作日志"""
+    """記錄操作日誌"""
     try:
         logs_dir = get_operation_logs_dir()
         
-        # 按日期创建日志文件
+        # 按日期創建日誌文件
         today = datetime.now().strftime('%Y-%m-%d')
         log_file = logs_dir / f"operations_{today}.json"
         
-        # 创建日志条目
+        # 創建日誌條目
         log_entry = {
             'timestamp': datetime.now().timestamp(),
             'username': username,
@@ -542,11 +542,11 @@ def log_operation(username: str, action_type: str, action: str, details: Dict = 
             'action': action,
             'details': details or {},
             'success': success,
-            'ip_address': None,  # 可以后续添加IP地址记录
-            'user_agent': None   # 可以后续添加用户代理记录
+            'ip_address': None,  # 可以後续添加IP地址記錄
+            'user_agent': None   # 可以後续添加用戶代理記錄
         }
         
-        # 读取现有日志
+        # 讀取現有日誌
         existing_logs = []
         if log_file.exists():
             try:
@@ -555,15 +555,15 @@ def log_operation(username: str, action_type: str, action: str, details: Dict = 
             except:
                 existing_logs = []
         
-        # 添加新日志
+        # 添加新日誌
         existing_logs.append(log_entry)
         
-        # 写入文件
+        # 寫入文件
         with open(log_file, 'w', encoding='utf-8') as f:
             json.dump(existing_logs, f, ensure_ascii=False, indent=2)
         
         return True
         
     except Exception as e:
-        print(f"记录操作日志失败: {e}")
+        print(f"記錄操作日誌失败: {e}")
         return False

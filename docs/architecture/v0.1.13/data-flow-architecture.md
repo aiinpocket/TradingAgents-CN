@@ -1,75 +1,75 @@
-# TradingAgents 数据流架构
+# TradingAgents 數據流架構
 
 ## 概述
 
-TradingAgents 采用多层次数据流架构，支持中国A股、港股和美股的全面数据获取和处理。系统通过统一的数据接口、智能的数据源管理和高效的缓存机制，为智能体提供高质量的金融数据服务。
+TradingAgents 採用多層次數據流架構，支持中國A股、港股和美股的全面數據獲取和處理。系統通過統一的數據接口、智能的數據源管理和高效的緩存機制，為智能體提供高质量的金融數據服務。
 
-## 🏗️ 数据流架构设计
+## 🏗️ 數據流架構設計
 
-### 架构层次图
+### 架構層次圖
 
 ```mermaid
 graph TB
-    subgraph "外部数据源层 (External Data Sources)"
-        subgraph "中国市场数据"
-            TUSHARE[Tushare专业数据]
-            AKSHARE[AKShare开源数据]
-            BAOSTOCK[BaoStock历史数据]
-            TDX[TDX通达信数据 - 已弃用]
+    subgraph "外部數據源層 (External Data Sources)"
+        subgraph "中國市場數據"
+            TUSHARE[Tushare專業數據]
+            AKSHARE[AKShare開源數據]
+            BAOSTOCK[BaoStock歷史數據]
+            TDX[TDX通達信數據 - 已弃用]
         end
         
-        subgraph "国际市场数据"
+        subgraph "國际市場數據"
             YFINANCE[Yahoo Finance]
             FINNHUB[FinnHub]
             SIMFIN[SimFin]
         end
         
-        subgraph "新闻情绪数据"
-            REDDIT[Reddit社交媒体]
-            GOOGLENEWS[Google新闻]
-            CHINESE_SOCIAL[中国社交媒体]
+        subgraph "新聞情绪數據"
+            REDDIT[Reddit社交媒體]
+            GOOGLENEWS[Google新聞]
+            CHINESE_SOCIAL[中國社交媒體]
         end
     end
     
-    subgraph "数据获取层 (Data Acquisition Layer)"
-        DSM[数据源管理器]
-        ADAPTERS[数据适配器]
+    subgraph "數據獲取層 (Data Acquisition Layer)"
+        DSM[數據源管理器]
+        ADAPTERS[數據適配器]
         API_MGR[API管理器]
     end
     
-    subgraph "数据处理层 (Data Processing Layer)"
-        CLEANER[数据清洗]
-        TRANSFORMER[数据转换]
-        VALIDATOR[数据验证]
+    subgraph "數據處理層 (Data Processing Layer)"
+        CLEANER[數據清洗]
+        TRANSFORMER[數據轉換]
+        VALIDATOR[數據驗證]
         QUALITY[质量控制]
     end
     
-    subgraph "数据存储层 (Data Storage Layer)"
-        CACHE[缓存系统]
+    subgraph "數據存储層 (Data Storage Layer)"
+        CACHE[緩存系統]
         FILES[文件存储]
         CONFIG[配置管理]
     end
     
-    subgraph "数据分发层 (Data Distribution Layer)"
-        INTERFACE[统一数据接口]
-        ROUTER[数据路由器]
+    subgraph "數據分發層 (Data Distribution Layer)"
+        INTERFACE[統一數據接口]
+        ROUTER[數據路由器]
         FORMATTER[格式化器]
     end
     
-    subgraph "工具集成层 (Tool Integration Layer)"
+    subgraph "工具集成層 (Tool Integration Layer)"
         TOOLKIT[Toolkit工具包]
-        UNIFIED_TOOLS[统一工具接口]
+        UNIFIED_TOOLS[統一工具接口]
         STOCK_UTILS[股票工具]
     end
     
-    subgraph "智能体消费层 (Agent Consumption Layer)"
-        ANALYSTS[分析师智能体]
-        RESEARCHERS[研究员智能体]
-        TRADER[交易员智能体]
-        MANAGERS[管理层智能体]
+    subgraph "智能體消費層 (Agent Consumption Layer)"
+        ANALYSTS[分析師智能體]
+        RESEARCHERS[研究員智能體]
+        TRADER[交易員智能體]
+        MANAGERS[管理層智能體]
     end
     
-    %% 数据流向
+    %% 數據流向
     TUSHARE --> DSM
     AKSHARE --> DSM
     BAOSTOCK --> DSM
@@ -109,7 +109,7 @@ graph TB
     STOCK_UTILS --> TRADER
     STOCK_UTILS --> MANAGERS
     
-    %% 样式定义
+    %% 樣式定義
     classDef sourceLayer fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef acquisitionLayer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     classDef processingLayer fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
@@ -127,13 +127,13 @@ graph TB
     class ANALYSTS,RESEARCHERS,TRADER,MANAGERS agentLayer
 ```
 
-## 📊 各层次详细说明
+## 📊 各層次詳細說明
 
-### 1. 外部数据源层 (External Data Sources)
+### 1. 外部數據源層 (External Data Sources)
 
-#### 中国市场数据源
+#### 中國市場數據源
 
-##### Tushare 专业数据源 (推荐)
+##### Tushare 專業數據源 (推薦)
 **文件位置**: `tradingagents/dataflows/tushare_utils.py`
 
 ```python
@@ -141,7 +141,7 @@ import tushare as ts
 from tradingagents.utils.logging_manager import get_logger
 
 class TushareProvider:
-    """Tushare数据提供商"""
+    """Tushare數據提供商"""
     
     def __init__(self):
         self.token = os.getenv('TUSHARE_TOKEN')
@@ -149,10 +149,10 @@ class TushareProvider:
             ts.set_token(self.token)
             self.pro = ts.pro_api()
         else:
-            raise ValueError("TUSHARE_TOKEN环境变量未设置")
+            raise ValueError("TUSHARE_TOKEN環境變量未設置")
     
     def get_stock_data(self, ts_code: str, start_date: str, end_date: str):
-        """获取股票历史数据"""
+        """獲取股票歷史數據"""
         try:
             df = self.pro.daily(
                 ts_code=ts_code,
@@ -161,11 +161,11 @@ class TushareProvider:
             )
             return df
         except Exception as e:
-            logger.error(f"Tushare数据获取失败: {e}")
+            logger.error(f"Tushare數據獲取失败: {e}")
             return None
     
     def get_stock_basic(self, ts_code: str):
-        """获取股票基本信息"""
+        """獲取股票基本信息"""
         try:
             df = self.pro.stock_basic(
                 ts_code=ts_code,
@@ -173,11 +173,11 @@ class TushareProvider:
             )
             return df
         except Exception as e:
-            logger.error(f"Tushare基本信息获取失败: {e}")
+            logger.error(f"Tushare基本信息獲取失败: {e}")
             return None
 ```
 
-##### AKShare 开源数据源 (备用)
+##### AKShare 開源數據源 (备用)
 **文件位置**: `tradingagents/dataflows/akshare_utils.py`
 
 ```python
@@ -186,35 +186,35 @@ import pandas as pd
 from typing import Optional, Dict, Any
 
 def get_akshare_provider():
-    """获取AKShare数据提供商实例"""
+    """獲取AKShare數據提供商實例"""
     return AKShareProvider()
 
 class AKShareProvider:
-    """AKShare数据提供商"""
+    """AKShare數據提供商"""
     
     def __init__(self):
         self.logger = get_logger('agents')
     
     def get_stock_zh_a_hist(self, symbol: str, period: str = "daily", 
                            start_date: str = None, end_date: str = None):
-        """获取A股历史数据"""
+        """獲取A股歷史數據"""
         try:
             df = ak.stock_zh_a_hist(
                 symbol=symbol,
                 period=period,
                 start_date=start_date,
                 end_date=end_date,
-                adjust="qfq"  # 前复权
+                adjust="qfq"  # 前複權
             )
             return df
         except Exception as e:
-            self.logger.error(f"AKShare A股数据获取失败: {e}")
+            self.logger.error(f"AKShare A股數據獲取失败: {e}")
             return None
     
     def get_hk_stock_data_akshare(self, symbol: str, period: str = "daily"):
-        """获取港股数据"""
+        """獲取港股數據"""
         try:
-            # 港股代码格式转换
+            # 港股代碼格式轉換
             if not symbol.startswith('0') and len(symbol) <= 5:
                 symbol = symbol.zfill(5)
             
@@ -225,24 +225,24 @@ class AKShareProvider:
             )
             return df
         except Exception as e:
-            self.logger.error(f"AKShare港股数据获取失败: {e}")
+            self.logger.error(f"AKShare港股數據獲取失败: {e}")
             return None
     
     def get_hk_stock_info_akshare(self, symbol: str):
-        """获取港股基本信息"""
+        """獲取港股基本信息"""
         try:
             df = ak.stock_hk_spot_em()
             if not df.empty:
                 # 查找匹配的股票
-                matched = df[df['代码'].str.contains(symbol, na=False)]
+                matched = df[df['代碼'].str.contains(symbol, na=False)]
                 return matched
             return None
         except Exception as e:
-            self.logger.error(f"AKShare港股信息获取失败: {e}")
+            self.logger.error(f"AKShare港股信息獲取失败: {e}")
             return None
 ```
 
-##### BaoStock 历史数据源 (备用)
+##### BaoStock 歷史數據源 (备用)
 **文件位置**: `tradingagents/dataflows/baostock_utils.py`
 
 ```python
@@ -250,16 +250,16 @@ import baostock as bs
 import pandas as pd
 
 class BaoStockProvider:
-    """BaoStock数据提供商"""
+    """BaoStock數據提供商"""
     
     def __init__(self):
         self.logger = get_logger('agents')
         self.login_result = bs.login()
         if self.login_result.error_code != '0':
-            self.logger.error(f"BaoStock登录失败: {self.login_result.error_msg}")
+            self.logger.error(f"BaoStock登錄失败: {self.login_result.error_msg}")
     
     def get_stock_data(self, code: str, start_date: str, end_date: str):
-        """获取股票历史数据"""
+        """獲取股票歷史數據"""
         try:
             rs = bs.query_history_k_data_plus(
                 code,
@@ -267,7 +267,7 @@ class BaoStockProvider:
                 start_date=start_date,
                 end_date=end_date,
                 frequency="d",
-                adjustflag="3"  # 前复权
+                adjustflag="3"  # 前複權
             )
             
             data_list = []
@@ -277,15 +277,15 @@ class BaoStockProvider:
             df = pd.DataFrame(data_list, columns=rs.fields)
             return df
         except Exception as e:
-            self.logger.error(f"BaoStock数据获取失败: {e}")
+            self.logger.error(f"BaoStock數據獲取失败: {e}")
             return None
     
     def __del__(self):
-        """析构函数，登出BaoStock"""
+        """析構函數，登出BaoStock"""
         bs.logout()
 ```
 
-#### 国际市场数据源
+#### 國际市場數據源
 
 ##### Yahoo Finance
 **文件位置**: `tradingagents/dataflows/yfin_utils.py`
@@ -297,16 +297,16 @@ from typing import Optional
 
 def get_yahoo_finance_data(ticker: str, period: str = "1y", 
                           start_date: str = None, end_date: str = None):
-    """获取Yahoo Finance数据
+    """獲取Yahoo Finance數據
     
     Args:
-        ticker: 股票代码
-        period: 时间周期 (1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max)
-        start_date: 开始日期 (YYYY-MM-DD)
-        end_date: 结束日期 (YYYY-MM-DD)
+        ticker: 股票代碼
+        period: 時間周期 (1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max)
+        start_date: 開始日期 (YYYY-MM-DD)
+        end_date: 結束日期 (YYYY-MM-DD)
     
     Returns:
-        DataFrame: 股票数据
+        DataFrame: 股票數據
     """
     try:
         stock = yf.Ticker(ticker)
@@ -317,26 +317,26 @@ def get_yahoo_finance_data(ticker: str, period: str = "1y",
             data = stock.history(period=period)
         
         if data.empty:
-            logger.warning(f"Yahoo Finance未找到{ticker}的数据")
+            logger.warning(f"Yahoo Finance未找到{ticker}的數據")
             return None
         
         return data
     except Exception as e:
-        logger.error(f"Yahoo Finance数据获取失败: {e}")
+        logger.error(f"Yahoo Finance數據獲取失败: {e}")
         return None
 
 def get_stock_info_yahoo(ticker: str):
-    """获取股票基本信息"""
+    """獲取股票基本信息"""
     try:
         stock = yf.Ticker(ticker)
         info = stock.info
         return info
     except Exception as e:
-        logger.error(f"Yahoo Finance信息获取失败: {e}")
+        logger.error(f"Yahoo Finance信息獲取失败: {e}")
         return None
 ```
 
-##### FinnHub 新闻和基本面数据
+##### FinnHub 新聞和基本面數據
 **文件位置**: `tradingagents/dataflows/finnhub_utils.py`
 
 ```python
@@ -346,29 +346,29 @@ import os
 
 def get_data_in_range(ticker: str, start_date: str, end_date: str, 
                      data_type: str, data_dir: str):
-    """从缓存中获取指定时间范围的数据
+    """從緩存中獲取指定時間範围的數據
     
     Args:
-        ticker: 股票代码
-        start_date: 开始日期
-        end_date: 结束日期
-        data_type: 数据类型 (news_data, insider_senti, insider_trans)
-        data_dir: 数据目录
+        ticker: 股票代碼
+        start_date: 開始日期
+        end_date: 結束日期
+        data_type: 數據類型 (news_data, insider_senti, insider_trans)
+        data_dir: 數據目錄
     
     Returns:
-        dict: 数据字典
+        dict: 數據字典
     """
     try:
         file_path = os.path.join(data_dir, f"{ticker}_{data_type}.json")
         
         if not os.path.exists(file_path):
-            logger.warning(f"数据文件不存在: {file_path}")
+            logger.warning(f"數據文件不存在: {file_path}")
             return {}
         
         with open(file_path, 'r', encoding='utf-8') as f:
             all_data = json.load(f)
         
-        # 过滤时间范围内的数据
+        # 過濾時間範围內的數據
         filtered_data = {}
         start_dt = datetime.strptime(start_date, "%Y-%m-%d")
         end_dt = datetime.strptime(end_date, "%Y-%m-%d")
@@ -383,13 +383,13 @@ def get_data_in_range(ticker: str, start_date: str, end_date: str,
         
         return filtered_data
     except Exception as e:
-        logger.error(f"数据获取失败: {e}")
+        logger.error(f"數據獲取失败: {e}")
         return {}
 ```
 
-#### 新闻情绪数据源
+#### 新聞情绪數據源
 
-##### Reddit 社交媒体
+##### Reddit 社交媒體
 **文件位置**: `tradingagents/dataflows/reddit_utils.py`
 
 ```python
@@ -399,12 +399,12 @@ from typing import List, Dict
 
 def fetch_top_from_category(subreddit: str, category: str = "hot", 
                            limit: int = 10) -> List[Dict]:
-    """从Reddit获取热门帖子
+    """從Reddit獲取熱門帖子
     
     Args:
-        subreddit: 子版块名称
-        category: 分类 (hot, new, top)
-        limit: 获取数量限制
+        subreddit: 子版塊名稱
+        category: 分類 (hot, new, top)
+        limit: 獲取數量限制
     
     Returns:
         List[Dict]: 帖子列表
@@ -440,56 +440,56 @@ def fetch_top_from_category(subreddit: str, category: str = "hot",
         
         return results
     except Exception as e:
-        logger.error(f"Reddit数据获取失败: {e}")
+        logger.error(f"Reddit數據獲取失败: {e}")
         return []
 ```
 
-##### 中国社交媒体情绪
+##### 中國社交媒體情绪
 **文件位置**: `tradingagents/dataflows/chinese_finance_utils.py`
 
 ```python
 def get_chinese_social_sentiment(ticker: str, platform: str = "weibo"):
-    """获取中国社交媒体情绪数据
+    """獲取中國社交媒體情绪數據
     
     Args:
-        ticker: 股票代码
-        platform: 平台名称 (weibo, xueqiu, eastmoney)
+        ticker: 股票代碼
+        platform: 平台名稱 (weibo, xueqiu, eastmoney)
     
     Returns:
-        str: 情绪分析报告
+        str: 情绪分析報告
     """
     try:
-        # 这里可以集成微博、雪球、东方财富等平台的API
-        # 目前返回模拟数据
+        # 這里可以集成微博、雪球、东方財富等平台的API
+        # 目前返回模擬數據
         sentiment_data = {
             'positive_ratio': 0.65,
             'negative_ratio': 0.25,
             'neutral_ratio': 0.10,
             'total_mentions': 1250,
-            'trending_keywords': ['上涨', '利好', '业绩', '增长']
+            'trending_keywords': ['上涨', '利好', '業绩', '增長']
         }
         
-        report = f"""## {ticker} 中国社交媒体情绪分析
+        report = f"""## {ticker} 中國社交媒體情绪分析
         
 **平台**: {platform}
-**总提及数**: {sentiment_data['total_mentions']}
+**总提及數**: {sentiment_data['total_mentions']}
 **情绪分布**:
-- 积极: {sentiment_data['positive_ratio']:.1%}
-- 消极: {sentiment_data['negative_ratio']:.1%}
+- 積極: {sentiment_data['positive_ratio']:.1%}
+- 消極: {sentiment_data['negative_ratio']:.1%}
 - 中性: {sentiment_data['neutral_ratio']:.1%}
 
-**热门关键词**: {', '.join(sentiment_data['trending_keywords'])}
+**熱門關键詞**: {', '.join(sentiment_data['trending_keywords'])}
         """
         
         return report
     except Exception as e:
-        logger.error(f"中国社交媒体情绪获取失败: {e}")
-        return f"中国社交媒体情绪数据获取失败: {str(e)}"
+        logger.error(f"中國社交媒體情绪獲取失败: {e}")
+        return f"中國社交媒體情绪數據獲取失败: {str(e)}"
 ```
 
-### 2. 数据获取层 (Data Acquisition Layer)
+### 2. 數據獲取層 (Data Acquisition Layer)
 
-#### 数据源管理器
+#### 數據源管理器
 **文件位置**: `tradingagents/dataflows/data_source_manager.py`
 
 ```python
@@ -497,155 +497,155 @@ from enum import Enum
 from typing import List, Optional
 
 class ChinaDataSource(Enum):
-    """中国股票数据源枚举"""
+    """中國股票數據源枚举"""
     TUSHARE = "tushare"
     AKSHARE = "akshare"
     BAOSTOCK = "baostock"
     TDX = "tdx"  # 已弃用
 
 class DataSourceManager:
-    """数据源管理器"""
+    """數據源管理器"""
     
     def __init__(self):
-        """初始化数据源管理器"""
+        """初始化數據源管理器"""
         self.default_source = self._get_default_source()
         self.available_sources = self._check_available_sources()
         self.current_source = self.default_source
         
-        logger.info(f"📊 数据源管理器初始化完成")
-        logger.info(f"   默认数据源: {self.default_source.value}")
-        logger.info(f"   可用数据源: {[s.value for s in self.available_sources]}")
+        logger.info(f"📊 數據源管理器初始化完成")
+        logger.info(f"   默認數據源: {self.default_source.value}")
+        logger.info(f"   可用數據源: {[s.value for s in self.available_sources]}")
     
     def _get_default_source(self) -> ChinaDataSource:
-        """获取默认数据源"""
+        """獲取默認數據源"""
         default = os.getenv('DEFAULT_CHINA_DATA_SOURCE', 'tushare').lower()
         
         try:
             return ChinaDataSource(default)
         except ValueError:
-            logger.warning(f"⚠️ 无效的默认数据源: {default}，使用Tushare")
+            logger.warning(f"⚠️ 無效的默認數據源: {default}，使用Tushare")
             return ChinaDataSource.TUSHARE
     
     def _check_available_sources(self) -> List[ChinaDataSource]:
-        """检查可用的数据源"""
+        """檢查可用的數據源"""
         available = []
         
-        # 检查Tushare
+        # 檢查Tushare
         try:
             import tushare as ts
             token = os.getenv('TUSHARE_TOKEN')
             if token:
                 available.append(ChinaDataSource.TUSHARE)
-                logger.info("✅ Tushare数据源可用")
+                logger.info("✅ Tushare數據源可用")
             else:
-                logger.warning("⚠️ Tushare数据源不可用: 未设置TUSHARE_TOKEN")
+                logger.warning("⚠️ Tushare數據源不可用: 未設置TUSHARE_TOKEN")
         except ImportError:
-            logger.warning("⚠️ Tushare数据源不可用: 库未安装")
+            logger.warning("⚠️ Tushare數據源不可用: 庫未安裝")
         
-        # 检查AKShare
+        # 檢查AKShare
         try:
             import akshare as ak
             available.append(ChinaDataSource.AKSHARE)
-            logger.info("✅ AKShare数据源可用")
+            logger.info("✅ AKShare數據源可用")
         except ImportError:
-            logger.warning("⚠️ AKShare数据源不可用: 库未安装")
+            logger.warning("⚠️ AKShare數據源不可用: 庫未安裝")
         
-        # 检查BaoStock
+        # 檢查BaoStock
         try:
             import baostock as bs
             available.append(ChinaDataSource.BAOSTOCK)
-            logger.info("✅ BaoStock数据源可用")
+            logger.info("✅ BaoStock數據源可用")
         except ImportError:
-            logger.warning("⚠️ BaoStock数据源不可用: 库未安装")
+            logger.warning("⚠️ BaoStock數據源不可用: 庫未安裝")
         
-        # 检查TDX (已弃用)
+        # 檢查TDX (已弃用)
         try:
             import pytdx
             available.append(ChinaDataSource.TDX)
-            logger.warning("⚠️ TDX数据源可用但已弃用，建议迁移到Tushare")
+            logger.warning("⚠️ TDX數據源可用但已弃用，建议迁移到Tushare")
         except ImportError:
-            logger.info("ℹ️ TDX数据源不可用: 库未安装")
+            logger.info("ℹ️ TDX數據源不可用: 庫未安裝")
         
         return available
     
     def switch_source(self, source_name: str) -> str:
-        """切换数据源
+        """切換數據源
         
         Args:
-            source_name: 数据源名称
+            source_name: 數據源名稱
         
         Returns:
-            str: 切换结果消息
+            str: 切換結果消息
         """
         try:
             new_source = ChinaDataSource(source_name.lower())
             
             if new_source in self.available_sources:
                 self.current_source = new_source
-                logger.info(f"✅ 数据源已切换到: {new_source.value}")
-                return f"✅ 数据源已成功切换到: {new_source.value}"
+                logger.info(f"✅ 數據源已切換到: {new_source.value}")
+                return f"✅ 數據源已成功切換到: {new_source.value}"
             else:
-                logger.warning(f"⚠️ 数据源{new_source.value}不可用")
-                return f"⚠️ 数据源{new_source.value}不可用，请检查安装和配置"
+                logger.warning(f"⚠️ 數據源{new_source.value}不可用")
+                return f"⚠️ 數據源{new_source.value}不可用，請檢查安裝和配置"
         except ValueError:
-            logger.error(f"❌ 无效的数据源名称: {source_name}")
-            return f"❌ 无效的数据源名称: {source_name}"
+            logger.error(f"❌ 無效的數據源名稱: {source_name}")
+            return f"❌ 無效的數據源名稱: {source_name}"
     
     def get_current_source(self) -> str:
-        """获取当前数据源"""
+        """獲取當前數據源"""
         return self.current_source.value
     
     def get_available_sources(self) -> List[str]:
-        """获取可用数据源列表"""
+        """獲取可用數據源列表"""
         return [s.value for s in self.available_sources]
 ```
 
-### 3. 数据处理层 (Data Processing Layer)
+### 3. 數據處理層 (Data Processing Layer)
 
-#### 数据验证和清洗
+#### 數據驗證和清洗
 **文件位置**: `tradingagents/dataflows/interface.py`
 
 ```python
 def validate_and_clean_data(data, data_type: str):
-    """数据验证和清洗
+    """數據驗證和清洗
     
     Args:
-        data: 原始数据
-        data_type: 数据类型
+        data: 原始數據
+        data_type: 數據類型
     
     Returns:
-        处理后的数据
+        處理後的數據
     """
     if data is None or (hasattr(data, 'empty') and data.empty):
         return None
     
     try:
         if data_type == "stock_data":
-            # 股票数据验证
+            # 股票數據驗證
             required_columns = ['open', 'high', 'low', 'close', 'volume']
             if hasattr(data, 'columns'):
                 missing_cols = [col for col in required_columns if col not in data.columns]
                 if missing_cols:
                     logger.warning(f"⚠️ 缺少必要列: {missing_cols}")
                 
-                # 数据清洗
-                data = data.dropna()  # 删除空值
-                data = data[data['volume'] > 0]  # 删除无交易量的数据
+                # 數據清洗
+                data = data.dropna()  # 刪除空值
+                data = data[data['volume'] > 0]  # 刪除無交易量的數據
         
         elif data_type == "news_data":
-            # 新闻数据验证
+            # 新聞數據驗證
             if isinstance(data, str) and len(data.strip()) == 0:
                 return None
         
         return data
     except Exception as e:
-        logger.error(f"数据验证失败: {e}")
+        logger.error(f"數據驗證失败: {e}")
         return None
 ```
 
-### 4. 数据存储层 (Data Storage Layer)
+### 4. 數據存储層 (Data Storage Layer)
 
-#### 缓存系统
+#### 緩存系統
 **文件位置**: `tradingagents/dataflows/config.py`
 
 ```python
@@ -656,58 +656,58 @@ from typing import Dict, Any
 _config = None
 
 def get_config() -> Dict[str, Any]:
-    """获取数据流配置"""
+    """獲取數據流配置"""
     global _config
     if _config is None:
         _config = {
             "data_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data"),
             "cache_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "cache"),
             "cache_expiry": {
-                "market_data": 300,      # 5分钟
-                "news_data": 3600,       # 1小时
-                "fundamentals": 86400,   # 24小时
-                "social_sentiment": 1800, # 30分钟
+                "market_data": 300,      # 5分鐘
+                "news_data": 3600,       # 1小時
+                "fundamentals": 86400,   # 24小時
+                "social_sentiment": 1800, # 30分鐘
             },
-            "max_cache_size": 1000,  # 最大缓存条目数
+            "max_cache_size": 1000,  # 最大緩存條目數
             "enable_cache": True,
         }
     return _config
 
 def set_config(config: Dict[str, Any]):
-    """设置数据流配置"""
+    """設置數據流配置"""
     global _config
     _config = config
 
-# 数据目录
+# 數據目錄
 DATA_DIR = get_config()["data_dir"]
 CACHE_DIR = get_config()["cache_dir"]
 
-# 确保目录存在
+# 確保目錄存在
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(CACHE_DIR, exist_ok=True)
 ```
 
-### 5. 数据分发层 (Data Distribution Layer)
+### 5. 數據分發層 (Data Distribution Layer)
 
-#### 统一数据接口
+#### 統一數據接口
 **文件位置**: `tradingagents/dataflows/interface.py`
 
 ```python
-# 统一数据获取接口
+# 統一數據獲取接口
 def get_finnhub_news(
-    ticker: Annotated[str, "公司股票代码，如 'AAPL', 'TSM' 等"],
-    curr_date: Annotated[str, "当前日期，格式为 yyyy-mm-dd"],
-    look_back_days: Annotated[int, "回看天数"],
+    ticker: Annotated[str, "公司股票代碼，如 'AAPL', 'TSM' 等"],
+    curr_date: Annotated[str, "當前日期，格式為 yyyy-mm-dd"],
+    look_back_days: Annotated[int, "回看天數"],
 ):
-    """获取指定时间范围内的公司新闻
+    """獲取指定時間範围內的公司新聞
     
     Args:
-        ticker (str): 目标公司的股票代码
-        curr_date (str): 当前日期，格式为 yyyy-mm-dd
-        look_back_days (int): 回看天数
+        ticker (str): 目標公司的股票代碼
+        curr_date (str): 當前日期，格式為 yyyy-mm-dd
+        look_back_days (int): 回看天數
     
     Returns:
-        str: 包含公司新闻的数据框
+        str: 包含公司新聞的數據框
     """
     start_date = datetime.strptime(curr_date, "%Y-%m-%d")
     before = start_date - relativedelta(days=look_back_days)
@@ -716,12 +716,12 @@ def get_finnhub_news(
     result = get_data_in_range(ticker, before, curr_date, "news_data", DATA_DIR)
     
     if len(result) == 0:
-        error_msg = f"⚠️ 无法获取{ticker}的新闻数据 ({before} 到 {curr_date})\n"
+        error_msg = f"⚠️ 無法獲取{ticker}的新聞數據 ({before} 到 {curr_date})\n"
         error_msg += f"可能的原因：\n"
-        error_msg += f"1. 数据文件不存在或路径配置错误\n"
-        error_msg += f"2. 指定日期范围内没有新闻数据\n"
-        error_msg += f"3. 需要先下载或更新Finnhub新闻数据\n"
-        error_msg += f"建议：检查数据目录配置或重新获取新闻数据"
+        error_msg += f"1. 數據文件不存在或路徑配置錯誤\n"
+        error_msg += f"2. 指定日期範围內没有新聞數據\n"
+        error_msg += f"3. 需要先下載或更新Finnhub新聞數據\n"
+        error_msg += f"建议：檢查數據目錄配置或重新獲取新聞數據"
         logger.debug(f"📰 [DEBUG] {error_msg}")
         return error_msg
     
@@ -738,19 +738,19 @@ def get_finnhub_news(
     return f"## {ticker} News, from {before} to {curr_date}:\n" + str(combined_result)
 
 def get_finnhub_company_insider_sentiment(
-    ticker: Annotated[str, "股票代码"],
-    curr_date: Annotated[str, "当前交易日期，yyyy-mm-dd格式"],
-    look_back_days: Annotated[int, "回看天数"],
+    ticker: Annotated[str, "股票代碼"],
+    curr_date: Annotated[str, "當前交易日期，yyyy-mm-dd格式"],
+    look_back_days: Annotated[int, "回看天數"],
 ):
-    """获取公司内部人士情绪数据（来自公开SEC信息）
+    """獲取公司內部人士情绪數據（來自公開SEC信息）
     
     Args:
-        ticker (str): 公司股票代码
-        curr_date (str): 当前交易日期，yyyy-mm-dd格式
-        look_back_days (int): 回看天数
+        ticker (str): 公司股票代碼
+        curr_date (str): 當前交易日期，yyyy-mm-dd格式
+        look_back_days (int): 回看天數
     
     Returns:
-        str: 过去指定天数的情绪报告
+        str: 過去指定天數的情绪報告
     """
     date_obj = datetime.strptime(curr_date, "%Y-%m-%d")
     before = date_obj - relativedelta(days=look_back_days)
@@ -776,21 +776,21 @@ def get_finnhub_company_insider_sentiment(
     )
 ```
 
-### 6. 工具集成层 (Tool Integration Layer)
+### 6. 工具集成層 (Tool Integration Layer)
 
-#### Toolkit 统一工具包
+#### Toolkit 統一工具包
 **文件位置**: `tradingagents/agents/utils/agent_utils.py`
 
 ```python
 class Toolkit:
-    """统一工具包，为所有智能体提供数据访问接口"""
+    """統一工具包，為所有智能體提供數據訪問接口"""
     
     def __init__(self, config):
         self.config = config
         self.logger = get_logger('agents')
     
     def get_stock_fundamentals_unified(self, ticker: str):
-        """统一基本面分析工具，自动识别股票类型"""
+        """統一基本面分析工具，自動识別股票類型"""
         from tradingagents.utils.stock_utils import StockUtils
         
         try:
@@ -803,11 +803,11 @@ class Toolkit:
             else:
                 return self._get_us_stock_fundamentals(ticker)
         except Exception as e:
-            self.logger.error(f"基本面数据获取失败: {e}")
-            return f"❌ 基本面数据获取失败: {str(e)}"
+            self.logger.error(f"基本面數據獲取失败: {e}")
+            return f"❌ 基本面數據獲取失败: {str(e)}"
     
     def _get_china_stock_fundamentals(self, ticker: str):
-        """获取中国股票基本面数据"""
+        """獲取中國股票基本面數據"""
         try:
             from tradingagents.dataflows.data_source_manager import DataSourceManager
             
@@ -819,44 +819,44 @@ class Toolkit:
             elif current_source == 'akshare':
                 return self._get_akshare_fundamentals(ticker)
             else:
-                # 降级策略
+                # 降級策略
                 return self._get_akshare_fundamentals(ticker)
         except Exception as e:
-            self.logger.error(f"中国股票基本面获取失败: {e}")
-            return f"❌ 中国股票基本面获取失败: {str(e)}"
+            self.logger.error(f"中國股票基本面獲取失败: {e}")
+            return f"❌ 中國股票基本面獲取失败: {str(e)}"
     
     def _get_tushare_fundamentals(self, ticker: str):
-        """使用Tushare获取基本面数据"""
+        """使用Tushare獲取基本面數據"""
         try:
             from tradingagents.dataflows.tushare_utils import TushareProvider
             
             provider = TushareProvider()
             
-            # 获取基本信息
+            # 獲取基本信息
             basic_info = provider.get_stock_basic(ticker)
             
-            # 获取财务数据
+            # 獲取財務數據
             financial_data = provider.get_financial_data(ticker)
             
-            # 格式化输出
-            report = f"""## {ticker} 基本面分析报告 (Tushare数据源)
+            # 格式化輸出
+            report = f"""## {ticker} 基本面分析報告 (Tushare數據源)
             
 **基本信息**:
-- 股票名称: {basic_info.get('name', 'N/A')}
-- 所属行业: {basic_info.get('industry', 'N/A')}
+- 股票名稱: {basic_info.get('name', 'N/A')}
+- 所屬行業: {basic_info.get('industry', 'N/A')}
 - 上市日期: {basic_info.get('list_date', 'N/A')}
 
-**财务指标**:
+**財務指標**:
 - 总市值: {financial_data.get('total_mv', 'N/A')}
 - 市盈率: {financial_data.get('pe', 'N/A')}
 - 市净率: {financial_data.get('pb', 'N/A')}
-- 净资产收益率: {financial_data.get('roe', 'N/A')}
+- 净資產收益率: {financial_data.get('roe', 'N/A')}
             """
             
             return report
         except Exception as e:
-            self.logger.error(f"Tushare基本面获取失败: {e}")
-            return f"❌ Tushare基本面获取失败: {str(e)}"
+            self.logger.error(f"Tushare基本面獲取失败: {e}")
+            return f"❌ Tushare基本面獲取失败: {str(e)}"
 ```
 
 #### 股票工具
@@ -867,37 +867,37 @@ from enum import Enum
 from typing import Dict, Any
 
 class StockMarket(Enum):
-    """股票市场枚举"""
-    CHINA_A = "china_a"      # 中国A股
+    """股票市場枚举"""
+    CHINA_A = "china_a"      # 中國A股
     HONG_KONG = "hong_kong"  # 港股
     US = "us"                # 美股
-    UNKNOWN = "unknown"      # 未知市场
+    UNKNOWN = "unknown"      # 未知市場
 
 class StockUtils:
-    """股票工具类"""
+    """股票工具類"""
     
     @staticmethod
     def identify_stock_market(ticker: str) -> StockMarket:
-        """识别股票所属市场
+        """识別股票所屬市場
         
         Args:
-            ticker: 股票代码
+            ticker: 股票代碼
             
         Returns:
-            StockMarket: 股票市场类型
+            StockMarket: 股票市場類型
         """
         ticker = ticker.upper().strip()
         
-        # 中国A股判断
+        # 中國A股判斷
         if (ticker.isdigit() and len(ticker) == 6 and 
             (ticker.startswith('0') or ticker.startswith('3') or ticker.startswith('6'))):
             return StockMarket.CHINA_A
         
-        # 港股判断
+        # 港股判斷
         if (ticker.isdigit() and len(ticker) <= 5) or ticker.endswith('.HK'):
             return StockMarket.HONG_KONG
         
-        # 美股判断（字母开头或包含字母）
+        # 美股判斷（字母開头或包含字母）
         if any(c.isalpha() for c in ticker) and not ticker.endswith('.HK'):
             return StockMarket.US
         
@@ -905,20 +905,20 @@ class StockUtils:
     
     @staticmethod
     def get_market_info(ticker: str) -> Dict[str, Any]:
-        """获取股票市场信息
+        """獲取股票市場信息
         
         Args:
-            ticker: 股票代码
+            ticker: 股票代碼
             
         Returns:
-            Dict: 市场信息字典
+            Dict: 市場信息字典
         """
         market = StockUtils.identify_stock_market(ticker)
         
         market_info = {
             StockMarket.CHINA_A: {
                 'market_type': 'A股',
-                'market_name': '中国A股市场',
+                'market_name': '中國A股市場',
                 'currency_name': '人民币',
                 'currency_symbol': '¥',
                 'timezone': 'Asia/Shanghai',
@@ -926,7 +926,7 @@ class StockUtils:
             },
             StockMarket.HONG_KONG: {
                 'market_type': '港股',
-                'market_name': '香港股票市场',
+                'market_name': '香港股票市場',
                 'currency_name': '港币',
                 'currency_symbol': 'HK$',
                 'timezone': 'Asia/Hong_Kong',
@@ -934,7 +934,7 @@ class StockUtils:
             },
             StockMarket.US: {
                 'market_type': '美股',
-                'market_name': '美国股票市场',
+                'market_name': '美國股票市場',
                 'currency_name': '美元',
                 'currency_symbol': '$',
                 'timezone': 'America/New_York',
@@ -942,7 +942,7 @@ class StockUtils:
             },
             StockMarket.UNKNOWN: {
                 'market_type': '未知',
-                'market_name': '未知市场',
+                'market_name': '未知市場',
                 'currency_name': '未知',
                 'currency_symbol': '?',
                 'timezone': 'UTC',
@@ -954,18 +954,18 @@ class StockUtils:
     
     @staticmethod
     def get_data_source(ticker: str) -> str:
-        """根据股票代码获取推荐的数据源
+        """根據股票代碼獲取推薦的數據源
         
         Args:
-            ticker: 股票代码
+            ticker: 股票代碼
             
         Returns:
-            str: 数据源名称
+            str: 數據源名稱
         """
         market = StockUtils.identify_stock_market(ticker)
         
         if market == StockMarket.CHINA_A:
-            return "china_unified"  # 使用统一的中国股票数据源
+            return "china_unified"  # 使用統一的中國股票數據源
         elif market == StockMarket.HONG_KONG:
             return "yahoo_finance"  # 港股使用Yahoo Finance
         elif market == StockMarket.US:
@@ -974,100 +974,100 @@ class StockUtils:
             return "unknown"
 ```
 
-## 🔄 数据流转过程
+## 🔄 數據流轉過程
 
-### 完整数据流程图
+### 完整數據流程圖
 
 ```mermaid
 sequenceDiagram
-    participant Agent as 智能体
+    participant Agent as 智能體
     participant Toolkit as 工具包
-    participant Interface as 数据接口
-    participant Manager as 数据源管理器
-    participant Cache as 缓存系统
-    participant Source as 数据源
+    participant Interface as 數據接口
+    participant Manager as 數據源管理器
+    participant Cache as 緩存系統
+    participant Source as 數據源
     
-    Agent->>Toolkit: 请求股票数据
-    Toolkit->>Interface: 调用统一接口
-    Interface->>Cache: 检查缓存
+    Agent->>Toolkit: 請求股票數據
+    Toolkit->>Interface: 調用統一接口
+    Interface->>Cache: 檢查緩存
     
-    alt 缓存命中
-        Cache->>Interface: 返回缓存数据
-    else 缓存未命中
-        Interface->>Manager: 获取数据源
-        Manager->>Source: 调用数据源API
-        Source->>Manager: 返回原始数据
-        Manager->>Interface: 返回处理后数据
-        Interface->>Cache: 更新缓存
+    alt 緩存命中
+        Cache->>Interface: 返回緩存數據
+    else 緩存未命中
+        Interface->>Manager: 獲取數據源
+        Manager->>Source: 調用數據源API
+        Source->>Manager: 返回原始數據
+        Manager->>Interface: 返回處理後數據
+        Interface->>Cache: 更新緩存
     end
     
-    Interface->>Toolkit: 返回格式化数据
-    Toolkit->>Agent: 返回分析就绪数据
+    Interface->>Toolkit: 返回格式化數據
+    Toolkit->>Agent: 返回分析就绪數據
 ```
 
-### 数据处理流水线
+### 數據處理流水線
 
-1. **数据请求**: 智能体通过Toolkit请求数据
-2. **缓存检查**: 首先检查本地缓存是否有效
-3. **数据源选择**: 根据股票类型选择最佳数据源
-4. **数据获取**: 从外部API获取原始数据
-5. **数据验证**: 验证数据完整性和有效性
-6. **数据清洗**: 清理异常值和缺失数据
-7. **数据标准化**: 统一数据格式和字段名
-8. **数据缓存**: 将处理后的数据存入缓存
-9. **数据返回**: 返回格式化的分析就绪数据
+1. **數據請求**: 智能體通過Toolkit請求數據
+2. **緩存檢查**: 首先檢查本地緩存是否有效
+3. **數據源選擇**: 根據股票類型選擇最佳數據源
+4. **數據獲取**: 從外部API獲取原始數據
+5. **數據驗證**: 驗證數據完整性和有效性
+6. **數據清洗**: 清理異常值和缺失數據
+7. **數據標準化**: 統一數據格式和字段名
+8. **數據緩存**: 将處理後的數據存入緩存
+9. **數據返回**: 返回格式化的分析就绪數據
 
-## 📊 数据质量监控
+## 📊 數據质量監控
 
-### 数据质量指标
+### 數據质量指標
 
 ```python
 class DataQualityMonitor:
-    """数据质量监控器"""
+    """數據质量監控器"""
     
     def __init__(self):
         self.quality_metrics = {
             'completeness': 0.0,    # 完整性
-            'accuracy': 0.0,        # 准确性
-            'timeliness': 0.0,      # 及时性
+            'accuracy': 0.0,        # 準確性
+            'timeliness': 0.0,      # 及時性
             'consistency': 0.0,     # 一致性
         }
     
     def check_data_quality(self, data, data_type: str):
-        """检查数据质量
+        """檢查數據质量
         
         Args:
-            data: 待检查的数据
-            data_type: 数据类型
+            data: 待檢查的數據
+            data_type: 數據類型
         
         Returns:
-            Dict: 质量评分
+            Dict: 质量評分
         """
         if data is None:
-            return {'overall_score': 0.0, 'issues': ['数据为空']}
+            return {'overall_score': 0.0, 'issues': ['數據為空']}
         
         issues = []
         scores = {}
         
-        # 完整性检查
+        # 完整性檢查
         completeness = self._check_completeness(data, data_type)
         scores['completeness'] = completeness
         if completeness < 0.8:
-            issues.append(f'数据完整性不足: {completeness:.1%}')
+            issues.append(f'數據完整性不足: {completeness:.1%}')
         
-        # 准确性检查
+        # 準確性檢查
         accuracy = self._check_accuracy(data, data_type)
         scores['accuracy'] = accuracy
         if accuracy < 0.9:
-            issues.append(f'数据准确性不足: {accuracy:.1%}')
+            issues.append(f'數據準確性不足: {accuracy:.1%}')
         
-        # 及时性检查
+        # 及時性檢查
         timeliness = self._check_timeliness(data, data_type)
         scores['timeliness'] = timeliness
         if timeliness < 0.7:
-            issues.append(f'数据及时性不足: {timeliness:.1%}')
+            issues.append(f'數據及時性不足: {timeliness:.1%}')
         
-        # 计算总分
+        # 計算总分
         overall_score = sum(scores.values()) / len(scores)
         
         return {
@@ -1077,7 +1077,7 @@ class DataQualityMonitor:
         }
     
     def _check_completeness(self, data, data_type: str) -> float:
-        """检查数据完整性"""
+        """檢查數據完整性"""
         if data_type == "stock_data":
             required_fields = ['open', 'high', 'low', 'close', 'volume']
             if hasattr(data, 'columns'):
@@ -1086,9 +1086,9 @@ class DataQualityMonitor:
         return 1.0
     
     def _check_accuracy(self, data, data_type: str) -> float:
-        """检查数据准确性"""
+        """檢查數據準確性"""
         if data_type == "stock_data" and hasattr(data, 'columns'):
-            # 检查价格逻辑性
+            # 檢查價格逻辑性
             if all(col in data.columns for col in ['high', 'low', 'close']):
                 valid_rows = (data['high'] >= data['low']).sum()
                 total_rows = len(data)
@@ -1096,18 +1096,18 @@ class DataQualityMonitor:
         return 1.0
     
     def _check_timeliness(self, data, data_type: str) -> float:
-        """检查数据及时性"""
-        # 简化实现，实际应检查数据时间戳
+        """檢查數據及時性"""
+        # 簡化實現，實际應檢查數據時間戳
         return 1.0
 ```
 
-## 🚀 性能优化
+## 🚀 性能優化
 
-### 缓存策略
+### 緩存策略
 
 ```python
 class CacheManager:
-    """缓存管理器"""
+    """緩存管理器"""
     
     def __init__(self, config):
         self.config = config
@@ -1116,7 +1116,7 @@ class CacheManager:
         self.max_cache_size = config.get('max_cache_size', 1000)
     
     def get_cache_key(self, ticker: str, data_type: str, params: dict = None) -> str:
-        """生成缓存键"""
+        """生成緩存键"""
         import hashlib
         
         key_parts = [ticker, data_type]
@@ -1127,11 +1127,11 @@ class CacheManager:
         return hashlib.md5(key_string.encode()).hexdigest()
     
     def is_cache_valid(self, cache_file: str, data_type: str) -> bool:
-        """检查缓存是否有效"""
+        """檢查緩存是否有效"""
         if not os.path.exists(cache_file):
             return False
         
-        # 检查缓存时间
+        # 檢查緩存時間
         cache_time = os.path.getmtime(cache_file)
         current_time = time.time()
         expiry_seconds = self.cache_expiry.get(data_type, 3600)
@@ -1139,7 +1139,7 @@ class CacheManager:
         return (current_time - cache_time) < expiry_seconds
     
     def get_from_cache(self, cache_key: str, data_type: str):
-        """从缓存获取数据"""
+        """從緩存獲取數據"""
         cache_file = os.path.join(self.cache_dir, f"{cache_key}.json")
         
         if self.is_cache_valid(cache_file, data_type):
@@ -1147,17 +1147,17 @@ class CacheManager:
                 with open(cache_file, 'r', encoding='utf-8') as f:
                     return json.load(f)
             except Exception as e:
-                logger.warning(f"缓存读取失败: {e}")
+                logger.warning(f"緩存讀取失败: {e}")
         
         return None
     
     def save_to_cache(self, cache_key: str, data, data_type: str):
-        """保存数据到缓存"""
+        """保存數據到緩存"""
         try:
             os.makedirs(self.cache_dir, exist_ok=True)
             cache_file = os.path.join(self.cache_dir, f"{cache_key}.json")
             
-            # 序列化数据
+            # 序列化數據
             if hasattr(data, 'to_dict'):
                 serializable_data = data.to_dict()
             elif hasattr(data, 'to_json'):
@@ -1168,36 +1168,36 @@ class CacheManager:
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(serializable_data, f, ensure_ascii=False, indent=2)
             
-            logger.debug(f"数据已缓存: {cache_key}")
+            logger.debug(f"數據已緩存: {cache_key}")
         except Exception as e:
-            logger.warning(f"缓存保存失败: {e}")
+            logger.warning(f"緩存保存失败: {e}")
 ```
 
-### 并行数据获取
+### 並行數據獲取
 
 ```python
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Callable
 
 class ParallelDataFetcher:
-    """并行数据获取器"""
+    """並行數據獲取器"""
     
     def __init__(self, max_workers: int = 5):
         self.max_workers = max_workers
     
     def fetch_multiple_data(self, tasks: List[dict]) -> dict:
-        """并行获取多个数据源的数据
+        """並行獲取多個數據源的數據
         
         Args:
-            tasks: 任务列表，每个任务包含 {'name': str, 'func': callable, 'args': tuple, 'kwargs': dict}
+            tasks: 任務列表，每個任務包含 {'name': str, 'func': callable, 'args': tuple, 'kwargs': dict}
         
         Returns:
-            dict: 结果字典，键为任务名称，值为结果
+            dict: 結果字典，键為任務名稱，值為結果
         """
         results = {}
         
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            # 提交所有任务
+            # 提交所有任務
             future_to_name = {}
             for task in tasks:
                 future = executor.submit(
@@ -1207,27 +1207,27 @@ class ParallelDataFetcher:
                 )
                 future_to_name[future] = task['name']
             
-            # 收集结果
+            # 收集結果
             for future in as_completed(future_to_name):
                 task_name = future_to_name[future]
                 try:
-                    result = future.result(timeout=30)  # 30秒超时
+                    result = future.result(timeout=30)  # 30秒超時
                     results[task_name] = result
-                    logger.debug(f"✅ 任务完成: {task_name}")
+                    logger.debug(f"✅ 任務完成: {task_name}")
                 except Exception as e:
-                    logger.error(f"❌ 任务失败: {task_name}, 错误: {e}")
+                    logger.error(f"❌ 任務失败: {task_name}, 錯誤: {e}")
                     results[task_name] = None
         
         return results
 ```
 
-## 🛡️ 错误处理和降级策略
+## 🛡️ 錯誤處理和降級策略
 
-### 数据源降级
+### 數據源降級
 
 ```python
 class DataSourceFallback:
-    """数据源降级处理器"""
+    """數據源降級處理器"""
     
     def __init__(self, manager: DataSourceManager):
         self.manager = manager
@@ -1239,23 +1239,23 @@ class DataSourceFallback:
     
     def get_data_with_fallback(self, ticker: str, data_type: str, 
                               get_data_func: Callable, *args, **kwargs):
-        """使用降级策略获取数据
+        """使用降級策略獲取數據
         
         Args:
-            ticker: 股票代码
-            data_type: 数据类型
-            get_data_func: 数据获取函数
-            *args, **kwargs: 函数参数
+            ticker: 股票代碼
+            data_type: 數據類型
+            get_data_func: 數據獲取函數
+            *args, **kwargs: 函數參數
         
         Returns:
-            数据或错误信息
+            數據或錯誤信息
         """
         from tradingagents.utils.stock_utils import StockUtils
         
         market_info = StockUtils.get_market_info(ticker)
         market_type = market_info['market_type']
         
-        # 确定降级顺序
+        # 確定降級顺序
         if market_type == 'A股':
             sources = self.fallback_order['china_stock']
         elif market_type == '美股':
@@ -1263,46 +1263,46 @@ class DataSourceFallback:
         elif market_type == '港股':
             sources = self.fallback_order['hk_stock']
         else:
-            sources = ['yahoo_finance']  # 默认
+            sources = ['yahoo_finance']  # 默認
         
         last_error = None
         
         for source in sources:
             try:
-                # 切换数据源
+                # 切換數據源
                 if source in self.manager.get_available_sources():
                     self.manager.switch_source(source)
                     
-                    # 尝试获取数据
+                    # 嘗試獲取數據
                     data = get_data_func(*args, **kwargs)
                     
                     if data is not None and not (hasattr(data, 'empty') and data.empty):
-                        logger.info(f"✅ 使用{source}数据源成功获取{ticker}的{data_type}数据")
+                        logger.info(f"✅ 使用{source}數據源成功獲取{ticker}的{data_type}數據")
                         return data
                     else:
-                        logger.warning(f"⚠️ {source}数据源返回空数据")
+                        logger.warning(f"⚠️ {source}數據源返回空數據")
                         
             except Exception as e:
                 last_error = e
-                logger.warning(f"⚠️ {source}数据源失败: {e}")
+                logger.warning(f"⚠️ {source}數據源失败: {e}")
                 continue
         
-        # 所有数据源都失败
-        error_msg = f"❌ 所有数据源都无法获取{ticker}的{data_type}数据"
+        # 所有數據源都失败
+        error_msg = f"❌ 所有數據源都無法獲取{ticker}的{data_type}數據"
         if last_error:
-            error_msg += f"，最后错误: {last_error}"
+            error_msg += f"，最後錯誤: {last_error}"
         
         logger.error(error_msg)
         return error_msg
 ```
 
-## 📈 监控和观测
+## 📈 監控和觀測
 
-### 数据流监控
+### 數據流監控
 
 ```python
 class DataFlowMonitor:
-    """数据流监控器"""
+    """數據流監控器"""
     
     def __init__(self):
         self.metrics = {
@@ -1318,7 +1318,7 @@ class DataFlowMonitor:
     def record_request(self, ticker: str, data_type: str, 
                       success: bool, response_time: float, 
                       data_source: str, from_cache: bool):
-        """记录数据请求"""
+        """記錄數據請求"""
         self.metrics['total_requests'] += 1
         
         if success:
@@ -1331,42 +1331,42 @@ class DataFlowMonitor:
         else:
             self.metrics['cache_misses'] += 1
         
-        # 更新平均响应时间
+        # 更新平均響應時間
         total_time = self.metrics['average_response_time'] * (self.metrics['total_requests'] - 1)
         self.metrics['average_response_time'] = (total_time + response_time) / self.metrics['total_requests']
         
-        # 记录数据源使用情况
+        # 記錄數據源使用情况
         if data_source not in self.metrics['data_source_usage']:
             self.metrics['data_source_usage'][data_source] = 0
         self.metrics['data_source_usage'][data_source] += 1
         
-        logger.info(f"📊 数据请求记录: {ticker} {data_type} {'✅' if success else '❌'} {response_time:.2f}s {data_source} {'(缓存)' if from_cache else ''}")
+        logger.info(f"📊 數據請求記錄: {ticker} {data_type} {'✅' if success else '❌'} {response_time:.2f}s {data_source} {'(緩存)' if from_cache else ''}")
     
     def get_metrics_report(self) -> str:
-        """生成监控报告"""
+        """生成監控報告"""
         if self.metrics['total_requests'] == 0:
-            return "📊 暂无数据请求记录"
+            return "📊 暂無數據請求記錄"
         
         success_rate = self.metrics['successful_requests'] / self.metrics['total_requests']
         cache_hit_rate = self.metrics['cache_hits'] / self.metrics['total_requests']
         
-        report = f"""📊 数据流监控报告
+        report = f"""📊 數據流監控報告
         
-**请求统计**:
-- 总请求数: {self.metrics['total_requests']}
-- 成功请求: {self.metrics['successful_requests']}
-- 失败请求: {self.metrics['failed_requests']}
+**請求統計**:
+- 总請求數: {self.metrics['total_requests']}
+- 成功請求: {self.metrics['successful_requests']}
+- 失败請求: {self.metrics['failed_requests']}
 - 成功率: {success_rate:.1%}
 
-**缓存统计**:
-- 缓存命中: {self.metrics['cache_hits']}
-- 缓存未命中: {self.metrics['cache_misses']}
-- 缓存命中率: {cache_hit_rate:.1%}
+**緩存統計**:
+- 緩存命中: {self.metrics['cache_hits']}
+- 緩存未命中: {self.metrics['cache_misses']}
+- 緩存命中率: {cache_hit_rate:.1%}
 
-**性能统计**:
-- 平均响应时间: {self.metrics['average_response_time']:.2f}s
+**性能統計**:
+- 平均響應時間: {self.metrics['average_response_time']:.2f}s
 
-**数据源使用情况**:
+**數據源使用情况**:
 """
         
         for source, count in self.metrics['data_source_usage'].items():
@@ -1375,30 +1375,30 @@ class DataFlowMonitor:
         
         return report
 
-# 全局监控实例
+# 全局監控實例
 data_flow_monitor = DataFlowMonitor()
 ```
 
 ## 🔧 配置管理
 
-### 环境变量配置
+### 環境變量配置
 
 ```bash
 # .env 文件示例
 
-# 数据源配置
+# 數據源配置
 DEFAULT_CHINA_DATA_SOURCE=tushare
 TUSHARE_TOKEN=your_tushare_token_here
 FINNHUB_API_KEY=your_finnhub_api_key
 REDDIT_CLIENT_ID=your_reddit_client_id
 REDDIT_CLIENT_SECRET=your_reddit_client_secret
 
-# 数据目录配置
+# 數據目錄配置
 DATA_DIR=./data
 CACHE_DIR=./cache
 RESULTS_DIR=./results
 
-# 缓存配置
+# 緩存配置
 ENABLE_CACHE=true
 CACHE_EXPIRY_MARKET_DATA=300
 CACHE_EXPIRY_NEWS_DATA=3600
@@ -1411,12 +1411,12 @@ REQUEST_TIMEOUT=30
 RETRY_ATTEMPTS=3
 RETRY_DELAY=1
 
-# 监控配置
+# 監控配置
 ENABLE_MONITORING=true
 LOG_LEVEL=INFO
 ```
 
-### 动态配置更新
+### 動態配置更新
 
 ```python
 class ConfigManager:
@@ -1428,25 +1428,25 @@ class ConfigManager:
         self._setup_directories()
     
     def _load_config(self) -> dict:
-        """加载配置"""
+        """加載配置"""
         from dotenv import load_dotenv
         
         load_dotenv(self.config_file)
         
         return {
-            # 数据源配置
+            # 數據源配置
             'default_china_data_source': os.getenv('DEFAULT_CHINA_DATA_SOURCE', 'tushare'),
             'tushare_token': os.getenv('TUSHARE_TOKEN'),
             'finnhub_api_key': os.getenv('FINNHUB_API_KEY'),
             'reddit_client_id': os.getenv('REDDIT_CLIENT_ID'),
             'reddit_client_secret': os.getenv('REDDIT_CLIENT_SECRET'),
             
-            # 目录配置
+            # 目錄配置
             'data_dir': os.getenv('DATA_DIR', './data'),
             'cache_dir': os.getenv('CACHE_DIR', './cache'),
             'results_dir': os.getenv('RESULTS_DIR', './results'),
             
-            # 缓存配置
+            # 緩存配置
             'enable_cache': os.getenv('ENABLE_CACHE', 'true').lower() == 'true',
             'cache_expiry': {
                 'market_data': int(os.getenv('CACHE_EXPIRY_MARKET_DATA', '300')),
@@ -1461,20 +1461,20 @@ class ConfigManager:
             'retry_attempts': int(os.getenv('RETRY_ATTEMPTS', '3')),
             'retry_delay': float(os.getenv('RETRY_DELAY', '1.0')),
             
-            # 监控配置
+            # 監控配置
             'enable_monitoring': os.getenv('ENABLE_MONITORING', 'true').lower() == 'true',
             'log_level': os.getenv('LOG_LEVEL', 'INFO'),
         }
     
     def _setup_directories(self):
-        """设置目录"""
+        """設置目錄"""
         for dir_key in ['data_dir', 'cache_dir', 'results_dir']:
             dir_path = self.config[dir_key]
             os.makedirs(dir_path, exist_ok=True)
-            logger.info(f"📁 目录已准备: {dir_key} = {dir_path}")
+            logger.info(f"📁 目錄已準备: {dir_key} = {dir_path}")
     
     def get(self, key: str, default=None):
-        """获取配置值"""
+        """獲取配置值"""
         return self.config.get(key, default)
     
     def update(self, key: str, value):
@@ -1483,60 +1483,60 @@ class ConfigManager:
         logger.info(f"🔧 配置已更新: {key} = {value}")
     
     def reload(self):
-        """重新加载配置"""
+        """重新加載配置"""
         self.config = self._load_config()
         self._setup_directories()
-        logger.info("🔄 配置已重新加载")
+        logger.info("🔄 配置已重新加載")
 
-# 全局配置实例
+# 全局配置實例
 config_manager = ConfigManager()
 ```
 
-## 🚀 最佳实践
+## 🚀 最佳實踐
 
-### 1. 数据源选择策略
+### 1. 數據源選擇策略
 
 ```python
-# 推荐的数据源配置
+# 推薦的數據源配置
 RECOMMENDED_DATA_SOURCES = {
     'A股': {
-        'primary': 'tushare',      # 主要数据源：专业、稳定
-        'fallback': ['akshare', 'baostock'],  # 备用数据源
-        'use_case': '适用于专业投资分析，数据质量高'
+        'primary': 'tushare',      # 主要數據源：專業、穩定
+        'fallback': ['akshare', 'baostock'],  # 备用數據源
+        'use_case': '適用於專業投資分析，數據质量高'
     },
     '港股': {
         'primary': 'yahoo_finance',
         'fallback': ['akshare'],
-        'use_case': '国际化数据源，覆盖全面'
+        'use_case': '國际化數據源，覆蓋全面'
     },
     '美股': {
         'primary': 'yahoo_finance',
         'fallback': ['finnhub'],
-        'use_case': '免费且稳定的美股数据'
+        'use_case': '免費且穩定的美股數據'
     }
 }
 ```
 
-### 2. 缓存策略优化
+### 2. 緩存策略優化
 
 ```python
-# 缓存过期时间建议
+# 緩存過期時間建议
 CACHE_EXPIRY_RECOMMENDATIONS = {
-    'real_time_data': 60,        # 实时数据：1分钟
-    'intraday_data': 300,        # 日内数据：5分钟
-    'daily_data': 3600,          # 日线数据：1小时
-    'fundamental_data': 86400,   # 基本面数据：24小时
-    'news_data': 1800,           # 新闻数据：30分钟
-    'social_sentiment': 900,     # 社交情绪：15分钟
+    'real_time_data': 60,        # 實時數據：1分鐘
+    'intraday_data': 300,        # 日內數據：5分鐘
+    'daily_data': 3600,          # 日線數據：1小時
+    'fundamental_data': 86400,   # 基本面數據：24小時
+    'news_data': 1800,           # 新聞數據：30分鐘
+    'social_sentiment': 900,     # 社交情绪：15分鐘
 }
 ```
 
-### 3. 错误处理模式
+### 3. 錯誤處理模式
 
 ```python
-# 错误处理最佳实践
+# 錯誤處理最佳實踐
 def robust_data_fetch(func):
-    """数据获取装饰器，提供统一的错误处理"""
+    """數據獲取裝饰器，提供統一的錯誤處理"""
     def wrapper(*args, **kwargs):
         max_retries = 3
         retry_delay = 1.0
@@ -1547,28 +1547,28 @@ def robust_data_fetch(func):
                 if result is not None:
                     return result
                 else:
-                    logger.warning(f"第{attempt + 1}次尝试返回空数据")
+                    logger.warning(f"第{attempt + 1}次嘗試返回空數據")
             except Exception as e:
-                logger.warning(f"第{attempt + 1}次尝试失败: {e}")
+                logger.warning(f"第{attempt + 1}次嘗試失败: {e}")
                 if attempt < max_retries - 1:
-                    time.sleep(retry_delay * (2 ** attempt))  # 指数退避
+                    time.sleep(retry_delay * (2 ** attempt))  # 指數退避
                 else:
-                    logger.error(f"所有重试都失败，最终错误: {e}")
+                    logger.error(f"所有重試都失败，最终錯誤: {e}")
                     return None
         
         return None
     return wrapper
 ```
 
-### 4. 性能监控建议
+### 4. 性能監控建议
 
 ```python
-# 性能监控关键指标
+# 性能監控關键指標
 PERFORMANCE_THRESHOLDS = {
     'response_time': {
-        'excellent': 1.0,    # 1秒以内
-        'good': 3.0,         # 3秒以内
-        'acceptable': 10.0,  # 10秒以内
+        'excellent': 1.0,    # 1秒以內
+        'good': 3.0,         # 3秒以內
+        'acceptable': 10.0,  # 10秒以內
     },
     'success_rate': {
         'excellent': 0.99,   # 99%以上
@@ -1583,31 +1583,31 @@ PERFORMANCE_THRESHOLDS = {
 }
 ```
 
-## 📋 总结
+## 📋 总結
 
-TradingAgents 的数据流架构具有以下特点：
+TradingAgents 的數據流架構具有以下特點：
 
-### ✅ 优势
+### ✅ 優势
 
-1. **统一接口**: 通过统一的数据接口屏蔽底层数据源差异
-2. **智能降级**: 自动数据源切换，确保数据获取的可靠性
-3. **高效缓存**: 多层缓存策略，显著提升响应速度
-4. **质量监控**: 实时数据质量检查和性能监控
-5. **灵活扩展**: 模块化设计，易于添加新的数据源
-6. **错误恢复**: 完善的错误处理和重试机制
+1. **統一接口**: 通過統一的數據接口屏蔽底層數據源差異
+2. **智能降級**: 自動數據源切換，確保數據獲取的可靠性
+3. **高效緩存**: 多層緩存策略，顯著提升響應速度
+4. **质量監控**: 實時數據质量檢查和性能監控
+5. **灵活擴展**: 模塊化設計，易於添加新的數據源
+6. **錯誤恢複**: 完善的錯誤處理和重試機制
 
-### 🎯 适用场景
+### 🎯 適用場景
 
-- **多市场交易**: 支持A股、港股、美股的统一数据访问
-- **实时分析**: 低延迟的数据获取和处理
-- **大规模部署**: 支持高并发和大数据量处理
-- **研究开发**: 灵活的数据源配置和扩展能力
+- **多市場交易**: 支持A股、港股、美股的統一數據訪問
+- **實時分析**: 低延迟的數據獲取和處理
+- **大規模部署**: 支持高並發和大數據量處理
+- **研究開發**: 灵活的數據源配置和擴展能力
 
-### 🔮 未来发展
+### 🔮 未來發展
 
-1. **实时数据流**: 集成WebSocket实时数据推送
-2. **机器学习**: 数据质量智能评估和预测
-3. **云原生**: 支持云端数据源和分布式缓存
-4. **国际化**: 扩展更多国际市场数据源
+1. **實時數據流**: 集成WebSocket實時數據推送
+2. **機器學习**: 數據质量智能評估和預測
+3. **云原生**: 支持云端數據源和分布式緩存
+4. **國际化**: 擴展更多國际市場數據源
 
-通过这个数据流架构，TradingAgents 能够为智能体提供高质量、高可用的金融数据服务，支撑复杂的投资决策分析。
+通過這個數據流架構，TradingAgents 能夠為智能體提供高质量、高可用的金融數據服務，支撑複雜的投資決策分析。

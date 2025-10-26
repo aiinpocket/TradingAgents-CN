@@ -1,46 +1,46 @@
-# 数据处理流程
+# 數據處理流程
 
 ## 概述
 
-TradingAgents 框架的数据处理系统负责将来自多个数据源的原始数据转换为智能体可以使用的标准化、高质量信息。本文档详细介绍了数据获取、清洗、转换、验证和分发的完整流程。
+TradingAgents 框架的數據處理系統负责将來自多個數據源的原始數據轉換為智能體可以使用的標準化、高质量信息。本文档詳細介紹了數據獲取、清洗、轉換、驗證和分發的完整流程。
 
-## 数据处理架构
+## 數據處理架構
 
-### 数据处理管道
+### 數據處理管道
 
 ```mermaid
 graph TB
-    subgraph "数据获取层"
+    subgraph "數據獲取層"
         API1[FinnHub API]
         API2[Yahoo Finance]
         API3[Reddit API]
         API4[Google News]
     end
     
-    subgraph "数据预处理层"
-        COLLECT[数据收集器]
-        VALIDATE[数据验证器]
-        CLEAN[数据清洗器]
-        NORMALIZE[数据标准化器]
+    subgraph "數據預處理層"
+        COLLECT[數據收集器]
+        VALIDATE[數據驗證器]
+        CLEAN[數據清洗器]
+        NORMALIZE[數據標準化器]
     end
     
-    subgraph "数据转换层"
-        TRANSFORM[数据转换器]
-        ENRICH[数据增强器]
-        AGGREGATE[数据聚合器]
+    subgraph "數據轉換層"
+        TRANSFORM[數據轉換器]
+        ENRICH[數據增强器]
+        AGGREGATE[數據聚合器]
         FEATURE[特征工程器]
     end
     
-    subgraph "数据存储层"
-        CACHE[缓存系统]
-        DATABASE[数据库]
-        MEMORY[内存存储]
+    subgraph "數據存储層"
+        CACHE[緩存系統]
+        DATABASE[數據庫]
+        MEMORY[內存存储]
     end
     
-    subgraph "数据分发层"
-        ROUTER[数据路由器]
+    subgraph "數據分發層"
+        ROUTER[數據路由器]
         FORMATTER[格式化器]
-        DISPATCHER[分发器]
+        DISPATCHER[分發器]
     end
     
     API1 --> COLLECT
@@ -69,12 +69,12 @@ graph TB
     FORMATTER --> DISPATCHER
 ```
 
-## 1. 数据收集器
+## 1. 數據收集器
 
 ### 核心功能
 ```python
 class DataCollector:
-    """数据收集器 - 统一收集各数据源的数据"""
+    """數據收集器 - 統一收集各數據源的數據"""
     
     def __init__(self, config: Dict):
         self.config = config
@@ -83,7 +83,7 @@ class DataCollector:
         self.error_handler = DataErrorHandler()
         
     def collect_comprehensive_data(self, symbol: str, date: str = None) -> Dict:
-        """收集综合数据"""
+        """收集综合數據"""
         
         collection_tasks = {
             "price_data": self._collect_price_data,
@@ -97,7 +97,7 @@ class DataCollector:
         collected_data = {}
         collection_metadata = {}
         
-        # 并行收集数据
+        # 並行收集數據
         with ThreadPoolExecutor(max_workers=6) as executor:
             future_to_task = {
                 executor.submit(task_func, symbol, date): task_name
@@ -107,7 +107,7 @@ class DataCollector:
             for future in as_completed(future_to_task):
                 task_name = future_to_task[future]
                 try:
-                    result = future.result(timeout=30)  # 30秒超时
+                    result = future.result(timeout=30)  # 30秒超時
                     collected_data[task_name] = result["data"]
                     collection_metadata[task_name] = result["metadata"]
                 except Exception as e:
@@ -124,7 +124,7 @@ class DataCollector:
         }
     
     def _collect_price_data(self, symbol: str, date: str = None) -> Dict:
-        """收集价格数据"""
+        """收集價格數據"""
         
         price_sources = ["finnhub", "yahoo_finance"]
         price_data = {}
@@ -134,14 +134,14 @@ class DataCollector:
                 if source == "finnhub" and "finnhub" in self.data_sources:
                     data = self.data_sources["finnhub"].get_stock_price(symbol)
                     price_data["finnhub"] = data
-                    break  # 优先使用 FinnHub
+                    break  # 優先使用 FinnHub
                 elif source == "yahoo_finance":
                     data = self.data_sources["yahoo"].get_current_price(symbol)
                     price_data["yahoo"] = data
             except Exception as e:
                 print(f"Error collecting price data from {source}: {e}")
         
-        # 选择最佳数据源
+        # 選擇最佳數據源
         best_price_data = self._select_best_price_data(price_data)
         
         return {
@@ -154,11 +154,11 @@ class DataCollector:
         }
     
     def _collect_fundamental_data(self, symbol: str, date: str = None) -> Dict:
-        """收集基本面数据"""
+        """收集基本面數據"""
         
         fundamental_data = {}
         
-        # 财务报表数据
+        # 財務報表數據
         try:
             if "finnhub" in self.data_sources:
                 financials = self.data_sources["finnhub"].get_financial_statements(symbol)
@@ -174,7 +174,7 @@ class DataCollector:
         except Exception as e:
             print(f"Error collecting company profile: {e}")
         
-        # 估值指标
+        # 估值指標
         try:
             if "yahoo" in self.data_sources:
                 valuation = self.data_sources["yahoo"].get_valuation_metrics(symbol)
@@ -191,19 +191,19 @@ class DataCollector:
         }
 ```
 
-## 2. 数据验证器
+## 2. 數據驗證器
 
-### 数据质量检查
+### 數據质量檢查
 ```python
 class DataValidator:
-    """数据验证器 - 确保数据质量和完整性"""
+    """數據驗證器 - 確保數據质量和完整性"""
     
     def __init__(self):
         self.validation_rules = self._load_validation_rules()
         self.quality_metrics = QualityMetrics()
         
     def validate_collected_data(self, collected_data: Dict) -> Dict:
-        """验证收集的数据"""
+        """驗證收集的數據"""
         
         validation_results = {}
         
@@ -211,7 +211,7 @@ class DataValidator:
             validation_result = self._validate_data_type(data_type, data)
             validation_results[data_type] = validation_result
         
-        # 计算整体数据质量评分
+        # 計算整體數據质量評分
         overall_quality = self._calculate_overall_quality(validation_results)
         
         return {
@@ -223,7 +223,7 @@ class DataValidator:
         }
     
     def _validate_data_type(self, data_type: str, data: Dict) -> Dict:
-        """验证特定类型的数据"""
+        """驗證特定類型的數據"""
         
         validation_checks = {
             "completeness": self._check_completeness(data_type, data),
@@ -233,7 +233,7 @@ class DataValidator:
             "format": self._check_format(data_type, data)
         }
         
-        # 计算验证评分
+        # 計算驗證評分
         validation_score = sum(check["score"] for check in validation_checks.values()) / len(validation_checks)
         
         return {
@@ -244,7 +244,7 @@ class DataValidator:
         }
     
     def _check_completeness(self, data_type: str, data: Dict) -> Dict:
-        """检查数据完整性"""
+        """檢查數據完整性"""
         
         required_fields = self.validation_rules[data_type]["required_fields"]
         missing_fields = [field for field in required_fields if field not in data]
@@ -259,21 +259,21 @@ class DataValidator:
         }
     
     def _check_accuracy(self, data_type: str, data: Dict) -> Dict:
-        """检查数据准确性"""
+        """檢查數據準確性"""
         
         accuracy_issues = []
         
         if data_type == "price_data":
-            # 价格合理性检查
+            # 價格合理性檢查
             if "current_price" in data:
                 price = data["current_price"]
                 if not isinstance(price, (int, float)) or price <= 0:
                     accuracy_issues.append("Invalid price value")
-                elif price > 10000:  # 异常高价格
+                elif price > 10000:  # 異常高價格
                     accuracy_issues.append("Unusually high price")
         
         elif data_type == "fundamental_data":
-            # 财务数据合理性检查
+            # 財務數據合理性檢查
             if "market_cap" in data:
                 market_cap = data["market_cap"]
                 if market_cap and market_cap < 0:
@@ -289,19 +289,19 @@ class DataValidator:
         }
 ```
 
-## 3. 数据清洗器
+## 3. 數據清洗器
 
-### 数据清洗流程
+### 數據清洗流程
 ```python
 class DataCleaner:
-    """数据清洗器 - 清理和修复数据问题"""
+    """數據清洗器 - 清理和修複數據問題"""
     
     def __init__(self):
         self.cleaning_strategies = self._initialize_cleaning_strategies()
         self.outlier_detector = OutlierDetector()
         
     def clean_data(self, validated_data: Dict) -> Dict:
-        """清洗数据"""
+        """清洗數據"""
         
         cleaned_data = {}
         cleaning_log = {}
@@ -318,27 +318,27 @@ class DataCleaner:
         }
     
     def _clean_data_type(self, data_type: str, data: Dict) -> Dict:
-        """清洗特定类型的数据"""
+        """清洗特定類型的數據"""
         
         cleaned_data = data.copy()
         cleaning_operations = []
         
-        # 处理缺失值
+        # 處理缺失值
         missing_value_result = self._handle_missing_values(data_type, cleaned_data)
         cleaned_data.update(missing_value_result["data"])
         cleaning_operations.extend(missing_value_result["operations"])
         
-        # 处理异常值
+        # 處理異常值
         outlier_result = self._handle_outliers(data_type, cleaned_data)
         cleaned_data.update(outlier_result["data"])
         cleaning_operations.extend(outlier_result["operations"])
         
-        # 数据类型转换
+        # 數據類型轉換
         type_conversion_result = self._convert_data_types(data_type, cleaned_data)
         cleaned_data.update(type_conversion_result["data"])
         cleaning_operations.extend(type_conversion_result["operations"])
         
-        # 数据格式标准化
+        # 數據格式標準化
         standardization_result = self._standardize_formats(data_type, cleaned_data)
         cleaned_data.update(standardization_result["data"])
         cleaning_operations.extend(standardization_result["operations"])
@@ -352,23 +352,23 @@ class DataCleaner:
         }
     
     def _handle_missing_values(self, data_type: str, data: Dict) -> Dict:
-        """处理缺失值"""
+        """處理缺失值"""
         
         operations = []
         updated_data = {}
         
         if data_type == "price_data":
-            # 价格数据的缺失值处理
+            # 價格數據的缺失值處理
             if "current_price" not in data or data["current_price"] is None:
-                # 尝试从历史数据推断
+                # 嘗試從歷史數據推斷
                 if "previous_close" in data and data["previous_close"]:
                     updated_data["current_price"] = data["previous_close"]
                     operations.append("Imputed current_price from previous_close")
         
         elif data_type == "fundamental_data":
-            # 基本面数据的缺失值处理
+            # 基本面數據的缺失值處理
             if "market_cap" not in data or data["market_cap"] is None:
-                # 尝试计算市值
+                # 嘗試計算市值
                 if "shares_outstanding" in data and "current_price" in data:
                     if data["shares_outstanding"] and data["current_price"]:
                         updated_data["market_cap"] = data["shares_outstanding"] * data["current_price"]
@@ -380,19 +380,19 @@ class DataCleaner:
         }
     
     def _handle_outliers(self, data_type: str, data: Dict) -> Dict:
-        """处理异常值"""
+        """處理異常值"""
         
         operations = []
         updated_data = {}
         
         if data_type == "price_data":
-            # 检查价格异常值
+            # 檢查價格異常值
             if "current_price" in data:
                 price = data["current_price"]
                 if isinstance(price, (int, float)):
-                    # 使用历史价格范围检查异常值
+                    # 使用歷史價格範围檢查異常值
                     if self._is_price_outlier(price, data):
-                        # 使用前一交易日收盘价替代
+                        # 使用前一交易日收盘價替代
                         if "previous_close" in data:
                             updated_data["current_price"] = data["previous_close"]
                             operations.append(f"Replaced outlier price {price} with previous_close")
@@ -403,19 +403,19 @@ class DataCleaner:
         }
 ```
 
-## 4. 数据转换器
+## 4. 數據轉換器
 
-### 数据标准化和转换
+### 數據標準化和轉換
 ```python
 class DataTransformer:
-    """数据转换器 - 标准化和转换数据格式"""
+    """數據轉換器 - 標準化和轉換數據格式"""
     
     def __init__(self):
         self.transformation_rules = self._load_transformation_rules()
         self.unit_converter = UnitConverter()
         
     def transform_data(self, cleaned_data: Dict) -> Dict:
-        """转换数据"""
+        """轉換數據"""
         
         transformed_data = {}
         transformation_log = {}
@@ -432,7 +432,7 @@ class DataTransformer:
         }
     
     def _transform_data_type(self, data_type: str, data: Dict) -> Dict:
-        """转换特定类型的数据"""
+        """轉換特定類型的數據"""
         
         transformed_data = {}
         transformations = []
@@ -462,7 +462,7 @@ class DataTransformer:
         }
     
     def _transform_price_data(self, data: Dict) -> Dict:
-        """转换价格数据"""
+        """轉換價格數據"""
         
         transformed = {
             "symbol": data.get("symbol"),
@@ -481,7 +481,7 @@ class DataTransformer:
             "timestamp": self._standardize_timestamp(data.get("timestamp"))
         }
         
-        # 计算额外指标
+        # 計算額外指標
         if transformed["price"]["current"] and transformed["price"]["previous_close"]:
             transformed["metrics"] = {
                 "daily_return": (transformed["price"]["current"] - transformed["price"]["previous_close"]) / transformed["price"]["previous_close"],
@@ -491,7 +491,7 @@ class DataTransformer:
         return transformed
     
     def _transform_fundamental_data(self, data: Dict) -> Dict:
-        """转换基本面数据"""
+        """轉換基本面數據"""
         
         transformed = {
             "company_info": {
@@ -538,7 +538,7 @@ class FeatureEngineer:
         
         features = {}
         
-        # 价格特征
+        # 價格特征
         if "price_data" in transformed_data:
             features["price_features"] = self._generate_price_features(transformed_data["price_data"])
         
@@ -546,7 +546,7 @@ class FeatureEngineer:
         if "fundamental_data" in transformed_data:
             features["fundamental_features"] = self._generate_fundamental_features(transformed_data["fundamental_data"])
         
-        # 技术特征
+        # 技術特征
         if "technical_data" in transformed_data:
             features["technical_features"] = self._generate_technical_features(transformed_data["technical_data"])
         
@@ -569,7 +569,7 @@ class FeatureEngineer:
         }
     
     def _generate_price_features(self, price_data: Dict) -> Dict:
-        """生成价格特征"""
+        """生成價格特征"""
         
         price_info = price_data.get("price", {})
         
@@ -601,19 +601,19 @@ class FeatureEngineer:
         return features
 ```
 
-## 6. 数据分发器
+## 6. 數據分發器
 
-### 智能数据路由
+### 智能數據路由
 ```python
 class DataDispatcher:
-    """数据分发器 - 将处理后的数据分发给智能体"""
+    """數據分發器 - 将處理後的數據分發給智能體"""
     
     def __init__(self):
         self.routing_rules = self._load_routing_rules()
         self.agent_requirements = self._load_agent_requirements()
         
     def dispatch_data(self, engineered_data: Dict, target_agents: List[str]) -> Dict:
-        """分发数据给目标智能体"""
+        """分發數據給目標智能體"""
         
         dispatched_data = {}
         
@@ -631,19 +631,19 @@ class DataDispatcher:
         }
     
     def _prepare_agent_data(self, agent: str, data: Dict) -> Dict:
-        """为特定智能体准备数据"""
+        """為特定智能體準备數據"""
         
         agent_requirements = self.agent_requirements.get(agent, {})
         required_features = agent_requirements.get("required_features", [])
         
         agent_data = {}
         
-        # 根据智能体需求筛选数据
+        # 根據智能體需求筛選數據
         for feature_category in required_features:
             if feature_category in data["features"]:
                 agent_data[feature_category] = data["features"][feature_category]
         
-        # 添加智能体特定的数据格式化
+        # 添加智能體特定的數據格式化
         formatted_data = self._format_for_agent(agent, agent_data)
         
         return {
@@ -656,4 +656,4 @@ class DataDispatcher:
         }
 ```
 
-通过这个完整的数据处理流程，TradingAgents 确保智能体获得高质量、标准化、相关的数据，为准确的分析和决策提供坚实基础。
+通過這個完整的數據處理流程，TradingAgents 確保智能體獲得高质量、標準化、相關的數據，為準確的分析和決策提供坚實基础。

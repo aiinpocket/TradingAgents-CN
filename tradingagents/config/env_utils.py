@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-环境变量解析工具
-提供兼容Python 3.13+的强健环境变量解析功能
+環境變量解析工具
+提供兼容Python 3.13+的强健環境變量解析功能
 """
 
 import os
@@ -10,7 +10,7 @@ from typing import Any, Union, Optional
 
 def parse_bool_env(env_var: str, default: bool = False) -> bool:
     """
-    解析布尔类型环境变量，兼容多种格式
+    解析布爾類型環境變量，兼容多種格式
     
     支持的格式：
     - true/True/TRUE
@@ -22,24 +22,24 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     - off/Off/OFF
     
     Args:
-        env_var: 环境变量名
-        default: 默认值
+        env_var: 環境變量名
+        default: 默認值
         
     Returns:
-        bool: 解析后的布尔值
+        bool: 解析後的布爾值
     """
     value = os.getenv(env_var)
     
     if value is None:
         return default
     
-    # 转换为字符串并去除空白
+    # 轉換為字符串並去除空白
     value_str = str(value).strip()
     
     if not value_str:
         return default
     
-    # 转换为小写进行比较
+    # 轉換為小寫進行比較
     value_lower = value_str.lower()
     
     # 真值列表
@@ -59,21 +59,21 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     elif value_lower in false_values:
         return False
     else:
-        # 如果无法识别，记录警告并返回默认值
-        print(f"⚠️ 无法解析环境变量 {env_var}='{value}'，使用默认值 {default}")
+        # 如果無法识別，記錄警告並返回默認值
+        print(f"⚠️ 無法解析環境變量 {env_var}='{value}'，使用默認值 {default}")
         return default
 
 
 def parse_int_env(env_var: str, default: int = 0) -> int:
     """
-    解析整数类型环境变量
+    解析整數類型環境變量
     
     Args:
-        env_var: 环境变量名
-        default: 默认值
+        env_var: 環境變量名
+        default: 默認值
         
     Returns:
-        int: 解析后的整数值
+        int: 解析後的整數值
     """
     value = os.getenv(env_var)
     
@@ -83,20 +83,20 @@ def parse_int_env(env_var: str, default: int = 0) -> int:
     try:
         return int(value.strip())
     except (ValueError, AttributeError):
-        print(f"⚠️ 无法解析环境变量 {env_var}='{value}' 为整数，使用默认值 {default}")
+        print(f"⚠️ 無法解析環境變量 {env_var}='{value}' 為整數，使用默認值 {default}")
         return default
 
 
 def parse_float_env(env_var: str, default: float = 0.0) -> float:
     """
-    解析浮点数类型环境变量
+    解析浮點數類型環境變量
     
     Args:
-        env_var: 环境变量名
-        default: 默认值
+        env_var: 環境變量名
+        default: 默認值
         
     Returns:
-        float: 解析后的浮点数值
+        float: 解析後的浮點數值
     """
     value = os.getenv(env_var)
     
@@ -106,20 +106,20 @@ def parse_float_env(env_var: str, default: float = 0.0) -> float:
     try:
         return float(value.strip())
     except (ValueError, AttributeError):
-        print(f"⚠️ 无法解析环境变量 {env_var}='{value}' 为浮点数，使用默认值 {default}")
+        print(f"⚠️ 無法解析環境變量 {env_var}='{value}' 為浮點數，使用默認值 {default}")
         return default
 
 
 def parse_str_env(env_var: str, default: str = "") -> str:
     """
-    解析字符串类型环境变量
+    解析字符串類型環境變量
     
     Args:
-        env_var: 环境变量名
-        default: 默认值
+        env_var: 環境變量名
+        default: 默認值
         
     Returns:
-        str: 解析后的字符串值
+        str: 解析後的字符串值
     """
     value = os.getenv(env_var)
     
@@ -131,15 +131,15 @@ def parse_str_env(env_var: str, default: str = "") -> str:
 
 def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] = None) -> list:
     """
-    解析列表类型环境变量
+    解析列表類型環境變量
     
     Args:
-        env_var: 环境变量名
+        env_var: 環境變量名
         separator: 分隔符
-        default: 默认值
+        default: 默認值
         
     Returns:
-        list: 解析后的列表
+        list: 解析後的列表
     """
     if default is None:
         default = []
@@ -150,24 +150,24 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
         return default
     
     try:
-        # 分割并去除空白
+        # 分割並去除空白
         items = [item.strip() for item in value.split(separator)]
-        # 过滤空字符串
+        # 過濾空字符串
         return [item for item in items if item]
     except AttributeError:
-        print(f"⚠️ 无法解析环境变量 {env_var}='{value}' 为列表，使用默认值 {default}")
+        print(f"⚠️ 無法解析環境變量 {env_var}='{value}' 為列表，使用默認值 {default}")
         return default
 
 
 def get_env_info(env_var: str) -> dict:
     """
-    获取环境变量的详细信息
+    獲取環境變量的詳細信息
     
     Args:
-        env_var: 环境变量名
+        env_var: 環境變量名
         
     Returns:
-        dict: 环境变量信息
+        dict: 環境變量信息
     """
     value = os.getenv(env_var)
     
@@ -183,13 +183,13 @@ def get_env_info(env_var: str) -> dict:
 
 def validate_required_env_vars(required_vars: list) -> dict:
     """
-    验证必需的环境变量是否已设置
+    驗證必需的環境變量是否已設置
     
     Args:
-        required_vars: 必需的环境变量列表
+        required_vars: 必需的環境變量列表
         
     Returns:
-        dict: 验证结果
+        dict: 驗證結果
     """
     results = {
         'all_set': True,
@@ -213,23 +213,23 @@ def validate_required_env_vars(required_vars: list) -> dict:
     return results
 
 
-# 兼容性函数：保持向后兼容
+# 兼容性函數：保持向後兼容
 def get_bool_env(env_var: str, default: bool = False) -> bool:
-    """向后兼容的布尔值解析函数"""
+    """向後兼容的布爾值解析函數"""
     return parse_bool_env(env_var, default)
 
 
 def get_int_env(env_var: str, default: int = 0) -> int:
-    """向后兼容的整数解析函数"""
+    """向後兼容的整數解析函數"""
     return parse_int_env(env_var, default)
 
 
 def get_str_env(env_var: str, default: str = "") -> str:
-    """向后兼容的字符串解析函数"""
+    """向後兼容的字符串解析函數"""
     return parse_str_env(env_var, default)
 
 
-# 导出主要函数
+# 導出主要函數
 __all__ = [
     'parse_bool_env',
     'parse_int_env', 
@@ -238,7 +238,7 @@ __all__ = [
     'parse_list_env',
     'get_env_info',
     'validate_required_env_vars',
-    'get_bool_env',  # 向后兼容
-    'get_int_env',   # 向后兼容
-    'get_str_env'    # 向后兼容
+    'get_bool_env',  # 向後兼容
+    'get_int_env',   # 向後兼容
+    'get_str_env'    # 向後兼容
 ]

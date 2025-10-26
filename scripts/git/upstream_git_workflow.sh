@@ -1,23 +1,23 @@
 #!/bin/bash
-# 上游贡献Git工作流脚本
-# 自动化处理Fork、分支管理、PR准备等任务
+# 上游贡献Git工作流腳本
+# 自動化處理Fork、分支管理、PR準备等任務
 
 set -e
 
-# 配置变量
+# 配置變量
 UPSTREAM_REPO="https://github.com/TauricResearch/TradingAgents.git"
-FORK_REPO="https://github.com/YOUR_USERNAME/TradingAgents.git"  # 需要替换为实际的Fork地址
+FORK_REPO="https://github.com/YOUR_USERNAME/TradingAgents.git"  # 需要替換為實际的Fork地址
 WORK_DIR="./upstream_work"
 CONTRIBUTION_DIR="./upstream_contribution"
 
-# 颜色输出
+# 颜色輸出
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# 日志函数
+# 日誌函數
 log_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -34,7 +34,7 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# 检查依赖
+# 檢查依賴
 check_dependencies() {
     log_info "Checking dependencies..."
     
@@ -51,7 +51,7 @@ check_dependencies() {
     log_success "All dependencies are available"
 }
 
-# 设置上游仓库
+# 設置上游仓庫
 setup_upstream_repo() {
     log_info "Setting up upstream repository..."
     
@@ -60,21 +60,21 @@ setup_upstream_repo() {
         rm -rf "$WORK_DIR"
     fi
     
-    # Clone上游仓库
+    # Clone上游仓庫
     git clone "$UPSTREAM_REPO" "$WORK_DIR"
     cd "$WORK_DIR"
     
-    # 添加Fork作为远程仓库
+    # 添加Fork作為远程仓庫
     git remote add fork "$FORK_REPO"
     
-    # 获取最新代码
+    # 獲取最新代碼
     git fetch origin
     git fetch fork
     
     log_success "Upstream repository setup completed"
 }
 
-# 创建功能分支
+# 創建功能分支
 create_feature_branch() {
     local batch_name=$1
     local branch_name="feature/${batch_name}"
@@ -83,17 +83,17 @@ create_feature_branch() {
     
     cd "$WORK_DIR"
     
-    # 确保在main分支
+    # 確保在main分支
     git checkout main
     git pull origin main
     
-    # 创建新分支
+    # 創建新分支
     git checkout -b "$branch_name"
     
     log_success "Feature branch $branch_name created"
 }
 
-# 应用贡献代码
+# 應用贡献代碼
 apply_contribution() {
     local batch_name=$1
     local batch_dir="../$CONTRIBUTION_DIR/$batch_name"
@@ -107,20 +107,20 @@ apply_contribution() {
     
     cd "$WORK_DIR"
     
-    # 复制文件
+    # 複制文件
     while IFS= read -r -d '' file; do
         local rel_path=$(realpath --relative-to="$batch_dir" "$file")
         local target_path="$rel_path"
         
-        # 跳过文档文件
+        # 跳過文档文件
         if [[ "$rel_path" == *.md ]] || [[ "$rel_path" == *.json ]]; then
             continue
         fi
         
-        # 确保目标目录存在
+        # 確保目標目錄存在
         mkdir -p "$(dirname "$target_path")"
         
-        # 复制文件
+        # 複制文件
         cp "$file" "$target_path"
         log_info "Copied: $rel_path"
         
@@ -129,18 +129,18 @@ apply_contribution() {
     log_success "Contribution $batch_name applied"
 }
 
-# 运行测试
+# 運行測試
 run_tests() {
     log_info "Running tests..."
     
     cd "$WORK_DIR"
     
-    # 安装依赖
+    # 安裝依賴
     if [ -f "requirements.txt" ]; then
         pip3 install -r requirements.txt
     fi
     
-    # 运行测试
+    # 運行測試
     if [ -d "tests" ]; then
         python3 -m pytest tests/ -v
         if [ $? -eq 0 ]; then
@@ -166,7 +166,7 @@ commit_changes() {
     # 添加所有更改
     git add .
     
-    # 检查是否有更改
+    # 檢查是否有更改
     if git diff --cached --quiet; then
         log_warning "No changes to commit"
         return 0
@@ -226,7 +226,7 @@ generate_pr_info() {
     echo "5. Submit the PR"
 }
 
-# 处理单个批次
+# 處理單個批次
 process_batch() {
     local batch_name=$1
     local batch_info=$2
@@ -236,13 +236,13 @@ process_batch() {
     echo "Description: $batch_info"
     echo ""
     
-    # 创建分支
+    # 創建分支
     create_feature_branch "$batch_name"
     
-    # 应用贡献
+    # 應用贡献
     apply_contribution "$batch_name"
     
-    # 运行测试
+    # 運行測試
     if ! run_tests; then
         log_error "Tests failed for $batch_name"
         return 1
@@ -260,13 +260,13 @@ process_batch() {
     log_success "Batch $batch_name processed successfully"
 }
 
-# 主函数
+# 主函數
 main() {
     echo "🚀 Upstream Contribution Git Workflow"
     echo "====================================="
     echo ""
     
-    # 检查参数
+    # 檢查參數
     if [ $# -eq 0 ]; then
         echo "Usage: $0 <batch_name> [batch_info]"
         echo ""
@@ -283,13 +283,13 @@ main() {
     local batch_name=$1
     local batch_info=${2:-"Contribution batch $batch_name"}
     
-    # 检查依赖
+    # 檢查依賴
     check_dependencies
     
-    # 设置仓库
+    # 設置仓庫
     setup_upstream_repo
     
-    # 处理批次
+    # 處理批次
     process_batch "$batch_name" "$batch_info"
     
     echo ""
@@ -302,5 +302,5 @@ main() {
     echo "4. Iterate until merged"
 }
 
-# 运行主函数
+# 運行主函數
 main "$@"

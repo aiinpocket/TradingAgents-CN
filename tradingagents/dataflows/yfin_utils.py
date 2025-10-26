@@ -8,18 +8,18 @@ from functools import wraps
 
 from .utils import save_output, SavePathType, decorate_all_methods
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
-# 导入缓存管理器
+# 導入緩存管理器
 try:
     from .cache_manager import get_cache
 
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False
-    logger.warning(f"⚠️ 缓存管理器不可用，将直接从API获取数据")
+    logger.warning(f"⚠️ 緩存管理器不可用，将直接從API獲取數據")
 
 
 def init_ticker(func: Callable) -> Callable:

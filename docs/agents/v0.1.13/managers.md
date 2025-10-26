@@ -1,75 +1,75 @@
-# 管理层团队
+# 管理層团隊
 
 ## 概述
 
-管理层团队是 TradingAgents 框架的决策核心，负责协调各个智能体的工作流程，评估投资辩论，并做出最终的投资决策。管理层通过综合分析师、研究员、交易员和风险管理团队的输出，形成全面的投资策略和具体的执行计划。
+管理層团隊是 TradingAgents 框架的決策核心，负责協調各個智能體的工作流程，評估投資辩論，並做出最终的投資決策。管理層通過综合分析師、研究員、交易員和風險管理团隊的輸出，形成全面的投資策略和具體的執行計劃。
 
-## 管理层架构
+## 管理層架構
 
-### 基础设计
+### 基础設計
 
-管理层团队基于统一的架构设计，专注于决策协调和策略制定：
+管理層团隊基於統一的架構設計，專註於決策協調和策略制定：
 
 ```python
-# 统一的管理层模块日志装饰器
+# 統一的管理層模塊日誌裝饰器
 from tradingagents.utils.tool_logging import log_manager_module
 
-# 统一日志系统
+# 統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 @log_manager_module("manager_type")
 def manager_node(state):
-    # 管理层决策逻辑实现
+    # 管理層決策逻辑實現
     pass
 ```
 
-### 智能体状态管理
+### 智能體狀態管理
 
-管理层团队通过 `AgentState` 获取完整的分析和决策信息：
+管理層团隊通過 `AgentState` 獲取完整的分析和決策信息：
 
 ```python
 class AgentState:
-    company_of_interest: str      # 股票代码
+    company_of_interest: str      # 股票代碼
     trade_date: str              # 交易日期
-    fundamentals_report: str     # 基本面报告
-    market_report: str           # 市场分析报告
-    news_report: str             # 新闻分析报告
-    sentiment_report: str        # 情绪分析报告
-    bull_argument: str           # 看涨论证
-    bear_argument: str           # 看跌论证
-    trader_recommendation: str   # 交易员建议
-    risk_analysis: str           # 风险分析
-    messages: List              # 消息历史
+    fundamentals_report: str     # 基本面報告
+    market_report: str           # 市場分析報告
+    news_report: str             # 新聞分析報告
+    sentiment_report: str        # 情绪分析報告
+    bull_argument: str           # 看涨論證
+    bear_argument: str           # 看跌論證
+    trader_recommendation: str   # 交易員建议
+    risk_analysis: str           # 風險分析
+    messages: List              # 消息歷史
 ```
 
-## 管理层团队成员
+## 管理層团隊成員
 
-### 1. 研究经理 (Research Manager)
+### 1. 研究經理 (Research Manager)
 
 **文件位置**: `tradingagents/agents/managers/research_manager.py`
 
-**核心职责**:
-- 作为投资组合经理和辩论主持人
-- 评估投资辩论质量和有效性
-- 总结看涨和看跌分析师的关键观点
-- 基于最有说服力的证据做出明确的买入、卖出或持有决策
-- 为交易员制定详细的投资计划
+**核心職责**:
+- 作為投資組合經理和辩論主持人
+- 評估投資辩論质量和有效性
+- 总結看涨和看跌分析師的關键觀點
+- 基於最有說服力的證據做出明確的买入、卖出或持有決策
+- 為交易員制定詳細的投資計劃
 
-**核心实现**:
+**核心實現**:
 ```python
 def create_research_manager(llm):
     @log_manager_module("research_manager")
     def research_manager_node(state):
-        # 获取基础信息
+        # 獲取基础信息
         company_name = state["company_of_interest"]
         trade_date = state.get("trade_date", "")
         
-        # 获取股票市场信息
+        # 獲取股票市場信息
         from tradingagents.utils.stock_utils import StockUtils
         market_info = StockUtils.get_market_info(company_name)
         
-        # 确定股票类型和货币信息
+        # 確定股票類型和貨币信息
         if market_info.get("is_china"):
             stock_type = "A股"
             currency_unit = "人民币"
@@ -80,106 +80,106 @@ def create_research_manager(llm):
             stock_type = "美股"
             currency_unit = "美元"
         else:
-            stock_type = "未知市场"
-            currency_unit = "未知货币"
+            stock_type = "未知市場"
+            currency_unit = "未知貨币"
         
-        # 获取各类分析报告
+        # 獲取各類分析報告
         fundamentals_report = state.get("fundamentals_report", "")
         market_report = state.get("market_report", "")
         sentiment_report = state.get("sentiment_report", "")
         news_report = state.get("news_report", "")
         
-        # 获取辩论结果
+        # 獲取辩論結果
         bull_argument = state.get("bull_argument", "")
         bear_argument = state.get("bear_argument", "")
         
-        # 构建研究经理决策提示
+        # 構建研究經理決策提示
         manager_prompt = f"""
-        作为投资组合经理和辩论主持人，请基于以下信息做出投资决策：
+        作為投資組合經理和辩論主持人，請基於以下信息做出投資決策：
         
-        公司名称: {company_name}
-        股票类型: {stock_type}
-        货币单位: {currency_unit}
+        公司名稱: {company_name}
+        股票類型: {stock_type}
+        貨币單位: {currency_unit}
         交易日期: {trade_date}
         
-        === 基础分析报告 ===
-        基本面报告: {fundamentals_report}
-        市场分析报告: {market_report}
-        情绪分析报告: {sentiment_report}
-        新闻分析报告: {news_report}
+        === 基础分析報告 ===
+        基本面報告: {fundamentals_report}
+        市場分析報告: {market_report}
+        情绪分析報告: {sentiment_report}
+        新聞分析報告: {news_report}
         
-        === 投资辩论结果 ===
-        看涨论证: {bull_argument}
-        看跌论证: {bear_argument}
+        === 投資辩論結果 ===
+        看涨論證: {bull_argument}
+        看跌論證: {bear_argument}
         
-        请作为经验丰富的投资组合经理：
-        1. 评估辩论质量和论证强度
-        2. 总结关键投资观点和风险因素
-        3. 做出明确的投资决策（买入/卖出/持有）
-        4. 制定详细的投资计划和执行策略
-        5. 提供具体的目标价格和时间框架
-        6. 说明决策理由和风险控制措施
+        請作為經驗丰富的投資組合經理：
+        1. 評估辩論质量和論證强度
+        2. 总結關键投資觀點和風險因素
+        3. 做出明確的投資決策（买入/卖出/持有）
+        4. 制定詳細的投資計劃和執行策略
+        5. 提供具體的目標價格和時間框架
+        6. 說明決策理由和風險控制措施
         
-        请确保决策基于客观分析，并提供清晰的执行指导。
+        請確保決策基於客觀分析，並提供清晰的執行指導。
         """
         
-        # 调用LLM生成投资决策
+        # 調用LLM生成投資決策
         response = llm.invoke(manager_prompt)
         
         return {"investment_plan": response.content}
 ```
 
-**决策特点**:
-- **综合评估**: 全面考虑各类分析报告和辩论结果
-- **客观决策**: 基于证据强度而非个人偏好做决策
-- **具体指导**: 提供明确的执行计划和目标价格
-- **风险意识**: 充分考虑风险因素和控制措施
+**決策特點**:
+- **综合評估**: 全面考慮各類分析報告和辩論結果
+- **客觀決策**: 基於證據强度而非個人偏好做決策
+- **具體指導**: 提供明確的執行計劃和目標價格
+- **風險意识**: 充分考慮風險因素和控制措施
 
-### 2. 投资组合经理 (Portfolio Manager)
+### 2. 投資組合經理 (Portfolio Manager)
 
 **文件位置**: `tradingagents/agents/managers/portfolio_manager.py`
 
-**核心职责**:
-- 管理整体投资组合配置
-- 协调多个股票的投资决策
-- 优化资产配置和风险分散
-- 监控组合绩效和风险指标
+**核心職责**:
+- 管理整體投資組合配置
+- 協調多個股票的投資決策
+- 優化資產配置和風險分散
+- 監控組合绩效和風險指標
 
 **核心功能**:
 ```python
 def create_portfolio_manager(llm):
     @log_manager_module("portfolio_manager")
     def portfolio_manager_node(state):
-        # 获取组合信息
+        # 獲取組合信息
         portfolio_holdings = state.get("portfolio_holdings", {})
         available_capital = state.get("available_capital", 0)
         risk_tolerance = state.get("risk_tolerance", "moderate")
         
-        # 获取新的投资建议
+        # 獲取新的投資建议
         new_investment_plan = state.get("investment_plan", "")
         company_name = state["company_of_interest"]
         
-        # 构建组合管理提示
+        # 構建組合管理提示
         portfolio_prompt = f"""
-        作为投资组合经理，请评估新的投资建议对整体组合的影响：
+        作為投資組合經理，請評估新的投資建议對整體組合的影響：
         
-        === 当前组合状况 ===
+        === 當前組合狀况 ===
         持仓情况: {portfolio_holdings}
-        可用资金: {available_capital}
-        风险偏好: {risk_tolerance}
+        可用資金: {available_capital}
+        風險偏好: {risk_tolerance}
         
-        === 新投资建议 ===
-        目标股票: {company_name}
-        投资计划: {new_investment_plan}
+        === 新投資建议 ===
+        目標股票: {company_name}
+        投資計劃: {new_investment_plan}
         
-        请分析：
-        1. 新投资对组合风险收益的影响
+        請分析：
+        1. 新投資對組合風險收益的影響
         2. 建议的仓位大小和配置比例
-        3. 与现有持仓的相关性分析
-        4. 组合整体风险评估
+        3. 与現有持仓的相關性分析
+        4. 組合整體風險評估
         5. 再平衡建议（如需要）
         
-        请提供具体的组合调整方案。
+        請提供具體的組合調整方案。
         """
         
         response = llm.invoke(portfolio_prompt)
@@ -187,58 +187,58 @@ def create_portfolio_manager(llm):
         return {"portfolio_adjustment": response.content}
 ```
 
-**管理特点**:
-- **整体视角**: 从组合层面考虑单个投资决策
-- **风险分散**: 优化资产配置以降低整体风险
-- **动态调整**: 根据市场变化调整组合配置
-- **绩效监控**: 持续跟踪组合表现和风险指标
+**管理特點**:
+- **整體視角**: 從組合層面考慮單個投資決策
+- **風險分散**: 優化資產配置以降低整體風險
+- **動態調整**: 根據市場變化調整組合配置
+- **绩效監控**: 持续跟蹤組合表現和風險指標
 
-### 3. 风险经理 (Risk Manager)
+### 3. 風險經理 (Risk Manager)
 
 **文件位置**: `tradingagents/agents/managers/risk_manager.py`
 
-**核心职责**:
-- 监控整体风险敞口
-- 设定和执行风险限额
-- 协调风险控制措施
-- 提供风险管理指导
+**核心職责**:
+- 監控整體風險敞口
+- 設定和執行風險限額
+- 協調風險控制措施
+- 提供風險管理指導
 
 **核心功能**:
 ```python
 def create_risk_manager(llm):
     @log_manager_module("risk_manager")
     def risk_manager_node(state):
-        # 获取风险分析结果
+        # 獲取風險分析結果
         conservative_analysis = state.get("conservative_risk_analysis", "")
         aggressive_analysis = state.get("aggressive_risk_analysis", "")
         neutral_analysis = state.get("neutral_risk_analysis", "")
         
-        # 获取投资计划
+        # 獲取投資計劃
         investment_plan = state.get("investment_plan", "")
         company_name = state["company_of_interest"]
         
-        # 构建风险管理提示
+        # 構建風險管理提示
         risk_management_prompt = f"""
-        作为风险经理，请基于多角度风险分析制定风险管理策略：
+        作為風險經理，請基於多角度風險分析制定風險管理策略：
         
-        === 风险分析结果 ===
-        保守风险分析: {conservative_analysis}
-        激进风险分析: {aggressive_analysis}
-        中性风险分析: {neutral_analysis}
+        === 風險分析結果 ===
+        保守風險分析: {conservative_analysis}
+        激進風險分析: {aggressive_analysis}
+        中性風險分析: {neutral_analysis}
         
-        === 投资计划 ===
-        目标股票: {company_name}
-        投资方案: {investment_plan}
+        === 投資計劃 ===
+        目標股票: {company_name}
+        投資方案: {investment_plan}
         
-        请制定：
-        1. 综合风险评估和等级
-        2. 具体的风险控制措施
-        3. 止损止盈策略
+        請制定：
+        1. 综合風險評估和等級
+        2. 具體的風險控制措施
+        3. 止損止盈策略
         4. 仓位管理建议
-        5. 风险监控指标
-        6. 应急预案
+        5. 風險監控指標
+        6. 應急預案
         
-        请提供可执行的风险管理方案。
+        請提供可執行的風險管理方案。
         """
         
         response = llm.invoke(risk_management_prompt)
@@ -246,15 +246,15 @@ def create_risk_manager(llm):
         return {"risk_management_plan": response.content}
 ```
 
-**管理特点**:
-- **全面监控**: 监控各类风险因素和指标
-- **主动管理**: 主动识别和控制潜在风险
-- **量化分析**: 使用量化方法评估风险
-- **应急响应**: 制定风险事件应对预案
+**管理特點**:
+- **全面監控**: 監控各類風險因素和指標
+- **主動管理**: 主動识別和控制潜在風險
+- **量化分析**: 使用量化方法評估風險
+- **應急響應**: 制定風險事件應對預案
 
-## 决策流程
+## 決策流程
 
-### 1. 信息收集阶段
+### 1. 信息收集階段
 
 ```python
 class InformationGathering:
@@ -276,7 +276,7 @@ class InformationGathering:
         ]
     
     def validate_inputs(self, state):
-        """验证输入信息完整性"""
+        """驗證輸入信息完整性"""
         missing_reports = []
         
         for report in self.required_reports:
@@ -284,13 +284,13 @@ class InformationGathering:
                 missing_reports.append(report)
         
         if missing_reports:
-            logger.warning(f"缺少必要报告: {missing_reports}")
+            logger.warning(f"缺少必要報告: {missing_reports}")
             return False, missing_reports
         
         return True, []
     
     def assess_information_quality(self, state):
-        """评估信息质量"""
+        """評估信息质量"""
         quality_scores = {}
         
         for report in self.required_reports:
@@ -300,32 +300,32 @@ class InformationGathering:
         return quality_scores
     
     def calculate_content_quality(self, content):
-        """计算内容质量分数"""
+        """計算內容质量分數"""
         if not content:
             return 0.0
         
-        # 基于长度、关键词、结构等因素评估质量
-        length_score = min(len(content) / 1000, 1.0)  # 标准化长度分数
+        # 基於長度、關键詞、結構等因素評估质量
+        length_score = min(len(content) / 1000, 1.0)  # 標準化長度分數
         keyword_score = self.check_keywords(content)
         structure_score = self.check_structure(content)
         
         return (length_score + keyword_score + structure_score) / 3
 ```
 
-### 2. 辩论评估阶段
+### 2. 辩論評估階段
 
 ```python
 class DebateEvaluation:
     def __init__(self):
         self.evaluation_criteria = {
             "logic_strength": 0.3,      # 逻辑强度
-            "evidence_quality": 0.3,    # 证据质量
-            "risk_awareness": 0.2,      # 风险意识
-            "market_insight": 0.2       # 市场洞察
+            "evidence_quality": 0.3,    # 證據质量
+            "risk_awareness": 0.2,      # 風險意识
+            "market_insight": 0.2       # 市場洞察
         }
     
     def evaluate_arguments(self, bull_argument, bear_argument):
-        """评估辩论论证质量"""
+        """評估辩論論證质量"""
         bull_score = self.score_argument(bull_argument)
         bear_score = self.score_argument(bear_argument)
         
@@ -337,7 +337,7 @@ class DebateEvaluation:
         }
     
     def score_argument(self, argument):
-        """为单个论证打分"""
+        """為單個論證打分"""
         scores = {}
         
         for criterion, weight in self.evaluation_criteria.items():
@@ -347,8 +347,8 @@ class DebateEvaluation:
         return sum(scores.values())
     
     def evaluate_criterion(self, argument, criterion):
-        """评估特定标准"""
-        # 使用NLP技术或规则评估论证质量
+        """評估特定標準"""
+        # 使用NLP技術或規則評估論證质量
         if criterion == "logic_strength":
             return self.assess_logical_structure(argument)
         elif criterion == "evidence_quality":
@@ -358,10 +358,10 @@ class DebateEvaluation:
         elif criterion == "market_insight":
             return self.assess_market_understanding(argument)
         
-        return 0.5  # 默认分数
+        return 0.5  # 默認分數
 ```
 
-### 3. 决策制定阶段
+### 3. 決策制定階段
 
 ```python
 class DecisionMaking:
@@ -376,15 +376,15 @@ class DecisionMaking:
         self.confidence_threshold = config.get("confidence_threshold", 0.7)
     
     def make_investment_decision(self, analysis_results):
-        """制定投资决策"""
-        # 综合各项分析结果
+        """制定投資決策"""
+        # 综合各項分析結果
         fundamental_score = analysis_results.get("fundamental_score", 0.5)
         technical_score = analysis_results.get("technical_score", 0.5)
         sentiment_score = analysis_results.get("sentiment_score", 0.5)
         debate_score = analysis_results.get("debate_score", 0.5)
         risk_score = analysis_results.get("risk_score", 0.5)
         
-        # 加权计算综合分数
+        # 加權計算综合分數
         weights = {
             "fundamental": 0.3,
             "technical": 0.2,
@@ -398,10 +398,10 @@ class DecisionMaking:
             technical_score * weights["technical"] +
             sentiment_score * weights["sentiment"] +
             debate_score * weights["debate"] +
-            (1 - risk_score) * weights["risk"]  # 风险分数取反
+            (1 - risk_score) * weights["risk"]  # 風險分數取反
         )
         
-        # 确定投资决策
+        # 確定投資決策
         decision = self.score_to_decision(composite_score)
         confidence = self.calculate_confidence(analysis_results)
         
@@ -413,7 +413,7 @@ class DecisionMaking:
         }
     
     def score_to_decision(self, score):
-        """将分数转换为投资决策"""
+        """将分數轉換為投資決策"""
         if score >= self.decision_thresholds["strong_buy"]:
             return "强烈买入"
         elif score >= self.decision_thresholds["buy"]:
@@ -426,8 +426,8 @@ class DecisionMaking:
             return "强烈卖出"
     
     def calculate_confidence(self, analysis_results):
-        """计算决策置信度"""
-        # 基于各项分析的一致性计算置信度
+        """計算決策置信度"""
+        # 基於各項分析的一致性計算置信度
         scores = [
             analysis_results.get("fundamental_score", 0.5),
             analysis_results.get("technical_score", 0.5),
@@ -435,15 +435,15 @@ class DecisionMaking:
             analysis_results.get("debate_score", 0.5)
         ]
         
-        # 计算标准差，标准差越小置信度越高
+        # 計算標準差，標準差越小置信度越高
         import numpy as np
         std_dev = np.std(scores)
-        confidence = max(0, 1 - std_dev * 2)  # 标准化到0-1范围
+        confidence = max(0, 1 - std_dev * 2)  # 標準化到0-1範围
         
         return confidence
 ```
 
-### 4. 执行计划制定
+### 4. 執行計劃制定
 
 ```python
 class ExecutionPlanning:
@@ -453,7 +453,7 @@ class ExecutionPlanning:
         self.min_position_size = config.get("min_position_size", 0.01)
     
     def create_execution_plan(self, decision_result, market_info):
-        """创建执行计划"""
+        """創建執行計劃"""
         decision = decision_result["decision"]
         confidence = decision_result["confidence"]
         
@@ -465,21 +465,21 @@ class ExecutionPlanning:
             return self.create_hold_plan(decision_result, market_info)
     
     def create_buy_plan(self, decision_result, market_info):
-        """创建买入计划"""
+        """創建买入計劃"""
         confidence = decision_result["confidence"]
         current_price = market_info.get("current_price", 0)
         
-        # 计算仓位大小
+        # 計算仓位大小
         position_size = self.calculate_position_size(
             decision_result, market_info
         )
         
-        # 计算目标价格
+        # 計算目標價格
         target_price = self.calculate_target_price(
             current_price, decision_result, "buy"
         )
         
-        # 计算止损价格
+        # 計算止損價格
         stop_loss = self.calculate_stop_loss(
             current_price, decision_result, "buy"
         )
@@ -495,7 +495,7 @@ class ExecutionPlanning:
         }
     
     def calculate_position_size(self, decision_result, market_info):
-        """计算仓位大小"""
+        """計算仓位大小"""
         confidence = decision_result["confidence"]
         volatility = market_info.get("volatility", 0.2)
         
@@ -516,16 +516,16 @@ class ExecutionPlanning:
             position_size = base_size * confidence
         
         else:
-            # 风险平价
+            # 風險平價
             target_risk = 0.02
             position_size = target_risk / volatility
         
         return min(self.max_position_size, max(self.min_position_size, position_size))
 ```
 
-## 决策质量评估
+## 決策质量評估
 
-### 决策评估框架
+### 決策評估框架
 
 ```python
 class DecisionQualityAssessment:
@@ -533,13 +533,13 @@ class DecisionQualityAssessment:
         self.quality_metrics = {
             "information_completeness": 0.2,    # 信息完整性
             "analysis_depth": 0.2,              # 分析深度
-            "risk_consideration": 0.2,           # 风险考虑
+            "risk_consideration": 0.2,           # 風險考慮
             "logical_consistency": 0.2,          # 逻辑一致性
-            "execution_feasibility": 0.2         # 执行可行性
+            "execution_feasibility": 0.2         # 執行可行性
         }
     
     def assess_decision_quality(self, decision_process):
-        """评估决策质量"""
+        """評估決策质量"""
         quality_scores = {}
         
         for metric, weight in self.quality_metrics.items():
@@ -556,7 +556,7 @@ class DecisionQualityAssessment:
         }
     
     def evaluate_metric(self, decision_process, metric):
-        """评估特定质量指标"""
+        """評估特定质量指標"""
         if metric == "information_completeness":
             return self.assess_information_completeness(decision_process)
         elif metric == "analysis_depth":
@@ -568,12 +568,12 @@ class DecisionQualityAssessment:
         elif metric == "execution_feasibility":
             return self.assess_execution_feasibility(decision_process)
         
-        return 0.5  # 默认分数
+        return 0.5  # 默認分數
     
     def grade_quality(self, score):
-        """质量等级评定"""
+        """质量等級評定"""
         if score >= 0.9:
-            return "优秀"
+            return "優秀"
         elif score >= 0.8:
             return "良好"
         elif score >= 0.7:
@@ -581,78 +581,78 @@ class DecisionQualityAssessment:
         elif score >= 0.6:
             return "及格"
         else:
-            return "需要改进"
+            return "需要改進"
 ```
 
-## 配置选项
+## 配置選項
 
-### 管理层配置
+### 管理層配置
 
 ```python
 manager_config = {
-    "decision_model": "consensus",          # 决策模型
+    "decision_model": "consensus",          # 決策模型
     "confidence_threshold": 0.7,           # 置信度阈值
-    "risk_tolerance": "moderate",          # 风险容忍度
-    "position_sizing_method": "kelly",     # 仓位计算方法
+    "risk_tolerance": "moderate",          # 風險容忍度
+    "position_sizing_method": "kelly",     # 仓位計算方法
     "max_position_size": 0.05,             # 最大仓位
-    "rebalance_frequency": "weekly",       # 再平衡频率
-    "performance_review_period": "monthly" # 绩效评估周期
+    "rebalance_frequency": "weekly",       # 再平衡頻率
+    "performance_review_period": "monthly" # 绩效評估周期
 }
 ```
 
-### 决策参数
+### 決策參數
 
 ```python
 decision_params = {
-    "analysis_weights": {                  # 分析权重
+    "analysis_weights": {                  # 分析權重
         "fundamental": 0.3,
         "technical": 0.2,
         "sentiment": 0.15,
         "debate": 0.25,
         "risk": 0.1
     },
-    "decision_thresholds": {               # 决策阈值
+    "decision_thresholds": {               # 決策阈值
         "strong_buy": 0.8,
         "buy": 0.6,
         "hold": 0.4,
         "sell": 0.2,
         "strong_sell": 0.0
     },
-    "time_horizons": {                     # 投资期限
-        "short_term": "1-3个月",
-        "medium_term": "3-12个月",
+    "time_horizons": {                     # 投資期限
+        "short_term": "1-3個月",
+        "medium_term": "3-12個月",
         "long_term": "1年以上"
     }
 }
 ```
 
-## 日志和监控
+## 日誌和監控
 
-### 详细日志记录
+### 詳細日誌記錄
 
 ```python
-# 管理层活动日志
-logger.info(f"👔 [管理层] 开始决策流程: {company_name}")
-logger.info(f"📋 [信息收集] 收集到 {len(reports)} 份分析报告")
-logger.info(f"⚖️ [辩论评估] 看涨分数: {bull_score:.2f}, 看跌分数: {bear_score:.2f}")
-logger.info(f"🎯 [投资决策] 决策: {decision}, 置信度: {confidence:.2%}")
-logger.info(f"📊 [执行计划] 仓位: {position_size:.2%}, 目标价: {target_price}")
-logger.info(f"✅ [决策完成] 投资计划制定完成")
+# 管理層活動日誌
+logger.info(f"👔 [管理層] 開始決策流程: {company_name}")
+logger.info(f"📋 [信息收集] 收集到 {len(reports)} 份分析報告")
+logger.info(f"⚖️ [辩論評估] 看涨分數: {bull_score:.2f}, 看跌分數: {bear_score:.2f}")
+logger.info(f"🎯 [投資決策] 決策: {decision}, 置信度: {confidence:.2%}")
+logger.info(f"📊 [執行計劃] 仓位: {position_size:.2%}, 目標價: {target_price}")
+logger.info(f"✅ [決策完成] 投資計劃制定完成")
 ```
 
-### 绩效监控指标
+### 绩效監控指標
 
-- 决策准确率
-- 风险调整收益
+- 決策準確率
+- 風險調整收益
 - 最大回撤控制
-- 决策执行效率
-- 组合多样化程度
+- 決策執行效率
+- 組合多樣化程度
 
-## 扩展指南
+## 擴展指南
 
 ### 添加新的管理角色
 
-1. **创建新管理角色**
+1. **創建新管理角色**
 ```python
 # tradingagents/agents/managers/new_manager.py
 from tradingagents.utils.tool_logging import log_manager_module
@@ -669,17 +669,17 @@ def create_new_manager(llm):
     return new_manager_node
 ```
 
-2. **集成到决策流程**
+2. **集成到決策流程**
 ```python
-# 在图配置中添加新管理角色
+# 在圖配置中添加新管理角色
 from tradingagents.agents.managers.new_manager import create_new_manager
 
 new_manager = create_new_manager(llm)
 ```
 
-### 自定义决策模型
+### 自定義決策模型
 
-1. **实现决策模型接口**
+1. **實現決策模型接口**
 ```python
 class DecisionModel:
     def analyze_inputs(self, state):
@@ -692,7 +692,7 @@ class DecisionModel:
         pass
 ```
 
-2. **注册决策模型**
+2. **註冊決策模型**
 ```python
 decision_models = {
     "consensus": ConsensusModel(),
@@ -701,68 +701,68 @@ decision_models = {
 }
 ```
 
-## 最佳实践
+## 最佳實踐
 
 ### 1. 全面信息整合
-- 确保所有必要信息都已收集
-- 验证信息质量和可靠性
-- 识别信息缺口和不确定性
-- 建立信息更新机制
+- 確保所有必要信息都已收集
+- 驗證信息质量和可靠性
+- 识別信息缺口和不確定性
+- 建立信息更新機制
 
-### 2. 客观决策制定
-- 基于数据和分析而非直觉
-- 考虑多种情景和可能性
-- 量化风险和收益预期
-- 保持决策过程透明
+### 2. 客觀決策制定
+- 基於數據和分析而非直觉
+- 考慮多種情景和可能性
+- 量化風險和收益預期
+- 保持決策過程透明
 
-### 3. 动态策略调整
-- 定期评估决策效果
-- 根据市场变化调整策略
-- 学习和改进决策模型
+### 3. 動態策略調整
+- 定期評估決策效果
+- 根據市場變化調整策略
+- 學习和改進決策模型
 - 保持策略灵活性
 
-### 4. 有效风险管理
-- 设定明确的风险限额
-- 建立多层风险控制机制
-- 定期进行压力测试
-- 制定应急预案
+### 4. 有效風險管理
+- 設定明確的風險限額
+- 建立多層風險控制機制
+- 定期進行壓力測試
+- 制定應急預案
 
 ## 故障排除
 
-### 常见问题
+### 常见問題
 
-1. **决策冲突**
-   - 检查各分析师输出一致性
-   - 调整决策权重配置
-   - 增加仲裁机制
+1. **決策冲突**
+   - 檢查各分析師輸出一致性
+   - 調整決策權重配置
+   - 增加仲裁機制
    - 提高信息质量
 
-2. **执行计划不可行**
-   - 验证市场流动性
-   - 调整仓位大小
-   - 修改执行时间框架
-   - 考虑市场冲击成本
+2. **執行計劃不可行**
+   - 驗證市場流動性
+   - 調整仓位大小
+   - 修改執行時間框架
+   - 考慮市場冲擊成本
 
-3. **决策质量下降**
-   - 评估输入信息质量
-   - 检查模型参数设置
-   - 更新决策算法
-   - 增加人工审核
+3. **決策质量下降**
+   - 評估輸入信息质量
+   - 檢查模型參數設置
+   - 更新決策算法
+   - 增加人工審核
 
-### 调试技巧
+### 調試技巧
 
-1. **决策流程跟踪**
+1. **決策流程跟蹤**
 ```python
-logger.debug(f"决策输入: {decision_inputs}")
-logger.debug(f"分析结果: {analysis_results}")
-logger.debug(f"决策输出: {decision_output}")
+logger.debug(f"決策輸入: {decision_inputs}")
+logger.debug(f"分析結果: {analysis_results}")
+logger.debug(f"決策輸出: {decision_output}")
 ```
 
-2. **质量评估**
+2. **质量評估**
 ```python
 logger.debug(f"信息完整性: {information_completeness}")
 logger.debug(f"分析深度: {analysis_depth}")
-logger.debug(f"决策质量: {decision_quality}")
+logger.debug(f"決策质量: {decision_quality}")
 ```
 
-管理层团队作为TradingAgents框架的决策中枢，通过科学的决策流程和全面的信息整合，确保投资决策的质量和有效性，为投资组合的成功管理提供强有力的领导和指导。
+管理層团隊作為TradingAgents框架的決策中枢，通過科學的決策流程和全面的信息整合，確保投資決策的质量和有效性，為投資組合的成功管理提供强有力的領導和指導。

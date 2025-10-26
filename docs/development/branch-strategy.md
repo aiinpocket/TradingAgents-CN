@@ -1,78 +1,78 @@
 # 分支管理策略
 
-## 🌿 分支架构设计
+## 🌿 分支架構設計
 
 ### 主要分支
 
 ```
-main (生产分支)
-├── develop (开发主分支)
-├── feature/* (功能开发分支)
+main (生產分支)
+├── develop (開發主分支)
+├── feature/* (功能開發分支)
 ├── enhancement/* (中文增强分支)
-├── hotfix/* (紧急修复分支)
-├── release/* (发布准备分支)
+├── hotfix/* (緊急修複分支)
+├── release/* (發布準备分支)
 └── upstream-sync/* (上游同步分支)
 ```
 
-### 分支说明
+### 分支說明
 
-#### 🏠 **main** - 生产主分支
-- **用途**: 稳定的生产版本
-- **保护**: 受保护，只能通过PR合并
-- **来源**: develop、hotfix、upstream-sync
-- **特点**: 始终保持可发布状态
+#### 🏠 **main** - 生產主分支
+- **用途**: 穩定的生產版本
+- **保護**: 受保護，只能通過PR合並
+- **來源**: develop、hotfix、upstream-sync
+- **特點**: 始终保持可發布狀態
 
-#### 🚀 **develop** - 开发主分支
-- **用途**: 集成所有功能开发
-- **保护**: 受保护，通过PR合并
-- **来源**: feature、enhancement分支
-- **特点**: 最新的开发进度
+#### 🚀 **develop** - 開發主分支
+- **用途**: 集成所有功能開發
+- **保護**: 受保護，通過PR合並
+- **來源**: feature、enhancement分支
+- **特點**: 最新的開發進度
 
-#### ✨ **feature/** - 功能开发分支
-- **命名**: `feature/功能名称`
-- **用途**: 开发新功能
+#### ✨ **feature/** - 功能開發分支
+- **命名**: `feature/功能名稱`
+- **用途**: 開發新功能
 - **生命周期**: 短期（1-2周）
 - **示例**: `feature/portfolio-optimization`
 
 #### 🇨🇳 **enhancement/** - 中文增强分支
-- **命名**: `enhancement/增强名称`
+- **命名**: `enhancement/增强名稱`
 - **用途**: 中文本地化和增强功能
 - **生命周期**: 中期（2-4周）
 - **示例**: `enhancement/chinese-llm-integration`
 
-#### 🚨 **hotfix/** - 紧急修复分支
-- **命名**: `hotfix/修复描述`
-- **用途**: 紧急Bug修复
+#### 🚨 **hotfix/** - 緊急修複分支
+- **命名**: `hotfix/修複描述`
+- **用途**: 緊急Bug修複
 - **生命周期**: 短期（1-3天）
 - **示例**: `hotfix/api-timeout-fix`
 
-#### 📦 **release/** - 发布准备分支
-- **命名**: `release/版本号`
-- **用途**: 发布前的最后准备
+#### 📦 **release/** - 發布準备分支
+- **命名**: `release/版本號`
+- **用途**: 發布前的最後準备
 - **生命周期**: 短期（3-7天）
 - **示例**: `release/v1.1.0-cn`
 
 #### 🔄 **upstream-sync/** - 上游同步分支
 - **命名**: `upstream-sync/日期`
 - **用途**: 同步上游更新
-- **生命周期**: 临时（1天）
+- **生命周期**: 臨時（1天）
 - **示例**: `upstream-sync/20240115`
 
 ## 🔄 工作流程
 
-### 功能开发流程
+### 功能開發流程
 
 ```mermaid
 graph LR
     A[main] --> B[develop]
     B --> C[feature/new-feature]
-    C --> D[开发和测试]
+    C --> D[開發和測試]
     D --> E[PR to develop]
-    E --> F[代码审查]
-    F --> G[合并到develop]
-    G --> H[测试集成]
+    E --> F[代碼審查]
+    F --> G[合並到develop]
+    G --> H[測試集成]
     H --> I[PR to main]
-    I --> J[发布]
+    I --> J[發布]
 ```
 
 ### 中文增强流程
@@ -80,43 +80,43 @@ graph LR
 ```mermaid
 graph LR
     A[develop] --> B[enhancement/chinese-feature]
-    B --> C[本地化开发]
-    C --> D[中文测试]
+    B --> C[本地化開發]
+    C --> D[中文測試]
     D --> E[文档更新]
     E --> F[PR to develop]
-    F --> G[审查和合并]
+    F --> G[審查和合並]
 ```
 
-### 紧急修复流程
+### 緊急修複流程
 
 ```mermaid
 graph LR
     A[main] --> B[hotfix/urgent-fix]
-    B --> C[快速修复]
-    C --> D[测试验证]
+    B --> C[快速修複]
+    C --> D[測試驗證]
     D --> E[PR to main]
-    E --> F[立即发布]
-    F --> G[合并到develop]
+    E --> F[立即發布]
+    F --> G[合並到develop]
 ```
 
 ## 📋 分支操作指南
 
-### 创建功能分支
+### 創建功能分支
 
 ```bash
-# 从develop创建功能分支
+# 從develop創建功能分支
 git checkout develop
 git pull origin develop
 git checkout -b feature/portfolio-analysis
 
-# 开发完成后推送
+# 開發完成後推送
 git push -u origin feature/portfolio-analysis
 ```
 
-### 创建中文增强分支
+### 創建中文增强分支
 
 ```bash
-# 从develop创建增强分支
+# 從develop創建增强分支
 git checkout develop
 git pull origin develop
 git checkout -b enhancement/tushare-integration
@@ -125,10 +125,10 @@ git checkout -b enhancement/tushare-integration
 git push -u origin enhancement/tushare-integration
 ```
 
-### 创建紧急修复分支
+### 創建緊急修複分支
 
 ```bash
-# 从main创建修复分支
+# 從main創建修複分支
 git checkout main
 git pull origin main
 git checkout -b hotfix/api-error-fix
@@ -137,143 +137,143 @@ git checkout -b hotfix/api-error-fix
 git push -u origin hotfix/api-error-fix
 ```
 
-## 🔒 分支保护规则
+## 🔒 分支保護規則
 
-### main分支保护
-- ✅ 要求PR审查
-- ✅ 要求状态检查通过
-- ✅ 要求分支为最新
-- ✅ 限制推送权限
+### main分支保護
+- ✅ 要求PR審查
+- ✅ 要求狀態檢查通過
+- ✅ 要求分支為最新
+- ✅ 限制推送權限
 - ✅ 限制强制推送
 
-### develop分支保护
-- ✅ 要求PR审查
-- ✅ 要求CI通过
-- ✅ 允许管理员绕过
+### develop分支保護
+- ✅ 要求PR審查
+- ✅ 要求CI通過
+- ✅ 允許管理員绕過
 
 ### 功能分支
-- ❌ 无特殊保护
-- ✅ 自动删除已合并分支
+- ❌ 無特殊保護
+- ✅ 自動刪除已合並分支
 
-## 🏷️ 命名规范
+## 🏷️ 命名規範
 
 ### 分支命名
 
 ```bash
-# 功能开发
-feature/功能名称-简短描述
+# 功能開發
+feature/功能名稱-簡短描述
 feature/chinese-data-source
 feature/risk-management-enhancement
 
 # 中文增强
-enhancement/增强类型-具体内容
+enhancement/增强類型-具體內容
 enhancement/llm-baidu-integration
 enhancement/chinese-financial-terms
 
-# Bug修复
-hotfix/问题描述
+# Bug修複
+hotfix/問題描述
 hotfix/memory-leak-fix
 hotfix/config-loading-error
 
-# 发布准备
-release/版本号
+# 發布準备
+release/版本號
 release/v1.1.0-cn
 release/v1.2.0-cn-beta
 ```
 
-### 提交信息规范
+### 提交信息規範
 
 ```bash
-# 功能开发
-feat(agents): 添加量化分析师智能体
-feat(data): 集成Tushare数据源
+# 功能開發
+feat(agents): 添加量化分析師智能體
+feat(data): 集成Tushare數據源
 
 # 中文增强
 enhance(llm): 集成文心一言API
-enhance(docs): 完善中文文档体系
+enhance(docs): 完善中文文档體系
 
-# Bug修复
-fix(api): 修复API超时问题
-fix(config): 解决配置文件加载错误
+# Bug修複
+fix(api): 修複API超時問題
+fix(config): 解決配置文件加載錯誤
 
 # 文档更新
-docs(readme): 更新安装指南
+docs(readme): 更新安裝指南
 docs(api): 添加API使用示例
 ```
 
-## 🧪 测试策略
+## 🧪 測試策略
 
-### 分支测试要求
+### 分支測試要求
 
 #### feature分支
-- ✅ 单元测试覆盖率 > 80%
-- ✅ 功能测试通过
-- ✅ 代码风格检查
+- ✅ 單元測試覆蓋率 > 80%
+- ✅ 功能測試通過
+- ✅ 代碼風格檢查
 
 #### enhancement分支
-- ✅ 中文功能测试
-- ✅ 兼容性测试
-- ✅ 文档完整性检查
+- ✅ 中文功能測試
+- ✅ 兼容性測試
+- ✅ 文档完整性檢查
 
 #### develop分支
-- ✅ 完整测试套件
-- ✅ 集成测试
-- ✅ 性能测试
+- ✅ 完整測試套件
+- ✅ 集成測試
+- ✅ 性能測試
 
 #### main分支
-- ✅ 生产环境测试
-- ✅ 端到端测试
+- ✅ 生產環境測試
+- ✅ 端到端測試
 - ✅ 安全扫描
 
-## 📊 分支监控
+## 📊 分支監控
 
-### 分支健康度指标
+### 分支健康度指標
 
 ```bash
-# 检查分支状态
-git branch -a --merged    # 已合并分支
-git branch -a --no-merged # 未合并分支
+# 檢查分支狀態
+git branch -a --merged    # 已合並分支
+git branch -a --no-merged # 未合並分支
 
-# 检查分支差异
+# 檢查分支差異
 git log develop..main --oneline
 git log feature/branch..develop --oneline
 
-# 检查分支大小
+# 檢查分支大小
 git rev-list --count develop..feature/branch
 ```
 
 ### 定期清理
 
 ```bash
-# 删除已合并的本地分支
+# 刪除已合並的本地分支
 git branch --merged develop | grep -v "develop\|main" | xargs -n 1 git branch -d
 
-# 删除远程跟踪分支
+# 刪除远程跟蹤分支
 git remote prune origin
 
-# 清理过期分支
+# 清理過期分支
 git for-each-ref --format='%(refname:short) %(committerdate)' refs/heads | awk '$2 <= "'$(date -d '30 days ago' '+%Y-%m-%d')'"' | cut -d' ' -f1
 ```
 
-## 🚀 发布流程
+## 🚀 發布流程
 
-### 版本发布步骤
+### 版本發布步骤
 
-1. **创建发布分支**
+1. **創建發布分支**
    ```bash
    git checkout develop
    git pull origin develop
    git checkout -b release/v1.1.0-cn
    ```
 
-2. **版本准备**
+2. **版本準备**
    ```bash
-   # 更新版本号
+   # 更新版本號
    # 更新CHANGELOG.md
-   # 最后测试
+   # 最後測試
    ```
 
-3. **合并到main**
+3. **合並到main**
    ```bash
    git checkout main
    git merge release/v1.1.0-cn
@@ -281,34 +281,34 @@ git for-each-ref --format='%(refname:short) %(committerdate)' refs/heads | awk '
    git push origin main --tags
    ```
 
-4. **回合并到develop**
+4. **回合並到develop**
    ```bash
    git checkout develop
    git merge main
    git push origin develop
    ```
 
-## 🔧 自动化工具
+## 🔧 自動化工具
 
 ### Git Hooks
 
 ```bash
 # pre-commit hook
 #!/bin/sh
-# 运行代码风格检查
+# 運行代碼風格檢查
 black --check .
 flake8 .
 
 # pre-push hook
 #!/bin/sh
-# 运行测试
+# 運行測試
 python -m pytest tests/
 ```
 
 ### GitHub Actions
 
 ```yaml
-# 分支保护检查
+# 分支保護檢查
 on:
   pull_request:
     branches: [main, develop]
@@ -322,19 +322,19 @@ jobs:
         run: python -m pytest
 ```
 
-## 🚀 推荐的开发工作流
+## 🚀 推薦的開發工作流
 
-### 1. 日常功能开发流程
+### 1. 日常功能開發流程
 
-#### 标准功能开发
+#### 標準功能開發
 ```bash
-# 步骤1: 创建功能分支
-python scripts/branch_manager.py create feature portfolio-optimization -d "投资组合优化功能"
+# 步骤1: 創建功能分支
+python scripts/branch_manager.py create feature portfolio-optimization -d "投資組合優化功能"
 
-# 步骤2: 开发功能
-# 编写代码...
+# 步骤2: 開發功能
+# 編寫代碼...
 git add .
-git commit -m "feat: 添加投资组合优化算法"
+git commit -m "feat: 添加投資組合優化算法"
 
 # 步骤3: 定期同步develop分支
 git fetch origin
@@ -343,86 +343,86 @@ git merge origin/develop  # 或使用 git rebase origin/develop
 # 步骤4: 推送到远程
 git push origin feature/portfolio-optimization
 
-# 步骤5: 创建Pull Request
-# 在GitHub上创建PR: feature/portfolio-optimization -> develop
-# 填写PR模板，包含功能描述、测试说明等
+# 步骤5: 創建Pull Request
+# 在GitHub上創建PR: feature/portfolio-optimization -> develop
+# 填寫PR模板，包含功能描述、測試說明等
 
-# 步骤6: 代码审查
-# 等待团队成员审查，根据反馈修改代码
+# 步骤6: 代碼審查
+# 等待团隊成員審查，根據反馈修改代碼
 
-# 步骤7: 合并和清理
-# PR合并后，删除本地和远程分支
+# 步骤7: 合並和清理
+# PR合並後，刪除本地和远程分支
 python scripts/branch_manager.py delete feature/portfolio-optimization
 ```
 
-#### 功能开发检查清单
-- [ ] 功能需求明确，有详细的设计文档
-- [ ] 创建了合适的分支名称和描述
-- [ ] 编写了完整的单元测试
-- [ ] 代码符合项目编码规范
-- [ ] 更新了相关文档
-- [ ] 通过了所有自动化测试
-- [ ] 进行了代码审查
-- [ ] 测试了与现有功能的兼容性
+#### 功能開發檢查清單
+- [ ] 功能需求明確，有詳細的設計文档
+- [ ] 創建了合適的分支名稱和描述
+- [ ] 編寫了完整的單元測試
+- [ ] 代碼符合項目編碼規範
+- [ ] 更新了相關文档
+- [ ] 通過了所有自動化測試
+- [ ] 進行了代碼審查
+- [ ] 測試了与現有功能的兼容性
 
-### 2. 中文增强开发流程
+### 2. 中文增强開發流程
 
-#### 本地化功能开发
+#### 本地化功能開發
 ```bash
-# 步骤1: 创建增强分支
-python scripts/branch_manager.py create enhancement tushare-integration -d "集成Tushare A股数据源"
+# 步骤1: 創建增强分支
+python scripts/branch_manager.py create enhancement tushare-integration -d "集成Tushare A股數據源"
 
-# 步骤2: 开发中文功能
-# 集成中文数据源
+# 步骤2: 開發中文功能
+# 集成中文數據源
 git add tradingagents/data/tushare_source.py
-git commit -m "enhance(data): 添加Tushare数据源适配器"
+git commit -m "enhance(data): 添加Tushare數據源適配器"
 
 # 添加中文配置
 git add config/chinese_config.yaml
-git commit -m "enhance(config): 添加中文市场配置"
+git commit -m "enhance(config): 添加中文市場配置"
 
 # 步骤3: 更新中文文档
 git add docs/data/tushare-integration.md
 git commit -m "docs: 添加Tushare集成文档"
 
-# 步骤4: 中文功能测试
+# 步骤4: 中文功能測試
 python -m pytest tests/test_tushare_integration.py
 git add tests/test_tushare_integration.py
-git commit -m "test: 添加Tushare集成测试"
+git commit -m "test: 添加Tushare集成測試"
 
-# 步骤5: 推送和合并
+# 步骤5: 推送和合並
 git push origin enhancement/tushare-integration
-# 创建PR到develop分支
+# 創建PR到develop分支
 ```
 
-#### 中文增强检查清单
-- [ ] 功能适配中国金融市场特点
+#### 中文增强檢查清單
+- [ ] 功能適配中國金融市場特點
 - [ ] 添加了完整的中文文档
-- [ ] 支持中文金融术语
-- [ ] 兼容现有的国际化功能
-- [ ] 测试了中文数据处理
+- [ ] 支持中文金融術語
+- [ ] 兼容現有的國际化功能
+- [ ] 測試了中文數據處理
 - [ ] 更新了配置文件和示例
 
-### 3. 紧急修复流程
+### 3. 緊急修複流程
 
-#### 生产环境Bug修复
+#### 生產環境Bug修複
 ```bash
-# 步骤1: 从main创建修复分支
-python scripts/branch_manager.py create hotfix api-timeout-fix -d "修复API请求超时问题"
+# 步骤1: 從main創建修複分支
+python scripts/branch_manager.py create hotfix api-timeout-fix -d "修複API請求超時問題"
 
-# 步骤2: 快速定位和修复
-# 分析问题根因
-# 实施最小化修复
+# 步骤2: 快速定位和修複
+# 分析問題根因
+# 實施最小化修複
 git add tradingagents/api/client.py
-git commit -m "fix: 增加API请求超时重试机制"
+git commit -m "fix: 增加API請求超時重試機制"
 
-# 步骤3: 紧急测试
+# 步骤3: 緊急測試
 python -m pytest tests/test_api_client.py -v
-# 手动测试关键路径
+# 手動測試關键路徑
 
 # 步骤4: 立即部署到main
 git push origin hotfix/api-timeout-fix
-# 创建PR到main，标记为紧急修复
+# 創建PR到main，標記為緊急修複
 
 # 步骤5: 同步到develop
 git checkout develop
@@ -430,77 +430,77 @@ git merge main
 git push origin develop
 ```
 
-#### 紧急修复检查清单
-- [ ] 问题影响评估和优先级确认
-- [ ] 实施最小化修复方案
-- [ ] 通过了关键路径测试
-- [ ] 有回滚计划
-- [ ] 同步到所有相关分支
-- [ ] 通知相关团队成员
+#### 緊急修複檢查清單
+- [ ] 問題影響評估和優先級確認
+- [ ] 實施最小化修複方案
+- [ ] 通過了關键路徑測試
+- [ ] 有回滚計劃
+- [ ] 同步到所有相關分支
+- [ ] 通知相關团隊成員
 
-### 4. 版本发布流程
+### 4. 版本發布流程
 
-#### 正式版本发布
+#### 正式版本發布
 ```bash
-# 步骤1: 创建发布分支
-python scripts/branch_manager.py create release v1.1.0-cn -d "v1.1.0中文增强版发布"
+# 步骤1: 創建發布分支
+python scripts/branch_manager.py create release v1.1.0-cn -d "v1.1.0中文增强版發布"
 
-# 步骤2: 版本准备
-# 更新版本号
+# 步骤2: 版本準备
+# 更新版本號
 echo "1.1.0-cn" > VERSION
 git add VERSION
-git commit -m "bump: 版本号更新到v1.1.0-cn"
+git commit -m "bump: 版本號更新到v1.1.0-cn"
 
-# 更新变更日志
+# 更新變更日誌
 git add CHANGELOG.md
-git commit -m "docs: 更新v1.1.0-cn变更日志"
+git commit -m "docs: 更新v1.1.0-cn變更日誌"
 
-# 最终测试
+# 最终測試
 python -m pytest tests/ --cov=tradingagents
 python examples/full_test.py
 
-# 步骤3: 合并到main
+# 步骤3: 合並到main
 git checkout main
 git merge release/v1.1.0-cn
 git tag v1.1.0-cn
 git push origin main --tags
 
-# 步骤4: 回合并到develop
+# 步骤4: 回合並到develop
 git checkout develop
 git merge main
 git push origin develop
 
-# 步骤5: 清理发布分支
+# 步骤5: 清理發布分支
 python scripts/branch_manager.py delete release/v1.1.0-cn
 ```
 
-#### 版本发布检查清单
-- [ ] 所有计划功能已完成并合并
-- [ ] 通过了完整的测试套件
-- [ ] 更新了版本号和变更日志
-- [ ] 创建了版本标签
-- [ ] 准备了发布说明
-- [ ] 通知了用户和社区
+#### 版本發布檢查清單
+- [ ] 所有計劃功能已完成並合並
+- [ ] 通過了完整的測試套件
+- [ ] 更新了版本號和變更日誌
+- [ ] 創建了版本標簽
+- [ ] 準备了發布說明
+- [ ] 通知了用戶和社区
 
 ### 5. 上游同步集成流程
 
-#### 与原项目保持同步
+#### 与原項目保持同步
 ```bash
-# 步骤1: 检查上游更新
+# 步骤1: 檢查上游更新
 python scripts/sync_upstream.py
 
-# 步骤2: 如果有更新，会自动创建同步分支
+# 步骤2: 如果有更新，會自動創建同步分支
 # upstream-sync/20240115
 
-# 步骤3: 解决可能的冲突
-# 保护我们的中文文档和增强功能
-# 采用上游的核心代码更新
+# 步骤3: 解決可能的冲突
+# 保護我們的中文文档和增强功能
+# 採用上游的核心代碼更新
 
-# 步骤4: 测试同步结果
+# 步骤4: 測試同步結果
 python -m pytest tests/
 python examples/basic_example.py
 
-# 步骤5: 合并到主分支
+# 步骤5: 合並到主分支
 git checkout main
 git merge upstream-sync/20240115
 git push origin main
@@ -511,30 +511,30 @@ git merge main
 git push origin develop
 ```
 
-## 📈 最佳实践
+## 📈 最佳實踐
 
-### 开发建议
+### 開發建议
 
-1. **小而频繁的提交** - 每个提交解决一个具体问题
-2. **描述性分支名** - 清楚表达分支用途
-3. **及时同步** - 定期从develop拉取最新更改
-4. **完整测试** - 合并前确保所有测试通过
-5. **文档同步** - 功能开发同时更新文档
+1. **小而頻繁的提交** - 每個提交解決一個具體問題
+2. **描述性分支名** - 清楚表達分支用途
+3. **及時同步** - 定期從develop拉取最新更改
+4. **完整測試** - 合並前確保所有測試通過
+5. **文档同步** - 功能開發同時更新文档
 
-### 协作规范
+### 協作規範
 
-1. **PR模板** - 使用标准的PR描述模板
-2. **代码审查** - 至少一人审查后合并
-3. **冲突解决** - 及时解决合并冲突
-4. **分支清理** - 及时删除已合并分支
-5. **版本标记** - 重要节点创建版本标签
+1. **PR模板** - 使用標準的PR描述模板
+2. **代碼審查** - 至少一人審查後合並
+3. **冲突解決** - 及時解決合並冲突
+4. **分支清理** - 及時刪除已合並分支
+5. **版本標記** - 重要節點創建版本標簽
 
-### 质量保证
+### 质量保證
 
-1. **自动化测试** - 每个PR都要通过CI测试
-2. **代码覆盖率** - 保持80%以上的测试覆盖率
-3. **性能测试** - 重要功能要进行性能测试
-4. **安全扫描** - 定期进行安全漏洞扫描
-5. **文档更新** - 功能变更同步更新文档
+1. **自動化測試** - 每個PR都要通過CI測試
+2. **代碼覆蓋率** - 保持80%以上的測試覆蓋率
+3. **性能測試** - 重要功能要進行性能測試
+4. **安全扫描** - 定期進行安全漏洞扫描
+5. **文档更新** - 功能變更同步更新文档
 
-通过这套完整的分支管理策略和开发工作流，我们可以确保项目开发的有序进行，同时保持代码质量和发布稳定性。
+通過這套完整的分支管理策略和開發工作流，我們可以確保項目開發的有序進行，同時保持代碼质量和發布穩定性。

@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-TradingAgents 中文演示脚本 - 使用阿里百炼大模型
-专门针对中文用户优化的股票分析演示
+TradingAgents 中文演示腳本 - 使用阿里百炼大模型
+專門针對中文用戶優化的股票分析演示
 """
 
 import os
 import sys
 from pathlib import Path
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('default')
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -20,35 +20,35 @@ from dotenv import load_dotenv
 from tradingagents.llm_adapters import ChatDashScope
 from langchain_core.messages import HumanMessage, SystemMessage
 
-# 加载 .env 文件
+# 加載 .env 文件
 load_dotenv()
 
 def analyze_stock_with_chinese_output(stock_symbol="AAPL", analysis_date="2024-05-10"):
-    """使用阿里百炼进行中文股票分析"""
+    """使用阿里百炼進行中文股票分析"""
     
     logger.info(f"🚀 TradingAgents 中文股票分析 - 阿里百炼版本")
     logger.info(f"=")
     
-    # 检查API密钥
+    # 檢查API密鑰
     dashscope_key = os.getenv('DASHSCOPE_API_KEY')
     finnhub_key = os.getenv('FINNHUB_API_KEY')
     
     if not dashscope_key:
-        logger.error(f"❌ 错误: 未找到 DASHSCOPE_API_KEY 环境变量")
+        logger.error(f"❌ 錯誤: 未找到 DASHSCOPE_API_KEY 環境變量")
         return
     
     if not finnhub_key:
-        logger.error(f"❌ 错误: 未找到 FINNHUB_API_KEY 环境变量")
+        logger.error(f"❌ 錯誤: 未找到 FINNHUB_API_KEY 環境變量")
         return
     
-    logger.info(f"✅ 阿里百炼 API 密钥: {dashscope_key[:10]}...")
-    logger.info(f"✅ FinnHub API 密钥: {finnhub_key[:10]}...")
+    logger.info(f"✅ 阿里百炼 API 密鑰: {dashscope_key[:10]}...")
+    logger.info(f"✅ FinnHub API 密鑰: {finnhub_key[:10]}...")
     print()
     
     try:
         logger.info(f"🤖 正在初始化阿里百炼大模型...")
         
-        # 创建阿里百炼模型实例
+        # 創建阿里百炼模型實例
         llm = ChatDashScope(
             model="qwen-plus-latest",
             temperature=0.1,
@@ -58,72 +58,72 @@ def analyze_stock_with_chinese_output(stock_symbol="AAPL", analysis_date="2024-0
         logger.info(f"✅ 模型初始化成功!")
         print()
         
-        logger.info(f"📈 开始分析股票: {stock_symbol}")
+        logger.info(f"📈 開始分析股票: {stock_symbol}")
         logger.info(f"📅 分析日期: {analysis_date}")
-        logger.info(f"⏳ 正在进行智能分析，请稍候...")
+        logger.info(f"⏳ 正在進行智能分析，請稍候...")
         print()
         
-        # 构建中文分析提示
-        system_prompt = """你是一位专业的股票分析师，具有丰富的金融市场经验。请用中文进行分析，确保内容专业、客观、易懂。
+        # 構建中文分析提示
+        system_prompt = """你是一位專業的股票分析師，具有丰富的金融市場經驗。請用中文進行分析，確保內容專業、客觀、易懂。
 
-你的任务是对指定股票进行全面分析，包括：
-1. 技术面分析
+你的任務是對指定股票進行全面分析，包括：
+1. 技術面分析
 2. 基本面分析  
-3. 市场情绪分析
-4. 风险评估
-5. 投资建议
+3. 市場情绪分析
+4. 風險評估
+5. 投資建议
 
-请确保分析结果：
-- 使用中文表达
-- 内容专业准确
-- 结构清晰
-- 包含具体的数据和指标
-- 提供明确的投资建议"""
+請確保分析結果：
+- 使用中文表達
+- 內容專業準確
+- 結構清晰
+- 包含具體的數據和指標
+- 提供明確的投資建议"""
 
-        user_prompt = f"""请对苹果公司(AAPL)进行全面的股票分析。
+        user_prompt = f"""請對苹果公司(AAPL)進行全面的股票分析。
 
 分析要求：
-1. **技术面分析**：
-   - 价格趋势分析
-   - 关键技术指标（MA、MACD、RSI、布林带等）
+1. **技術面分析**：
+   - 價格趋势分析
+   - 關键技術指標（MA、MACD、RSI、布林帶等）
    - 支撑位和阻力位
    - 成交量分析
 
 2. **基本面分析**：
-   - 公司财务状况
-   - 营收和利润趋势
-   - 市场地位和竞争优势
-   - 未来增长前景
+   - 公司財務狀况
+   - 營收和利润趋势
+   - 市場地位和競爭優势
+   - 未來增長前景
 
-3. **市场情绪分析**：
-   - 投资者情绪
-   - 分析师评级
-   - 机构持仓情况
-   - 市场热点关注度
+3. **市場情绪分析**：
+   - 投資者情绪
+   - 分析師評級
+   - 機構持仓情况
+   - 市場熱點關註度
 
-4. **风险评估**：
-   - 主要风险因素
-   - 宏观经济影响
-   - 行业竞争风险
-   - 监管风险
+4. **風險評估**：
+   - 主要風險因素
+   - 宏觀經濟影響
+   - 行業競爭風險
+   - 監管風險
 
-5. **投资建议**：
-   - 明确的买入/持有/卖出建议
-   - 目标价位
-   - 投资时间框架
-   - 风险控制建议
+5. **投資建议**：
+   - 明確的买入/持有/卖出建议
+   - 目標價位
+   - 投資時間框架
+   - 風險控制建议
 
-请用中文撰写详细的分析报告，确保内容专业且易于理解。"""
+請用中文撰寫詳細的分析報告，確保內容專業且易於理解。"""
 
         messages = [
             SystemMessage(content=system_prompt),
             HumanMessage(content=user_prompt)
         ]
         
-        # 生成分析报告
+        # 生成分析報告
         response = llm.invoke(messages)
         
-        logger.info(f"🎯 中文分析报告:")
+        logger.info(f"🎯 中文分析報告:")
         logger.info(f"=")
         print(response.content)
         logger.info(f"=")
@@ -131,34 +131,34 @@ def analyze_stock_with_chinese_output(stock_symbol="AAPL", analysis_date="2024-0
         print()
         logger.info(f"✅ 分析完成!")
         print()
-        logger.info(f"🌟 阿里百炼大模型优势:")
-        logger.info(f"  - 中文理解和表达能力强")
-        logger.info(f"  - 金融专业知识丰富")
-        logger.info(f"  - 分析逻辑清晰严谨")
-        logger.info(f"  - 适合中国投资者使用习惯")
+        logger.info(f"🌟 阿里百炼大模型優势:")
+        logger.info(f"  - 中文理解和表達能力强")
+        logger.info(f"  - 金融專業知识丰富")
+        logger.info(f"  - 分析逻辑清晰嚴谨")
+        logger.info(f"  - 適合中國投資者使用习惯")
         
         return response.content
         
     except Exception as e:
-        logger.error(f"❌ 分析过程中出现错误: {str(e)}")
+        logger.error(f"❌ 分析過程中出現錯誤: {str(e)}")
         import traceback
 
-        logger.error(f"🔍 详细错误信息:")
+        logger.error(f"🔍 詳細錯誤信息:")
         traceback.print_exc()
         return None
 
 def compare_models_chinese():
-    """比较不同通义千问模型的中文表达能力"""
-    logger.info(f"\n🔄 比较不同通义千问模型的中文分析能力")
+    """比較不同通義千問模型的中文表達能力"""
+    logger.info(f"\n🔄 比較不同通義千問模型的中文分析能力")
     logger.info(f"=")
     
     models = [
-        ("qwen-turbo", "通义千问 Turbo"),
-        ("qwen-plus", "通义千问 Plus"),
-        ("qwen-max", "通义千问 Max")
+        ("qwen-turbo", "通義千問 Turbo"),
+        ("qwen-plus", "通義千問 Plus"),
+        ("qwen-max", "通義千問 Max")
     ]
     
-    question = "请用一段话总结苹果公司当前的投资价值，包括优势和风险。"
+    question = "請用一段話总結苹果公司當前的投資價值，包括優势和風險。"
     
     for model_id, model_name in models:
         try:
@@ -174,18 +174,18 @@ def compare_models_chinese():
             logger.error(f"❌ {model_name} 分析失败: {str(e)}")
 
 def main():
-    """主函数"""
-    # 进行完整的股票分析
+    """主函數"""
+    # 進行完整的股票分析
     result = analyze_stock_with_chinese_output("AAPL", "2024-05-10")
     
-    # 比较不同模型
+    # 比較不同模型
     compare_models_chinese()
     
     logger.info(f"\n💡 使用建议:")
-    logger.info(f"  1. 通义千问Plus适合日常分析，平衡性能和成本")
-    logger.info(f"  2. 通义千问Max适合深度分析，质量最高")
-    logger.info(f"  3. 通义千问Turbo适合快速查询，响应最快")
-    logger.info(f"  4. 所有模型都针对中文进行了优化")
+    logger.info(f"  1. 通義千問Plus適合日常分析，平衡性能和成本")
+    logger.info(f"  2. 通義千問Max適合深度分析，质量最高")
+    logger.info(f"  3. 通義千問Turbo適合快速查詢，響應最快")
+    logger.info(f"  4. 所有模型都针對中文進行了優化")
 
 if __name__ == "__main__":
     main()

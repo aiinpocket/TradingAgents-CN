@@ -6,7 +6,7 @@ from tradingagents.agents import *
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import END, StateGraph, START, MessagesState
 
-# 导入统一日志系统
+# 導入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 

@@ -1,17 +1,17 @@
 """
-测试AKShare港股功能
+測試AKShare港股功能
 """
 
 import sys
 import os
 
-# 添加项目根目录到路径
+# 添加項目根目錄到路徑
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 def test_akshare_hk_basic():
-    """测试AKShare港股基本功能"""
-    print("🧪 测试AKShare港股基本功能...")
+    """測試AKShare港股基本功能"""
+    print("🧪 測試AKShare港股基本功能...")
     
     try:
         from tradingagents.dataflows.akshare_utils import get_akshare_provider
@@ -19,10 +19,10 @@ def test_akshare_hk_basic():
         provider = get_akshare_provider()
         
         if not provider.connected:
-            print("⚠️ AKShare未连接，跳过测试")
+            print("⚠️ AKShare未連接，跳過測試")
             return True
         
-        # 测试港股代码标准化
+        # 測試港股代碼標準化
         test_symbols = [
             ("0700.HK", "00700"),
             ("700", "00700"),
@@ -32,47 +32,47 @@ def test_akshare_hk_basic():
         
         for input_symbol, expected in test_symbols:
             normalized = provider._normalize_hk_symbol_for_akshare(input_symbol)
-            print(f"  标准化: {input_symbol} -> {normalized} {'✅' if normalized == expected else '❌'}")
+            print(f"  標準化: {input_symbol} -> {normalized} {'✅' if normalized == expected else '❌'}")
             
             if normalized != expected:
-                print(f"❌ 港股代码标准化失败: {input_symbol} -> {normalized}, 期望: {expected}")
+                print(f"❌ 港股代碼標準化失败: {input_symbol} -> {normalized}, 期望: {expected}")
                 return False
         
-        print("✅ AKShare港股基本功能测试通过")
+        print("✅ AKShare港股基本功能測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ AKShare港股基本功能测试失败: {e}")
+        print(f"❌ AKShare港股基本功能測試失败: {e}")
         return False
 
 def test_akshare_hk_data():
-    """测试AKShare港股数据获取"""
-    print("\n🧪 测试AKShare港股数据获取...")
+    """測試AKShare港股數據獲取"""
+    print("\n🧪 測試AKShare港股數據獲取...")
     
     try:
         from tradingagents.dataflows.akshare_utils import get_hk_stock_data_akshare
         from datetime import datetime, timedelta
         
-        # 设置测试日期
+        # 設置測試日期
         end_date = datetime.now().strftime('%Y-%m-%d')
         start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
         
-        # 测试腾讯港股
+        # 測試腾讯港股
         symbol = "0700.HK"
-        print(f"  获取 {symbol} 数据...")
+        print(f"  獲取 {symbol} 數據...")
         
         data = get_hk_stock_data_akshare(symbol, start_date, end_date)
         
         if data and len(data) > 100:
-            print("  ✅ AKShare港股数据获取成功")
+            print("  ✅ AKShare港股數據獲取成功")
             
-            # 检查关键信息
+            # 檢查關键信息
             checks = [
-                ("港股数据报告", "包含标题"),
-                ("AKShare", "包含数据源标识"),
-                ("HK$", "包含港币符号"),
+                ("港股數據報告", "包含標題"),
+                ("AKShare", "包含數據源標识"),
+                ("HK$", "包含港币符號"),
                 ("香港交易所", "包含交易所信息"),
-                (symbol, "包含股票代码")
+                (symbol, "包含股票代碼")
             ]
             
             for check_text, description in checks:
@@ -81,55 +81,55 @@ def test_akshare_hk_data():
                 else:
                     print(f"    ⚠️ 缺少{description}")
             
-            print("✅ AKShare港股数据获取测试通过")
+            print("✅ AKShare港股數據獲取測試通過")
             return True
         else:
-            print("❌ AKShare港股数据获取失败")
-            print(f"返回数据: {data[:200]}...")
+            print("❌ AKShare港股數據獲取失败")
+            print(f"返回數據: {data[:200]}...")
             return False
             
     except Exception as e:
-        print(f"❌ AKShare港股数据获取测试失败: {e}")
+        print(f"❌ AKShare港股數據獲取測試失败: {e}")
         return False
 
 def test_akshare_hk_info():
-    """测试AKShare港股信息获取"""
-    print("\n🧪 测试AKShare港股信息获取...")
+    """測試AKShare港股信息獲取"""
+    print("\n🧪 測試AKShare港股信息獲取...")
     
     try:
         from tradingagents.dataflows.akshare_utils import get_hk_stock_info_akshare
         
         symbol = "0700.HK"
-        print(f"  获取 {symbol} 信息...")
+        print(f"  獲取 {symbol} 信息...")
         
         info = get_hk_stock_info_akshare(symbol)
         
         if info and 'symbol' in info:
-            print(f"    ✅ 股票代码: {info['symbol']}")
-            print(f"    ✅ 股票名称: {info['name']}")
-            print(f"    ✅ 货币: {info['currency']}")
+            print(f"    ✅ 股票代碼: {info['symbol']}")
+            print(f"    ✅ 股票名稱: {info['name']}")
+            print(f"    ✅ 貨币: {info['currency']}")
             print(f"    ✅ 交易所: {info['exchange']}")
-            print(f"    ✅ 数据源: {info['source']}")
+            print(f"    ✅ 數據源: {info['source']}")
             
-            # 验证港股特有信息
+            # 驗證港股特有信息
             if info['currency'] == 'HKD' and info['exchange'] == 'HKG':
-                print("    ✅ 港股信息正确")
+                print("    ✅ 港股信息正確")
             else:
                 print("    ⚠️ 港股信息可能不完整")
             
-            print("✅ AKShare港股信息获取测试通过")
+            print("✅ AKShare港股信息獲取測試通過")
             return True
         else:
-            print("❌ AKShare港股信息获取失败")
+            print("❌ AKShare港股信息獲取失败")
             return False
             
     except Exception as e:
-        print(f"❌ AKShare港股信息获取测试失败: {e}")
+        print(f"❌ AKShare港股信息獲取測試失败: {e}")
         return False
 
 def test_unified_interface():
-    """测试统一接口的AKShare支持"""
-    print("\n🧪 测试统一接口的AKShare支持...")
+    """測試統一接口的AKShare支持"""
+    print("\n🧪 測試統一接口的AKShare支持...")
     
     try:
         from tradingagents.dataflows.interface import get_hk_stock_data_unified, get_hk_stock_info_unified
@@ -139,39 +139,39 @@ def test_unified_interface():
         start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
         
         symbol = "0700.HK"
-        print(f"  通过统一接口获取 {symbol} 数据...")
+        print(f"  通過統一接口獲取 {symbol} 數據...")
         
-        # 测试数据获取
+        # 測試數據獲取
         data = get_hk_stock_data_unified(symbol, start_date, end_date)
         
         if data and len(data) > 50:
-            print("    ✅ 统一接口数据获取成功")
+            print("    ✅ 統一接口數據獲取成功")
             
-            # 检查是否包含AKShare标识
+            # 檢查是否包含AKShare標识
             if "AKShare" in data:
-                print("    ✅ 成功使用AKShare作为数据源")
+                print("    ✅ 成功使用AKShare作為數據源")
             elif "Yahoo Finance" in data:
-                print("    ✅ 使用Yahoo Finance作为备用数据源")
+                print("    ✅ 使用Yahoo Finance作為备用數據源")
             elif "演示模式" in data:
-                print("    ✅ 使用演示模式作为最终备用")
+                print("    ✅ 使用演示模式作為最终备用")
             
-        # 测试信息获取
+        # 測試信息獲取
         info = get_hk_stock_info_unified(symbol)
         
         if info and 'symbol' in info:
-            print("    ✅ 统一接口信息获取成功")
-            print(f"    数据源: {info.get('source', 'unknown')}")
+            print("    ✅ 統一接口信息獲取成功")
+            print(f"    數據源: {info.get('source', 'unknown')}")
         
-        print("✅ 统一接口AKShare支持测试通过")
+        print("✅ 統一接口AKShare支持測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 统一接口AKShare支持测试失败: {e}")
+        print(f"❌ 統一接口AKShare支持測試失败: {e}")
         return False
 
 def main():
-    """运行所有AKShare港股测试"""
-    print("🇭🇰 开始AKShare港股功能测试")
+    """運行所有AKShare港股測試"""
+    print("🇭🇰 開始AKShare港股功能測試")
     print("=" * 50)
     
     tests = [
@@ -189,21 +189,21 @@ def main():
             if test_func():
                 passed += 1
         except Exception as e:
-            print(f"❌ 测试 {test_func.__name__} 异常: {e}")
+            print(f"❌ 測試 {test_func.__name__} 異常: {e}")
     
     print("\n" + "=" * 50)
-    print(f"🇭🇰 AKShare港股功能测试完成: {passed}/{total} 通过")
+    print(f"🇭🇰 AKShare港股功能測試完成: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有测试通过！AKShare港股功能正常")
-        print("\n✅ AKShare港股功能特点:")
-        print("  - 支持港股代码格式转换")
-        print("  - 获取港股历史数据")
-        print("  - 获取港股基本信息")
-        print("  - 集成到统一数据接口")
-        print("  - 作为Yahoo Finance的备用方案")
+        print("🎉 所有測試通過！AKShare港股功能正常")
+        print("\n✅ AKShare港股功能特點:")
+        print("  - 支持港股代碼格式轉換")
+        print("  - 獲取港股歷史數據")
+        print("  - 獲取港股基本信息")
+        print("  - 集成到統一數據接口")
+        print("  - 作為Yahoo Finance的备用方案")
     else:
-        print("⚠️ 部分测试失败，但核心功能可能正常")
+        print("⚠️ 部分測試失败，但核心功能可能正常")
 
 if __name__ == "__main__":
     main()

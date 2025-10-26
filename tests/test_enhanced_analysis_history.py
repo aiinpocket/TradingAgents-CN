@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-测试增强的分析历史功能
+測試增强的分析歷史功能
 """
 
 import sys
@@ -9,23 +9,23 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 
-# 添加项目根目录到路径
+# 添加項目根目錄到路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_load_analysis_results():
-    """测试加载分析结果功能"""
+    """測試加載分析結果功能"""
     try:
         from web.components.analysis_results import load_analysis_results
         
-        print("🔍 测试加载分析结果...")
+        print("🔍 測試加載分析結果...")
         
-        # 测试基本加载
+        # 測試基本加載
         results = load_analysis_results(limit=10)
-        print(f"✅ 成功加载 {len(results)} 个分析结果")
+        print(f"✅ 成功加載 {len(results)} 個分析結果")
         
         if results:
-            # 检查结果结构
+            # 檢查結果結構
             first_result = results[0]
             required_fields = ['analysis_id', 'timestamp', 'stock_symbol', 'status']
             
@@ -38,27 +38,27 @@ def test_load_analysis_results():
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         return False
 
 
 def test_comparison_functions():
-    """测试对比功能"""
+    """測試對比功能"""
     try:
         from web.components.analysis_results import (
             calculate_text_similarity,
             get_report_content
         )
         
-        print("🔍 测试对比功能...")
+        print("🔍 測試對比功能...")
         
-        # 测试文本相似度计算
-        text1 = "这是一个测试文本"
-        text2 = "这是另一个测试文本"
+        # 測試文本相似度計算
+        text1 = "這是一個測試文本"
+        text2 = "這是另一個測試文本"
         similarity = calculate_text_similarity(text1, text2)
-        print(f"✅ 文本相似度计算: {similarity:.2f}")
+        print(f"✅ 文本相似度計算: {similarity:.2f}")
         
-        # 测试报告内容获取
+        # 測試報告內容獲取
         mock_result = {
             'source': 'file_system',
             'reports': {
@@ -67,17 +67,17 @@ def test_comparison_functions():
         }
         
         content = get_report_content(mock_result, 'final_trade_decision')
-        print(f"✅ 报告内容获取: {content}")
+        print(f"✅ 報告內容獲取: {content}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         return False
 
 
 def test_chart_functions():
-    """测试图表功能"""
+    """測試圖表功能"""
     try:
         import pandas as pd
         from web.components.analysis_results import (
@@ -85,9 +85,9 @@ def test_chart_functions():
             render_time_distribution_charts
         )
         
-        print("🔍 测试图表功能...")
+        print("🔍 測試圖表功能...")
         
-        # 创建模拟数据
+        # 創建模擬數據
         mock_data = []
         for i in range(10):
             mock_data.append({
@@ -104,33 +104,33 @@ def test_chart_functions():
             })
         
         df = pd.DataFrame(mock_data)
-        print(f"✅ 创建模拟数据: {len(df)} 条记录")
+        print(f"✅ 創建模擬數據: {len(df)} 條記錄")
         
-        # 注意：这里只是测试函数是否可以导入，实际渲染需要Streamlit环境
-        print("✅ 图表函数导入成功")
+        # 註意：這里只是測試函數是否可以導入，實际渲染需要Streamlit環境
+        print("✅ 圖表函數導入成功")
         
         return True
         
     except Exception as e:
-        print(f"❌ 测试失败: {e}")
+        print(f"❌ 測試失败: {e}")
         return False
 
 
 def create_test_data():
-    """创建测试数据"""
+    """創建測試數據"""
     try:
-        print("🔍 创建测试数据...")
+        print("🔍 創建測試數據...")
         
-        # 确保测试数据目录存在
+        # 確保測試數據目錄存在
         test_data_dir = project_root / "data" / "analysis_results" / "detailed" / "TEST001"
         test_date_dir = test_data_dir / "2025-07-31" / "reports"
         test_date_dir.mkdir(parents=True, exist_ok=True)
         
-        # 创建测试报告
+        # 創建測試報告
         test_reports = {
-            'final_trade_decision.md': '# 测试交易决策\n\n建议买入',
-            'fundamentals_report.md': '# 测试基本面分析\n\n公司基本面良好',
-            'market_report.md': '# 测试技术分析\n\n技术指标显示上涨趋势'
+            'final_trade_decision.md': '# 測試交易決策\n\n建议买入',
+            'fundamentals_report.md': '# 測試基本面分析\n\n公司基本面良好',
+            'market_report.md': '# 測試技術分析\n\n技術指標顯示上涨趋势'
         }
         
         for filename, content in test_reports.items():
@@ -138,45 +138,45 @@ def create_test_data():
             with open(report_file, 'w', encoding='utf-8') as f:
                 f.write(content)
         
-        print(f"✅ 测试数据创建成功: {test_date_dir}")
+        print(f"✅ 測試數據創建成功: {test_date_dir}")
         return True
         
     except Exception as e:
-        print(f"❌ 创建测试数据失败: {e}")
+        print(f"❌ 創建測試數據失败: {e}")
         return False
 
 
 def main():
-    """主测试函数"""
-    print("🚀 开始测试增强的分析历史功能")
+    """主測試函數"""
+    print("🚀 開始測試增强的分析歷史功能")
     print("=" * 50)
     
     tests = [
-        ("创建测试数据", create_test_data),
-        ("加载分析结果", test_load_analysis_results),
-        ("对比功能", test_comparison_functions),
-        ("图表功能", test_chart_functions)
+        ("創建測試數據", create_test_data),
+        ("加載分析結果", test_load_analysis_results),
+        ("對比功能", test_comparison_functions),
+        ("圖表功能", test_chart_functions)
     ]
     
     passed = 0
     total = len(tests)
     
     for test_name, test_func in tests:
-        print(f"\n📋 测试: {test_name}")
+        print(f"\n📋 測試: {test_name}")
         if test_func():
             passed += 1
-            print(f"✅ {test_name} 通过")
+            print(f"✅ {test_name} 通過")
         else:
             print(f"❌ {test_name} 失败")
     
     print("\n" + "=" * 50)
-    print(f"📊 测试结果: {passed}/{total} 通过")
+    print(f"📊 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有测试通过！")
+        print("🎉 所有測試通過！")
         return True
     else:
-        print("⚠️ 部分测试失败，请检查代码")
+        print("⚠️ 部分測試失败，請檢查代碼")
         return False
 
 

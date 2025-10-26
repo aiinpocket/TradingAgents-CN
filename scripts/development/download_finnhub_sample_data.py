@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Finnhub示例数据下载脚本
+Finnhub示例數據下載腳本
 
-这个脚本用于创建示例的Finnhub数据文件，以便测试新闻数据功能。
-在没有真实API密钥或数据的情况下，可以使用此脚本创建测试数据。
+這個腳本用於創建示例的Finnhub數據文件，以便測試新聞數據功能。
+在没有真實API密鑰或數據的情况下，可以使用此腳本創建測試數據。
 """
 
 import os
@@ -14,11 +14,11 @@ import random
 from pathlib import Path
 from datetime import datetime, timedelta
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -26,70 +26,70 @@ from tradingagents.dataflows.config import get_config, set_config
 
 def create_sample_news_data(ticker, data_dir, days=7):
     """
-    创建示例新闻数据
+    創建示例新聞數據
     
     Args:
-        ticker (str): 股票代码
-        data_dir (str): 数据目录
-        days (int): 生成多少天的数据
+        ticker (str): 股票代碼
+        data_dir (str): 數據目錄
+        days (int): 生成多少天的數據
     """
-    # 创建目录结构
+    # 創建目錄結構
     news_dir = os.path.join(data_dir, "finnhub_data", "news_data")
     os.makedirs(news_dir, exist_ok=True)
     
-    # 生成示例新闻数据
+    # 生成示例新聞數據
     sample_news = {
         "AAPL": [
-            "苹果公司发布新款iPhone，销量预期强劲",
-            "苹果在人工智能领域取得重大突破",
-            "苹果股价创历史新高，投资者信心增强",
-            "苹果宣布新的环保计划，致力于碳中和",
-            "苹果服务业务收入持续增长"
+            "苹果公司發布新款iPhone，銷量預期强劲",
+            "苹果在人工智能領域取得重大突破",
+            "苹果股價創歷史新高，投資者信心增强",
+            "苹果宣布新的環保計劃，致力於碳中和",
+            "苹果服務業務收入持续增長"
         ],
         "TSLA": [
-            "特斯拉交付量超预期，股价大涨",
-            "特斯拉自动驾驶技术获得新突破",
-            "特斯拉在中国市场表现强劲",
-            "特斯拉能源业务快速增长",
-            "马斯克宣布特斯拉新工厂计划"
+            "特斯拉交付量超預期，股價大涨",
+            "特斯拉自動驾驶技術獲得新突破",
+            "特斯拉在中國市場表現强劲",
+            "特斯拉能源業務快速增長",
+            "馬斯克宣布特斯拉新工厂計劃"
         ],
         "MSFT": [
-            "微软云业务Azure收入大幅增长",
-            "微软AI助手Copilot用户数量激增",
+            "微软云業務Azure收入大幅增長",
+            "微软AI助手Copilot用戶數量激增",
             "微软与OpenAI合作深化",
-            "微软Office 365订阅用户创新高",
-            "微软游戏业务表现亮眼"
+            "微软Office 365订阅用戶創新高",
+            "微软游戏業務表現亮眼"
         ],
         "GOOGL": [
-            "谷歌搜索广告收入稳定增长",
-            "谷歌云计算业务竞争力提升",
-            "谷歌AI模型Gemini性能优异",
-            "YouTube广告收入超预期",
-            "谷歌在量子计算领域取得进展"
+            "谷歌搜索廣告收入穩定增長",
+            "谷歌云計算業務競爭力提升",
+            "谷歌AI模型Gemini性能優異",
+            "YouTube廣告收入超預期",
+            "谷歌在量子計算領域取得進展"
         ],
         "AMZN": [
-            "亚马逊AWS云服务市场份额扩大",
-            "亚马逊Prime会员数量持续增长",
-            "亚马逊物流网络进一步优化",
-            "亚马逊广告业务快速发展",
-            "亚马逊在AI领域投资加大"
+            "亚馬逊AWS云服務市場份額擴大",
+            "亚馬逊Prime會員數量持续增長",
+            "亚馬逊物流網絡進一步優化",
+            "亚馬逊廣告業務快速發展",
+            "亚馬逊在AI領域投資加大"
         ]
     }
     
-    # 为指定股票生成数据
+    # 為指定股票生成數據
     if ticker not in sample_news:
-        # 如果不在预定义列表中，使用通用模板
+        # 如果不在預定義列表中，使用通用模板
         headlines = [
-            f"{ticker}公司业绩超预期，股价上涨",
-            f"{ticker}宣布重大战略调整",
-            f"{ticker}在行业中地位稳固",
-            f"{ticker}管理层对未来前景乐观",
-            f"{ticker}获得分析师买入评级"
+            f"{ticker}公司業绩超預期，股價上涨",
+            f"{ticker}宣布重大战略調整",
+            f"{ticker}在行業中地位穩固",
+            f"{ticker}管理層對未來前景乐觀",
+            f"{ticker}獲得分析師买入評級"
         ]
     else:
         headlines = sample_news[ticker]
     
-    # 生成日期数据
+    # 生成日期數據
     data = {}
     current_date = datetime.now()
     
@@ -97,7 +97,7 @@ def create_sample_news_data(ticker, data_dir, days=7):
         date = current_date - timedelta(days=i)
         date_str = date.strftime("%Y-%m-%d")
         
-        # 每天生成1-3条新闻
+        # 每天生成1-3條新聞
         num_news = random.randint(1, 3)
         daily_news = []
         
@@ -107,8 +107,8 @@ def create_sample_news_data(ticker, data_dir, days=7):
             
             news_item = {
                 "headline": headline,
-                "summary": f"根据最新报道，{headline}。这一消息对投资者来说具有重要意义，可能会影响股票的短期和长期表现。分析师认为这一发展符合公司的战略方向。",
-                "source": "财经新闻",
+                "summary": f"根據最新報道，{headline}。這一消息對投資者來說具有重要意義，可能會影響股票的短期和長期表現。分析師認為這一發展符合公司的战略方向。",
+                "source": "財經新聞",
                 "url": f"https://example.com/news/{ticker.lower()}-{date_str}-{j+1}",
                 "datetime": int(date.timestamp())
             }
@@ -116,26 +116,26 @@ def create_sample_news_data(ticker, data_dir, days=7):
         
         data[date_str] = daily_news
     
-    # 保存数据文件
+    # 保存數據文件
     file_path = os.path.join(news_dir, f"{ticker}_data_formatted.json")
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f"✅ 创建示例新闻数据: {file_path}")
-    logger.info(f"   包含 {len(data)} 天的数据，共 {sum(len(news) for news in data.values())} 条新闻")
+    logger.info(f"✅ 創建示例新聞數據: {file_path}")
+    logger.info(f"   包含 {len(data)} 天的數據，共 {sum(len(news) for news in data.values())} 條新聞")
     
     return file_path
 
 def create_sample_insider_data(ticker, data_dir, data_type):
     """
-    创建示例内部人数据
+    創建示例內部人數據
     
     Args:
-        ticker (str): 股票代码
-        data_dir (str): 数据目录
-        data_type (str): 数据类型 (insider_senti 或 insider_trans)
+        ticker (str): 股票代碼
+        data_dir (str): 數據目錄
+        data_type (str): 數據類型 (insider_senti 或 insider_trans)
     """
-    # 创建目录结构
+    # 創建目錄結構
     insider_dir = os.path.join(data_dir, "finnhub_data", data_type)
     os.makedirs(insider_dir, exist_ok=True)
     
@@ -143,8 +143,8 @@ def create_sample_insider_data(ticker, data_dir, data_type):
     current_date = datetime.now()
     
     if data_type == "insider_senti":
-        # 内部人情绪数据
-        for i in range(3):  # 生成3个月的数据
+        # 內部人情绪數據
+        for i in range(3):  # 生成3個月的數據
             date = current_date - timedelta(days=30*i)
             date_str = date.strftime("%Y-%m-%d")
             
@@ -158,10 +158,10 @@ def create_sample_insider_data(ticker, data_dir, data_type):
             data[date_str] = sentiment_data
     
     elif data_type == "insider_trans":
-        # 内部人交易数据
+        # 內部人交易數據
         executives = ["CEO John Smith", "CFO Jane Doe", "CTO Mike Johnson"]
         
-        for i in range(7):  # 生成7天的数据
+        for i in range(7):  # 生成7天的數據
             date = current_date - timedelta(days=i)
             date_str = date.strftime("%Y-%m-%d")
             
@@ -177,55 +177,55 @@ def create_sample_insider_data(ticker, data_dir, data_type):
                 }]
                 data[date_str] = transaction_data
     
-    # 保存数据文件
+    # 保存數據文件
     file_path = os.path.join(insider_dir, f"{ticker}_data_formatted.json")
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f"✅ 创建示例{data_type}数据: {file_path}")
+    logger.info(f"✅ 創建示例{data_type}數據: {file_path}")
     return file_path
 
 def main():
     """
-    主函数
+    主函數
     """
-    logger.info(f"Finnhub示例数据下载脚本")
+    logger.info(f"Finnhub示例數據下載腳本")
     logger.info(f"=")
     
-    # 获取配置
+    # 獲取配置
     config = get_config()
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        logger.error(f"❌ 数据目录未配置")
+        logger.error(f"❌ 數據目錄未配置")
         return
     
-    logger.info(f"数据目录: {data_dir}")
+    logger.info(f"數據目錄: {data_dir}")
     
-    # 确保数据目录存在
+    # 確保數據目錄存在
     os.makedirs(data_dir, exist_ok=True)
     
-    # 常用股票代码
+    # 常用股票代碼
     tickers = ["AAPL", "TSLA", "MSFT", "GOOGL", "AMZN"]
     
-    logger.info(f"\n创建示例数据...")
+    logger.info(f"\n創建示例數據...")
     
-    # 为每个股票创建新闻数据
+    # 為每個股票創建新聞數據
     for ticker in tickers:
         create_sample_news_data(ticker, data_dir, days=7)
         create_sample_insider_data(ticker, data_dir, "insider_senti")
         create_sample_insider_data(ticker, data_dir, "insider_trans")
     
-    logger.info(f"\n=== 数据创建完成 ===")
-    logger.info(f"数据位置: {data_dir}")
-    logger.info(f"包含以下股票的示例数据:")
+    logger.info(f"\n=== 數據創建完成 ===")
+    logger.info(f"數據位置: {data_dir}")
+    logger.info(f"包含以下股票的示例數據:")
     for ticker in tickers:
-        logger.info(f"  - {ticker}: 新闻、内部人情绪、内部人交易")
+        logger.info(f"  - {ticker}: 新聞、內部人情绪、內部人交易")
     
-    logger.info(f"\n现在您可以测试Finnhub新闻功能了！")
+    logger.info(f"\n現在您可以測試Finnhub新聞功能了！")
     
-    # 测试数据获取
-    logger.info(f"\n=== 测试数据获取 ===")
+    # 測試數據獲取
+    logger.info(f"\n=== 測試數據獲取 ===")
     try:
         from tradingagents.dataflows.interface import get_finnhub_news
 
@@ -236,15 +236,15 @@ def main():
             look_back_days=3
         )
         
-        if result and "无法获取" not in result:
-            logger.info(f"✅ 新闻数据获取成功！")
-            logger.info(f"示例内容: {result[:200]}...")
+        if result and "無法獲取" not in result:
+            logger.info(f"✅ 新聞數據獲取成功！")
+            logger.info(f"示例內容: {result[:200]}...")
         else:
-            logger.error(f"⚠️ 新闻数据获取失败，请检查配置")
-            logger.info(f"返回结果: {result}")
+            logger.error(f"⚠️ 新聞數據獲取失败，請檢查配置")
+            logger.info(f"返回結果: {result}")
     
     except Exception as e:
-        logger.error(f"❌ 测试失败: {e}")
+        logger.error(f"❌ 測試失败: {e}")
 
 if __name__ == "__main__":
     main()

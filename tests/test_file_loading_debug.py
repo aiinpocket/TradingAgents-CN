@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-调试文件加载问题
+調試文件加載問題
 """
 
 import os
@@ -8,66 +8,66 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 加载环境变量
+# 加載環境變量
 load_dotenv()
 
 def test_file_loading():
-    """测试文件加载"""
-    print("🔬 文件加载调试")
+    """測試文件加載"""
+    print("🔬 文件加載調試")
     print("=" * 80)
     
     try:
         from tradingagents.config.config_manager import ConfigManager
         
-        print("🔧 创建ConfigManager...")
+        print("🔧 創建ConfigManager...")
         config_manager = ConfigManager()
         
-        print("\n📊 加载定价配置...")
+        print("\n📊 加載定價配置...")
         print("=" * 60)
         
-        # 这会触发详细的文件加载日志
+        # 這會觸發詳細的文件加載日誌
         pricing_configs = config_manager.load_pricing()
         
         print("=" * 60)
-        print(f"📊 最终加载的配置数量: {len(pricing_configs)}")
+        print(f"📊 最终加載的配置數量: {len(pricing_configs)}")
         
         # 查找DeepSeek配置
         deepseek_configs = [p for p in pricing_configs if p.provider == "deepseek"]
-        print(f"📊 DeepSeek配置数量: {len(deepseek_configs)}")
+        print(f"📊 DeepSeek配置數量: {len(deepseek_configs)}")
         
         if deepseek_configs:
             print("✅ 找到DeepSeek配置:")
             for config in deepseek_configs:
-                print(f"   - {config.model_name}: 输入¥{config.input_price_per_1k}/1K, 输出¥{config.output_price_per_1k}/1K")
+                print(f"   - {config.model_name}: 輸入¥{config.input_price_per_1k}/1K, 輸出¥{config.output_price_per_1k}/1K")
         else:
             print("❌ 未找到DeepSeek配置")
         
         return True
         
     except Exception as e:
-        print(f"❌ 文件加载测试失败: {e}")
+        print(f"❌ 文件加載測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def main():
-    """主函数"""
-    print("🔬 文件加载调试测试")
+    """主函數"""
+    print("🔬 文件加載調試測試")
     print("=" * 80)
-    print("📝 这个测试将显示实际加载的配置文件内容")
+    print("📝 這個測試将顯示實际加載的配置文件內容")
     print("=" * 80)
     
     success = test_file_loading()
     
     if success:
-        print("\n🎉 文件加载测试完成！")
-        print("请查看上面的详细日志，确认加载的文件内容。")
+        print("\n🎉 文件加載測試完成！")
+        print("請查看上面的詳細日誌，確認加載的文件內容。")
     else:
-        print("\n❌ 文件加载测试失败")
+        print("\n❌ 文件加載測試失败")
     
     return success
 

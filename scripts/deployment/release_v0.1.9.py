@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-TradingAgents-CN v0.1.9 版本发布脚本
-CLI用户体验重大优化与统一日志管理版本
+TradingAgents-CN v0.1.9 版本發布腳本
+CLI用戶體驗重大優化与統一日誌管理版本
 """
 
 import os
@@ -10,12 +10,12 @@ import subprocess
 import json
 from datetime import datetime
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
 
 def run_command(command, cwd=None):
-    """执行命令并返回结果"""
+    """執行命令並返回結果"""
     try:
         result = subprocess.run(
             command, 
@@ -30,10 +30,10 @@ def run_command(command, cwd=None):
         return False, "", str(e)
 
 def check_version_consistency():
-    """检查版本号一致性"""
-    print("🔍 检查版本号一致性...")
+    """檢查版本號一致性"""
+    print("🔍 檢查版本號一致性...")
     
-    # 检查VERSION文件
+    # 檢查VERSION文件
     version_file = os.path.join(project_root, "VERSION")
     if os.path.exists(version_file):
         with open(version_file, 'r', encoding='utf-8') as f:
@@ -43,7 +43,7 @@ def check_version_consistency():
         print("   ❌ VERSION文件不存在")
         return False
     
-    # 检查pyproject.toml
+    # 檢查pyproject.toml
     pyproject_file = os.path.join(project_root, "pyproject.toml")
     if os.path.exists(pyproject_file):
         with open(pyproject_file, 'r', encoding='utf-8') as f:
@@ -54,7 +54,7 @@ def check_version_consistency():
                     print(f"   pyproject.toml: {pyproject_version}")
                     break
     
-    # 检查README.md
+    # 檢查README.md
     readme_file = os.path.join(project_root, "README.md")
     if os.path.exists(readme_file):
         with open(readme_file, 'r', encoding='utf-8') as f:
@@ -62,114 +62,114 @@ def check_version_consistency():
             if "cn--0.1.9" in content:
                 print("   README.md: cn-0.1.9 ✅")
             else:
-                print("   README.md: 版本号未更新 ❌")
+                print("   README.md: 版本號未更新 ❌")
                 return False
     
     return True
 
 def create_git_tag():
-    """创建Git标签"""
-    print("🏷️ 创建Git标签...")
+    """創建Git標簽"""
+    print("🏷️ 創建Git標簽...")
     
     tag_name = "v0.1.9"
-    tag_message = "TradingAgents-CN v0.1.9: CLI用户体验重大优化与统一日志管理"
+    tag_message = "TradingAgents-CN v0.1.9: CLI用戶體驗重大優化与統一日誌管理"
     
-    # 检查标签是否已存在
+    # 檢查標簽是否已存在
     success, stdout, stderr = run_command(f"git tag -l {tag_name}")
     if tag_name in stdout:
-        print(f"   标签 {tag_name} 已存在")
+        print(f"   標簽 {tag_name} 已存在")
         return True
     
-    # 创建标签
+    # 創建標簽
     success, stdout, stderr = run_command(f'git tag -a {tag_name} -m "{tag_message}"')
     if success:
-        print(f"   ✅ 标签 {tag_name} 创建成功")
+        print(f"   ✅ 標簽 {tag_name} 創建成功")
         return True
     else:
-        print(f"   ❌ 标签创建失败: {stderr}")
+        print(f"   ❌ 標簽創建失败: {stderr}")
         return False
 
 def generate_release_summary():
-    """生成发布摘要"""
-    print("📋 生成发布摘要...")
+    """生成發布摘要"""
+    print("📋 生成發布摘要...")
     
     summary = {
         "version": "cn-0.1.9",
         "release_date": datetime.now().strftime("%Y-%m-%d"),
-        "title": "CLI用户体验重大优化与统一日志管理",
+        "title": "CLI用戶體驗重大優化与統一日誌管理",
         "highlights": [
-            "🎨 CLI界面重构 - 界面与日志分离，提供清爽用户体验",
-            "🔄 进度显示优化 - 解决重复提示，添加多阶段进度跟踪", 
-            "⏱️ 时间预估功能 - 智能分析阶段添加10分钟时间预估",
-            "📝 统一日志管理 - 配置化日志系统，支持多环境",
-            "🇭🇰 港股数据优化 - 改进数据获取稳定性和容错机制",
-            "🔑 OpenAI配置修复 - 解决配置混乱和错误处理问题"
+            "🎨 CLI界面重構 - 界面与日誌分離，提供清爽用戶體驗",
+            "🔄 進度顯示優化 - 解決重複提示，添加多階段進度跟蹤", 
+            "⏱️ 時間預估功能 - 智能分析階段添加10分鐘時間預估",
+            "📝 統一日誌管理 - 配置化日誌系統，支持多環境",
+            "🇭🇰 港股數據優化 - 改進數據獲取穩定性和容錯機制",
+            "🔑 OpenAI配置修複 - 解決配置混乱和錯誤處理問題"
         ],
         "key_features": {
             "cli_optimization": {
-                "interface_separation": "用户界面与系统日志完全分离",
-                "progress_display": "智能进度显示，防止重复提示",
-                "time_estimation": "分析阶段时间预估，管理用户期望",
-                "visual_enhancement": "Rich彩色输出，专业视觉效果"
+                "interface_separation": "用戶界面与系統日誌完全分離",
+                "progress_display": "智能進度顯示，防止重複提示",
+                "time_estimation": "分析階段時間預估，管理用戶期望",
+                "visual_enhancement": "Rich彩色輸出，專業視觉效果"
             },
             "logging_system": {
-                "unified_management": "LoggingManager统一日志管理",
-                "configurable": "TOML配置文件，灵活控制日志级别",
-                "tool_logging": "详细记录工具调用过程和结果",
-                "multi_environment": "本地和Docker环境差异化配置"
+                "unified_management": "LoggingManager統一日誌管理",
+                "configurable": "TOML配置文件，灵活控制日誌級別",
+                "tool_logging": "詳細記錄工具調用過程和結果",
+                "multi_environment": "本地和Docker環境差異化配置"
             },
             "data_source_improvements": {
-                "hk_stocks": "港股数据获取优化和容错机制",
-                "openai_config": "OpenAI配置统一和错误处理",
-                "caching_strategy": "智能缓存和多级fallback"
+                "hk_stocks": "港股數據獲取優化和容錯機制",
+                "openai_config": "OpenAI配置統一和錯誤處理",
+                "caching_strategy": "智能緩存和多級fallback"
             }
         },
         "user_experience": {
-            "before": "技术日志干扰、重复提示、等待焦虑",
-            "after": "清爽界面、智能进度、时间预估、专业体验"
+            "before": "技術日誌干扰、重複提示、等待焦慮",
+            "after": "清爽界面、智能進度、時間預估、專業體驗"
         },
         "technical_improvements": [
-            "代码质量提升 - 统一导入方式，增强错误处理",
-            "测试覆盖增加 - CLI和日志系统测试套件",
-            "文档完善 - 设计文档和配置管理指南",
-            "架构优化 - 模块化设计，提升可维护性"
+            "代碼质量提升 - 統一導入方式，增强錯誤處理",
+            "測試覆蓋增加 - CLI和日誌系統測試套件",
+            "文档完善 - 設計文档和配置管理指南",
+            "架構優化 - 模塊化設計，提升可維護性"
         ],
         "files_changed": {
             "core_files": [
-                "cli/main.py - CLI界面重构和进度显示优化",
-                "tradingagents/utils/logging_manager.py - 统一日志管理器",
-                "tradingagents/utils/tool_logging.py - 工具调用日志记录",
-                "config/logging.toml - 日志配置文件"
+                "cli/main.py - CLI界面重構和進度顯示優化",
+                "tradingagents/utils/logging_manager.py - 統一日誌管理器",
+                "tradingagents/utils/tool_logging.py - 工具調用日誌記錄",
+                "config/logging.toml - 日誌配置文件"
             ],
             "documentation": [
-                "docs/releases/v0.1.9.md - 详细发布说明",
-                "docs/releases/CHANGELOG.md - 更新日志",
+                "docs/releases/v0.1.9.md - 詳細發布說明",
+                "docs/releases/CHANGELOG.md - 更新日誌",
                 "README.md - 版本信息更新"
             ],
             "tests": [
-                "test_cli_logging_fix.py - CLI日志修复测试",
-                "test_cli_progress_display.py - 进度显示测试",
-                "test_duplicate_progress_fix.py - 重复提示修复测试",
-                "test_detailed_progress_display.py - 详细进度显示测试"
+                "test_cli_logging_fix.py - CLI日誌修複測試",
+                "test_cli_progress_display.py - 進度顯示測試",
+                "test_duplicate_progress_fix.py - 重複提示修複測試",
+                "test_detailed_progress_display.py - 詳細進度顯示測試"
             ]
         }
     }
     
-    # 保存发布摘要
+    # 保存發布摘要
     summary_file = os.path.join(project_root, "docs", "releases", "v0.1.9_summary.json")
     with open(summary_file, 'w', encoding='utf-8') as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
     
-    print(f"   ✅ 发布摘要已保存到: {summary_file}")
+    print(f"   ✅ 發布摘要已保存到: {summary_file}")
     return True
 
 def validate_release():
-    """验证发布准备"""
-    print("✅ 验证发布准备...")
+    """驗證發布準备"""
+    print("✅ 驗證發布準备...")
     
     checks = []
     
-    # 检查关键文件是否存在
+    # 檢查關键文件是否存在
     key_files = [
         "VERSION",
         "README.md", 
@@ -186,7 +186,7 @@ def validate_release():
         else:
             checks.append(f"   ❌ {file_path} 缺失")
     
-    # 检查Git状态
+    # 檢查Git狀態
     success, stdout, stderr = run_command("git status --porcelain")
     if success:
         if stdout.strip():
@@ -200,59 +200,59 @@ def validate_release():
     return all("✅" in check for check in checks)
 
 def main():
-    """主函数"""
-    print("🚀 TradingAgents-CN v0.1.9 版本发布")
+    """主函數"""
+    print("🚀 TradingAgents-CN v0.1.9 版本發布")
     print("=" * 60)
-    print("📋 版本主题: CLI用户体验重大优化与统一日志管理")
-    print("📅 发布日期:", datetime.now().strftime("%Y年%m月%d日"))
+    print("📋 版本主題: CLI用戶體驗重大優化与統一日誌管理")
+    print("📅 發布日期:", datetime.now().strftime("%Y年%m月%d日"))
     print("=" * 60)
     
     steps = [
-        ("检查版本号一致性", check_version_consistency),
-        ("验证发布准备", validate_release),
-        ("生成发布摘要", generate_release_summary),
-        ("创建Git标签", create_git_tag)
+        ("檢查版本號一致性", check_version_consistency),
+        ("驗證發布準备", validate_release),
+        ("生成發布摘要", generate_release_summary),
+        ("創建Git標簽", create_git_tag)
     ]
     
     for step_name, step_func in steps:
         print(f"\n📋 {step_name}")
         if not step_func():
-            print(f"❌ {step_name}失败，发布中止")
+            print(f"❌ {step_name}失败，發布中止")
             return False
     
     print("\n" + "=" * 60)
-    print("🎉 v0.1.9 版本发布准备完成！")
+    print("🎉 v0.1.9 版本發布準备完成！")
     print("=" * 60)
     
-    print("\n📋 发布亮点:")
+    print("\n📋 發布亮點:")
     highlights = [
-        "🎨 CLI界面重构 - 专业、清爽、用户友好",
-        "🔄 进度显示优化 - 智能跟踪，消除重复",
-        "⏱️ 时间预估功能 - 管理期望，减少焦虑",
-        "📝 统一日志管理 - 配置化，多环境支持",
-        "🇭🇰 港股数据优化 - 稳定性和容错性提升",
-        "🔑 配置问题修复 - OpenAI配置统一管理"
+        "🎨 CLI界面重構 - 專業、清爽、用戶友好",
+        "🔄 進度顯示優化 - 智能跟蹤，消除重複",
+        "⏱️ 時間預估功能 - 管理期望，减少焦慮",
+        "📝 統一日誌管理 - 配置化，多環境支持",
+        "🇭🇰 港股數據優化 - 穩定性和容錯性提升",
+        "🔑 配置問題修複 - OpenAI配置統一管理"
     ]
     
     for highlight in highlights:
         print(f"   {highlight}")
     
-    print("\n🎯 用户体验提升:")
-    print("   - 界面清爽美观，没有技术信息干扰")
-    print("   - 实时进度反馈，消除等待焦虑") 
-    print("   - 专业分析流程展示，增强系统信任")
-    print("   - 时间预估管理，提升等待体验")
+    print("\n🎯 用戶體驗提升:")
+    print("   - 界面清爽美觀，没有技術信息干扰")
+    print("   - 實時進度反馈，消除等待焦慮") 
+    print("   - 專業分析流程展示，增强系統信任")
+    print("   - 時間預估管理，提升等待體驗")
     
-    print("\n📚 相关文档:")
-    print("   - 详细发布说明: docs/releases/v0.1.9.md")
-    print("   - 完整更新日志: docs/releases/CHANGELOG.md")
-    print("   - 发布摘要: docs/releases/v0.1.9_summary.json")
+    print("\n📚 相關文档:")
+    print("   - 詳細發布說明: docs/releases/v0.1.9.md")
+    print("   - 完整更新日誌: docs/releases/CHANGELOG.md")
+    print("   - 發布摘要: docs/releases/v0.1.9_summary.json")
     
     print("\n🔄 下一步操作:")
     print("   1. git push origin main")
     print("   2. git push origin v0.1.9")
-    print("   3. 在GitHub创建Release")
-    print("   4. 更新Docker镜像")
+    print("   3. 在GitHub創建Release")
+    print("   4. 更新Docker鏡像")
     
     return True
 

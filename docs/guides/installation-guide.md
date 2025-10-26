@@ -5,57 +5,57 @@ code_compatibility: cn-0.1.14-preview
 status: updated
 ---
 
-# TradingAgents-CN 安装配置指导
+# TradingAgents-CN 安裝配置指導
 
-> **版本说明**: 本文档基于 `cn-0.1.14-preview` 版本编写  
-> **最后更新**: 2025-01-13  
-> **状态**: ✅ 已更新 - 包含最新的安装和配置步骤
+> **版本說明**: 本文档基於 `cn-0.1.14-preview` 版本編寫  
+> **最後更新**: 2025-01-13  
+> **狀態**: ✅ 已更新 - 包含最新的安裝和配置步骤
 
-## 📋 目录
+## 📋 目錄
 
-1. [系统要求](#系统要求)
-2. [环境准备](#环境准备)
-3. [项目安装](#项目安装)
-4. [环境配置](#环境配置)
-5. [数据库配置](#数据库配置)
-6. [启动应用](#启动应用)
-7. [验证安装](#验证安装)
-8. [常见问题](#常见问题)
-9. [高级配置](#高级配置)
+1. [系統要求](#系統要求)
+2. [環境準备](#環境準备)
+3. [項目安裝](#項目安裝)
+4. [環境配置](#環境配置)
+5. [數據庫配置](#數據庫配置)
+6. [啟動應用](#啟動應用)
+7. [驗證安裝](#驗證安裝)
+8. [常见問題](#常见問題)
+9. [高級配置](#高級配置)
 
-## 🖥️ 系统要求
+## 🖥️ 系統要求
 
-### 操作系统支持
-- ✅ **Windows 10/11** (推荐)
+### 操作系統支持
+- ✅ **Windows 10/11** (推薦)
 - ✅ **macOS 10.15+**
 - ✅ **Linux (Ubuntu 20.04+, CentOS 8+)**
 
 ### 硬件要求
-- **CPU**: 4核心以上 (推荐8核心)
-- **内存**: 8GB以上 (推荐16GB)
-- **存储**: 10GB可用空间
-- **网络**: 稳定的互联网连接
+- **CPU**: 4核心以上 (推薦8核心)
+- **內存**: 8GB以上 (推薦16GB)
+- **存储**: 10GB可用空間
+- **網絡**: 穩定的互聯網連接
 
-### 软件依赖
+### 软件依賴
 - **Python**: 3.10+ (必需)
 - **Git**: 最新版本
-- **Redis**: 6.2+ (可选，用于缓存)
-- **MongoDB**: 4.4+ (可选，用于数据存储)
+- **Redis**: 6.2+ (可選，用於緩存)
+- **MongoDB**: 4.4+ (可選，用於數據存储)
 
-## 🔧 环境准备
+## 🔧 環境準备
 
-### 1. 安装Python 3.10+
+### 1. 安裝Python 3.10+
 
 #### Windows
 ```bash
-# 下载并安装Python 3.10+
-# 访问 https://www.python.org/downloads/
-# 确保勾选 "Add Python to PATH"
+# 下載並安裝Python 3.10+
+# 訪問 https://www.python.org/downloads/
+# 確保勾選 "Add Python to PATH"
 ```
 
 #### macOS
 ```bash
-# 使用Homebrew安装
+# 使用Homebrew安裝
 brew install python@3.10
 
 # 或使用pyenv
@@ -68,16 +68,16 @@ pyenv global 3.10.12
 # 更新包列表
 sudo apt update
 
-# 安装Python 3.10
+# 安裝Python 3.10
 sudo apt install python3.10 python3.10-venv python3.10-pip
 
-# 验证安装
+# 驗證安裝
 python3.10 --version
 ```
 
-### 2. 安装Git
+### 2. 安裝Git
 ```bash
-# Windows: 下载Git for Windows
+# Windows: 下載Git for Windows
 # https://git-scm.com/download/win
 
 # macOS
@@ -88,7 +88,7 @@ sudo apt install git  # Ubuntu
 sudo yum install git   # CentOS
 ```
 
-### 3. 安装uv (推荐的包管理器)
+### 3. 安裝uv (推薦的包管理器)
 ```bash
 # Windows (PowerShell)
 powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
@@ -96,104 +96,104 @@ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 # macOS/Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 验证安装
+# 驗證安裝
 uv --version
 ```
 
-## 📦 项目安装
+## 📦 項目安裝
 
-### 1. 克隆项目
+### 1. 克隆項目
 ```bash
-# 克隆项目到本地
+# 克隆項目到本地
 git clone https://github.com/your-repo/TradingAgents-CN.git
 cd TradingAgents-CN
 
-# 查看当前版本
+# 查看當前版本
 cat VERSION
 ```
 
-### 2. 创建虚拟环境
+### 2. 創建虛擬環境
 ```bash
-# 使用uv创建虚拟环境 (推荐)
+# 使用uv創建虛擬環境 (推薦)
 uv venv
 
-# 激活虚拟环境
+# 激活虛擬環境
 # Windows
 .venv\Scripts\activate
 
 # macOS/Linux
 source .venv/bin/activate
 
-# 验证虚拟环境
-which python  # 应该指向虚拟环境中的python
+# 驗證虛擬環境
+which python  # 應该指向虛擬環境中的python
 ```
 
-### 3. 安装依赖
+### 3. 安裝依賴
 
-#### 方法1: 使用uv安装 (推荐)
+#### 方法1: 使用uv安裝 (推薦)
 ```bash
-# 安装核心依赖
+# 安裝核心依賴
 uv pip install -e .
 
-# 安装额外依赖
+# 安裝額外依賴
 uv pip install yfinance langgraph dashscope
 
-# 验证安装
-python -c "import tradingagents; print('安装成功!')"
+# 驗證安裝
+python -c "import tradingagents; print('安裝成功!')"
 ```
 
-#### 方法2: 使用传统pip
+#### 方法2: 使用傳統pip
 ```bash
-# 安装核心依赖
+# 安裝核心依賴
 pip install -e .
 
-# 安装缺失的依赖包
+# 安裝缺失的依賴包
 pip install yfinance langgraph dashscope
 
-# 或一次性安装所有依赖
+# 或一次性安裝所有依賴
 pip install -r requirements.txt
 
-# 验证安装
-python -c "import tradingagents; print('安装成功!')"
+# 驗證安裝
+python -c "import tradingagents; print('安裝成功!')"
 ```
 
-#### 方法3: 分步安装 (推荐用于解决依赖冲突)
+#### 方法3: 分步安裝 (推薦用於解決依賴冲突)
 ```bash
-# 1. 安装基础依赖
+# 1. 安裝基础依賴
 pip install streamlit pandas numpy requests plotly
 
-# 2. 安装LLM相关依赖
+# 2. 安裝LLM相關依賴
 pip install openai langchain langgraph dashscope
 
-# 3. 安装数据源依赖
+# 3. 安裝數據源依賴
 pip install yfinance tushare akshare
 
-# 4. 安装数据库依赖 (可选)
+# 4. 安裝數據庫依賴 (可選)
 pip install redis pymongo
 
-# 5. 安装项目
+# 5. 安裝項目
 pip install -e .
 ```
 
-## ⚙️ 环境配置
+## ⚙️ 環境配置
 
-### 1. 创建环境变量文件
+### 1. 創建環境變量文件
 ```bash
-# 复制环境变量模板
+# 複制環境變量模板
 cp .env.example .env
 
-# 编辑环境变量文件
+# 編辑環境變量文件
 # Windows: notepad .env
 # macOS/Linux: nano .env
 ```
 
-### 2. 配置API密钥
+### 2. 配置API密鑰
 
 在 `.env` 文件中添加以下配置：
 
 ```bash
 # ===========================================
-# TradingAgents-CN 环境配置
+# TradingAgents-CN 環境配置
 # ===========================================
 
 # 基础配置
@@ -202,7 +202,7 @@ DEBUG=true
 LOG_LEVEL=INFO
 
 # ===========================================
-# LLM API 配置 (选择一个或多个)
+# LLM API 配置 (選擇一個或多個)
 # ===========================================
 
 # OpenAI配置
@@ -223,24 +223,24 @@ GOOGLE_API_KEY=your_google_api_key_here
 QIANFAN_ACCESS_KEY=your_qianfan_access_key_here
 QIANFAN_SECRET_KEY=your_qianfan_secret_key_here
 
-# 硅基流动配置
+# 硅基流動配置
 SILICONFLOW_API_KEY=your_siliconflow_api_key_here
 
 # ===========================================
-# 数据源API配置
+# 數據源API配置
 # ===========================================
 
-# Tushare配置 (A股数据)
+# Tushare配置 (A股數據)
 TUSHARE_TOKEN=your_tushare_token_here
 
-# FinnHub配置 (美股数据)
+# FinnHub配置 (美股數據)
 FINNHUB_API_KEY=your_finnhub_api_key_here
 
 # Alpha Vantage配置
 ALPHA_VANTAGE_API_KEY=your_alpha_vantage_api_key_here
 
 # ===========================================
-# 数据库配置 (可选)
+# 數據庫配置 (可選)
 # ===========================================
 
 # Redis配置
@@ -254,53 +254,53 @@ MONGODB_URI=mongodb://localhost:27017/tradingagents
 MONGODB_DATABASE=tradingagents
 
 # ===========================================
-# 应用配置
+# 應用配置
 # ===========================================
 
-# Web应用配置
+# Web應用配置
 WEB_HOST=localhost
 WEB_PORT=8501
 WEB_DEBUG=true
 
-# 数据缓存目录
+# 數據緩存目錄
 DATA_CACHE_DIR=./data/cache
 
-# 日志配置
+# 日誌配置
 LOG_DIR=./logs
 LOG_FILE=tradingagents.log
 ```
 
-### 3. 获取API密钥指南
+### 3. 獲取API密鑰指南
 
-#### OpenAI API密钥
-1. 访问 [OpenAI Platform](https://platform.openai.com/)
-2. 注册/登录账户
-3. 进入 API Keys 页面
-4. 创建新的API密钥
+#### OpenAI API密鑰
+1. 訪問 [OpenAI Platform](https://platform.openai.com/)
+2. 註冊/登錄账戶
+3. 進入 API Keys 页面
+4. 創建新的API密鑰
 
 #### 阿里百炼 (DashScope)
-1. 访问 [阿里云百炼](https://dashscope.aliyun.com/)
-2. 注册/登录阿里云账户
-3. 开通百炼服务
-4. 获取API Key
+1. 訪問 [阿里云百炼](https://dashscope.aliyun.com/)
+2. 註冊/登錄阿里云账戶
+3. 開通百炼服務
+4. 獲取API Key
 
 #### Tushare Token
-1. 访问 [Tushare官网](https://tushare.pro/)
-2. 注册账户并实名认证
-3. 获取Token (免费用户有调用限制)
+1. 訪問 [Tushare官網](https://tushare.pro/)
+2. 註冊账戶並實名認證
+3. 獲取Token (免費用戶有調用限制)
 
 #### FinnHub API
-1. 访问 [FinnHub](https://finnhub.io/)
-2. 注册免费账户
-3. 获取API Key
+1. 訪問 [FinnHub](https://finnhub.io/)
+2. 註冊免費账戶
+3. 獲取API Key
 
-## 🗄️ 数据库配置
+## 🗄️ 數據庫配置
 
-### Redis配置 (推荐)
+### Redis配置 (推薦)
 
 #### Windows
 ```bash
-# 下载Redis for Windows
+# 下載Redis for Windows
 # https://github.com/microsoftarchive/redis/releases
 
 # 或使用Docker
@@ -309,13 +309,13 @@ docker run -d --name redis -p 6379:6379 redis:latest
 
 #### macOS
 ```bash
-# 使用Homebrew安装
+# 使用Homebrew安裝
 brew install redis
 
-# 启动Redis服务
+# 啟動Redis服務
 brew services start redis
 
-# 验证连接
+# 驗證連接
 redis-cli ping
 ```
 
@@ -327,132 +327,132 @@ sudo apt install redis-server
 # CentOS
 sudo yum install redis
 
-# 启动服务
+# 啟動服務
 sudo systemctl start redis
 sudo systemctl enable redis
 ```
 
-### MongoDB配置 (可选)
+### MongoDB配置 (可選)
 
-#### 使用Docker (推荐)
+#### 使用Docker (推薦)
 ```bash
-# 启动MongoDB容器
+# 啟動MongoDB容器
 docker run -d --name mongodb -p 27017:27017 mongo:latest
 
-# 验证连接
+# 驗證連接
 docker exec -it mongodb mongosh
 ```
 
-#### 本地安装
+#### 本地安裝
 ```bash
-# 访问MongoDB官网下载安装包
+# 訪問MongoDB官網下載安裝包
 # https://www.mongodb.com/try/download/community
 
-## 🚀 启动应用
+## 🚀 啟動應用
 
-### 1. 启动Web应用
+### 1. 啟動Web應用
 
-#### 方法1: 使用启动脚本 (推荐)
+#### 方法1: 使用啟動腳本 (推薦)
 ```bash
-# 确保虚拟环境已激活
+# 確保虛擬環境已激活
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
 
-# 启动Web应用
+# 啟動Web應用
 python start_web.py
 ```
 
-#### 方法2: 直接启动Streamlit
+#### 方法2: 直接啟動Streamlit
 ```bash
-# 进入web目录
+# 進入web目錄
 cd web
 
-# 启动Streamlit应用
+# 啟動Streamlit應用
 streamlit run app.py --server.port 8501
 ```
 
-#### 方法3: 使用批处理文件 (Windows)
+#### 方法3: 使用批處理文件 (Windows)
 ```bash
-# 双击运行
+# 雙擊運行
 start_web.bat
 ```
 
-### 2. 访问应用
-打开浏览器访问: http://localhost:8501
+### 2. 訪問應用
+打開浏覽器訪問: http://localhost:8501
 
 ### 3. 首次使用配置
 
-1. **选择LLM提供商**: 在侧边栏选择已配置的LLM提供商
-2. **选择模型**: 根据需要选择具体的模型
-3. **配置分析参数**: 设置分析日期、股票代码等
-4. **开始分析**: 输入股票代码进行测试
+1. **選擇LLM提供商**: 在侧邊栏選擇已配置的LLM提供商
+2. **選擇模型**: 根據需要選擇具體的模型
+3. **配置分析參數**: 設置分析日期、股票代碼等
+4. **開始分析**: 輸入股票代碼進行測試
 
-## ✅ 验证安装
+## ✅ 驗證安裝
 
-### 1. 基础功能测试
+### 1. 基础功能測試
 ```bash
-# 测试Python环境
-python -c "import tradingagents; print('✅ 模块导入成功')"
+# 測試Python環境
+python -c "import tradingagents; print('✅ 模塊導入成功')"
 
-# 测试依赖包
-python -c "import streamlit, pandas, yfinance; print('✅ 依赖包正常')"
+# 測試依賴包
+python -c "import streamlit, pandas, yfinance; print('✅ 依賴包正常')"
 
-# 测试配置文件
-python -c "from tradingagents.config import get_config; print('✅ 配置加载成功')"
+# 測試配置文件
+python -c "from tradingagents.config import get_config; print('✅ 配置加載成功')"
 ```
 
-### 2. API连接测试
+### 2. API連接測試
 ```bash
-# 进入项目目录
+# 進入項目目錄
 cd examples
 
-# 测试LLM连接
+# 測試LLM連接
 python test_llm_connection.py
 
-# 测试数据源连接
+# 測試數據源連接
 python test_data_sources.py
 ```
 
-### 3. Web应用测试
-1. 启动应用后访问 http://localhost:8501
-2. 检查侧边栏是否正常显示
-3. 尝试选择不同的LLM提供商
-4. 输入测试股票代码 (如: AAPL, 000001)
+### 3. Web應用測試
+1. 啟動應用後訪問 http://localhost:8501
+2. 檢查侧邊栏是否正常顯示
+3. 嘗試選擇不同的LLM提供商
+4. 輸入測試股票代碼 (如: AAPL, 000001)
 
-## 🔧 常见问题
+## 🔧 常见問題
 
-### 1. 模块导入错误
+### 1. 模塊導入錯誤
 ```bash
-# 问题: ModuleNotFoundError: No module named 'tradingagents'
-# 解决方案:
+# 問題: ModuleNotFoundError: No module named 'tradingagents'
+# 解決方案:
 pip install -e .
 
-# 或重新安装
+# 或重新安裝
 pip uninstall tradingagents
 pip install -e .
 ```
 
-### 2. 虚拟环境问题
+### 2. 虛擬環境問題
 ```bash
-# 问题: 虚拟环境未激活
-# 解决方案:
+# 問題: 虛擬環境未激活
+# 解決方案:
 # Windows
 .venv\Scripts\activate
 
 # macOS/Linux
 source .venv/bin/activate
 
-# 验证
+# 驗證
 which python
 ```
 
-### 3. 端口占用问题
+### 3. 端口占用問題
 ```bash
-# 问题: Port 8501 is already in use
-# 解决方案:
+# 問題: Port 8501 is already in use
+# 解決方案:
 streamlit run app.py --server.port 8502
 
-# 或杀死占用进程
+# 或杀死占用進程
 # Windows
 netstat -ano | findstr :8501
 taskkill /PID <PID> /F
@@ -461,31 +461,31 @@ taskkill /PID <PID> /F
 lsof -ti:8501 | xargs kill -9
 ```
 
-### 4. API密钥错误
+### 4. API密鑰錯誤
 ```bash
-# 问题: API密钥验证失败
-# 解决方案:
-1. 检查.env文件中的API密钥格式
-2. 确认API密钥有效性
-3. 检查网络连接
-4. 查看日志文件: logs/tradingagents.log
+# 問題: API密鑰驗證失败
+# 解決方案:
+1. 檢查.env文件中的API密鑰格式
+2. 確認API密鑰有效性
+3. 檢查網絡連接
+4. 查看日誌文件: logs/tradingagents.log
 ```
 
-### 5. 数据获取失败
+### 5. 數據獲取失败
 ```bash
-# 问题: 无法获取股票数据
-# 解决方案:
-1. 检查网络连接
-2. 验证数据源API密钥
-3. 检查股票代码格式
-4. 查看缓存目录: data/cache
+# 問題: 無法獲取股票數據
+# 解決方案:
+1. 檢查網絡連接
+2. 驗證數據源API密鑰
+3. 檢查股票代碼格式
+4. 查看緩存目錄: data/cache
 ```
 
-## ⚡ 高级配置
+## ⚡ 高級配置
 
-### 1. 性能优化
+### 1. 性能優化
 
-#### 启用Redis缓存
+#### 啟用Redis緩存
 ```bash
 # 在.env文件中配置Redis
 REDIS_HOST=localhost
@@ -493,9 +493,9 @@ REDIS_PORT=6379
 REDIS_ENABLED=true
 ```
 
-#### 配置并发设置
+#### 配置並發設置
 ```python
-# 在config/settings.json中调整
+# 在config/settings.json中調整
 {
   "max_workers": 4,
   "request_timeout": 30,
@@ -503,28 +503,28 @@ REDIS_ENABLED=true
 }
 ```
 
-### 2. 日志配置
+### 2. 日誌配置
 
-#### 自定义日志级别
+#### 自定義日誌級別
 ```bash
-# 在.env文件中设置
+# 在.env文件中設置
 LOG_LEVEL=DEBUG  # DEBUG, INFO, WARNING, ERROR
 LOG_FILE=logs/tradingagents.log
 ```
 
-#### 结构化日志
+#### 結構化日誌
 ```python
-# 编辑config/logging.toml
+# 編辑config/logging.toml
 [loggers.tradingagents]
 level = "INFO"
 handlers = ["console", "file"]
 ```
 
-### 3. 数据源配置
+### 3. 數據源配置
 
-#### 优先级设置
+#### 優先級設置
 ```python
-# 在config/settings.json中配置数据源优先级
+# 在config/settings.json中配置數據源優先級
 {
   "data_sources": {
     "china_stocks": ["tushare", "akshare", "tdx"],
@@ -536,7 +536,7 @@ handlers = ["console", "file"]
 
 ### 4. 模型配置
 
-#### 自定义模型参数
+#### 自定義模型參數
 ```python
 # 在config/models.json中配置
 {
@@ -548,14 +548,14 @@ handlers = ["console", "file"]
 }
 ```
 
-## 🐳 Docker部署 (可选)
+## 🐳 Docker部署 (可選)
 
-### 1. 构建Docker镜像
+### 1. 構建Docker鏡像
 ```bash
-# 构建镜像
+# 構建鏡像
 docker build -t tradingagents-cn .
 
-# 运行容器
+# 運行容器
 docker run -d \
   --name tradingagents \
   -p 8501:8501 \
@@ -565,33 +565,33 @@ docker run -d \
 
 ### 2. 使用Docker Compose
 ```bash
-# 启动完整服务栈
+# 啟動完整服務棧
 docker-compose up -d
 
-# 查看服务状态
+# 查看服務狀態
 docker-compose ps
 
-# 查看日志
+# 查看日誌
 docker-compose logs -f
 ```
 
 ## 📚 下一步
 
-安装完成后，建议阅读以下文档：
+安裝完成後，建议阅讀以下文档：
 
-1. **[快速开始指南](../QUICK_START.md)** - 了解基本使用方法
-2. **[配置管理指南](./config-management-guide.md)** - 深入了解配置选项
-3. **[A股分析指南](./a-share-analysis-guide.md)** - A股市场分析教程
-4. **[Docker部署指南](./docker-deployment-guide.md)** - 生产环境部署
-5. **[故障排除指南](../troubleshooting/)** - 常见问题解决方案
+1. **[快速開始指南](../QUICK_START.md)** - 了解基本使用方法
+2. **[配置管理指南](./config-management-guide.md)** - 深入了解配置選項
+3. **[A股分析指南](./a-share-analysis-guide.md)** - A股市場分析教程
+4. **[Docker部署指南](./docker-deployment-guide.md)** - 生產環境部署
+5. **[故障排除指南](../troubleshooting/)** - 常见問題解決方案
 
-## 🆘 获取帮助
+## 🆘 獲取幫助
 
-如果遇到问题，可以通过以下方式获取帮助：
+如果遇到問題，可以通過以下方式獲取幫助：
 
-- **GitHub Issues**: [提交问题](https://github.com/your-repo/TradingAgents-CN/issues)
+- **GitHub Issues**: [提交問題](https://github.com/your-repo/TradingAgents-CN/issues)
 - **文档**: [查看完整文档](../README.md)
-- **社区**: [加入讨论群](https://your-community-link)
+- **社区**: [加入討論群](https://your-community-link)
 
 ---
 

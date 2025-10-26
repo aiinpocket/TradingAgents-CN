@@ -1,78 +1,78 @@
-# Token使用统计和成本跟踪指南 (v0.1.7)
+# Token使用統計和成本跟蹤指南 (v0.1.7)
 
-本指南介绍如何配置和使用TradingAgents-CN的Token使用统计和成本跟踪功能，包括v0.1.7新增的DeepSeek成本追踪和智能成本控制。
+本指南介紹如何配置和使用TradingAgents-CN的Token使用統計和成本跟蹤功能，包括v0.1.7新增的DeepSeek成本追蹤和智能成本控制。
 
 ## 功能概述
 
-TradingAgents提供了完整的Token使用统计和成本跟踪功能，包括：
+TradingAgents提供了完整的Token使用統計和成本跟蹤功能，包括：
 
-- **实时Token统计**: 自动记录每次LLM调用的输入和输出token数量
-- **成本计算**: 根据不同供应商的定价自动计算使用成本
-- **多存储支持**: 支持JSON文件存储和MongoDB数据库存储
-- **统计分析**: 提供详细的使用统计和成本分析
-- **成本警告**: 当使用成本超过阈值时自动提醒
+- **實時Token統計**: 自動記錄每次LLM調用的輸入和輸出token數量
+- **成本計算**: 根據不同供應商的定價自動計算使用成本
+- **多存储支持**: 支持JSON文件存储和MongoDB數據庫存储
+- **統計分析**: 提供詳細的使用統計和成本分析
+- **成本警告**: 當使用成本超過阈值時自動提醒
 
-## 支持的LLM供应商
+## 支持的LLM供應商
 
-目前支持以下LLM供应商的Token统计：
+目前支持以下LLM供應商的Token統計：
 
-- ✅ **DeepSeek**: 完全支持，自动提取API响应中的token使用量 (v0.1.7新增)
-- ✅ **DashScope (阿里百炼)**: 完全支持，自动提取API响应中的token使用量
-- ✅ **Google AI**: 完全支持，Gemini系列模型token统计
-- 🔄 **OpenAI**: 计划支持
-- 🔄 **Anthropic**: 计划支持
+- ✅ **DeepSeek**: 完全支持，自動提取API響應中的token使用量 (v0.1.7新增)
+- ✅ **DashScope (阿里百炼)**: 完全支持，自動提取API響應中的token使用量
+- ✅ **Google AI**: 完全支持，Gemini系列模型token統計
+- 🔄 **OpenAI**: 計劃支持
+- 🔄 **Anthropic**: 計劃支持
 
 ## 配置方法
 
 ### 1. 基础配置
 
-在项目根目录创建或编辑 `.env` 文件：
+在項目根目錄創建或編辑 `.env` 文件：
 
 ```bash
-# 启用成本跟踪（默认启用）
+# 啟用成本跟蹤（默認啟用）
 ENABLE_COST_TRACKING=true
 
 # 成本警告阈值（人民币）
 COST_ALERT_THRESHOLD=100.0
 
-# DashScope API密钥
+# DashScope API密鑰
 DASHSCOPE_API_KEY=your_dashscope_api_key_here
 ```
 
 ### 2. 存储配置
 
-#### 选项1: JSON文件存储（默认）
+#### 選項1: JSON文件存储（默認）
 
-默认情况下，Token使用记录保存在 `config/usage.json` 文件中。
+默認情况下，Token使用記錄保存在 `config/usage.json` 文件中。
 
 ```bash
-# 最大记录数量（默认10000）
+# 最大記錄數量（默認10000）
 MAX_USAGE_RECORDS=10000
 
-# 自动保存使用记录（默认启用）
+# 自動保存使用記錄（默認啟用）
 AUTO_SAVE_USAGE=true
 ```
 
-#### 选项2: MongoDB存储（推荐用于生产环境）
+#### 選項2: MongoDB存储（推薦用於生產環境）
 
-对于大量数据和高性能需求，推荐使用MongoDB存储：
+對於大量數據和高性能需求，推薦使用MongoDB存储：
 
 ```bash
-# 启用MongoDB存储
+# 啟用MongoDB存储
 USE_MONGODB_STORAGE=true
 
-# MongoDB连接字符串
+# MongoDB連接字符串
 # 本地MongoDB
 MONGODB_CONNECTION_STRING=mongodb://localhost:27017/
 
 # 或云MongoDB（如MongoDB Atlas）
 # MONGODB_CONNECTION_STRING=mongodb+srv://username:password@cluster.mongodb.net/
 
-# 数据库名称
+# 數據庫名稱
 MONGODB_DATABASE_NAME=tradingagents
 ```
 
-### 3. 安装MongoDB依赖（如果使用MongoDB存储）
+### 3. 安裝MongoDB依賴（如果使用MongoDB存储）
 
 ```bash
 pip install pymongo
@@ -80,9 +80,9 @@ pip install pymongo
 
 ## 使用方法
 
-### 1. 自动Token统计
+### 1. 自動Token統計
 
-当使用DashScope适配器时，Token统计会自动进行：
+當使用DashScope適配器時，Token統計會自動進行：
 
 ```python
 from tradingagents.llm_adapters.dashscope_adapter import ChatDashScope
@@ -94,44 +94,44 @@ llm = ChatDashScope(
     temperature=0.7
 )
 
-# 发送消息（自动记录token使用）
+# 發送消息（自動記錄token使用）
 response = llm.invoke([
     HumanMessage(content="分析一下苹果公司的股票")
 ], session_id="my_session", analysis_type="stock_analysis")
 ```
 
-### 2. 查看使用统计
+### 2. 查看使用統計
 
 ```python
 from tradingagents.config.config_manager import config_manager
 
-# 获取最近30天的统计
+# 獲取最近30天的統計
 stats = config_manager.get_usage_statistics(30)
 
 print(f"总成本: ¥{stats['total_cost']:.4f}")
-print(f"总请求数: {stats['total_requests']}")
-print(f"输入tokens: {stats['total_input_tokens']}")
-print(f"输出tokens: {stats['total_output_tokens']}")
+print(f"总請求數: {stats['total_requests']}")
+print(f"輸入tokens: {stats['total_input_tokens']}")
+print(f"輸出tokens: {stats['total_output_tokens']}")
 
-# 按供应商查看统计
+# 按供應商查看統計
 for provider, provider_stats in stats['provider_stats'].items():
     print(f"{provider}: ¥{provider_stats['cost']:.4f}")
 ```
 
-### 3. 查看会话成本
+### 3. 查看會話成本
 
 ```python
 from tradingagents.config.config_manager import token_tracker
 
-# 查看特定会话的成本
+# 查看特定會話的成本
 session_cost = token_tracker.get_session_cost("my_session")
-print(f"会话成本: ¥{session_cost:.4f}")
+print(f"會話成本: ¥{session_cost:.4f}")
 ```
 
 ### 4. 估算成本
 
 ```python
-# 估算成本（用于预算规划）
+# 估算成本（用於預算規劃）
 estimated_cost = token_tracker.estimate_cost(
     provider="dashscope",
     model_name="qwen-turbo",
@@ -141,19 +141,19 @@ estimated_cost = token_tracker.estimate_cost(
 print(f"估算成本: ¥{estimated_cost:.4f}")
 ```
 
-## 定价配置
+## 定價配置
 
-系统内置了主要LLM供应商的定价信息，也可以自定义定价：
+系統內置了主要LLM供應商的定價信息，也可以自定義定價：
 
 ```python
 from tradingagents.config.config_manager import config_manager, PricingConfig
 
-# 添加自定义定价
+# 添加自定義定價
 custom_pricing = PricingConfig(
     provider="dashscope",
     model_name="qwen-max",
-    input_price_per_1k=0.02,   # 每1000个输入token的价格（人民币）
-    output_price_per_1k=0.06,  # 每1000个输出token的价格（人民币）
+    input_price_per_1k=0.02,   # 每1000個輸入token的價格（人民币）
+    output_price_per_1k=0.06,  # 每1000個輸出token的價格（人民币）
     currency="CNY"
 )
 
@@ -162,11 +162,11 @@ pricing_list.append(custom_pricing)
 config_manager.save_pricing(pricing_list)
 ```
 
-## 内置定价表
+## 內置定價表
 
 ### DashScope (阿里百炼)
 
-| 模型 | 输入价格 (¥/1K tokens) | 输出价格 (¥/1K tokens) |
+| 模型 | 輸入價格 (¥/1K tokens) | 輸出價格 (¥/1K tokens) |
 |------|----------------------|----------------------|
 | qwen-turbo | 0.002 | 0.006 |
 | qwen-plus-latest | 0.004 | 0.012 |
@@ -174,79 +174,79 @@ config_manager.save_pricing(pricing_list)
 
 ### OpenAI
 
-| 模型 | 输入价格 ($/1K tokens) | 输出价格 ($/1K tokens) |
+| 模型 | 輸入價格 ($/1K tokens) | 輸出價格 ($/1K tokens) |
 |------|----------------------|----------------------|
 | gpt-3.5-turbo | 0.0015 | 0.002 |
 | gpt-4 | 0.03 | 0.06 |
 | gpt-4-turbo | 0.01 | 0.03 |
 
-## 测试Token统计功能
+## 測試Token統計功能
 
-运行测试脚本验证功能：
+運行測試腳本驗證功能：
 
 ```bash
-# 测试DashScope token统计
+# 測試DashScope token統計
 python tests/test_dashscope_token_tracking.py
 ```
 
-## MongoDB存储优势
+## MongoDB存储優势
 
-使用MongoDB存储相比JSON文件存储有以下优势：
+使用MongoDB存储相比JSON文件存储有以下優势：
 
-1. **高性能**: 支持大量数据的高效查询和聚合
-2. **可扩展性**: 支持分布式部署和水平扩展
-3. **数据安全**: 支持备份、复制和故障恢复
-4. **高级查询**: 支持复杂的聚合查询和统计分析
-5. **并发支持**: 支持多用户并发访问
+1. **高性能**: 支持大量數據的高效查詢和聚合
+2. **可擴展性**: 支持分布式部署和水平擴展
+3. **數據安全**: 支持备份、複制和故障恢複
+4. **高級查詢**: 支持複雜的聚合查詢和統計分析
+5. **並發支持**: 支持多用戶並發訪問
 
-### MongoDB索引优化
+### MongoDB索引優化
 
-系统会自动创建以下索引以提高查询性能：
+系統會自動創建以下索引以提高查詢性能：
 
-- 复合索引：`(timestamp, provider, model_name)`
-- 单字段索引：`session_id`, `analysis_type`
+- 複合索引：`(timestamp, provider, model_name)`
+- 單字段索引：`session_id`, `analysis_type`
 
 ## 成本控制建议
 
-1. **设置合理的成本警告阈值**
-2. **定期查看使用统计，优化使用模式**
-3. **根据需求选择合适的模型（平衡成本和性能）**
-4. **使用会话ID跟踪特定分析的成本**
-5. **定期清理旧的使用记录（MongoDB支持自动清理）**
+1. **設置合理的成本警告阈值**
+2. **定期查看使用統計，優化使用模式**
+3. **根據需求選擇合適的模型（平衡成本和性能）**
+4. **使用會話ID跟蹤特定分析的成本**
+5. **定期清理旧的使用記錄（MongoDB支持自動清理）**
 
 ## 故障排除
 
-### 1. Token统计不工作
+### 1. Token統計不工作
 
-- 检查API密钥是否正确配置
-- 确认 `ENABLE_COST_TRACKING=true`
-- 查看控制台是否有错误信息
+- 檢查API密鑰是否正確配置
+- 確認 `ENABLE_COST_TRACKING=true`
+- 查看控制台是否有錯誤信息
 
-### 2. MongoDB连接失败
+### 2. MongoDB連接失败
 
-- 检查MongoDB服务是否运行
-- 验证连接字符串格式
-- 确认网络连接和防火墙设置
-- 检查用户权限
+- 檢查MongoDB服務是否運行
+- 驗證連接字符串格式
+- 確認網絡連接和防火墙設置
+- 檢查用戶權限
 
-### 3. 成本计算不准确
+### 3. 成本計算不準確
 
-- 检查定价配置是否正确
-- 确认模型名称匹配
-- 验证token提取逻辑
+- 檢查定價配置是否正確
+- 確認模型名稱匹配
+- 驗證token提取逻辑
 
-## 最佳实践
+## 最佳實踐
 
-1. **生产环境使用MongoDB存储**
-2. **定期备份使用数据**
-3. **监控成本趋势，及时调整策略**
-4. **使用有意义的会话ID和分析类型**
-5. **定期更新定价信息**
+1. **生產環境使用MongoDB存储**
+2. **定期备份使用數據**
+3. **監控成本趋势，及時調整策略**
+4. **使用有意義的會話ID和分析類型**
+5. **定期更新定價信息**
 
-## 未来计划
+## 未來計劃
 
-- [ ] 支持更多LLM供应商的Token统计
-- [ ] 添加可视化仪表板
-- [ ] 支持成本预算和限制
-- [ ] 添加使用报告导出功能
-- [ ] 支持团队和用户级别的成本跟踪
+- [ ] 支持更多LLM供應商的Token統計
+- [ ] 添加可視化儀表板
+- [ ] 支持成本預算和限制
+- [ ] 添加使用報告導出功能
+- [ ] 支持团隊和用戶級別的成本跟蹤

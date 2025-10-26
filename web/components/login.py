@@ -1,6 +1,6 @@
 """
-登录组件
-提供用户登录界面
+登錄組件
+提供用戶登錄界面
 """
 
 import streamlit as st
@@ -9,31 +9,31 @@ import sys
 from pathlib import Path
 import base64
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-# 导入认证管理器 - 使用全局变量确保在整个模块中可用
+# 導入認證管理器 - 使用全局變量確保在整個模塊中可用
 auth_manager = None
 
-# 尝试多种导入路径
+# 嘗試多種導入路徑
 try:
-    # 尝试相对导入（从 web 目录运行时）
+    # 嘗試相對導入（從 web 目錄運行時）
     from ..utils.auth_manager import AuthManager, auth_manager as imported_auth_manager
     auth_manager = imported_auth_manager
 except ImportError:
     try:
-        # 尝试从 web.utils 导入（从项目根目录运行时）
+        # 嘗試從 web.utils 導入（從項目根目錄運行時）
         from web.utils.auth_manager import AuthManager, auth_manager as imported_auth_manager
         auth_manager = imported_auth_manager
     except ImportError:
         try:
-            # 尝试直接从 utils 导入
+            # 嘗試直接從 utils 導入
             from utils.auth_manager import AuthManager, auth_manager as imported_auth_manager
             auth_manager = imported_auth_manager
         except ImportError:
             try:
-                # 尝试绝对路径导入
+                # 嘗試絕對路徑導入
                 import sys
                 from pathlib import Path
                 web_utils_path = Path(__file__).parent.parent / "utils"
@@ -41,7 +41,7 @@ except ImportError:
                 from auth_manager import AuthManager, auth_manager as imported_auth_manager
                 auth_manager = imported_auth_manager
             except ImportError:
-                # 如果都失败了，创建一个简单的认证管理器
+                # 如果都失败了，創建一個簡單的認證管理器
                 class SimpleAuthManager:
                     def __init__(self):
                         self.authenticated = False
@@ -51,7 +51,7 @@ except ImportError:
                         return st.session_state.get('authenticated', False)
                     
                     def authenticate(self, username, password):
-                        # 简单的认证逻辑
+                        # 簡單的認證逻辑
                         if username == "admin" and password == "admin123":
                             return True, {"username": username, "role": "admin"}
                         elif username == "user" and password == "user123":
@@ -71,7 +71,7 @@ except ImportError:
                 auth_manager = SimpleAuthManager()
 
 def get_base64_image(image_path):
-    """将图片转换为base64编码"""
+    """将圖片轉換為base64編碼"""
     try:
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
@@ -79,9 +79,9 @@ def get_base64_image(image_path):
         return None
 
 def render_login_form():
-    """渲染登录表单"""
+    """渲染登錄表單"""
     
-    # 现代化登录页面样式
+    # 現代化登錄页面樣式
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -217,51 +217,51 @@ def render_login_form():
     </style>
     """, unsafe_allow_html=True)
     
-    # 主登录容器
+    # 主登錄容器
     st.markdown("""
     <div class="login-container">
         <div class="login-header">
             <h1 class="login-title">🚀 TradingAgents-CN</h1>
-            <p class="login-subtitle">AI驱动的股票交易分析平台 · 让投资更智能</p>
+            <p class="login-subtitle">AI驱動的股票交易分析平台 · 让投資更智能</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
-    # 登录表单
+    # 登錄表單
     with st.container():
         st.markdown('<div class="login-form">', unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.markdown("### 🔐 用户登录")
+            st.markdown("### 🔐 用戶登錄")
 
             username = st.text_input(
-                "用户名",
-                placeholder="请输入您的用户名（首次使用：admin）",
+                "用戶名",
+                placeholder="請輸入您的用戶名（首次使用：admin）",
                 key="username_input",
                 label_visibility="collapsed"
             )
             password = st.text_input(
-                "密码",
+                "密碼",
                 type="password",
-                placeholder="请输入您的密码（首次使用：admin123）",
+                placeholder="請輸入您的密碼（首次使用：admin123）",
                 key="password_input",
                 label_visibility="collapsed"
             )
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            if st.button("🚀 立即登录", use_container_width=True, key="login_button"):
+            if st.button("🚀 立即登錄", use_container_width=True, key="login_button"):
                 if username and password:
-                    # 使用auth_manager.login()方法来确保前端缓存被正确保存
+                    # 使用auth_manager.login()方法來確保前端緩存被正確保存
                     if auth_manager.login(username, password):
-                        st.success("✅ 登录成功！正在为您跳转...")
+                        st.success("✅ 登錄成功！正在為您跳轉...")
                         time.sleep(1)
                         st.rerun()
                     else:
-                        st.error("❌ 用户名或密码错误，请重试")
+                        st.error("❌ 用戶名或密碼錯誤，請重試")
                 else:
-                    st.warning("⚠️ 请输入完整的登录信息")
+                    st.warning("⚠️ 請輸入完整的登錄信息")
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -271,28 +271,28 @@ def render_login_form():
         <div class="feature-card">
             <div class="feature-icon">📊</div>
             <div class="feature-title">智能分析</div>
-            <div class="feature-desc">AI驱动的股票分析</div>
+            <div class="feature-desc">AI驱動的股票分析</div>
         </div>
         <div class="feature-card">
             <div class="feature-icon">🔍</div>
             <div class="feature-title">深度研究</div>
-            <div class="feature-desc">全方位市场洞察</div>
+            <div class="feature-desc">全方位市場洞察</div>
         </div>
         <div class="feature-card">
             <div class="feature-icon">⚡</div>
-            <div class="feature-title">实时数据</div>
-            <div class="feature-desc">最新市场信息</div>
+            <div class="feature-title">實時數據</div>
+            <div class="feature-desc">最新市場信息</div>
         </div>
         <div class="feature-card">
             <div class="feature-icon">🛡️</div>
-            <div class="feature-title">风险控制</div>
-            <div class="feature-desc">智能风险评估</div>
+            <div class="feature-title">風險控制</div>
+            <div class="feature-desc">智能風險評估</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 def render_sidebar_user_info():
-    """在侧边栏渲染用户信息"""
+    """在侧邊栏渲染用戶信息"""
     
     if not auth_manager.is_authenticated():
         return
@@ -301,7 +301,7 @@ def render_sidebar_user_info():
     if not user_info:
         return
     
-    # 侧边栏用户信息样式
+    # 侧邊栏用戶信息樣式
     st.sidebar.markdown("""
     <style>
     .sidebar-user-info {
@@ -360,13 +360,13 @@ def render_sidebar_user_info():
     </style>
     """, unsafe_allow_html=True)
     
-    # 获取用户角色的中文显示
+    # 獲取用戶角色的中文顯示
     role_display = {
-        'admin': '管理员',
-        'user': '普通用户'
-    }.get(user_info.get('role', 'user'), '用户')
+        'admin': '管理員',
+        'user': '普通用戶'
+    }.get(user_info.get('role', 'user'), '用戶')
     
-    # 获取登录时间
+    # 獲取登錄時間
     login_time = st.session_state.get('login_time')
     login_time_str = ""
     if login_time:
@@ -374,24 +374,24 @@ def render_sidebar_user_info():
         login_dt = datetime.datetime.fromtimestamp(login_time)
         login_time_str = login_dt.strftime("%H:%M")
     
-    # 渲染用户信息
+    # 渲染用戶信息
     st.sidebar.markdown(f"""
     <div class="sidebar-user-info">
         <div class="sidebar-user-name">👋 {user_info['username']}</div>
         <div class="sidebar-user-role">{role_display}</div>
         <div class="sidebar-user-status">
-            🌟 在线中 {f'· {login_time_str}登录' if login_time_str else ''}
+            🌟 在線中 {f'· {login_time_str}登錄' if login_time_str else ''}
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 def render_sidebar_logout():
-    """在侧边栏底部渲染退出按钮"""
+    """在侧邊栏底部渲染退出按钮"""
     
     if not auth_manager.is_authenticated():
         return
     
-    # 退出按钮样式
+    # 退出按钮樣式
     st.sidebar.markdown("""
     <style>
     .sidebar-logout-container {
@@ -421,7 +421,7 @@ def render_sidebar_logout():
     </style>
     """, unsafe_allow_html=True)
     
-    # 添加分隔线和退出按钮
+    # 添加分隔線和退出按钮
     st.sidebar.markdown('<div class="sidebar-logout-container">', unsafe_allow_html=True)
     if st.sidebar.button("🚪 安全退出", use_container_width=True, key="sidebar_logout_btn"):
         auth_manager.logout()
@@ -431,7 +431,7 @@ def render_sidebar_logout():
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 def render_user_info():
-    """渲染用户信息栏"""
+    """渲染用戶信息栏"""
     
     if not auth_manager.is_authenticated():
         return
@@ -440,7 +440,7 @@ def render_user_info():
     if not user_info:
         return
     
-    # 现代化用户信息栏样式
+    # 現代化用戶信息栏樣式
     st.markdown("""
     <style>
     .user-info-container {
@@ -502,13 +502,13 @@ def render_user_info():
     </style>
     """, unsafe_allow_html=True)
     
-    # 获取用户角色的中文显示
+    # 獲取用戶角色的中文顯示
     role_display = {
-        'admin': '管理员',
-        'user': '普通用户'
-    }.get(user_info.get('role', 'user'), '用户')
+        'admin': '管理員',
+        'user': '普通用戶'
+    }.get(user_info.get('role', 'user'), '用戶')
     
-    # 获取登录时间
+    # 獲取登錄時間
     login_time = st.session_state.get('login_time')
     login_time_str = ""
     if login_time:
@@ -523,11 +523,11 @@ def render_user_info():
         <div class="user-info-container">
             <div class="user-welcome">
                 <div>
-                    <h3 class="user-name">👋 欢迎回来，{user_info['username']}</h3>
+                    <h3 class="user-name">👋 欢迎回來，{user_info['username']}</h3>
                     <div class="user-details">
                         <span>🎯 {role_display}</span>
-                        {f'<span>🕐 {login_time_str} 登录</span>' if login_time_str else ''}
-                        <span>🌟 在线中</span>
+                        {f'<span>🕐 {login_time_str} 登錄</span>' if login_time_str else ''}
+                        <span>🌟 在線中</span>
                     </div>
                 </div>
                 <div class="user-role">{role_display}</div>
@@ -543,14 +543,14 @@ def render_user_info():
             st.rerun()
 
 def check_authentication():
-    """检查用户认证状态"""
+    """檢查用戶認證狀態"""
     global auth_manager
     if auth_manager is None:
         return False
     return auth_manager.is_authenticated()
 
 def require_permission(permission: str):
-    """要求特定权限"""
+    """要求特定權限"""
     global auth_manager
     if auth_manager is None:
         return False

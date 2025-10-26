@@ -1,76 +1,76 @@
 #!/usr/bin/env python3
 """
-测试进度显示功能
+測試進度顯示功能
 """
 
 import time
 import sys
 from pathlib import Path
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 def test_progress_callback():
-    """测试进度回调功能"""
+    """測試進度回調功能"""
     
     def mock_progress_callback(message, step=None, total_steps=None):
-        """模拟进度回调"""
-        print(f"[进度] {message}")
+        """模擬進度回調"""
+        print(f"[進度] {message}")
         if step is not None and total_steps is not None:
             percentage = (step / total_steps) * 100
             print(f"  步骤: {step}/{total_steps} ({percentage:.1f}%)")
         print()
     
-    # 模拟分析过程
+    # 模擬分析過程
     steps = [
-        "开始股票分析...",
-        "检查环境变量配置...",
-        "环境变量验证通过",
-        "配置分析参数...",
-        "创建必要的目录...",
+        "開始股票分析...",
+        "檢查環境變量配置...",
+        "環境變量驗證通過",
+        "配置分析參數...",
+        "創建必要的目錄...",
         "初始化分析引擎...",
-        "开始分析 AAPL 股票，这可能需要几分钟时间...",
-        "分析完成，正在整理结果...",
+        "開始分析 AAPL 股票，這可能需要几分鐘時間...",
+        "分析完成，正在整理結果...",
         "✅ 分析成功完成！"
     ]
     
-    print("🧪 测试进度回调功能")
+    print("🧪 測試進度回調功能")
     print("=" * 50)
     
     for i, step in enumerate(steps):
         mock_progress_callback(step, i, len(steps))
-        time.sleep(0.5)  # 模拟处理时间
+        time.sleep(0.5)  # 模擬處理時間
     
-    print("✅ 进度回调测试完成！")
+    print("✅ 進度回調測試完成！")
 
 def test_progress_tracker():
-    """测试进度跟踪器"""
+    """測試進度跟蹤器"""
     try:
         from web.utils.progress_tracker import AnalysisProgressTracker
         
-        print("🧪 测试进度跟踪器")
+        print("🧪 測試進度跟蹤器")
         print("=" * 50)
         
         def mock_callback(message, current_step, total_steps, progress, elapsed_time):
-            print(f"[跟踪器] {message}")
+            print(f"[跟蹤器] {message}")
             print(f"  步骤: {current_step + 1}/{total_steps}")
-            print(f"  进度: {progress:.1%}")
-            print(f"  用时: {elapsed_time:.1f}秒")
+            print(f"  進度: {progress:.1%}")
+            print(f"  用時: {elapsed_time:.1f}秒")
             print()
         
         tracker = AnalysisProgressTracker(callback=mock_callback)
         
-        # 模拟分析步骤
+        # 模擬分析步骤
         steps = [
-            "开始股票分析...",
-            "检查环境变量配置...",
-            "配置分析参数...",
-            "创建必要的目录...",
+            "開始股票分析...",
+            "檢查環境變量配置...",
+            "配置分析參數...",
+            "創建必要的目錄...",
             "初始化分析引擎...",
-            "获取股票数据...",
-            "进行技术分析...",
-            "分析完成，正在整理结果...",
+            "獲取股票數據...",
+            "進行技術分析...",
+            "分析完成，正在整理結果...",
             "✅ 分析成功完成！"
         ]
         
@@ -78,26 +78,26 @@ def test_progress_tracker():
             tracker.update(step)
             time.sleep(0.3)
         
-        print("✅ 进度跟踪器测试完成！")
+        print("✅ 進度跟蹤器測試完成！")
         return True
         
     except Exception as e:
-        print(f"❌ 进度跟踪器测试失败: {e}")
+        print(f"❌ 進度跟蹤器測試失败: {e}")
         return False
 
 def main():
-    """主测试函数"""
-    print("🧪 进度显示功能测试")
+    """主測試函數"""
+    print("🧪 進度顯示功能測試")
     print("=" * 60)
     
-    # 测试基本进度回调
+    # 測試基本進度回調
     test_progress_callback()
     print()
     
-    # 测试进度跟踪器
+    # 測試進度跟蹤器
     test_progress_tracker()
     
-    print("\n🎉 所有测试完成！")
+    print("\n🎉 所有測試完成！")
 
 if __name__ == "__main__":
     main()

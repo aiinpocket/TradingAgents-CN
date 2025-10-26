@@ -1,350 +1,350 @@
-# 新闻分析工具链和提示词系统
+# 新聞分析工具鏈和提示詞系統
 
-本文档详细介绍了TradingAgentsCN系统中的新闻分析工具链架构、提示词设计和实现机制。
+本文档詳細介紹了TradingAgentsCN系統中的新聞分析工具鏈架構、提示詞設計和實現機制。
 
-## 1. 新闻分析工具链架构
+## 1. 新聞分析工具鏈架構
 
-### 1.1 整体架构图
+### 1.1 整體架構圖
 
 ```
-新闻分析师 (NewsAnalyst)
+新聞分析師 (NewsAnalyst)
     ↓
-工具选择器 (根据股票类型和模式)
+工具選擇器 (根據股票類型和模式)
     ↓
 ┌─────────────────┬─────────────────┬─────────────────┐
-│   A股工具链     │   非A股工具链   │   离线工具链    │
+│   A股工具鏈     │   非A股工具鏈   │   離線工具鏈    │
 └─────────────────┴─────────────────┴─────────────────┘
     ↓                   ↓                   ↓
-实时新闻聚合器 (RealtimeNewsAggregator)
+實時新聞聚合器 (RealtimeNewsAggregator)
     ↓
 ┌─────────────┬─────────────┬─────────────┬─────────────┐
-│  FinnHub    │ Alpha       │  NewsAPI    │  中文财经   │
-│  实时新闻   │ Vantage     │  新闻源     │  新闻源     │
+│  FinnHub    │ Alpha       │  NewsAPI    │  中文財經   │
+│  實時新聞   │ Vantage     │  新聞源     │  新聞源     │
 └─────────────┴─────────────┴─────────────┴─────────────┘
     ↓
-新闻处理流水线
+新聞處理流水線
     ↓
 ┌─────────────┬─────────────┬─────────────┬─────────────┐
-│  去重处理   │  时效性     │  紧急程度   │  相关性     │
-│            │  评估       │  评估       │  评分       │
+│  去重處理   │  時效性     │  緊急程度   │  相關性     │
+│            │  評估       │  評估       │  評分       │
 └─────────────┴─────────────┴─────────────┴─────────────┘
     ↓
-格式化新闻报告
+格式化新聞報告
     ↓
-LLM分析 (基于提示词模板)
+LLM分析 (基於提示詞模板)
     ↓
-结构化分析报告
+結構化分析報告
 ```
 
-### 1.2 工具链组件详解
+### 1.2 工具鏈組件詳解
 
-#### 1.2.1 新闻分析师 (NewsAnalyst)
+#### 1.2.1 新聞分析師 (NewsAnalyst)
 
 **位置**: `tradingagents/agents/analysts/news_analyst.py`
 
 **核心功能**:
-- 智能工具选择（根据股票类型和运行模式）
-- 提示词模板管理
-- LLM调用和结果处理
-- 分析报告生成
+- 智能工具選擇（根據股票類型和運行模式）
+- 提示詞模板管理
+- LLM調用和結果處理
+- 分析報告生成
 
-**工具选择逻辑**:
+**工具選擇逻辑**:
 ```python
-# A股工具链
+# A股工具鏈
 if is_china:
     tools = [
-        toolkit.get_realtime_stock_news,  # 实时新闻（包含东方财富）
-        toolkit.get_google_news,         # Google新闻（中文搜索）
-        toolkit.get_global_news_openai   # OpenAI全球新闻（作为补充）
+        toolkit.get_realtime_stock_news,  # 實時新聞（包含东方財富）
+        toolkit.get_google_news,         # Google新聞（中文搜索）
+        toolkit.get_global_news_openai   # OpenAI全球新聞（作為補充）
     ]
 
-# 非A股工具链
+# 非A股工具鏈
 else:
     tools = [
-        toolkit.get_realtime_stock_news,  # 实时新闻
+        toolkit.get_realtime_stock_news,  # 實時新聞
         toolkit.get_global_news_openai,
         toolkit.get_google_news
     ]
 
-# 离线模式工具链
+# 離線模式工具鏈
 if not online_tools:
     tools = [
-        toolkit.get_realtime_stock_news,  # 尝试实时新闻
+        toolkit.get_realtime_stock_news,  # 嘗試實時新聞
         toolkit.get_finnhub_news,
         toolkit.get_reddit_news,
         toolkit.get_google_news,
     ]
 ```
 
-#### 1.2.2 实时新闻聚合器 (RealtimeNewsAggregator)
+#### 1.2.2 實時新聞聚合器 (RealtimeNewsAggregator)
 
 **位置**: `tradingagents/dataflows/realtime_news_utils.py`
 
 **核心功能**:
-- 多源新闻聚合
-- 新闻去重和排序
-- 紧急程度评估
-- 相关性评分
-- 时效性分析
+- 多源新聞聚合
+- 新聞去重和排序
+- 緊急程度評估
+- 相關性評分
+- 時效性分析
 
-**数据源优先级**:
-1. **FinnHub实时新闻** (最高优先级)
-2. **Alpha Vantage新闻**
-3. **NewsAPI新闻源**
-4. **中文财经新闻源**
+**數據源優先級**:
+1. **FinnHub實時新聞** (最高優先級)
+2. **Alpha Vantage新聞**
+3. **NewsAPI新聞源**
+4. **中文財經新聞源**
 
-**新闻项目数据结构**:
+**新聞項目數據結構**:
 ```python
 @dataclass
 class NewsItem:
-    title: str              # 新闻标题
-    content: str           # 新闻内容
-    source: str            # 新闻来源
-    publish_time: datetime # 发布时间
-    url: str              # 新闻链接
-    urgency: str          # 紧急程度 (high, medium, low)
-    relevance_score: float # 相关性评分
+    title: str              # 新聞標題
+    content: str           # 新聞內容
+    source: str            # 新聞來源
+    publish_time: datetime # 發布時間
+    url: str              # 新聞鏈接
+    urgency: str          # 緊急程度 (high, medium, low)
+    relevance_score: float # 相關性評分
 ```
 
-#### 1.2.3 新闻处理流水线
+#### 1.2.3 新聞處理流水線
 
-**去重处理**:
-- 基于标题相似度的去重算法
-- 时间窗口内的重复新闻过滤
+**去重處理**:
+- 基於標題相似度的去重算法
+- 時間窗口內的重複新聞過濾
 
-**紧急程度评估**:
+**緊急程度評估**:
 ```python
-# 高紧急程度关键词
+# 高緊急程度關键詞
 high_urgency_keywords = [
-    "破产", "诉讼", "收购", "合并", "FDA批准", "盈利警告",
-    "停牌", "重组", "违规", "调查", "制裁"
+    "破產", "诉讼", "收購", "合並", "FDA批準", "盈利警告",
+    "停牌", "重組", "违規", "調查", "制裁"
 ]
 
-# 中等紧急程度关键词
+# 中等緊急程度關键詞
 medium_urgency_keywords = [
-    "财报", "业绩", "合作", "新产品", "市场份额",
-    "分红", "回购", "增持", "减持"
+    "財報", "業绩", "合作", "新產品", "市場份額",
+    "分红", "回購", "增持", "减持"
 ]
 ```
 
-**相关性评分算法**:
-- 股票代码匹配度
-- 公司名称匹配度
-- 行业关键词匹配度
-- 内容相关性分析
+**相關性評分算法**:
+- 股票代碼匹配度
+- 公司名稱匹配度
+- 行業關键詞匹配度
+- 內容相關性分析
 
-## 2. 提示词系统设计
+## 2. 提示詞系統設計
 
-### 2.1 系统提示词模板
+### 2.1 系統提示詞模板
 
 ```python
-system_message = """您是一位专业的财经新闻分析师，负责分析最新的市场新闻和事件对股票价格的潜在影响。
+system_message = """您是一位專業的財經新聞分析師，负责分析最新的市場新聞和事件對股票價格的潜在影響。
 
-您的主要职责包括：
-1. 获取和分析最新的实时新闻（优先15-30分钟内的新闻）
-2. 评估新闻事件的紧急程度和市场影响
-3. 识别可能影响股价的关键信息
-4. 分析新闻的时效性和可靠性
-5. 提供基于新闻的交易建议和价格影响评估
+您的主要職责包括：
+1. 獲取和分析最新的實時新聞（優先15-30分鐘內的新聞）
+2. 評估新聞事件的緊急程度和市場影響
+3. 识別可能影響股價的關键信息
+4. 分析新聞的時效性和可靠性
+5. 提供基於新聞的交易建议和價格影響評估
 
-重点关注的新闻类型：
-- 财报发布和业绩指导
-- 重大合作和并购消息
-- 政策变化和监管动态
-- 突发事件和危机管理
-- 行业趋势和技术突破
-- 管理层变动和战略调整
+重點關註的新聞類型：
+- 財報發布和業绩指導
+- 重大合作和並購消息
+- 政策變化和監管動態
+- 突發事件和危機管理
+- 行業趋势和技術突破
+- 管理層變動和战略調整
 
-分析要点：
-- 新闻的时效性（发布时间距离现在多久）
-- 新闻的可信度（来源权威性）
-- 市场影响程度（对股价的潜在影响）
-- 投资者情绪变化（正面/负面/中性）
-- 与历史类似事件的对比
+分析要點：
+- 新聞的時效性（發布時間距離現在多久）
+- 新聞的可信度（來源權威性）
+- 市場影響程度（對股價的潜在影響）
+- 投資者情绪變化（正面/负面/中性）
+- 与歷史類似事件的對比
 
-📊 价格影响分析要求：
-- 评估新闻对股价的短期影响（1-3天）
-- 分析可能的价格波动幅度（百分比）
-- 提供基于新闻的价格调整建议
-- 识别关键价格支撑位和阻力位
-- 评估新闻对长期投资价值的影响
-- 不允许回复'无法评估价格影响'或'需要更多信息'
+📊 價格影響分析要求：
+- 評估新聞對股價的短期影響（1-3天）
+- 分析可能的價格波動幅度（百分比）
+- 提供基於新聞的價格調整建议
+- 识別關键價格支撑位和阻力位
+- 評估新聞對長期投資價值的影響
+- 不允許回複'無法評估價格影響'或'需要更多信息'
 
-请特别注意：
-⚠️ 如果新闻数据存在滞后（超过2小时），请在分析中明确说明时效性限制
-✅ 优先分析最新的、高相关性的新闻事件
-📊 提供新闻对股价影响的量化评估和具体价格预期
-💰 必须包含基于新闻的价格影响分析和调整建议
+請特別註意：
+⚠️ 如果新聞數據存在滞後（超過2小時），請在分析中明確說明時效性限制
+✅ 優先分析最新的、高相關性的新聞事件
+📊 提供新聞對股價影響的量化評估和具體價格預期
+💰 必须包含基於新聞的價格影響分析和調整建议
 
-请撰写详细的中文分析报告，并在报告末尾附上Markdown表格总结关键发现。"""
+請撰寫詳細的中文分析報告，並在報告末尾附上Markdown表格总結關键發現。"""
 ```
 
-### 2.2 提示词设计原则
+### 2.2 提示詞設計原則
 
 #### 2.2.1 角色定位
-- **专业身份**: 财经新闻分析师
-- **核心职责**: 新闻分析和价格影响评估
-- **专业要求**: 量化分析和具体建议
+- **專業身份**: 財經新聞分析師
+- **核心職责**: 新聞分析和價格影響評估
+- **專業要求**: 量化分析和具體建议
 
-#### 2.2.2 任务导向
-- **主要任务**: 5个核心职责明确定义
-- **关注重点**: 6类重要新闻类型
-- **分析维度**: 5个关键分析要点
+#### 2.2.2 任務導向
+- **主要任務**: 5個核心職责明確定義
+- **關註重點**: 6類重要新聞類型
+- **分析維度**: 5個關键分析要點
 
-#### 2.2.3 输出要求
-- **强制要求**: 价格影响分析（不允许回避）
-- **格式要求**: 中文报告 + Markdown表格
-- **质量标准**: 详细分析 + 量化评估
+#### 2.2.3 輸出要求
+- **强制要求**: 價格影響分析（不允許回避）
+- **格式要求**: 中文報告 + Markdown表格
+- **质量標準**: 詳細分析 + 量化評估
 
-#### 2.2.4 约束条件
-- **时效性约束**: 优先15-30分钟内新闻
-- **可靠性约束**: 评估新闻来源权威性
-- **完整性约束**: 必须包含价格影响分析
+#### 2.2.4 約束條件
+- **時效性約束**: 優先15-30分鐘內新聞
+- **可靠性約束**: 評估新聞來源權威性
+- **完整性約束**: 必须包含價格影響分析
 
-### 2.3 动态提示词注入
+### 2.3 動態提示詞註入
 
 ```python
 prompt = ChatPromptTemplate.from_messages([
     (
         "system",
-        "您是一位有用的AI助手，与其他助手协作。"
-        " 使用提供的工具来推进回答问题。"
-        " 您可以访问以下工具：{tool_names}。\n{system_message}"
-        "供您参考，当前日期是{current_date}。我们正在查看公司{ticker}。请用中文撰写所有分析内容。",
+        "您是一位有用的AI助手，与其他助手協作。"
+        " 使用提供的工具來推進回答問題。"
+        " 您可以訪問以下工具：{tool_names}。\n{system_message}"
+        "供您參考，當前日期是{current_date}。我們正在查看公司{ticker}。請用中文撰寫所有分析內容。",
     ),
     MessagesPlaceholder(variable_name="messages"),
 ])
 
-# 动态参数注入
+# 動態參數註入
 prompt = prompt.partial(system_message=system_message)
 prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
 prompt = prompt.partial(current_date=current_date)
 prompt = prompt.partial(ticker=ticker)
 ```
 
-## 3. 工具链执行流程
+## 3. 工具鏈執行流程
 
-### 3.1 初始化阶段
+### 3.1 初始化階段
 
 ```python
 def create_news_analyst(llm, toolkit):
     @log_analyst_module("news")
     def news_analyst_node(state):
-        # 1. 提取状态信息
+        # 1. 提取狀態信息
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
-        session_id = state.get("session_id", "未知会话")
+        session_id = state.get("session_id", "未知會話")
         
-        # 2. 股票类型识别
+        # 2. 股票類型识別
         market_info = StockUtils.get_market_info(ticker)
         is_china = market_info['is_china']
         
-        # 3. 工具选择
+        # 3. 工具選擇
         tools = select_tools_by_market(is_china, toolkit.config["online_tools"])
         
-        # 4. 提示词构建
+        # 4. 提示詞構建
         prompt = build_prompt_template(system_message, tools, current_date, ticker)
 ```
 
-### 3.2 新闻获取阶段
+### 3.2 新聞獲取階段
 
 ```python
 def get_realtime_stock_news(ticker: str, hours_back: int = 6):
-    # 1. 多源新闻获取
+    # 1. 多源新聞獲取
     finnhub_news = _get_finnhub_realtime_news(ticker, hours_back)
     av_news = _get_alpha_vantage_news(ticker, hours_back)
     newsapi_news = _get_newsapi_news(ticker, hours_back)
     chinese_news = _get_chinese_finance_news(ticker, hours_back)
     
-    # 2. 新闻聚合
+    # 2. 新聞聚合
     all_news = finnhub_news + av_news + newsapi_news + chinese_news
     
     # 3. 去重和排序
     unique_news = _deduplicate_news(all_news)
     sorted_news = sorted(unique_news, key=lambda x: x.publish_time, reverse=True)
     
-    # 4. 格式化报告
+    # 4. 格式化報告
     report = format_news_report(sorted_news, ticker)
     
     return report
 ```
 
-### 3.3 LLM分析阶段
+### 3.3 LLM分析階段
 
 ```python
 def analyze_news_with_llm(llm, prompt, tools, state):
     # 1. 工具绑定
     chain = prompt | llm.bind_tools(tools)
     
-    # 2. LLM调用
+    # 2. LLM調用
     result = chain.invoke(state["messages"])
     
-    # 3. 工具调用处理
+    # 3. 工具調用處理
     if hasattr(result, 'tool_calls') and len(result.tool_calls) > 0:
-        # 处理工具调用结果
+        # 處理工具調用結果
         tool_results = process_tool_calls(result.tool_calls)
         report = generate_analysis_report(tool_results)
     else:
-        # 直接使用LLM生成的内容
+        # 直接使用LLM生成的內容
         report = result.content
     
     return report
 ```
 
-### 3.4 报告生成阶段
+### 3.4 報告生成階段
 
 ```python
 def format_news_report(news_items: List[NewsItem], ticker: str) -> str:
-    report = f"# {ticker} 实时新闻分析报告\n\n"
-    report += f"📅 **生成时间**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-    report += f"📊 **新闻总数**: {len(news_items)} 条\n\n"
+    report = f"# {ticker} 實時新聞分析報告\n\n"
+    report += f"📅 **生成時間**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    report += f"📊 **新聞总數**: {len(news_items)} 條\n\n"
     
-    # 紧急新闻优先显示
+    # 緊急新聞優先顯示
     urgent_news = [item for item in news_items if item.urgency == 'high']
     if urgent_news:
-        report += "## 🚨 紧急新闻\n\n"
+        report += "## 🚨 緊急新聞\n\n"
         for item in urgent_news:
             report += format_news_item(item)
     
-    # 一般新闻
+    # 一般新聞
     normal_news = [item for item in news_items if item.urgency != 'high']
     if normal_news:
-        report += "## 📰 最新新闻\n\n"
-        for item in normal_news[:10]:  # 限制显示数量
+        report += "## 📰 最新新聞\n\n"
+        for item in normal_news[:10]:  # 限制顯示數量
             report += format_news_item(item)
     
     return report
 ```
 
-## 4. 关键特性和优势
+## 4. 關键特性和優势
 
-### 4.1 智能工具选择
-- **股票类型识别**: 自动识别A股、港股、美股
-- **数据源优化**: A股优先中文新闻源，美股优先英文新闻源
-- **模式适配**: 在线/离线模式自动切换
+### 4.1 智能工具選擇
+- **股票類型识別**: 自動识別A股、港股、美股
+- **數據源優化**: A股優先中文新聞源，美股優先英文新聞源
+- **模式適配**: 在線/離線模式自動切換
 
-### 4.2 多源新闻聚合
-- **专业API**: FinnHub、Alpha Vantage提供高质量金融新闻
-- **通用API**: NewsAPI提供广泛新闻覆盖
-- **本地化**: 中文财经新闻源支持A股分析
+### 4.2 多源新聞聚合
+- **專業API**: FinnHub、Alpha Vantage提供高质量金融新聞
+- **通用API**: NewsAPI提供廣泛新聞覆蓋
+- **本地化**: 中文財經新聞源支持A股分析
 
-### 4.3 智能新闻处理
-- **去重算法**: 基于内容相似度的智能去重
-- **紧急程度评估**: 关键词匹配 + 内容分析
-- **相关性评分**: 多维度相关性计算
-- **时效性分析**: 新闻发布时间与当前时间对比
+### 4.3 智能新聞處理
+- **去重算法**: 基於內容相似度的智能去重
+- **緊急程度評估**: 關键詞匹配 + 內容分析
+- **相關性評分**: 多維度相關性計算
+- **時效性分析**: 新聞發布時間与當前時間對比
 
-### 4.4 强化提示词设计
-- **角色明确**: 专业财经新闻分析师定位
-- **任务具体**: 5大职责 + 6类新闻类型
-- **输出标准**: 强制价格影响分析
-- **质量保证**: 详细分析 + 量化评估
+### 4.4 强化提示詞設計
+- **角色明確**: 專業財經新聞分析師定位
+- **任務具體**: 5大職责 + 6類新聞類型
+- **輸出標準**: 强制價格影響分析
+- **质量保證**: 詳細分析 + 量化評估
 
-### 4.5 完整的日志追踪
-- **性能监控**: 每个步骤的耗时统计
-- **工具使用**: 工具调用情况记录
-- **数据质量**: 新闻数量和质量统计
-- **错误处理**: 异常情况的详细记录
+### 4.5 完整的日誌追蹤
+- **性能監控**: 每個步骤的耗時統計
+- **工具使用**: 工具調用情况記錄
+- **數據质量**: 新聞數量和质量統計
+- **錯誤處理**: 異常情况的詳細記錄
 
 ## 5. 使用示例
 
@@ -355,14 +355,14 @@ from tradingagents.agents.analysts.news_analyst import create_news_analyst
 from tradingagents.agents.utils.agent_utils import Toolkit
 from tradingagents.llm_adapters import ChatDashScope
 
-# 创建LLM和工具包
+# 創建LLM和工具包
 llm = ChatDashScope()
 toolkit = Toolkit()
 
-# 创建新闻分析师
+# 創建新聞分析師
 news_analyst = create_news_analyst(llm, toolkit)
 
-# 执行分析
+# 執行分析
 state = {
     "trade_date": "2024-01-15",
     "company_of_interest": "AAPL",
@@ -374,26 +374,26 @@ result = news_analyst(state)
 print(result["news_report"])
 ```
 
-### 5.2 自定义配置
+### 5.2 自定義配置
 
 ```python
-# 自定义新闻聚合器
+# 自定義新聞聚合器
 from tradingagents.dataflows.realtime_news_utils import RealtimeNewsAggregator
 
 aggregator = RealtimeNewsAggregator()
 
-# 自定义紧急程度关键词
-aggregator.high_urgency_keywords = ["破产", "收购", "FDA批准"]
-aggregator.medium_urgency_keywords = ["财报", "合作", "新产品"]
+# 自定義緊急程度關键詞
+aggregator.high_urgency_keywords = ["破產", "收購", "FDA批準"]
+aggregator.medium_urgency_keywords = ["財報", "合作", "新產品"]
 
-# 获取新闻
+# 獲取新聞
 news_items = aggregator.get_realtime_stock_news("AAPL", hours_back=12)
 report = aggregator.format_news_report(news_items, "AAPL")
 ```
 
 ## 6. 配置要求
 
-### 6.1 API密钥配置
+### 6.1 API密鑰配置
 
 ```bash
 # .env 文件配置
@@ -402,47 +402,47 @@ ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
 NEWSAPI_KEY=your_newsapi_key
 ```
 
-### 6.2 依赖包要求
+### 6.2 依賴包要求
 
 ```python
 # requirements.txt
 requests>=2.28.0
 langchain-core>=0.1.0
-akshare>=1.9.0  # 用于东方财富新闻
+akshare>=1.9.0  # 用於东方財富新聞
 ```
 
-## 7. 性能优化
+## 7. 性能優化
 
-### 7.1 缓存机制
-- **新闻缓存**: 避免重复API调用
-- **分析缓存**: 相同股票的分析结果缓存
-- **工具结果缓存**: 工具调用结果缓存
+### 7.1 緩存機制
+- **新聞緩存**: 避免重複API調用
+- **分析緩存**: 相同股票的分析結果緩存
+- **工具結果緩存**: 工具調用結果緩存
 
-### 7.2 并发处理
-- **多源并发**: 多个新闻源并发获取
-- **异步处理**: 非阻塞的新闻获取
-- **超时控制**: 避免长时间等待
+### 7.2 並發處理
+- **多源並發**: 多個新聞源並發獲取
+- **異步處理**: 非阻塞的新聞獲取
+- **超時控制**: 避免長時間等待
 
-### 7.3 错误处理
-- **降级策略**: API失败时的备用方案
-- **重试机制**: 网络错误的自动重试
-- **异常捕获**: 完整的异常处理机制
+### 7.3 錯誤處理
+- **降級策略**: API失败時的备用方案
+- **重試機制**: 網絡錯誤的自動重試
+- **異常捕獲**: 完整的異常處理機制
 
-## 8. 扩展性设计
+## 8. 擴展性設計
 
-### 8.1 新数据源接入
-- **标准接口**: 统一的新闻源接入接口
-- **插件化**: 新数据源的插件化集成
-- **配置化**: 通过配置文件管理数据源
+### 8.1 新數據源接入
+- **標準接口**: 統一的新聞源接入接口
+- **插件化**: 新數據源的插件化集成
+- **配置化**: 通過配置文件管理數據源
 
-### 8.2 分析能力扩展
-- **情感分析**: 新闻情感倾向分析
-- **事件提取**: 关键事件的自动提取
-- **影响预测**: 基于历史数据的影响预测
+### 8.2 分析能力擴展
+- **情感分析**: 新聞情感倾向分析
+- **事件提取**: 關键事件的自動提取
+- **影響預測**: 基於歷史數據的影響預測
 
-### 8.3 多语言支持
-- **中英文**: 中英文新闻的统一处理
-- **本地化**: 不同市场的本地化支持
-- **翻译集成**: 自动翻译功能集成
+### 8.3 多語言支持
+- **中英文**: 中英文新聞的統一處理
+- **本地化**: 不同市場的本地化支持
+- **翻譯集成**: 自動翻譯功能集成
 
-这个新闻分析工具链和提示词系统为TradingAgentsCN提供了强大的新闻分析能力，能够实时获取、处理和分析市场新闻，为投资决策提供重要参考。
+這個新聞分析工具鏈和提示詞系統為TradingAgentsCN提供了强大的新聞分析能力，能夠實時獲取、處理和分析市場新聞，為投資決策提供重要參考。

@@ -1,19 +1,19 @@
-# 高级使用示例
+# 高級使用示例
 
 ## 概述
 
-本文档提供了 TradingAgents 框架的高级使用示例，包括自定义智能体开发、复杂策略实现、性能优化和生产环境部署等高级功能。
+本文档提供了 TradingAgents 框架的高級使用示例，包括自定義智能體開發、複雜策略實現、性能優化和生產環境部署等高級功能。
 
-## 示例 1: 自定义分析师智能体
+## 示例 1: 自定義分析師智能體
 
-### 创建量化分析师
+### 創建量化分析師
 ```python
 from tradingagents.agents.analysts.base_analyst import BaseAnalyst
 import numpy as np
 import pandas as pd
 
 class QuantitativeAnalyst(BaseAnalyst):
-    """量化分析师 - 基于数学模型的分析"""
+    """量化分析師 - 基於數學模型的分析"""
 
     def __init__(self, llm, config):
         super().__init__(llm, config)
@@ -29,7 +29,7 @@ class QuantitativeAnalyst(BaseAnalyst):
         }
 
     def perform_analysis(self, data: Dict) -> Dict:
-        """执行量化分析"""
+        """執行量化分析"""
 
         price_data = data.get("price_data", {})
         historical_data = data.get("historical_data", pd.DataFrame())
@@ -37,22 +37,22 @@ class QuantitativeAnalyst(BaseAnalyst):
         if historical_data.empty:
             return {"error": "No historical data available"}
 
-        # 1. 统计套利分析
+        # 1. 統計套利分析
         stat_arb_signals = self._statistical_arbitrage_analysis(historical_data)
 
-        # 2. 动量因子分析
+        # 2. 動量因子分析
         momentum_signals = self._momentum_factor_analysis(historical_data)
 
-        # 3. 均值回归分析
+        # 3. 均值回歸分析
         mean_reversion_signals = self._mean_reversion_analysis(historical_data)
 
-        # 4. 波动率分析
+        # 4. 波動率分析
         volatility_analysis = self._volatility_analysis(historical_data)
 
-        # 5. 风险调整收益分析
+        # 5. 風險調整收益分析
         risk_adjusted_metrics = self._risk_adjusted_analysis(historical_data)
 
-        # 6. 综合量化评分
+        # 6. 综合量化評分
         quant_score = self._calculate_quant_score({
             "stat_arb": stat_arb_signals,
             "momentum": momentum_signals,
@@ -73,19 +73,19 @@ class QuantitativeAnalyst(BaseAnalyst):
         }
 
     def _statistical_arbitrage_analysis(self, data: pd.DataFrame) -> Dict:
-        """统计套利分析"""
+        """統計套利分析"""
 
         returns = data['Close'].pct_change().dropna()
 
-        # Z-Score 计算
+        # Z-Score 計算
         rolling_mean = returns.rolling(window=20).mean()
         rolling_std = returns.rolling(window=20).std()
         z_score = (returns - rolling_mean) / rolling_std
 
-        # 协整性检验
+        # 協整性檢驗
         adf_statistic, adf_pvalue = self._adf_test(data['Close'])
 
-        # 半衰期计算
+        # 半衰期計算
         half_life = self._calculate_half_life(returns)
 
         return {
@@ -99,18 +99,18 @@ class QuantitativeAnalyst(BaseAnalyst):
         }
 
     def _momentum_factor_analysis(self, data: pd.DataFrame) -> Dict:
-        """动量因子分析"""
+        """動量因子分析"""
 
-        # 多时间框架动量
-        momentum_1m = self._calculate_momentum(data, 21)    # 1个月
-        momentum_3m = self._calculate_momentum(data, 63)    # 3个月
-        momentum_6m = self._calculate_momentum(data, 126)   # 6个月
-        momentum_12m = self._calculate_momentum(data, 252)  # 12个月
+        # 多時間框架動量
+        momentum_1m = self._calculate_momentum(data, 21)    # 1個月
+        momentum_3m = self._calculate_momentum(data, 63)    # 3個月
+        momentum_6m = self._calculate_momentum(data, 126)   # 6個月
+        momentum_12m = self._calculate_momentum(data, 252)  # 12個月
 
-        # 动量强度
+        # 動量强度
         momentum_strength = self._calculate_momentum_strength(data)
 
-        # 动量持续性
+        # 動量持续性
         momentum_persistence = self._calculate_momentum_persistence(data)
 
         return {
@@ -125,12 +125,12 @@ class QuantitativeAnalyst(BaseAnalyst):
         }
 ```
 
-## 示例 2: 多资产组合分析
+## 示例 2: 多資產組合分析
 
-### 投资组合优化器
+### 投資組合優化器
 ```python
 class PortfolioOptimizer:
-    """投资组合优化器 - 多资产配置优化"""
+    """投資組合優化器 - 多資產配置優化"""
 
     def __init__(self, config: Dict):
         self.config = config
@@ -139,21 +139,21 @@ class PortfolioOptimizer:
 
     def optimize_portfolio(self, symbols: List[str], target_date: str,
                           constraints: Dict = None) -> Dict:
-        """优化投资组合配置"""
+        """優化投資組合配置"""
 
-        # 1. 收集所有资产数据
+        # 1. 收集所有資產數據
         assets_data = self._collect_multi_asset_data(symbols, target_date)
 
-        # 2. 计算预期收益
+        # 2. 計算預期收益
         expected_returns = self._calculate_expected_returns(assets_data)
 
-        # 3. 构建协方差矩阵
+        # 3. 構建協方差矩阵
         covariance_matrix = self._build_covariance_matrix(assets_data)
 
-        # 4. 风险模型分析
+        # 4. 風險模型分析
         risk_analysis = self._analyze_portfolio_risk(assets_data, covariance_matrix)
 
-        # 5. 多目标优化
+        # 5. 多目標優化
         optimization_results = self._multi_objective_optimization(
             expected_returns, covariance_matrix, constraints
         )
@@ -174,11 +174,11 @@ class PortfolioOptimizer:
         }
 
     def _collect_multi_asset_data(self, symbols: List[str], target_date: str) -> Dict:
-        """收集多资产数据"""
+        """收集多資產數據"""
 
         assets_data = {}
 
-        # 并行分析所有资产
+        # 並行分析所有資產
         with ThreadPoolExecutor(max_workers=len(symbols)) as executor:
             future_to_symbol = {
                 executor.submit(self._analyze_single_asset, symbol, target_date): symbol
@@ -197,13 +197,13 @@ class PortfolioOptimizer:
         return assets_data
 
     def _analyze_single_asset(self, symbol: str, target_date: str) -> Dict:
-        """分析单个资产"""
+        """分析單個資產"""
 
-        # 使用 TradingAgents 分析单个资产
+        # 使用 TradingAgents 分析單個資產
         ta = TradingAgentsGraph(debug=False, config=self.config)
         state, decision = ta.propagate(symbol, target_date)
 
-        # 提取关键指标
+        # 提取關键指標
         return {
             "symbol": symbol,
             "decision": decision,
@@ -219,25 +219,25 @@ class PortfolioOptimizer:
 
     def _multi_objective_optimization(self, expected_returns: np.ndarray,
                                     cov_matrix: np.ndarray, constraints: Dict) -> Dict:
-        """多目标优化"""
+        """多目標優化"""
 
         from scipy.optimize import minimize
 
         n_assets = len(expected_returns)
 
-        # 目标函数：最大化夏普比率
+        # 目標函數：最大化夏普比率
         def objective(weights):
             portfolio_return = np.sum(weights * expected_returns)
             portfolio_risk = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))
             sharpe_ratio = portfolio_return / portfolio_risk if portfolio_risk > 0 else 0
             return -sharpe_ratio  # 最小化负夏普比率
 
-        # 约束条件
+        # 約束條件
         constraints_list = [
-            {'type': 'eq', 'fun': lambda x: np.sum(x) - 1}  # 权重和为1
+            {'type': 'eq', 'fun': lambda x: np.sum(x) - 1}  # 權重和為1
         ]
 
-        # 添加自定义约束
+        # 添加自定義約束
         if constraints:
             if 'max_weight' in constraints:
                 for i in range(n_assets):
@@ -253,13 +253,13 @@ class PortfolioOptimizer:
                         'fun': lambda x, i=i: x[i] - constraints['min_weight']
                     })
 
-        # 边界条件
+        # 邊界條件
         bounds = tuple((0, 1) for _ in range(n_assets))
 
-        # 初始猜测
+        # 初始猜測
         x0 = np.array([1/n_assets] * n_assets)
 
-        # 优化
+        # 優化
         result = minimize(objective, x0, method='SLSQP', bounds=bounds, constraints=constraints_list)
 
         if result.success:
@@ -278,7 +278,7 @@ class PortfolioOptimizer:
                 }
             }
         else:
-            # 如果优化失败，使用等权重
+            # 如果優化失败，使用等權重
             equal_weights = np.array([1/n_assets] * n_assets)
             return {
                 "weights": equal_weights,
@@ -292,12 +292,12 @@ class PortfolioOptimizer:
             }
 ```
 
-## 示例 3: 实时交易系统
+## 示例 3: 實時交易系統
 
-### 实时监控和执行系统
+### 實時監控和執行系統
 ```python
 class RealTimeTradingSystem:
-    """实时交易系统"""
+    """實時交易系統"""
 
     def __init__(self, config: Dict):
         self.config = config
@@ -308,32 +308,32 @@ class RealTimeTradingSystem:
         self.market_data_feed = MarketDataFeed()
 
     async def start_real_time_trading(self, watchlist: List[str]):
-        """启动实时交易"""
+        """啟動實時交易"""
 
-        print(f"启动实时交易系统，监控 {len(watchlist)} 只股票...")
+        print(f"啟動實時交易系統，監控 {len(watchlist)} 只股票...")
 
-        # 初始化每只股票的交易智能体
+        # 初始化每只股票的交易智能體
         for symbol in watchlist:
             self.trading_agents[symbol] = TradingAgentsGraph(
                 debug=False,
                 config=self.config
             )
 
-        # 启动市场数据订阅
+        # 啟動市場數據订阅
         await self.market_data_feed.subscribe(watchlist)
 
-        # 启动主交易循环
+        # 啟動主交易循環
         await self._main_trading_loop(watchlist)
 
     async def _main_trading_loop(self, watchlist: List[str]):
-        """主交易循环"""
+        """主交易循環"""
 
         while True:
             try:
-                # 获取最新市场数据
+                # 獲取最新市場數據
                 market_updates = await self.market_data_feed.get_updates()
 
-                # 并行处理所有股票
+                # 並行處理所有股票
                 tasks = []
                 for symbol in watchlist:
                     if symbol in market_updates:
@@ -343,43 +343,43 @@ class RealTimeTradingSystem:
                 if tasks:
                     await asyncio.gather(*tasks, return_exceptions=True)
 
-                # 风险检查
+                # 風險檢查
                 await self._perform_risk_checks()
 
                 # 短暂休眠
                 await asyncio.sleep(1)
 
             except Exception as e:
-                print(f"交易循环错误: {e}")
+                print(f"交易循環錯誤: {e}")
                 await asyncio.sleep(5)
 
     async def _process_symbol_update(self, symbol: str, market_data: Dict):
-        """处理单个股票的市场更新"""
+        """處理單個股票的市場更新"""
 
         try:
-            # 检查是否需要重新分析
+            # 檢查是否需要重新分析
             if self._should_reanalyze(symbol, market_data):
 
-                # 执行快速分析
+                # 執行快速分析
                 analysis_result = await self._quick_analysis(symbol, market_data)
 
-                # 检查交易信号
+                # 檢查交易信號
                 trading_signals = self._extract_trading_signals(analysis_result)
 
-                # 执行交易决策
+                # 執行交易決策
                 if trading_signals["action"] != "hold":
                     await self._execute_trading_decision(symbol, trading_signals)
 
-                # 更新仓位监控
+                # 更新仓位監控
                 await self._update_position_monitoring(symbol, analysis_result)
 
         except Exception as e:
-            print(f"处理 {symbol} 更新时出错: {e}")
+            print(f"處理 {symbol} 更新時出錯: {e}")
 
     def _should_reanalyze(self, symbol: str, market_data: Dict) -> bool:
-        """判断是否需要重新分析"""
+        """判斷是否需要重新分析"""
 
-        # 价格变动阈值
+        # 價格變動阈值
         price_change_threshold = 0.02  # 2%
 
         current_price = market_data.get("price", 0)
@@ -390,8 +390,8 @@ class RealTimeTradingSystem:
 
         price_change = abs(current_price - last_analysis_price) / last_analysis_price
 
-        # 如果价格变动超过阈值，或者距离上次分析超过一定时间
-        time_threshold = 300  # 5分钟
+        # 如果價格變動超過阈值，或者距離上次分析超過一定時間
+        time_threshold = 300  # 5分鐘
         last_analysis_time = getattr(self.trading_agents[symbol], 'last_analysis_time', 0)
         time_since_last = time.time() - last_analysis_time
 
@@ -400,7 +400,7 @@ class RealTimeTradingSystem:
     async def _quick_analysis(self, symbol: str, market_data: Dict) -> Dict:
         """快速分析"""
 
-        # 使用简化配置进行快速分析
+        # 使用簡化配置進行快速分析
         quick_config = self.config.copy()
         quick_config.update({
             "max_debate_rounds": 1,
@@ -408,18 +408,18 @@ class RealTimeTradingSystem:
             "quick_think_llm": "gpt-4o-mini"  # 使用快速模型
         })
 
-        # 创建快速分析智能体
+        # 創建快速分析智能體
         quick_agent = TradingAgentsGraph(
-            selected_analysts=["market", "news"],  # 只使用关键分析师
+            selected_analysts=["market", "news"],  # 只使用關键分析師
             debug=False,
             config=quick_config
         )
 
-        # 执行分析
+        # 執行分析
         current_date = datetime.now().strftime("%Y-%m-%d")
         state, decision = quick_agent.propagate(symbol, current_date)
 
-        # 记录分析时间和价格
+        # 記錄分析時間和價格
         self.trading_agents[symbol].last_analysis_time = time.time()
         self.trading_agents[symbol].last_analysis_price = market_data.get("price", 0)
 
@@ -431,12 +431,12 @@ class RealTimeTradingSystem:
         }
 ```
 
-## 示例 4: 策略回测框架
+## 示例 4: 策略回測框架
 
-### 高级回测系统
+### 高級回測系統
 ```python
 class AdvancedBacktester:
-    """高级回测系统"""
+    """高級回測系統"""
 
     def __init__(self, config: Dict):
         self.config = config
@@ -447,23 +447,23 @@ class AdvancedBacktester:
     def run_comprehensive_backtest(self, strategy_config: Dict,
                                  start_date: str, end_date: str,
                                  universe: List[str]) -> Dict:
-        """运行综合回测"""
+        """運行综合回測"""
 
-        print(f"开始回测: {start_date} 到 {end_date}, 股票池: {len(universe)} 只")
+        print(f"開始回測: {start_date} 到 {end_date}, 股票池: {len(universe)} 只")
 
-        # 1. 数据准备
+        # 1. 數據準备
         historical_data = self._prepare_historical_data(universe, start_date, end_date)
 
-        # 2. 策略执行
+        # 2. 策略執行
         trading_history = self._execute_strategy(strategy_config, historical_data)
 
         # 3. 性能分析
         performance_metrics = self._analyze_performance(trading_history)
 
-        # 4. 风险分析
+        # 4. 風險分析
         risk_metrics = self._analyze_risk(trading_history)
 
-        # 5. 归因分析
+        # 5. 歸因分析
         attribution_analysis = self._perform_attribution_analysis(trading_history)
 
         # 6. 敏感性分析
@@ -482,38 +482,38 @@ class AdvancedBacktester:
         }
 
     def _execute_strategy(self, strategy_config: Dict, historical_data: Dict) -> List[Dict]:
-        """执行策略"""
+        """執行策略"""
 
         trading_history = []
         portfolio = Portfolio(initial_capital=strategy_config.get("initial_capital", 1000000))
 
-        # 按日期顺序执行
+        # 按日期顺序執行
         dates = sorted(historical_data.keys())
 
         for date in dates:
             daily_data = historical_data[date]
 
-            # 为每只股票生成交易信号
+            # 為每只股票生成交易信號
             daily_signals = {}
             for symbol in daily_data:
                 try:
-                    # 使用 TradingAgents 生成信号
+                    # 使用 TradingAgents 生成信號
                     signal = self._generate_trading_signal(symbol, date, daily_data[symbol])
                     daily_signals[symbol] = signal
                 except Exception as e:
-                    print(f"生成 {symbol} 信号时出错: {e}")
+                    print(f"生成 {symbol} 信號時出錯: {e}")
                     continue
 
-            # 执行投资组合重平衡
+            # 執行投資組合重平衡
             portfolio_changes = self._rebalance_portfolio(
                 portfolio, daily_signals, daily_data, strategy_config
             )
 
-            # 记录交易历史
+            # 記錄交易歷史
             if portfolio_changes:
                 trading_history.extend(portfolio_changes)
 
-            # 更新投资组合价值
+            # 更新投資組合價值
             portfolio.update_value(daily_data)
 
         return trading_history
@@ -521,16 +521,16 @@ class AdvancedBacktester:
     def _analyze_performance(self, trading_history: List[Dict]) -> Dict:
         """分析策略性能"""
 
-        # 计算收益序列
+        # 計算收益序列
         returns = self._calculate_returns(trading_history)
 
-        # 基础性能指标
+        # 基础性能指標
         total_return = self._calculate_total_return(returns)
         annualized_return = self._calculate_annualized_return(returns)
         volatility = self._calculate_volatility(returns)
         sharpe_ratio = self._calculate_sharpe_ratio(returns)
 
-        # 高级性能指标
+        # 高級性能指標
         sortino_ratio = self._calculate_sortino_ratio(returns)
         calmar_ratio = self._calculate_calmar_ratio(returns)
         max_drawdown = self._calculate_max_drawdown(returns)
@@ -554,4 +554,4 @@ class AdvancedBacktester:
         }
 ```
 
-这些高级示例展示了 TradingAgents 框架的扩展能力和在复杂金融应用中的使用方法。通过这些示例，您可以构建更加复杂和专业的交易系统。
+這些高級示例展示了 TradingAgents 框架的擴展能力和在複雜金融應用中的使用方法。通過這些示例，您可以構建更加複雜和專業的交易系統。

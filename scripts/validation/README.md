@@ -1,42 +1,42 @@
 # Validation Scripts
 
-## 目录说明
+## 目錄說明
 
-这个目录包含各种验证脚本，用于检查项目配置、依赖、Git设置等。
+這個目錄包含各種驗證腳本，用於檢查項目配置、依賴、Git設置等。
 
-## 脚本列表
+## 腳本列表
 
-- `verify_gitignore.py` - 验证Git忽略配置，确保docs/contribution目录不被版本控制
-- `check_dependencies.py` - 检查项目依赖是否正确安装
-- `smart_config.py` - 智能配置检测和管理
+- `verify_gitignore.py` - 驗證Git忽略配置，確保docs/contribution目錄不被版本控制
+- `check_dependencies.py` - 檢查項目依賴是否正確安裝
+- `smart_config.py` - 智能配置檢測和管理
 
 ## 使用方法
 
 ```bash
-# 进入项目根目录
+# 進入項目根目錄
 cd C:\code\TradingAgentsCN
 
-# 运行验证脚本
+# 運行驗證腳本
 python scripts/validation/verify_gitignore.py
 python scripts/validation/check_dependencies.py
 python scripts/validation/smart_config.py
 ```
 
-## 验证脚本 vs 测试脚本的区别
+## 驗證腳本 vs 測試腳本的区別
 
-### 验证脚本 (scripts/validation/)
-- **目的**: 检查项目配置、环境设置、依赖状态
-- **运行时机**: 开发环境设置、部署前检查、问题排查
-- **特点**: 独立运行，提供详细的检查报告和修复建议
+### 驗證腳本 (scripts/validation/)
+- **目的**: 檢查項目配置、環境設置、依賴狀態
+- **運行時機**: 開發環境設置、部署前檢查、問題排查
+- **特點**: 獨立運行，提供詳細的檢查報告和修複建议
 
-### 测试脚本 (tests/)
-- **目的**: 验证代码功能正确性
-- **运行时机**: 开发过程中、CI/CD流程
-- **特点**: 使用pytest框架，专注于代码逻辑测试
+### 測試腳本 (tests/)
+- **目的**: 驗證代碼功能正確性
+- **運行時機**: 開發過程中、CI/CD流程
+- **特點**: 使用pytest框架，專註於代碼逻辑測試
 
-## 注意事项
+## 註意事項
 
-- 确保在项目根目录下运行脚本
-- 验证脚本会检查系统状态并提供修复建议
-- 某些验证可能需要网络连接或特定权限
-- 验证失败时会提供详细的错误信息和解决方案
+- 確保在項目根目錄下運行腳本
+- 驗證腳本會檢查系統狀態並提供修複建议
+- 某些驗證可能需要網絡連接或特定權限
+- 驗證失败時會提供詳細的錯誤信息和解決方案

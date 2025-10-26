@@ -1,18 +1,18 @@
 """
-智能进度跟踪器
-根据分析师数量、研究深度动态计算进度和时间预估
+智能進度跟蹤器
+根據分析師數量、研究深度動態計算進度和時間預估
 """
 
 import time
 from typing import Optional, Callable, Dict, List
 import streamlit as st
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('progress')
 
 class SmartAnalysisProgressTracker:
-    """智能分析进度跟踪器"""
+    """智能分析進度跟蹤器"""
 
     def __init__(self, analysts: List[str], research_depth: int, llm_provider: str, callback: Optional[Callable] = None):
         self.callback = callback
@@ -23,124 +23,124 @@ class SmartAnalysisProgressTracker:
         self.current_step = 0
         self.start_time = time.time()
 
-        # 根据分析师数量和研究深度动态生成步骤
+        # 根據分析師數量和研究深度動態生成步骤
         self.analysis_steps = self._generate_dynamic_steps()
         self.estimated_duration = self._estimate_total_duration()
 
     def _generate_dynamic_steps(self) -> List[Dict]:
-        """根据分析师数量动态生成分析步骤"""
+        """根據分析師數量動態生成分析步骤"""
         steps = [
-            {"name": "数据验证", "description": "验证股票代码并预获取数据", "weight": 0.05},
-            {"name": "环境准备", "description": "检查API密钥和环境配置", "weight": 0.02},
-            {"name": "成本预估", "description": "预估分析成本", "weight": 0.01},
-            {"name": "参数配置", "description": "配置分析参数和模型", "weight": 0.02},
+            {"name": "數據驗證", "description": "驗證股票代碼並預獲取數據", "weight": 0.05},
+            {"name": "環境準备", "description": "檢查API密鑰和環境配置", "weight": 0.02},
+            {"name": "成本預估", "description": "預估分析成本", "weight": 0.01},
+            {"name": "參數配置", "description": "配置分析參數和模型", "weight": 0.02},
             {"name": "引擎初始化", "description": "初始化AI分析引擎", "weight": 0.05},
         ]
 
-        # 为每个分析师添加专门的步骤
-        analyst_weight = 0.8 / len(self.analysts)  # 80%的时间用于分析师工作
+        # 為每個分析師添加專門的步骤
+        analyst_weight = 0.8 / len(self.analysts)  # 80%的時間用於分析師工作
         for analyst in self.analysts:
             analyst_name = self._get_analyst_display_name(analyst)
             steps.append({
                 "name": f"{analyst_name}分析",
-                "description": f"{analyst_name}正在进行专业分析",
+                "description": f"{analyst_name}正在進行專業分析",
                 "weight": analyst_weight
             })
 
-        # 最后的整理步骤
-        steps.append({"name": "结果整理", "description": "整理分析结果和生成报告", "weight": 0.05})
+        # 最後的整理步骤
+        steps.append({"name": "結果整理", "description": "整理分析結果和生成報告", "weight": 0.05})
 
         return steps
 
     def _get_analyst_display_name(self, analyst: str) -> str:
-        """获取分析师显示名称"""
+        """獲取分析師顯示名稱"""
         name_map = {
-            'market': '市场分析师',
-            'fundamentals': '基本面分析师',
-            'technical': '技术分析师',
-            'sentiment': '情绪分析师',
-            'risk': '风险分析师'
+            'market': '市場分析師',
+            'fundamentals': '基本面分析師',
+            'technical': '技術分析師',
+            'sentiment': '情绪分析師',
+            'risk': '風險分析師'
         }
         return name_map.get(analyst, analyst)
 
     def _estimate_total_duration(self) -> float:
-        """根据分析师数量、研究深度、模型类型预估总时长（秒）"""
-        # 基础时间（秒）- 环境准备、配置等
+        """根據分析師數量、研究深度、模型類型預估总時長（秒）"""
+        # 基础時間（秒）- 環境準备、配置等
         base_time = 60
 
-        # 每个分析师的实际耗时（基于真实测试数据）
+        # 每個分析師的實际耗時（基於真實測試數據）
         analyst_base_time = {
-            1: 120,  # 快速分析：每个分析师约2分钟
-            2: 180,  # 基础分析：每个分析师约3分钟
-            3: 240   # 标准分析：每个分析师约4分钟
+            1: 120,  # 快速分析：每個分析師約2分鐘
+            2: 180,  # 基础分析：每個分析師約3分鐘
+            3: 240   # 標準分析：每個分析師約4分鐘
         }.get(self.research_depth, 180)
 
         analyst_time = len(self.analysts) * analyst_base_time
 
-        # 模型速度影响（基于实际测试）
+        # 模型速度影響（基於實际測試）
         model_multiplier = {
-            'dashscope': 1.0,  # 阿里百炼速度适中
-            'deepseek': 0.7,   # DeepSeek较快
-            'google': 1.3      # Google较慢
+            'dashscope': 1.0,  # 阿里百炼速度適中
+            'deepseek': 0.7,   # DeepSeek較快
+            'google': 1.3      # Google較慢
         }.get(self.llm_provider, 1.0)
 
-        # 研究深度额外影响（工具调用复杂度）
+        # 研究深度額外影響（工具調用複雜度）
         depth_multiplier = {
-            1: 0.8,  # 快速分析，较少工具调用
-            2: 1.0,  # 基础分析，标准工具调用
-            3: 1.3   # 标准分析，更多工具调用和推理
+            1: 0.8,  # 快速分析，較少工具調用
+            2: 1.0,  # 基础分析，標準工具調用
+            3: 1.3   # 標準分析，更多工具調用和推理
         }.get(self.research_depth, 1.0)
 
         total_time = (base_time + analyst_time) * model_multiplier * depth_multiplier
         return total_time
     
     def update(self, message: str, step: Optional[int] = None, total_steps: Optional[int] = None):
-        """更新进度"""
+        """更新進度"""
         current_time = time.time()
         elapsed_time = current_time - self.start_time
 
-        # 记录步骤
+        # 記錄步骤
         self.steps.append({
             'message': message,
             'timestamp': current_time,
             'elapsed': elapsed_time
         })
 
-        # 根据消息内容自动判断当前步骤
+        # 根據消息內容自動判斷當前步骤
         if step is None:
             step = self._detect_step_from_message(message)
 
         if step is not None:
-            # 特殊处理：如果检测到"模块完成"，推进到下一步
-            if "模块完成" in message and step == self.current_step:
-                # 分析师完成，推进到下一步
+            # 特殊處理：如果檢測到"模塊完成"，推進到下一步
+            if "模塊完成" in message and step == self.current_step:
+                # 分析師完成，推進到下一步
                 next_step = min(step + 1, len(self.analysis_steps) - 1)
                 self.current_step = next_step
-                logger.info(f"📊 [进度更新] 分析师完成，推进到步骤 {self.current_step + 1}/{len(self.analysis_steps)}")
-            # 防止步骤倒退：只有当检测到的步骤大于等于当前步骤时才更新
+                logger.info(f"📊 [進度更新] 分析師完成，推進到步骤 {self.current_step + 1}/{len(self.analysis_steps)}")
+            # 防止步骤倒退：只有當檢測到的步骤大於等於當前步骤時才更新
             elif step >= self.current_step:
                 self.current_step = step
-                logger.debug(f"📊 [进度更新] 步骤推进到 {self.current_step + 1}/{len(self.analysis_steps)}")
+                logger.debug(f"📊 [進度更新] 步骤推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
             else:
-                logger.debug(f"📊 [进度更新] 忽略倒退步骤：检测到步骤{step + 1}，当前步骤{self.current_step + 1}")
+                logger.debug(f"📊 [進度更新] 忽略倒退步骤：檢測到步骤{step + 1}，當前步骤{self.current_step + 1}")
 
-        # 如果是完成消息，确保进度为100%
+        # 如果是完成消息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "✅ 分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
-            logger.info(f"📊 [进度更新] 分析完成，设置为最终步骤 {self.current_step + 1}/{len(self.analysis_steps)}")
+            logger.info(f"📊 [進度更新] 分析完成，設置為最终步骤 {self.current_step + 1}/{len(self.analysis_steps)}")
 
-        # 调用回调函数
+        # 調用回調函數
         if self.callback:
             progress = self._calculate_weighted_progress()
             remaining_time = self._estimate_remaining_time(progress, elapsed_time)
             self.callback(message, self.current_step, len(self.analysis_steps), progress, elapsed_time, remaining_time)
 
     def _calculate_weighted_progress(self) -> float:
-        """根据步骤权重计算进度"""
+        """根據步骤權重計算進度"""
         if self.current_step >= len(self.analysis_steps):
             return 1.0
 
-        # 如果是最后一步，返回100%
+        # 如果是最後一步，返回100%
         if self.current_step == len(self.analysis_steps) - 1:
             return 1.0
 
@@ -150,128 +150,128 @@ class SmartAnalysisProgressTracker:
         return min(completed_weight / total_weight, 1.0)
 
     def _estimate_remaining_time(self, progress: float, elapsed_time: float) -> float:
-        """智能预估剩余时间"""
+        """智能預估剩余時間"""
         if progress <= 0:
             return self.estimated_duration
 
-        # 如果进度超过20%，使用实际进度来预估
+        # 如果進度超過20%，使用實际進度來預估
         if progress > 0.2:
             estimated_total = elapsed_time / progress
             return max(estimated_total - elapsed_time, 0)
         else:
-            # 前期使用预估时间
+            # 前期使用預估時間
             return max(self.estimated_duration - elapsed_time, 0)
     
     def _detect_step_from_message(self, message: str) -> Optional[int]:
-        """根据消息内容智能检测当前步骤"""
+        """根據消息內容智能檢測當前步骤"""
         message_lower = message.lower()
 
-        # 开始分析阶段 - 只匹配最初的开始消息
-        if "🚀 开始股票分析" in message:
+        # 開始分析階段 - 只匹配最初的開始消息
+        if "🚀 開始股票分析" in message:
             return 0
-        # 数据验证阶段
-        elif "验证" in message or "预获取" in message or "数据准备" in message:
+        # 數據驗證階段
+        elif "驗證" in message or "預獲取" in message or "數據準备" in message:
             return 0
-        # 环境准备阶段
-        elif "环境" in message or "api" in message_lower or "密钥" in message:
+        # 環境準备階段
+        elif "環境" in message or "api" in message_lower or "密鑰" in message:
             return 1
-        # 成本预估阶段
-        elif "成本" in message or "预估" in message:
+        # 成本預估階段
+        elif "成本" in message or "預估" in message:
             return 2
-        # 参数配置阶段
-        elif "配置" in message or "参数" in message:
+        # 參數配置階段
+        elif "配置" in message or "參數" in message:
             return 3
-        # 引擎初始化阶段
+        # 引擎初始化階段
         elif "初始化" in message or "引擎" in message:
             return 4
-        # 分析师工作阶段 - 根据分析师名称和工具调用匹配
-        elif any(analyst_name in message for analyst_name in ["市场分析师", "基本面分析师", "技术分析师", "情绪分析师", "风险分析师"]):
-            # 找到对应的分析师步骤
+        # 分析師工作階段 - 根據分析師名稱和工具調用匹配
+        elif any(analyst_name in message for analyst_name in ["市場分析師", "基本面分析師", "技術分析師", "情绪分析師", "風險分析師"]):
+            # 找到對應的分析師步骤
             for i, step in enumerate(self.analysis_steps):
-                if "分析师" in step["name"]:
-                    # 检查消息中是否包含对应的分析师类型
-                    if "市场" in message and "市场" in step["name"]:
+                if "分析師" in step["name"]:
+                    # 檢查消息中是否包含對應的分析師類型
+                    if "市場" in message and "市場" in step["name"]:
                         return i
                     elif "基本面" in message and "基本面" in step["name"]:
                         return i
-                    elif "技术" in message and "技术" in step["name"]:
+                    elif "技術" in message and "技術" in step["name"]:
                         return i
                     elif "情绪" in message and "情绪" in step["name"]:
                         return i
-                    elif "风险" in message and "风险" in step["name"]:
+                    elif "風險" in message and "風險" in step["name"]:
                         return i
-        # 工具调用阶段 - 检测分析师正在使用工具
-        elif "工具调用" in message or "正在调用" in message or "tool" in message.lower():
-            # 如果当前步骤是分析师步骤，保持当前步骤
-            if self.current_step < len(self.analysis_steps) and "分析师" in self.analysis_steps[self.current_step]["name"]:
+        # 工具調用階段 - 檢測分析師正在使用工具
+        elif "工具調用" in message or "正在調用" in message or "tool" in message.lower():
+            # 如果當前步骤是分析師步骤，保持當前步骤
+            if self.current_step < len(self.analysis_steps) and "分析師" in self.analysis_steps[self.current_step]["name"]:
                 return self.current_step
-        # 模块开始/完成日志
-        elif "模块开始" in message or "模块完成" in message:
-            # 从日志中提取分析师类型
-            if "market_analyst" in message or "market" in message or "市场" in message:
+        # 模塊開始/完成日誌
+        elif "模塊開始" in message or "模塊完成" in message:
+            # 從日誌中提取分析師類型
+            if "market_analyst" in message or "market" in message or "市場" in message:
                 for i, step in enumerate(self.analysis_steps):
-                    if "市场" in step["name"]:
+                    if "市場" in step["name"]:
                         return i
             elif "fundamentals_analyst" in message or "fundamentals" in message or "基本面" in message:
                 for i, step in enumerate(self.analysis_steps):
                     if "基本面" in step["name"]:
                         return i
-            elif "technical_analyst" in message or "technical" in message or "技术" in message:
+            elif "technical_analyst" in message or "technical" in message or "技術" in message:
                 for i, step in enumerate(self.analysis_steps):
-                    if "技术" in step["name"]:
+                    if "技術" in step["name"]:
                         return i
             elif "sentiment_analyst" in message or "sentiment" in message or "情绪" in message:
                 for i, step in enumerate(self.analysis_steps):
                     if "情绪" in step["name"]:
                         return i
-            elif "risk_analyst" in message or "risk" in message or "风险" in message:
+            elif "risk_analyst" in message or "risk" in message or "風險" in message:
                 for i, step in enumerate(self.analysis_steps):
-                    if "风险" in step["name"]:
+                    if "風險" in step["name"]:
                         return i
-            elif "graph_signal_processing" in message or "signal" in message or "信号" in message:
+            elif "graph_signal_processing" in message or "signal" in message or "信號" in message:
                 for i, step in enumerate(self.analysis_steps):
-                    if "信号" in step["name"] or "整理" in step["name"]:
+                    if "信號" in step["name"] or "整理" in step["name"]:
                         return i
-        # 结果整理阶段
-        elif "整理" in message or "结果" in message:
+        # 結果整理階段
+        elif "整理" in message or "結果" in message:
             return len(self.analysis_steps) - 1
-        # 完成阶段
+        # 完成階段
         elif "完成" in message or "成功" in message:
             return len(self.analysis_steps) - 1
 
         return None
     
     def get_current_step_info(self) -> Dict:
-        """获取当前步骤信息"""
+        """獲取當前步骤信息"""
         if self.current_step < len(self.analysis_steps):
             return self.analysis_steps[self.current_step]
         return {"name": "完成", "description": "分析已完成", "weight": 0}
 
     def get_progress_percentage(self) -> float:
-        """获取进度百分比"""
+        """獲取進度百分比"""
         return self._calculate_weighted_progress() * 100
 
     def get_elapsed_time(self) -> float:
-        """获取已用时间"""
+        """獲取已用時間"""
         return time.time() - self.start_time
 
     def get_estimated_total_time(self) -> float:
-        """获取预估总时间"""
+        """獲取預估总時間"""
         return self.estimated_duration
 
     def format_time(self, seconds: float) -> str:
-        """格式化时间显示"""
+        """格式化時間顯示"""
         if seconds < 60:
             return f"{seconds:.1f}秒"
         elif seconds < 3600:
             minutes = seconds / 60
-            return f"{minutes:.1f}分钟"
+            return f"{minutes:.1f}分鐘"
         else:
             hours = seconds / 3600
-            return f"{hours:.1f}小时"
+            return f"{hours:.1f}小時"
 
 class SmartStreamlitProgressDisplay:
-    """智能Streamlit进度显示组件"""
+    """智能Streamlit進度顯示組件"""
 
     def __init__(self, container):
         self.container = container
@@ -282,63 +282,63 @@ class SmartStreamlitProgressDisplay:
         self.setup_display()
 
     def setup_display(self):
-        """设置显示组件"""
+        """設置顯示組件"""
         with self.container:
-            st.markdown("### 📊 分析进度")
+            st.markdown("### 📊 分析進度")
             self.progress_bar = st.progress(0)
             self.status_text = st.empty()
             self.step_info = st.empty()
             self.time_info = st.empty()
 
     def update(self, message: str, current_step: int, total_steps: int, progress: float, elapsed_time: float, remaining_time: float):
-        """更新显示"""
-        # 更新进度条
+        """更新顯示"""
+        # 更新進度條
         self.progress_bar.progress(progress)
 
-        # 更新状态文本
-        self.status_text.markdown(f"**当前状态:** 📋 {message}")
+        # 更新狀態文本
+        self.status_text.markdown(f"**當前狀態:** 📋 {message}")
 
         # 更新步骤信息
-        step_text = f"**进度:** 第 {current_step + 1} 步，共 {total_steps} 步 ({progress:.1%})"
+        step_text = f"**進度:** 第 {current_step + 1} 步，共 {total_steps} 步 ({progress:.1%})"
         self.step_info.markdown(step_text)
 
-        # 更新时间信息
-        time_text = f"**已用时间:** {self._format_time(elapsed_time)}"
+        # 更新時間信息
+        time_text = f"**已用時間:** {self._format_time(elapsed_time)}"
         if remaining_time > 0:
-            time_text += f" | **预计剩余:** {self._format_time(remaining_time)}"
+            time_text += f" | **預計剩余:** {self._format_time(remaining_time)}"
 
         self.time_info.markdown(time_text)
     
     def _format_time(self, seconds: float) -> str:
-        """格式化时间显示"""
+        """格式化時間顯示"""
         if seconds < 60:
             return f"{seconds:.1f}秒"
         elif seconds < 3600:
             minutes = seconds / 60
-            return f"{minutes:.1f}分钟"
+            return f"{minutes:.1f}分鐘"
         else:
             hours = seconds / 3600
-            return f"{hours:.1f}小时"
+            return f"{hours:.1f}小時"
     
     def clear(self):
-        """清除显示"""
+        """清除顯示"""
         self.container.empty()
 
 def create_smart_progress_callback(display: SmartStreamlitProgressDisplay, analysts: List[str], research_depth: int, llm_provider: str) -> Callable:
-    """创建智能进度回调函数"""
+    """創建智能進度回調函數"""
     tracker = SmartAnalysisProgressTracker(analysts, research_depth, llm_provider)
 
     def callback(message: str, step: Optional[int] = None, total_steps: Optional[int] = None):
-        # 如果明确指定了步骤和总步骤，使用旧的固定模式（兼容性）
+        # 如果明確指定了步骤和总步骤，使用旧的固定模式（兼容性）
         if step is not None and total_steps is not None and total_steps == 10:
-            # 兼容旧的10步模式，但使用智能时间预估
+            # 兼容旧的10步模式，但使用智能時間預估
             progress = step / max(total_steps - 1, 1) if total_steps > 1 else 1.0
             progress = min(progress, 1.0)
             elapsed_time = tracker.get_elapsed_time()
             remaining_time = tracker._estimate_remaining_time(progress, elapsed_time)
             display.update(message, step, total_steps, progress, elapsed_time, remaining_time)
         else:
-            # 使用新的智能跟踪模式
+            # 使用新的智能跟蹤模式
             tracker.update(message, step, total_steps)
             current_step = tracker.current_step
             total_steps_count = len(tracker.analysis_steps)
@@ -349,9 +349,9 @@ def create_smart_progress_callback(display: SmartStreamlitProgressDisplay, analy
 
     return callback
 
-# 向后兼容的函数
+# 向後兼容的函數
 def create_progress_callback(display, analysts=None, research_depth=2, llm_provider="dashscope") -> Callable:
-    """创建进度回调函数（向后兼容）"""
+    """創建進度回調函數（向後兼容）"""
     if hasattr(display, '__class__') and 'Smart' in display.__class__.__name__:
         return create_smart_progress_callback(display, analysts or ['market', 'fundamentals'], research_depth, llm_provider)
     else:

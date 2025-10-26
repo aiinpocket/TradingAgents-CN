@@ -1,36 +1,36 @@
-# Finnhub新闻数据配置指南
+# Finnhub新聞數據配置指南
 
-## 问题描述
+## 問題描述
 
-如果您遇到以下错误信息：
+如果您遇到以下錯誤信息：
 
 ```
-[DEBUG] FinnhubNewsTool调用，股票代码: AAPL 
-获取新闻数据失败: [Errno 2] No such file or directory: '/Users/yluo/Documents/Code/ScAI/FR1-data\\finnhub_data\\news_data\\AAPL_data_formatted.json'
+[DEBUG] FinnhubNewsTool調用，股票代碼: AAPL 
+獲取新聞數據失败: [Errno 2] No such file or directory: '/Users/yluo/Documents/Code/ScAI/FR1-data\\finnhub_data\\news_data\\AAPL_data_formatted.json'
 ```
 
-这表明存在以下问题：
-1. **路径配置错误**：混合了Unix和Windows路径分隔符
-2. **数据文件不存在**：缺少Finnhub新闻数据文件
-3. **数据目录配置**：数据目录路径不正确
+這表明存在以下問題：
+1. **路徑配置錯誤**：混合了Unix和Windows路徑分隔符
+2. **數據文件不存在**：缺少Finnhub新聞數據文件
+3. **數據目錄配置**：數據目錄路徑不正確
 
-## 解决方案
+## 解決方案
 
-### 1. 路径修复（已自动修复）
+### 1. 路徑修複（已自動修複）
 
-我们已经修复了 `tradingagents/default_config.py` 中的路径配置：
+我們已經修複了 `tradingagents/default_config.py` 中的路徑配置：
 
 ```python
-# 修复前（硬编码Unix路径）
+# 修複前（硬編碼Unix路徑）
 "data_dir": "/Users/yluo/Documents/Code/ScAI/FR1-data",
 
-# 修复后（跨平台兼容路径）
+# 修複後（跨平台兼容路徑）
 "data_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data"),
 ```
 
-### 2. 数据目录结构
+### 2. 數據目錄結構
 
-正确的数据目录结构应该是：
+正確的數據目錄結構應该是：
 
 ```
 ~/Documents/TradingAgents/data/
@@ -45,59 +45,59 @@
 └── other_data/
 ```
 
-### 3. 获取Finnhub数据
+### 3. 獲取Finnhub數據
 
-#### 方法一：使用API下载（推荐）
+#### 方法一：使用API下載（推薦）
 
-1. **配置Finnhub API密钥**
+1. **配置Finnhub API密鑰**
    ```bash
    # 在.env文件中添加
    FINNHUB_API_KEY=your_finnhub_api_key_here
    ```
 
-2. **运行数据下载脚本**
+2. **運行數據下載腳本**
    ```bash
-   # 下载新闻数据
+   # 下載新聞數據
    python scripts/download_finnhub_data.py --data-type news --symbols AAPL,TSLA,MSFT
 
-   # 下载所有类型数据
+   # 下載所有類型數據
    python scripts/download_finnhub_data.py --all
 
-   # 强制刷新已存在的数据
+   # 强制刷新已存在的數據
    python scripts/download_finnhub_data.py --force-refresh
 
-   # 下载指定天数的新闻数据
+   # 下載指定天數的新聞數據
    python scripts/download_finnhub_data.py --data-type news --days 30 --symbols AAPL
    ```
 
-3. **脚本参数说明**
-   - `--data-type`: 数据类型 (news, sentiment, transactions, all)
-   - `--symbols`: 股票代码，用逗号分隔
-   - `--days`: 新闻数据天数 (默认7天)
-   - `--force-refresh`: 强制刷新已存在的数据
-   - `--all`: 下载所有类型数据
+3. **腳本參數說明**
+   - `--data-type`: 數據類型 (news, sentiment, transactions, all)
+   - `--symbols`: 股票代碼，用逗號分隔
+   - `--days`: 新聞數據天數 (默認7天)
+   - `--force-refresh`: 强制刷新已存在的數據
+   - `--all`: 下載所有類型數據
 
-#### 方法二：手动创建测试数据
+#### 方法二：手動創建測試數據
 
-如果您只是想测试功能，可以创建示例数据：
+如果您只是想測試功能，可以創建示例數據：
 
 ```bash
-# 运行示例数据生成脚本
+# 運行示例數據生成腳本
 python scripts/development/download_finnhub_sample_data.py
 
-# 或者运行测试脚本，会自动创建示例数据
+# 或者運行測試腳本，會自動創建示例數據
 python tests/test_finnhub_news_fix.py
 ```
 
-### 4. 验证配置
+### 4. 驗證配置
 
-运行以下命令验证配置是否正确：
+運行以下命令驗證配置是否正確：
 
 ```bash
-# 验证路径修复
+# 驗證路徑修複
 python tests/test_finnhub_news_fix.py
 
-# 测试新闻数据获取
+# 測試新聞數據獲取
 python -c "
 from tradingagents.dataflows.interface import get_finnhub_news
 result = get_finnhub_news('AAPL', '2025-01-02', 7)
@@ -105,38 +105,38 @@ print(result[:200])
 "
 ```
 
-## 错误处理改进
+## 錯誤處理改進
 
-我们已经改进了错误处理，现在当数据文件不存在时，会显示详细的错误信息：
+我們已經改進了錯誤處理，現在當數據文件不存在時，會顯示詳細的錯誤信息：
 
 ```
-⚠️ 无法获取AAPL的新闻数据 (2024-12-26 到 2025-01-02)
+⚠️ 無法獲取AAPL的新聞數據 (2024-12-26 到 2025-01-02)
 可能的原因：
-1. 数据文件不存在或路径配置错误
-2. 指定日期范围内没有新闻数据
-3. 需要先下载或更新Finnhub新闻数据
-建议：检查数据目录配置或重新获取新闻数据
+1. 數據文件不存在或路徑配置錯誤
+2. 指定日期範围內没有新聞數據
+3. 需要先下載或更新Finnhub新聞數據
+建议：檢查數據目錄配置或重新獲取新聞數據
 ```
 
-## 配置选项
+## 配置選項
 
-### 自定义数据目录
+### 自定義數據目錄
 
-如果您想使用自定义数据目录，可以在代码中设置：
+如果您想使用自定義數據目錄，可以在代碼中設置：
 
 ```python
 from tradingagents.dataflows.config import set_config
 
-# 设置自定义数据目录
+# 設置自定義數據目錄
 config = {
     "data_dir": "C:/your/custom/data/directory"
 }
 set_config(config)
 ```
 
-### 环境变量配置
+### 環境變量配置
 
-您也可以通过环境变量设置：
+您也可以通過環境變量設置：
 
 ```bash
 # Windows
@@ -146,15 +146,15 @@ set TRADINGAGENTS_DATA_DIR=C:\your\custom\data\directory
 export TRADINGAGENTS_DATA_DIR=/your/custom/data/directory
 ```
 
-## 常见问题
+## 常见問題
 
-### Q1: 数据目录权限问题
+### Q1: 數據目錄權限問題
 
-**问题**：无法创建或写入数据目录
+**問題**：無法創建或寫入數據目錄
 
-**解决方案**：
+**解決方案**：
 ```bash
-# Windows（以管理员身份运行）
+# Windows（以管理員身份運行）
 mkdir "C:\Users\%USERNAME%\Documents\TradingAgents\data"
 
 # Linux/Mac
@@ -162,49 +162,49 @@ mkdir -p ~/Documents/TradingAgents/data
 chmod 755 ~/Documents/TradingAgents/data
 ```
 
-### Q2: Finnhub API配额限制
+### Q2: Finnhub API配額限制
 
-**问题**：API调用次数超限
+**問題**：API調用次數超限
 
-**解决方案**：
-1. 升级Finnhub API计划
-2. 使用缓存减少API调用
-3. 限制数据获取频率
+**解決方案**：
+1. 升級Finnhub API計劃
+2. 使用緩存减少API調用
+3. 限制數據獲取頻率
 
-### Q3: 数据格式错误
+### Q3: 數據格式錯誤
 
-**问题**：JSON文件格式不正确
+**問題**：JSON文件格式不正確
 
-**解决方案**：
+**解決方案**：
 ```bash
-# 验证JSON格式
+# 驗證JSON格式
 python -c "import json; print(json.load(open('path/to/file.json')))"
 
-# 重新下载数据
+# 重新下載數據
 python scripts/download_finnhub_data.py --force-refresh
 ```
 
-## 技术细节
+## 技術細節
 
-### 修复的文件
+### 修複的文件
 
 1. **`tradingagents/default_config.py`**
-   - 修复硬编码的Unix路径
-   - 使用跨平台兼容的路径构建
+   - 修複硬編碼的Unix路徑
+   - 使用跨平台兼容的路徑構建
 
 2. **`tradingagents/dataflows/finnhub_utils.py`**
-   - 添加文件存在性检查
-   - 改进错误处理和调试信息
-   - 使用UTF-8编码读取文件
+   - 添加文件存在性檢查
+   - 改進錯誤處理和調試信息
+   - 使用UTF-8編碼讀取文件
 
 3. **`tradingagents/dataflows/interface.py`**
-   - 改进get_finnhub_news函数的错误提示
-   - 提供详细的故障排除建议
+   - 改進get_finnhub_news函數的錯誤提示
+   - 提供詳細的故障排除建议
 
-### 路径处理逻辑
+### 路徑處理逻辑
 
 ```python
-# 跨平台路径构建
+# 跨平台路徑構建
 data_path = os.path.join(
     data_dir, 
     "finnhub_data", 
@@ -212,23 +212,23 @@ data_path = os.path.join(
     f"{ticker}_data_formatted.json"
 )
 
-# 文件存在性检查
+# 文件存在性檢查
 if not os.path.exists(data_path):
-    print(f"⚠️ [DEBUG] 数据文件不存在: {data_path}")
+    print(f"⚠️ [DEBUG] 數據文件不存在: {data_path}")
     return {}
 ```
 
-## 联系支持
+## 聯系支持
 
-如果您仍然遇到问题，请：
+如果您仍然遇到問題，請：
 
-1. 运行诊断脚本：`python tests/test_finnhub_news_fix.py`
-2. 检查日志输出中的详细错误信息
-3. 确认Finnhub API密钥配置正确
-4. 提供完整的错误堆栈信息
+1. 運行診斷腳本：`python tests/test_finnhub_news_fix.py`
+2. 檢查日誌輸出中的詳細錯誤信息
+3. 確認Finnhub API密鑰配置正確
+4. 提供完整的錯誤堆棧信息
 
 ---
 
 **更新日期**：2025-01-02  
 **版本**：v1.0  
-**适用范围**：TradingAgents-CN v0.1.3+
+**適用範围**：TradingAgents-CN v0.1.3+

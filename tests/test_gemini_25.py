@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-测试Gemini 2.5 Flash和Pro模型
+測試Gemini 2.5 Flash和Pro模型
 """
 
 import os
@@ -8,11 +8,11 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-# 加载环境变量
+# 加載環境變量
 load_dotenv(project_root / ".env", override=True)
 
 # Gemini 2.5模型列表
@@ -24,35 +24,35 @@ GEMINI_25_MODELS = [
 ]
 
 def test_gemini_25_availability():
-    """测试Gemini 2.5模型的可用性"""
-    print("🧪 测试Gemini 2.5模型可用性")
+    """測試Gemini 2.5模型的可用性"""
+    print("🧪 測試Gemini 2.5模型可用性")
     print("=" * 60)
     
     try:
         import google.generativeai as genai
         
-        # 配置API密钥
+        # 配置API密鑰
         google_api_key = os.getenv('GOOGLE_API_KEY')
         if not google_api_key:
-            print("❌ Google API密钥未配置")
+            print("❌ Google API密鑰未配置")
             return []
         
         genai.configure(api_key=google_api_key)
         
-        # 获取所有可用模型
-        print("📋 获取所有可用模型...")
+        # 獲取所有可用模型
+        print("📋 獲取所有可用模型...")
         all_models = genai.list_models()
         
         available_25_models = []
         
-        print("🔍 检查Gemini 2.5模型:")
+        print("🔍 檢查Gemini 2.5模型:")
         for model_name in GEMINI_25_MODELS:
             found = False
             for model in all_models:
                 if model_name in model.name:
                     print(f"✅ {model_name}: 可用")
-                    print(f"   完整名称: {model.name}")
-                    print(f"   显示名称: {model.display_name}")
+                    print(f"   完整名稱: {model.name}")
+                    print(f"   顯示名稱: {model.display_name}")
                     print(f"   支持方法: {model.supported_generation_methods}")
                     available_25_models.append(model.name)
                     found = True
@@ -64,44 +64,44 @@ def test_gemini_25_availability():
         return available_25_models
         
     except Exception as e:
-        print(f"❌ 检查模型可用性失败: {e}")
+        print(f"❌ 檢查模型可用性失败: {e}")
         return []
 
 def test_specific_gemini_25_model(model_name):
-    """测试特定的Gemini 2.5模型"""
+    """測試特定的Gemini 2.5模型"""
     try:
-        print(f"\n🧪 测试模型: {model_name}")
+        print(f"\n🧪 測試模型: {model_name}")
         print("=" * 60)
         
         import google.generativeai as genai
         from langchain_google_genai import ChatGoogleGenerativeAI
         
-        # 配置API密钥
+        # 配置API密鑰
         google_api_key = os.getenv('GOOGLE_API_KEY')
         genai.configure(api_key=google_api_key)
         
-        # 测试1: 直接API
-        print("📝 测试直接API...")
+        # 測試1: 直接API
+        print("📝 測試直接API...")
         try:
             model = genai.GenerativeModel(model_name)
             response = model.generate_content(
-                "请用中文分析苹果公司(AAPL)的投资价值，包括技术创新、市场地位和财务状况"
+                "請用中文分析苹果公司(AAPL)的投資價值，包括技術創新、市場地位和財務狀况"
             )
             
             if response and response.text:
-                print("✅ 直接API调用成功")
-                print(f"   响应长度: {len(response.text)} 字符")
-                print(f"   响应预览: {response.text[:200]}...")
+                print("✅ 直接API調用成功")
+                print(f"   響應長度: {len(response.text)} 字符")
+                print(f"   響應預覽: {response.text[:200]}...")
                 direct_success = True
             else:
-                print("❌ 直接API调用失败：无响应内容")
+                print("❌ 直接API調用失败：無響應內容")
                 direct_success = False
         except Exception as e:
-            print(f"❌ 直接API调用失败: {e}")
+            print(f"❌ 直接API調用失败: {e}")
             direct_success = False
         
-        # 测试2: LangChain集成
-        print("\n📝 测试LangChain集成...")
+        # 測試2: LangChain集成
+        print("\n📝 測試LangChain集成...")
         try:
             llm = ChatGoogleGenerativeAI(
                 model=model_name,
@@ -111,122 +111,122 @@ def test_specific_gemini_25_model(model_name):
             )
             
             response = llm.invoke(
-                "请用中文分析当前人工智能行业的投资机会，重点关注大型科技公司的AI战略"
+                "請用中文分析當前人工智能行業的投資機會，重點關註大型科技公司的AI战略"
             )
             
             if response and response.content:
-                print("✅ LangChain调用成功")
-                print(f"   响应长度: {len(response.content)} 字符")
-                print(f"   响应预览: {response.content[:200]}...")
+                print("✅ LangChain調用成功")
+                print(f"   響應長度: {len(response.content)} 字符")
+                print(f"   響應預覽: {response.content[:200]}...")
                 langchain_success = True
             else:
-                print("❌ LangChain调用失败：无响应内容")
+                print("❌ LangChain調用失败：無響應內容")
                 langchain_success = False
         except Exception as e:
-            print(f"❌ LangChain调用失败: {e}")
+            print(f"❌ LangChain調用失败: {e}")
             langchain_success = False
         
-        # 测试3: 复杂推理能力
-        print("\n📝 测试复杂推理能力...")
+        # 測試3: 複雜推理能力
+        print("\n📝 測試複雜推理能力...")
         try:
             complex_prompt = """
-            请用中文进行复杂的股票分析推理：
+            請用中文進行複雜的股票分析推理：
             
-            假设场景：
-            - 当前时间：2025年6月
-            - 美联储刚刚降息0.25%
-            - 中美贸易关系有所缓解
-            - AI技术快速发展
+            假設場景：
+            - 當前時間：2025年6月
+            - 美聯储刚刚降息0.25%
+            - 中美貿易關系有所緩解
+            - AI技術快速發展
             - 通胀率降至2.5%
             
-            请分析在这种宏观环境下，苹果公司(AAPL)的投资价值，包括：
-            1. 宏观经济因素的影响
-            2. 行业竞争态势
-            3. 公司特有优势
-            4. 风险因素
-            5. 投资建议和目标价位
+            請分析在這種宏觀環境下，苹果公司(AAPL)的投資價值，包括：
+            1. 宏觀經濟因素的影響
+            2. 行業競爭態势
+            3. 公司特有優势
+            4. 風險因素
+            5. 投資建议和目標價位
             
-            请提供详细的逻辑推理过程。
+            請提供詳細的逻辑推理過程。
             """
             
             response = llm.invoke(complex_prompt)
             
             if response and response.content and len(response.content) > 500:
-                print("✅ 复杂推理测试成功")
-                print(f"   响应长度: {len(response.content)} 字符")
-                print(f"   响应预览: {response.content[:300]}...")
+                print("✅ 複雜推理測試成功")
+                print(f"   響應長度: {len(response.content)} 字符")
+                print(f"   響應預覽: {response.content[:300]}...")
                 complex_success = True
             else:
-                print("❌ 复杂推理测试失败：响应过短或无内容")
+                print("❌ 複雜推理測試失败：響應過短或無內容")
                 complex_success = False
         except Exception as e:
-            print(f"❌ 复杂推理测试失败: {e}")
+            print(f"❌ 複雜推理測試失败: {e}")
             complex_success = False
         
         return direct_success, langchain_success, complex_success
         
     except Exception as e:
-        print(f"❌ 模型测试失败: {e}")
+        print(f"❌ 模型測試失败: {e}")
         return False, False, False
 
 def test_gemini_25_in_tradingagents(model_name):
-    """测试Gemini 2.5在TradingAgents中的使用"""
+    """測試Gemini 2.5在TradingAgents中的使用"""
     try:
-        print(f"\n🧪 测试{model_name}在TradingAgents中的使用")
+        print(f"\n🧪 測試{model_name}在TradingAgents中的使用")
         print("=" * 60)
         
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        # 创建配置
+        # 創建配置
         config = DEFAULT_CONFIG.copy()
         config["llm_provider"] = "google"
         config["deep_think_llm"] = model_name
         config["quick_think_llm"] = model_name
         config["online_tools"] = False  # 避免API限制
-        config["memory_enabled"] = True  # 启用内存功能
+        config["memory_enabled"] = True  # 啟用內存功能
         config["max_debate_rounds"] = 1
         config["max_risk_discuss_rounds"] = 1
         
-        # 修复路径
+        # 修複路徑
         config["data_dir"] = str(project_root / "data")
         config["results_dir"] = str(project_root / "results")
         config["data_cache_dir"] = str(project_root / "tradingagents" / "dataflows" / "data_cache")
         
-        # 创建目录
+        # 創建目錄
         os.makedirs(config["data_dir"], exist_ok=True)
         os.makedirs(config["results_dir"], exist_ok=True)
         os.makedirs(config["data_cache_dir"], exist_ok=True)
         
-        print("✅ 配置创建成功")
+        print("✅ 配置創建成功")
         print(f"   模型: {model_name}")
-        print(f"   内存功能: {config['memory_enabled']}")
+        print(f"   內存功能: {config['memory_enabled']}")
         
-        # 创建TradingAgentsGraph实例
-        print("🚀 初始化TradingAgents图...")
+        # 創建TradingAgentsGraph實例
+        print("🚀 初始化TradingAgents圖...")
         graph = TradingAgentsGraph(["market"], config=config, debug=False)
         
-        print("✅ TradingAgents图初始化成功")
+        print("✅ TradingAgents圖初始化成功")
         
-        # 测试分析
-        print("📊 开始股票分析...")
+        # 測試分析
+        print("📊 開始股票分析...")
         
         try:
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print(f"✅ {model_name}驱动的股票分析成功！")
-                print(f"   最终决策: {decision}")
+                print(f"✅ {model_name}驱動的股票分析成功！")
+                print(f"   最终決策: {decision}")
                 
-                # 检查市场报告
+                # 檢查市場報告
                 if "market_report" in state and state["market_report"]:
                     market_report = state["market_report"]
-                    print(f"   市场报告长度: {len(market_report)} 字符")
-                    print(f"   报告预览: {market_report[:200]}...")
+                    print(f"   市場報告長度: {len(market_report)} 字符")
+                    print(f"   報告預覽: {market_report[:200]}...")
                 
                 return True
             else:
-                print("❌ 分析完成但结果为空")
+                print("❌ 分析完成但結果為空")
                 return False
                 
         except Exception as e:
@@ -234,53 +234,53 @@ def test_gemini_25_in_tradingagents(model_name):
             return False
             
     except Exception as e:
-        print(f"❌ TradingAgents测试失败: {e}")
+        print(f"❌ TradingAgents測試失败: {e}")
         return False
 
 def main():
-    """主测试函数"""
-    print("🧪 Gemini 2.5模型测试")
+    """主測試函數"""
+    print("🧪 Gemini 2.5模型測試")
     print("=" * 70)
     
-    # 检查API密钥
+    # 檢查API密鑰
     google_api_key = os.getenv('GOOGLE_API_KEY')
     if not google_api_key:
-        print("❌ Google API密钥未配置")
+        print("❌ Google API密鑰未配置")
         return
     
-    print(f"✅ Google API密钥已配置: {google_api_key[:20]}...")
+    print(f"✅ Google API密鑰已配置: {google_api_key[:20]}...")
     
-    # 检查可用的Gemini 2.5模型
+    # 檢查可用的Gemini 2.5模型
     available_models = test_gemini_25_availability()
     
     if not available_models:
         print("\n❌ 没有找到可用的Gemini 2.5模型")
         return
     
-    print(f"\n🎯 找到 {len(available_models)} 个可用的Gemini 2.5模型")
+    print(f"\n🎯 找到 {len(available_models)} 個可用的Gemini 2.5模型")
     
-    # 测试每个可用模型
+    # 測試每個可用模型
     best_model = None
     best_score = 0
     
     for model_name in available_models:
         print(f"\n{'='*70}")
         
-        # 基础功能测试
+        # 基础功能測試
         direct, langchain, complex = test_specific_gemini_25_model(model_name)
         score = sum([direct, langchain, complex])
         
-        print(f"\n📊 {model_name} 基础测试结果:")
+        print(f"\n📊 {model_name} 基础測試結果:")
         print(f"   直接API: {'✅' if direct else '❌'}")
         print(f"   LangChain: {'✅' if langchain else '❌'}")
-        print(f"   复杂推理: {'✅' if complex else '❌'}")
+        print(f"   複雜推理: {'✅' if complex else '❌'}")
         print(f"   得分: {score}/3")
         
         if score > best_score:
             best_score = score
             best_model = model_name
         
-        # 如果基础功能全部通过，测试TradingAgents集成
+        # 如果基础功能全部通過，測試TradingAgents集成
         if score == 3:
             tradingagents_success = test_gemini_25_in_tradingagents(model_name)
             if tradingagents_success:
@@ -292,22 +292,22 @@ def main():
             
             print(f"   总得分: {total_score}/4")
     
-    # 最终推荐
-    print(f"\n📊 最终测试结果:")
+    # 最终推薦
+    print(f"\n📊 最终測試結果:")
     print("=" * 50)
     print(f"  最佳模型: {best_model}")
     print(f"  最高得分: {best_score}/3")
     
     if best_score >= 2:
-        print(f"\n🎉 推荐使用: {best_model}")
+        print(f"\n🎉 推薦使用: {best_model}")
         print(f"\n💡 配置建议:")
-        print(f"   1. 在Web界面中选择'Google'作为LLM提供商")
-        print(f"   2. 使用模型名称: {best_model}")
+        print(f"   1. 在Web界面中選擇'Google'作為LLM提供商")
+        print(f"   2. 使用模型名稱: {best_model}")
         print(f"   3. Gemini 2.5具有更强的推理和分析能力")
-        print(f"   4. 支持更复杂的金融分析任务")
+        print(f"   4. 支持更複雜的金融分析任務")
     else:
-        print(f"\n⚠️ 所有Gemini 2.5模型测试不理想")
-        print(f"   建议检查API密钥权限和网络连接")
+        print(f"\n⚠️ 所有Gemini 2.5模型測試不理想")
+        print(f"   建议檢查API密鑰權限和網絡連接")
 
 if __name__ == "__main__":
     main()

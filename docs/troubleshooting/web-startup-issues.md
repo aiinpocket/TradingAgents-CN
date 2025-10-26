@@ -1,41 +1,41 @@
-# 🔧 Web应用启动问题排除指南
+# 🔧 Web應用啟動問題排除指南
 
-## 🚨 常见问题
+## 🚨 常见問題
 
 ### 1. ModuleNotFoundError: No module named 'tradingagents'
 
-**问题描述**:
+**問題描述**:
 ```bash
 ModuleNotFoundError: No module named 'tradingagents'
 ```
 
-**原因**: 项目没有安装到Python环境中，导致无法导入模块。
+**原因**: 項目没有安裝到Python環境中，導致無法導入模塊。
 
-**解决方案**:
+**解決方案**:
 
-#### 方案A: 开发模式安装（推荐）
+#### 方案A: 開發模式安裝（推薦）
 ```bash
-# 1. 激活虚拟环境
+# 1. 激活虛擬環境
 .\env\Scripts\activate  # Windows
 source env/bin/activate  # Linux/macOS
 
-# 2. 安装项目到虚拟环境
+# 2. 安裝項目到虛擬環境
 pip install -e .
 
-# 3. 启动Web应用
+# 3. 啟動Web應用
 python start_web.py
 ```
 
-#### 方案B: 使用一键安装脚本
+#### 方案B: 使用一键安裝腳本
 ```bash
-# 1. 激活虚拟环境
+# 1. 激活虛擬環境
 .\env\Scripts\activate  # Windows
 
-# 2. 运行一键安装脚本
+# 2. 運行一键安裝腳本
 python scripts/install_and_run.py
 ```
 
-#### 方案C: 手动设置Python路径
+#### 方案C: 手動設置Python路徑
 ```bash
 # Windows
 set PYTHONPATH=%CD%;%PYTHONPATH%
@@ -48,56 +48,56 @@ streamlit run web/app.py
 
 ### 2. ModuleNotFoundError: No module named 'streamlit'
 
-**问题描述**:
+**問題描述**:
 ```bash
 ModuleNotFoundError: No module named 'streamlit'
 ```
 
-**解决方案**:
+**解決方案**:
 ```bash
-# 安装Streamlit和相关依赖
+# 安裝Streamlit和相關依賴
 pip install streamlit plotly altair
 
-# 或者安装完整的Web依赖
+# 或者安裝完整的Web依賴
 pip install -r requirements_web.txt
 ```
 
-### 3. 虚拟环境问题
+### 3. 虛擬環境問題
 
-**问题描述**: 不确定是否在虚拟环境中
+**問題描述**: 不確定是否在虛擬環境中
 
-**检查方法**:
+**檢查方法**:
 ```bash
-# 检查Python路径
+# 檢查Python路徑
 python -c "import sys; print(sys.prefix)"
 
-# 检查是否在虚拟环境
+# 檢查是否在虛擬環境
 python -c "import sys; print(hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))"
 ```
 
-**解决方案**:
+**解決方案**:
 ```bash
-# 创建虚拟环境（如果不存在）
+# 創建虛擬環境（如果不存在）
 python -m venv env
 
-# 激活虚拟环境
+# 激活虛擬環境
 .\env\Scripts\activate  # Windows
 source env/bin/activate  # Linux/macOS
 ```
 
-### 4. 端口占用问题
+### 4. 端口占用問題
 
-**问题描述**:
+**問題描述**:
 ```bash
 OSError: [Errno 48] Address already in use
 ```
 
-**解决方案**:
+**解決方案**:
 ```bash
 # 方法1: 使用不同端口
 streamlit run web/app.py --server.port 8502
 
-# 方法2: 杀死占用端口的进程
+# 方法2: 杀死占用端口的進程
 # Windows
 netstat -ano | findstr :8501
 taskkill /PID <PID> /F
@@ -106,110 +106,110 @@ taskkill /PID <PID> /F
 lsof -ti:8501 | xargs kill -9
 ```
 
-### 5. 权限问题
+### 5. 權限問題
 
-**问题描述**: 在某些系统上可能遇到权限问题
+**問題描述**: 在某些系統上可能遇到權限問題
 
-**解决方案**:
+**解決方案**:
 ```bash
-# 确保有执行权限
+# 確保有執行權限
 chmod +x start_web.py
 chmod +x web/run_web.py
 
-# 或者使用python命令运行
+# 或者使用python命令運行
 python start_web.py
 ```
 
-## 🛠️ 启动方式对比
+## 🛠️ 啟動方式對比
 
-| 启动方式 | 优点 | 缺点 | 推荐度 |
+| 啟動方式 | 優點 | 缺點 | 推薦度 |
 |---------|------|------|--------|
-| `python start_web.py` | 简单，自动处理路径 | 需要在项目根目录 | ⭐⭐⭐⭐⭐ |
-| `pip install -e . && streamlit run web/app.py` | 标准方式，稳定 | 需要安装步骤 | ⭐⭐⭐⭐ |
-| `python web/run_web.py` | 功能完整，有检查 | 可能有导入问题 | ⭐⭐⭐ |
-| `PYTHONPATH=. streamlit run web/app.py` | 不需要安装 | 环境变量设置复杂 | ⭐⭐ |
+| `python start_web.py` | 簡單，自動處理路徑 | 需要在項目根目錄 | ⭐⭐⭐⭐⭐ |
+| `pip install -e . && streamlit run web/app.py` | 標準方式，穩定 | 需要安裝步骤 | ⭐⭐⭐⭐ |
+| `python web/run_web.py` | 功能完整，有檢查 | 可能有導入問題 | ⭐⭐⭐ |
+| `PYTHONPATH=. streamlit run web/app.py` | 不需要安裝 | 環境變量設置複雜 | ⭐⭐ |
 
-## 🔍 诊断工具
+## 🔍 診斷工具
 
-### 环境检查脚本
+### 環境檢查腳本
 ```bash
-# 运行环境检查
+# 運行環境檢查
 python scripts/check_api_config.py
 ```
 
-### 手动检查步骤
+### 手動檢查步骤
 ```python
-# 检查Python环境
+# 檢查Python環境
 import sys
 print("Python版本:", sys.version)
-print("Python路径:", sys.executable)
-print("虚拟环境:", hasattr(sys, 'real_prefix'))
+print("Python路徑:", sys.executable)
+print("虛擬環境:", hasattr(sys, 'real_prefix'))
 
-# 检查模块导入
+# 檢查模塊導入
 try:
     import tradingagents
-    print("✅ tradingagents模块可用")
+    print("✅ tradingagents模塊可用")
 except ImportError as e:
-    print("❌ tradingagents模块不可用:", e)
+    print("❌ tradingagents模塊不可用:", e)
 
 try:
     import streamlit
-    print("✅ streamlit模块可用")
+    print("✅ streamlit模塊可用")
 except ImportError as e:
-    print("❌ streamlit模块不可用:", e)
+    print("❌ streamlit模塊不可用:", e)
 ```
 
-## 📋 完整启动检查清单
+## 📋 完整啟動檢查清單
 
-### 启动前检查
-- [ ] 虚拟环境已激活
+### 啟動前檢查
+- [ ] 虛擬環境已激活
 - [ ] Python版本 >= 3.10
-- [ ] 项目已安装 (`pip install -e .`)
-- [ ] Streamlit已安装
+- [ ] 項目已安裝 (`pip install -e .`)
+- [ ] Streamlit已安裝
 - [ ] .env文件已配置
 - [ ] 端口8501未被占用
 
-### 启动命令
+### 啟動命令
 ```bash
-# 推荐启动方式
+# 推薦啟動方式
 python start_web.py
 ```
 
-### 启动后验证
-- [ ] 浏览器自动打开 http://localhost:8501
-- [ ] 页面正常加载，无错误信息
-- [ ] 侧边栏配置正常显示
-- [ ] 可以选择分析师和股票代码
+### 啟動後驗證
+- [ ] 浏覽器自動打開 http://localhost:8501
+- [ ] 页面正常加載，無錯誤信息
+- [ ] 侧邊栏配置正常顯示
+- [ ] 可以選擇分析師和股票代碼
 
-## 🆘 获取帮助
+## 🆘 獲取幫助
 
-如果以上方法都无法解决问题：
+如果以上方法都無法解決問題：
 
-1. **查看详细错误日志**:
+1. **查看詳細錯誤日誌**:
    ```bash
    python start_web.py 2>&1 | tee startup.log
    ```
 
-2. **检查系统环境**:
+2. **檢查系統環境**:
    ```bash
    python --version
    pip list | grep -E "(streamlit|tradingagents)"
    ```
 
-3. **重新安装**:
+3. **重新安裝**:
    ```bash
    pip uninstall tradingagents
    pip install -e .
    ```
 
 4. **提交Issue**: 
-   - 访问 [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
-   - 提供错误日志和系统信息
+   - 訪問 [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
+   - 提供錯誤日誌和系統信息
 
-## 💡 最佳实践
+## 💡 最佳實踐
 
-1. **始终使用虚拟环境**
-2. **定期更新依赖**: `pip install -U -r requirements.txt`
-3. **保持项目结构完整**
-4. **定期清理缓存**: `python web/run_web.py --force-clean`
+1. **始终使用虛擬環境**
+2. **定期更新依賴**: `pip install -U -r requirements.txt`
+3. **保持項目結構完整**
+4. **定期清理緩存**: `python web/run_web.py --force-clean`
 5. **备份配置文件**: 定期备份.env文件

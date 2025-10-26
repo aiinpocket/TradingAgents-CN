@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import date, timedelta, datetime
 from typing import Annotated
 
-# 导入日志模块
+# 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 

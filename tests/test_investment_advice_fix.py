@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 """
-测试投资建议中文化修复
+測試投資建议中文化修複
 """
 
 import os
 import sys
 from pathlib import Path
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 def test_web_components():
-    """测试Web组件的投资建议显示"""
-    print("🧪 测试Web组件投资建议显示")
+    """測試Web組件的投資建议顯示"""
+    print("🧪 測試Web組件投資建议顯示")
     print("=" * 50)
     
     try:
-        # 测试results_display组件
-        print("📊 测试results_display组件...")
+        # 測試results_display組件
+        print("📊 測試results_display組件...")
         
-        # 模拟不同的投资建议输入
+        # 模擬不同的投資建议輸入
         test_cases = [
             {'action': 'BUY', 'confidence': 0.8, 'risk_score': 0.3},
             {'action': 'SELL', 'confidence': 0.7, 'risk_score': 0.6},
@@ -30,11 +30,11 @@ def test_web_components():
             {'action': '持有', 'confidence': 0.6, 'risk_score': 0.4},
         ]
         
-        # 模拟Web组件的处理逻辑
+        # 模擬Web組件的處理逻辑
         for decision in test_cases:
             action = decision.get('action', 'N/A')
             
-            # 应用我们的修复逻辑
+            # 應用我們的修複逻辑
             action_translation = {
                 'BUY': '买入',
                 'SELL': '卖出', 
@@ -46,27 +46,27 @@ def test_web_components():
             
             chinese_action = action_translation.get(action.upper(), action)
             
-            print(f"   输入: {action} -> 输出: {chinese_action}")
+            print(f"   輸入: {action} -> 輸出: {chinese_action}")
             
             if chinese_action in ['买入', '卖出', '持有']:
-                print(f"   ✅ 正确转换为中文")
+                print(f"   ✅ 正確轉換為中文")
             else:
-                print(f"   ❌ 转换失败")
+                print(f"   ❌ 轉換失败")
                 return False
         
         return True
         
     except Exception as e:
-        print(f"❌ Web组件测试失败: {e}")
+        print(f"❌ Web組件測試失败: {e}")
         return False
 
 def test_analysis_runner():
-    """测试analysis_runner的投资建议处理"""
-    print("\n🔍 测试analysis_runner投资建议处理")
+    """測試analysis_runner的投資建议處理"""
+    print("\n🔍 測試analysis_runner投資建议處理")
     print("-" * 50)
     
     try:
-        # 模拟analysis_runner的处理逻辑
+        # 模擬analysis_runner的處理逻辑
         test_decisions = [
             "BUY",
             "SELL", 
@@ -77,9 +77,9 @@ def test_analysis_runner():
         ]
         
         for decision in test_decisions:
-            print(f"\n输入决策: {decision}")
+            print(f"\n輸入決策: {decision}")
             
-            # 应用我们的修复逻辑
+            # 應用我們的修複逻辑
             if isinstance(decision, str):
                 action_translation = {
                     'BUY': '买入',
@@ -115,62 +115,62 @@ def test_analysis_runner():
                 }
             
             result_action = formatted_decision['action']
-            print(f"输出决策: {result_action}")
+            print(f"輸出決策: {result_action}")
             
             if result_action in ['买入', '卖出', '持有']:
-                print(f"✅ 正确转换为中文")
+                print(f"✅ 正確轉換為中文")
             else:
-                print(f"❌ 转换失败: {result_action}")
+                print(f"❌ 轉換失败: {result_action}")
                 return False
         
         return True
         
     except Exception as e:
-        print(f"❌ analysis_runner测试失败: {e}")
+        print(f"❌ analysis_runner測試失败: {e}")
         return False
 
 def test_demo_data():
-    """测试演示数据的中文化"""
-    print("\n🎯 测试演示数据中文化")
+    """測試演示數據的中文化"""
+    print("\n🎯 測試演示數據中文化")
     print("-" * 30)
     
     try:
-        # 模拟演示数据生成
+        # 模擬演示數據生成
         import random
         
-        actions = ['买入', '持有', '卖出']  # 修复后应该使用中文
+        actions = ['买入', '持有', '卖出']  # 修複後應该使用中文
         action = random.choice(actions)
         
-        print(f"演示投资建议: {action}")
+        print(f"演示投資建议: {action}")
         
-        # 模拟演示报告生成
+        # 模擬演示報告生成
         demo_report = f"""
-**投资建议**: {action}
+**投資建议**: {action}
 
-**主要分析要点**:
-1. **技术面分析**: 当前价格趋势显示{'上涨' if action == '买入' else '下跌' if action == '卖出' else '横盘'}信号
-2. **基本面评估**: 公司财务状况{'良好' if action == '买入' else '一般' if action == '持有' else '需关注'}
-3. **市场情绪**: 投资者情绪{'乐观' if action == '买入' else '中性' if action == '持有' else '谨慎'}
-4. **风险评估**: 当前风险水平为{'中等' if action == '持有' else '较低' if action == '买入' else '较高'}
+**主要分析要點**:
+1. **技術面分析**: 當前價格趋势顯示{'上涨' if action == '买入' else '下跌' if action == '卖出' else '横盘'}信號
+2. **基本面評估**: 公司財務狀况{'良好' if action == '买入' else '一般' if action == '持有' else '需關註'}
+3. **市場情绪**: 投資者情绪{'乐觀' if action == '买入' else '中性' if action == '持有' else '谨慎'}
+4. **風險評估**: 當前風險水平為{'中等' if action == '持有' else '較低' if action == '买入' else '較高'}
         """
         
-        print("演示报告片段:")
+        print("演示報告片段:")
         print(demo_report[:200] + "...")
         
         if action in ['买入', '卖出', '持有']:
-            print("✅ 演示数据使用中文")
+            print("✅ 演示數據使用中文")
             return True
         else:
-            print(f"❌ 演示数据仍使用英文: {action}")
+            print(f"❌ 演示數據仍使用英文: {action}")
             return False
         
     except Exception as e:
-        print(f"❌ 演示数据测试失败: {e}")
+        print(f"❌ 演示數據測試失败: {e}")
         return False
 
 def main():
-    """主函数"""
-    print("🔧 投资建议中文化修复测试")
+    """主函數"""
+    print("🔧 投資建议中文化修複測試")
     print("=" * 60)
     
     success1 = test_web_components()
@@ -179,15 +179,15 @@ def main():
     
     print("\n" + "=" * 60)
     if success1 and success2 and success3:
-        print("🎉 投资建议中文化修复测试全部通过！")
-        print("\n✅ 修复效果:")
-        print("   - Web界面投资建议显示中文")
-        print("   - 分析结果处理使用中文")
-        print("   - 演示数据生成中文内容")
-        print("\n现在所有投资建议都应该显示为中文：买入/卖出/持有")
+        print("🎉 投資建议中文化修複測試全部通過！")
+        print("\n✅ 修複效果:")
+        print("   - Web界面投資建议顯示中文")
+        print("   - 分析結果處理使用中文")
+        print("   - 演示數據生成中文內容")
+        print("\n現在所有投資建议都應该顯示為中文：买入/卖出/持有")
     else:
-        print("❌ 投资建议中文化修复测试失败")
-        print("   需要进一步检查和修复")
+        print("❌ 投資建议中文化修複測試失败")
+        print("   需要進一步檢查和修複")
     
     return success1 and success2 and success3
 

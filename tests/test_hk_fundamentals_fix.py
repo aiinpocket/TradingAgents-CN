@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-测试港股基本面分析修复
-验证港股代码识别、工具选择和货币处理是否正确
+測試港股基本面分析修複
+驗證港股代碼识別、工具選擇和貨币處理是否正確
 """
 
 import os
 import sys
 
 def test_stock_type_detection():
-    """测试股票类型检测功能"""
-    print("🧪 测试股票类型检测...")
+    """測試股票類型檢測功能"""
+    print("🧪 測試股票類型檢測...")
     
     try:
         from tradingagents.utils.stock_utils import StockUtils
@@ -17,8 +17,8 @@ def test_stock_type_detection():
         test_cases = [
             ("0700.HK", "港股", "港币", "HK$"),
             ("9988.HK", "港股", "港币", "HK$"),
-            ("000001", "中国A股", "人民币", "¥"),
-            ("600036", "中国A股", "人民币", "¥"),
+            ("000001", "中國A股", "人民币", "¥"),
+            ("600036", "中國A股", "人民币", "¥"),
             ("AAPL", "美股", "美元", "$"),
             ("TSLA", "美股", "美元", "$"),
         ]
@@ -27,88 +27,88 @@ def test_stock_type_detection():
             market_info = StockUtils.get_market_info(ticker)
             
             print(f"  {ticker}:")
-            print(f"    市场: {market_info['market_name']}")
-            print(f"    货币: {market_info['currency_name']} ({market_info['currency_symbol']})")
+            print(f"    市場: {market_info['market_name']}")
+            print(f"    貨币: {market_info['currency_name']} ({market_info['currency_symbol']})")
             print(f"    是否港股: {market_info['is_hk']}")
             print(f"    是否A股: {market_info['is_china']}")
             print(f"    是否美股: {market_info['is_us']}")
             
-            # 验证结果
+            # 驗證結果
             if (expected_market in market_info['market_name'] and 
                 market_info['currency_name'] == expected_currency and
                 market_info['currency_symbol'] == expected_symbol):
-                print(f"    ✅ 识别正确")
+                print(f"    ✅ 识別正確")
             else:
-                print(f"    ❌ 识别错误")
+                print(f"    ❌ 识別錯誤")
                 print(f"       期望: {expected_market}, {expected_currency}, {expected_symbol}")
-                print(f"       实际: {market_info['market_name']}, {market_info['currency_name']}, {market_info['currency_symbol']}")
+                print(f"       實际: {market_info['market_name']}, {market_info['currency_name']}, {market_info['currency_symbol']}")
                 return False
         
-        print("✅ 股票类型检测测试通过")
+        print("✅ 股票類型檢測測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 股票类型检测测试失败: {e}")
+        print(f"❌ 股票類型檢測測試失败: {e}")
         return False
 
 
 def test_fundamentals_analyst_tool_selection():
-    """测试基本面分析师的工具选择逻辑"""
-    print("\n🧪 测试基本面分析师工具选择...")
+    """測試基本面分析師的工具選擇逻辑"""
+    print("\n🧪 測試基本面分析師工具選擇...")
     
     try:
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
         from tradingagents.utils.stock_utils import StockUtils
         
-        # 创建工具包
+        # 創建工具包
         config = DEFAULT_CONFIG.copy()
         config["online_tools"] = True
         toolkit = Toolkit(config)
         
-        # 测试港股工具选择
+        # 測試港股工具選擇
         hk_ticker = "0700.HK"
         market_info = StockUtils.get_market_info(hk_ticker)
         
-        print(f"  港股工具选择测试: {hk_ticker}")
-        print(f"    市场类型: {market_info['market_name']}")
+        print(f"  港股工具選擇測試: {hk_ticker}")
+        print(f"    市場類型: {market_info['market_name']}")
         print(f"    是否港股: {market_info['is_hk']}")
-        print(f"    货币: {market_info['currency_name']} ({market_info['currency_symbol']})")
+        print(f"    貨币: {market_info['currency_name']} ({market_info['currency_symbol']})")
         
-        # 检查港股专用工具是否存在
+        # 檢查港股專用工具是否存在
         if hasattr(toolkit, 'get_hk_stock_data_unified'):
-            print(f"    ✅ 港股专用工具存在: get_hk_stock_data_unified")
+            print(f"    ✅ 港股專用工具存在: get_hk_stock_data_unified")
         else:
-            print(f"    ❌ 港股专用工具不存在")
+            print(f"    ❌ 港股專用工具不存在")
             return False
         
-        # 测试A股工具选择
+        # 測試A股工具選擇
         china_ticker = "000001"
         market_info = StockUtils.get_market_info(china_ticker)
         
-        print(f"  A股工具选择测试: {china_ticker}")
-        print(f"    市场类型: {market_info['market_name']}")
+        print(f"  A股工具選擇測試: {china_ticker}")
+        print(f"    市場類型: {market_info['market_name']}")
         print(f"    是否A股: {market_info['is_china']}")
-        print(f"    货币: {market_info['currency_name']} ({market_info['currency_symbol']})")
+        print(f"    貨币: {market_info['currency_name']} ({market_info['currency_symbol']})")
         
-        # 检查A股专用工具是否存在
+        # 檢查A股專用工具是否存在
         if hasattr(toolkit, 'get_china_stock_data'):
-            print(f"    ✅ A股专用工具存在: get_china_stock_data")
+            print(f"    ✅ A股專用工具存在: get_china_stock_data")
         else:
-            print(f"    ❌ A股专用工具不存在")
+            print(f"    ❌ A股專用工具不存在")
             return False
         
-        print("✅ 基本面分析师工具选择测试通过")
+        print("✅ 基本面分析師工具選擇測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 基本面分析师工具选择测试失败: {e}")
+        print(f"❌ 基本面分析師工具選擇測試失败: {e}")
         return False
 
 
 def test_trader_currency_detection():
-    """测试交易员节点的货币检测"""
-    print("\n🧪 测试交易员货币检测...")
+    """測試交易員節點的貨币檢測"""
+    print("\n🧪 測試交易員貨币檢測...")
     
     try:
         from tradingagents.utils.stock_utils import StockUtils
@@ -124,57 +124,57 @@ def test_trader_currency_detection():
             market_info = StockUtils.get_market_info(ticker)
             
             print(f"  {ticker}:")
-            print(f"    检测到的货币: {market_info['currency_name']} ({market_info['currency_symbol']})")
-            print(f"    期望的货币: {expected_currency} ({expected_symbol})")
+            print(f"    檢測到的貨币: {market_info['currency_name']} ({market_info['currency_symbol']})")
+            print(f"    期望的貨币: {expected_currency} ({expected_symbol})")
             
             if (market_info['currency_name'] == expected_currency and 
                 market_info['currency_symbol'] == expected_symbol):
-                print(f"    ✅ 货币检测正确")
+                print(f"    ✅ 貨币檢測正確")
             else:
-                print(f"    ❌ 货币检测错误")
+                print(f"    ❌ 貨币檢測錯誤")
                 return False
         
-        print("✅ 交易员货币检测测试通过")
+        print("✅ 交易員貨币檢測測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 交易员货币检测测试失败: {e}")
+        print(f"❌ 交易員貨币檢測測試失败: {e}")
         return False
 
 
 def test_hk_data_source():
-    """测试港股数据源"""
-    print("\n🧪 测试港股数据源...")
+    """測試港股數據源"""
+    print("\n🧪 測試港股數據源...")
     
     try:
         from tradingagents.dataflows.interface import get_hk_stock_data_unified
         
-        # 测试港股数据获取
+        # 測試港股數據獲取
         hk_ticker = "0700.HK"
-        print(f"  测试获取港股数据: {hk_ticker}")
+        print(f"  測試獲取港股數據: {hk_ticker}")
         
         result = get_hk_stock_data_unified(hk_ticker, "2025-07-10", "2025-07-14")
         
-        print(f"  数据获取结果长度: {len(result)}")
-        print(f"  结果前100字符: {result[:100]}...")
+        print(f"  數據獲取結果長度: {len(result)}")
+        print(f"  結果前100字符: {result[:100]}...")
         
         if "❌" in result:
-            print(f"  ⚠️ 数据获取失败，但这可能是正常的（网络问题或API限制）")
+            print(f"  ⚠️ 數據獲取失败，但這可能是正常的（網絡問題或API限制）")
             print(f"  失败信息: {result}")
         else:
-            print(f"  ✅ 数据获取成功")
+            print(f"  ✅ 數據獲取成功")
         
-        print("✅ 港股数据源测试完成")
+        print("✅ 港股數據源測試完成")
         return True
         
     except Exception as e:
-        print(f"❌ 港股数据源测试失败: {e}")
+        print(f"❌ 港股數據源測試失败: {e}")
         return False
 
 
 def main():
-    """主测试函数"""
-    print("🔧 港股基本面分析修复测试")
+    """主測試函數"""
+    print("🔧 港股基本面分析修複測試")
     print("=" * 60)
     
     tests = [
@@ -192,18 +192,18 @@ def main():
             if test():
                 passed += 1
             else:
-                print(f"❌ 测试失败: {test.__name__}")
+                print(f"❌ 測試失败: {test.__name__}")
         except Exception as e:
-            print(f"❌ 测试异常: {test.__name__} - {e}")
+            print(f"❌ 測試異常: {test.__name__} - {e}")
     
     print("\n" + "=" * 60)
-    print(f"📊 测试结果: {passed}/{total} 通过")
+    print(f"📊 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有测试通过！港股基本面分析修复成功")
+        print("🎉 所有測試通過！港股基本面分析修複成功")
         return True
     else:
-        print("⚠️ 部分测试失败，需要进一步检查")
+        print("⚠️ 部分測試失败，需要進一步檢查")
         return False
 
 

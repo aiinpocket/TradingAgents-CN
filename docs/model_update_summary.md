@@ -1,15 +1,15 @@
-# 项目模型更新总结报告
+# 項目模型更新总結報告
 
 ## 更新概述
 
-本次更新将项目配置调整为使用6个经过验证的Google AI模型，替换了之前的临时修复方案。
+本次更新将項目配置調整為使用6個經過驗證的Google AI模型，替換了之前的臨時修複方案。
 
-## 验证的模型列表
+## 驗證的模型列表
 
-基于实际测试结果，以下6个模型已验证可用：
+基於實际測試結果，以下6個模型已驗證可用：
 
-1. **gemini-2.5-flash-lite-preview-06-17** ⚡ (1.45s) - 超快响应
-2. **gemini-2.0-flash** 🚀 (1.87s) - 快速响应
+1. **gemini-2.5-flash-lite-preview-06-17** ⚡ (1.45s) - 超快響應
+2. **gemini-2.0-flash** 🚀 (1.87s) - 快速響應
 3. **gemini-1.5-pro** ⚖️ (2.25s) - 平衡性能
 4. **gemini-2.5-flash** ⚡ (2.73s) - 通用快速
 5. **gemini-1.5-flash** 💨 (2.87s) - 备用快速
@@ -18,40 +18,40 @@
 ## 更新的文件
 
 ### 1. 配置管理器 (`tradingagents/config/config_manager.py`)
-- ✅ 更新默认Google模型为 `gemini-2.5-pro`
-- ✅ 添加所有6个验证模型的定价配置
-- ✅ 保持与现有配置结构的兼容性
+- ✅ 更新默認Google模型為 `gemini-2.5-pro`
+- ✅ 添加所有6個驗證模型的定價配置
+- ✅ 保持与現有配置結構的兼容性
 
-### 2. Google适配器 (`tradingagents/llm_adapters/google_openai_adapter.py`)
-- ✅ 更新 `GOOGLE_OPENAI_MODELS` 字典，包含详细的模型信息
-- ✅ 添加平均响应时间和推荐用途
-- ✅ 修复语法错误和重复定义
-- ✅ 更新默认模型参数
+### 2. Google適配器 (`tradingagents/llm_adapters/google_openai_adapter.py`)
+- ✅ 更新 `GOOGLE_OPENAI_MODELS` 字典，包含詳細的模型信息
+- ✅ 添加平均響應時間和推薦用途
+- ✅ 修複語法錯誤和重複定義
+- ✅ 更新默認模型參數
 
-### 3. 分析运行器 (`web/utils/analysis_runner.py`)
-- ✅ 添加基于研究深度的Google模型优化逻辑
-- ✅ 根据分析深度自动选择最适合的模型组合
-- ✅ 添加详细的模型选择日志
+### 3. 分析運行器 (`web/utils/analysis_runner.py`)
+- ✅ 添加基於研究深度的Google模型優化逻辑
+- ✅ 根據分析深度自動選擇最適合的模型組合
+- ✅ 添加詳細的模型選擇日誌
 
-### 4. 侧边栏组件 (`web/components/sidebar.py`)
-- ✅ 恢复所有6个验证模型的选项
-- ✅ 移除之前的临时注释
-- ✅ 保持用户界面的一致性
+### 4. 侧邊栏組件 (`web/components/sidebar.py`)
+- ✅ 恢複所有6個驗證模型的選項
+- ✅ 移除之前的臨時註釋
+- ✅ 保持用戶界面的一致性
 
-### 5. 测试文件更新
+### 5. 測試文件更新
 - ✅ `tests/test_risk_assessment.py`
 - ✅ `tests/test_gemini_simple.py`
 - ✅ `tests/test_gemini_final.py`
 - ✅ `tests/test_google_memory_fix.py`
 - ✅ `test_google_adapter.py`
 
-### 6. 文档创建
-- ✅ `docs/google_models_guide.md` - 详细的模型使用指南
-- ✅ `verified_models.json` - 验证结果配置文件
+### 6. 文档創建
+- ✅ `docs/google_models_guide.md` - 詳細的模型使用指南
+- ✅ `verified_models.json` - 驗證結果配置文件
 
-## 智能模型选择策略
+## 智能模型選擇策略
 
-根据研究深度自动选择最优模型组合：
+根據研究深度自動選擇最優模型組合：
 
 ### 快速分析 (深度1)
 - 快速模型: `gemini-2.5-flash-lite-preview-06-17` (1.45s)
@@ -61,7 +61,7 @@
 - 快速模型: `gemini-2.0-flash` (1.87s)
 - 深度模型: `gemini-1.5-pro` (2.25s)
 
-### 标准分析 (深度3)
+### 標準分析 (深度3)
 - 快速模型: `gemini-1.5-pro` (2.25s)
 - 深度模型: `gemini-2.5-flash` (2.73s)
 
@@ -73,9 +73,9 @@
 - 快速模型: `gemini-2.5-pro` (16.68s)
 - 深度模型: `gemini-2.5-pro` (16.68s)
 
-## 性能优化
+## 性能優化
 
-### 响应时间排序
+### 響應時間排序
 1. `gemini-2.5-flash-lite-preview-06-17` - 1.45s ⚡
 2. `gemini-2.0-flash` - 1.87s 🚀
 3. `gemini-1.5-pro` - 2.25s ⚖️
@@ -83,43 +83,43 @@
 5. `gemini-1.5-flash` - 2.87s 💨
 6. `gemini-2.5-pro` - 16.68s 🧠
 
-### 推荐使用场景
-- **实时交互**: `gemini-2.5-flash-lite-preview-06-17`
-- **快速决策**: `gemini-2.0-flash`
+### 推薦使用場景
+- **實時交互**: `gemini-2.5-flash-lite-preview-06-17`
+- **快速決策**: `gemini-2.0-flash`
 - **平衡分析**: `gemini-1.5-pro`
 - **深度思考**: `gemini-2.5-pro`
 
-## 兼容性保证
+## 兼容性保證
 
-- ✅ 保持与现有API的完全兼容
-- ✅ 不影响其他LLM提供商的配置
-- ✅ 向后兼容旧的配置文件
-- ✅ 平滑的用户体验过渡
+- ✅ 保持与現有API的完全兼容
+- ✅ 不影響其他LLM提供商的配置
+- ✅ 向後兼容旧的配置文件
+- ✅ 平滑的用戶體驗過渡
 
 ## 下一步操作
 
-1. **重启应用** - 使新配置生效
-2. **测试验证** - 确认所有模型正常工作
-3. **性能监控** - 观察实际使用中的响应时间
-4. **用户反馈** - 收集使用体验并优化
+1. **重啟應用** - 使新配置生效
+2. **測試驗證** - 確認所有模型正常工作
+3. **性能監控** - 觀察實际使用中的響應時間
+4. **用戶反馈** - 收集使用體驗並優化
 
-## 技术细节
+## 技術細節
 
 ### 配置文件位置
 - 模型配置: `tradingagents/config/config_manager.py`
-- 适配器: `tradingagents/llm_adapters/google_openai_adapter.py`
+- 適配器: `tradingagents/llm_adapters/google_openai_adapter.py`
 - 分析器: `web/utils/analysis_runner.py`
 - 界面: `web/components/sidebar.py`
 
-### 验证文件
-- 测试结果: `verified_models.json`
+### 驗證文件
+- 測試結果: `verified_models.json`
 - 使用指南: `docs/google_models_guide.md`
 
-## 更新时间
-- 执行时间: 2024年1月
+## 更新時間
+- 執行時間: 2024年1月
 - 更新版本: v2.0
-- 状态: ✅ 完成
+- 狀態: ✅ 完成
 
 ---
 
-**注意**: 所有更新都基于实际测试结果，确保了模型的可用性和性能表现。建议在生产环境中使用前进行充分测试。
+**註意**: 所有更新都基於實际測試結果，確保了模型的可用性和性能表現。建议在生產環境中使用前進行充分測試。

@@ -1,104 +1,104 @@
 # Scripts Directory
 
-这个目录包含TradingAgentsCN项目的各种脚本工具，按功能分类组织。
+這個目錄包含TradingAgentsCN項目的各種腳本工具，按功能分類組織。
 
-## 目录结构
+## 目錄結構
 
-### 📦 setup/ - 安装和配置脚本
-- 环境设置
-- 依赖安装  
+### 📦 setup/ - 安裝和配置腳本
+- 環境設置
+- 依賴安裝  
 - API配置
-- 数据库设置
+- 數據庫設置
 
-### 🔍 validation/ - 验证脚本
-- Git配置验证
-- 依赖检查
-- 配置验证
-- API连接测试
+### 🔍 validation/ - 驗證腳本
+- Git配置驗證
+- 依賴檢查
+- 配置驗證
+- API連接測試
 
-### 🔧 maintenance/ - 维护脚本
-- 缓存清理
-- 数据备份
-- 依赖更新
+### 🔧 maintenance/ - 維護腳本
+- 緩存清理
+- 數據备份
+- 依賴更新
 - 上游同步
 - 分支管理
 
-### 🛠️ development/ - 开发辅助脚本
-- 代码分析
-- 性能基准测试
+### 🛠️ development/ - 開發辅助腳本
+- 代碼分析
+- 性能基準測試
 - 文档生成
-- 贡献准备
-- 数据下载
+- 贡献準备
+- 數據下載
 
-### 🚀 deployment/ - 部署脚本
-- GitHub发布
-- 版本发布
+### 🚀 deployment/ - 部署腳本
+- GitHub發布
+- 版本發布
 - 打包部署
 
-### 🐳 docker/ - Docker脚本
-- Docker服务管理
-- 容器启动停止
-- 数据库初始化
+### 🐳 docker/ - Docker腳本
+- Docker服務管理
+- 容器啟動停止
+- 數據庫初始化
 
-### 📋 git/ - Git工具脚本
+### 📋 git/ - Git工具腳本
 - 上游同步
-- Fork环境设置
+- Fork環境設置
 - 贡献工作流
 
-## 使用原则
+## 使用原則
 
-### 脚本分类
-- **tests/** - 单元测试和集成测试（pytest运行）
-- **scripts/** - 工具脚本和验证脚本（独立运行）
-- **utils/** - 实用工具脚本
+### 腳本分類
+- **tests/** - 單元測試和集成測試（pytest運行）
+- **scripts/** - 工具腳本和驗證腳本（獨立運行）
+- **utils/** - 實用工具腳本
 
-### 运行方式
+### 運行方式
 ```bash
-# 从项目根目录运行
+# 從項目根目錄運行
 cd C:\code\TradingAgentsCN
 
-# Python脚本
+# Python腳本
 python scripts/validation/verify_gitignore.py
 
-# PowerShell脚本  
+# PowerShell腳本  
 powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
 
-# Bash脚本
+# Bash腳本
 bash scripts/git/upstream_git_workflow.sh
 ```
 
-## 目录说明
+## 目錄說明
 
-| 目录 | 用途 | 示例脚本 |
+| 目錄 | 用途 | 示例腳本 |
 |------|------|----------|
-| `setup/` | 环境配置和初始化 | setup_databases.py |
-| `validation/` | 验证和检查 | verify_gitignore.py |
-| `maintenance/` | 维护和管理 | sync_upstream.py |
-| `development/` | 开发辅助 | prepare_upstream_contribution.py |
-| `deployment/` | 部署发布 | create_github_release.py |
+| `setup/` | 環境配置和初始化 | setup_databases.py |
+| `validation/` | 驗證和檢查 | verify_gitignore.py |
+| `maintenance/` | 維護和管理 | sync_upstream.py |
+| `development/` | 開發辅助 | prepare_upstream_contribution.py |
+| `deployment/` | 部署發布 | create_github_release.py |
 | `docker/` | 容器管理 | start_docker_services.bat |
 | `git/` | Git工具 | upstream_git_workflow.sh |
 
-## 注意事项
+## 註意事項
 
-- 所有脚本应该从项目根目录运行
-- 检查脚本的依赖要求
-- 某些脚本可能需要特殊权限
-- 保持脚本的独立性和可重用性
+- 所有腳本應该從項目根目錄運行
+- 檢查腳本的依賴要求
+- 某些腳本可能需要特殊權限
+- 保持腳本的獨立性和可重用性
 
-## 开发指南
+## 開發指南
 
-### 添加新脚本
-1. 确定脚本类型和目标目录
-2. 创建脚本文件
-3. 添加适当的文档注释
-4. 更新相应目录的README
-5. 测试脚本功能
+### 添加新腳本
+1. 確定腳本類型和目標目錄
+2. 創建腳本文件
+3. 添加適當的文档註釋
+4. 更新相應目錄的README
+5. 測試腳本功能
 
-### 脚本模板
-每个脚本应包含：
-- 文件头注释说明用途
-- 使用方法说明
-- 依赖要求
-- 错误处理
-- 日志输出
+### 腳本模板
+每個腳本應包含：
+- 文件头註釋說明用途
+- 使用方法說明
+- 依賴要求
+- 錯誤處理
+- 日誌輸出

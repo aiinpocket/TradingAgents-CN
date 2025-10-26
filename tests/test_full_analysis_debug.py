@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-运行完整的股票分析，观察DeepSeek成本计算的详细日志
+運行完整的股票分析，觀察DeepSeek成本計算的詳細日誌
 """
 
 import os
@@ -8,28 +8,28 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 添加项目根目录到Python路径
+# 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 加载环境变量
+# 加載環境變量
 load_dotenv()
 
 def test_full_stock_analysis():
-    """运行完整的股票分析"""
-    print("🔬 完整股票分析 - DeepSeek成本计算调试")
+    """運行完整的股票分析"""
+    print("🔬 完整股票分析 - DeepSeek成本計算調試")
     print("=" * 80)
     
-    # 检查API密钥
+    # 檢查API密鑰
     if not os.getenv("DEEPSEEK_API_KEY"):
-        print("❌ 未找到DEEPSEEK_API_KEY，无法测试")
+        print("❌ 未找到DEEPSEEK_API_KEY，無法測試")
         return False
     
     try:
         from tradingagents.graph.setup import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        print("🔧 初始化交易分析图...")
+        print("🔧 初始化交易分析圖...")
         
         # 配置DeepSeek
         config = DEFAULT_CONFIG.copy()
@@ -37,7 +37,7 @@ def test_full_stock_analysis():
             "llm_provider": "deepseek",
             "deep_think_llm": "deepseek-chat",
             "quick_think_llm": "deepseek-chat",
-            "max_debate_rounds": 1,  # 减少轮次，节省时间
+            "max_debate_rounds": 1,  # 减少轮次，節省時間
             "max_risk_discuss_rounds": 1,
             "online_tools": True,
             "memory_enabled": False
@@ -48,70 +48,70 @@ def test_full_stock_analysis():
         print(f"   深度思考模型: {config['deep_think_llm']}")
         print(f"   快速思考模型: {config['quick_think_llm']}")
         
-        # 创建图实例
+        # 創建圖實例
         graph = TradingAgentsGraph(config)
         
-        # 设置分析师（只选择市场分析师，减少复杂度）
-        print(f"📈 设置分析师...")
+        # 設置分析師（只選擇市場分析師，减少複雜度）
+        print(f"📈 設置分析師...")
         graph.setup_and_compile(selected_analysts=["market"])
         
-        print(f"✅ 图设置完成")
+        print(f"✅ 圖設置完成")
         
-        # 准备输入
+        # 準备輸入
         input_data = {
-            "company_of_interest": "300059",  # 东方财富
+            "company_of_interest": "300059",  # 东方財富
             "trade_date": "2025-07-08"
         }
         
-        print(f"\n📊 开始分析股票: {input_data['company_of_interest']}")
+        print(f"\n📊 開始分析股票: {input_data['company_of_interest']}")
         print(f"📅 交易日期: {input_data['trade_date']}")
         print("\n" + "="*100)
-        print("开始完整分析流程，请观察DeepSeek成本计算的详细日志：")
+        print("開始完整分析流程，請觀察DeepSeek成本計算的詳細日誌：")
         print("="*100)
         
-        # 运行分析
+        # 運行分析
         result = graph.run(input_data)
         
         print("="*100)
         print("分析完成！")
         print("="*100)
         
-        # 输出结果摘要
+        # 輸出結果摘要
         if result and "decision" in result:
             decision = result["decision"]
-            print(f"\n📋 分析结果摘要:")
-            print(f"   投资建议: {decision.get('action', 'N/A')}")
+            print(f"\n📋 分析結果摘要:")
+            print(f"   投資建议: {decision.get('action', 'N/A')}")
             print(f"   置信度: {decision.get('confidence', 'N/A')}")
-            print(f"   目标价格: {decision.get('target_price', 'N/A')}")
+            print(f"   目標價格: {decision.get('target_price', 'N/A')}")
             
             if "market_report" in result:
                 market_report = result["market_report"]
-                print(f"   市场报告长度: {len(market_report)}")
+                print(f"   市場報告長度: {len(market_report)}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 完整分析测试失败: {e}")
+        print(f"❌ 完整分析測試失败: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def main():
-    """主函数"""
-    print("🔬 完整股票分析 - DeepSeek成本计算调试测试")
+    """主函數"""
+    print("🔬 完整股票分析 - DeepSeek成本計算調試測試")
     print("=" * 80)
-    print("📝 这个测试将运行完整的股票分析流程")
-    print("📝 请仔细观察所有的成本计算日志")
-    print("📝 特别注意是否有成本为¥0.000000的情况")
+    print("📝 這個測試将運行完整的股票分析流程")
+    print("📝 請仔細觀察所有的成本計算日誌")
+    print("📝 特別註意是否有成本為¥0.000000的情况")
     print("=" * 80)
     
     success = test_full_stock_analysis()
     
     if success:
-        print("\n🎉 完整分析测试完成！")
-        print("请查看上面的详细日志，分析成本计算的完整流程。")
+        print("\n🎉 完整分析測試完成！")
+        print("請查看上面的詳細日誌，分析成本計算的完整流程。")
     else:
-        print("\n❌ 完整分析测试失败")
+        print("\n❌ 完整分析測試失败")
     
     return success
 

@@ -1,7 +1,7 @@
 import time
 import json
 
-# 导入统一日志系统
+# 導入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
@@ -18,54 +18,54 @@ def create_research_manager(llm, memory):
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
 
-        # 安全检查：确保memory不为None
+        # 安全檢查：確保memory不為None
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"⚠️ [DEBUG] memory为None，跳过历史记忆检索")
+            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記忆檢索")
             past_memories = []
 
         past_memory_str = ""
         for i, rec in enumerate(past_memories, 1):
             past_memory_str += rec["recommendation"] + "\n\n"
 
-        prompt = f"""作为投资组合经理和辩论主持人，您的职责是批判性地评估这轮辩论并做出明确决策：支持看跌分析师、看涨分析师，或者仅在基于所提出论点有强有力理由时选择持有。
+        prompt = f"""作為投資組合經理和辩論主持人，您的職责是批判性地評估這轮辩論並做出明確決策：支持看跌分析師、看涨分析師，或者仅在基於所提出論點有强有力理由時選擇持有。
 
-简洁地总结双方的关键观点，重点关注最有说服力的证据或推理。您的建议——买入、卖出或持有——必须明确且可操作。避免仅仅因为双方都有有效观点就默认选择持有；要基于辩论中最强有力的论点做出承诺。
+簡潔地总結雙方的關键觀點，重點關註最有說服力的證據或推理。您的建议——买入、卖出或持有——必须明確且可操作。避免仅仅因為雙方都有有效觀點就默認選擇持有；要基於辩論中最强有力的論點做出承诺。
 
-此外，为交易员制定详细的投资计划。这应该包括：
+此外，為交易員制定詳細的投資計劃。這應该包括：
 
-您的建议：基于最有说服力论点的明确立场。
-理由：解释为什么这些论点导致您的结论。
-战略行动：实施建议的具体步骤。
-📊 目标价格分析：基于所有可用报告（基本面、新闻、情绪），提供全面的目标价格区间和具体价格目标。考虑：
-- 基本面报告中的基本估值
-- 新闻对价格预期的影响
-- 情绪驱动的价格调整
-- 技术支撑/阻力位
-- 风险调整价格情景（保守、基准、乐观）
-- 价格目标的时间范围（1个月、3个月、6个月）
-💰 您必须提供具体的目标价格 - 不要回复"无法确定"或"需要更多信息"。
+您的建议：基於最有說服力論點的明確立場。
+理由：解釋為什么這些論點導致您的結論。
+战略行動：實施建议的具體步骤。
+📊 目標價格分析：基於所有可用報告（基本面、新聞、情绪），提供全面的目標價格区間和具體價格目標。考慮：
+- 基本面報告中的基本估值
+- 新聞對價格預期的影響
+- 情绪驱動的價格調整
+- 技術支撑/阻力位
+- 風險調整價格情景（保守、基準、乐觀）
+- 價格目標的時間範围（1個月、3個月、6個月）
+💰 您必须提供具體的目標價格 - 不要回複"無法確定"或"需要更多信息"。
 
-考虑您在类似情况下的过去错误。利用这些见解来完善您的决策制定，确保您在学习和改进。以对话方式呈现您的分析，就像自然说话一样，不使用特殊格式。
+考慮您在類似情况下的過去錯誤。利用這些见解來完善您的決策制定，確保您在學习和改進。以對話方式呈現您的分析，就像自然說話一樣，不使用特殊格式。
 
-以下是您对错误的过去反思：
+以下是您對錯誤的過去反思：
 \"{past_memory_str}\"
 
-以下是综合分析报告：
-市场研究：{market_research_report}
+以下是综合分析報告：
+市場研究：{market_research_report}
 
 情绪分析：{sentiment_report}
 
-新闻分析：{news_report}
+新聞分析：{news_report}
 
 基本面分析：{fundamentals_report}
 
-以下是辩论：
-辩论历史：
+以下是辩論：
+辩論歷史：
 {history}
 
-请用中文撰写所有分析内容和建议。"""
+請用中文撰寫所有分析內容和建议。"""
         response = llm.invoke(prompt)
 
         new_investment_debate_state = {
