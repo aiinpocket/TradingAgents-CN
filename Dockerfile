@@ -32,16 +32,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN echo '#!/bin/bash\nXvfb :99 -screen 0 1024x768x24 -ac +extension GLX &\nexport DISPLAY=:99\nexec "$@"' > /usr/local/bin/start-xvfb.sh \
     && chmod +x /usr/local/bin/start-xvfb.sh
 
-COPY requirements.txt .
+COPY requirements-docker.txt requirements.txt ./
 
-# 使用全球官方 PyPI 源安裝依賴
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# 使用全球官方 PyPI 源安裝依賴（Docker 專用版本，已排除 Windows 套件）
+# 分步執行以便定位問題
+RUN pip install --no-cache-dir --upgrade pip
 
-# 复制日志配置文件
-COPY config/ ./config/
+# 安裝 requirements-docker.txt 中的依賴
+RUN pip install --no-cache-dir -r requirements-docker.txt
 
+# 複製專案源碼（pip install -e . 需要這些檔案）
 COPY . .
+
+# 安裝 tradingagents 套件本身（不安裝依賴）
+RUN pip install --no-deps -e .
 
 EXPOSE 8501
 
