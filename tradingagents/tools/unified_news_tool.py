@@ -6,39 +6,51 @@
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
+import hashlib
+import os
 
 logger = logging.getLogger(__name__)
 
 class UnifiedNewsAnalyzer:
     """統一新聞分析器，整合所有新聞獲取逻辑"""
-    
+
     def __init__(self, toolkit):
         """初始化統一新聞分析器
-        
+
         Args:
             toolkit: 包含各種新聞獲取工具的工具包
         """
         self.toolkit = toolkit
+        self.news_cache = {}
+        self.cache_hours = int(os.getenv('NEWS_CACHE_HOURS', '4'))
+        self.cache_enabled = os.getenv('NEWS_CACHE_ENABLED', 'true').lower() == 'true'
+        logger.info(f"[統一新聞工具] 快取已{'啟用' if self.cache_enabled else '禁用'}，快取時間: {self.cache_hours}小時")
         
     def get_stock_news_unified(self, stock_code: str, max_news: int = 10, model_info: str = "") -> str:
         """
         統一新聞獲取接口
         根據股票代碼自動识別股票類型並獲取相應新聞
-        
+
         Args:
             stock_code: 股票代碼
             max_news: 最大新聞數量
             model_info: 當前使用的模型信息，用於特殊處理
-            
+
         Returns:
             str: 格式化的新聞內容
         """
         logger.info(f"[統一新聞工具] 開始獲取 {stock_code} 的新聞，模型: {model_info}")
         logger.info(f"[統一新聞工具] 🤖 當前模型信息: {model_info}")
-        
-        # 识別股票類型
+
+        if self.cache_enabled:
+            cache_key = self._generate_cache_key(stock_code, max_news)
+            cached_result = self._get_from_cache(cache_key)
+            if cached_result:
+                logger.info(f"[統一新聞工具] ✅ 從快取返回結果，股票: {stock_code}")
+                return cached_result
+
         stock_type = self._identify_stock_type(stock_code)
         logger.info(f"[統一新聞工具] 股票類型: {stock_type}")
         
@@ -53,16 +65,39 @@ class UnifiedNewsAnalyzer:
             # 默認使用A股逻辑
             result = self._get_a_share_news(stock_code, max_news, model_info)
         
-        # 🔍 添加詳細的結果調試日誌
         logger.info(f"[統一新聞工具] 📊 新聞獲取完成，結果長度: {len(result)} 字符")
         logger.info(f"[統一新聞工具] 📋 返回結果預覽 (前1000字符): {result[:1000]}")
-        
-        # 如果結果為空或過短，記錄警告
+
         if not result or len(result.strip()) < 50:
             logger.warning(f"[統一新聞工具] ⚠️ 返回結果異常短或為空！")
             logger.warning(f"[統一新聞工具] 📝 完整結果內容: '{result}'")
-        
+
+        if self.cache_enabled and result and len(result.strip()) >= 50:
+            cache_key = self._generate_cache_key(stock_code, max_news)
+            self._save_to_cache(cache_key, result)
+            logger.info(f"[統一新聞工具] 💾 結果已保存到快取，股票: {stock_code}")
+
         return result
+
+    def _generate_cache_key(self, stock_code: str, max_news: int) -> str:
+        """產生快取鍵值"""
+        today = datetime.now().strftime("%Y-%m-%d")
+        key_str = f"{stock_code}_{max_news}_{today}"
+        return hashlib.md5(key_str.encode()).hexdigest()
+
+    def _get_from_cache(self, cache_key: str):
+        """從快取獲取資料"""
+        if cache_key in self.news_cache:
+            cached_data, cached_time = self.news_cache[cache_key]
+            if datetime.now() - cached_time < timedelta(hours=self.cache_hours):
+                return cached_data
+            else:
+                del self.news_cache[cache_key]
+        return None
+
+    def _save_to_cache(self, cache_key: str, data: str):
+        """將資料保存到快取"""
+        self.news_cache[cache_key] = (data, datetime.now())
     
     def _identify_stock_type(self, stock_code: str) -> str:
         """识別股票類型"""

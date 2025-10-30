@@ -1,8 +1,6 @@
 import chromadb
 from chromadb.config import Settings
 from openai import OpenAI
-import dashscope
-from dashscope import TextEmbedding
 import os
 import threading
 import hashlib

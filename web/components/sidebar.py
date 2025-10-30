@@ -217,11 +217,9 @@ def render_sidebar():
         # LLM提供商選擇
         llm_provider = st.selectbox(
             "LLM提供商",
-            options=["dashscope", "deepseek", "google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"],
-            index=["dashscope", "deepseek", "google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"].index(st.session_state.llm_provider) if st.session_state.llm_provider in ["dashscope", "deepseek", "google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"] else 0,
+            options=["google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"],
+            index=["google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"].index(st.session_state.llm_provider) if st.session_state.llm_provider in ["google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"] else 0,
             format_func=lambda x: {
-                "dashscope": "🇨🇳 阿里百炼",
-                "deepseek": "🚀 DeepSeek V3",
                 "google": "🌟 Google AI",
                 "openai": "🤖 OpenAI",
                 "openrouter": "🌐 OpenRouter",
@@ -248,36 +246,7 @@ def render_sidebar():
             st.session_state.llm_provider = llm_provider
 
         # 根據提供商顯示不同的模型選項
-        if llm_provider == "dashscope":
-            dashscope_options = ["qwen-turbo", "qwen-plus-latest", "qwen-max"]
-
-            # 獲取當前選擇的索引
-            current_index = 1  # 默認選擇qwen-plus-latest
-            if st.session_state.llm_model in dashscope_options:
-                current_index = dashscope_options.index(st.session_state.llm_model)
-
-            llm_model = st.selectbox(
-                "模型版本",
-                options=dashscope_options,
-                index=current_index,
-                format_func=lambda x: {
-                    "qwen-turbo": "Turbo - 快速",
-                    "qwen-plus-latest": "Plus - 平衡",
-                    "qwen-max": "Max - 最强"
-                }[x],
-                help="選擇用於分析的阿里百炼模型",
-                key="dashscope_model_select"
-            )
-
-            # 更新session state和持久化存储
-            if st.session_state.llm_model != llm_model:
-                logger.debug(f"🔄 [Persistence] DashScope模型變更: {st.session_state.llm_model} → {llm_model}")
-            st.session_state.llm_model = llm_model
-            logger.debug(f"💾 [Persistence] DashScope模型已保存: {llm_model}")
-
-            # 保存到持久化存储
-            save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
-        elif llm_provider == "siliconflow":
+        if llm_provider == "siliconflow":
             siliconflow_options = ["Qwen/Qwen3-30B-A3B-Thinking-2507", "Qwen/Qwen3-30B-A3B-Instruct-2507", "Qwen/Qwen3-235B-A22B-Thinking-2507", "Qwen/Qwen3-235B-A22B-Instruct-2507","deepseek-ai/DeepSeek-R1", "zai-org/GLM-4.5", "moonshotai/Kimi-K2-Instruct"]
 
             # 獲取當前選擇的索引
@@ -311,44 +280,19 @@ def render_sidebar():
             # 保存到持久化存储
             save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
 
-        elif llm_provider == "deepseek":
-            deepseek_options = ["deepseek-chat"]
-
-            # 獲取當前選擇的索引
-            current_index = 0
-            if st.session_state.llm_model in deepseek_options:
-                current_index = deepseek_options.index(st.session_state.llm_model)
-
-            llm_model = st.selectbox(
-                "選擇DeepSeek模型",
-                options=deepseek_options,
-                index=current_index,
-                format_func=lambda x: {
-                    "deepseek-chat": "DeepSeek Chat - 通用對話模型，適合股票分析"
-                }[x],
-                help="選擇用於分析的DeepSeek模型",
-                key="deepseek_model_select"
-            )
-
-            # 更新session state和持久化存储
-            if st.session_state.llm_model != llm_model:
-                logger.debug(f"🔄 [Persistence] DeepSeek模型變更: {st.session_state.llm_model} → {llm_model}")
-            st.session_state.llm_model = llm_model
-            logger.debug(f"💾 [Persistence] DeepSeek模型已保存: {llm_model}")
-
-            # 保存到持久化存储
-            save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
-
         elif llm_provider == "google":
             google_options = [
-                "gemini-2.5-pro", 
+                "gemini-2.5-pro",
                 "gemini-2.5-flash",
                 "gemini-2.5-flash-lite",
                 "gemini-2.5-pro-002",
                 "gemini-2.5-flash-002",
+                "gemini-2.5-flash-preview-05-20",
+                "gemini-2.5-flash-lite-preview-06-17",
                 "gemini-2.0-flash",
-                "gemini-2.5-flash-lite-preview-06-17", 
-                "gemini-1.5-pro", 
+                "gemini-2.0-flash-lite",
+                "gemini-2.0-pro-experimental",
+                "gemini-1.5-pro",
                 "gemini-1.5-flash"
             ]
 
@@ -362,17 +306,20 @@ def render_sidebar():
                 options=google_options,
                 index=current_index,
                 format_func=lambda x: {
-                    "gemini-2.5-pro": "Gemini 2.5 Pro - 🚀 最新旗舰模型",
-                    "gemini-2.5-flash": "Gemini 2.5 Flash - ⚡ 最新快速模型",
-                    "gemini-2.5-flash-lite": "Gemini 2.5 Flash Lite - 💡 轻量快速",
-                    "gemini-2.5-flash-lite-preview-06-17": "Gemini 2.5 Flash Lite Preview - ⚡ 超快響應 (1.45s)",
-                    "gemini-2.5-pro-002": "Gemini 2.5 Pro-002 - 🔧 優化版本",
-                    "gemini-2.5-flash-002": "Gemini 2.5 Flash-002 - ⚡ 優化快速版",
-                    "gemini-2.0-flash": "Gemini 2.0 Flash - 🚀 推薦使用 (1.87s)",
-                    "gemini-1.5-pro": "Gemini 1.5 Pro - ⚖️ 强大性能 (2.25s)",
-                    "gemini-1.5-flash": "Gemini 1.5 Flash - 💨 快速響應 (2.87s)"
+                    "gemini-2.5-pro": "🚀 Gemini 2.5 Pro - 最新旗艦模型（自適應思維）",
+                    "gemini-2.5-flash": "⚡ Gemini 2.5 Flash - 最新快速模型（SWE-Bench 54%）",
+                    "gemini-2.5-flash-lite": "💡 Gemini 2.5 Flash Lite - 輕量快速",
+                    "gemini-2.5-pro-002": "🔧 Gemini 2.5 Pro-002 - 優化版本",
+                    "gemini-2.5-flash-002": "⚡ Gemini 2.5 Flash-002 - 優化快速版",
+                    "gemini-2.5-flash-preview-05-20": "🧪 Gemini 2.5 Flash Preview - 預覽版（推理強化）",
+                    "gemini-2.5-flash-lite-preview-06-17": "⚡ Gemini 2.5 Flash Lite Preview - 超快響應",
+                    "gemini-2.0-flash": "🚀 Gemini 2.0 Flash - 推薦使用",
+                    "gemini-2.0-flash-lite": "💡 Gemini 2.0 Flash Lite - 輕量版",
+                    "gemini-2.0-pro-experimental": "🧪 Gemini 2.0 Pro Experimental - 實驗版本",
+                    "gemini-1.5-pro": "Gemini 1.5 Pro - 強大性能",
+                    "gemini-1.5-flash": "Gemini 1.5 Flash - 快速響應"
                 }[x],
-                help="選擇用於分析的Google Gemini模型",
+                help="選擇用於分析的Google Gemini模型（包含2025年最新的2.5和2.0系列）",
                 key="google_model_select"
             )
 
@@ -418,6 +365,12 @@ def render_sidebar():
             save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
         elif llm_provider == "openai":
              openai_options = [
+                 "gpt-5",
+                 "gpt-5-mini",
+                 "gpt-5-nano",
+                 "o1",
+                 "o1-mini",
+                 "o1-preview",
                  "gpt-4o",
                  "gpt-4o-mini",
                  "gpt-4-turbo",
@@ -426,7 +379,7 @@ def render_sidebar():
              ]
 
              # 獲取當前選擇的索引
-             current_index = 0
+             current_index = 6  # 默認選擇 gpt-4o
              if st.session_state.llm_model in openai_options:
                  current_index = openai_options.index(st.session_state.llm_model)
 
@@ -435,13 +388,19 @@ def render_sidebar():
                  options=openai_options,
                  index=current_index,
                  format_func=lambda x: {
-                     "gpt-4o": "GPT-4o - 最新旗舰模型",
-                     "gpt-4o-mini": "GPT-4o Mini - 轻量旗舰",
-                     "gpt-4-turbo": "GPT-4 Turbo - 强化版",
+                     "gpt-5": "🚀 GPT-5 - 2025最新旗艦模型",
+                     "gpt-5-mini": "⚡ GPT-5 Mini - 輕量版GPT-5",
+                     "gpt-5-nano": "💡 GPT-5 Nano - 超輕量版",
+                     "o1": "🧠 o1 - 最新推理模型",
+                     "o1-mini": "🧠 o1-mini - 輕量推理模型",
+                     "o1-preview": "🧪 o1-preview - 推理模型預覽版",
+                     "gpt-4o": "GPT-4o - 旗艦模型",
+                     "gpt-4o-mini": "GPT-4o Mini - 輕量旗艦",
+                     "gpt-4-turbo": "GPT-4 Turbo - 強化版",
                      "gpt-4": "GPT-4 - 經典版",
                      "gpt-3.5-turbo": "GPT-3.5 Turbo - 經濟版"
                  }[x],
-                 help="選擇用於分析的OpenAI模型",
+                 help="選擇用於分析的OpenAI模型（包含2025年8月發布的GPT-5系列）",
                  key="openai_model_select"
              )
 
@@ -701,6 +660,9 @@ def render_sidebar():
                 save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
             elif model_category == "anthropic":
                 anthropic_options = [
+                    "anthropic/claude-opus-4.1",
+                    "anthropic/claude-sonnet-4.5",
+                    "anthropic/claude-haiku-4.5",
                     "anthropic/claude-opus-4",
                     "anthropic/claude-sonnet-4",
                     "anthropic/claude-haiku-4",
@@ -723,18 +685,21 @@ def render_sidebar():
                     options=anthropic_options,
                     index=current_index,
                     format_func=lambda x: {
-                        "anthropic/claude-opus-4": "🚀 Claude Opus 4 - 最新顶級模型",
-                        "anthropic/claude-sonnet-4": "🚀 Claude Sonnet 4 - 最新平衡模型",
-                        "anthropic/claude-haiku-4": "🚀 Claude Haiku 4 - 最新快速模型",
-                        "anthropic/claude-3.5-sonnet": "Claude 3.5 Sonnet - 當前旗舰",
+                        "anthropic/claude-opus-4.1": "🚀 Claude Opus 4.1 - 最強模型（2025-08）",
+                        "anthropic/claude-sonnet-4.5": "💻 Claude Sonnet 4.5 - 世界最強編碼模型（2025-09）",
+                        "anthropic/claude-haiku-4.5": "⚡ Claude Haiku 4.5 - 高性價比（2025-10）",
+                        "anthropic/claude-opus-4": "🚀 Claude Opus 4 - 頂級模型",
+                        "anthropic/claude-sonnet-4": "🚀 Claude Sonnet 4 - 平衡模型",
+                        "anthropic/claude-haiku-4": "🚀 Claude Haiku 4 - 快速模型",
+                        "anthropic/claude-3.5-sonnet": "Claude 3.5 Sonnet - 當前旗艦",
                         "anthropic/claude-3.5-haiku": "Claude 3.5 Haiku - 快速響應",
                         "anthropic/claude-3.5-sonnet-20241022": "Claude 3.5 Sonnet (2024-10-22)",
                         "anthropic/claude-3.5-haiku-20241022": "Claude 3.5 Haiku (2024-10-22)",
-                        "anthropic/claude-3-opus": "Claude 3 Opus - 强大性能",
+                        "anthropic/claude-3-opus": "Claude 3 Opus - 強大性能",
                         "anthropic/claude-3-sonnet": "Claude 3 Sonnet - 平衡版",
                         "anthropic/claude-3-haiku": "Claude 3 Haiku - 經濟版"
                     }[x],
-                    help="Anthropic公司的Claude系列模型，包含最新Claude 4",
+                    help="Anthropic公司的Claude系列模型，包含2025年最新Claude 4.5系列",
                     key="anthropic_model_select"
                 )
 

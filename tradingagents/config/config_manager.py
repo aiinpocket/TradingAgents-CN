@@ -96,11 +96,9 @@ class ConfigManager:
     def _get_env_api_key(self, provider: str) -> str:
         """從環境變量獲取API密鑰"""
         env_key_map = {
-            "dashscope": "DASHSCOPE_API_KEY",
             "openai": "OPENAI_API_KEY",
             "google": "GOOGLE_API_KEY",
-            "anthropic": "ANTHROPIC_API_KEY",
-            "deepseek": "DEEPSEEK_API_KEY"
+            "anthropic": "ANTHROPIC_API_KEY"
         }
 
         env_key = env_key_map.get(provider.lower())
@@ -182,26 +180,12 @@ class ConfigManager:
         if not self.models_file.exists():
             default_models = [
                 ModelConfig(
-                    provider="dashscope",
-                    model_name="qwen-turbo",
-                    api_key="",
-                    max_tokens=4000,
-                    temperature=0.7
-                ),
-                ModelConfig(
-                    provider="dashscope",
-                    model_name="qwen-plus-latest",
-                    api_key="",
-                    max_tokens=8000,
-                    temperature=0.7
-                ),
-                ModelConfig(
                     provider="openai",
                     model_name="gpt-3.5-turbo",
                     api_key="",
                     max_tokens=4000,
                     temperature=0.7,
-                    enabled=False
+                    enabled=True
                 ),
                 ModelConfig(
                     provider="openai",
@@ -218,14 +202,6 @@ class ConfigManager:
                     max_tokens=4000,
                     temperature=0.7,
                     enabled=False
-                ),
-                ModelConfig(
-                    provider="deepseek",
-                    model_name="deepseek-chat",
-                    api_key="",
-                    max_tokens=8000,
-                    temperature=0.7,
-                    enabled=False
                 )
             ]
             self.save_models(default_models)
@@ -233,29 +209,59 @@ class ConfigManager:
         # 默認定價配置
         if not self.pricing_file.exists():
             default_pricing = [
-                # 阿里百炼定價 (人民币)
-                PricingConfig("dashscope", "qwen-turbo", 0.002, 0.006, "CNY"),
-                PricingConfig("dashscope", "qwen-plus-latest", 0.004, 0.012, "CNY"),
-                PricingConfig("dashscope", "qwen-max", 0.02, 0.06, "CNY"),
+                # OpenAI定價 (美元，每千token) - 2025年最新價格
+                # GPT-5系列 (2025年8月發布)
+                PricingConfig("openai", "gpt-5", 0.00125, 0.01, "USD"),
+                PricingConfig("openai", "gpt-5-mini", 0.00025, 0.002, "USD"),
+                PricingConfig("openai", "gpt-5-nano", 0.00005, 0.0004, "USD"),
 
-                # DeepSeek定價 (人民币) - 2025年最新價格
-                PricingConfig("deepseek", "deepseek-chat", 0.0014, 0.0028, "CNY"),
-                PricingConfig("deepseek", "deepseek-coder", 0.0014, 0.0028, "CNY"),
+                # o系列推理模型
+                PricingConfig("openai", "o1", 0.015, 0.06, "USD"),
+                PricingConfig("openai", "o1-mini", 0.003, 0.012, "USD"),
+                PricingConfig("openai", "o1-preview", 0.015, 0.06, "USD"),
 
-                # OpenAI定價 (美元)
-                PricingConfig("openai", "gpt-3.5-turbo", 0.0015, 0.002, "USD"),
-                PricingConfig("openai", "gpt-4", 0.03, 0.06, "USD"),
+                # GPT-4系列
+                PricingConfig("openai", "gpt-4o", 0.0025, 0.01, "USD"),
+                PricingConfig("openai", "gpt-4o-mini", 0.00015, 0.0006, "USD"),
                 PricingConfig("openai", "gpt-4-turbo", 0.01, 0.03, "USD"),
+                PricingConfig("openai", "gpt-4", 0.03, 0.06, "USD"),
+                PricingConfig("openai", "gpt-3.5-turbo", 0.0005, 0.0015, "USD"),
 
-                # Google定價 (美元)
-                PricingConfig("google", "gemini-2.5-pro", 0.00025, 0.0005, "USD"),
-                PricingConfig("google", "gemini-2.5-flash", 0.00025, 0.0005, "USD"),
+                # Google定價 (美元，每千token)
+                # Gemini 2.5系列 (2025年最新)
+                PricingConfig("google", "gemini-2.5-pro", 0.00125, 0.01, "USD"),
+                PricingConfig("google", "gemini-2.5-pro-002", 0.00125, 0.01, "USD"),
+                PricingConfig("google", "gemini-2.5-flash", 0.0003, 0.0025, "USD"),
+                PricingConfig("google", "gemini-2.5-flash-002", 0.0003, 0.0025, "USD"),
+                PricingConfig("google", "gemini-2.5-flash-preview-05-20", 0.0003, 0.0025, "USD"),
+                PricingConfig("google", "gemini-2.5-flash-lite", 0.0001, 0.0004, "USD"),
+                PricingConfig("google", "gemini-2.5-flash-lite-preview-06-17", 0.0001, 0.0004, "USD"),
+
+                # Gemini 2.0系列
                 PricingConfig("google", "gemini-2.0-flash", 0.00025, 0.0005, "USD"),
+                PricingConfig("google", "gemini-2.0-flash-lite", 0.0001, 0.0004, "USD"),
+                PricingConfig("google", "gemini-2.0-pro-experimental", 0.00125, 0.01, "USD"),
+
+                # Gemini 1.5系列
                 PricingConfig("google", "gemini-1.5-pro", 0.00025, 0.0005, "USD"),
                 PricingConfig("google", "gemini-1.5-flash", 0.00025, 0.0005, "USD"),
-                PricingConfig("google", "gemini-2.5-flash-lite-preview-06-17", 0.00025, 0.0005, "USD"),
                 PricingConfig("google", "gemini-pro", 0.00025, 0.0005, "USD"),
                 PricingConfig("google", "gemini-pro-vision", 0.00025, 0.0005, "USD"),
+
+                # Anthropic Claude定價 (美元，每千token)
+                # Claude 4系列 (2025年最新)
+                PricingConfig("anthropic", "claude-opus-4.1", 0.015, 0.075, "USD"),
+                PricingConfig("anthropic", "claude-sonnet-4.5", 0.003, 0.015, "USD"),
+                PricingConfig("anthropic", "claude-haiku-4.5", 0.001, 0.005, "USD"),
+                PricingConfig("anthropic", "claude-opus-4", 0.015, 0.075, "USD"),
+                PricingConfig("anthropic", "claude-sonnet-4", 0.003, 0.015, "USD"),
+                PricingConfig("anthropic", "claude-haiku-4", 0.001, 0.005, "USD"),
+
+                # Claude 3系列
+                PricingConfig("anthropic", "claude-3-opus-20240229", 0.015, 0.075, "USD"),
+                PricingConfig("anthropic", "claude-3-sonnet-20240229", 0.003, 0.015, "USD"),
+                PricingConfig("anthropic", "claude-3-haiku-20240307", 0.00025, 0.00125, "USD"),
+                PricingConfig("anthropic", "claude-3-5-sonnet-20241022", 0.003, 0.015, "USD"),
             ]
             self.save_pricing(default_pricing)
         
@@ -266,18 +272,18 @@ class ConfigManager:
             default_data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
             
             default_settings = {
-                "default_provider": "dashscope",
-                "default_model": "qwen-turbo",
+                "default_provider": "openai",
+                "default_model": "gpt-4o-mini",
                 "enable_cost_tracking": True,
-                "cost_alert_threshold": 100.0,  # 成本警告阈值
-                "currency_preference": "CNY",
+                "cost_alert_threshold": 100.0,
+                "currency_preference": "USD",
                 "auto_save_usage": True,
                 "max_usage_records": 10000,
-                "data_dir": default_data_dir,  # 數據目錄配置
-                "cache_dir": os.path.join(default_data_dir, "cache"),  # 緩存目錄
-                "results_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "results"),  # 結果目錄
-                "auto_create_dirs": True,  # 自動創建目錄
-                "openai_enabled": False,  # OpenAI模型是否啟用
+                "data_dir": default_data_dir,
+                "cache_dir": os.path.join(default_data_dir, "cache"),
+                "results_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "results"),
+                "auto_create_dirs": True,
+                "openai_enabled": True,
             }
             self.save_settings(default_settings)
     

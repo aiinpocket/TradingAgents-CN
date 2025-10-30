@@ -9,7 +9,7 @@ from typing import Dict, Any, Tuple, List, Optional
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
-from tradingagents.llm_adapters import ChatDashScope, ChatDashScopeOpenAI, ChatGoogleOpenAI
+from tradingagents.llm_adapters import ChatGoogleOpenAI
 
 from langgraph.prebuilt import ToolNode
 
@@ -138,51 +138,6 @@ class TradingAgentsGraph:
             )
             
             logger.info(f"✅ [Google AI] 已啟用優化的工具調用和內容格式處理")
-        elif (self.config["llm_provider"].lower() == "dashscope" or
-              self.config["llm_provider"].lower() == "alibaba" or
-              "dashscope" in self.config["llm_provider"].lower() or
-              "阿里百炼" in self.config["llm_provider"]):
-            # 使用 OpenAI 兼容適配器，支持原生 Function Calling
-            logger.info(f"🔧 使用阿里百炼 OpenAI 兼容適配器 (支持原生工具調用)")
-            self.deep_thinking_llm = ChatDashScopeOpenAI(
-                model=self.config["deep_think_llm"],
-                temperature=0.1,
-                max_tokens=2000
-            )
-            self.quick_thinking_llm = ChatDashScopeOpenAI(
-                model=self.config["quick_think_llm"],
-                temperature=0.1,
-                max_tokens=2000
-            )
-        elif (self.config["llm_provider"].lower() == "deepseek" or
-              "deepseek" in self.config["llm_provider"].lower()):
-            # DeepSeek V3配置 - 使用支持token統計的適配器
-            from tradingagents.llm_adapters.deepseek_adapter import ChatDeepSeek
-
-
-            deepseek_api_key = os.getenv('DEEPSEEK_API_KEY')
-            if not deepseek_api_key:
-                raise ValueError("使用DeepSeek需要設置DEEPSEEK_API_KEY環境變量")
-
-            deepseek_base_url = os.getenv('DEEPSEEK_BASE_URL', 'https://api.deepseek.com')
-
-            # 使用支持token統計的DeepSeek適配器
-            self.deep_thinking_llm = ChatDeepSeek(
-                model=self.config["deep_think_llm"],
-                api_key=deepseek_api_key,
-                base_url=deepseek_base_url,
-                temperature=0.1,
-                max_tokens=2000
-            )
-            self.quick_thinking_llm = ChatDeepSeek(
-                model=self.config["quick_think_llm"],
-                api_key=deepseek_api_key,
-                base_url=deepseek_base_url,
-                temperature=0.1,
-                max_tokens=2000
-                )
-
-            logger.info(f"✅ [DeepSeek] 已啟用token統計功能")
         elif self.config["llm_provider"].lower() == "custom_openai":
             # 自定義OpenAI端點配置
             from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm

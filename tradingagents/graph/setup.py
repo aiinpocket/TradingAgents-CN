@@ -69,26 +69,7 @@ class GraphSetup:
         tool_nodes = {}
 
         if "market" in selected_analysts:
-            # 現在所有LLM都使用標準市場分析師（包括阿里百炼的OpenAI兼容適配器）
-            llm_provider = self.config.get("llm_provider", "").lower()
-
-            # 檢查是否使用OpenAI兼容的阿里百炼適配器
-            using_dashscope_openai = (
-                "dashscope" in llm_provider and
-                hasattr(self.quick_thinking_llm, '__class__') and
-                'OpenAI' in self.quick_thinking_llm.__class__.__name__
-            )
-
-            if using_dashscope_openai:
-                logger.debug(f"📈 [DEBUG] 使用標準市場分析師（阿里百炼OpenAI兼容模式）")
-            elif "dashscope" in llm_provider or "阿里百炼" in self.config.get("llm_provider", ""):
-                logger.debug(f"📈 [DEBUG] 使用標準市場分析師（阿里百炼原生模式）")
-            elif "deepseek" in llm_provider:
-                logger.debug(f"📈 [DEBUG] 使用標準市場分析師（DeepSeek）")
-            else:
-                logger.debug(f"📈 [DEBUG] 使用標準市場分析師")
-
-            # 所有LLM都使用標準分析師
+            logger.debug(f"📈 [DEBUG] 使用標準市場分析師")
             analyst_nodes["market"] = create_market_analyst(
                 self.quick_thinking_llm, self.toolkit
             )
@@ -110,26 +91,7 @@ class GraphSetup:
             tool_nodes["news"] = self.tool_nodes["news"]
 
         if "fundamentals" in selected_analysts:
-            # 現在所有LLM都使用標準基本面分析師（包括阿里百炼的OpenAI兼容適配器）
-            llm_provider = self.config.get("llm_provider", "").lower()
-
-            # 檢查是否使用OpenAI兼容的阿里百炼適配器
-            using_dashscope_openai = (
-                "dashscope" in llm_provider and
-                hasattr(self.quick_thinking_llm, '__class__') and
-                'OpenAI' in self.quick_thinking_llm.__class__.__name__
-            )
-
-            if using_dashscope_openai:
-                logger.debug(f"📊 [DEBUG] 使用標準基本面分析師（阿里百炼OpenAI兼容模式）")
-            elif "dashscope" in llm_provider or "阿里百炼" in self.config.get("llm_provider", ""):
-                logger.debug(f"📊 [DEBUG] 使用標準基本面分析師（阿里百炼原生模式）")
-            elif "deepseek" in llm_provider:
-                logger.debug(f"📊 [DEBUG] 使用標準基本面分析師（DeepSeek）")
-            else:
-                logger.debug(f"📊 [DEBUG] 使用標準基本面分析師")
-
-            # 所有LLM都使用標準分析師（包含强制工具調用機制）
+            logger.debug(f"📊 [DEBUG] 使用標準基本面分析師")
             analyst_nodes["fundamentals"] = create_fundamentals_analyst(
                 self.quick_thinking_llm, self.toolkit
             )
