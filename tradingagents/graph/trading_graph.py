@@ -69,28 +69,6 @@ class TradingAgentsGraph:
         if self.config["llm_provider"].lower() == "openai":
             self.deep_thinking_llm = ChatOpenAI(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
             self.quick_thinking_llm = ChatOpenAI(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
-        elif self.config["llm_provider"] == "siliconflow":
-            # SiliconFlow支持：使用OpenAI兼容API
-            siliconflow_api_key = os.getenv('SILICONFLOW_API_KEY')
-            if not siliconflow_api_key:
-                raise ValueError("使用SiliconFlow需要設置SILICONFLOW_API_KEY環境變量")
-
-            logger.info(f"🌐 [SiliconFlow] 使用API密鑰: {siliconflow_api_key[:20]}...")
-
-            self.deep_thinking_llm = ChatOpenAI(
-                model=self.config["deep_think_llm"],
-                base_url=self.config["backend_url"],
-                api_key=siliconflow_api_key,
-                temperature=0.1,
-                max_tokens=2000
-            )
-            self.quick_thinking_llm = ChatOpenAI(
-                model=self.config["quick_think_llm"],
-                base_url=self.config["backend_url"],
-                api_key=siliconflow_api_key,
-                temperature=0.1,
-                max_tokens=2000
-            )
         elif self.config["llm_provider"] == "openrouter":
             # OpenRouter支持：優先使用OPENROUTER_API_KEY，否則使用OPENAI_API_KEY
             openrouter_api_key = os.getenv('OPENROUTER_API_KEY') or os.getenv('OPENAI_API_KEY')
@@ -167,24 +145,6 @@ class TradingAgentsGraph:
             )
             
             logger.info(f"✅ [自定義OpenAI] 已配置自定義端點: {custom_base_url}")
-        elif self.config["llm_provider"].lower() == "qianfan":
-            # 百度千帆（文心一言）配置 - 統一由適配器內部讀取与校驗 QIANFAN_API_KEY
-            from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm
-            
-            # 使用OpenAI兼容適配器創建LLM實例（基類會使用千帆默認base_url並负责密鑰校驗）
-            self.deep_thinking_llm = create_openai_compatible_llm(
-                provider="qianfan",
-                model=self.config["deep_think_llm"],
-                temperature=0.1,
-                max_tokens=2000
-            )
-            self.quick_thinking_llm = create_openai_compatible_llm(
-                provider="qianfan",
-                model=self.config["quick_think_llm"],
-                temperature=0.1,
-                max_tokens=2000
-            )
-            logger.info("✅ [千帆] 文心一言適配器已配置成功")
         else:
             raise ValueError(f"Unsupported LLM provider: {self.config['llm_provider']}")
         

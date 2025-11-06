@@ -8,6 +8,54 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 避免撰寫過多的註解讓人發現是AI
 - 對於每個功能都必須要寫註解讓人知道這個功能主要處理什麼
 
+## 快速參考指南
+
+### 最常用的命令
+
+```bash
+# 啟動 Web 應用（最常用）
+python start_web.py
+
+# 運行測試
+pytest tests/
+
+# 檢查 API 配置
+python scripts/check_api_config.py
+
+# 用戶管理
+python scripts/user_password_manager.py list
+
+# Docker 部署
+docker-compose up -d --build
+```
+
+### 最重要的文件
+
+| 文件 | 功能 | 何時修改 |
+|------|------|----------|
+| `tradingagents/graph/trading_graph.py` | 主工作流程 | 添加新 LLM 提供商、修改工作流邏輯 |
+| `tradingagents/llm_adapters/` | LLM 適配器 | 集成新的 LLM 提供商 |
+| `tradingagents/agents/analysts/` | 分析師智慧體 | 添加新的分析師類型 |
+| `web/pages/1_🔬_股票分析.py` | Web 主頁面 | 修改 Web UI、添加新選項 |
+| `.env` | 環境配置 | 配置 API 金鑰、資料庫連接 |
+| `tradingagents/default_config.py` | 預設配置 | 修改系統預設設定 |
+
+### 架構速查
+
+```
+用戶請求 → Web/CLI → TradingAgentsGraph
+                        ↓
+                 初始化 LLM + 智慧體
+                        ↓
+                 LangGraph 工作流
+                   ↙    ↓    ↘
+            分析師  研究員  交易員
+                   ↘    ↓    ↙
+                   資料整合
+                        ↓
+                 返回分析結果
+```
+
 ## 專案概述
 
 TradingAgents-CN 是一個基於多智慧體大語言模型的中文金融交易決策框架，專為中文使用者優化，提供完整的 A股/港股/美股分析能力。這是 [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) 的中文增強版本。
@@ -95,6 +143,12 @@ pytest --cov=tradingagents tests/
 
 # 調試模式運行測試
 pytest -v -s tests/
+
+# 快速語法檢查（開發時使用）
+python scripts/quick_syntax_check.py
+
+# 安裝驗證測試
+python examples/test_installation.py
 ```
 
 ### 開發工具
@@ -202,13 +256,15 @@ data/                      # 資料儲存目錄
 ├── dashscope_adapter.py      # 阿里百煉適配器
 ├── deepseek_adapter.py       # DeepSeek 適配器
 ├── google_openai_adapter.py  # Google AI OpenAI 相容適配器
-└── openai_adapter.py         # 原生 OpenAI 適配器
+├── openai_adapter.py         # 原生 OpenAI 適配器
+└── qianfan_adapter.py        # 百度千帆適配器
 ```
 
 **關鍵設計**：
 - 所有適配器繼承統一基類，提供一致的呼叫接口
 - 支持工具呼叫（Tool Calling）的智慧處理和降級
 - 錯誤處理和自動重試機制
+- 適配器模板位於 `docs/LLM_ADAPTER_TEMPLATE.py`
 
 ### 資料流架構
 
@@ -258,23 +314,72 @@ max_debate_rounds: int  # 辯論輪數
 max_risk_discuss_rounds: int  # 風險討論輪數
 ```
 
+## 核心工作流程理解
+
+### 分析執行流程
+
+當使用者執行股票分析時，系統遵循以下流程：
+
+1. **初始化階段**（`TradingAgentsGraph.__init__`）
+   - 載入配置（環境變數 → 執行時配置 → 預設配置）
+   - 初始化 LLM 客戶端（根據 `llm_provider` 選擇適配器）
+   - 設置智慧體節點和工作流邊
+
+2. **資料獲取階段**（`tradingagents/dataflows/`）
+   - 檢查多級快取（Redis → MongoDB → 本機檔案）
+   - 呼叫資料源 API（Tushare、AkShare、Yahoo Finance 等）
+   - 儲存到快取供後續使用
+
+3. **智慧體協作階段**（LangGraph 工作流）
+   - **分析師團隊**並行執行分析（市場、基本面、新聞、社交媒體）
+   - **研究員團隊**進行看漲/看跌辯論
+   - **交易員**綜合所有輸入制定決策
+   - **風險管理**評估風險並提供建議
+
+4. **結果輸出階段**
+   - 格式化分析結果
+   - 儲存到 MongoDB（如果啟用）
+   - 返回給 Web 界面或 CLI
+
+### LangGraph 狀態管理
+
+專案使用 LangGraph 管理複雜的多智慧體狀態：
+
+- `AgentState`：主要狀態，包含所有分析結果
+- `InvestDebateState`：看漲/看跌辯論狀態
+- `RiskDebateState`：風險評估討論狀態
+
+狀態在智慧體之間傳遞，每個智慧體更新相應的欄位。
+
+### 條件路由邏輯
+
+工作流使用條件邏輯決定下一步：
+
+- `should_continue_research`：是否需要更多研究
+- `should_continue_debate`：是否繼續辯論
+- `route_to_specialist`：路由到特定專家
+
+條件邏輯定義在 `tradingagents/graph/conditional_logic.py`。
+
 ## 開發指南
 
 ### 添加新的 LLM 提供商
 
-1. 在 `tradingagents/llm_adapters/` 創建新適配器
+1. 在 `tradingagents/llm_adapters/` 創建新適配器（參考 `docs/LLM_ADAPTER_TEMPLATE.py`）
 2. 繼承 `BaseAdapter` 並實現必需方法
-3. 在 `tradingagents/llm/` 註冊新提供商
+3. 在 `tradingagents/graph/trading_graph.py` 的 `__init__` 方法中添加新提供商的初始化邏輯
 4. 更新 `.env.example` 添加 API 金鑰配置
-5. 在 Web 界面的模型選擇中添加新選項
+5. 在 Web 界面的模型選擇中添加新選項（`web/pages/1_🔬_股票分析.py`）
+6. 運行測試確保集成成功
 
 ### 添加新的分析師
 
 1. 在 `tradingagents/agents/analysts/` 創建新分析師類別
-2. 定義分析師的提示詞和工具
-3. 在 `tradingagents/graph/setup.py` 註冊新智慧體
-4. 更新 `tradingagents/graph/trading_graph.py` 添加到工作流
-5. 在 Web 界面添加分析師選擇選項
+2. 定義分析師的提示詞和工具（參考現有分析師如 `market_analyst.py`）
+3. 在 `tradingagents/agents/__init__.py` 導出新分析師
+4. 在 `tradingagents/graph/setup.py` 的 `setup_agent_nodes` 方法中註冊新智慧體
+5. 更新 `tradingagents/graph/trading_graph.py` 添加到工作流
+6. 在 Web 界面添加分析師選擇選項（`web/pages/1_🔬_股票分析.py`）
 
 ### 添加新的資料來源
 
@@ -360,11 +465,26 @@ ta = TradingAgentsGraph(debug=True, config=config)
 python scripts/development/visualize_graph.py
 ```
 
+### 日誌系統
+
+專案使用統一的日誌管理系統：
+
+```python
+# 使用統一日誌系統
+from tradingagents.utils.logging_manager import get_logger
+
+logger = get_logger('module_name')
+logger.info("資訊訊息")
+logger.warning("警告訊息")
+logger.error("錯誤訊息")
+```
+
 ### 日誌位置
 
 - **應用日誌**：`logs/`
 - **Docker 日誌**：`docker-compose logs -f web`
 - **Streamlit 日誌**：終端輸出
+- **日誌分析工具**：`python scripts/log_analyzer.py`
 
 ### 常見問題排查
 
@@ -404,15 +524,19 @@ python scripts/development/visualize_graph.py
 
 - **必須升級 pip**：`python -m pip install --upgrade pip`
 - **推薦使用鎖定版本**：`requirements-lock.txt` 避免依賴衝突
-- **國內映像加速**：使用清華源加速下載
+- **國內映像加速**：使用清華源加速下載（`docs/installation-mirror.md`）
 - **Windows PyYAML 問題**：使用鎖定版本可避免編譯錯誤
+- **安裝驗證**：運行 `python examples/test_installation.py` 驗證安裝
 
 ### 部署相關
 
 - **首次啟動**：Docker 建構需要 5-10 分鐘
-- **資料庫主機名**：本機部署用 `localhost`，Docker 用服務名
+- **資料庫主機名**：本機部署用 `localhost`，Docker 用服務名（`mongodb`, `redis`）
 - **連接埠衝突**：確保 8501（Web）、27017（MongoDB）、6379（Redis）連接埠可用
 - **預設帳號**：admin/admin123，user/user123（首次登入後立即修改）
+- **快速啟動腳本**：
+  - Windows: `powershell -ExecutionPolicy Bypass -File scripts\smart_start.ps1`
+  - Linux/Mac: `./scripts/smart_start.sh`
 
 ### 開發相關
 
@@ -421,12 +545,23 @@ python scripts/development/visualize_graph.py
 - **環境變數優先**：配置優先順序為環境變數 > 執行時配置 > 預設配置
 - **完整測試**：修改核心邏輯後運行完整測試套件
 - **文檔更新**：添加新功能時同步更新 `docs/` 目錄
+- **代碼風格**：遵守繁體中文註解規範，避免使用 emoji
 
 ### 資料庫相關
 
 - **可選功能**：資料庫是效能優化功能，非必需
 - **智慧降級**：資料庫不可用時自動降級到 API 直接呼叫
 - **快取策略**：Redis（熱資料）→ MongoDB（歷史）→ API → 本機檔案
+- **資料目錄配置**：`python -m cli.main data-config --show`
+
+### 關鍵檔案位置
+
+- **環境配置**：`.env`（從 `.env.example` 複製）
+- **使用者管理**：`web/config/users.json`
+- **日誌目錄**：`logs/`
+- **資料目錄**：`data/`（可透過環境變數配置）
+- **測試目錄**：`tests/`
+- **範例程式**：`examples/`
 
 ## 參考資源
 

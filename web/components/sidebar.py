@@ -217,15 +217,15 @@ def render_sidebar():
         # LLM提供商選擇
         llm_provider = st.selectbox(
             "LLM提供商",
-            options=["google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"],
-            index=["google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"].index(st.session_state.llm_provider) if st.session_state.llm_provider in ["google", "openai", "openrouter", "siliconflow", "custom_openai", "qianfan"] else 0,
+            options=["google", "openai", "openrouter", "custom_openai", "anthropic", "ollama"],
+            index=["google", "openai", "openrouter", "custom_openai", "anthropic", "ollama"].index(st.session_state.llm_provider) if st.session_state.llm_provider in ["google", "openai", "openrouter", "custom_openai", "anthropic", "ollama"] else 0,
             format_func=lambda x: {
                 "google": "🌟 Google AI",
                 "openai": "🤖 OpenAI",
                 "openrouter": "🌐 OpenRouter",
-                "siliconflow": "🇨🇳 硅基流動",
                 "custom_openai": "🔧 自定義OpenAI端點",
-                "qianfan": "🧠 文心一言（千帆）"
+                "anthropic": "🤖 Anthropic (Claude)",
+                "ollama": "💻 Ollama (本地)"
             }[x],
             help="選擇AI模型提供商",
             key="llm_provider_select"
@@ -246,41 +246,7 @@ def render_sidebar():
             st.session_state.llm_provider = llm_provider
 
         # 根據提供商顯示不同的模型選項
-        if llm_provider == "siliconflow":
-            siliconflow_options = ["Qwen/Qwen3-30B-A3B-Thinking-2507", "Qwen/Qwen3-30B-A3B-Instruct-2507", "Qwen/Qwen3-235B-A22B-Thinking-2507", "Qwen/Qwen3-235B-A22B-Instruct-2507","deepseek-ai/DeepSeek-R1", "zai-org/GLM-4.5", "moonshotai/Kimi-K2-Instruct"]
-
-            # 獲取當前選擇的索引
-            current_index = 0
-            if st.session_state.llm_model in siliconflow_options:
-                current_index = siliconflow_options.index(st.session_state.llm_model)
-
-            llm_model = st.selectbox(
-                "選擇siliconflow模型",
-                options=siliconflow_options,
-                index=current_index,
-                format_func=lambda x: {
-                    "Qwen/Qwen3-30B-A3B-Thinking-2507": "Qwen3-30B-A3B-Thinking-2507 - 30B思維鏈模型",
-                    "Qwen/Qwen3-30B-A3B-Instruct-2507": "Qwen3-30B-A3B-Instruct-2507 - 30B指令模型",
-                    "Qwen/Qwen3-235B-A22B-Thinking-2507": "Qwen3-235B-A22B-Thinking-2507 - 235B思維鏈模型",
-                    "Qwen/Qwen3-235B-A22B-Instruct-2507": "Qwen3-235B-A22B-Instruct-2507 - 235B指令模型",
-                    "deepseek-ai/DeepSeek-R1": "DeepSeek-R1",
-                    "zai-org/GLM-4.5": "GLM-4.5 - 智谱",
-                    "moonshotai/Kimi-K2-Instruct": "Kimi-K2-Instruct",
-                }[x],
-                help="選擇用於分析的siliconflow模型",
-                key="siliconflow_model_select"
-            )
-
-            # 更新session state和持久化存储
-            if st.session_state.llm_model != llm_model:
-                logger.debug(f"🔄 [Persistence] siliconflow模型變更: {st.session_state.llm_model} → {llm_model}")
-            st.session_state.llm_model = llm_model
-            logger.debug(f"💾 [Persistence] siliconflow模型已保存: {llm_model}")
-
-            # 保存到持久化存储
-            save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
-
-        elif llm_provider == "google":
+        if llm_provider == "google":
             google_options = [
                 "gemini-2.5-pro",
                 "gemini-2.5-flash",
@@ -330,38 +296,6 @@ def render_sidebar():
             logger.debug(f"💾 [Persistence] Google模型已保存: {llm_model}")
 
             # 保存到持久化存储
-            save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
-        elif llm_provider == "qianfan":
-            qianfan_options = [
-                "ernie-3.5-8k",
-                "ernie-4.0-turbo-8k",
-                "ERNIE-Speed-8K",
-                "ERNIE-Lite-8K"
-            ]
-
-            current_index = 0
-            if st.session_state.llm_model in qianfan_options:
-                current_index = qianfan_options.index(st.session_state.llm_model)
-
-            llm_model = st.selectbox(
-                "選擇文心一言模型",
-                options=qianfan_options,
-                index=current_index,
-                format_func=lambda x: {
-                    "ernie-3.5-8k": "ERNIE 3.5 8K - ⚡ 快速高效",
-                    "ernie-4.0-turbo-8k": "ERNIE 4.0 Turbo 8K - 🚀 强大推理",
-                    "ERNIE-Speed-8K": "ERNIE Speed 8K - 🏃 極速響應",
-                    "ERNIE-Lite-8K": "ERNIE Lite 8K - 💡 轻量經濟"
-                }[x],
-                help="選擇用於分析的文心一言（千帆）模型",
-                key="qianfan_model_select"
-            )
-
-            if st.session_state.llm_model != llm_model:
-                logger.debug(f"🔄 [Persistence] Qianfan模型變更: {st.session_state.llm_model} → {llm_model}")
-            st.session_state.llm_model = llm_model
-            logger.debug(f"💾 [Persistence] Qianfan模型已保存: {llm_model}")
-
             save_model_selection(st.session_state.llm_provider, st.session_state.model_category, llm_model)
         elif llm_provider == "openai":
              openai_options = [
