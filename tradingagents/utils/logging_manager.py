@@ -180,7 +180,12 @@ class TradingAgentsLogger:
         # 創建日誌目錄
         if self.config['handlers']['file']['enabled']:
             log_dir = Path(self.config['handlers']['file']['directory'])
-            log_dir.mkdir(parents=True, exist_ok=True)
+            try:
+                log_dir.mkdir(parents=True, exist_ok=True)
+            except (OSError, PermissionError) as e:
+                # 如果無法創建日誌目錄（例如只讀文件系統），禁用文件日誌
+                print(f"警告：無法創建日誌目錄 {log_dir}: {e}，禁用文件日誌")
+                self.config['handlers']['file']['enabled'] = False
         
         # 設置根日誌級別
         root_logger = logging.getLogger()
@@ -246,22 +251,26 @@ class TradingAgentsLogger:
     
     def _add_structured_handler(self, logger: logging.Logger):
         """添加結構化日誌處理器"""
-        log_dir = Path(self.config['handlers']['structured']['directory'])
-        log_file = log_dir / 'tradingagents_structured.log'
-        
-        structured_handler = logging.handlers.RotatingFileHandler(
-            log_file,
-            maxBytes=self._parse_size('10MB'),
-            backupCount=3,
-            encoding='utf-8'
-        )
-        
-        structured_level = getattr(logging, self.config['handlers']['structured']['level'])
-        structured_handler.setLevel(structured_level)
-        
-        formatter = StructuredFormatter()
-        structured_handler.setFormatter(formatter)
-        logger.addHandler(structured_handler)
+        try:
+            log_dir = Path(self.config['handlers']['structured']['directory'])
+            log_file = log_dir / 'tradingagents_structured.log'
+
+            structured_handler = logging.handlers.RotatingFileHandler(
+                log_file,
+                maxBytes=self._parse_size('10MB'),
+                backupCount=3,
+                encoding='utf-8'
+            )
+
+            structured_level = getattr(logging, self.config['handlers']['structured']['level'])
+            structured_handler.setLevel(structured_level)
+
+            formatter = StructuredFormatter()
+            structured_handler.setFormatter(formatter)
+            logger.addHandler(structured_handler)
+        except (OSError, PermissionError, FileNotFoundError) as e:
+            # 如果無法創建structured日誌，只輸出警告但不中斷
+            print(f"警告：無法創建結構化日誌文件: {e}，跳過structured handler")
     
     def _configure_specific_loggers(self):
         """配置特定的日誌器"""

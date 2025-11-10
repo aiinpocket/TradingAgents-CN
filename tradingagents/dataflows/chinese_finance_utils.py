@@ -190,12 +190,12 @@ class ChineseFinanceDataAggregator:
         """獲取公司中文名稱"""
         # 簡單的映射表，實际可以從數據庫或API獲取
         name_mapping = {
-            'AAPL': '苹果',
+            'AAPL': '蘋果',
             'TSLA': '特斯拉',
-            'NVDA': '英伟達',
-            'MSFT': '微软',
+            'NVDA': '輝達',
+            'MSFT': '微軟',
             'GOOGL': '谷歌',
-            'AMZN': '亚馬逊'
+            'AMZN': '亞馬遜'
         }
         return name_mapping.get(ticker.upper())
     

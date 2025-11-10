@@ -314,7 +314,7 @@ def test_google_openai_function_calling(
         llm_with_tools = llm.bind_tools([test_news_tool])
         
         # 測試工具調用
-        response = llm_with_tools.invoke("請使用test_news_tool查詢'苹果公司'的新聞")
+        response = llm_with_tools.invoke("請使用test_news_tool查詢'蘋果公司'的新聞")
         
         logger.info(f"✅ Google AI Function Calling 測試完成")
         logger.info(f"   響應類型: {type(response)}")

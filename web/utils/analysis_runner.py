@@ -736,18 +736,18 @@ def get_supported_stocks():
     
     # 常见的美股股票代碼
     popular_stocks = [
-        {'symbol': 'AAPL', 'name': '苹果公司', 'sector': '科技'},
-        {'symbol': 'MSFT', 'name': '微软', 'sector': '科技'},
+        {'symbol': 'AAPL', 'name': '蘋果公司', 'sector': '科技'},
+        {'symbol': 'MSFT', 'name': '微軟', 'sector': '科技'},
         {'symbol': 'GOOGL', 'name': '谷歌', 'sector': '科技'},
-        {'symbol': 'AMZN', 'name': '亚馬逊', 'sector': '消費'},
+        {'symbol': 'AMZN', 'name': '亞馬遜', 'sector': '消費'},
         {'symbol': 'TSLA', 'name': '特斯拉', 'sector': '汽車'},
-        {'symbol': 'NVDA', 'name': '英伟達', 'sector': '科技'},
+        {'symbol': 'NVDA', 'name': '輝達', 'sector': '科技'},
         {'symbol': 'META', 'name': 'Meta', 'sector': '科技'},
-        {'symbol': 'NFLX', 'name': '奈飞', 'sector': '媒體'},
+        {'symbol': 'NFLX', 'name': 'Netflix', 'sector': '媒體'},
         {'symbol': 'AMD', 'name': 'AMD', 'sector': '科技'},
         {'symbol': 'INTC', 'name': '英特爾', 'sector': '科技'},
         {'symbol': 'SPY', 'name': 'S&P 500 ETF', 'sector': 'ETF'},
-        {'symbol': 'QQQ', 'name': '纳斯達克100 ETF', 'sector': 'ETF'},
+        {'symbol': 'QQQ', 'name': '納斯達克100 ETF', 'sector': 'ETF'},
     ]
     
     return popular_stocks

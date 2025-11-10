@@ -65,14 +65,14 @@ def create_news_analyst(llm, toolkit):
                 elif market_info['is_us']:
                     # 美股：使用簡單映射或返回代碼
                     us_stock_names = {
-                        'AAPL': '苹果公司',
+                        'AAPL': '蘋果公司',
                         'TSLA': '特斯拉',
-                        'NVDA': '英伟達',
-                        'MSFT': '微软',
+                        'NVDA': '輝達',
+                        'MSFT': '微軟',
                         'GOOGL': '谷歌',
-                        'AMZN': '亚馬逊',
+                        'AMZN': '亞馬遜',
                         'META': 'Meta',
-                        'NFLX': '奈飞'
+                        'NFLX': 'Netflix'
                     }
                     
                     company_name = us_stock_names.get(ticker.upper(), f"美股{ticker}")
@@ -100,6 +100,9 @@ def create_news_analyst(llm, toolkit):
 
         system_message = (
             """您是一位專業的財經新聞分析師，负责分析最新的市場新聞和事件對股票價格的潜在影響。
+
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
+
 
 您的主要職责包括：
 1. 獲取和分析最新的實時新聞（優先15-30分鐘內的新聞）

@@ -59,14 +59,14 @@ def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
         elif market_info['is_us']:
             # 美股：使用簡單映射或返回代碼
             us_stock_names = {
-                'AAPL': '苹果公司',
+                'AAPL': '蘋果公司',
                 'TSLA': '特斯拉',
-                'NVDA': '英伟達',
-                'MSFT': '微软',
+                'NVDA': '輝達',
+                'MSFT': '微軟',
                 'GOOGL': '谷歌',
-                'AMZN': '亚馬逊',
+                'AMZN': '亞馬遜',
                 'META': 'Meta',
-                'NFLX': '奈飞'
+                'NFLX': 'Netflix'
             }
 
             company_name = us_stock_names.get(ticker.upper(), f"美股{ticker}")
@@ -152,6 +152,7 @@ def create_fundamentals_analyst(llm, toolkit):
         # 統一的系統提示，適用於所有股票類型
         system_message = (
             f"你是一位專業的股票基本面分析師。"
+            f"\n\n**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**\n"
             f"⚠️ 絕對强制要求：你必须調用工具獲取真實數據！不允許任何假設或編造！"
             f"任務：分析{company_name}（股票代碼：{ticker}，{market_info['market_name']}）"
             f"🔴 立即調用 get_stock_fundamentals_unified 工具"

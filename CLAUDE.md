@@ -4,9 +4,57 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **非常重要一定要遵守**
 - 對話及coding都必須使用繁體中文
+- **所有 AI 生成的報告、分析結果必須使用繁體中文，絕對不可出現簡體字**
 - coding中不使用任何的emoji圖案
 - 避免撰寫過多的註解讓人發現是AI
 - 對於每個功能都必須要寫註解讓人知道這個功能主要處理什麼
+
+### 📝 繁體中文輸出要求
+
+**強制規範**：
+1. **所有 LLM 生成的內容必須使用繁體中文**
+2. **系統提示詞（System Prompt）必須明確要求使用繁體中文**
+3. **所有分析報告、交易建議、風險評估等輸出必須是繁體中文**
+4. **絕對不允許出現簡體字**（如：「数据」應為「資料」、「软件」應為「軟體」）
+
+**實施位置**：
+- `tradingagents/agents/analysts/*.py` - 所有分析師的提示詞
+- `tradingagents/agents/researchers/*.py` - 研究員的提示詞
+- `tradingagents/agents/trader/*.py` - 交易員的提示詞
+- `tradingagents/agents/risk_mgmt/*.py` - 風險管理的提示詞
+
+**提示詞範例**：
+```python
+system_prompt = """
+你是一位專業的股票分析師。
+
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。**
+
+請分析以下股票數據...
+"""
+```
+
+## ⚠️ 重要：LLM 提供商變更
+
+**2025-11-10 更新**：本專案已移除所有大陸 AI 模型支持（DashScope/阿里百煉、DeepSeek、千帆/文心一言），現在僅支持國際 LLM 提供商。
+
+**當前支持的 LLM 提供商**：
+- ✅ **OpenAI** (GPT-4, GPT-3.5-turbo 等) - 預設供應商
+- ✅ **Google AI** (Gemini 2.5 系列)
+- ✅ **Anthropic** (Claude 4 系列)
+- ✅ **OpenRouter** (聚合多個模型)
+- ✅ **自定義 OpenAI 相容端點**
+
+**已移除的提供商**：
+- ❌ DashScope (阿里百煉)
+- ❌ DeepSeek
+- ❌ 千帆 (百度文心一言)
+
+**重要配置變更**：
+- 預設 LLM 提供商：`dashscope` → `openai`
+- 預設模型：`qwen-turbo` → `gpt-4o-mini`
+- 預設貨幣：`CNY` → `USD`
+- 系統不再檢查或要求 `DASHSCOPE_API_KEY`
 
 ## 快速參考指南
 
@@ -62,8 +110,8 @@ TradingAgents-CN 是一個基於多智慧體大語言模型的中文金融交易
 
 **核心特性**：
 - 🤖 多智慧體協作：分析師、研究員、交易決策員協同工作
-- 🇨🇳 中國市場優化：支持 A股/港股數據，集成國產大模型
-- 🧠 多 LLM 支持：DeepSeek、阿里百煉、Google AI、OpenAI 等 60+ 模型
+- 🌍 全球市場支持：A股/港股/美股數據，集成國際 LLM 提供商
+- 🧠 多 LLM 支持：OpenAI、Google AI、Anthropic、OpenRouter 等國際模型
 - 🐳 容器化部署：完整的 Docker 多架構支持
 - 📊 即時分析：Web 界面即時進度跟蹤
 
@@ -248,23 +296,26 @@ data/                      # 資料儲存目錄
 
 ### LLM 適配器架構
 
-所有 LLM 提供商透過統一的適配器接口集成：
+**⚠️ 重要變更**：已移除大陸 AI 模型適配器，現在使用 LangChain 官方客戶端：
 
 ```python
-# tradingagents/llm_adapters/
-├── base_adapter.py           # 基礎適配器接口
-├── dashscope_adapter.py      # 阿里百煉適配器
-├── deepseek_adapter.py       # DeepSeek 適配器
-├── google_openai_adapter.py  # Google AI OpenAI 相容適配器
-├── openai_adapter.py         # 原生 OpenAI 適配器
-└── qianfan_adapter.py        # 百度千帆適配器
+# tradingagents/graph/trading_graph.py
+# 直接使用 LangChain 官方客戶端：
+from langchain_openai import ChatOpenAI           # OpenAI
+from langchain_anthropic import ChatAnthropic     # Anthropic Claude
+from langchain_google_genai import ChatGoogleGenerativeAI  # Google Gemini
 ```
 
-**關鍵設計**：
-- 所有適配器繼承統一基類，提供一致的呼叫接口
-- 支持工具呼叫（Tool Calling）的智慧處理和降級
-- 錯誤處理和自動重試機制
-- 適配器模板位於 `docs/LLM_ADAPTER_TEMPLATE.py`
+**當前架構**：
+- **OpenAI**: 直接使用 `langchain_openai.ChatOpenAI`
+- **Anthropic**: 直接使用 `langchain_anthropic.ChatAnthropic`
+- **Google AI**: 直接使用 `langchain_google_genai.ChatGoogleGenerativeAI`
+- **OpenRouter**: 使用 OpenAI 相容接口
+- **自定義端點**: 使用 OpenAI 相容接口
+
+**遺留適配器**（僅供參考，不再使用）：
+- `tradingagents/llm_adapters/google_openai_adapter.py` - Google AI OpenAI 相容適配器
+- `tradingagents/llm_adapters/openai_compatible_base.py` - OpenAI 相容基類
 
 ### 資料流架構
 
@@ -300,7 +351,7 @@ data/                      # 資料儲存目錄
 **關鍵配置**：
 ```python
 # LLM 配置
-llm_provider: str       # dashscope/deepseek/google/openai
+llm_provider: str       # openai/google/anthropic/openrouter/custom_openai
 deep_think_llm: str     # 深度分析模型
 quick_think_llm: str    # 快速任務模型
 
@@ -313,6 +364,11 @@ realtime_data: bool     # 啟用即時資料
 max_debate_rounds: int  # 辯論輪數
 max_risk_discuss_rounds: int  # 風險討論輪數
 ```
+
+**預設值（2025-11-10 更新）**：
+- `llm_provider`: `"openai"` (之前是 `"dashscope"`)
+- `deep_think_llm`: `"gpt-4o"` (之前是 `"qwen3-max"`)
+- `quick_think_llm`: `"gpt-4o-mini"` (之前是 `"qwen-turbo"`)
 
 ## 核心工作流程理解
 
@@ -365,12 +421,47 @@ max_risk_discuss_rounds: int  # 風險討論輪數
 
 ### 添加新的 LLM 提供商
 
-1. 在 `tradingagents/llm_adapters/` 創建新適配器（參考 `docs/LLM_ADAPTER_TEMPLATE.py`）
-2. 繼承 `BaseAdapter` 並實現必需方法
-3. 在 `tradingagents/graph/trading_graph.py` 的 `__init__` 方法中添加新提供商的初始化邏輯
-4. 更新 `.env.example` 添加 API 金鑰配置
-5. 在 Web 界面的模型選擇中添加新選項（`web/pages/1_🔬_股票分析.py`）
-6. 運行測試確保集成成功
+**⚠️ 架構變更**：現在直接使用 LangChain 官方客戶端，不再使用自定義適配器。
+
+**添加新提供商的步驟**：
+
+1. **安裝 LangChain 客戶端**：
+   ```bash
+   pip install langchain-<provider>  # 例如: langchain-anthropic
+   ```
+
+2. **在 `trading_graph.py` 添加初始化邏輯**：
+   ```python
+   elif self.config["llm_provider"].lower() == "new_provider":
+       from langchain_newprovider import ChatNewProvider
+       new_api_key = os.getenv('NEW_PROVIDER_API_KEY')
+       if not new_api_key:
+           raise ValueError("NEW_PROVIDER_API_KEY 環境變量未設置")
+
+       self.quick_think_llm = ChatNewProvider(
+           model=self.config["quick_think_llm"],
+           api_key=new_api_key,
+           temperature=0.7
+       )
+   ```
+
+3. **更新環境變數配置**：
+   - 在 `.env.example` 添加新的 API 金鑰
+   - 在 `config_manager.py` 的 `get_env_config_status()` 添加檢查
+
+4. **更新 Web 界面**：
+   - 在 `web/pages/1_🔬_股票分析.py` 添加供應商選項
+   - 在 `web/modules/config_management.py` 添加配置選項
+
+5. **測試集成**：
+   ```bash
+   pytest tests/ -k test_new_provider
+   ```
+
+**重要提醒**：
+- 只支持國際 LLM 提供商
+- 不要添加需要特殊網絡環境的提供商
+- 優先使用 LangChain 官方客戶端
 
 ### 添加新的分析師
 
@@ -403,17 +494,16 @@ max_risk_discuss_rounds: int  # 風險討論輪數
 所有環境變數應在 `.env.example` 中定義：
 
 ```bash
-# LLM API 金鑰
-DASHSCOPE_API_KEY=your_key_here
-DEEPSEEK_API_KEY=your_key_here
-GOOGLE_API_KEY=your_key_here
-OPENAI_API_KEY=your_key_here
+# LLM API 金鑰（至少配置一個）
+OPENAI_API_KEY=sk-your-openai-key        # OpenAI (推薦)
+GOOGLE_API_KEY=your-google-key           # Google Gemini
+ANTHROPIC_API_KEY=sk-ant-your-key        # Anthropic Claude
+OPENROUTER_API_KEY=sk-or-v1-your-key    # OpenRouter (可選)
 
 # 資料來源 API
-TUSHARE_TOKEN=your_token
-FINNHUB_API_KEY=your_key
+FINNHUB_API_KEY=your-finnhub-key         # 美股數據 (可選)
 
-# 資料庫配置
+# 資料庫配置（可選，用於快取優化）
 MONGODB_ENABLED=true
 MONGODB_HOST=localhost
 MONGODB_PORT=27017
@@ -422,10 +512,17 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 
 # 功能開關
-ONLINE_TOOLS_ENABLED=false
+ONLINE_TOOLS_ENABLED=true
 ONLINE_NEWS_ENABLED=true
-REALTIME_DATA_ENABLED=false
+REALTIME_DATA_ENABLED=true
+MEMORY_ENABLED=true
 ```
+
+**⚠️ 重要變更**：
+- **已移除**: `DASHSCOPE_API_KEY`, `DEEPSEEK_API_KEY`, `QIANFAN_API_KEY`, `TUSHARE_TOKEN`
+- **必需**: 至少配置一個國際 LLM 提供商的 API 金鑰
+- **推薦**: 配置 `OPENAI_API_KEY` 作為主要提供商
+- **可選**: `FINNHUB_API_KEY` 僅用於美股數據，若無則部分功能受限
 
 ### Docker 建構註意事項
 
@@ -506,16 +603,44 @@ logger.error("錯誤訊息")
    docker-compose restart mongodb
    ```
 
-3. **API 金鑰錯誤**
+3. **LLM API 金鑰錯誤**
    ```bash
-   # 驗證配置
+   # 驗證 API 配置
    python scripts/check_api_config.py
+
+   # 常見錯誤：
+   # - "未檢測到任何 LLM 提供商的 API 密鑰"
+   #   解決：至少配置 OPENAI_API_KEY、GOOGLE_API_KEY 或 ANTHROPIC_API_KEY 其中一個
+   # - "OpenAI API密鑰格式不正確"
+   #   解決：確保密鑰以 'sk-' 開頭且長度為 51 個字符
    ```
 
-4. **快取問題**
+4. **DASHSCOPE_API_KEY 錯誤（已過時）**
+   ```bash
+   # 如果看到 "DASHSCOPE_API_KEY 環境變量未設置" 錯誤
+   # 這表示代碼可能沒有更新到最新版本
+   #
+   # 解決方法：
+   # 1. 確認 tradingagents/config/config_manager.py 中預設供應商是 "openai"
+   # 2. 確認 web/utils/analysis_runner.py 中沒有檢查 DASHSCOPE_API_KEY
+   # 3. 確認 web/run_web.py 中使用 llm_configured 檢查而非 dashscope_key
+   ```
+
+5. **快取問題**
    ```bash
    # 清理快取
    python scripts/maintenance/cleanup_cache.py --days 7
+   ```
+
+6. **市場數據問題**
+   ```bash
+   # A股/港股數據依賴：需要網絡訪問 AkShare 數據源
+   # 美股數據依賴：需要配置 FINNHUB_API_KEY（可選）
+   #
+   # 如果數據獲取失敗：
+   # 1. 檢查網絡連接
+   # 2. 確認 FINNHUB_API_KEY 是否配置（美股）
+   # 3. 查看日誌中的具體錯誤信息
    ```
 
 ## 重要提醒

@@ -45,6 +45,8 @@ def create_bear_researcher(llm, memory):
 
         prompt = f"""你是一位看跌分析師，负责論證不投資股票 {company_name} 的理由。
 
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
+
 ⚠️ 重要提醒：當前分析的是 {market_info['market_name']}，所有價格和估值請使用 {currency}（{currency_symbol}）作為單位。
 
 你的目標是提出合理的論證，强調風險、挑战和负面指標。利用提供的研究和數據來突出潜在的不利因素並有效反驳看涨論點。

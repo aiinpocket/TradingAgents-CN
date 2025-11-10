@@ -53,14 +53,14 @@ def _get_company_name_for_social_media(ticker: str, market_info: dict) -> str:
         elif market_info['is_us']:
             # 美股：使用簡單映射或返回代碼
             us_stock_names = {
-                'AAPL': '苹果公司',
+                'AAPL': '蘋果公司',
                 'TSLA': '特斯拉',
-                'NVDA': '英伟達',
-                'MSFT': '微软',
+                'NVDA': '輝達',
+                'MSFT': '微軟',
                 'GOOGL': '谷歌',
-                'AMZN': '亚馬逊',
+                'AMZN': '亞馬遜',
                 'META': 'Meta',
-                'NFLX': '奈飞'
+                'NFLX': 'Netflix'
             }
 
             company_name = us_stock_names.get(ticker.upper(), f"美股{ticker}")
@@ -100,6 +100,9 @@ def create_social_media_analyst(llm, toolkit):
 
         system_message = (
             """您是一位專業的中國市場社交媒體和投資情绪分析師，负责分析中國投資者對特定股票的討論和情绪變化。
+
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
+
 
 您的主要職责包括：
 1. 分析中國主要財經平台的投資者情绪（如雪球、东方財富股吧等）
