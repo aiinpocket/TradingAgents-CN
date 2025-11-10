@@ -142,8 +142,8 @@ def render_model_config():
     col1, col2 = st.columns(2)
     
     with col1:
-        new_provider = st.selectbox("供應商", ["dashscope", "openai", "google", "anthropic", "other"], key="new_provider")
-        new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4, qwen-plus-latest", key="new_model_name")
+        new_provider = st.selectbox("供應商", ["openai", "google", "anthropic", "other"], key="new_provider")
+        new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4, gemini-2.5-pro", key="new_model_name")
         new_api_key = st.text_input("API密鑰", type="password", key="new_api_key")
 
     with col2:
@@ -244,8 +244,8 @@ def render_pricing_config():
     col1, col2 = st.columns(2)
     
     with col1:
-        new_provider = st.text_input("供應商", placeholder="例如: openai, dashscope", key="new_pricing_provider")
-        new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4, qwen-plus", key="new_pricing_model")
+        new_provider = st.text_input("供應商", placeholder="例如: openai, google, anthropic", key="new_pricing_provider")
+        new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4, gemini-2.5-pro", key="new_pricing_model")
         new_currency = st.selectbox("貨币", ["CNY", "USD", "EUR"], key="new_pricing_currency")
 
     with col2:
@@ -394,12 +394,16 @@ def render_system_settings():
     col1, col2 = st.columns(2)
     
     with col1:
+        providers = ["openai", "google", "anthropic"]
+        default_provider_value = settings.get("default_provider", "openai")
+        # 確保預設值在選項中
+        if default_provider_value not in providers:
+            default_provider_value = "openai"
+
         default_provider = st.selectbox(
             "默認供應商",
-            ["dashscope", "openai", "google", "anthropic"],
-            index=["dashscope", "openai", "google", "anthropic"].index(
-                settings.get("default_provider", "dashscope")
-            ),
+            providers,
+            index=providers.index(default_provider_value),
             key="settings_default_provider"
         )
 
@@ -530,10 +534,9 @@ def render_env_status():
         with api_col1:
             st.write("**大模型API密鑰:**")
             for provider, configured in env_status["api_keys"].items():
-                if provider in ["dashscope", "openai", "google", "anthropic"]:
+                if provider in ["openai", "google", "anthropic"]:
                     status = "✅ 已配置" if configured else "❌ 未配置"
                     provider_name = {
-                        "dashscope": "阿里百炼",
                         "openai": "OpenAI",
                         "google": "Google AI",
                         "anthropic": "Anthropic"

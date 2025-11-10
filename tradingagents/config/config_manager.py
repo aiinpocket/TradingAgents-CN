@@ -438,18 +438,18 @@ class ConfigManager:
             else:
                 # 如果設置文件不存在，創建默認設置
                 settings = {
-                    "default_provider": "dashscope",
-                    "default_model": "qwen-turbo",
+                    "default_provider": "openai",
+                    "default_model": "gpt-4o-mini",
                     "enable_cost_tracking": True,
                     "cost_alert_threshold": 100.0,
-                    "currency_preference": "CNY",
+                    "currency_preference": "USD",
                     "auto_save_usage": True,
                     "max_usage_records": 10000,
                     "data_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data"),
                     "cache_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data", "cache"),
                     "results_dir": os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "results"),
                     "auto_create_dirs": True,
-                    "openai_enabled": False,
+                    "openai_enabled": True,
                 }
                 self.save_settings(settings)
         except Exception as e:
@@ -489,7 +489,6 @@ class ConfigManager:
         return {
             "env_file_exists": (Path(__file__).parent.parent.parent / ".env").exists(),
             "api_keys": {
-                "dashscope": bool(os.getenv("DASHSCOPE_API_KEY")),
                 "openai": bool(os.getenv("OPENAI_API_KEY")),
                 "google": bool(os.getenv("GOOGLE_API_KEY")),
                 "anthropic": bool(os.getenv("ANTHROPIC_API_KEY")),

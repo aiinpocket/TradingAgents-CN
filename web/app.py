@@ -1001,25 +1001,34 @@ def main():
         
         with st.expander("📋 API密鑰配置指南", expanded=True):
             st.markdown("""
-            ### 🔑 必需的API密鑰
-            
-            1. **阿里百炼API密鑰** (DASHSCOPE_API_KEY)
-               - 獲取地址: https://dashscope.aliyun.com/
-               - 用途: AI模型推理
-            
-            2. **金融數據API密鑰** (FINNHUB_API_KEY)  
+            ### 🔑 必需的API密鑰（至少配置一個 LLM 提供商）
+
+            1. **OpenAI API密鑰** (OPENAI_API_KEY)
+               - 獲取地址: https://platform.openai.com/
+               - 用途: GPT-4、GPT-3.5 等模型
+
+            2. **Google AI API密鑰** (GOOGLE_API_KEY)
+               - 獲取地址: https://ai.google.dev/
+               - 用途: Gemini 模型系列
+
+            3. **Anthropic API密鑰** (ANTHROPIC_API_KEY)
+               - 獲取地址: https://console.anthropic.com/
+               - 用途: Claude 模型系列
+
+            4. **金融數據API密鑰** (FINNHUB_API_KEY，可選)
                - 獲取地址: https://finnhub.io/
-               - 用途: 獲取股票數據
-            
+               - 用途: 美股數據（若無則部分功能受限）
+
             ### ⚙️ 配置方法
-            
+
             1. 複制項目根目錄的 `.env.example` 為 `.env`
             2. 編辑 `.env` 文件，填入您的真實API密鑰
             3. 重啟Web應用
-            
+
             ```bash
             # .env 文件示例
-            DASHSCOPE_API_KEY=sk-your-dashscope-key
+            OPENAI_API_KEY=sk-your-openai-key
+            GOOGLE_API_KEY=your-google-key
             FINNHUB_API_KEY=your-finnhub-key
             ```
             """)

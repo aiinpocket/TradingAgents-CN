@@ -201,17 +201,13 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
     # 驗證環境變量
     update_progress("檢查環境變量配置...")
-    dashscope_key = os.getenv("DASHSCOPE_API_KEY")
     finnhub_key = os.getenv("FINNHUB_API_KEY")
 
     logger.info(f"環境變量檢查:")
-    logger.info(f"  DASHSCOPE_API_KEY: {'已設置' if dashscope_key else '未設置'}")
     logger.info(f"  FINNHUB_API_KEY: {'已設置' if finnhub_key else '未設置'}")
 
-    if not dashscope_key:
-        raise ValueError("DASHSCOPE_API_KEY 環境變量未設置")
     if not finnhub_key:
-        raise ValueError("FINNHUB_API_KEY 環境變量未設置")
+        logger.warning("⚠️ FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
 
     update_progress("環境變量驗證通過")
 
@@ -236,94 +232,29 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             # 統一使用在線工具，避免離線工具的各種問題
             config["online_tools"] = True  # 所有市場都使用統一工具
             logger.info(f"🔧 [快速分析] {market_type}使用統一工具，確保數據源正確和穩定性")
-            if llm_provider == "dashscope":
-                config["quick_think_llm"] = "qwen-turbo"  # 使用最快模型
-                config["deep_think_llm"] = "qwen-plus"
-            elif llm_provider == "deepseek":
-                config["quick_think_llm"] = "deepseek-chat"  # DeepSeek只有一個模型
-                config["deep_think_llm"] = "deepseek-chat"
         elif research_depth == 2:  # 2級 - 基础分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
             config["memory_enabled"] = True
             config["online_tools"] = True
-            if llm_provider == "dashscope":
-                config["quick_think_llm"] = "qwen-plus"
-                config["deep_think_llm"] = "qwen-plus"
-            elif llm_provider == "deepseek":
-                config["quick_think_llm"] = "deepseek-chat"
-                config["deep_think_llm"] = "deepseek-chat"
-            elif llm_provider == "openai":
-                config["quick_think_llm"] = llm_model
-                config["deep_think_llm"] = llm_model
-            elif llm_provider == "openai":
-                config["quick_think_llm"] = llm_model
-                config["deep_think_llm"] = llm_model
-            elif llm_provider == "openai":
-                config["quick_think_llm"] = llm_model
-                config["deep_think_llm"] = llm_model
-            elif llm_provider == "openai":
-                config["quick_think_llm"] = llm_model
-                config["deep_think_llm"] = llm_model
-            elif llm_provider == "openai":
-                config["quick_think_llm"] = llm_model
-                config["deep_think_llm"] = llm_model
         elif research_depth == 3:  # 3級 - 標準分析 (默認)
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 2
             config["memory_enabled"] = True
             config["online_tools"] = True
-            if llm_provider == "dashscope":
-                config["quick_think_llm"] = "qwen-plus"
-                config["deep_think_llm"] = "qwen3-max"
-            elif llm_provider == "deepseek":
-                config["quick_think_llm"] = "deepseek-chat"
-                config["deep_think_llm"] = "deepseek-chat"
         elif research_depth == 4:  # 4級 - 深度分析
             config["max_debate_rounds"] = 2
             config["max_risk_discuss_rounds"] = 2
             config["memory_enabled"] = True
             config["online_tools"] = True
-            if llm_provider == "dashscope":
-                config["quick_think_llm"] = "qwen-plus"
-                config["deep_think_llm"] = "qwen3-max"
-            elif llm_provider == "deepseek":
-                config["quick_think_llm"] = "deepseek-chat"
-                config["deep_think_llm"] = "deepseek-chat"
         else:  # 5級 - 全面分析
             config["max_debate_rounds"] = 3
             config["max_risk_discuss_rounds"] = 3
             config["memory_enabled"] = True
             config["online_tools"] = True
-            if llm_provider == "dashscope":
-                config["quick_think_llm"] = "qwen3-max"
-                config["deep_think_llm"] = "qwen3-max"
-            elif llm_provider == "deepseek":
-                config["quick_think_llm"] = "deepseek-chat"
-                config["deep_think_llm"] = "deepseek-chat"
 
         # 根據LLM提供商設置不同的配置
-        if llm_provider == "dashscope":
-            config["backend_url"] = "https://dashscope.aliyuncs.com/api/v1"
-        elif llm_provider == "deepseek":
-            config["backend_url"] = "https://api.deepseek.com"
-        elif llm_provider == "qianfan":
-            # 千帆（文心一言）配置
-            config["backend_url"] = "https://aip.baidubce.com"
-            # 根據研究深度設置千帆模型
-            if research_depth <= 2:  # 快速和基础分析
-                config["quick_think_llm"] = "ernie-3.5-8k"
-                config["deep_think_llm"] = "ernie-3.5-8k"
-            elif research_depth <= 4:  # 標準和深度分析
-                config["quick_think_llm"] = "ernie-3.5-8k"
-                config["deep_think_llm"] = "ernie-4.0-turbo-8k"
-            else:  # 全面分析
-                config["quick_think_llm"] = "ernie-4.0-turbo-8k"
-                config["deep_think_llm"] = "ernie-4.0-turbo-8k"
-            
-            logger.info(f"🤖 [千帆] 快速模型: {config['quick_think_llm']}")
-            logger.info(f"🤖 [千帆] 深度模型: {config['deep_think_llm']}")
-        elif llm_provider == "google":
+        if llm_provider == "google":
             # Google AI不需要backend_url，使用默認的OpenAI格式
             config["backend_url"] = "https://api.openai.com/v1"
             

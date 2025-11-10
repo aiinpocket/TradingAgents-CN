@@ -164,21 +164,28 @@ def check_api_keys():
     project_root = Path(__file__).parent.parent
     load_dotenv(project_root / ".env")
     
-    dashscope_key = os.getenv("DASHSCOPE_API_KEY")
+    # 檢查至少一個 LLM 提供商的 API 密鑰已配置
+    openai_key = os.getenv("OPENAI_API_KEY")
+    google_key = os.getenv("GOOGLE_API_KEY")
+    anthropic_key = os.getenv("ANTHROPIC_API_KEY")
     finnhub_key = os.getenv("FINNHUB_API_KEY")
-    
-    if not dashscope_key or not finnhub_key:
-        logger.warning(f"⚠️ API密鑰配置不完整")
-        logger.info(f"請確保在.env文件中配置以下密鑰:")
-        if not dashscope_key:
-            logger.info(f"  - DASHSCOPE_API_KEY (阿里百炼)")
-        if not finnhub_key:
-            logger.info(f"  - FINNHUB_API_KEY (金融數據)")
+
+    llm_configured = openai_key or google_key or anthropic_key
+
+    if not llm_configured:
+        logger.warning(f"⚠️ 未檢測到任何 LLM 提供商的 API 密鑰")
+        logger.info(f"請確保在.env文件中至少配置以下其中一個密鑰:")
+        logger.info(f"  - OPENAI_API_KEY (OpenAI GPT 模型)")
+        logger.info(f"  - GOOGLE_API_KEY (Google Gemini 模型)")
+        logger.info(f"  - ANTHROPIC_API_KEY (Anthropic Claude 模型)")
         logger.info(f"\n配置方法:")
         logger.info(f"1. 複制 .env.example 為 .env")
         logger.info(f"2. 編辑 .env 文件，填入真實API密鑰")
         return False
-    
+
+    if not finnhub_key:
+        logger.warning(f"⚠️ FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
+
     logger.info(f"✅ API密鑰配置完成")
     return True
 
