@@ -25,7 +25,7 @@ TradingAgents現在支持自定義OpenAI兼容端點，允許您使用任何支�
 ### 2. 配置端點
 - **API端點URL**: 輸入您的OpenAI兼容API端點
   - 官方OpenAI: `https://api.openai.com/v1`
-  - DeepSeek: `https://api.deepseek.com/v1`
+  - 
   - 本地服務: `http://localhost:8000/v1`
 - **API密鑰**: 輸入對應的API密鑰
 
@@ -51,7 +51,7 @@ python cli/main.py
 ### 3. 配置端點
 輸入您的自定義OpenAI端點URL，例如：
 - `https://api.openai.com/v1`
-- `https://api.deepseek.com/v1`
+- `https://api.
 - `http://localhost:8000/v1`
 
 ### 4. 選擇模型
@@ -117,11 +117,11 @@ CUSTOM_OPENAI_BASE_URL=https://api.openai.com/v1
 模型: llama-3.1-8b
 ```
 
-### 4. 使用DeepSeek API
+### 4. 使用
 ```
-端點: https://api.deepseek.com/v1
-密鑰: 您的DeepSeek API密鑰
-模型: deepseek-chat
+端點: https://api.
+密鑰: 您的
+模型: 
 ```
 
 ### 5. 使用硅基流動（SiliconFlow）

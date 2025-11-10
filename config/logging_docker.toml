@@ -1,24 +1,24 @@
-# Docker环境专用日志配置 - 完整修复版
-# 解决KeyError: 'file'错误
+# Docker環境專用日誌配置 - 完整修復版
+# 解決KeyError: 'file'錯誤
 
 [logging]
 level = "INFO"
 
 [logging.format]
-# 必须包含所有格式配置
+# 必須包含所有格式配置
 console = "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
 file = "%(asctime)s | %(name)-20s | %(levelname)-8s | %(module)s:%(funcName)s:%(lineno)d | %(message)s"
 structured = "json"
 
 [logging.handlers]
 
-# 控制台输出
+# 控制臺輸出
 [logging.handlers.console]
 enabled = true
 colored = false
 level = "INFO"
 
-# 文件输出 - 完整配置
+# 檔案輸出 - 完整配置
 [logging.handlers.file]
 enabled = true
 level = "DEBUG"
@@ -26,7 +26,7 @@ max_size = "100MB"
 backup_count = 5
 directory = "/app/logs"
 
-# 结构化日志
+# 結構化日誌
 [logging.handlers.structured]
 enabled = true
 level = "INFO"
@@ -63,11 +63,11 @@ level = "WARNING"
 [logging.loggers.pandas]
 level = "WARNING"
 
-# Docker配置 - 修复版
+# Docker配置 - 修復版
 [logging.docker]
 enabled = true
-stdout_only = false  # 同时输出到文件和stdout
-disable_file_logging = false  # 启用文件日志
+stdout_only = false  # 同時輸出到檔案和stdout
+disable_file_logging = false  # 啟用檔案日誌
 
 [logging.development]
 enabled = false

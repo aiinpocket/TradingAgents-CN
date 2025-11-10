@@ -1,26 +1,26 @@
-# TradingAgents-CN 日志配置文件
-# 支持不同环境的日志配置
+# TradingAgents-CN 日誌配置檔案
+# 支援不同環境的日誌配置
 
 [logging]
-# 全局日志级别：DEBUG, INFO, WARNING, ERROR, CRITICAL
+# 全域日誌級別：DEBUG, INFO, WARNING, ERROR, CRITICAL
 level = "INFO"
 
-# 日志格式配置
+# 日誌格式配置
 [logging.format]
 console = "%(asctime)s | %(name)-20s | %(levelname)-8s | %(message)s"
 file = "%(asctime)s | %(name)-20s | %(levelname)-8s | %(module)s:%(funcName)s:%(lineno)d | %(message)s"
 structured = "json"
 
-# 处理器配置
+# 處理器配置
 [logging.handlers]
 
-# 控制台处理器
+# 控制臺處理器
 [logging.handlers.console]
 enabled = true
-colored = true  # 是否启用彩色输出
+colored = true  # 是否啟用彩色輸出
 level = "INFO"
 
-# 文件处理器
+# 檔案處理器
 [logging.handlers.file]
 enabled = true
 level = "DEBUG"
@@ -28,32 +28,32 @@ max_size = "10MB"
 backup_count = 5
 directory = "./logs"
 
-# 结构化日志处理器（JSON格式）
+# 結構化日誌處理器（JSON格式）
 [logging.handlers.structured]
-enabled = false  # 默认关闭，生产环境可启用
+enabled = false  # 預設關閉，生產環境可啟用
 level = "INFO"
 directory = "./logs"
 
-# 特定日志器配置
+# 特定日誌器配置
 [logging.loggers]
 
-# 主应用日志
+# 主應用日誌
 [logging.loggers.tradingagents]
 level = "INFO"
 
-# Web界面日志
+# Web界面日誌
 [logging.loggers.web]
 level = "INFO"
 
-# 数据流日志
+# 資料流日誌
 [logging.loggers.dataflows]
 level = "INFO"
 
-# LLM适配器日志
+# LLM適配器日誌
 [logging.loggers.llm_adapters]
 level = "INFO"
 
-# 第三方库日志（通常设置为WARNING减少噪音）
+# 第三方套件日誌（通常設定為WARNING減少雜訊）
 [logging.loggers.streamlit]
 level = "WARNING"
 
@@ -69,42 +69,42 @@ level = "WARNING"
 [logging.loggers.pandas]
 level = "WARNING"
 
-# Docker环境配置
+# Docker環境配置
 [logging.docker]
-enabled = false  # 自动检测Docker环境
-stdout_only = true  # Docker环境只输出到stdout
-disable_file_logging = true  # Docker环境禁用文件日志
+enabled = false  # 自動檢測Docker環境
+stdout_only = true  # Docker環境只輸出到stdout
+disable_file_logging = true  # Docker環境禁用檔案日誌
 
-# 开发环境配置
+# 開發環境配置
 [logging.development]
-enabled = false  # 开发模式
-debug_modules = ["tradingagents.graph", "tradingagents.llm_adapters"]  # 开发时详细日志的模块
-save_debug_files = true  # 保存调试文件
+enabled = false  # 開發模式
+debug_modules = ["tradingagents.graph", "tradingagents.llm_adapters"]  # 開發時詳細日誌的模組
+save_debug_files = true  # 儲存調試檔案
 
-# 生产环境配置
+# 生產環境配置
 [logging.production]
-enabled = false  # 生产模式
-structured_only = true  # 只使用结构化日志
-error_notification = true  # 错误通知
-max_log_size = "100MB"  # 生产环境更大的日志文件
+enabled = false  # 生產模式
+structured_only = true  # 只使用結構化日誌
+error_notification = true  # 錯誤通知
+max_log_size = "100MB"  # 生產環境更大的日誌檔案
 
-# 性能监控日志
+# 效能監控日誌
 [logging.performance]
 enabled = true
 log_slow_operations = true
-slow_threshold_seconds = 5.0  # 超过5秒的操作记录为慢操作
-log_memory_usage = false  # 是否记录内存使用
+slow_threshold_seconds = 5.0  # 超過5秒的操作記錄為慢操作
+log_memory_usage = false  # 是否記錄記憶體使用
 
-# 安全日志
+# 安全日誌
 [logging.security]
 enabled = true
-log_api_calls = true  # 记录API调用
-log_token_usage = true  # 记录Token使用
-mask_sensitive_data = true  # 屏蔽敏感数据
+log_api_calls = true  # 記錄API呼叫
+log_token_usage = true  # 記錄Token使用
+mask_sensitive_data = true  # 遮罩敏感資料
 
-# 业务日志
+# 業務日誌
 [logging.business]
 enabled = true
-log_analysis_events = true  # 记录分析事件
-log_user_actions = true  # 记录用户操作
-log_export_events = true  # 记录导出事件
+log_analysis_events = true  # 記錄分析事件
+log_user_actions = true  # 記錄使用者操作
+log_export_events = true  # 記錄匯出事件

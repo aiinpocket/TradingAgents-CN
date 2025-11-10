@@ -59,9 +59,9 @@ pip install pytest pytest-asyncio
 
 創建 `tests/test_your_provider_adapter.py`：
 
-### 千帆模型專項測試（OpenAI 兼容模式）
+### 模型專項測試（OpenAI 兼容模式）
 
-創建 `tests/test_qianfan_adapter.py`：
+創建 `tests/test__adapter.py`：
 
 ```python
 import os
@@ -69,26 +69,26 @@ from tradingagents.llm_adapters.openai_compatible_base import create_openai_comp
 from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage
 
-def test_qianfan_api_key_config():
-    """測試千帆 API Key 配置"""
-    api_key = os.environ.get("QIANFAN_API_KEY")
+def test__api_key_config():
+    """測試 API Key 配置"""
+    api_key = os.environ.get("_API_KEY")
     
     if not api_key:
-        print("❌ 缺少千帆API密鑰配置: QIANFAN_API_KEY")
+        print("❌ 缺少API密鑰配置: _API_KEY")
         return False
     
     if not api_key.startswith("bce-v3/"):
-        print("⚠️ 千帆API密鑰格式可能不正確，建议使用 bce-v3/ 開头的格式")
+        print("⚠️ API密鑰格式可能不正確，建议使用 bce-v3/ 開头的格式")
         return False
     
-    print(f"✅ 千帆API密鑰配置正確 (格式: {api_key[:10]}...)")
+    print(f"✅ API密鑰配置正確 (格式: {api_key[:10]}...)")
     return True
 
-def test_qianfan_basic_chat():
-    """測試千帆基础對話（OpenAI 兼容模式）"""
+def test__basic_chat():
+    """測試基础對話（OpenAI 兼容模式）"""
     try:
         llm = create_openai_compatible_llm(
-            provider="qianfan",
+            provider="",
             model="ernie-3.5-8k",
             temperature=0.1,
             max_tokens=500
@@ -98,14 +98,14 @@ def test_qianfan_basic_chat():
             HumanMessage(content="你好，請簡單介紹一下你自己")
         ])
         
-        print(f"✅ 千帆對話成功: {response.content[:100]}...")
+        print(f"✅ 對話成功: {response.content[:100]}...")
         return True
     except Exception as e:
-        print(f"❌ 千帆對話失败: {e}")
+        print(f"❌ 對話失败: {e}")
         return False
 
-def test_qianfan_function_calling():
-    """測試千帆工具調用功能"""
+def test__function_calling():
+    """測試工具調用功能"""
     try:
         @tool
         def get_stock_price(symbol: str) -> str:
@@ -120,7 +120,7 @@ def test_qianfan_function_calling():
             return f"股票 {symbol} 的當前價格是 $150.00"
         
         llm = create_openai_compatible_llm(
-            provider="qianfan",
+            provider="",
             model="ernie-4.0-turbo-8k",
             temperature=0.1
         )
@@ -131,7 +131,7 @@ def test_qianfan_function_calling():
             HumanMessage(content="請幫我查詢 AAPL 股票的價格")
         ])
         
-        print(f"✅ 千帆工具調用成功: {response.content[:200]}...")
+        print(f"✅ 工具調用成功: {response.content[:200]}...")
         
         # 檢查是否包含工具調用結果
         if "150.00" in response.content or "AAPL" in response.content:
@@ -142,14 +142,14 @@ def test_qianfan_function_calling():
             return False
             
     except Exception as e:
-        print(f"❌ 千帆工具調用失败: {e}")
+        print(f"❌ 工具調用失败: {e}")
         return False
 
-def test_qianfan_chinese_analysis():
-    """測試千帆中文金融分析能力"""
+def test__chinese_analysis():
+    """測試中文金融分析能力"""
     try:
         llm = create_openai_compatible_llm(
-            provider="qianfan",
+            provider="",
             model="ernie-3.5-8k",
             temperature=0.1
         )
@@ -168,26 +168,26 @@ def test_qianfan_chinese_analysis():
         if (any('\u4e00' <= char <= '\u9fff' for char in content) and 
             ("苹果" in content or "AAPL" in content) and
             len(content) > 50):
-            print("✅ 千帆中文金融分析能力正常")
+            print("✅ 中文金融分析能力正常")
             print(f"📄 分析內容預覽: {content[:150]}...")
             return True
         else:
-            print("⚠️ 千帆中文分析響應可能有問題")
+            print("⚠️ 中文分析響應可能有問題")
             print(f"📄 實际響應: {content}")
             return False
             
     except Exception as e:
-        print(f"❌ 千帆中文分析測試失败: {e}")
+        print(f"❌ 中文分析測試失败: {e}")
         return False
 
-def test_qianfan_model_variants():
-    """測試千帆不同模型變體"""
-    models_to_test = ["ernie-3.5-8k", "ernie-4.0-turbo-8k", "ERNIE-Speed-8K"]
+def test__model_variants():
+    """測試不同模型變體"""
+    models_to_test = ["ernie-3.5-8k", "ernie-4.0-turbo-8k", "
     
     for model in models_to_test:
         try:
             llm = create_openai_compatible_llm(
-                provider="qianfan",
+                provider="",
                 model=model,
                 temperature=0.1,
                 max_tokens=100
@@ -202,28 +202,28 @@ def test_qianfan_model_variants():
             print(f"❌ 模型 {model} 測試失败: {e}")
 
 if __name__ == "__main__":
-    print("=== 千帆模型專項測試（OpenAI 兼容模式）===")
+    print("=== 模型專項測試（OpenAI 兼容模式）===")
     print()
     
     # 基础配置測試
-    test_qianfan_api_key_config()
+    test__api_key_config()
     print()
     
     # 基础對話測試
-    test_qianfan_basic_chat()
+    test__basic_chat()
     print()
     
     # 工具調用測試
-    test_qianfan_function_calling()
+    test__function_calling()
     print()
     
     # 中文分析測試
-    test_qianfan_chinese_analysis()
+    test__chinese_analysis()
     print()
     
     # 模型變體測試
     print("--- 測試不同模型變體 ---")
-    test_qianfan_model_variants()
+    test__model_variants()
 ```
 
 ```python
@@ -655,27 +655,27 @@ pip install -e .
 python -c "from tradingagents.llm_adapters import ChatYourProvider; print('導入成功')"
 ```
 
-### 問題 5: 千帆模型認證失败
+### 問題 5: 模型認證失败
 
 **症狀**: `AuthenticationError` 或 `invalid_client`
 
 **解決方案**:
 ```bash
-# 檢查千帆API密鑰配置（仅需一個密鑰）
-echo $QIANFAN_API_KEY
+# 檢查API密鑰配置（仅需一個密鑰）
+echo $_API_KEY
 
 # 驗證密鑰格式（應该以 bce-v3/ 開头）
-python -c "import os; print(f'API Key格式: {os.getenv("QIANFAN_API_KEY", "未設置")[:10]}...')"
+python -c "import os; print(f'API Key格式: {os.getenv("_API_KEY", "未設置")[:10]}...')"
 
 # 建议：使用 OpenAI 兼容路徑進行連通性驗證（無需 AK/SK 獲取 Token）
 python - << 'PY'
 from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm
-llm = create_openai_compatible_llm(provider="qianfan", model="ernie-3.5-8k")
+llm = create_openai_compatible_llm(provider="", model="ernie-3.5-8k")
 print(llm.invoke("ping").content)
 PY
 ```
 
-### 問題 6: 千帆模型中文乱碼
+### 問題 6: 模型中文乱碼
 
 **症狀**: 返回內容包含乱碼或編碼錯誤
 
@@ -698,23 +698,23 @@ print(f"編碼: {test_text.encode('utf-8')}")
 print(f"解碼: {test_text.encode('utf-8').decode('utf-8')}")
 ```
 
-### 問題 7: 千帆調用失败（OpenAI 兼容路徑）
+### 問題 7: 調用失败（OpenAI 兼容路徑）
 
 **症狀**: `AuthenticationError`、`RateLimitError` 或 `ModelNotFound`
 
 **解決方案**:
 ```python
 # 1) 檢查 API Key 是否正確設置
-action = "已設置" if os.getenv("QIANFAN_API_KEY") else "未設置"
-print(f"QIANFAN_API_KEY: {action}")
+action = "已設置" if os.getenv("_API_KEY") else "未設置"
+print(f"_API_KEY: {action}")
 
 # 2) 確認模型名稱是否在映射列表
 from tradingagents.llm_adapters.openai_compatible_base import OPENAI_COMPATIBLE_PROVIDERS
-print(OPENAI_COMPATIBLE_PROVIDERS["qianfan"]["models"].keys())
+print(OPENAI_COMPATIBLE_PROVIDERS[""]["models"].keys())
 
 # 3) 低並發/延時重試
 from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm
-llm = create_openai_compatible_llm(provider="qianfan", model="ernie-3.5-8k", request_timeout=60)
+llm = create_openai_compatible_llm(provider="", model="ernie-3.5-8k", request_timeout=60)
 print(llm.invoke("hello").content)
 ```
 

@@ -891,16 +891,6 @@ def render_sidebar():
         # 必需的API密鑰
         st.markdown("*必需配置:*")
 
-        # 阿里百炼
-        dashscope_key = os.getenv("DASHSCOPE_API_KEY")
-        status, level = validate_api_key(dashscope_key, "dashscope")
-        if level == "success":
-            st.success(f"✅ 阿里百炼: {status}")
-        elif level == "warning":
-            st.warning(f"⚠️ 阿里百炼: {status}")
-        else:
-            st.error("❌ 阿里百炼: 未配置")
-
         # FinnHub
         finnhub_key = os.getenv("FINNHUB_API_KEY")
         status, level = validate_api_key(finnhub_key, "finnhub")
@@ -913,26 +903,6 @@ def render_sidebar():
 
         # 可選的API密鑰
         st.markdown("*可選配置:*")
-
-        # DeepSeek
-        deepseek_key = os.getenv("DEEPSEEK_API_KEY")
-        status, level = validate_api_key(deepseek_key, "deepseek")
-        if level == "success":
-            st.success(f"✅ DeepSeek: {status}")
-        elif level == "warning":
-            st.warning(f"⚠️ DeepSeek: {status}")
-        else:
-            st.info("ℹ️ DeepSeek: 未配置")
-
-        # Tushare
-        tushare_key = os.getenv("TUSHARE_TOKEN")
-        status, level = validate_api_key(tushare_key, "tushare")
-        if level == "success":
-            st.success(f"✅ Tushare: {status}")
-        elif level == "warning":
-            st.warning(f"⚠️ Tushare: {status}")
-        else:
-            st.info("ℹ️ Tushare: 未配置")
 
         # Google AI
         google_key = os.getenv("GOOGLE_API_KEY")

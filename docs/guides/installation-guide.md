@@ -9,7 +9,7 @@ status: updated
 
 > **版本說明**: 本文档基於 `cn-0.1.14-preview` 版本編寫  
 > **最後更新**: 2025-01-13  
-> **狀態**: ✅ 已更新 - 包含最新的安裝和配置步骤
+> **狀態**: ✅ 已更新 - 包含最新的安裝和配置步驟
 
 ## 📋 目錄
 
@@ -25,7 +25,7 @@ status: updated
 
 ## 🖥️ 系統要求
 
-### 操作系統支持
+### 操作系統支援
 - ✅ **Windows 10/11** (推薦)
 - ✅ **macOS 10.15+**
 - ✅ **Linux (Ubuntu 20.04+, CentOS 8+)**
@@ -136,7 +136,7 @@ which python  # 應该指向虛擬環境中的python
 uv pip install -e .
 
 # 安裝額外依賴
-uv pip install yfinance langgraph dashscope
+uv pip install yfinance langgraph 
 
 # 驗證安裝
 python -c "import tradingagents; print('安裝成功!')"
@@ -148,7 +148,7 @@ python -c "import tradingagents; print('安裝成功!')"
 pip install -e .
 
 # 安裝缺失的依賴包
-pip install yfinance langgraph dashscope
+pip install yfinance langgraph 
 
 # 或一次性安裝所有依賴
 pip install -r requirements.txt
@@ -163,10 +163,10 @@ python -c "import tradingagents; print('安裝成功!')"
 pip install streamlit pandas numpy requests plotly
 
 # 2. 安裝LLM相關依賴
-pip install openai langchain langgraph dashscope
+pip install openai langchain langgraph 
 
 # 3. 安裝數據源依賴
-pip install yfinance tushare akshare
+pip install yfinance  
 
 # 4. 安裝數據庫依賴 (可選)
 pip install redis pymongo
@@ -209,29 +209,15 @@ LOG_LEVEL=INFO
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_BASE_URL=https://api.openai.com/v1
 
-# 阿里百炼 (DashScope)
-DASHSCOPE_API_KEY=your_dashscope_api_key_here
-
-# DeepSeek配置
-DEEPSEEK_API_KEY=your_deepseek_api_key_here
-DEEPSEEK_BASE_URL=https://api.deepseek.com
-
 # Google AI配置
 GOOGLE_API_KEY=your_google_api_key_here
-
-# 百度千帆配置
-QIANFAN_ACCESS_KEY=your_qianfan_access_key_here
-QIANFAN_SECRET_KEY=your_qianfan_secret_key_here
-
-# 硅基流動配置
-SILICONFLOW_API_KEY=your_siliconflow_api_key_here
 
 # ===========================================
 # 數據源API配置
 # ===========================================
 
-# Tushare配置 (A股數據)
-TUSHARE_TOKEN=your_tushare_token_here
+# 配置 (數據)
+TUSHARE_TOKEN=your__token_here
 
 # FinnHub配置 (美股數據)
 FINNHUB_API_KEY=your_finnhub_api_key_here
@@ -274,24 +260,24 @@ LOG_FILE=tradingagents.log
 
 #### OpenAI API密鑰
 1. 訪問 [OpenAI Platform](https://platform.openai.com/)
-2. 註冊/登錄账戶
-3. 進入 API Keys 页面
-4. 創建新的API密鑰
+2. 註冊/登錄帳戶
+3. 進入 API Keys 頁面
+4. 建立新的API密鑰
 
-#### 阿里百炼 (DashScope)
-1. 訪問 [阿里云百炼](https://dashscope.aliyun.com/)
-2. 註冊/登錄阿里云账戶
-3. 開通百炼服務
+#### Google AI API
+1. 訪問 [Google AI Studio](https://ai.google.dev/)
+2. 使用Google帳戶登入
+3. 建立新專案
 4. 獲取API Key
-
-#### Tushare Token
-1. 訪問 [Tushare官網](https://tushare.pro/)
-2. 註冊账戶並實名認證
-3. 獲取Token (免費用戶有調用限制)
 
 #### FinnHub API
 1. 訪問 [FinnHub](https://finnhub.io/)
-2. 註冊免費账戶
+2. 註冊免費帳戶
+3. 獲取API Key
+
+#### Alpha Vantage API
+1. 訪問 [Alpha Vantage](https://www.alphavantage.co/)
+2. 註冊免費帳戶
 3. 獲取API Key
 
 ## 🗄️ 數據庫配置
@@ -527,9 +513,9 @@ handlers = ["console", "file"]
 # 在config/settings.json中配置數據源優先級
 {
   "data_sources": {
-    "china_stocks": ["tushare", "akshare", "tdx"],
+    "china_stocks": ["", "", "tdx"],
     "us_stocks": ["yfinance", "finnhub", "alpha_vantage"],
-    "hk_stocks": ["akshare", "yfinance"]
+    "hk_stocks": ["", "yfinance"]
   }
 }
 ```
@@ -577,11 +563,11 @@ docker-compose logs -f
 
 ## 📚 下一步
 
-安裝完成後，建议阅讀以下文档：
+安裝完成後，建議阅讀以下文档：
 
 1. **[快速開始指南](../QUICK_START.md)** - 了解基本使用方法
 2. **[配置管理指南](./config-management-guide.md)** - 深入了解配置選項
-3. **[A股分析指南](./a-share-analysis-guide.md)** - A股市場分析教程
+3. **[分析指南](./a-share-analysis-guide.md)** - 市場分析教程
 4. **[Docker部署指南](./docker-deployment-guide.md)** - 生產環境部署
 5. **[故障排除指南](../troubleshooting/)** - 常见問題解決方案
 
@@ -591,7 +577,7 @@ docker-compose logs -f
 
 - **GitHub Issues**: [提交問題](https://github.com/your-repo/TradingAgents-CN/issues)
 - **文档**: [查看完整文档](../README.md)
-- **社区**: [加入討論群](https://your-community-link)
+- **社群**: [加入討論群](https://your-community-link)
 
 ---
 

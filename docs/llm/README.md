@@ -9,20 +9,20 @@
   - 系統架構概覽
   - OpenAI兼容適配器開發
   - 前端集成步骤
-  - 百度千帆模型實际接入案例
+  - 模型實际接入案例
   - 常见問題与解決方案
 
 ### 🧪 測試驗證
 - **[LLM_TESTING_VALIDATION_GUIDE.md](./LLM_TESTING_VALIDATION_GUIDE.md)** - LLM測試驗證指南
   - 測試腳本模板
-  - 千帆模型專項測試
+  - 模型專項測試
   - 工具調用功能測試
   - Web界面集成測試
   - 完整驗證清單
 
 ### 🎯 專項指南
-- **[QIANFAN_INTEGRATION_GUIDE.md](./QIANFAN_INTEGRATION_GUIDE.md)** - 百度千帆模型專項接入指南
-  - 千帆模型特點和優势
+- **[_INTEGRATION_GUIDE.md](./_INTEGRATION_GUIDE.md)** - 模型專項接入指南
+  - 模型特點和優势
   - 詳細接入步骤
   - 特殊問題解決方案
   - 性能優化建议
@@ -34,25 +34,25 @@
 如果您是第一次接入LLM，建议按以下顺序阅讀：
 
 1. **[LLM_INTEGRATION_GUIDE.md](./LLM_INTEGRATION_GUIDE.md)** - 了解整體架構和通用流程
-2. **[QIANFAN_INTEGRATION_GUIDE.md](./QIANFAN_INTEGRATION_GUIDE.md)** - 學习具體的接入案例
+2. **[_INTEGRATION_GUIDE.md](./_INTEGRATION_GUIDE.md)** - 學习具體的接入案例
 3. **[LLM_TESTING_VALIDATION_GUIDE.md](./LLM_TESTING_VALIDATION_GUIDE.md)** - 進行測試驗證
 
 ### 開發者指南
 如果您要添加新的LLM提供商：
 
 1. 📖 阅讀 **LLM_INTEGRATION_GUIDE.md** 了解開發規範
-2. 🔍 參考 **QIANFAN_INTEGRATION_GUIDE.md** 中的實际案例
+2. 🔍 參考 **_INTEGRATION_GUIDE.md** 中的實际案例
 3. 🧪 使用 **LLM_TESTING_VALIDATION_GUIDE.md** 進行全面測試
 4. 📝 提交PR時包含完整的測試報告
 
 ## 🎯 支持的LLM提供商
 
 ### 已集成
-- ✅ **阿里百炼 (DashScope)** - 通義千問系列模型
-- ✅ **DeepSeek** - DeepSeek V3等高性價比模型
+- ✅ ** (
+- ✅ **
 - ✅ **Google AI** - Gemini系列模型
 - ✅ **OpenRouter** - 60+模型統一接口
-- ✅ **百度千帆** - 文心一言系列模型（詳见專項指南）
+- ✅ **** - 系列模型（詳见專項指南）
 
 ### 計劃中
 - 🔄 **智谱AI** - GLM系列模型
@@ -67,10 +67,10 @@
 tradingagents/
 ├── llm_adapters/              # LLM適配器實現
 │   ├── openai_compatible_base.py  # OpenAI兼容基類
-│   ├── dashscope_adapter.py       # 阿里百炼適配器
-│   ├── deepseek_adapter.py        # DeepSeek適配器
+│   ├── 
+│   ├── 
 │   ├── google_openai_adapter.py   # Google AI適配器
-│   └── （通過 openai_compatible_base 內部註冊 qianfan 提供商）
+│   └── （通過 openai_compatible_base 內部註冊  提供商）
 └── web/
     ├── components/sidebar.py      # 前端模型選擇
     └── utils/analysis_runner.py   # 運行時配置

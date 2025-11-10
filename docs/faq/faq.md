@@ -1,14 +1,14 @@
-# 常见問題解答 (FAQ)
+# 常見問題解答 (FAQ)
 
 ## 概述
 
-本文档收集了用戶在使用 TradingAgents 框架時最常遇到的問題和解答，幫助您快速解決常见問題。
+本文檔收集了用戶在使用 TradingAgents 框架時最常遇到的問題和解答，幫助您快速解決常見問題。
 
 ## 🚀 安裝和配置
 
-### Q1: 安裝時出現依賴冲突怎么办？
+### Q1: 安裝時出現依賴衝突怎麼辦？
 
-**A:** 依賴冲突通常是由於不同包的版本要求不兼容導致的。解決方法：
+**A:** 依賴衝突通常是由於不同套件的版本要求不兼容導致的。解決方法：
 
 ```bash
 # 方法1: 使用新的虛擬環境
@@ -16,7 +16,7 @@ conda create -n tradingagents-clean python=3.11
 conda activate tradingagents-clean
 pip install -r requirements.txt
 
-# 方法2: 使用 pip-tools 解決冲突
+# 方法2: 使用 pip-tools 解決衝突
 pip install pip-tools
 pip-compile requirements.in
 pip-sync requirements.txt
@@ -27,11 +27,11 @@ pip install langchain-openai langgraph finnhub-python pandas
 
 ### Q2: API 密鑰設置後仍然報錯？
 
-**A:** 檢查以下几個方面：
+**A:** 檢查以下幾個方面：
 
-1. **環境變量設置**：
+1. **環境變數設置**：
 ```bash
-# 檢查環境變量是否正確設置
+# 檢查環境變數是否正確設置
 echo $OPENAI_API_KEY
 echo $FINNHUB_API_KEY
 
@@ -43,7 +43,7 @@ echo %FINNHUB_API_KEY%
 2. **密鑰格式驗證**：
 ```python
 import os
-# OpenAI 密鑰應该以 'sk-' 開头
+# OpenAI 密鑰應該以 'sk-' 開頭
 openai_key = os.getenv('OPENAI_API_KEY')
 print(f"OpenAI Key: {openai_key[:10]}..." if openai_key else "Not set")
 
@@ -79,9 +79,9 @@ except Exception as e:
     print(f"FinnHub API 錯誤: {e}")
 ```
 
-### Q3: 支持哪些 Python 版本？
+### Q3: 支援哪些 Python 版本？
 
-**A:** TradingAgents 支持 Python 3.10, 3.11, 和 3.12。推薦使用 Python 3.11 以獲得最佳性能和兼容性。
+**A:** TradingAgents 支援 Python 3.10, 3.11, 和 3.12。推薦使用 Python 3.11 以獲得最佳性能和兼容性。
 
 ```bash
 # 檢查 Python 版本
@@ -101,9 +101,9 @@ pyenv global 3.11.7
 **典型成本估算**（單次分析）：
 - **經濟模式**：$0.01-0.05（使用 gpt-4o-mini）
 - **標準模式**：$0.05-0.15（使用 gpt-4o）
-- **高精度模式**：$0.10-0.30（使用 gpt-4o + 多轮辩論）
+- **高精度模式**：$0.10-0.30（使用 gpt-4o + 多輪辯論）
 
-**成本優化建议**：
+**成本優化建議**：
 ```python
 # 低成本配置
 cost_optimized_config = {
@@ -125,7 +125,7 @@ class BudgetController:
     def __init__(self, daily_budget=50):
         self.daily_budget = daily_budget
         self.current_usage = 0
-    
+
     def check_budget(self, estimated_cost):
         if self.current_usage + estimated_cost > self.daily_budget:
             raise Exception("Daily budget exceeded")
@@ -148,7 +148,7 @@ selected_analysts = ["market", "fundamentals"]  # 而不是全部四個
 
 ## 🔧 技術問題
 
-### Q6: 分析速度太慢怎么办？
+### Q6: 分析速度太慢怎麼辦？
 
 **A:** 多種優化方法：
 
@@ -168,7 +168,7 @@ config = {
 }
 ```
 
-3. **减少辩論轮次**：
+3. **減少辯論輪次**：
 ```python
 config = {
     "max_debate_rounds": 1,
@@ -184,7 +184,7 @@ config = {
 }
 ```
 
-### Q7: 內存使用過高怎么解決？
+### Q7: 內存使用過高怎麼解決？
 
 **A:** 內存優化策略：
 
@@ -192,7 +192,7 @@ config = {
 ```python
 config = {
     "memory_cache": {
-        "max_size": 500,  # 减少緩存項數量
+        "max_size": 500,  # 減少緩存項數量
         "cleanup_threshold": 0.7
     }
 }
@@ -217,12 +217,12 @@ def analyze_with_cleanup(symbol, date):
         result = ta.propagate(symbol, date)
         return result
     finally:
-        gc.collect()  # 强制垃圾回收
+        gc.collect()  # 強制垃圾回收
 ```
 
-### Q8: 網絡連接不穩定導致分析失败？
+### Q8: 網路連接不穩定導致分析失敗？
 
-**A:** 網絡問題解決方案：
+**A:** 網路問題解決方案：
 
 1. **重試機制**：
 ```python
@@ -275,8 +275,6 @@ os.environ['HTTPS_PROXY'] = 'https://proxy.company.com:8080'
 # 確保使用正確的股票代碼格式
 symbols = {
     "US": "AAPL",           # 美股
-    "HK": "0700.HK",        # 港股
-    "CN": "000001.SZ"       # A股
 }
 ```
 
@@ -289,7 +287,7 @@ def check_data_availability(symbol):
         print(f"FinnHub: {symbol} - OK")
     except:
         print(f"FinnHub: {symbol} - Failed")
-    
+
     try:
         # 檢查 Yahoo Finance
         import yfinance as yf
@@ -300,7 +298,7 @@ def check_data_availability(symbol):
         print(f"Yahoo: {symbol} - Failed")
 ```
 
-3. **使用备用數據源**：
+3. **使用備用數據源**：
 ```python
 config = {
     "data_sources": {
@@ -314,18 +312,18 @@ config = {
 
 **A:** 提高分析準確性的方法：
 
-1. **增加辩論轮次**：
+1. **增加辯論輪次**：
 ```python
 config = {
-    "max_debate_rounds": 3,  # 增加辩論轮次
+    "max_debate_rounds": 3,  # 增加辯論輪次
     "max_risk_discuss_rounds": 2
 }
 ```
 
-2. **使用更强的模型**：
+2. **使用更強的模型**：
 ```python
 config = {
-    "deep_think_llm": "gpt-4o",  # 使用更强的模型
+    "deep_think_llm": "gpt-4o",  # 使用更強的模型
     "quick_think_llm": "gpt-4o-mini"
 }
 ```
@@ -352,11 +350,11 @@ config = {
 
 ## 🛠️ 開發和擴展
 
-### Q11: 如何創建自定義智能體？
+### Q11: 如何創建自訂智能體？
 
-**A:** 創建自定義智能體的步骤：
+**A:** 創建自訂智能體的步驟：
 
-1. **繼承基础類**：
+1. **繼承基礎類**：
 ```python
 from tradingagents.agents.analysts.base_analyst import BaseAnalyst
 
@@ -364,9 +362,9 @@ class CustomAnalyst(BaseAnalyst):
     def __init__(self, llm, config):
         super().__init__(llm, config)
         self.custom_tools = self._initialize_custom_tools()
-    
+
     def perform_analysis(self, data: Dict) -> Dict:
-        # 實現自定義分析逻辑
+        # 實現自訂分析邏輯
         return {
             "custom_score": 0.75,
             "custom_insights": ["insight1", "insight2"],
@@ -376,7 +374,7 @@ class CustomAnalyst(BaseAnalyst):
 
 2. **註冊到框架**：
 ```python
-# 在配置中添加自定義智能體
+# 在配置中添加自訂智能體
 config = {
     "custom_analysts": {
         "custom": CustomAnalyst
@@ -393,9 +391,9 @@ config = {
 class CustomDataProvider:
     def __init__(self, api_key):
         self.api_key = api_key
-    
+
     def get_data(self, symbol):
-        # 實現數據獲取逻辑
+        # 實現數據獲取邏輯
         return {"custom_metric": 0.85}
 ```
 
@@ -410,17 +408,17 @@ config = {
 
 ## 🚨 錯誤處理
 
-### Q13: 常见錯誤代碼及解決方法
+### Q13: 常見錯誤代碼及解決方法
 
 **A:** 主要錯誤類型和解決方案：
 
 | 錯誤類型 | 原因 | 解決方法 |
 |---------|------|---------|
 | `API_KEY_INVALID` | API密鑰無效 | 檢查密鑰格式和權限 |
-| `RATE_LIMIT_EXCEEDED` | 超過API限制 | 降低調用頻率或升級账戶 |
-| `NETWORK_TIMEOUT` | 網絡超時 | 檢查網絡連接，增加超時時間 |
-| `DATA_NOT_FOUND` | 數據不存在 | 檢查股票代碼，使用备用數據源 |
-| `INSUFFICIENT_MEMORY` | 內存不足 | 减少緩存大小，分批處理 |
+| `RATE_LIMIT_EXCEEDED` | 超過API限制 | 降低調用頻率或升級帳戶 |
+| `NETWORK_TIMEOUT` | 網路超時 | 檢查網路連接，增加超時時間 |
+| `DATA_NOT_FOUND` | 數據不存在 | 檢查股票代碼，使用備用數據源 |
+| `INSUFFICIENT_MEMORY` | 內存不足 | 減少緩存大小，分批處理 |
 
 ### Q14: 如何啟用調試模式？
 
@@ -444,14 +442,14 @@ ta = TradingAgentsGraph(debug=True, config=config)
 
 ## 📞 獲取幫助
 
-### Q15: 在哪里可以獲得更多幫助？
+### Q15: 在哪裡可以獲得更多幫助？
 
 **A:** 多種獲取幫助的渠道：
 
-1. **官方文档**: [docs/README.md](../README.md)
+1. **官方文檔**: [docs/README.md](../README.md)
 2. **GitHub Issues**: [提交問題](https://github.com/TauricResearch/TradingAgents/issues)
-3. **Discord 社区**: [加入討論](https://discord.com/invite/hk9PGKShPK)
-4. **邮箱支持**: support@tauric.ai
+3. **Discord 社群**: [加入討論](https://discord.com/invite/hk9PGKShPK)
+4. **郵箱支援**: support@tauric.ai
 
 ### Q16: 如何報告 Bug？
 
@@ -461,7 +459,7 @@ ta = TradingAgentsGraph(debug=True, config=config)
 ## Bug 描述
 簡要描述遇到的問題
 
-## 複現步骤
+## 複現步驟
 1. 執行的代碼
 2. 使用的配置
 3. 輸入的參數
@@ -469,17 +467,17 @@ ta = TradingAgentsGraph(debug=True, config=config)
 ## 預期行為
 描述期望的結果
 
-## 實际行為
-描述實际發生的情况
+## 實際行為
+描述實際發生的情況
 
-## 環境信息
+## 環境資訊
 - Python 版本:
 - TradingAgents 版本:
-- 操作系統:
+- 作業系統:
 - 相關依賴版本:
 
 ## 錯誤日誌
-粘贴完整的錯誤信息
+貼上完整的錯誤資訊
 ```
 
-如果您的問題没有在這里找到答案，請通過上述渠道聯系我們獲取幫助。
+如果您的問題沒有在這裡找到答案，請通過上述渠道聯繫我們獲取幫助。

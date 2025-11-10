@@ -40,59 +40,23 @@ def render_analysis_form():
         col1, col2 = st.columns(2)
         
         with col1:
-            # 市場選擇（使用緩存的值）
-            market_options = ["美股", "A股", "港股"]
-            cached_market = cached_config.get('market_type', 'A股') if cached_config else 'A股'
-            try:
-                market_index = market_options.index(cached_market)
-            except (ValueError, TypeError):
-                market_index = 1  # 默認A股
-
-            market_type = st.selectbox(
-                "選擇市場 🌍",
-                options=market_options,
-                index=market_index,
-                help="選擇要分析的股票市場"
-            )
+            # 市場選擇（固定為美股）
+            market_type = "美股"
+            st.info("📊 目前僅支援美股分析")
 
             # 根據市場類型顯示不同的輸入提示
             cached_stock = cached_config.get('stock_symbol', '') if cached_config else ''
 
-            if market_type == "美股":
-                stock_symbol = st.text_input(
-                    "股票代碼 📈",
-                    value=cached_stock if (cached_config and cached_config.get('market_type') == '美股') else '',
-                    placeholder="輸入美股代碼，如 AAPL, TSLA, MSFT，然後按回車確認",
-                    help="輸入要分析的美股代碼，輸入完成後請按回車键確認",
-                    key="us_stock_input",
-                    autocomplete="off"  # 修複autocomplete警告
-                ).upper().strip()
+            stock_symbol = st.text_input(
+                "股票代碼 📈",
+                value=cached_stock if (cached_config and cached_config.get('market_type') == '美股') else '',
+                placeholder="輸入美股代碼，如 AAPL, TSLA, MSFT，然後按回車確認",
+                help="輸入要分析的美股代碼，輸入完成後請按回車键確認",
+                key="us_stock_input",
+                autocomplete="off"
+            ).upper().strip()
 
-                logger.debug(f"🔍 [FORM DEBUG] 美股text_input返回值: '{stock_symbol}'")
-
-            elif market_type == "港股":
-                stock_symbol = st.text_input(
-                    "股票代碼 📈",
-                    value=cached_stock if (cached_config and cached_config.get('market_type') == '港股') else '',
-                    placeholder="輸入港股代碼，如 0700.HK, 9988.HK, 3690.HK，然後按回車確認",
-                    help="輸入要分析的港股代碼，如 0700.HK(腾讯控股), 9988.HK(阿里巴巴), 3690.HK(美团)，輸入完成後請按回車键確認",
-                    key="hk_stock_input",
-                    autocomplete="off"  # 修複autocomplete警告
-                ).upper().strip()
-
-                logger.debug(f"🔍 [FORM DEBUG] 港股text_input返回值: '{stock_symbol}'")
-
-            else:  # A股
-                stock_symbol = st.text_input(
-                    "股票代碼 📈",
-                    value=cached_stock if (cached_config and cached_config.get('market_type') == 'A股') else '',
-                    placeholder="輸入A股代碼，如 000001, 600519，然後按回車確認",
-                    help="輸入要分析的A股代碼，如 000001(平安銀行), 600519(贵州茅台)，輸入完成後請按回車键確認",
-                    key="cn_stock_input",
-                    autocomplete="off"  # 修複autocomplete警告
-                ).strip()
-
-                logger.debug(f"🔍 [FORM DEBUG] A股text_input返回值: '{stock_symbol}'")
+            logger.debug(f"🔍 [FORM DEBUG] 美股text_input返回值: '{stock_symbol}'")
             
             # 分析日期
             analysis_date = st.date_input(
@@ -127,21 +91,6 @@ def render_analysis_form():
         cached_analysts = cached_config.get('selected_analysts', ['market', 'fundamentals']) if cached_config else ['market', 'fundamentals']
         cached_market_type = cached_config.get('market_type', 'A股') if cached_config else 'A股'
 
-        # 檢測市場類型是否發生變化
-        market_type_changed = cached_market_type != market_type
-
-        # 如果市場類型發生變化，需要調整分析師選擇
-        if market_type_changed:
-            if market_type == "A股":
-                # 切換到A股：移除社交媒體分析師
-                cached_analysts = [analyst for analyst in cached_analysts if analyst != 'social']
-                if len(cached_analysts) == 0:
-                    cached_analysts = ['market', 'fundamentals']  # 確保至少有默認選擇
-            else:
-                # 切換到非A股：如果只有基础分析師，添加社交媒體分析師
-                if 'social' not in cached_analysts and len(cached_analysts) <= 2:
-                    cached_analysts.append('social')
-
         with col1:
             market_analyst = st.checkbox(
                 "📈 市場分析師",
@@ -149,23 +98,11 @@ def render_analysis_form():
                 help="專註於技術面分析、價格趋势、技術指標"
             )
 
-            # 始终顯示社交媒體分析師checkbox，但在A股時禁用
-            if market_type == "A股":
-                # A股市場：顯示但禁用社交媒體分析師
-                social_analyst = st.checkbox(
-                    "💭 社交媒體分析師",
-                    value=False,
-                    disabled=True,
-                    help="A股市場暂不支持社交媒體分析（國內數據源限制）"
-                )
-                st.info("💡 A股市場暂不支持社交媒體分析，因為國內數據源限制")
-            else:
-                # 非A股市場：正常顯示社交媒體分析師
-                social_analyst = st.checkbox(
-                    "💭 社交媒體分析師",
-                    value='social' in cached_analysts,
-                    help="分析社交媒體情绪、投資者情绪指標"
-                )
+            social_analyst = st.checkbox(
+                "💭 社交媒體分析師",
+                value='social' in cached_analysts,
+                help="分析社交媒體情绪、投資者情绪指標"
+            )
 
         with col2:
             news_analyst = st.checkbox(

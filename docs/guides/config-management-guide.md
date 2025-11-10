@@ -25,7 +25,7 @@ TradingAgents-CN 提供了完整的配置管理和成本統計系統，让您可
 
 ## 🎉 最新配置管理特性
 
-- 🔑 **統一API管理**: 支持多個LLM提供商的API密鑰管理
+- 🔑 **統一API管理**: 支援多個LLM提供商的API密鑰管理
 - 🧠 **智能模型選擇**: 根據任務類型自動選擇最優模型
 - 📄 **配置文件管理**: JSON/TOML格式的配置文件
 - 💰 **成本控制**: 實時成本監控和預算管理
@@ -56,16 +56,16 @@ python -m streamlit run web/app.py
 
 ## 🤖 模型配置管理
 
-### 支持的模型供應商
+### 支援的模型供應商
 
 | 供應商 | 模型示例 | 貨币 | 說明 |
 |--------|----------|------|------|
-| **阿里百炼** | qwen-turbo, qwen-plus-latest, qwen-max | CNY | 國產模型，推薦使用 |
+| **** | qwen-turbo, qwen-plus-latest, qwen-max | CNY | 國產模型，推薦使用 |
 | **OpenAI** | gpt-3.5-turbo, gpt-4, gpt-4-turbo | USD | 國际領先模型 |
 | **Google** | gemini-pro, gemini-pro-vision | USD | Google最新模型 |
-| **Anthropic** | claude-3-sonnet, claude-3-opus | USD | 高质量對話模型 |
+| **Anthropic** | claude-3-sonnet, claude-3-opus | USD | 高品質對話模型 |
 
-### 配置步骤
+### 配置步驟
 
 #### **添加新模型**
 
@@ -90,8 +90,8 @@ python -m streamlit run web/app.py
 
 ```json
 {
-  "provider": "dashscope",
-  "model_name": "qwen-plus-latest",
+  "provider": "openai",
+  "model_name": "gpt-4-turbo",
   "api_key": "sk-your-api-key-here",
   "max_tokens": 4000,
   "temperature": 0.7,
@@ -102,13 +102,6 @@ python -m streamlit run web/app.py
 ## 💰 定價設置管理
 
 ### 默認費率表
-
-#### **阿里百炼 (CNY/1000 tokens)**
-| 模型 | 輸入價格 | 輸出價格 | 說明 |
-|------|----------|----------|------|
-| qwen-turbo | ¥0.002 | ¥0.006 | 快速響應 |
-| qwen-plus | ¥0.004 | ¥0.012 | 平衡性能 |
-| qwen-max | ¥0.020 | ¥0.060 | 最强性能 |
 
 #### **OpenAI (USD/1000 tokens)**
 | 模型 | 輸入價格 | 輸出價格 | 說明 |
@@ -121,7 +114,7 @@ python -m streamlit run web/app.py
 | 模型 | 輸入價格 | 輸出價格 | 說明 |
 |------|----------|----------|------|
 | gemini-pro | $0.00025 | $0.0005 | 高性價比 |
-| gemini-pro-vision | $0.00025 | $0.0005 | 支持圖像 |
+| gemini-pro-vision | $0.00025 | $0.0005 | 支援圖像 |
 
 ### 自定義定價
 
@@ -170,7 +163,7 @@ python -m streamlit run web/app.py
 2. 設置 **"成本警告阈值"**
 3. 當日成本超過阈值時會收到警告
 
-#### **成本優化建议**
+#### **成本優化建議**
 - **選擇合適的模型**: 根據需求選擇性價比最高的模型
 - **控制Token使用**: 合理設置最大Token數
 - **監控使用趋势**: 定期查看成本統計
@@ -181,7 +174,7 @@ python -m streamlit run web/app.py
 
 | 設置項 | 說明 | 默認值 |
 |--------|------|--------|
-| **默認供應商** | 新分析時的默認模型供應商 | dashscope |
+| **默認供應商** | 新分析時的默認模型供應商 | 
 | **默認模型** | 默認使用的模型名稱 | qwen-turbo |
 | **啟用成本跟蹤** | 是否記錄Token使用和成本 | 啟用 |
 | **成本警告阈值** | 日成本超過此值時警告 | ¥100 |
@@ -193,7 +186,7 @@ python -m streamlit run web/app.py
 
 #### **導出配置**
 - 導出所有配置到JSON文件
-- 便於备份和迁移
+- 便於備份和迁移
 
 #### **清空使用記錄**
 - 清空所有Token使用記錄
@@ -213,13 +206,13 @@ python -m streamlit run web/app.py
 # 自動記錄的信息
 {
     "timestamp": "2025-06-28T10:30:00",
-    "provider": "dashscope",
+    "provider": "
     "model_name": "qwen-plus",
     "input_tokens": 2500,
     "output_tokens": 1200,
     "cost": 0.024,
     "session_id": "analysis_abc123_20250628_1030",
-    "analysis_type": "A股_analysis"
+    "analysis_type": "_analysis"
 }
 ```
 
@@ -270,7 +263,7 @@ python -m streamlit run web/app.py
 ### 數據安全
 - **API密鑰加密存储**: 系統會安全存储您的API密鑰
 - **本地數據**: 所有配置和使用記錄都存储在本地
-- **定期备份**: 建议定期導出配置進行备份
+- **定期備份**: 建議定期導出配置進行備份
 
 ### 成本控制
 - **實時監控**: 定期查看使用統計
@@ -288,7 +281,7 @@ python -m streamlit run web/app.py
 - **多貨币汇率轉換**: 自動轉換不同貨币的成本
 - **成本預測**: 基於歷史數據預測未來成本
 - **使用報告**: 生成詳細的使用報告
-- **团隊管理**: 支持多用戶和權限管理
+- **团隊管理**: 支援多用戶和權限管理
 - **API集成**: 提供配置管理的API接口
 
 ---

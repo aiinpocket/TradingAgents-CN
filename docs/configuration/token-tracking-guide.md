@@ -1,6 +1,6 @@
 # Token使用統計和成本跟蹤指南 (v0.1.7)
 
-本指南介紹如何配置和使用TradingAgents-CN的Token使用統計和成本跟蹤功能，包括v0.1.7新增的DeepSeek成本追蹤和智能成本控制。
+本指南介紹如何配置和使用TradingAgents-CN的Token使用統計和成本跟蹤功能，包括v0.1.7新增的
 
 ## 功能概述
 
@@ -16,8 +16,8 @@ TradingAgents提供了完整的Token使用統計和成本跟蹤功能，包括�
 
 目前支持以下LLM供應商的Token統計：
 
-- ✅ **DeepSeek**: 完全支持，自動提取API響應中的token使用量 (v0.1.7新增)
-- ✅ **DashScope (阿里百炼)**: 完全支持，自動提取API響應中的token使用量
+- ✅ **
+- ✅ **
 - ✅ **Google AI**: 完全支持，Gemini系列模型token統計
 - 🔄 **OpenAI**: 計劃支持
 - 🔄 **Anthropic**: 計劃支持
@@ -35,8 +35,8 @@ ENABLE_COST_TRACKING=true
 # 成本警告阈值（人民币）
 COST_ALERT_THRESHOLD=100.0
 
-# DashScope API密鑰
-DASHSCOPE_API_KEY=your_dashscope_api_key_here
+# 
+DASHSCOPE_API_KEY=your_
 ```
 
 ### 2. 存储配置
@@ -82,14 +82,14 @@ pip install pymongo
 
 ### 1. 自動Token統計
 
-當使用DashScope適配器時，Token統計會自動進行：
+當使用
 
 ```python
-from tradingagents.llm_adapters.dashscope_adapter import ChatDashScope
+from tradingagents.llm_adapters.
 from langchain_core.messages import HumanMessage
 
 # 初始化LLM
-llm = ChatDashScope(
+llm = Chat
     model="qwen-turbo",
     temperature=0.7
 )
@@ -133,7 +133,7 @@ print(f"會話成本: ¥{session_cost:.4f}")
 ```python
 # 估算成本（用於預算規劃）
 estimated_cost = token_tracker.estimate_cost(
-    provider="dashscope",
+    provider="
     model_name="qwen-turbo",
     estimated_input_tokens=1000,
     estimated_output_tokens=500
@@ -150,7 +150,7 @@ from tradingagents.config.config_manager import config_manager, PricingConfig
 
 # 添加自定義定價
 custom_pricing = PricingConfig(
-    provider="dashscope",
+    provider="
     model_name="qwen-max",
     input_price_per_1k=0.02,   # 每1000個輸入token的價格（人民币）
     output_price_per_1k=0.06,  # 每1000個輸出token的價格（人民币）
@@ -164,7 +164,7 @@ config_manager.save_pricing(pricing_list)
 
 ## 內置定價表
 
-### DashScope (阿里百炼)
+### 
 
 | 模型 | 輸入價格 (¥/1K tokens) | 輸出價格 (¥/1K tokens) |
 |------|----------------------|----------------------|
@@ -185,8 +185,8 @@ config_manager.save_pricing(pricing_list)
 運行測試腳本驗證功能：
 
 ```bash
-# 測試DashScope token統計
-python tests/test_dashscope_token_tracking.py
+# 測試
+python tests/test_
 ```
 
 ## MongoDB存储優势

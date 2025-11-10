@@ -1,8 +1,8 @@
-# 🧪 DeepSeek V3 預覽版測試指南
+# 🧪 
 
 ## 📋 測試目標
 
-幫助用戶系統性地測試DeepSeek V3集成功能，發現問題並提供反馈，共同完善這個高性價比的AI金融分析工具。
+幫助用戶系統性地測試
 
 ## 🚀 快速測試流程
 
@@ -10,7 +10,7 @@
 
 ```bash
 # 1. 克隆預覽分支
-git clone -b feature/deepseek-v3-integration https://github.com/hsliuping/TradingAgents-CN.git
+git clone -b feature/
 cd TradingAgents-CN
 
 # 2. 創建虛擬環境
@@ -25,9 +25,9 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-### 第二步：獲取DeepSeek API密鑰
+### 第二步：獲取
 
-1. 訪問 [DeepSeek平台](https://platform.deepseek.com/)
+1. 訪問 [
 2. 註冊账號（支持手機號註冊）
 3. 進入控制台 → API Keys
 4. 創建新的API Key
@@ -40,31 +40,31 @@ cp .env.example .env
 ### 第三步：基础功能測試
 
 ```bash
-# 測試DeepSeek連接
+# 測試
 python -c "
 import os
 from dotenv import load_dotenv
 load_dotenv()
-print('DeepSeek API Key:', '✅ 已配置' if os.getenv('DEEPSEEK_API_KEY') else '❌ 未配置')
+print('
 "
 
 # 測試基本面分析
 python tests/test_fundamentals_analysis.py
 
-# 測試DeepSeek Token統計
-python tests/test_deepseek_token_tracking.py
+# 測試
+python tests/test_
 ```
 
 ## 📊 詳細測試項目
 
-### 1. DeepSeek模型集成測試
+### 1. 
 
 #### 1.1 API連接測試
 ```bash
 # 測試基本連接
 python -c "
-from tradingagents.llm_adapters.deepseek_adapter import ChatDeepSeek
-llm = ChatDeepSeek(model='deepseek-chat', temperature=0.1)
+from tradingagents.llm_adapters.
+llm = Chat
 response = llm.invoke('你好，請簡單介紹一下股票投資')
 print('響應:', response.content[:100] + '...')
 "
@@ -79,7 +79,7 @@ print('響應:', response.content[:100] + '...')
 #### 1.2 Token統計測試
 ```bash
 # 測試Token使用統計
-python examples/demo_deepseek_analysis.py
+python examples/demo_
 ```
 
 **測試要點**：
@@ -90,19 +90,19 @@ python examples/demo_deepseek_analysis.py
 
 ### 2. 基本面分析功能測試
 
-#### 2.1 A股分析測試
+#### 2.1 分析測試
 ```bash
-# 測試A股基本面分析
+# 測試基本面分析
 python -c "
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
 
 config = DEFAULT_CONFIG.copy()
 config.update({
-    'llm_provider': 'deepseek',
-    'llm_model': 'deepseek-chat',
-    'quick_think_llm': 'deepseek-chat',
-    'deep_think_llm': 'deepseek-chat',
+    'llm_provider': '
+    'llm_model': '
+    'quick_think_llm': '
+    'deep_think_llm': '
 })
 
 ta = TradingAgentsGraph(
@@ -156,7 +156,7 @@ streamlit run web/app.py
 訪問 http://localhost:8501 進行測試：
 
 #### 3.1 配置页面測試
-- [ ] DeepSeek模型是否出現在選擇列表中
+- [ ] 
 - [ ] API密鑰狀態顯示是否正確
 - [ ] 模型切換是否正常工作
 
@@ -167,7 +167,7 @@ streamlit run web/app.py
 - [ ] 結果展示是否完整清晰
 
 #### 3.3 Token統計页面測試
-- [ ] DeepSeek使用統計是否顯示
+- [ ] 
 - [ ] 成本計算是否準確
 - [ ] 歷史記錄是否正確保存
 
@@ -179,13 +179,13 @@ python -m cli.main
 ```
 
 **測試流程**：
-1. 選擇"DeepSeek V3"作為LLM提供商
-2. 選擇"deepseek-chat"模型
+1. 選擇"
+2. 選擇"
 3. 輸入股票代碼進行分析
 4. 檢查分析結果质量
 
 **測試要點**：
-- [ ] DeepSeek選項是否可用
+- [ ] 
 - [ ] 模型選擇是否正常
 - [ ] 分析流程是否顺畅
 - [ ] 結果輸出是否完整
@@ -210,7 +210,7 @@ python -m cli.main
 ```bash
 # 啟用調試模式
 export TRADINGAGENTS_LOG_LEVEL=DEBUG
-python tests/test_deepseek_token_tracking.py
+python tests/test_
 ```
 
 ### 問題3：基本面分析顯示模板內容
@@ -240,7 +240,7 @@ print('數據獲取結果:', data[:200] if data else '獲取失败')
 - 測試時間：2025-01-08
 
 **測試項目**：
-- [x] DeepSeek API連接
+- [x] 
 - [x] Token統計功能
 - [x] 基本面分析
 - [x] Web界面
@@ -271,7 +271,7 @@ print('數據獲取結果:', data[:200] if data else '獲取失败')
 **環境信息**：
 - 操作系統：
 - Python版本：
-- DeepSeek API密鑰狀態：
+- 
 - 錯誤日誌：
 
 **截圖**：
@@ -281,7 +281,7 @@ print('數據獲取結果:', data[:200] if data else '獲取失败')
 ## 🎯 測試重點關註
 
 ### 高優先級測試
-1. **DeepSeek API集成穩定性**
+1. **
 2. **Token統計準確性**
 3. **基本面分析质量**
 4. **中文輸出正確性**

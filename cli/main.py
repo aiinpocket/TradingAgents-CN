@@ -532,7 +532,7 @@ def get_user_selections():
     welcome_content += "[bold green]TradingAgents: 多智能體大語言模型金融交易框架 - CLI[/bold green]\n"
     welcome_content += "[bold green]Multi-Agents LLM Financial Trading Framework - CLI[/bold green]\n\n"
     welcome_content += "[bold]工作流程 | Workflow Steps:[/bold]\n"
-    welcome_content += "I. 分析師团隊 | Analyst Team → II. 研究团隊 | Research Team → III. 交易員 | Trader → IV. 風險管理 | Risk Management → V. 投資組合管理 | Portfolio Management\n\n"
+    welcome_content += "I. 分析師團隊 | Analyst Team → II. 研究團隊 | Research Team → III. 交易員 | Trader → IV. 風險管理 | Risk Management → V. 投資組合管理 | Portfolio Management\n\n"
     welcome_content += (
         "[dim]Built by [Tauric Research](https://github.com/TauricResearch)[/dim]"
     )
@@ -542,7 +542,7 @@ def get_user_selections():
         welcome_content,
         border_style="green",
         padding=(1, 2),
-        title="欢迎使用 TradingAgents | Welcome to TradingAgents",
+        title="歡迎使用 TradingAgents | Welcome to TradingAgents",
         subtitle="多智能體大語言模型金融交易框架 | Multi-Agents LLM Financial Trading Framework",
     )
     console.print(Align.center(welcome_box))
@@ -590,7 +590,7 @@ def get_user_selections():
     # Step 4: Select analysts
     console.print(
         create_question_box(
-            "步骤 4: 分析師团隊 | Step 4: Analysts Team",
+            "步骤 4: 分析師團隊 | Step 4: Analysts Team",
             "選擇您的LLM分析師智能體進行分析 | Select your LLM analyst agents for the analysis"
         )
     )
@@ -641,54 +641,20 @@ def get_user_selections():
 
 
 def select_market():
-    """選擇股票市場"""
-    markets = {
-        "1": {
-            "name": "美股",
-            "name_en": "US Stock",
-            "default": "SPY",
-            "examples": ["SPY", "AAPL", "TSLA", "NVDA", "MSFT"],
-            "format": "直接輸入代碼 (如: AAPL)",
-            "pattern": r'^[A-Z]{1,5}$',
-            "data_source": "yahoo_finance"
-        },
-        "2": {
-            "name": "A股",
-            "name_en": "China A-Share",
-            "default": "600036",
-            "examples": ["000001 (平安銀行)", "600036 (招商銀行)", "000858 (五粮液)"],
-            "format": "6位數字代碼 (如: 600036, 000001)",
-            "pattern": r'^\d{6}$',
-            "data_source": "china_stock"
-        },
-        "3": {
-            "name": "港股",
-            "name_en": "Hong Kong Stock",
-            "default": "0700.HK",
-            "examples": ["0700.HK (腾讯)", "09988.HK (阿里巴巴)", "03690.HK (美团)"],
-            "format": "代碼.HK (如: 0700.HK, 09988.HK)",
-            "pattern": r'^\d{4,5}\.HK$',
-            "data_source": "yahoo_finance"
-        }
+    """選擇股票市場（目前僅支援美股）"""
+    market = {
+        "name": "美股",
+        "name_en": "US Stock",
+        "default": "SPY",
+        "examples": ["SPY", "AAPL", "TSLA", "NVDA", "MSFT"],
+        "format": "直接輸入代碼 (如: AAPL)",
+        "pattern": r'^[A-Z]{1,5}$',
+        "data_source": "yahoo_finance"
     }
 
-    console.print(f"\n[bold cyan]請選擇股票市場 | Please select stock market:[/bold cyan]")
-    for key, market in markets.items():
-        examples_str = ", ".join(market["examples"][:3])
-        console.print(f"[cyan]{key}[/cyan]. 🌍 {market['name']} | {market['name_en']}")
-        console.print(f"   示例 | Examples: {examples_str}")
-
-    while True:
-        choice = typer.prompt("\n請選擇市場 | Select market", default="2")
-        if choice in markets:
-            selected_market = markets[choice]
-            console.print(f"[green]✅ 已選擇: {selected_market['name']} | Selected: {selected_market['name_en']}[/green]")
-            # 記錄系統日誌（只寫入文件）
-            logger.info(f"用戶選擇市場: {selected_market['name']} ({selected_market['name_en']})")
-            return selected_market
-        else:
-            console.print(f"[red]❌ 無效選擇，請輸入 1、2 或 3 | Invalid choice, please enter 1, 2, or 3[/red]")
-            logger.warning(f"用戶輸入無效選擇: {choice}")
+    console.print(f"[green]✅ 市場: {market['name']} | Selected Market: {market['name_en']}[/green]")
+    logger.info(f"使用市場: {market['name']} ({market['name_en']})")
+    return market
 
 
 def get_ticker(market):
@@ -703,35 +669,26 @@ def get_ticker(market):
         ticker = typer.prompt(f"\n請輸入{market['name']}股票代碼 | Enter {market['name_en']} ticker",
                              default=market['default'])
 
-        # 記錄用戶輸入（只寫入文件）
-        logger.info(f"用戶輸入股票代碼: {ticker}")
+        logger.info(f"使用者輸入股票代碼: {ticker}")
 
-        # 驗證股票代碼格式
         import re
-        
-        # 添加邊界條件檢查
-        ticker = ticker.strip()  # 移除首尾空格
-        if not ticker:  # 檢查空字符串
+
+        ticker = ticker.strip()
+        if not ticker:
             console.print(f"[red]❌ 股票代碼不能為空 | Ticker cannot be empty[/red]")
-            logger.warning(f"用戶輸入空股票代碼")
+            logger.warning(f"使用者輸入空股票代碼")
             continue
-            
-        ticker_to_check = ticker.upper() if market['data_source'] != 'china_stock' else ticker
+
+        ticker_to_check = ticker.upper()
 
         if re.match(market['pattern'], ticker_to_check):
-            # 對於A股，返回純數字代碼
-            if market['data_source'] == 'china_stock':
-                console.print(f"[green]✅ A股代碼有效: {ticker} (将使用中國股票數據源)[/green]")
-                logger.info(f"A股代碼驗證成功: {ticker}")
-                return ticker
-            else:
-                console.print(f"[green]✅ 股票代碼有效: {ticker.upper()}[/green]")
-                logger.info(f"股票代碼驗證成功: {ticker.upper()}")
-                return ticker.upper()
+            console.print(f"[green]✅ 股票代碼有效: {ticker.upper()}[/green]")
+            logger.info(f"股票代碼驗證成功: {ticker.upper()}")
+            return ticker.upper()
         else:
             console.print(f"[red]❌ 股票代碼格式不正確 | Invalid ticker format[/red]")
             console.print(f"[yellow]請使用正確格式: {market['format']}[/yellow]")
-            logger.warning(f"股票代碼格式驗證失败: {ticker}")
+            logger.warning(f"股票代碼格式驗證失敗: {ticker}")
 
 
 def get_analysis_date():
@@ -946,9 +903,9 @@ def display_complete_report(final_state):
 
 def update_research_team_status(status):
     """
-    更新所有研究团隊成員和交易員的狀態
+    更新所有研究團隊成員和交易員的狀態
     Update status for all research team members and trader
-    
+
     Args:
         status: 新的狀態值
     """
@@ -1034,7 +991,7 @@ def run_analysis():
 
     # Check API keys before proceeding
     if not check_api_keys(selections["llm_provider"]):
-        ui.show_error("分析终止 | Analysis terminated")
+        ui.show_error("分析終止 | Analysis terminated")
         return
 
     # 顯示分析開始信息
@@ -1079,7 +1036,7 @@ def run_analysis():
         )
         ui.show_success("分析系統初始化完成")
     except ImportError as e:
-        ui.show_error(f"模塊導入失败 | Module import failed: {str(e)}")
+        ui.show_error(f"模塊導入失敗 | Module import failed: {str(e)}")
         ui.show_warning("💡 請檢查依賴安裝 | Please check dependencies installation")
         return
     except ValueError as e:
@@ -1087,7 +1044,7 @@ def run_analysis():
         ui.show_warning("💡 請檢查配置參數 | Please check configuration parameters")
         return
     except Exception as e:
-        ui.show_error(f"初始化失败 | Initialization failed: {str(e)}")
+        ui.show_error(f"初始化失敗 | Initialization failed: {str(e)}")
         ui.show_warning("💡 請檢查API密鑰配置 | Please check API key configuration")
         return
 
@@ -1184,29 +1141,8 @@ def run_analysis():
         try:
             from tradingagents.utils.stock_validator import prepare_stock_data
 
-            # 確定市場類型
-            market_type_map = {
-                "china_stock": "A股",
-                "yahoo_finance": "港股" if ".HK" in selections["ticker"] else "美股"
-            }
-
-            # 獲取選定市場的數據源類型
-            selected_market = None
-            for choice, market in {
-                "1": {"data_source": "yahoo_finance"},
-                "2": {"data_source": "china_stock"},
-                "3": {"data_source": "yahoo_finance"}
-            }.items():
-                # 這里需要從用戶選擇中獲取市場類型，暂時使用代碼推斷
-                pass
-
-            # 根據股票代碼推斷市場類型
-            if re.match(r'^\d{6}$', selections["ticker"]):
-                market_type = "A股"
-            elif ".HK" in selections["ticker"].upper():
-                market_type = "港股"
-            else:
-                market_type = "美股"
+            # 確定市場類型（僅支援美股）
+            market_type = "美股"
 
             # 預獲取股票數據（默認30天歷史數據）
             preparation_result = prepare_stock_data(
@@ -1217,9 +1153,9 @@ def run_analysis():
             )
 
             if not preparation_result.is_valid:
-                ui.show_error(f"❌ 股票數據驗證失败: {preparation_result.error_message}")
-                ui.show_warning(f"💡 建议: {preparation_result.suggestion}")
-                logger.error(f"股票數據驗證失败: {preparation_result.error_message}")
+                ui.show_error(f"❌ 股票數據驗證失敗: {preparation_result.error_message}")
+                ui.show_warning(f"💡 建議: {preparation_result.suggestion}")
+                logger.error(f"股票數據驗證失敗: {preparation_result.error_message}")
                 return
 
             # 數據預獲取成功
@@ -1247,8 +1183,8 @@ def run_analysis():
 
         # 顯示分析階段
         ui.show_step_header(4, "智能分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
-        ui.show_progress("啟動分析師团隊...")
-        ui.show_user_message("💡 提示：智能分析包含多個团隊協作，請耐心等待約10分鐘", "dim")
+        ui.show_progress("啟動分析師團隊...")
+        ui.show_user_message("💡 提示：智能分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
 
         # Stream the analysis
         trace = []
@@ -1385,9 +1321,9 @@ def run_analysis():
 
                     # Update Bull Researcher status and report
                     if "bull_history" in debate_state and debate_state["bull_history"]:
-                        # 顯示研究团隊開始工作
+                        # 顯示研究團隊開始工作
                         if "research_team_started" not in completed_analysts:
-                            ui.show_progress("🔬 研究团隊開始深度分析...")
+                            ui.show_progress("🔬 研究團隊開始深度分析...")
                             completed_analysts.add("research_team_started")
 
                         # Keep all research team members in progress
@@ -1423,9 +1359,9 @@ def run_analysis():
                         "judge_decision" in debate_state
                         and debate_state["judge_decision"]
                     ):
-                        # 顯示研究团隊完成
+                        # 顯示研究團隊完成
                         if "research_team" not in completed_analysts:
-                            ui.show_success("🔬 研究团隊分析完成")
+                            ui.show_success("🔬 研究團隊分析完成")
                             completed_analysts.add("research_team")
 
                         # Keep all research team members in progress until final decision
@@ -1451,14 +1387,14 @@ def run_analysis():
                     "trader_investment_plan" in chunk
                     and chunk["trader_investment_plan"]
                 ):
-                    # 顯示交易团隊開始工作
+                    # 顯示交易團隊開始工作
                     if "trading_team_started" not in completed_analysts:
-                        ui.show_progress("💼 交易团隊制定投資計劃...")
+                        ui.show_progress("💼 交易團隊制定投資計劃...")
                         completed_analysts.add("trading_team_started")
 
-                    # 顯示交易团隊完成
+                    # 顯示交易團隊完成
                     if "trading_team" not in completed_analysts:
-                        ui.show_success("💼 交易团隊計劃完成")
+                        ui.show_success("💼 交易團隊計劃完成")
                         completed_analysts.add("trading_team")
 
                     message_buffer.update_report_section(
@@ -1476,9 +1412,9 @@ def run_analysis():
                         "current_risky_response" in risk_state
                         and risk_state["current_risky_response"]
                     ):
-                        # 顯示風險管理团隊開始工作
+                        # 顯示風險管理團隊開始工作
                         if "risk_team_started" not in completed_analysts:
-                            ui.show_progress("⚖️ 風險管理团隊評估投資風險...")
+                            ui.show_progress("⚖️ 風險管理團隊評估投資風險...")
                             completed_analysts.add("risk_team_started")
 
                         message_buffer.update_agent_status(
@@ -1532,9 +1468,9 @@ def run_analysis():
 
                     # Update Portfolio Manager status and final decision
                     if "judge_decision" in risk_state and risk_state["judge_decision"]:
-                        # 顯示風險管理团隊完成
+                        # 顯示風險管理團隊完成
                         if "risk_management" not in completed_analysts:
-                            ui.show_success("⚖️ 風險管理团隊分析完成")
+                            ui.show_success("⚖️ 風險管理團隊分析完成")
                             completed_analysts.add("risk_management")
 
                         message_buffer.update_agent_status(
@@ -1753,21 +1689,20 @@ def version():
     logger.info(f"  • 🤖 多智能體協作分析 | Multi-agent collaborative analysis")
     logger.info(f"  • 🇨🇳 阿里百炼大模型支持 | Alibaba DashScope support")
     logger.info(f"  • 📈 實時股票數據分析 | Real-time stock data analysis")
-    logger.info(f"  • 🧠 智能投資建议 | Intelligent investment recommendations")
+    logger.info(f"  • 🧠 智能投資建議 | Intelligent investment recommendations")
     logger.debug(f"  • 🔍 風險評估 | Risk assessment")
 
     logger.warning(f"\n[yellow]⚠️  預覽版本提醒 | Preview Version Notice:[/yellow]")
     logger.info(f"  • 這是早期預覽版本，功能仍在完善中")
-    logger.info(f"  • 建议仅在測試環境中使用")
-    logger.info(f"  • 投資建议仅供參考，請谨慎決策")
-    logger.info(f"  • 欢迎反馈問題和改進建议")
+    logger.info(f"  • 建議僅在測試環境中使用")
+    logger.info(f"  • 投資建議僅供參考，請謹慎決策")
+    logger.info(f"  • 歡迎回饋問題和改進建議")
 
-    logger.info(f"\n[blue]🙏 致敬源項目 | Tribute to Original Project:[/blue]")
-    logger.info(f"  • 💎 感谢 Tauric Research 团隊提供的珍贵源碼")
-    logger.info(f"  • 🔄 感谢持续的維護、更新和改進工作")
-    logger.info(f"  • 🌍 感谢選擇Apache 2.0協议的開源精神")
-    logger.info(f"  • 🎯 本項目旨在更好地在中國推廣TradingAgents")
-    logger.info(f"  • 🔗 源項目: https://github.com/TauricResearch/TradingAgents")
+    logger.info(f"\n[blue]🙏 致敬源專案 | Tribute to Original Project:[/blue]")
+    logger.info(f"  • 💎 感謝 Tauric Research 團隊提供的珍貴原始碼")
+    logger.info(f"  • 🔄 感謝持續的維護、更新和改進工作")
+    logger.info(f"  • 🌍 感謝選擇Apache 2.0協議的開源精神")
+    logger.info(f"  • 🔗 源專案: https://github.com/TauricResearch/TradingAgents")
 
 
 @app.command(
@@ -1811,7 +1746,7 @@ def data_config(
                     indent = '  ' * level
                     logger.info(f"{indent}📁 {os.path.basename(root)}/")
         except Exception as e:
-            logger.error(f"[red]❌ 設置數據目錄失败: {e}[/red]")
+            logger.error(f"[red]❌ 設置數據目錄失敗: {e}[/red]")
         return
     
     # 顯示當前配置（默認行為或使用--show）
@@ -1942,7 +1877,7 @@ def test():
             logger.info(f"[green]✅ 測試通過 | Tests passed[/green]")
             console.print(result.stdout)
         else:
-            logger.error(f"[red]❌ 測試失败 | Tests failed[/red]")
+            logger.error(f"[red]❌ 測試失敗 | Tests failed[/red]")
             console.print(result.stderr)
 
     except Exception as e:
@@ -1998,7 +1933,7 @@ def help_chinese():
     commands_table.add_row(
         "version",
         "版本信息 | Version",
-        "顯示软件版本和功能特性信息"
+        "顯示軟體版本和功能特性資訊"
     )
 
     console.print(commands_table)

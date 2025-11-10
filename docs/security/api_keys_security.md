@@ -72,8 +72,8 @@ code .env           # VS Code
 
 ### 3. 填入真實API密鑰
 ```bash
-# 阿里百炼API密鑰 (推薦)
-DASHSCOPE_API_KEY=sk-your-real-dashscope-key
+# API密鑰 (推薦)
+DASHSCOPE_API_KEY=sk-your-real-
 
 # 金融數據API密鑰 (必需)
 FINNHUB_API_KEY=your-real-finnhub-key
@@ -86,8 +86,8 @@ python -m cli.main config
 
 ## 🔍 API密鑰獲取指南
 
-### 阿里百炼 (推薦)
-1. 訪問 https://dashscope.aliyun.com/
+###  (推薦)
+1. 訪問 https://
 2. 註冊/登錄阿里云账號
 3. 開通百炼服務
 4. 在控制台獲取API密鑰

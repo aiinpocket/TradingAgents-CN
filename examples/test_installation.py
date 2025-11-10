@@ -141,10 +141,7 @@ class InstallationTester:
                 # 檢查是否有API密鑰配置
                 api_keys = [
                     'OPENAI_API_KEY',
-                    'DASHSCOPE_API_KEY', 
-                    'DEEPSEEK_API_KEY',
-                    'QIANFAN_ACCESS_KEY',
-                    'TUSHARE_TOKEN'
+                    'GOOGLE_API_KEY'
                 ]
                 
                 configured_apis = []

@@ -6,7 +6,7 @@
 
 ## 🎯 適用場景
 
-- 添加新的大模型提供商（如智谱、腾讯、百度等）
+- 添加新的大模型提供商（如智谱、腾讯、等）
 - 為現有提供商添加新模型
 - 修複或優化現有 LLM 適配器
 - 添加新的 API 兼容方式
@@ -20,10 +20,10 @@ tradingagents/
 ├── llm_adapters/              # LLM 適配器實現
 │   ├── __init__.py           # 導出所有適配器
 │   ├── openai_compatible_base.py  # OpenAI 兼容基類 (核心)
-│   ├── dashscope_adapter.py       # 阿里百炼適配器
-│   ├── dashscope_openai_adapter.py # 阿里百炼 OpenAI 兼容適配器  
-│   ├── deepseek_adapter.py        # DeepSeek 原生適配器
-│   ├── deepseek_direct_adapter.py # DeepSeek 直接適配器
+│   ├── 
+│   ├── 
+│   ├── 
+│   ├── 
 │   └── google_openai_adapter.py   # Google AI 適配器
 └── web/
     ├── components/sidebar.py  # 前端模型選擇界面
@@ -76,7 +76,7 @@ tradingagents/
 - 複用現有的工具調用逻辑
 - 統一的錯誤處理和日誌記錄
 
-> 备註：百度千帆（Qianfan）已通過 OpenAI 兼容方式集成，provider 名稱為 `qianfan`，只需配置 `QIANFAN_API_KEY`。相關細節见專項文档 QIANFAN_INTEGRATION_GUIDE.md；pricing.json 已包含 ERNIE 系列占位價格，支持在 Web 配置页調整。
+> 备註：（）已通過 OpenAI 兼容方式集成，provider 名稱為 ``，只需配置 `_API_KEY`。相關細節见專項文档 _INTEGRATION_GUIDE.md；pricing.json 已包含 
 
 #### 方式二：原生 API 適配器
 
@@ -155,7 +155,7 @@ OPENAI_COMPATIBLE_PROVIDERS = {
 ```python
 from .your_provider_adapter import ChatYourProvider
 
-__all__ = ["ChatDashScope", "ChatDashScopeOpenAI", "ChatGoogleOpenAI", "ChatYourProvider"]
+__all__ = ["Chat
 ```
 
 #### 4. 前端集成
@@ -164,7 +164,7 @@ __all__ = ["ChatDashScope", "ChatDashScopeOpenAI", "ChatGoogleOpenAI", "ChatYour
 
 ```python
 # 在 llm_provider 選擇中添加選項
-options=["dashscope", "deepseek", "google", "openai", "openrouter", "custom_openai", "your_provider"],
+options=["
 
 # 在格式化映射中添加
 format_mapping={
@@ -330,47 +330,47 @@ streamlit run app.py
 - [ ]  添加了模型特性說明
 - [ ]  提供了使用示例
 
-## 💡 實际接入案例：百度千帆模型
+## 💡 實际接入案例：模型
 
 ### 案例背景
 
-百度千帆模型是一個典型的國產大模型接入案例，在實际接入過程中遇到了一些特殊問題，以下是完整的解決方案。
+模型是一個典型的國產大模型接入案例，在實际接入過程中遇到了一些特殊問題，以下是完整的解決方案。
 
 ### 接入步骤詳解
 
-#### 1. 使用 OpenAI 兼容基座註冊千帆提供商
+#### 1. 使用 OpenAI 兼容基座註冊提供商
 
 ```python
 # 在 tradingagents/llm_adapters/openai_compatible_base.py 內部註冊
-OPENAI_COMPATIBLE_PROVIDERS["qianfan"] = {
-    "base_url": "https://qianfan.baidubce.com/v2",
-    "api_key_env": "QIANFAN_API_KEY",
+OPENAI_COMPATIBLE_PROVIDERS[""] = {
+    "base_url": "https://.baidubce.com/v2",
+    "api_key_env": "_API_KEY",
     "models": {
         "ernie-3.5-8k": {"context_length": 8192, "supports_function_calling": True},
         "ernie-4.0-turbo-8k": {"context_length": 8192, "supports_function_calling": True},
-        "ERNIE-Speed-8K": {"context_length": 8192, "supports_function_calling": True},
-        "ERNIE-Lite-8K": {"context_length": 8192, "supports_function_calling": False},
+        "
+        "
     }
 }
 ```
 
-> 提示：無需單獨的 qianfan_adapter.py 文件，統一由 openai_compatible_base 進行適配。
+> 提示：無需單獨的 _adapter.py 文件，統一由 openai_compatible_base 進行適配。
 
-#### 2. 註冊千帆提供商
+#### 2. 註冊提供商
 
 ```python
 # 在 openai_compatible_base.py 中添加
 OPENAI_COMPATIBLE_PROVIDERS = {
     # ... 現有配置 ...
   
-    "qianfan": {
-        "base_url": "https://qianfan.baidubce.com/v2",
-        "api_key_env": "QIANFAN_API_KEY",
+    "": {
+        "base_url": "https://.baidubce.com/v2",
+        "api_key_env": "_API_KEY",
         "models": {
             "ernie-3.5-8k": {"context_length": 8192, "supports_function_calling": True},
             "ernie-4.0-turbo-8k": {"context_length": 8192, "supports_function_calling": True},
-            "ERNIE-Lite-8K": {"context_length": 8192, "supports_function_calling": False},
-            "ERNIE-Speed-8K": {"context_length": 8192, "supports_function_calling": True},
+            "
+            "
         }
     },
 }
@@ -378,43 +378,43 @@ OPENAI_COMPATIBLE_PROVIDERS = {
 
 #### 3. 配置環境變量
 
-在 `.env` 文件中添加千帆API配置：
+在 `.env` 文件中添加API配置：
 
 ```bash
-# 千帆API配置
-QIANFAN_ACCESS_KEY=your_access_key_here
-QIANFAN_SECRET_KEY=your_secret_key_here
+# API配置
+_ACCESS_KEY=your_access_key_here
+_SECRET_KEY=your_secret_key_here
 ```
 
 #### 4. 添加模型價格配置
 
-在 `config/pricing.json` 文件中添加千帆模型的價格信息：
+在 `config/pricing.json` 文件中添加模型的價格信息：
 
 ```json
 {
-  "provider": "qianfan",
+  "provider": "",
   "model_name": "ernie-3.5-8k",
   "input_price_per_1k": 0.0025,
   "output_price_per_1k": 0.005,
   "currency": "CNY"
 },
 {
-  "provider": "qianfan",
+  "provider": "",
   "model_name": "ernie-4.0-turbo-8k",
   "input_price_per_1k": 0.03,
   "output_price_per_1k": 0.09,
   "currency": "CNY"
 },
 {
-  "provider": "qianfan",
-  "model_name": "ERNIE-Speed-8K",
+  "provider": "",
+  "model_name": "
   "input_price_per_1k": 0.0004,
   "output_price_per_1k": 0.0008,
   "currency": "CNY"
 },
 {
-  "provider": "qianfan",
-  "model_name": "ERNIE-Lite-8K",
+  "provider": "",
+  "model_name": "
   "input_price_per_1k": 0.0008,
   "output_price_per_1k": 0.002,
   "currency": "CNY"
@@ -424,44 +424,43 @@ QIANFAN_SECRET_KEY=your_secret_key_here
 **價格說明**：
 - 價格單位為每1000個token的費用
 - 貨币單位為人民币（CNY）
-- 價格基於百度千帆官方定價，可能會有調整
+- 價格基於官方定價，可能會有調整
 
 #### 5. 前端界面集成
 
 ```python
-# 在 sidebar.py 中添加千帆選項
-elif llm_provider == "qianfan":
-    qianfan_options = [
+# 在 sidebar.py 中添加選項
+elif llm_provider == "":
+    _options = [
         "ernie-3.5-8k",
         "ernie-4.0-turbo-8k",
-        "ERNIE-Speed-8K",
-        "ERNIE-Lite-8K"
+        "
+        "
     ]
 
     current_index = 0
-    if st.session_state.llm_model in qianfan_options:
-        current_index = qianfan_options.index(st.session_state.llm_model)
+    if st.session_state.llm_model in _options:
+        current_index = _options.index(st.session_state.llm_model)
 
     llm_model = st.selectbox(
-        "選擇文心一言模型",
-        options=qianfan_options,
+        "選擇模型",
+        options=_options,
         index=current_index,
         format_func=lambda x: {
-            "ernie-3.5-8k": "ERNIE 3.5 8K - ⚡ 快速高效",
-            "ernie-4.0-turbo-8k": "ERNIE 4.0 Turbo 8K - 🚀 强大推理",
-            "ERNIE-Speed-8K": "ERNIE Speed 8K - 🏃 極速響應",
-            "ERNIE-Lite-8K": "ERNIE Lite 8K - 💡 轻量經濟"
+            "ernie-3.5-8k": "
+            "ernie-4.0-turbo-8k": "
+            "
+            "
         }[x],
-        help="選擇用於分析的文心一言（千帆）模型",
-        key="qianfan_model_select"
+        help="選擇用於分析的（）模型",
+        key="_model_select"
     )
 
     if st.session_state.llm_model != llm_model:
-        logger.debug(f"🔄 [Persistence] Qianfan模型變更: {st.session_state.llm_model} → {llm_model}")
+        logger.debug(f"🔄 [Persistence] 模型變更: {st.session_state.llm_model} → {llm_model}")
     st.session_state.llm_model = llm_model
-    logger.debug(f"💾 [Persistence] Qianfan模型已保存: {llm_model}")
+    logger.debug(f"💾 [Persistence] 模型已保存: {llm_model}")
 ```
-
 
 ## 🚨 常见問題与解決方案
 
@@ -474,7 +473,7 @@ elif llm_provider == "qianfan":
 - 檢查 API 密鑰格式是否符合提供商要求
 - 確認環境變量名稱拼寫正確
 - 檢查 `.env` 文件是否在正確位置
-- **千帆特殊情况**: 需要同時設置 `QIANFAN_API_KEY`
+- **特殊情况**: 需要同時設置 `_API_KEY`
 
 ### 2. 工具調用不工作
 
@@ -485,7 +484,7 @@ elif llm_provider == "qianfan":
 - 確認模型本身支持 Function Calling
 - 檢查 API 格式是否完全兼容 OpenAI 標準
 - 查看是否需要特殊的工具調用格式
-- **千帆特殊情况**: 需要轉換工具定義格式，參考上述案例
+- **特殊情况**: 需要轉換工具定義格式，參考上述案例
 
 ### 3. 前端界面不顯示新模型
 
@@ -539,11 +538,11 @@ def safe_json_loads(text):
 # 智能模型選擇示例
 def select_model_by_task(task_complexity: str) -> str:
     if task_complexity == "simple":
-        return "ERNIE-Lite-8K"  # 成本低
+        return "
     elif task_complexity == "medium":
-        return "ERNIE-3.5-8K"  # 平衡
+        return "
     else:
-        return "ERNIE-4.0-8K"  # 性能强
+        return "
 ```
 ## 📝 PR 提交規範
 
@@ -622,7 +621,7 @@ Closes #{issue_number}
 
 如果在開發過程中遇到問題：
 
-1. **查看現有實現**: 參考 `deepseek_adapter.py` 或 `dashscope_adapter.py`
+1. **查看現有實現**: 參考 `
 2. **阅讀基類文档**: 查看 `openai_compatible_base.py` 的註釋
 3. **提交 Issue**: 在 GitHub 上創建問題描述
 4. **加入討論**: 參与項目的 Discussion 板塊

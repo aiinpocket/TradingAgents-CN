@@ -12,7 +12,7 @@
 工具選擇器 (根據股票類型和模式)
     ↓
 ┌─────────────────┬─────────────────┬─────────────────┐
-│   A股工具鏈     │   非A股工具鏈   │   離線工具鏈    │
+│   工具鏈     │   非工具鏈   │   離線工具鏈    │
 └─────────────────┴─────────────────┴─────────────────┘
     ↓                   ↓                   ↓
 實時新聞聚合器 (RealtimeNewsAggregator)
@@ -50,7 +50,7 @@ LLM分析 (基於提示詞模板)
 
 **工具選擇逻辑**:
 ```python
-# A股工具鏈
+# 工具鏈
 if is_china:
     tools = [
         toolkit.get_realtime_stock_news,  # 實時新聞（包含东方財富）
@@ -58,7 +58,7 @@ if is_china:
         toolkit.get_global_news_openai   # OpenAI全球新聞（作為補充）
     ]
 
-# 非A股工具鏈
+# 非工具鏈
 else:
     tools = [
         toolkit.get_realtime_stock_news,  # 實時新聞
@@ -319,14 +319,14 @@ def format_news_report(news_items: List[NewsItem], ticker: str) -> str:
 ## 4. 關键特性和優势
 
 ### 4.1 智能工具選擇
-- **股票類型识別**: 自動识別A股、港股、美股
-- **數據源優化**: A股優先中文新聞源，美股優先英文新聞源
+- **股票類型识別**: 自動识別、、美股
+- **數據源優化**: 優先中文新聞源，美股優先英文新聞源
 - **模式適配**: 在線/離線模式自動切換
 
 ### 4.2 多源新聞聚合
 - **專業API**: FinnHub、Alpha Vantage提供高质量金融新聞
 - **通用API**: NewsAPI提供廣泛新聞覆蓋
-- **本地化**: 中文財經新聞源支持A股分析
+- **本地化**: 中文財經新聞源支持分析
 
 ### 4.3 智能新聞處理
 - **去重算法**: 基於內容相似度的智能去重
@@ -353,10 +353,10 @@ def format_news_report(news_items: List[NewsItem], ticker: str) -> str:
 ```python
 from tradingagents.agents.analysts.news_analyst import create_news_analyst
 from tradingagents.agents.utils.agent_utils import Toolkit
-from tradingagents.llm_adapters import ChatDashScope
+from tradingagents.llm_adapters import Chat
 
 # 創建LLM和工具包
-llm = ChatDashScope()
+llm = Chat
 toolkit = Toolkit()
 
 # 創建新聞分析師
@@ -408,7 +408,7 @@ NEWSAPI_KEY=your_newsapi_key
 # requirements.txt
 requests>=2.28.0
 langchain-core>=0.1.0
-akshare>=1.9.0  # 用於东方財富新聞
+>=1.9.0  # 用於东方財富新聞
 ```
 
 ## 7. 性能優化

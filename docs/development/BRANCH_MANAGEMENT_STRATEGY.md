@@ -7,11 +7,11 @@
 ### 🎯 主要分支
 - **main** - 穩定的生產版本
 - **develop** - 開發主分支
-- **feature/tushare-integration** - Tushare集成和v0.1.6功能
-- **feature/deepseek-v3-integration** - DeepSeek V3集成（可能已合並）
+- **feature/-integration** - 集成和v0.1.6功能
+- **feature/
 
 ### 🔧 功能分支（可能存在）
-- **feature/dashscope-openai-fix** - 阿里百炼修複
+- **feature/
 - **feature/data-source-upgrade** - 數據源升級
 - **hotfix/*** - 緊急修複分支
 
@@ -38,13 +38,13 @@ main (生產版本)
 
 #### 當前v0.1.6發布流程
 ```bash
-# Step 1: 確保feature/tushare-integration包含所有v0.1.6功能
-git checkout feature/tushare-integration
+# Step 1: 確保feature/-integration包含所有v0.1.6功能
+git checkout feature/-integration
 git status
 
 # Step 2: 合並到develop分支
 git checkout develop
-git merge feature/tushare-integration
+git merge feature/-integration
 
 # Step 3: 合並到main分支並打標簽
 git checkout main
@@ -53,8 +53,8 @@ git tag v0.1.6
 git push origin main --tags
 
 # Step 4: 清理功能分支
-git branch -d feature/tushare-integration
-git push origin --delete feature/tushare-integration
+git branch -d feature/-integration
+git push origin --delete feature/-integration
 ```
 
 ### 3. 未來版本開發流程
@@ -153,20 +153,20 @@ git log --oneline -5
 
 #### 2. 整理v0.1.6版本
 ```bash
-# 如果當前在feature/tushare-integration分支
+# 如果當前在feature/-integration分支
 # 確保所有v0.1.6功能都已提交
 git add .
 git commit -m "完成v0.1.6所有功能"
 
 # 推送到远程
-git push origin feature/tushare-integration
+git push origin feature/-integration
 ```
 
 #### 3. 發布v0.1.6正式版
 ```bash
 # 合並到main分支
 git checkout main
-git merge feature/tushare-integration
+git merge feature/-integration
 
 # 創建版本標簽
 git tag -a v0.1.6 -m "TradingAgents-CN v0.1.6正式版"

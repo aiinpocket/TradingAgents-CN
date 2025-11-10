@@ -1,6 +1,6 @@
 # 用戶密碼管理工具
 
-這個工具集提供了通過命令行管理TradingAgents-CN用戶账戶的功能，包括修改密碼、創建用戶、刪除用戶等操作。
+這個工具集提供了通過命令行管理TradingAgents-CN用戶帳戶的功能，包括修改密碼、建立用戶、刪除用戶等操作。
 
 ## 文件說明
 
@@ -19,10 +19,10 @@ python scripts/user_password_manager.py list
 # 修改用戶密碼
 python scripts/user_password_manager.py change-password admin newpassword123
 
-# 創建新用戶
+# 建立新用戶
 python scripts/user_password_manager.py create-user newuser password123 --role user
 
-# 創建管理員用戶
+# 建立管理員用戶
 python scripts/user_password_manager.py create-user newadmin adminpass123 --role admin
 
 # 刪除用戶
@@ -41,7 +41,7 @@ scripts\user_manager.bat list
 # 修改用戶密碼
 scripts\user_manager.bat change-password admin newpassword123
 
-# 創建新用戶
+# 建立新用戶
 scripts\user_manager.bat create-user newuser password123 user
 
 # 刪除用戶
@@ -60,7 +60,7 @@ scripts\user_manager.bat reset
 # 修改用戶密碼
 .\scripts\user_manager.ps1 change-password admin newpassword123
 
-# 創建新用戶
+# 建立新用戶
 .\scripts\user_manager.ps1 create-user newuser password123 user
 
 # 刪除用戶
@@ -80,8 +80,8 @@ scripts\user_manager.bat reset
 
 **語法**: `change-password <用戶名> <新密碼>`
 
-### 創建用戶 (create-user)
-創建新的用戶账戶。
+### 建立用戶 (create-user)
+建立新的用戶帳戶。
 
 **語法**: `create-user <用戶名> <密碼> [--role <角色>] [--permissions <權限列表>]`
 
@@ -94,7 +94,7 @@ scripts\user_manager.bat reset
 - `admin` 角色: `["analysis", "config", "admin"]`
 
 ### 刪除用戶 (delete-user)
-刪除指定的用戶账戶。為了安全，不能刪除最後一個管理員用戶。
+刪除指定的用戶帳戶。為了安全，不能刪除最後一個管理員用戶。
 
 **語法**: `delete-user <用戶名>`
 
@@ -105,9 +105,9 @@ scripts\user_manager.bat reset
 
 ## 安全註意事項
 
-1. **密碼安全**: 所有密碼都使用SHA256進行哈希處理，不會以明文形式存储
+1. **密碼安全**: 所有密碼都使用SHA256進行哈希處理，不會以明文形式儲存
 2. **權限控制**: 管理員用戶擁有所有權限，普通用戶只能進行分析操作
-3. **备份建议**: 在進行重置操作前，建议备份現有的用戶配置文件
+3. **備份建議**: 在進行重置操作前，建議備份現有的用戶配置檔案
 4. **訪問控制**: 確保只有授權人員能夠訪問這些管理工具
 
 ## 配置文件位置
@@ -122,8 +122,8 @@ scripts\user_manager.bat reset
 ### 2. 權限錯誤
 在Windows上，可能需要以管理員身份運行命令提示符或PowerShell。
 
-### 3. 配置文件不存在
-工具會自動創建默認的用戶配置文件，如果仍有問題，請檢查文件路徑和權限。
+### 3. 配置檔案不存在
+工具會自動建立預設的用戶配置檔案，如果仍有問題，請檢查檔案路徑和權限。
 
 ### 4. PowerShell執行策略
 如果PowerShell腳本無法執行，可能需要修改執行策略：
@@ -142,7 +142,7 @@ python scripts/user_password_manager.py change-password admin your_secure_passwo
 python scripts/user_password_manager.py change-password user your_user_password
 ```
 
-### 場景2: 為团隊添加新用戶
+### 場景2: 為團隊添加新用戶
 ```bash
 # 添加分析師用戶
 python scripts/user_password_manager.py create-user analyst analyst123 --role user

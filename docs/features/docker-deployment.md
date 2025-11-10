@@ -196,11 +196,11 @@ volumes:
 # .env 文件示例
 # LLM API配置
 OPENAI_API_KEY=your_openai_key
-DEEPSEEK_API_KEY=your_deepseek_key
+DEEPSEEK_API_KEY=your_
 QWEN_API_KEY=your_qwen_key
 
 # 數據源配置
-TUSHARE_TOKEN=your_tushare_token
+TUSHARE_TOKEN=your__token
 FINNHUB_API_KEY=your_finnhub_key
 
 # 數據庫配置

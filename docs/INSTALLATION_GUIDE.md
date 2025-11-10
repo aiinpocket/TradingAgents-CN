@@ -2,10 +2,10 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Docker](https://img.shields.io/badge/Docker-支持-blue.svg)](https://www.docker.com/)
+[![Docker](https://img.shields.io/badge/Docker-支援-blue.svg)](https://www.docker.com/)
 
-> 🎯 **本指南適用於**: 初學者到高級用戶，涵蓋Docker和本地安裝两種方式
-> 
+> 🎯 **本指南適用於**: 初學者到進階用戶，涵蓋Docker和本地安裝兩種方式
+>
 > 📋 **預計時間**: Docker安裝 15-30分鐘 | 本地安裝 30-60分鐘
 
 ## 📋 目錄
@@ -17,24 +17,24 @@
 - [環境配置](#環境配置)
 - [API密鑰配置](#api密鑰配置)
 - [驗證安裝](#驗證安裝)
-- [常见問題](#常见問題)
+- [常見問題](#常見問題)
 - [故障排除](#故障排除)
 
 ## 🔧 系統要求
 
 ### 最低配置
-- **操作系統**: Windows 10/11, macOS 10.15+, Ubuntu 18.04+
-- **內存**: 4GB RAM（推薦 8GB+）
-- **存储**: 5GB 可用空間
-- **網絡**: 穩定的互聯網連接
+- **作業系統**: Windows 10/11, macOS 10.15+, Ubuntu 18.04+
+- **記憶體**: 4GB RAM（推薦 8GB+）
+- **儲存空間**: 5GB 可用空間
+- **網路**: 穩定的網際網路連線
 
 ### 推薦配置
-- **操作系統**: Windows 11, macOS 12+, Ubuntu 20.04+
-- **內存**: 16GB RAM
-- **存储**: 20GB 可用空間（SSD推薦）
+- **作業系統**: Windows 11, macOS 12+, Ubuntu 20.04+
+- **記憶體**: 16GB RAM
+- **儲存空間**: 20GB 可用空間（SSD推薦）
 - **CPU**: 4核心以上
 
-### 软件依賴
+### 軟體依賴
 
 #### Docker安裝方式
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) 4.0+
@@ -47,17 +47,17 @@
 
 ## 🚀 快速開始
 
-### 方式一：Docker一键啟動（推薦新手）
+### 方式一：Docker一鍵啟動（推薦新手）
 
 ```bash
-# 1. 克隆項目
+# 1. 克隆專案
 git clone https://github.com/hsliuping/TradingAgents-CN.git
 cd TradingAgents-CN
 
-# 2. 複制環境配置
+# 2. 複製環境配置
 cp .env.example .env
 
-# 3. 編辑API密鑰（必须）
+# 3. 編輯API密鑰（必須）
 # Windows: notepad .env
 # macOS/Linux: nano .env
 
@@ -65,20 +65,20 @@ cp .env.example .env
 docker-compose up -d
 
 # 5. 訪問應用
-# 打開浏覽器訪問: http://localhost:8501
+# 開啟瀏覽器訪問: http://localhost:8501
 ```
 
 ### 方式二：本地快速啟動
 
 ```bash
-# 1. 克隆項目
+# 1. 克隆專案
 git clone https://github.com/hsliuping/TradingAgents-CN.git
 cd TradingAgents-CN
 
-# 2. 創建虛擬環境
+# 2. 建立虛擬環境
 python -m venv env
 
-# 3. 激活虛擬環境
+# 3. 啟動虛擬環境
 # Windows:
 env\Scripts\activate
 # macOS/Linux:
@@ -90,10 +90,10 @@ python -m pip install --upgrade pip
 # 5. 安裝依賴
 pip install -e .
 
-# 6. 複制環境配置
+# 6. 複製環境配置
 cp .env.example .env
 
-# 7. 編辑API密鑰（必须）
+# 7. 編輯API密鑰（必須）
 # Windows: notepad .env
 # macOS/Linux: nano .env
 
@@ -155,37 +155,37 @@ docker-compose --version
 docker run hello-world
 ```
 
-### 步骤3：克隆項目
+### 步驟3：克隆專案
 
 ```bash
-# 克隆項目到本地
+# 克隆專案到本地
 git clone https://github.com/hsliuping/TradingAgents-CN.git
 
-# 進入項目目錄
+# 進入專案目錄
 cd TradingAgents-CN
 
-# 查看項目結構
+# 查看專案結構
 ls -la
 ```
 
-### 步骤4：配置環境變量
+### 步驟4：配置環境變數
 
 ```bash
-# 複制環境配置模板
+# 複製環境配置範本
 cp .env.example .env
 
-# 編辑環境配置文件
+# 編輯環境配置檔案
 # Windows: notepad .env
 # macOS: open -e .env
 # Linux: nano .env
 ```
 
-**重要**: 必须配置至少一個AI模型的API密鑰，否則無法正常使用。
+**重要**: 必須配置至少一個AI模型的API密鑰，否則無法正常使用。
 
-### 步骤5：啟動Docker服務
+### 步驟5：啟動Docker服務
 
 ```bash
-# 啟動所有服務（後台運行）
+# 啟動所有服務（背景執行）
 docker-compose up -d
 
 # 查看服務狀態
@@ -195,24 +195,24 @@ docker-compose ps
 docker-compose logs -f web
 ```
 
-### 步骤6：訪問應用
+### 步驟6：訪問應用
 
-打開浏覽器訪問以下地址：
+開啟瀏覽器訪問以下位址：
 
 - **主應用**: http://localhost:8501
-- **Redis管理**: http://localhost:8081 (用戶名/密碼: admin/tradingagents123)
+- **Redis管理**: http://localhost:8081 (使用者名稱/密碼: admin/tradingagents123)
 - **MongoDB管理**: http://localhost:8082 (可選，需要啟動管理服務)
 
 ## 💻 本地安裝
 
-本地安裝提供更多的控制和自定義選項，適合開發者和高級用戶。
+本地安裝提供更多的控制和自訂選項，適合開發者和進階用戶。
 
-### 步骤1：安裝Python
+### 步驟1：安裝Python
 
 #### Windows
 1. 訪問 [Python官網](https://www.python.org/downloads/windows/)
 2. 下載Python 3.10或更高版本
-3. 運行安裝程序，**確保勾選"Add Python to PATH"**
+3. 執行安裝程式，**確保勾選「Add Python to PATH」**
 4. 驗證安裝：
    ```cmd
    python --version
@@ -230,32 +230,32 @@ brew install python@3.10
 
 #### Linux (Ubuntu/Debian)
 ```bash
-# 更新包列表
+# 更新套件清單
 sudo apt update
 
 # 安裝Python 3.10+
 sudo apt install python3.10 python3.10-venv python3.10-pip
 
-# 創建软鏈接（可選）
+# 建立軟連結（可選）
 sudo ln -sf /usr/bin/python3.10 /usr/bin/python
 sudo ln -sf /usr/bin/pip3 /usr/bin/pip
 ```
 
-### 步骤2：克隆項目
+### 步驟2：克隆專案
 
 ```bash
-# 克隆項目
+# 克隆專案
 git clone https://github.com/hsliuping/TradingAgents-CN.git
 cd TradingAgents-CN
 ```
 
-### 步骤3：創建虛擬環境
+### 步驟3：建立虛擬環境
 
 ```bash
-# 創建虛擬環境
+# 建立虛擬環境
 python -m venv env
 
-# 激活虛擬環境
+# 啟動虛擬環境
 # Windows:
 env\Scripts\activate
 
@@ -263,37 +263,37 @@ env\Scripts\activate
 source env/bin/activate
 
 # 驗證虛擬環境
-which python  # 應该顯示虛擬環境中的python路徑
+which python  # 應該顯示虛擬環境中的python路徑
 ```
 
-### 步骤4：安裝依賴
+### 步驟4：安裝依賴
 
 ```bash
 # 升級pip
 python -m pip install --upgrade pip
 
-# 安裝項目依賴
+# 安裝專案依賴
 pip install -r requirements.txt
 
-# 驗證關键包安裝
+# 驗證關鍵套件安裝
 python -c "import streamlit; print('Streamlit安裝成功')"
 python -c "import openai; print('OpenAI安裝成功')"
 python -c "import akshare; print('AKShare安裝成功')"
 ```
 
-### 步骤5：配置環境
+### 步驟5：配置環境
 
 ```bash
-# 複制環境配置
+# 複製環境配置
 cp .env.example .env
 
-# 編辑配置文件
+# 編輯配置檔案
 # Windows: notepad .env
-# macOS: open -e .env  
+# macOS: open -e .env
 # Linux: nano .env
 ```
 
-### 步骤6：可選數據庫安裝
+### 步驟6：可選資料庫安裝
 
 #### MongoDB (推薦)
 ```bash
@@ -323,10 +323,10 @@ brew install redis
 sudo apt install redis-server
 ```
 
-### 步骤7：啟動應用
+### 步驟7：啟動應用
 
 ```bash
-# 確保虛擬環境已激活
+# 確保虛擬環境已啟動
 # Windows: env\Scripts\activate
 # macOS/Linux: source env/bin/activate
 
@@ -340,9 +340,9 @@ python -m streamlit run web/app.py
 
 ## ⚙️ 環境配置
 
-### .env文件詳細配置
+### .env檔案詳細配置
 
-創建`.env`文件並配置以下參數：
+建立`.env`檔案並配置以下參數：
 
 ```bash
 # =============================================================================
@@ -351,34 +351,24 @@ python -m streamlit run web/app.py
 
 # OpenAI配置
 OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_BASE_URL=https://api.openai.com/v1  # 可選，自定義API端點
-
-# DeepSeek配置 (推薦，性價比高)
-DEEPSEEK_API_KEY=your_deepseek_api_key_here
-DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
-
-# 通義千問配置 (阿里云)
-DASHSCOPE_API_KEY=your_dashscope_api_key_here
+OPENAI_BASE_URL=https://api.openai.com/v1  # 可選，自訂API端點
 
 # Google Gemini配置
 GOOGLE_API_KEY=your_google_api_key_here
 
 # =============================================================================
-# 數據源配置
+# 資料源配置
 # =============================================================================
 
-# Tushare配置 (A股數據，推薦)
-TUSHARE_TOKEN=your_tushare_token_here
-
-# FinnHub配置 (美股數據)
+# FinnHub配置 (美股資料)
 FINNHUB_API_KEY=your_finnhub_api_key_here
 
 # =============================================================================
-# 數據庫配置 (可選，提升性能)
+# 資料庫配置 (可選，提升效能)
 # =============================================================================
 
 # MongoDB配置
-MONGODB_ENABLED=false  # 設置為true啟用MongoDB
+MONGODB_ENABLED=false  # 設定為true啟用MongoDB
 MONGODB_HOST=localhost
 MONGODB_PORT=27017
 MONGODB_USERNAME=admin
@@ -386,7 +376,7 @@ MONGODB_PASSWORD=your_mongodb_password
 MONGODB_DATABASE=tradingagents
 
 # Redis配置
-REDIS_ENABLED=false  # 設置為true啟用Redis
+REDIS_ENABLED=false  # 設定為true啟用Redis
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=your_redis_password
@@ -399,111 +389,85 @@ REDIS_DB=0
 # 日誌級別
 LOG_LEVEL=INFO  # DEBUG, INFO, WARNING, ERROR
 
-# 緩存配置
+# 快取配置
 CACHE_ENABLED=true
-CACHE_TTL=3600  # 緩存過期時間（秒）
+CACHE_TTL=3600  # 快取過期時間（秒）
 
-# 網絡配置
-REQUEST_TIMEOUT=30  # 網絡請求超時時間（秒）
+# 網路配置
+REQUEST_TIMEOUT=30  # 網路請求逾時時間（秒）
 MAX_RETRIES=3  # 最大重試次數
 ```
 
-### 配置優先級說明
+### 配置優先順序說明
 
-1. **必须配置**: 至少一個AI模型API密鑰
-2. **推薦配置**: Tushare Token（A股分析）
-3. **可選配置**: 數據庫（提升性能）
-4. **高級配置**: 自定義參數
+1. **必須配置**: 至少一個AI模型API密鑰
+2. **推薦配置**: FinnHub API Key（美股分析）
+3. **可選配置**: 資料庫（提升效能）
+4. **進階配置**: 自訂參數
 
 ## 🔑 API密鑰配置
 
 ### 獲取AI模型API密鑰
 
-#### 1. DeepSeek (推薦，性價比最高)
-1. 訪問 [DeepSeek開放平台](https://platform.deepseek.com/)
-2. 註冊账號並完成實名認證
-3. 進入控制台 → API密鑰
-4. 創建新的API密鑰
-5. 複制密鑰到`.env`文件的`DEEPSEEK_API_KEY`
-
-**費用**: 約 ¥1/万tokens，新用戶送免費額度
-
-#### 2. 通義千問 (國產，穩定)
-1. 訪問 [阿里云DashScope](https://dashscope.aliyun.com/)
-2. 登錄阿里云账號
-3. 開通DashScope服務
-4. 獲取API-KEY
-5. 複制到`.env`文件的`DASHSCOPE_API_KEY`
-
-**費用**: 按量計費，有免費額度
-
-#### 3. OpenAI (功能强大)
+#### 1. OpenAI (功能強大)
 1. 訪問 [OpenAI平台](https://platform.openai.com/)
-2. 註冊账號並绑定支付方式
-3. 進入API Keys页面
-4. 創建新的API密鑰
-5. 複制到`.env`文件的`OPENAI_API_KEY`
+2. 註冊帳號並綁定支付方式
+3. 進入API Keys頁面
+4. 建立新的API密鑰
+5. 複製到`.env`檔案的`OPENAI_API_KEY`
 
 **費用**: 按使用量計費，需要美元支付
 
-#### 4. Google Gemini (免費額度大)
+#### 2. Google Gemini (免費額度大)
 1. 訪問 [Google AI Studio](https://aistudio.google.com/)
-2. 登錄Google账號
-3. 創建API密鑰
-4. 複制到`.env`文件的`GOOGLE_API_KEY`
+2. 登入Google帳號
+3. 建立API密鑰
+4. 複製到`.env`檔案的`GOOGLE_API_KEY`
 
 **費用**: 有較大免費額度
 
-### 獲取數據源API密鑰
+### 獲取資料源API密鑰
 
-#### Tushare (A股數據，强烈推薦)
-1. 訪問 [Tushare官網](https://tushare.pro/)
-2. 註冊账號
-3. 獲取Token
-4. 複制到`.env`文件的`TUSHARE_TOKEN`
-
-**費用**: 免費，有積分限制
-
-#### FinnHub (美股數據)
+#### FinnHub (美股資料)
 1. 訪問 [FinnHub](https://finnhub.io/)
-2. 註冊免費账號
+2. 註冊免費帳號
 3. 獲取API密鑰
-4. 複制到`.env`文件的`FINNHUB_API_KEY`
+4. 複製到`.env`檔案的`FINNHUB_API_KEY`
 
 **費用**: 免費版有限制，付費版功能更全
 
-### API密鑰安全建议
+### API密鑰安全建議
 
-1. **不要提交到Git**: 確保`.env`文件在`.gitignore`中
-2. **定期轮換**: 定期更換API密鑰
+1. **不要提交到Git**: 確保`.env`檔案在`.gitignore`中
+2. **定期更換**: 定期更換API密鑰
 3. **權限最小化**: 只給必要的權限
-4. **監控使用**: 定期檢查API使用情况
+4. **監控使用**: 定期檢查API使用情況
 
 ## ✅ 驗證安裝
 
-### 基础功能驗證
+### 基礎功能驗證
 
 ```bash
 # 1. 檢查Python環境
-python --version  # 應该顯示3.10+
+python --version  # 應該顯示3.10+
 
-# 2. 檢查關键依賴
+# 2. 檢查關鍵依賴
 python -c "import streamlit; print('✅ Streamlit正常')"
 python -c "import openai; print('✅ OpenAI正常')"
 python -c "import akshare; print('✅ AKShare正常')"
 
-# 3. 檢查環境變量
-python -c "import os; print('✅ API密鑰已配置' if os.getenv('DEEPSEEK_API_KEY') else '❌ 需要配置API密鑰')"
+# 3. 檢查環境變數
+python -c "import os; print('✅ API密鑰已配置' if os.getenv('OPENAI_API_KEY') or os.getenv('GOOGLE_API_KEY') else '❌ 需要配置API密鑰')"
 ```
 
 ### Web界面驗證
 
 1. 啟動應用後訪問 http://localhost:8501
-2. 檢查页面是否正常加載
-3. 嘗試輸入股票代碼（如：000001）
-4. 選擇分析師团隊
-5. 點擊"開始分析"按钮
-6. 觀察是否有錯誤信息
+2. 檢查頁面是否正常載入
+3. 嘗試輸入股票代碼（如：AAPL）
+4. 選擇分析師團隊
+5. 點擊「開始分析」按鈕
+6. 觀察是否有錯誤訊息
 
 ### Docker環境驗證
 
@@ -514,42 +478,26 @@ docker-compose ps
 # 查看應用日誌
 docker-compose logs web
 
-# 檢查數據庫連接
+# 檢查資料庫連線
 docker-compose logs mongodb
 docker-compose logs redis
 ```
 
 ### 功能測試
 
-#### 測試A股分析
-```bash
-# 在Web界面中測試
-股票代碼: 000001
-市場類型: A股
-研究深度: 3級
-分析師: 市場分析師 + 基本面分析師
-```
-
 #### 測試美股分析
 ```bash
+# 在Web界面中測試
 股票代碼: AAPL
 市場類型: 美股
 研究深度: 3級
 分析師: 市場分析師 + 基本面分析師
 ```
 
-#### 測試港股分析
-```bash
-股票代碼: 0700.HK
-市場類型: 港股
-研究深度: 3級
-分析師: 市場分析師 + 基本面分析師
-```
+## ❓ 常見問題
 
-## ❓ 常见問題
-
-### Q1: 啟動時提示"ModuleNotFoundError"
-**A**: 依賴包未正確安裝
+### Q1: 啟動時提示「ModuleNotFoundError」
+**A**: 依賴套件未正確安裝
 ```bash
 # 解決方案
 pip install -r requirements.txt --upgrade
@@ -558,57 +506,57 @@ pip install -r requirements.txt --upgrade
 ### Q2: API密鑰配置後仍然報錯
 **A**: 檢查密鑰格式和權限
 ```bash
-# 檢查環境變量是否生效
-python -c "import os; print(os.getenv('DEEPSEEK_API_KEY'))"
+# 檢查環境變數是否生效
+python -c "import os; print(os.getenv('OPENAI_API_KEY'))"
 
 # 重新啟動應用
 ```
 
-### Q3: Docker啟動失败
-**A**: 檢查Docker服務和端口占用
+### Q3: Docker啟動失敗
+**A**: 檢查Docker服務和埠號佔用
 ```bash
 # 檢查Docker狀態
 docker info
 
-# 檢查端口占用
+# 檢查埠號佔用
 netstat -an | grep 8501
 
-# 重新構建鏡像
+# 重新建構映像
 docker-compose build --no-cache
 ```
 
-### Q4: 分析過程中斷或失败
-**A**: 檢查網絡連接和API配額
-- 確保網絡連接穩定
-- 檢查API密鑰余額
-- 查看應用日誌獲取詳細錯誤信息
+### Q4: 分析過程中斷或失敗
+**A**: 檢查網路連線和API配額
+- 確保網路連線穩定
+- 檢查API密鑰餘額
+- 查看應用日誌獲取詳細錯誤訊息
 
-### Q5: 數據獲取失败
-**A**: 檢查數據源配置
-- 確認Tushare Token有效
+### Q5: 資料獲取失敗
+**A**: 檢查資料源配置
+- 確認FinnHub API Key有效
 - 檢查股票代碼格式
-- 驗證網絡訪問權限
+- 驗證網路訪問權限
 
-### Q6: 中文顯示乱碼
-**A**: 檢查系統編碼設置
+### Q6: 中文顯示亂碼
+**A**: 檢查系統編碼設定
 ```bash
-# Windows: 設置控制台編碼
+# Windows: 設定主控台編碼
 chcp 65001
 
 # Linux/macOS: 檢查locale
 locale
 ```
 
-### Q7: 內存不足錯誤
+### Q7: 記憶體不足錯誤
 **A**: 調整分析參數
 - 降低研究深度
-- 减少分析師數量
-- 增加系統內存
+- 減少分析師數量
+- 增加系統記憶體
 
-### Q8: 報告導出失败
-**A**: 檢查導出依賴
+### Q8: 報告匯出失敗
+**A**: 檢查匯出依賴
 ```bash
-# 安裝pandoc (PDF導出需要)
+# 安裝pandoc (PDF匯出需要)
 # Windows: 下載安裝包
 # macOS: brew install pandoc
 # Linux: sudo apt install pandoc
@@ -623,7 +571,7 @@ locale
 # 查看應用日誌
 docker-compose logs -f web
 
-# 查看數據庫日誌
+# 查看資料庫日誌
 docker-compose logs mongodb
 docker-compose logs redis
 
@@ -640,15 +588,15 @@ tail -f logs/tradingagents.log
 python -m streamlit run web/app.py --logger.level=debug
 ```
 
-### 網絡問題
+### 網路問題
 
-#### 代理設置
+#### 代理設定
 ```bash
-# 設置HTTP代理
+# 設定HTTP代理
 export HTTP_PROXY=http://proxy.company.com:8080
 export HTTPS_PROXY=http://proxy.company.com:8080
 
-# 或在.env文件中設置
+# 或在.env檔案中設定
 HTTP_PROXY=http://proxy.company.com:8080
 HTTPS_PROXY=http://proxy.company.com:8080
 ```
@@ -656,34 +604,34 @@ HTTPS_PROXY=http://proxy.company.com:8080
 #### DNS問題
 ```bash
 # 使用公共DNS
-# Windows: 設置網絡適配器DNS為8.8.8.8
-# Linux: 編辑/etc/resolv.conf
+# Windows: 設定網路介面卡DNS為8.8.8.8
+# Linux: 編輯/etc/resolv.conf
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 ```
 
-### 性能優化
+### 效能優化
 
-#### 內存優化
+#### 記憶體優化
 ```bash
-# 在.env中設置
+# 在.env中設定
 STREAMLIT_SERVER_MAX_UPLOAD_SIZE=200
 STREAMLIT_SERVER_MAX_MESSAGE_SIZE=200
 ```
 
-#### 緩存優化
+#### 快取優化
 ```bash
-# 啟用Redis緩存
+# 啟用Redis快取
 REDIS_ENABLED=true
-CACHE_TTL=7200  # 增加緩存時間
+CACHE_TTL=7200  # 增加快取時間
 ```
 
-### 數據庫問題
+### 資料庫問題
 
-#### MongoDB連接失败
+#### MongoDB連線失敗
 ```bash
 # 檢查MongoDB服務
-# Windows: services.msc 查找MongoDB
+# Windows: services.msc 尋找MongoDB
 # Linux: sudo systemctl status mongod
 # macOS: brew services list | grep mongodb
 
@@ -693,7 +641,7 @@ docker volume rm tradingagents_mongodb_data
 docker-compose up -d mongodb
 ```
 
-#### Redis連接失败
+#### Redis連線失敗
 ```bash
 # 檢查Redis服務
 redis-cli ping
@@ -711,13 +659,13 @@ docker-compose up -d redis
 # 給腳本執行權限
 chmod +x start_web.sh
 
-# 修複文件所有權
+# 修復檔案所有權
 sudo chown -R $USER:$USER .
 ```
 
 #### Windows權限
-- 以管理員身份運行命令提示符
-- 檢查防火墙設置
+- 以系統管理員身分執行命令提示字元
+- 檢查防火牆設定
 - 確保Python在PATH中
 
 ### 重置安裝
@@ -727,11 +675,11 @@ sudo chown -R $USER:$USER .
 # 停止所有服務
 docker-compose down
 
-# 刪除所有數據
+# 刪除所有資料
 docker volume prune
 docker system prune -a
 
-# 重新構建
+# 重新建構
 docker-compose build --no-cache
 docker-compose up -d
 ```
@@ -741,7 +689,7 @@ docker-compose up -d
 # 刪除虛擬環境
 rm -rf env
 
-# 重新創建
+# 重新建立
 python -m venv env
 source env/bin/activate  # Linux/macOS
 # 或 env\Scripts\activate  # Windows
@@ -753,17 +701,17 @@ pip install -r requirements.txt
 ## 📞 獲取幫助
 
 ### 官方資源
-- **項目主页**: https://github.com/hsliuping/TradingAgents-CN
-- **文档中心**: https://www.tradingagents.cn/
-- **問題反馈**: https://github.com/hsliuping/TradingAgents-CN/issues
+- **專案主頁**: https://github.com/hsliuping/TradingAgents-CN
+- **文檔中心**: https://www.tradingagents.cn/
+- **問題回饋**: https://github.com/hsliuping/TradingAgents-CN/issues
 
-### 社区支持
-- **微信群**: 扫描README中的二維碼
-- **QQ群**: 詳见項目主页
-- **邮件支持**: 见項目聯系方式
+### 社群支援
+- **GitHub Issues**: 提交問題和建議
+- **GitHub Discussions**: 技術討論和交流
+- **Email 支援**: 見專案聯絡方式
 
-### 贡献代碼
-欢迎提交Pull Request和Issue，幫助改進項目！
+### 貢獻程式碼
+歡迎提交Pull Request和Issue，幫助改進專案！
 
 ---
 
