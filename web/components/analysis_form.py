@@ -25,7 +25,7 @@ def render_analysis_form():
     # 獲取緩存的表單配置（確保不為None）
     cached_config = st.session_state.get('form_config') or {}
 
-    # 調試信息（只在没有分析運行時記錄，避免重複）
+    # 調試信息（只在沒有分析運行時記錄，避免重複）
     if not st.session_state.get('analysis_running', False):
         if cached_config:
             logger.debug(f"📊 [配置恢複] 使用緩存配置: {cached_config}")
@@ -192,7 +192,7 @@ def render_analysis_form():
             'custom_prompt': custom_prompt
         }
 
-        # 如果配置發生變化，立即保存（即使没有提交）
+        # 如果配置發生變化，立即保存（即使沒有提交）
         if current_config != initial_config:
             st.session_state.form_config = current_config
             try:
@@ -292,7 +292,7 @@ def render_analysis_form():
 
         return form_data
     elif submitted and not stock_symbol:
-        # 用戶點擊了提交但没有輸入股票代碼
+        # 用戶點擊了提交但沒有輸入股票代碼
         logger.error(f"🔍 [FORM DEBUG] 提交失败：股票代碼為空")
         st.error("❌ 請輸入股票代碼後再提交")
         return {'submitted': False}

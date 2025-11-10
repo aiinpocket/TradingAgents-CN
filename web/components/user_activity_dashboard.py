@@ -24,7 +24,7 @@ def render_user_activity_dashboard():
     
     # 檢查權限
     if not auth_manager or not auth_manager.check_permission("admin"):
-        st.error("❌ 您没有權限訪問用戶活動記錄")
+        st.error("❌ 您沒有權限訪問用戶活動記錄")
         return
     
     if not user_activity_logger:
@@ -222,7 +222,7 @@ def render_activity_list(activities: List[Dict[str, Any]]):
         if total_pages > 1:
             st.info(f"📄 第 {page + 1} 页，共 {total_pages} 页 | 顯示 {start_idx + 1}-{end_idx} 條，共 {len(activities)} 條記錄")
     else:
-        st.info("📭 當前页没有數據")
+        st.info("📭 當前页沒有數據")
 
 def render_user_analysis(activities: List[Dict[str, Any]]):
     """渲染用戶分析"""

@@ -31,7 +31,7 @@ except ImportError:
 @dataclass
 class ModelConfig:
     """模型配置"""
-    provider: str  # 供應商：dashscope, openai, google, etc.
+    provider: str  # 供應商：openai, google, anthropic, etc.
     model_name: str  # 模型名稱
     api_key: str  # API密鑰
     base_url: Optional[str] = None  # 自定義API地址
@@ -591,7 +591,7 @@ class ConfigManager:
         settings = self.load_settings()
         data_dir = settings.get("data_dir")
         if not data_dir:
-            # 如果没有配置，使用默認路徑
+            # 如果沒有配置，使用默認路徑
             data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
         return data_dir
 

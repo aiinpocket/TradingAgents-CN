@@ -151,7 +151,7 @@ def create_news_analyst(llm, toolkit):
                     "\n🚨 CRITICAL REQUIREMENT - 絕對強制要求："
                     "\n"
                     "\n❌ 禁止行為："
-                    "\n- 絕對禁止在没有調用工具的情況下直接回答"
+                    "\n- 絕對禁止在沒有調用工具的情況下直接回答"
                     "\n- 絕對禁止基於推測或假設生成任何分析內容"
                     "\n- 絕對禁止跳過工具調用步驟"
                     "\n- 絕對禁止說'我無法獲取實時數據'等借口"
@@ -167,7 +167,7 @@ def create_news_analyst(llm, toolkit):
                     "\n"
                     "\n⚠️ 如果您不調用工具，您的回答将被視為無效並被拒絕。"
                     "\n⚠️ 您必须先調用工具獲取數據，然後基於數據進行分析。"
-                    "\n⚠️ 没有例外，没有借口，必须調用工具。"
+                    "\n⚠️ 沒有例外，沒有借口，必须調用工具。"
                     "\n"
                     "\n您可以訪問以下工具：{tool_names}。"
                     "\n{system_message}"
@@ -289,7 +289,7 @@ def create_news_analyst(llm, toolkit):
             logger.info(f"[新聞分析師] LLM調用了 {tool_call_count} 個工具")
             
             if tool_call_count == 0:
-                logger.warning(f"[新聞分析師] ⚠️ {llm.__class__.__name__} 没有調用任何工具，啟動補救機制...")
+                logger.warning(f"[新聞分析師] ⚠️ {llm.__class__.__name__} 沒有調用任何工具，啟動補救機制...")
                 
                 try:
                     # 強制獲取新聞數據

@@ -271,7 +271,7 @@ class DatabaseCacheManager:
             except Exception as e:
                 logger.error(f"⚠️ Redis加載失败: {e}")
         
-        # 如果Redis没有，從MongoDB加載
+        # 如果Redis沒有，從MongoDB加載
         if self.mongodb_db is not None:
             try:
                 collection = self.mongodb_db.stock_data

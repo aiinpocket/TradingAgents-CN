@@ -30,7 +30,7 @@ class MongoDBStorage:
         if not MONGODB_AVAILABLE:
             raise ImportError("pymongo is not installed. Please install it with: pip install pymongo")
         
-        # 修複硬編碼問題 - 如果没有提供連接字符串且環境變量也未設置，則拋出錯誤
+        # 修複硬編碼問題 - 如果沒有提供連接字符串且環境變量也未設置，則拋出錯誤
         self.connection_string = connection_string or os.getenv("MONGODB_CONNECTION_STRING")
         if not self.connection_string:
             raise ValueError(

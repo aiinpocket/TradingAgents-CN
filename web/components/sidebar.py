@@ -179,7 +179,7 @@ def render_sidebar():
         <div id="localStorage-reader" style="display: none;">
             <script>
             // 從localStorage讀取設置並發送給Streamlit
-            const provider = loadFromLocalStorage('llm_provider', 'dashscope');
+            const provider = loadFromLocalStorage('llm_provider', 'openai');
             const category = loadFromLocalStorage('model_category', 'openai');
             const model = loadFromLocalStorage('llm_model', '');
 
@@ -869,11 +869,7 @@ def render_sidebar():
             if not key:
                 return "未配置", "error"
 
-            if expected_format == "dashscope" and key.startswith("sk-") and len(key) >= 32:
-                return f"{key[:8]}...", "success"
-            elif expected_format == "deepseek" and key.startswith("sk-") and len(key) >= 32:
-                return f"{key[:8]}...", "success"
-            elif expected_format == "finnhub" and len(key) >= 20:
+            if expected_format == "finnhub" and len(key) >= 20:
                 return f"{key[:8]}...", "success"
             elif expected_format == "tushare" and len(key) >= 32:
                 return f"{key[:8]}...", "success"

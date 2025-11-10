@@ -934,7 +934,7 @@ class OptimizedChinaDataProvider:
         if symbol.startswith(('000001', '600036')):  # 銀行股
             return {
                 "pe": "5.2倍（銀行業平均水平）",
-                "pb": "0.65倍（破净狀態，銀行業常见）",
+                "pb": "0.65倍（破净狀態，銀行業常見）",
                 "ps": "2.1倍",
                 "dividend_yield": "4.2%（銀行業分红較高）",
                 "roe": "12.5%（銀行業平均）",

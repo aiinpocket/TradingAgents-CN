@@ -144,7 +144,7 @@ def render_decision_summary(decision, stock_symbol=None):
 
     st.subheader("🎯 投資決策摘要")
 
-    # 如果没有決策數據，顯示占位符
+    # 如果沒有決策數據，顯示占位符
     if not decision:
         st.markdown("""
         <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);

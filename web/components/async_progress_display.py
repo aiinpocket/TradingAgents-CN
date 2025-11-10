@@ -97,7 +97,7 @@ class AsyncProgressDisplay:
                 with self.step_info:
                     if st.button("📊 查看分析報告", key=f"view_report_{progress_data.get('analysis_id', 'unknown')}", type="primary"):
                         analysis_id = progress_data.get('analysis_id')
-                        # 嘗試恢複分析結果（如果还没有的話）
+                        # 嘗試恢複分析結果（如果还沒有的話）
                         if not st.session_state.get('analysis_results'):
                             try:
                                 from web.utils.analysis_runner import format_analysis_results
@@ -233,7 +233,7 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
         # 添加查看報告按钮
         if st.button("📊 查看分析報告", key=f"view_report_streamlit_{progress_data.get('analysis_id', 'unknown')}", type="primary"):
             analysis_id = progress_data.get('analysis_id')
-            # 嘗試恢複分析結果（如果还没有的話）
+            # 嘗試恢複分析結果（如果还沒有的話）
             if not st.session_state.get('analysis_results'):
                 try:
                     from web.utils.analysis_runner import format_analysis_results
@@ -391,7 +391,7 @@ def display_static_progress(analysis_id: str) -> bool:
 
         # 添加查看報告按钮
         if st.button("📊 查看分析報告", key=f"view_report_static_{analysis_id}", type="primary"):
-            # 嘗試恢複分析結果（如果还没有的話）
+            # 嘗試恢複分析結果（如果还沒有的話）
             if not st.session_state.get('analysis_results'):
                 try:
                     from web.utils.async_progress_tracker import get_progress_by_id
@@ -471,7 +471,7 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
     progress_data = get_progress_by_id(analysis_id)
 
     if not progress_data:
-        # 如果没有進度數據，顯示默認的準备狀態
+        # 如果沒有進度數據，顯示默認的準备狀態
         st.info("🔄 **當前狀態**: 準备開始分析...")
         
         # 設置默認狀態為initializing
@@ -561,7 +561,7 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
 
         # 添加查看報告按钮
         if st.button("📊 查看分析報告", key=f"view_report_unified_{analysis_id}", type="primary"):
-            # 嘗試恢複分析結果（如果还没有的話）
+            # 嘗試恢複分析結果（如果还沒有的話）
             if not st.session_state.get('analysis_results'):
                 try:
                     from web.utils.async_progress_tracker import get_progress_by_id
@@ -586,7 +586,7 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
 
     # 顯示刷新控制的條件：
     # 1. 需要顯示刷新控件 AND
-    # 2. (分析正在運行 OR 分析刚開始还没有狀態)
+    # 2. (分析正在運行 OR 分析刚開始还沒有狀態)
     if show_refresh_controls and (status == 'running' or status == 'initializing'):
         col1, col2 = st.columns([1, 1])
         with col1:

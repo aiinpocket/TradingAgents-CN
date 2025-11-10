@@ -154,7 +154,7 @@ def render_operation_logs():
         from utils.auth_manager import auth_manager
         
         if not auth_manager or not auth_manager.check_permission("admin"):
-            st.error("❌ 您没有權限訪問操作日誌")
+            st.error("❌ 您沒有權限訪問操作日誌")
             st.info("💡 提示：操作日誌功能需要 'admin' 權限")
             return
     except Exception as e:
@@ -399,7 +399,7 @@ def render_logs_list(logs: List[Dict[str, Any]]):
         if total_pages > 1:
             st.info(f"第 {page + 1} 页，共 {total_pages} 页，总計 {len(logs)} 條記錄")
     else:
-        st.info("當前页没有數據")
+        st.info("當前页沒有數據")
 
 def render_logs_export(logs: List[Dict[str, Any]]):
     """渲染日誌導出功能"""
@@ -407,7 +407,7 @@ def render_logs_export(logs: List[Dict[str, Any]]):
     st.subheader("📤 導出操作日誌")
     
     if not logs:
-        st.warning("没有可導出的日誌數據")
+        st.warning("沒有可導出的日誌數據")
         return
     
     # 導出格式選擇

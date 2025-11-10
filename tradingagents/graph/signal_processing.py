@@ -73,8 +73,8 @@ class SignalProcessor:
 {{
     "action": "买入/持有/卖出",
     "target_price": 數字({currency}價格，**必须提供具體數值，不能為null**),
-    "confidence": 數字(0-1之間，如果没有明確提及則為0.7),
-    "risk_score": 數字(0-1之間，如果没有明確提及則為0.5),
+    "confidence": 數字(0-1之間，如果沒有明確提及則為0.7),
+    "risk_score": 數字(0-1之間，如果沒有明確提及則為0.5),
     "reasoning": "決策的主要理由摘要"
 }}
 
@@ -89,7 +89,7 @@ class SignalProcessor:
 - 股票代碼 {stock_symbol or '未知'} 是{market_info['market_name']}，使用{currency}計價
 - 目標價格必须与股票的交易貨币一致（{currency_symbol}）
 
-如果某些信息在報告中没有明確提及，請使用合理的默認值。""",
+如果某些信息在報告中沒有明確提及，請使用合理的默認值。""",
             ),
             ("human", full_signal),
         ]
@@ -139,7 +139,7 @@ class SignalProcessor:
                 # 處理目標價格，確保正確提取
                 target_price = decision_data.get('target_price')
                 if target_price is None or target_price == "null" or target_price == "":
-                    # 如果JSON中没有目標價格，嘗試從reasoning和完整文本中提取
+                    # 如果JSON中沒有目標價格，嘗試從reasoning和完整文本中提取
                     reasoning = decision_data.get('reasoning', '')
                     full_text = f"{reasoning} {full_signal}"  # 擴大搜索範围
                     
@@ -171,7 +171,7 @@ class SignalProcessor:
                             except (ValueError, IndexError):
                                 continue
 
-                    # 如果仍然没有找到價格，嘗試智能推算
+                    # 如果仍然沒有找到價格，嘗試智能推算
                     if target_price is None or target_price == "null" or target_price == "":
                         target_price = self._smart_price_estimation(full_text, action, is_china)
                         if target_price:
@@ -262,7 +262,7 @@ class SignalProcessor:
             elif action == '卖出':
                 return round(current_price * (1 - percentage_change), 2)
         
-        # 如果有當前價格但没有涨跌幅，使用默認估算
+        # 如果有當前價格但沒有涨跌幅，使用默認估算
         if current_price:
             if action == '买入':
                 # 买入建議默認10-20%涨幅
@@ -311,7 +311,7 @@ class SignalProcessor:
                 except ValueError:
                     continue
 
-        # 如果没有找到價格，嘗試智能推算
+        # 如果沒有找到價格，嘗試智能推算
         if target_price is None:
             # 檢測股票類型
             is_china = True  # 默認假設是A股，實际應该從上下文獲取

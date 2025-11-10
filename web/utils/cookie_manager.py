@@ -32,7 +32,7 @@ class CookieManager:
 
                 # 檢查Cookie管理器是否準备就绪
                 if not self.cookies.ready():
-                    # 如果没有準备就绪，先顯示等待信息，然後停止執行
+                    # 如果沒有準备就绪，先顯示等待信息，然後停止執行
                     st.info("🔄 正在初始化Cookie管理器，請稍候...")
                     st.stop()
 

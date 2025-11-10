@@ -83,7 +83,7 @@ class TushareConfig:
             result['issues'].append("TUSHARE_TOKEN格式可能不正確")
             result['suggestions'].append("檢查token是否完整（通常為40字符）")
         
-        # 如果没有問題，標記為有效
+        # 如果沒有問題，標記為有效
         if not result['issues']:
             result['valid'] = True
         
@@ -146,10 +146,10 @@ class TushareConfig:
         return results
     
     def fix_common_issues(self) -> Dict[str, str]:
-        """修複常见配置問題"""
+        """修複常見配置問題"""
         fixes = {}
         
-        # 檢查TUSHARE_ENABLED的常见問題
+        # 檢查TUSHARE_ENABLED的常見問題
         enabled_raw = os.getenv("TUSHARE_ENABLED", "")
         if enabled_raw.lower() in ["true", "1", "yes", "on"] and not self.enabled:
             fixes["TUSHARE_ENABLED"] = f"檢測到 '{enabled_raw}'，但解析為False，可能存在兼容性問題"

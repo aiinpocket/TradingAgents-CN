@@ -40,7 +40,7 @@ def get_win11_chromadb_client():
         client = chromadb.Client(settings)
         return client
     except Exception as e:
-        # 如果还有問題，使用最簡配置
+        # 如果還有問題，使用最簡配置
         minimal_settings = Settings(
             allow_reset=True,
             anonymized_telemetry=False,  # 關键：禁用遥測

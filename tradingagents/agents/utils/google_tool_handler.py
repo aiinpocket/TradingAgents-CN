@@ -70,7 +70,7 @@ class GoogleToolCallHandler:
         
         # 檢查是否有工具調用
         if not hasattr(result, 'tool_calls'):
-            logger.warning(f"[{analyst_name}] ⚠️ 結果對象没有tool_calls屬性")
+            logger.warning(f"[{analyst_name}] ⚠️ 結果對象沒有tool_calls屬性")
             logger.debug(f"[{analyst_name}] 🔍 可用屬性: {[attr for attr in dir(result) if not attr.startswith('_')]}")
             return result.content, [result]
         
@@ -346,10 +346,10 @@ class GoogleToolCallHandler:
                         logger.warning(f"[{analyst_name}] ⚠️ Google模型返回內容為空")
                         logger.debug(f"[{analyst_name}] 🔍 空內容詳情: repr={repr(content)}")
                 else:
-                    logger.warning(f"[{analyst_name}] ⚠️ Google模型返回結果没有content屬性")
+                    logger.warning(f"[{analyst_name}] ⚠️ Google模型返回結果沒有content屬性")
                     logger.debug(f"[{analyst_name}] 🔍 可用屬性: {[attr for attr in dir(final_result) if not attr.startswith('_')]}")
                 
-                # 如果到這里，說明內容為空或没有content屬性
+                # 如果到這里，說明內容為空或沒有content屬性
                 logger.warning(f"[{analyst_name}] ⚠️ Google模型最終分析報告生成失败 - 內容為空")
                 # 降級處理：基於工具結果生成簡單報告
                 tool_summary = "\n\n".join([f"工具結果 {i+1}:\n{str(result)}" for i, result in enumerate(tool_results)])
@@ -626,7 +626,7 @@ class GoogleToolCallHandler:
                         logger.info(f"[{analyst_name}] ✅ 成功生成分析報告，長度: {len(content)} 字符")
                         return content
                 else:
-                    logger.error(f"[{analyst_name}] ❌ 返回結果没有content屬性 (嘗試 {attempt + 1}/{max_retries})")
+                    logger.error(f"[{analyst_name}] ❌ 返回結果沒有content屬性 (嘗試 {attempt + 1}/{max_retries})")
                     
                     if attempt < max_retries - 1:
                         logger.info(f"[{analyst_name}] 🔄 等待{retry_delay}秒後重試...")

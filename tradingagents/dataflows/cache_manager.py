@@ -236,7 +236,7 @@ class StockDataCache:
         if not metadata:
             return False
 
-        # 如果没有指定TTL，根據數據類型和市場自動確定
+        # 如果沒有指定TTL，根據數據類型和市場自動確定
         if max_age_hours is None:
             if symbol and data_type:
                 market_type = self._determine_market_type(symbol)
@@ -369,7 +369,7 @@ class StockDataCache:
         """
         market_type = self._determine_market_type(symbol)
 
-        # 如果没有指定TTL，使用智能配置
+        # 如果沒有指定TTL，使用智能配置
         if max_age_hours is None:
             cache_type = f"{market_type}_stock_data"
             max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
@@ -387,7 +387,7 @@ class StockDataCache:
             logger.info(f"🎯 找到精確匹配的{desc}: {symbol} -> {search_key}")
             return search_key
 
-        # 如果没有精確匹配，查找部分匹配（相同股票代碼的其他緩存）
+        # 如果沒有精確匹配，查找部分匹配（相同股票代碼的其他緩存）
         for metadata_file in self.metadata_dir.glob(f"*_meta.json"):
             try:
                 with open(metadata_file, 'r', encoding='utf-8') as f:
@@ -523,7 +523,7 @@ class StockDataCache:
         """
         market_type = self._determine_market_type(symbol)
         
-        # 如果没有指定TTL，使用智能配置
+        # 如果沒有指定TTL，使用智能配置
         if max_age_hours is None:
             cache_type = f"{market_type}_fundamentals"
             max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
@@ -601,7 +601,7 @@ class StockDataCache:
                 elif data_type == 'fundamentals':
                     stats['fundamentals_count'] += 1
                 
-                # 檢查是否為跳過的緩存（没有實际文件）
+                # 檢查是否為跳過的緩存（沒有實际文件）
                 data_file = Path(metadata.get('file_path', ''))
                 if not data_file.exists():
                     stats['skipped_count'] += 1

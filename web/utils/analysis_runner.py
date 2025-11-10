@@ -572,7 +572,7 @@ def format_analysis_results(results):
             'action': action,
             'confidence': 0.7,  # 默認置信度
             'risk_score': 0.3,  # 默認風險分數
-            'target_price': None,  # 字符串格式没有目標價格
+            'target_price': None,  # 字符串格式沒有目標價格
             'reasoning': f'基於AI分析，建議{decision.strip().upper()}'
         }
     elif isinstance(decision, dict):
@@ -734,7 +734,7 @@ def validate_analysis_params(stock_symbol, analysis_date, analysts, research_dep
 def get_supported_stocks():
     """獲取支持的股票列表"""
     
-    # 常见的美股股票代碼
+    # 常見的美股股票代碼
     popular_stocks = [
         {'symbol': 'AAPL', 'name': '蘋果公司', 'sector': '科技'},
         {'symbol': 'MSFT', 'name': '微軟', 'sector': '科技'},

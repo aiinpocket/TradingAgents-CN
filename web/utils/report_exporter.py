@@ -832,7 +832,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                     else:
                         logger.warning(f"⚠️ MongoDB保存失败，但文件保存成功")
                 else:
-                    logger.warning(f"⚠️ 没有報告內容可保存到MongoDB")
+                    logger.warning(f"⚠️ 沒有報告內容可保存到MongoDB")
 
             except Exception as e:
                 logger.error(f"❌ MongoDB保存過程出錯: {e}")
@@ -1180,7 +1180,7 @@ def save_analysis_report(stock_symbol: str, analysis_results: Dict[str, Any],
             logger.warning("MongoDB報告管理器不可用，無法保存報告")
             return False
         
-        # 如果没有提供報告內容，則生成Markdown報告
+        # 如果沒有提供報告內容，則生成Markdown報告
         if report_content is None:
             report_content = report_exporter.generate_markdown_report(analysis_results)
         

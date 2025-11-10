@@ -330,7 +330,7 @@ class UnifiedNewsAnalyzer:
                 google_control_applied = True
                 logger.info(f"[統一新聞工具] ✅ Google模型智能長度控制完成，從{original_length}字符壓縮至{len(news_content)}字符")
             else:
-                # 如果没有重要行，直接截斷到目標長度
+                # 如果沒有重要行，直接截斷到目標長度
                 news_content = news_content[:target_length] + "...(內容已強制截斷)"
                 google_control_applied = True
                 logger.info(f"[統一新聞工具] ⚠️ Google模型強制截斷至{target_length}字符")

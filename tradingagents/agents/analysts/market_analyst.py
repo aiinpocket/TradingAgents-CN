@@ -418,7 +418,7 @@ def create_market_analyst(llm, toolkit):
             
             # 處理市場分析報告
             if len(result.tool_calls) == 0:
-                # 没有工具調用，直接使用LLM的回複
+                # 沒有工具調用，直接使用LLM的回複
                 report = result.content
                 logger.info(f"📊 [市場分析師] 直接回複，長度: {len(report)}")
             else:

@@ -68,7 +68,7 @@ class OptimizedUSDataProvider:
                 data_source="finnhub"
             )
 
-            # 如果没有FINNHUB緩存，查找Yahoo Finance緩存
+            # 如果沒有FINNHUB緩存，查找Yahoo Finance緩存
             if not cache_key:
                 cache_key = self.cache.find_cached_stock_data(
                     symbol=symbol,

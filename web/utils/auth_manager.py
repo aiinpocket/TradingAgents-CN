@@ -335,7 +335,7 @@ class AuthManager:
             # 驗證用戶信息的有效性
             username = user_info.get('username')
             if not username:
-                logger.warning(f"⚠️ 恢複失败: 用戶信息中没有用戶名")
+                logger.warning(f"⚠️ 恢複失败: 用戶信息中沒有用戶名")
                 return False
             
             # 檢查用戶是否仍然存在
@@ -367,7 +367,7 @@ class AuthManager:
     
     def require_permission(self, permission: str) -> bool:
         """
-        要求特定權限，如果没有權限則顯示錯誤信息
+        要求特定權限，如果沒有權限則顯示錯誤信息
         
         Args:
             permission: 權限名稱
@@ -376,7 +376,7 @@ class AuthManager:
             是否有權限
         """
         if not self.check_permission(permission):
-            st.error(f"❌ 您没有 '{permission}' 權限，請聯系管理員")
+            st.error(f"❌ 您沒有 '{permission}' 權限，請聯系管理員")
             return False
         return True
 

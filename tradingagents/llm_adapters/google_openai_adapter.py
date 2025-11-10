@@ -324,7 +324,7 @@ def test_google_openai_function_calling(
             return True
         else:
             logger.info(f"   響應內容: {getattr(response, 'content', 'No content')}")
-            return True  # 即使没有工具調用也算成功，因為模型可能選擇不調用工具
+            return True  # 即使沒有工具調用也算成功，因為模型可能選擇不調用工具
             
     except Exception as e:
         logger.error(f"❌ Google AI Function Calling 測試失败: {e}")

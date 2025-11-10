@@ -313,7 +313,7 @@ def create_fundamentals_analyst(llm, toolkit):
                     "fundamentals_report": result.content if hasattr(result, 'content') else str(result)
                 }
             else:
-                # 没有工具調用，使用強制工具調用修複
+                # 沒有工具調用，使用強制工具調用修複
                 logger.debug(f"📊 [DEBUG] 檢測到模型未調用工具，啟用強制工具調用模式")
                 
                 # 強制調用統一基本面分析工具

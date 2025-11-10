@@ -690,7 +690,7 @@ class DataSourceManager:
                     info['name'] = f'股票{symbol}'
 
                 # 提取其他信息
-                info['area'] = '未知'  # AKShare没有地区信息
+                info['area'] = '未知'  # AKShare沒有地区信息
                 info['industry'] = '未知'  # 可以通過其他API獲取
                 info['market'] = '未知'  # 可以根據股票代碼推斷
                 info['list_date'] = '未知'  # 可以通過其他API獲取
@@ -739,8 +739,8 @@ class DataSourceManager:
                 # BaoStock返回格式: [code, code_name, ipoDate, outDate, type, status]
                 info = {'symbol': symbol, 'source': 'baostock'}
                 info['name'] = data_list[0][1]  # code_name
-                info['area'] = '未知'  # BaoStock没有地区信息
-                info['industry'] = '未知'  # BaoStock没有行業信息
+                info['area'] = '未知'  # BaoStock沒有地区信息
+                info['industry'] = '未知'  # BaoStock沒有行業信息
                 info['market'] = '未知'  # 可以根據股票代碼推斷
                 info['list_date'] = data_list[0][2]  # ipoDate
 

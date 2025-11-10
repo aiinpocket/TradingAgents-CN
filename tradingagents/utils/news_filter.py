@@ -256,7 +256,7 @@ def get_company_name(ticker: str) -> str:
         logger.debug(f"[公司映射] {ticker} -> {company_name}")
         return company_name
     else:
-        # 如果没有映射，返回默認名稱
+        # 如果沒有映射，返回默認名稱
         default_name = f"股票{clean_ticker}"
         logger.warning(f"[公司映射] 未找到 {ticker} 的公司名稱映射，使用默認: {default_name}")
         return default_name

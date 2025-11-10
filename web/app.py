@@ -408,7 +408,7 @@ def initialize_session_state():
 
         if session_data and 'form_config' in session_data:
             st.session_state.form_config = session_data['form_config']
-            # 只在没有分析運行時記錄日誌，避免重複
+            # 只在沒有分析運行時記錄日誌，避免重複
             if not st.session_state.get('analysis_running', False):
                 logger.info("📊 [配置恢複] 表單配置已恢複")
     except Exception as e:
@@ -453,7 +453,7 @@ def check_frontend_auth_cache():
             if 'userInfo' in auth_data:
                 user_info = auth_data['userInfo']
                 # 使用當前時間作為新的登錄時間，避免超時問題
-                # 因為前端已經驗證了lastActivity没有超時
+                # 因為前端已經驗證了lastActivity沒有超時
                 login_time = time.time()
             else:
                 # 旧格式兼容
@@ -477,8 +477,8 @@ def check_frontend_auth_cache():
                 # 恢複失败，清除URL參數
                 del st.query_params['restore_auth']
         else:
-            # 如果没有URL參數，註入前端檢查腳本
-            logger.info("📝 没有URL恢複參數，註入前端檢查腳本")
+            # 如果沒有URL參數，註入前端檢查腳本
+            logger.info("📝 沒有URL恢複參數，註入前端檢查腳本")
             inject_frontend_cache_check()
     except Exception as e:
         logger.warning(f"⚠️ 處理前端緩存恢複失败: {e}")
@@ -518,7 +518,7 @@ def inject_frontend_cache_check():
             console.log('🔍 檢查localStorage中的認證數據:', authData ? '存在' : '不存在');
             
             if (!authData) {
-                console.log('🔍 前端緩存中没有登錄狀態');
+                console.log('🔍 前端緩存中沒有登錄狀態');
                 return;
             }
             
@@ -1050,7 +1050,7 @@ def main():
     # 如果正在分析或有分析結果，默認隱藏使用指南
     default_show_guide = not (st.session_state.get('analysis_running', False) or st.session_state.get('analysis_results') is not None)
     
-    # 如果用戶没有手動設置過，使用默認值
+    # 如果用戶沒有手動設置過，使用默認值
     if 'user_set_guide_preference' not in st.session_state:
         st.session_state.user_set_guide_preference = False
         st.session_state.show_guide_preference = default_show_guide
@@ -1134,7 +1134,7 @@ def main():
 
         # 檢查是否提交了表單
         if form_data.get('submitted', False) and not st.session_state.get('analysis_running', False):
-            # 只有在没有分析運行時才處理新的提交
+            # 只有在沒有分析運行時才處理新的提交
             # 驗證分析參數
             is_valid, validation_errors = validate_analysis_params(
                 stock_symbol=form_data['stock_symbol'],
@@ -1546,15 +1546,15 @@ def main():
                 💡 **推薦**: 日常分析使用 `qwen-plus`，重要決策使用 `qwen-max`
                 """)
 
-            # 常见問題
-            with st.expander("❓ 常见問題"):
+            # 常見問題
+            with st.expander("❓ 常見問題"):
                 st.markdown("""
-                ### 🔍 常见問題解答
+                ### 🔍 常見問題解答
 
-                **Q: 為什么輸入股票代碼没有反應？**
+                **Q: 為什麼輸入股票代碼沒有反應？**
                 A: 請確保輸入代碼後按 **回車键** 確認，這是Streamlit的默認行為。
 
-                **Q: 美股代碼格式是什么？**
+                **Q: 美股代碼格式是什麼？**
                 A: 美股使用字母代碼，如 `AAPL`、`TSLA`、`MSFT` 等。
 
                 **Q: 分析需要多長時間？**

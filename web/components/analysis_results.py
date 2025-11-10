@@ -113,7 +113,7 @@ def remove_tag_from_analysis(analysis_id, tag):
     tags = load_tags()
     if analysis_id in tags and tag in tags[analysis_id]:
         tags[analysis_id].remove(tag)
-        if not tags[analysis_id]:  # 如果没有標簽了，刪除该條目
+        if not tags[analysis_id]:  # 如果沒有標簽了，刪除该條目
             del tags[analysis_id]
         save_tags(tags)
 
@@ -261,7 +261,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                                 elif len(reports) >= 3:
                                     research_depth = 2
                         else:
-                            # 如果没有元數據文件，使用推斷邏輯
+                            # 如果沒有元數據文件，使用推斷邏輯
                             if len(reports) >= 5:
                                 research_depth = 3
                             elif len(reports) >= 3:
@@ -341,7 +341,7 @@ def render_analysis_results():
         from utils.auth_manager import auth_manager
         
         if not auth_manager or not auth_manager.check_permission("analysis"):
-            st.error("❌ 您没有權限訪問分析結果")
+            st.error("❌ 您沒有權限訪問分析結果")
             st.info("💡 提示：分析結果功能需要 'analysis' 權限")
             return
     except Exception as e:
@@ -571,7 +571,7 @@ def render_results_cards(results: List[Dict[str, Any]]):
                     for tag in tags[:3]:  # 最多顯示3個標簽
                         st.markdown(f"`{tag}`")
                     if len(tags) > 3:
-                        st.caption(f"还有 {len(tags) - 3} 個標簽...")
+                        st.caption(f"還有 {len(tags) - 3} 個標簽...")
 
             # 顯示折叠詳情
             result_id = result.get('_id') or result.get('analysis_id') or f"result_{start_idx + i}"
@@ -893,7 +893,7 @@ def render_results_export(results: List[Dict[str, Any]]):
     st.subheader("📤 導出分析結果")
     
     if not results:
-        st.warning("没有可導出的分析結果")
+        st.warning("沒有可導出的分析結果")
         return
     
     # 導出選項
@@ -1176,7 +1176,7 @@ def render_detailed_analysis(results: List[Dict[str, Any]]):
     st.subheader("📊 詳細分析")
     
     if not results:
-        st.info("没有可分析的數據")
+        st.info("沒有可分析的數據")
         return
     
     # 選擇要查看的分析結果
@@ -1247,7 +1247,7 @@ def render_detailed_analysis_content(selected_result):
         reports = selected_result['reports']
         
         if not reports:
-            st.warning("该分析結果没有可用的報告內容")
+            st.warning("该分析結果沒有可用的報告內容")
             return
         
         # 調試信息：顯示所有可用的報告
@@ -1440,7 +1440,7 @@ def render_detailed_analysis_content(selected_result):
                 available_modules.append(module)
 
     if not available_modules:
-        # 如果没有預定義模塊的數據，顯示所有可用的分析數據
+        # 如果沒有預定義模塊的數據，顯示所有可用的分析數據
         st.info("📊 顯示完整分析報告數據")
         
         # 排除一些基础字段，只顯示分析相關的數據
@@ -1520,7 +1520,7 @@ def render_detailed_analysis_content(selected_result):
                         # 其他類型直接顯示
                         st.write(value)
         else:
-            # 如果真的没有任何分析數據，顯示原始JSON
+            # 如果真的沒有任何分析數據，顯示原始JSON
             st.warning("📊 该分析結果暂無詳細報告數據")
             with st.expander("查看原始數據"):
                 st.json(selected_result)
@@ -1701,7 +1701,7 @@ def show_expanded_detail(result):
 
         # 檢查是否有報告數據
         if 'reports' not in result or not result['reports']:
-            # 如果没有reports字段，檢查是否有其他分析數據
+            # 如果沒有reports字段，檢查是否有其他分析數據
             if result.get('summary'):
                 st.subheader("📝 分析摘要")
                 st.markdown(result['summary'])

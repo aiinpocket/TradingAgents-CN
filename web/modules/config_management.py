@@ -87,87 +87,77 @@ def render_model_config():
         df = pd.DataFrame(model_data)
         st.dataframe(df, use_container_width=True)
         
-        # 編辑模型配置
-        st.markdown("**編辑模型配置**")
-        
-        # 選擇要編辑的模型
+        # 編輯模型參數（API密鑰不可修改）
+        st.markdown("**編輯模型參數**")
+        st.info("🔒 **安全提示**: API密鑰只能通過 `.env` 文件配置，無法在Web界面修改")
+
+        # 選擇要編輯的模型
         model_options = [f"{m.provider} - {m.model_name}" for m in models]
-        selected_model_idx = st.selectbox("選擇要編辑的模型", range(len(model_options)),
+        selected_model_idx = st.selectbox("選擇要編輯的模型", range(len(model_options)),
                                          format_func=lambda x: model_options[x],
                                          key="select_model_to_edit")
-        
+
         if selected_model_idx is not None:
             model = models[selected_model_idx]
 
             # 檢查是否來自.env
             env_has_key = env_status["api_keys"].get(model.provider.lower(), False)
+
+            # 顯示API密鑰狀態（只讀）
             if env_has_key:
-                st.info(f"💡 此模型的API密鑰來自 .env 文件，修改 .env 文件後需重啟應用生效")
+                st.success(f"✅ API密鑰: 已從 `.env` 文件載入")
+            elif model.api_key:
+                st.warning(f"⚠️ API密鑰: 使用舊配置（建議遷移到 `.env`）")
+            else:
+                st.error(f"❌ API密鑰: 未配置（請在 `.env` 文件中設置）")
 
             col1, col2 = st.columns(2)
 
             with col1:
-                new_api_key = st.text_input("API密鑰", value=model.api_key, type="password", key=f"edit_api_key_{selected_model_idx}")
-                if env_has_key:
-                    st.caption("⚠️ 此密鑰來自 .env 文件，Web修改可能被覆蓋")
                 new_max_tokens = st.number_input("最大Token數", value=model.max_tokens, min_value=1000, max_value=32000, key=f"edit_max_tokens_{selected_model_idx}")
                 new_temperature = st.slider("溫度參數", 0.0, 2.0, model.temperature, 0.1, key=f"edit_temperature_{selected_model_idx}")
 
             with col2:
                 new_enabled = st.checkbox("啟用模型", value=model.enabled, key=f"edit_enabled_{selected_model_idx}")
                 new_base_url = st.text_input("自定義API地址 (可選)", value=model.base_url or "", key=f"edit_base_url_{selected_model_idx}")
-            
+
             if st.button("保存配置", type="primary", key=f"save_model_config_{selected_model_idx}"):
-                # 更新模型配置
+                # 更新模型配置（保留原API密鑰，不允許修改）
                 models[selected_model_idx] = ModelConfig(
                     provider=model.provider,
                     model_name=model.model_name,
-                    api_key=new_api_key,
+                    api_key=model.api_key,  # 保留原API密鑰
                     base_url=new_base_url if new_base_url else None,
                     max_tokens=new_max_tokens,
                     temperature=new_temperature,
                     enabled=new_enabled
                 )
-                
+
                 config_manager.save_models(models)
                 st.success("✅ 配置已保存！")
                 st.rerun()
     
     else:
-        st.warning("没有找到模型配置")
-    
-    # 添加新模型
-    st.markdown("**添加新模型**")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        new_provider = st.selectbox("供應商", ["openai", "google", "anthropic", "other"], key="new_provider")
-        new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4, gemini-2.5-pro", key="new_model_name")
-        new_api_key = st.text_input("API密鑰", type="password", key="new_api_key")
+        st.warning("沒有找到模型配置")
 
-    with col2:
-        new_max_tokens = st.number_input("最大Token數", value=4000, min_value=1000, max_value=32000, key="new_max_tokens")
-        new_temperature = st.slider("溫度參數", 0.0, 2.0, 0.7, 0.1, key="new_temperature")
-        new_enabled = st.checkbox("啟用模型", value=True, key="new_enabled")
-    
-    if st.button("添加模型", key="add_new_model"):
-        if new_provider and new_model_name and new_api_key:
-            new_model = ModelConfig(
-                provider=new_provider,
-                model_name=new_model_name,
-                api_key=new_api_key,
-                max_tokens=new_max_tokens,
-                temperature=new_temperature,
-                enabled=new_enabled
-            )
-            
-            models.append(new_model)
-            config_manager.save_models(models)
-            st.success("✅ 新模型已添加！")
-            st.rerun()
-        else:
-            st.error("請填寫所有必需字段")
+    # 添加新模型的說明
+    st.markdown("**添加新模型**")
+    st.info("""
+    🔒 **如何添加新模型：**
+
+    為了安全起見，新模型的配置（包括API密鑰）只能通過 `.env` 文件設置。
+
+    **步驟：**
+    1. 打開專案根目錄的 `.env` 文件
+    2. 添加相應的API密鑰環境變數：
+       - OpenAI: `OPENAI_API_KEY=your_key`
+       - Google AI: `GOOGLE_API_KEY=your_key`
+       - Anthropic: `ANTHROPIC_API_KEY=your_key`
+    3. 重新啟動應用程式
+    4. 系統會自動檢測並載入新配置的模型
+
+    **注意**: Web界面不支持直接添加新模型，這是為了保護您的API密鑰安全。
+    """)
 
 
 def render_pricing_config():
@@ -425,7 +415,7 @@ def render_system_settings():
     with col2:
         default_model = st.text_input(
             "默認模型",
-            value=settings.get("default_model", "qwen-turbo"),
+            value=settings.get("default_model", "gpt-4o-mini"),
             key="settings_default_model"
         )
 

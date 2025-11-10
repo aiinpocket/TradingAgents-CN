@@ -841,7 +841,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             return report
         else:
             logger.warning(f"[新聞分析] 實時新聞聚合器未獲取到 {ticker} 的新聞，耗時 {time_taken:.2f} 秒，嘗試使用備用新聞源")
-            # 如果没有獲取到新聞，繼续嘗試備用方案
+            # 如果沒有獲取到新聞，繼续嘗試備用方案
     except Exception as e:
         logger.error(f"[新聞分析] 實時新聞聚合器獲取失败: {e}，将嘗試備用新聞源")
         logger.error(f"[新聞分析] 異常詳情: {type(e).__name__}: {str(e)}")

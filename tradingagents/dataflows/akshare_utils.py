@@ -283,7 +283,7 @@ class AKShareProvider:
                         'source': 'akshare'
                     }
 
-            # 如果没有找到，返回基本信息
+            # 如果沒有找到，返回基本信息
             return {
                 'symbol': symbol,
                 'name': f'港股{symbol}',
