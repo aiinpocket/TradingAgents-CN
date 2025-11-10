@@ -48,14 +48,14 @@ class OptimizedChinaDataProvider:
             symbol: 股票代碼（6位數字）
             start_date: 開始日期 (YYYY-MM-DD)
             end_date: 結束日期 (YYYY-MM-DD)
-            force_refresh: 是否强制刷新緩存
+            force_refresh: 是否強制刷新緩存
         
         Returns:
             格式化的股票數據字符串
         """
         logger.info(f"📈 獲取A股數據: {symbol} ({start_date} 到 {end_date})")
         
-        # 檢查緩存（除非强制刷新）
+        # 檢查緩存（除非強制刷新）
         if not force_refresh:
             cache_key = self.cache.find_cached_stock_data(
                 symbol=symbol,
@@ -77,7 +77,7 @@ class OptimizedChinaDataProvider:
             # API限制處理
             self._wait_for_rate_limit()
             
-            # 調用統一數據源接口（默認Tushare，支持备用數據源）
+            # 調用統一數據源接口（默認Tushare，支持備用數據源）
             from .data_source_manager import get_china_stock_data_unified
 
             formatted_data = get_china_stock_data_unified(
@@ -95,7 +95,7 @@ class OptimizedChinaDataProvider:
                     logger.info(f"📁 使用過期緩存數據: {symbol}")
                     return old_cache
 
-                # 生成备用數據
+                # 生成備用數據
                 return self._generate_fallback_data(symbol, start_date, end_date, "數據源API調用失败")
             
             # 保存到緩存
@@ -120,7 +120,7 @@ class OptimizedChinaDataProvider:
                 logger.info(f"📁 使用過期緩存數據: {symbol}")
                 return old_cache
             
-            # 生成备用數據
+            # 生成備用數據
             return self._generate_fallback_data(symbol, start_date, end_date, error_msg)
     
     def get_fundamentals_data(self, symbol: str, force_refresh: bool = False) -> str:
@@ -129,14 +129,14 @@ class OptimizedChinaDataProvider:
         
         Args:
             symbol: 股票代碼
-            force_refresh: 是否强制刷新緩存
+            force_refresh: 是否強制刷新緩存
         
         Returns:
             格式化的基本面數據字符串
         """
         logger.info(f"📊 獲取A股基本面數據: {symbol}")
         
-        # 檢查緩存（除非强制刷新）
+        # 檢查緩存（除非強制刷新）
         if not force_refresh:
             # 查找基本面數據緩存
             for metadata_file in self.cache.metadata_dir.glob(f"*_meta.json"):
@@ -271,7 +271,7 @@ class OptimizedChinaDataProvider:
         data_source = financial_estimates.get('data_source', '')
         
         if any("（估算值）" in str(v) for v in financial_estimates.values() if isinstance(v, str)):
-            data_source_note = "\n⚠️ **數據說明**: 部分財務指標為估算值，建议結合最新財報數據進行分析"
+            data_source_note = "\n⚠️ **數據說明**: 部分財務指標為估算值，建議結合最新財報數據進行分析"
         elif data_source == "AKShare":
             data_source_note = "\n✅ **數據說明**: 財務指標基於AKShare真實財務數據計算"
         elif data_source == "Tushare":
@@ -332,15 +332,15 @@ class OptimizedChinaDataProvider:
 ### 風險評估
 {self._analyze_risks(symbol, financial_estimates, industry_info)}
 
-## 💡 投資建议
+## 💡 投資建議
 
-### 综合評分
+### 綜合評分
 - **基本面評分**: {financial_estimates['fundamental_score']}/10
 - **估值吸引力**: {financial_estimates['valuation_score']}/10
 - **成長潜力**: {financial_estimates['growth_score']}/10
 - **風險等級**: {financial_estimates['risk_level']}
 
-### 操作建议
+### 操作建議
 {self._generate_investment_advice(financial_estimates, industry_info)}
 
 ### 絕對估值
@@ -359,8 +359,8 @@ class OptimizedChinaDataProvider:
 - **財務風險**：债務結構和偿债能力風險
 - **管理風險**：管理層變動和決策風險
 
-## 投資建议
-### 综合評價
+## 投資建議
+### 綜合評價
 基於以上分析，该股票的投資價值評估：
 
 **優势：**
@@ -371,15 +371,15 @@ class OptimizedChinaDataProvider:
 **風險：**
 - 需要關註宏觀經濟環境變化
 - 行業競爭加剧的影響
-- 政策調整對業務的潜在影響
+- 政策調整對業務的潛在影響
 
-### 操作建议
-- **投資策略**：建议採用價值投資策略，關註長期基本面
-- **仓位建议**：根據風險承受能力合理配置仓位
+### 操作建議
+- **投資策略**：建議採用價值投資策略，關註長期基本面
+- **仓位建議**：根據風險承受能力合理配置仓位
 - **關註指標**：重點關註ROE、PE、現金流等核心指標
 
 ---
-**重要聲明**: 本報告基於公開數據和模型估算生成，仅供參考，不構成投資建议。
+**重要聲明**: 本報告基於公開數據和模型估算生成，僅供參考，不構成投資建議。
 實际投資決策請結合最新財報數據和專業分析師意见。
 
 **數據來源**: {data_source if data_source else "多源數據"}數據接口 + 基本面分析模型
@@ -401,8 +401,8 @@ class OptimizedChinaDataProvider:
         logger.debug(f"🔍 [股票代碼追蹤] 提取的代碼前缀: '{code_prefix}'")
 
         industry_map = {
-            "000": {"industry": "深市主板", "market": "深圳證券交易所", "type": "综合"},
-            "001": {"industry": "深市主板", "market": "深圳證券交易所", "type": "综合"},
+            "000": {"industry": "深市主板", "market": "深圳證券交易所", "type": "綜合"},
+            "001": {"industry": "深市主板", "market": "深圳證券交易所", "type": "綜合"},
             "002": {"industry": "中小板", "market": "深圳證券交易所", "type": "成長型"},
             "003": {"industry": "創業板", "market": "深圳證券交易所", "type": "創新型"},
             "300": {"industry": "創業板", "market": "深圳證券交易所", "type": "高科技"},
@@ -415,7 +415,7 @@ class OptimizedChinaDataProvider:
         info = industry_map.get(code_prefix, {
             "industry": "其他",
             "market": "未知市場",
-            "type": "综合"
+            "type": "綜合"
         })
 
         # 特殊股票的詳細信息
@@ -513,8 +513,8 @@ class OptimizedChinaDataProvider:
             else:
                 logger.warning(f"⚠️ AKShare未連接，嘗試Tushare")
             
-            # 备用方案：使用Tushare數據源
-            logger.info(f"🔄 使用Tushare备用數據源獲取{symbol}財務數據")
+            # 備用方案：使用Tushare數據源
+            logger.info(f"🔄 使用Tushare備用數據源獲取{symbol}財務數據")
             from .tushare_utils import get_tushare_provider
             
             provider = get_tushare_provider()
@@ -996,9 +996,9 @@ class OptimizedChinaDataProvider:
         if valuation_score >= 8:
             return "當前估值水平較為合理，具有一定的投資價值。市盈率和市净率相對較低，安全邊际較高。"
         elif valuation_score >= 6:
-            return "估值水平適中，需要結合基本面和成長性综合判斷投資價值。"
+            return "估值水平適中，需要結合基本面和成長性綜合判斷投資價值。"
         else:
-            return "當前估值偏高，投資需谨慎。建议等待更好的买入時機。"
+            return "當前估值偏高，投資需謹慎。建議等待更好的买入時機。"
 
     def _analyze_growth_potential(self, symbol: str, industry_info: dict) -> str:
         """分析成長潜力"""
@@ -1007,7 +1007,7 @@ class OptimizedChinaDataProvider:
         elif symbol.startswith('300'):
             return "創業板公司通常具有較高的成長潜力，但也伴隨着較高的風險。需要關註技術創新和市場拓展能力。"
         else:
-            return "成長潜力需要結合具體行業和公司基本面分析。建议關註行業發展趋势和公司競爭優势。"
+            return "成長潜力需要結合具體行業和公司基本面分析。建議關註行業發展趋势和公司競爭優势。"
 
     def _analyze_risks(self, symbol: str, financial_estimates: dict, industry_info: dict) -> str:
         """分析投資風險"""
@@ -1018,7 +1018,7 @@ class OptimizedChinaDataProvider:
         if symbol.startswith(('000001', '600036')):
             risk_analysis += """**主要風險**:
 - 利率環境變化對净息差的影響
-- 信贷資產质量風險
+- 信贷資產質量風險
 - 監管政策變化風險
 - 宏觀經濟下行對銀行業的影響"""
         elif symbol.startswith('300'):
@@ -1037,7 +1037,7 @@ class OptimizedChinaDataProvider:
         return risk_analysis
 
     def _generate_investment_advice(self, financial_estimates: dict, industry_info: dict) -> str:
-        """生成投資建议"""
+        """生成投資建議"""
         fundamental_score = financial_estimates['fundamental_score']
         valuation_score = financial_estimates['valuation_score']
         growth_score = financial_estimates['growth_score']
@@ -1045,23 +1045,23 @@ class OptimizedChinaDataProvider:
         total_score = (fundamental_score + valuation_score + growth_score) / 3
 
         if total_score >= 7.5:
-            return """**投資建议**: 🟢 **买入**
+            return """**投資建議**: 🟢 **买入**
 - 基本面良好，估值合理，具有較好的投資價值
-- 建议分批建仓，長期持有
+- 建議分批建仓，長期持有
 - 適合價值投資者和穩健型投資者"""
         elif total_score >= 6.0:
-            return """**投資建议**: 🟡 **觀望**
+            return """**投資建議**: 🟡 **觀望**
 - 基本面一般，需要進一步觀察
 - 可以小仓位試探，等待更好時機
 - 適合有經驗的投資者"""
         else:
-            return """**投資建议**: 🔴 **回避**
-- 當前風險較高，不建议投資
-- 建议等待基本面改善或估值回落
+            return """**投資建議**: 🔴 **回避**
+- 當前風險較高，不建議投資
+- 建議等待基本面改善或估值回落
 - 風險承受能力較低的投資者應避免"""
     
     def _try_get_old_cache(self, symbol: str, start_date: str, end_date: str) -> Optional[str]:
-        """嘗試獲取過期的緩存數據作為备用"""
+        """嘗試獲取過期的緩存數據作為備用"""
         try:
             # 查找任何相關的緩存，不考慮TTL
             for metadata_file in self.cache.metadata_dir.glob(f"*_meta.json"):
@@ -1087,13 +1087,13 @@ class OptimizedChinaDataProvider:
         return None
     
     def _generate_fallback_data(self, symbol: str, start_date: str, end_date: str, error_msg: str) -> str:
-        """生成备用數據"""
+        """生成備用數據"""
         return f"""# {symbol} A股數據獲取失败
 
 ## ❌ 錯誤信息
 {error_msg}
 
-## 📊 模擬數據（仅供演示）
+## 📊 模擬數據（僅供演示）
 - 股票代碼: {symbol}
 - 股票名稱: 模擬公司
 - 數據期間: {start_date} 至 {end_date}
@@ -1102,13 +1102,13 @@ class OptimizedChinaDataProvider:
 
 ## ⚠️ 重要提示
 由於數據接口限制或網絡問題，無法獲取實時數據。
-建议稍後重試或檢查網絡連接。
+建議稍後重試或檢查網絡連接。
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
     
     def _generate_fallback_fundamentals(self, symbol: str, error_msg: str) -> str:
-        """生成备用基本面數據"""
+        """生成備用基本面數據"""
         return f"""# {symbol} A股基本面分析失败
 
 ## ❌ 錯誤信息
@@ -1117,7 +1117,7 @@ class OptimizedChinaDataProvider:
 ## 📊 基本信息
 - 股票代碼: {symbol}
 - 分析狀態: 數據獲取失败
-- 建议: 稍後重試或檢查網絡連接
+- 建議: 稍後重試或檢查網絡連接
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
@@ -1143,7 +1143,7 @@ def get_china_stock_data_cached(symbol: str, start_date: str, end_date: str,
         symbol: 股票代碼（6位數字）
         start_date: 開始日期 (YYYY-MM-DD)
         end_date: 結束日期 (YYYY-MM-DD)
-        force_refresh: 是否强制刷新緩存
+        force_refresh: 是否強制刷新緩存
     
     Returns:
         格式化的股票數據字符串
@@ -1158,7 +1158,7 @@ def get_china_fundamentals_cached(symbol: str, force_refresh: bool = False) -> s
     
     Args:
         symbol: 股票代碼（6位數字）
-        force_refresh: 是否强制刷新緩存
+        force_refresh: 是否強制刷新緩存
     
     Returns:
         格式化的基本面數據字符串

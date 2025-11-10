@@ -189,7 +189,7 @@ class ReportExporter:
 
 | 指標 | 數值 |
 |------|------|
-| **投資建议** | {action} |
+| **投資建議** | {action} |
 | **置信度** | {decision.get('confidence', 0):.1%} |
 | **風險評分** | {decision.get('risk_score', 0):.1%} |
 | **目標價位** | {target_price} |
@@ -222,7 +222,7 @@ class ReportExporter:
             ('sentiment_report', '💭 市場情绪分析', '投資者情绪、社交媒體情绪指標'),
             ('news_report', '📰 新聞事件分析', '相關新聞事件、市場動態影響分析'),
             ('risk_assessment', '⚠️ 風險評估', '風險因素识別、風險等級評估'),
-            ('investment_plan', '📋 投資建议', '具體投資策略、仓位管理建议')
+            ('investment_plan', '📋 投資建議', '具體投資策略、仓位管理建議')
         ]
         
         for key, title, description in analysis_modules:
@@ -252,10 +252,10 @@ class ReportExporter:
 ## ⚠️ 重要風險提示
 
 **投資風險提示**:
-- **仅供參考**: 本分析結果仅供參考，不構成投資建议
+- **僅供參考**: 本分析結果僅供參考，不構成投資建議
 - **投資風險**: 股票投資有風險，可能導致本金損失
 - **理性決策**: 請結合多方信息進行理性投資決策
-- **專業咨詢**: 重大投資決策建议咨詢專業財務顧問
+- **專業咨詢**: 重大投資決策建議咨詢專業財務顧問
 - **自擔風險**: 投資決策及其後果由投資者自行承擔
 
 ---
@@ -270,7 +270,7 @@ class ReportExporter:
         # II. 研究团隊決策報告
         if 'investment_debate_state' in state and state['investment_debate_state']:
             md_content += "\n---\n\n## 🔬 研究团隊決策\n\n"
-            md_content += "*多头/空头研究員辩論分析，研究經理综合決策*\n\n"
+            md_content += "*多头/空头研究員辩論分析，研究經理綜合決策*\n\n"
 
             debate_state = state['investment_debate_state']
 
@@ -286,7 +286,7 @@ class ReportExporter:
 
             # 研究經理決策
             if debate_state.get('judge_decision'):
-                md_content += "### 🎯 研究經理综合決策\n\n"
+                md_content += "### 🎯 研究經理綜合決策\n\n"
                 md_content += f"{self._clean_text_for_markdown(debate_state['judge_decision'])}\n\n"
 
         # III. 交易团隊計劃
@@ -298,7 +298,7 @@ class ReportExporter:
         # IV. 風險管理团隊決策
         if 'risk_debate_state' in state and state['risk_debate_state']:
             md_content += "\n---\n\n## ⚖️ 風險管理团隊決策\n\n"
-            md_content += "*激進/保守/中性分析師風險評估，投資組合經理最终決策*\n\n"
+            md_content += "*激進/保守/中性分析師風險評估，投資組合經理最終決策*\n\n"
 
             risk_state = state['risk_debate_state']
 
@@ -319,13 +319,13 @@ class ReportExporter:
 
             # 投資組合經理決策
             if risk_state.get('judge_decision'):
-                md_content += "### 🎯 投資組合經理最终決策\n\n"
+                md_content += "### 🎯 投資組合經理最終決策\n\n"
                 md_content += f"{self._clean_text_for_markdown(risk_state['judge_decision'])}\n\n"
 
-        # V. 最终交易決策
+        # V. 最終交易決策
         if 'final_trade_decision' in state and state['final_trade_decision']:
-            md_content += "\n---\n\n## 🎯 最终交易決策\n\n"
-            md_content += "*综合所有团隊分析後的最终投資決策*\n\n"
+            md_content += "\n---\n\n## 🎯 最終交易決策\n\n"
+            md_content += "*綜合所有团隊分析後的最終投資決策*\n\n"
             md_content += f"{self._clean_text_for_markdown(state['final_trade_decision'])}\n\n"
 
         return md_content
@@ -345,7 +345,7 @@ class ReportExporter:
                 formatted_content += f"{content['bear_history']}\n\n"
 
             if content.get('judge_decision'):
-                formatted_content += "## 🎯 研究經理综合決策\n\n"
+                formatted_content += "## 🎯 研究經理綜合決策\n\n"
                 formatted_content += f"{content['judge_decision']}\n\n"
 
         elif module_key == 'risk_debate_state':
@@ -363,19 +363,19 @@ class ReportExporter:
                 formatted_content += f"{content['neutral_history']}\n\n"
 
             if content.get('judge_decision'):
-                formatted_content += "## 🎯 投資組合經理最终決策\n\n"
+                formatted_content += "## 🎯 投資組合經理最終決策\n\n"
                 formatted_content += f"{content['judge_decision']}\n\n"
 
         return formatted_content
 
     def generate_docx_report(self, results: Dict[str, Any]) -> bytes:
-        """生成Word文档格式的報告"""
+        """生成Word文檔格式的報告"""
 
-        logger.info("📄 開始生成Word文档...")
+        logger.info("📄 開始生成Word文檔...")
 
         if not self.pandoc_available:
             logger.error("❌ Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成Word文档。請安裝pandoc或使用Markdown格式導出。")
+            raise Exception("Pandoc不可用，無法生成Word文檔。請安裝pandoc或使用Markdown格式導出。")
 
         # 首先生成markdown內容
         logger.info("📝 生成Markdown內容...")
@@ -389,7 +389,7 @@ class ReportExporter:
                 output_file = tmp_file.name
             logger.info(f"📁 臨時文件路徑: {output_file}")
 
-            # 使用强制禁用YAML的參數
+            # 使用強制禁用YAML的參數
             extra_args = ['--from=markdown-yaml_metadata_block']  # 禁用YAML解析
             logger.info(f"🔧 pypandoc參數: {extra_args} (禁用YAML解析)")
 
@@ -438,18 +438,18 @@ class ReportExporter:
 
             return docx_content
         except Exception as e:
-            logger.error(f"❌ Word文档生成失败: {e}", exc_info=True)
-            raise Exception(f"生成Word文档失败: {e}")
+            logger.error(f"❌ Word文檔生成失败: {e}", exc_info=True)
+            raise Exception(f"生成Word文檔失败: {e}")
     
     
     def generate_pdf_report(self, results: Dict[str, Any]) -> bytes:
         """生成PDF格式的報告"""
 
-        logger.info("📊 開始生成PDF文档...")
+        logger.info("📊 開始生成PDF文檔...")
 
         if not self.pandoc_available:
             logger.error("❌ Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成PDF文档。請安裝pandoc或使用Markdown格式導出。")
+            raise Exception("Pandoc不可用，無法生成PDF文檔。請安裝pandoc或使用Markdown格式導出。")
 
         # 首先生成markdown內容
         logger.info("📝 生成Markdown內容...")
@@ -565,23 +565,23 @@ class ReportExporter:
                 return content.encode('utf-8')
 
             elif format_type == 'docx':
-                logger.info("📄 生成Word文档...")
+                logger.info("📄 生成Word文檔...")
                 if not self.pandoc_available:
-                    logger.error("❌ pandoc不可用，無法生成Word文档")
-                    st.error("❌ pandoc不可用，無法生成Word文档")
+                    logger.error("❌ pandoc不可用，無法生成Word文檔")
+                    st.error("❌ pandoc不可用，無法生成Word文檔")
                     return None
                 content = self.generate_docx_report(results)
-                logger.info(f"✅ Word文档生成成功，大小: {len(content)} 字節")
+                logger.info(f"✅ Word文檔生成成功，大小: {len(content)} 字節")
                 return content
 
             elif format_type == 'pdf':
-                logger.info("📊 生成PDF文档...")
+                logger.info("📊 生成PDF文檔...")
                 if not self.pandoc_available:
-                    logger.error("❌ pandoc不可用，無法生成PDF文档")
-                    st.error("❌ pandoc不可用，無法生成PDF文档")
+                    logger.error("❌ pandoc不可用，無法生成PDF文檔")
+                    st.error("❌ pandoc不可用，無法生成PDF文檔")
                     return None
                 content = self.generate_pdf_report(results)
-                logger.info(f"✅ PDF文档生成成功，大小: {len(content)} 字節")
+                logger.info(f"✅ PDF文檔生成成功，大小: {len(content)} 字節")
                 return content
 
             else:
@@ -614,7 +614,7 @@ def _format_team_decision_content(content: Dict[str, Any], module_key: str) -> s
             formatted_content += f"{content['bear_history']}\n\n"
 
         if content.get('judge_decision'):
-            formatted_content += "## 🎯 研究經理综合決策\n\n"
+            formatted_content += "## 🎯 研究經理綜合決策\n\n"
             formatted_content += f"{content['judge_decision']}\n\n"
 
     elif module_key == 'risk_debate_state':
@@ -632,7 +632,7 @@ def _format_team_decision_content(content: Dict[str, Any], module_key: str) -> s
             formatted_content += f"{content['neutral_history']}\n\n"
 
         if content.get('judge_decision'):
-            formatted_content += "## 🎯 投資組合經理最终決策\n\n"
+            formatted_content += "## 🎯 投資組合經理最終決策\n\n"
             formatted_content += f"{content['judge_decision']}\n\n"
 
     return formatted_content
@@ -705,7 +705,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             },
             'final_trade_decision': {
                 'filename': 'final_trade_decision.md',
-                'title': f'{stock_symbol} 最终投資決策',
+                'title': f'{stock_symbol} 最終投資決策',
                 'state_key': 'final_trade_decision'
             },
             # 添加团隊決策報告模塊
@@ -752,13 +752,13 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 saved_files[module_key] = str(file_path)
                 logger.info(f"✅ 保存模塊報告: {file_path}")
 
-        # 如果有決策信息，也保存最终決策報告
+        # 如果有決策信息，也保存最終決策報告
         decision = results.get('decision', {})
         if decision:
-            decision_content = f"# {stock_symbol} 最终投資決策\n\n"
+            decision_content = f"# {stock_symbol} 最終投資決策\n\n"
 
             if isinstance(decision, dict):
-                decision_content += f"## 投資建议\n\n"
+                decision_content += f"## 投資建議\n\n"
                 decision_content += f"**行動**: {decision.get('action', 'N/A')}\n\n"
                 decision_content += f"**置信度**: {decision.get('confidence', 0):.1%}\n\n"
                 decision_content += f"**風險評分**: {decision.get('risk_score', 0):.1%}\n\n"
@@ -772,7 +772,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 f.write(decision_content)
 
             saved_files['final_trade_decision'] = str(decision_file)
-            logger.info(f"✅ 保存最终決策: {decision_file}")
+            logger.info(f"✅ 保存最終決策: {decision_file}")
 
         # 保存分析元數據文件，包含研究深度等信息
         metadata = {
@@ -964,27 +964,27 @@ def render_export_buttons(results: Dict[str, Any]):
             logger.info("📁 開始保存分模塊報告（CLI格式）...")
             modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
 
-            # 2. 生成汇总報告（下載用）
+            # 2. 生成彙總報告（下載用）
             content = report_exporter.export_report(results, 'markdown')
             if content:
                 filename = f"{stock_symbol}_analysis_{timestamp}.md"
                 logger.info(f"✅ [EXPORT] Markdown導出成功，文件名: {filename}")
                 logger.info(f"✅ Markdown導出成功，文件名: {filename}")
 
-                # 3. 保存汇总報告到results目錄
+                # 3. 保存彙總報告到results目錄
                 saved_path = save_report_to_results_dir(content, filename, stock_symbol)
 
                 # 4. 顯示保存結果
                 if modular_files and saved_path:
-                    st.success(f"✅ 已保存 {len(modular_files)} 個分模塊報告 + 1個汇总報告")
+                    st.success(f"✅ 已保存 {len(modular_files)} 個分模塊報告 + 1個彙總報告")
                     with st.expander("📁 查看保存的文件"):
                         st.write("**分模塊報告:**")
                         for module, path in modular_files.items():
                             st.write(f"- {module}: `{path}`")
-                        st.write("**汇总報告:**")
-                        st.write(f"- 汇总報告: `{saved_path}`")
+                        st.write("**彙總報告:**")
+                        st.write(f"- 彙總報告: `{saved_path}`")
                 elif saved_path:
-                    st.success(f"✅ 汇总報告已保存到: {saved_path}")
+                    st.success(f"✅ 彙總報告已保存到: {saved_path}")
 
                 st.download_button(
                     label="📥 下載 Markdown",
@@ -997,10 +997,10 @@ def render_export_buttons(results: Dict[str, Any]):
                 logger.error("❌ Markdown導出失败，content為空")
     
     with col2:
-        if st.button("📝 導出 Word", help="導出為Word文档格式"):
+        if st.button("📝 導出 Word", help="導出為Word文檔格式"):
             logger.info(f"🖱️ [EXPORT] 用戶點擊Word導出按钮 - 股票: {stock_symbol}")
             logger.info(f"🖱️ 用戶點擊Word導出按钮 - 股票: {stock_symbol}")
-            with st.spinner("正在生成Word文档，請稍候..."):
+            with st.spinner("正在生成Word文檔，請稍候..."):
                 try:
                     logger.info(f"🔄 [EXPORT] 開始Word導出流程...")
                     logger.info("🔄 開始Word導出流程...")
@@ -1009,29 +1009,29 @@ def render_export_buttons(results: Dict[str, Any]):
                     logger.info("📁 開始保存分模塊報告（CLI格式）...")
                     modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
 
-                    # 2. 生成Word汇总報告
+                    # 2. 生成Word彙總報告
                     content = report_exporter.export_report(results, 'docx')
                     if content:
                         filename = f"{stock_symbol}_analysis_{timestamp}.docx"
                         logger.info(f"✅ [EXPORT] Word導出成功，文件名: {filename}, 大小: {len(content)} 字節")
                         logger.info(f"✅ Word導出成功，文件名: {filename}, 大小: {len(content)} 字節")
 
-                        # 3. 保存Word汇总報告到results目錄
+                        # 3. 保存Word彙總報告到results目錄
                         saved_path = save_report_to_results_dir(content, filename, stock_symbol)
 
                         # 4. 顯示保存結果
                         if modular_files and saved_path:
-                            st.success(f"✅ 已保存 {len(modular_files)} 個分模塊報告 + 1個Word汇总報告")
+                            st.success(f"✅ 已保存 {len(modular_files)} 個分模塊報告 + 1個Word彙總報告")
                             with st.expander("📁 查看保存的文件"):
                                 st.write("**分模塊報告:**")
                                 for module, path in modular_files.items():
                                     st.write(f"- {module}: `{path}`")
-                                st.write("**Word汇总報告:**")
+                                st.write("**Word彙總報告:**")
                                 st.write(f"- Word報告: `{saved_path}`")
                         elif saved_path:
-                            st.success(f"✅ Word文档已保存到: {saved_path}")
+                            st.success(f"✅ Word文檔已保存到: {saved_path}")
                         else:
-                            st.success("✅ Word文档生成成功！")
+                            st.success("✅ Word文檔生成成功！")
 
                         st.download_button(
                             label="📥 下載 Word",
@@ -1042,11 +1042,11 @@ def render_export_buttons(results: Dict[str, Any]):
                     else:
                         logger.error(f"❌ [EXPORT] Word導出失败，content為空")
                         logger.error("❌ Word導出失败，content為空")
-                        st.error("❌ Word文档生成失败")
+                        st.error("❌ Word文檔生成失败")
                 except Exception as e:
                     logger.error(f"❌ [EXPORT] Word導出異常: {str(e)}")
                     logger.error(f"❌ Word導出異常: {str(e)}", exc_info=True)
-                    st.error(f"❌ Word文档生成失败: {str(e)}")
+                    st.error(f"❌ Word文檔生成失败: {str(e)}")
 
                     # 顯示詳細錯誤信息
                     with st.expander("🔍 查看詳細錯誤信息"):
@@ -1084,23 +1084,23 @@ def render_export_buttons(results: Dict[str, Any]):
                     logger.info("📁 開始保存分模塊報告（CLI格式）...")
                     modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
 
-                    # 2. 生成PDF汇总報告
+                    # 2. 生成PDF彙總報告
                     content = report_exporter.export_report(results, 'pdf')
                     if content:
                         filename = f"{stock_symbol}_analysis_{timestamp}.pdf"
                         logger.info(f"✅ PDF導出成功，文件名: {filename}, 大小: {len(content)} 字節")
 
-                        # 3. 保存PDF汇总報告到results目錄
+                        # 3. 保存PDF彙總報告到results目錄
                         saved_path = save_report_to_results_dir(content, filename, stock_symbol)
 
                         # 4. 顯示保存結果
                         if modular_files and saved_path:
-                            st.success(f"✅ 已保存 {len(modular_files)} 個分模塊報告 + 1個PDF汇总報告")
+                            st.success(f"✅ 已保存 {len(modular_files)} 個分模塊報告 + 1個PDF彙總報告")
                             with st.expander("📁 查看保存的文件"):
                                 st.write("**分模塊報告:**")
                                 for module, path in modular_files.items():
                                     st.write(f"- {module}: `{path}`")
-                                st.write("**PDF汇总報告:**")
+                                st.write("**PDF彙總報告:**")
                                 st.write(f"- PDF報告: `{saved_path}`")
                         elif saved_path:
                             st.success(f"✅ PDF已保存到: {saved_path}")
@@ -1158,8 +1158,8 @@ def render_export_buttons(results: Dict[str, Any]):
                         - 📝 Word格式 - 適合進一步編辑
                         """)
 
-                    # 建议使用其他格式
-                    st.info("💡 建议：您可以先使用Markdown或Word格式導出，然後使用其他工具轉換為PDF")
+                    # 建議使用其他格式
+                    st.info("💡 建議：您可以先使用Markdown或Word格式導出，然後使用其他工具轉換為PDF")
 
 
 def save_analysis_report(stock_symbol: str, analysis_results: Dict[str, Any], 

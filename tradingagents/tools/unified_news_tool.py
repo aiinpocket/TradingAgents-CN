@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 統一新聞分析工具
-整合A股、港股、美股等不同市場的新聞獲取逻辑到一個工具函數中
+整合A股、港股、美股等不同市場的新聞獲取邏輯到一個工具函數中
 让大模型只需要調用一個工具就能獲取所有類型股票的新聞數據
 """
 
@@ -14,7 +14,7 @@ import os
 logger = logging.getLogger(__name__)
 
 class UnifiedNewsAnalyzer:
-    """統一新聞分析器，整合所有新聞獲取逻辑"""
+    """統一新聞分析器，整合所有新聞獲取邏輯"""
 
     def __init__(self, toolkit):
         """初始化統一新聞分析器
@@ -62,7 +62,7 @@ class UnifiedNewsAnalyzer:
         elif stock_type == "美股":
             result = self._get_us_share_news(stock_code, max_news, model_info)
         else:
-            # 默認使用A股逻辑
+            # 默認使用A股邏輯
             result = self._get_a_share_news(stock_code, max_news, model_info)
         
         logger.info(f"[統一新聞工具] 📊 新聞獲取完成，結果長度: {len(result)} 字符")
@@ -331,11 +331,11 @@ class UnifiedNewsAnalyzer:
                 logger.info(f"[統一新聞工具] ✅ Google模型智能長度控制完成，從{original_length}字符壓縮至{len(news_content)}字符")
             else:
                 # 如果没有重要行，直接截斷到目標長度
-                news_content = news_content[:target_length] + "...(內容已强制截斷)"
+                news_content = news_content[:target_length] + "...(內容已強制截斷)"
                 google_control_applied = True
-                logger.info(f"[統一新聞工具] ⚠️ Google模型强制截斷至{target_length}字符")
+                logger.info(f"[統一新聞工具] ⚠️ Google模型強制截斷至{target_length}字符")
         
-        # 計算最终的格式化結果長度，確保总長度合理
+        # 計算最終的格式化結果長度，確保总長度合理
         base_format_length = 300  # 格式化模板的大概長度
         if is_google_model and (len(news_content) + base_format_length) > 4000:
             # 如果加上格式化後仍然過長，進一步壓縮新聞內容
@@ -343,7 +343,7 @@ class UnifiedNewsAnalyzer:
             if len(news_content) > max_content_length:
                 news_content = news_content[:max_content_length] + "...(已優化長度)"
                 google_control_applied = True
-                logger.info(f"[統一新聞工具] 🔧 Google模型最终長度優化，內容長度: {len(news_content)}字符")
+                logger.info(f"[統一新聞工具] 🔧 Google模型最終長度優化，內容長度: {len(news_content)}字符")
         
         formatted_result = f"""
 === 📰 新聞數據來源: {source} ===

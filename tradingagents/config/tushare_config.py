@@ -195,9 +195,9 @@ def diagnose_tushare_issues():
         for issue in validation['issues']:
             print(f"   - {issue}")
     
-    # 顯示建议
+    # 顯示建議
     if validation['suggestions']:
-        print(f"\n💡 修複建议:")
+        print(f"\n💡 修複建議:")
         for suggestion in validation['suggestions']:
             print(f"   - {suggestion}")
     
@@ -218,10 +218,10 @@ def diagnose_tushare_issues():
     else:
         print(f"   ✅ 所有布爾值解析測試通過")
     
-    # 顯示修複建议
+    # 顯示修複建議
     fixes = compatibility['common_fixes']
     if fixes:
-        print(f"\n🔧 自動修複建议:")
+        print(f"\n🔧 自動修複建議:")
         for var, fix in fixes.items():
             print(f"   {var}: {fix}")
 

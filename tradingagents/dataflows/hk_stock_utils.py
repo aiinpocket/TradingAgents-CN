@@ -103,7 +103,7 @@ class HKStockProvider:
                         if attempt < self.max_retries - 1:
                             time.sleep(2 ** attempt)  # 指數退避
                     
-            logger.error(f"❌ 港股數據獲取最终失败: {symbol}")
+            logger.error(f"❌ 港股數據獲取最終失败: {symbol}")
             return None
 
         except Exception as e:
@@ -225,7 +225,7 @@ class HKStockProvider:
 
         # 處理其他可能的格式
         if '.' not in symbol and symbol.isdigit():
-            # 保持原有位數，不强制填充到4位
+            # 保持原有位數，不強制填充到4位
             return f"{symbol}.HK"
             
         return symbol

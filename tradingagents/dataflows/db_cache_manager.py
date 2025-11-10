@@ -202,7 +202,7 @@ class DatabaseCacheManager:
             else:  # 其他格式為美股
                 market_type = "us"
         
-        # 準备文档數據
+        # 準备文檔數據
         doc = {
             "_id": cache_key,
             "symbol": symbol,
@@ -508,7 +508,7 @@ class DatabaseCacheManager:
                 logger.error(f"⚠️ MongoDB清理失败: {e}")
 
         # Redis會自動過期，不需要手動清理
-        logger.info(f"🧹 总共清理了 {cleared_count} 條過期記錄")
+        logger.info(f"🧹 總共清理了 {cleared_count} 條過期記錄")
         return cleared_count
 
     def close(self):

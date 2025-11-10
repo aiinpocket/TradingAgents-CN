@@ -23,12 +23,12 @@ class SmartAnalysisProgressTracker:
         self.current_step = 0
         self.start_time = time.time()
 
-        # 根據分析師數量和研究深度動態生成步骤
+        # 根據分析師數量和研究深度動態生成步驟
         self.analysis_steps = self._generate_dynamic_steps()
         self.estimated_duration = self._estimate_total_duration()
 
     def _generate_dynamic_steps(self) -> List[Dict]:
-        """根據分析師數量動態生成分析步骤"""
+        """根據分析師數量動態生成分析步驟"""
         steps = [
             {"name": "數據驗證", "description": "驗證股票代碼並預獲取數據", "weight": 0.05},
             {"name": "環境準备", "description": "檢查API密鑰和環境配置", "weight": 0.02},
@@ -37,7 +37,7 @@ class SmartAnalysisProgressTracker:
             {"name": "引擎初始化", "description": "初始化AI分析引擎", "weight": 0.05},
         ]
 
-        # 為每個分析師添加專門的步骤
+        # 為每個分析師添加專門的步驟
         analyst_weight = 0.8 / len(self.analysts)  # 80%的時間用於分析師工作
         for analyst in self.analysts:
             analyst_name = self._get_analyst_display_name(analyst)
@@ -47,7 +47,7 @@ class SmartAnalysisProgressTracker:
                 "weight": analyst_weight
             })
 
-        # 最後的整理步骤
+        # 最後的整理步驟
         steps.append({"name": "結果整理", "description": "整理分析結果和生成報告", "weight": 0.05})
 
         return steps
@@ -99,14 +99,14 @@ class SmartAnalysisProgressTracker:
         current_time = time.time()
         elapsed_time = current_time - self.start_time
 
-        # 記錄步骤
+        # 記錄步驟
         self.steps.append({
             'message': message,
             'timestamp': current_time,
             'elapsed': elapsed_time
         })
 
-        # 根據消息內容自動判斷當前步骤
+        # 根據消息內容自動判斷當前步驟
         if step is None:
             step = self._detect_step_from_message(message)
 
@@ -116,18 +116,18 @@ class SmartAnalysisProgressTracker:
                 # 分析師完成，推進到下一步
                 next_step = min(step + 1, len(self.analysis_steps) - 1)
                 self.current_step = next_step
-                logger.info(f"📊 [進度更新] 分析師完成，推進到步骤 {self.current_step + 1}/{len(self.analysis_steps)}")
-            # 防止步骤倒退：只有當檢測到的步骤大於等於當前步骤時才更新
+                logger.info(f"📊 [進度更新] 分析師完成，推進到步驟 {self.current_step + 1}/{len(self.analysis_steps)}")
+            # 防止步驟倒退：只有當檢測到的步驟大於等於當前步驟時才更新
             elif step >= self.current_step:
                 self.current_step = step
-                logger.debug(f"📊 [進度更新] 步骤推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
+                logger.debug(f"📊 [進度更新] 步驟推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
             else:
-                logger.debug(f"📊 [進度更新] 忽略倒退步骤：檢測到步骤{step + 1}，當前步骤{self.current_step + 1}")
+                logger.debug(f"📊 [進度更新] 忽略倒退步驟：檢測到步驟{step + 1}，當前步驟{self.current_step + 1}")
 
         # 如果是完成消息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "✅ 分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
-            logger.info(f"📊 [進度更新] 分析完成，設置為最终步骤 {self.current_step + 1}/{len(self.analysis_steps)}")
+            logger.info(f"📊 [進度更新] 分析完成，設置為最終步驟 {self.current_step + 1}/{len(self.analysis_steps)}")
 
         # 調用回調函數
         if self.callback:
@@ -136,7 +136,7 @@ class SmartAnalysisProgressTracker:
             self.callback(message, self.current_step, len(self.analysis_steps), progress, elapsed_time, remaining_time)
 
     def _calculate_weighted_progress(self) -> float:
-        """根據步骤權重計算進度"""
+        """根據步驟權重計算進度"""
         if self.current_step >= len(self.analysis_steps):
             return 1.0
 
@@ -163,7 +163,7 @@ class SmartAnalysisProgressTracker:
             return max(self.estimated_duration - elapsed_time, 0)
     
     def _detect_step_from_message(self, message: str) -> Optional[int]:
-        """根據消息內容智能檢測當前步骤"""
+        """根據消息內容智能檢測當前步驟"""
         message_lower = message.lower()
 
         # 開始分析階段 - 只匹配最初的開始消息
@@ -186,7 +186,7 @@ class SmartAnalysisProgressTracker:
             return 4
         # 分析師工作階段 - 根據分析師名稱和工具調用匹配
         elif any(analyst_name in message for analyst_name in ["市場分析師", "基本面分析師", "技術分析師", "情绪分析師", "風險分析師"]):
-            # 找到對應的分析師步骤
+            # 找到對應的分析師步驟
             for i, step in enumerate(self.analysis_steps):
                 if "分析師" in step["name"]:
                     # 檢查消息中是否包含對應的分析師類型
@@ -202,7 +202,7 @@ class SmartAnalysisProgressTracker:
                         return i
         # 工具調用階段 - 檢測分析師正在使用工具
         elif "工具調用" in message or "正在調用" in message or "tool" in message.lower():
-            # 如果當前步骤是分析師步骤，保持當前步骤
+            # 如果當前步驟是分析師步驟，保持當前步驟
             if self.current_step < len(self.analysis_steps) and "分析師" in self.analysis_steps[self.current_step]["name"]:
                 return self.current_step
         # 模塊開始/完成日誌
@@ -242,7 +242,7 @@ class SmartAnalysisProgressTracker:
         return None
     
     def get_current_step_info(self) -> Dict:
-        """獲取當前步骤信息"""
+        """獲取當前步驟信息"""
         if self.current_step < len(self.analysis_steps):
             return self.analysis_steps[self.current_step]
         return {"name": "完成", "description": "分析已完成", "weight": 0}
@@ -298,7 +298,7 @@ class SmartStreamlitProgressDisplay:
         # 更新狀態文本
         self.status_text.markdown(f"**當前狀態:** 📋 {message}")
 
-        # 更新步骤信息
+        # 更新步驟信息
         step_text = f"**進度:** 第 {current_step + 1} 步，共 {total_steps} 步 ({progress:.1%})"
         self.step_info.markdown(step_text)
 
@@ -329,7 +329,7 @@ def create_smart_progress_callback(display: SmartStreamlitProgressDisplay, analy
     tracker = SmartAnalysisProgressTracker(analysts, research_depth, llm_provider)
 
     def callback(message: str, step: Optional[int] = None, total_steps: Optional[int] = None):
-        # 如果明確指定了步骤和总步骤，使用旧的固定模式（兼容性）
+        # 如果明確指定了步驟和总步驟，使用旧的固定模式（兼容性）
         if step is not None and total_steps is not None and total_steps == 10:
             # 兼容旧的10步模式，但使用智能時間預估
             progress = step / max(total_steps - 1, 1) if total_steps > 1 else 1.0

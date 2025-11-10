@@ -27,7 +27,7 @@ class ChineseFinanceDataAggregator:
     
     def get_stock_sentiment_summary(self, ticker: str, days: int = 7) -> Dict:
         """
-        獲取股票情绪分析汇总
+        獲取股票情绪分析彙總
         整合多個可獲取的中國財經數據源
         """
         try:
@@ -40,7 +40,7 @@ class ChineseFinanceDataAggregator:
             # 3. 獲取財經媒體報道
             media_sentiment = self._get_media_coverage_sentiment(ticker, days)
             
-            # 4. 综合分析
+            # 4. 綜合分析
             overall_sentiment = self._calculate_overall_sentiment(
                 news_sentiment, forum_sentiment, media_sentiment
             )
@@ -60,7 +60,7 @@ class ChineseFinanceDataAggregator:
             return {
                 'ticker': ticker,
                 'error': f'數據獲取失败: {str(e)}',
-                'fallback_message': '由於中國社交媒體API限制，建议使用財經新聞和基本面分析作為主要參考',
+                'fallback_message': '由於中國社交媒體API限制，建議使用財經新聞和基本面分析作為主要參考',
                 'timestamp': datetime.now().isoformat()
             }
     
@@ -118,7 +118,7 @@ class ChineseFinanceDataAggregator:
             'sentiment_score': 0,
             'discussion_count': 0,
             'hot_topics': [],
-            'note': '股票論坛數據獲取受限，建议關註官方財經新聞',
+            'note': '股票論坛數據獲取受限，建議關註官方財經新聞',
             'confidence': 0
         }
     
@@ -200,7 +200,7 @@ class ChineseFinanceDataAggregator:
         return name_mapping.get(ticker.upper())
     
     def _calculate_overall_sentiment(self, news_sentiment: Dict, forum_sentiment: Dict, media_sentiment: Dict) -> Dict:
-        """計算综合情绪分析"""
+        """計算綜合情绪分析"""
         # 根據各數據源的置信度加權計算
         news_weight = news_sentiment.get('confidence', 0)
         forum_weight = forum_sentiment.get('confidence', 0)
@@ -274,7 +274,7 @@ def get_chinese_social_sentiment(ticker: str, curr_date: str) -> str:
 ⚠️ 數據獲取限制說明:
 {sentiment_data.get('fallback_message', '數據獲取遇到技術限制')}
 
-建议:
+建議:
 1. 重點關註財經新聞和基本面分析
 2. 參考官方財報和業绩指導
 3. 關註行業政策和監管動態
@@ -291,7 +291,7 @@ def get_chinese_social_sentiment(ticker: str, curr_date: str) -> str:
 分析日期: {curr_date}
 分析周期: {sentiment_data.get('analysis_period', '7天')}
 
-📊 综合情绪評估:
+📊 綜合情绪評估:
 {sentiment_data.get('summary', '數據不足')}
 
 📰 財經新聞情绪:
@@ -300,8 +300,8 @@ def get_chinese_social_sentiment(ticker: str, curr_date: str) -> str:
 - 负面新聞比例: {news.get('negative_ratio', 0):.1%}
 - 新聞數量: {news.get('news_count', 0)}條
 
-💡 投資建议:
-基於當前可獲取的中國市場數據，建议投資者:
+💡 投資建議:
+基於當前可獲取的中國市場數據，建議投資者:
 1. 密切關註官方財經媒體報道
 2. 重視基本面分析和財務數據
 3. 考慮政策環境對股價的影響
@@ -309,7 +309,7 @@ def get_chinese_social_sentiment(ticker: str, curr_date: str) -> str:
 
 ⚠️ 數據說明:
 由於中國社交媒體平台API獲取限制，本分析主要基於公開財經新聞數據。
-建议結合其他分析維度進行综合判斷。
+建議結合其他分析維度進行綜合判斷。
 
 生成時間: {sentiment_data.get('timestamp', datetime.now().isoformat())}
 """
@@ -321,11 +321,11 @@ def get_chinese_social_sentiment(ticker: str, curr_date: str) -> str:
 
 ❌ 分析失败: {str(e)}
 
-💡 替代建议:
+💡 替代建議:
 1. 查看財經新聞網站的相關報道
-2. 關註雪球、东方財富等投資社区討論
+2. 關註雪球、东方財富等投資社區討論
 3. 參考專業機構的研究報告
 4. 重點分析基本面和技術面數據
 
-註: 中國社交媒體數據獲取存在技術限制，建议以基本面分析為主。
+註: 中國社交媒體數據獲取存在技術限制，建議以基本面分析為主。
 """

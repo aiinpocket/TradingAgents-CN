@@ -51,14 +51,14 @@ class OptimizedUSDataProvider:
             symbol: 股票代碼
             start_date: 開始日期 (YYYY-MM-DD)
             end_date: 結束日期 (YYYY-MM-DD)
-            force_refresh: 是否强制刷新緩存
+            force_refresh: 是否強制刷新緩存
         
         Returns:
             格式化的股票數據字符串
         """
         logger.info(f"📈 獲取美股數據: {symbol} ({start_date} 到 {end_date})")
         
-        # 檢查緩存（除非强制刷新）
+        # 檢查緩存（除非強制刷新）
         if not force_refresh:
             # 優先查找FINNHUB緩存
             cache_key = self.cache.find_cached_stock_data(
@@ -97,14 +97,14 @@ class OptimizedUSDataProvider:
                 data_source = "finnhub"
                 logger.info(f"✅ FINNHUB數據獲取成功: {symbol}")
             else:
-                logger.error(f"⚠️ FINNHUB數據獲取失败，嘗試备用方案")
+                logger.error(f"⚠️ FINNHUB數據獲取失败，嘗試備用方案")
                 formatted_data = None
 
         except Exception as e:
             logger.error(f"❌ FINNHUB API調用失败: {e}")
             formatted_data = None
 
-        # 备用方案：根據股票類型選擇合適的數據源
+        # 備用方案：根據股票類型選擇合適的數據源
         if not formatted_data:
             try:
                 # 檢測股票類型
@@ -127,8 +127,8 @@ class OptimizedUSDataProvider:
 
                     except Exception as e:
                         logger.error(f"⚠️ AKShare港股數據獲取失败: {e}")
-                        # 备用方案：Yahoo Finance
-                        logger.info(f"🔄 使用Yahoo Finance备用方案獲取港股數據: {symbol}")
+                        # 備用方案：Yahoo Finance
+                        logger.info(f"🔄 使用Yahoo Finance備用方案獲取港股數據: {symbol}")
 
                         self._wait_for_rate_limit()
                         ticker = yf.Ticker(symbol)  # 港股代碼保持原格式
@@ -162,7 +162,7 @@ class OptimizedUSDataProvider:
                 logger.error(f"❌ 數據獲取失败: {e}")
                 formatted_data = None
 
-        # 如果所有API都失败，生成备用數據
+        # 如果所有API都失败，生成備用數據
         if not formatted_data:
             error_msg = "所有美股數據源都不可用"
             logger.error(f"❌ {error_msg}")
@@ -241,7 +241,7 @@ class OptimizedUSDataProvider:
         return result
     
     def _try_get_old_cache(self, symbol: str, start_date: str, end_date: str) -> Optional[str]:
-        """嘗試獲取過期的緩存數據作為备用"""
+        """嘗試獲取過期的緩存數據作為備用"""
         try:
             # 查找任何相關的緩存，不考慮TTL
             for metadata_file in self.cache.metadata_dir.glob(f"*_meta.json"):
@@ -323,13 +323,13 @@ class OptimizedUSDataProvider:
             return None
 
     def _generate_fallback_data(self, symbol: str, start_date: str, end_date: str, error_msg: str) -> str:
-        """生成备用數據"""
+        """生成備用數據"""
         return f"""# {symbol} 美股數據獲取失败
 
 ## ❌ 錯誤信息
 {error_msg}
 
-## 📊 模擬數據（仅供演示）
+## 📊 模擬數據（僅供演示）
 - 股票代碼: {symbol}
 - 數據期間: {start_date} 至 {end_date}
 - 最新價格: ${random.uniform(100, 300):.2f}
@@ -337,7 +337,7 @@ class OptimizedUSDataProvider:
 
 ## ⚠️ 重要提示
 由於API限制或網絡問題，無法獲取實時數據。
-建议稍後重試或檢查網絡連接。
+建議稍後重試或檢查網絡連接。
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
@@ -363,7 +363,7 @@ def get_us_stock_data_cached(symbol: str, start_date: str, end_date: str,
         symbol: 股票代碼
         start_date: 開始日期 (YYYY-MM-DD)
         end_date: 結束日期 (YYYY-MM-DD)
-        force_refresh: 是否强制刷新緩存
+        force_refresh: 是否強制刷新緩存
     
     Returns:
         格式化的股票數據字符串

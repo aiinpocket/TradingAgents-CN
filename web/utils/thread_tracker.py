@@ -133,7 +133,7 @@ def check_analysis_status(analysis_id: str) -> str:
     if is_analysis_thread_alive(analysis_id):
         return 'running'
     
-    # 線程不存在，檢查進度數據確定最终狀態
+    # 線程不存在，檢查進度數據確定最終狀態
     try:
         from .async_progress_tracker import get_progress_by_id
         progress_data = get_progress_by_id(analysis_id)

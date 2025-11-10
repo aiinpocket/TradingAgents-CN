@@ -200,7 +200,7 @@ class ImprovedHKStockProvider:
                 except Exception as e:
                     logger.debug(f"📊 [港股AKShare] AKShare獲取失败: {e}")
 
-                # 备用：嘗試從統一接口獲取（包含Yahoo Finance）
+                # 備用：嘗試從統一接口獲取（包含Yahoo Finance）
                 from tradingagents.dataflows.interface import get_hk_stock_info_unified
                 hk_info = get_hk_stock_info_unified(symbol)
 

@@ -96,7 +96,7 @@ def get_finnhub_news(
         error_msg += f"1. 數據文件不存在或路徑配置錯誤\n"
         error_msg += f"2. 指定日期範围內没有新聞數據\n"
         error_msg += f"3. 需要先下載或更新Finnhub新聞數據\n"
-        error_msg += f"建议：檢查數據目錄配置或重新獲取新聞數據"
+        error_msg += f"建議：檢查數據目錄配置或重新獲取新聞數據"
         logger.debug(f"📰 [DEBUG] {error_msg}")
         return error_msg
 
@@ -1208,7 +1208,7 @@ def get_china_stock_data_unified(
 ) -> str:
     """
     統一的中國A股數據獲取接口
-    自動使用配置的數據源（默認Tushare），支持备用數據源
+    自動使用配置的數據源（默認Tushare），支持備用數據源
 
     Args:
         ticker: 股票代碼
@@ -1258,7 +1258,7 @@ def get_china_stock_data_unified(
                            'event_type': 'unified_data_call_success'
                        })
         else:
-            logger.warning(f"⚠️ [統一接口] 中國股票數據质量異常",
+            logger.warning(f"⚠️ [統一接口] 中國股票數據質量異常",
                           extra={
                               'function': 'get_china_stock_data_unified',
                               'ticker': ticker,
@@ -1414,14 +1414,14 @@ def get_hk_stock_data_unified(symbol: str, start_date: str = None, end_date: str
                     logger.info(f"✅ AKShare港股數據獲取成功: {symbol}")
                     return result
                 else:
-                    logger.error(f"⚠️ AKShare返回錯誤結果，嘗試备用方案")
+                    logger.error(f"⚠️ AKShare返回錯誤結果，嘗試備用方案")
             except Exception as e:
                 logger.error(f"⚠️ AKShare港股數據獲取失败: {e}")
 
-        # 备用方案1：使用Yahoo Finance港股工具
+        # 備用方案1：使用Yahoo Finance港股工具
         if HK_STOCK_AVAILABLE:
             try:
-                logger.info(f"🔄 使用Yahoo Finance备用方案獲取港股數據: {symbol}")
+                logger.info(f"🔄 使用Yahoo Finance備用方案獲取港股數據: {symbol}")
                 result = get_hk_stock_data(symbol, start_date, end_date)
                 if result and "❌" not in result:
                     logger.info(f"✅ Yahoo Finance港股數據獲取成功: {symbol}")
@@ -1431,7 +1431,7 @@ def get_hk_stock_data_unified(symbol: str, start_date: str = None, end_date: str
             except Exception as e:
                 logger.error(f"⚠️ Yahoo Finance港股數據獲取失败: {e}")
 
-        # 备用方案2：使用FINNHUB（付費用戶可用）
+        # 備用方案2：使用FINNHUB（付費用戶可用）
         try:
             from .optimized_us_data import get_us_stock_data_cached
             logger.info(f"🔄 使用FINNHUB獲取港股數據: {symbol}")
@@ -1471,14 +1471,14 @@ def get_hk_stock_info_unified(symbol: str) -> Dict:
                     logger.info(f"✅ AKShare成功獲取港股信息: {symbol} -> {result.get('name', 'N/A')}")
                     return result
                 else:
-                    logger.warning(f"⚠️ AKShare返回默認信息，嘗試备用方案")
+                    logger.warning(f"⚠️ AKShare返回默認信息，嘗試備用方案")
             except Exception as e:
                 logger.error(f"⚠️ AKShare港股信息獲取失败: {e}")
 
-        # 备用方案1：使用Yahoo Finance港股工具
+        # 備用方案1：使用Yahoo Finance港股工具
         if HK_STOCK_AVAILABLE:
             try:
-                logger.info(f"🔄 使用Yahoo Finance备用方案獲取港股信息: {symbol}")
+                logger.info(f"🔄 使用Yahoo Finance備用方案獲取港股信息: {symbol}")
                 result = get_hk_stock_info(symbol)
                 if result and 'error' not in result and not result.get('name', '').startswith('港股'):
                     logger.info(f"✅ Yahoo Finance成功獲取港股信息: {symbol} -> {result.get('name', 'N/A')}")
@@ -1488,7 +1488,7 @@ def get_hk_stock_info_unified(symbol: str) -> Dict:
             except Exception as e:
                 logger.error(f"⚠️ Yahoo Finance港股信息獲取失败: {e}")
 
-        # 备用方案2：返回基本信息
+        # 備用方案2：返回基本信息
         logger.info(f"🔄 使用默認信息: {symbol}")
         return {
             'symbol': symbol,

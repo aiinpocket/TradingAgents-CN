@@ -157,7 +157,7 @@ def render_decision_summary(decision, stock_symbol=None):
             <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
                 <span style="background: white; padding: 8px 16px; border-radius: 20px;
                            color: #6c757d; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    📊 投資建议
+                    📊 投資建議
                 </span>
                 <span style="background: white; padding: 8px 16px; border-radius: 20px;
                            color: #6c757d; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -181,7 +181,7 @@ def render_decision_summary(decision, stock_symbol=None):
     with col1:
         action = decision.get('action', 'N/A')
 
-        # 将英文投資建议轉換為中文
+        # 将英文投資建議轉換為中文
         action_translation = {
             'BUY': '买入',
             'SELL': '卖出',
@@ -191,7 +191,7 @@ def render_decision_summary(decision, stock_symbol=None):
             '持有': '持有'
         }
 
-        # 獲取中文投資建议
+        # 獲取中文投資建議
         chinese_action = action_translation.get(action.upper(), action)
 
         action_color = {
@@ -204,9 +204,9 @@ def render_decision_summary(decision, stock_symbol=None):
         }.get(action.upper(), 'normal')
 
         st.metric(
-            label="投資建议",
+            label="投資建議",
             value=chinese_action,
-            help="基於AI分析的投資建议"
+            help="基於AI分析的投資建議"
         )
 
     with col2:
@@ -322,7 +322,7 @@ def render_detailed_analysis(state):
         transform: translateY(-2px);
     }
 
-    /* 標簽页內容区域 */
+    /* 標簽页內容區域 */
     .stTabs [data-baseweb="tab-panel"] {
         padding: 20px;
         background-color: #ffffff;
@@ -395,16 +395,16 @@ def render_detailed_analysis(state):
         },
         {
             'key': 'investment_plan',
-            'title': '📋 投資建议',
+            'title': '📋 投資建議',
             'icon': '📋',
-            'description': '具體投資策略、仓位管理建议'
+            'description': '具體投資策略、仓位管理建議'
         },
         # 添加团隊決策報告模塊
         {
             'key': 'investment_debate_state',
             'title': '🔬 研究团隊決策',
             'icon': '🔬',
-            'description': '多头/空头研究員辩論分析，研究經理综合決策'
+            'description': '多头/空头研究員辩論分析，研究經理綜合決策'
         },
         {
             'key': 'trader_investment_plan',
@@ -416,13 +416,13 @@ def render_detailed_analysis(state):
             'key': 'risk_debate_state',
             'title': '⚖️ 風險管理团隊',
             'icon': '⚖️',
-            'description': '激進/保守/中性分析師風險評估，投資組合經理最终決策'
+            'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'
         },
         {
             'key': 'final_trade_decision',
-            'title': '🎯 最终交易決策',
+            'title': '🎯 最終交易決策',
             'icon': '🎯',
-            'description': '综合所有团隊分析後的最终投資決策'
+            'description': '綜合所有团隊分析後的最終投資決策'
         }
     ]
     
@@ -450,7 +450,7 @@ def render_detailed_analysis(state):
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
         with tab:
-            # 在內容区域顯示圖標和描述
+            # 在內容區域顯示圖標和描述
             st.markdown(f"## {module['icon']} {module['title']}")
             st.markdown(f"*{module['description']}*")
             st.markdown("---")
@@ -486,7 +486,7 @@ def render_investment_debate_content(content):
         st.markdown("---")
 
     if content.get('judge_decision'):
-        st.subheader("🎯 研究經理综合決策")
+        st.subheader("🎯 研究經理綜合決策")
         st.markdown(content['judge_decision'])
 
 def render_risk_debate_content(content):
@@ -507,7 +507,7 @@ def render_risk_debate_content(content):
         st.markdown("---")
 
     if content.get('judge_decision'):
-        st.subheader("🎯 投資組合經理最终決策")
+        st.subheader("🎯 投資組合經理最終決策")
         st.markdown(content['judge_decision'])
 
 def render_analysis_placeholder():
@@ -542,7 +542,7 @@ def render_analysis_placeholder():
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
                 <div style="font-size: 24px; margin-bottom: 8px;">⚖️</div>
                 <div style="font-weight: bold; color: #495057;">風險評估</div>
-                <div style="font-size: 12px; color: #6c757d;">風險控制、投資建议</div>
+                <div style="font-size: 12px; color: #6c757d;">風險控制、投資建議</div>
             </div>
         </div>
 
@@ -563,10 +563,10 @@ def render_risk_warning():
     # 移除演示數據相關的提示，因為我們不再顯示演示數據
     st.error("""
     **投資風險提示**:
-    - **仅供參考**: 本分析結果仅供參考，不構成投資建议
+    - **僅供參考**: 本分析結果僅供參考，不構成投資建議
     - **投資風險**: 股票投資有風險，可能導致本金損失
     - **理性決策**: 請結合多方信息進行理性投資決策
-    - **專業咨詢**: 重大投資決策建议咨詢專業財務顧問
+    - **專業咨詢**: 重大投資決策建議咨詢專業財務顧問
     - **自擔風險**: 投資決策及其後果由投資者自行承擔
     """)
 

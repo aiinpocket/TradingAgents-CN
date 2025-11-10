@@ -62,7 +62,7 @@ def setup_xvfb_display():
         return True
     except Exception as e:
         logger.error(f"⚠️ 虛擬顯示器設置失败: {e}")
-        # 即使Xvfb失败，也嘗試繼续，某些情况下wkhtmltopdf可以無头運行
+        # 即使Xvfb失败，也嘗試繼续，某些情況下wkhtmltopdf可以無头運行
         return False
 
 def get_docker_wkhtmltopdf_args():
@@ -100,7 +100,7 @@ def test_docker_pdf_generation() -> bool:
         </head>
         <body>
             <h1>Docker PDF 測試</h1>
-            <p>這是在Docker環境中生成的PDF測試文档。</p>
+            <p>這是在Docker環境中生成的PDF測試文檔。</p>
             <p>中文字符測試：你好世界！</p>
         </body>
         </html>

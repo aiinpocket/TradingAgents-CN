@@ -27,7 +27,7 @@ from tradingagents.config.config_manager import (
 
 def render_config_management():
     """渲染配置管理页面"""
-    # 應用隐藏Deploy按钮的CSS樣式
+    # 應用隱藏Deploy按钮的CSS樣式
     apply_hide_deploy_button_css()
     
     st.title("⚙️ 配置管理")

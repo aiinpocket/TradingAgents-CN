@@ -158,7 +158,7 @@ class Toolkit:
         end_date: Annotated[str, "結束日期，格式 yyyy-mm-dd"],
     ) -> str:
         """
-        獲取中國A股實時和歷史數據，通過Tushare等高质量數據源提供專業的股票數據。
+        獲取中國A股實時和歷史數據，通過Tushare等高質量數據源提供專業的股票數據。
         支持實時行情、歷史K線、技術指標等全面數據，自動使用最佳數據源。
         Args:
             stock_code (str): 中國股票代碼，如 000001(平安銀行), 600519(贵州茅台)
@@ -504,7 +504,7 @@ class Toolkit:
         """
         獲取股票的實時新聞分析，解決傳統新聞源的滞後性問題。
         整合多個專業財經API，提供15-30分鐘內的最新新聞。
-        支持多種新聞源轮詢機制，優先使用實時新聞聚合器，失败時自動嘗試备用新聞源。
+        支持多種新聞源轮詢機制，優先使用實時新聞聚合器，失败時自動嘗試備用新聞源。
         對於A股和港股，會優先使用中文財經新聞源（如东方財富）。
         
         Args:
@@ -627,7 +627,7 @@ class Toolkit:
             return f"錯誤：{ticker} 不是有效的中國A股代碼格式"
 
         try:
-            # 使用統一數據源接口獲取股票數據（默認Tushare，支持备用數據源）
+            # 使用統一數據源接口獲取股票數據（默認Tushare，支持備用數據源）
             from tradingagents.dataflows.interface import get_china_stock_data_unified
             logger.debug(f"📊 [DEBUG] 正在獲取 {ticker} 的股票數據...")
 
@@ -677,7 +677,7 @@ class Toolkit:
         end_date: Annotated[str, "結束日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        獲取港股數據的統一接口，優先使用AKShare數據源，备用Yahoo Finance
+        獲取港股數據的統一接口，優先使用AKShare數據源，備用Yahoo Finance
 
         Args:
             symbol: 港股代碼 (如: 0700.HK)
@@ -795,7 +795,7 @@ class Toolkit:
                     result_data.append(f"## A股基本面數據\n獲取失败: {e}")
 
             elif is_hk:
-                # 港股：使用AKShare數據源，支持多重备用方案
+                # 港股：使用AKShare數據源，支持多重備用方案
                 logger.info(f"🇭🇰 [統一基本面工具] 處理港股數據...")
 
                 hk_data_success = False
@@ -805,18 +805,18 @@ class Toolkit:
                     from tradingagents.dataflows.interface import get_hk_stock_data_unified
                     hk_data = get_hk_stock_data_unified(ticker, start_date, end_date)
 
-                    # 檢查數據质量
+                    # 檢查數據質量
                     if hk_data and len(hk_data) > 100 and "❌" not in hk_data:
                         result_data.append(f"## 港股數據\n{hk_data}")
                         hk_data_success = True
                         logger.info(f"✅ [統一基本面工具] 港股主要數據源成功")
                     else:
-                        logger.warning(f"⚠️ [統一基本面工具] 港股主要數據源质量不佳")
+                        logger.warning(f"⚠️ [統一基本面工具] 港股主要數據源質量不佳")
 
                 except Exception as e:
                     logger.error(f"⚠️ [統一基本面工具] 港股主要數據源失败: {e}")
 
-                # 备用方案：基础港股信息
+                # 備用方案：基础港股信息
                 if not hk_data_success:
                     try:
                         from tradingagents.dataflows.interface import get_hk_stock_info_unified
@@ -830,19 +830,19 @@ class Toolkit:
 **交易所**: 香港交易所 (HKG)
 **數據源**: {hk_info.get('source', '基础信息')}
 
-⚠️ 註意：詳細的價格和財務數據暂時無法獲取，建议稍後重試或使用其他數據源。
+⚠️ 註意：詳細的價格和財務數據暂時無法獲取，建議稍後重試或使用其他數據源。
 
-**基本面分析建议**：
-- 建议查看公司最新財報
+**基本面分析建議**：
+- 建議查看公司最新財報
 - 關註港股市場整體走势
 - 考慮汇率因素對投資的影響
 """
                         result_data.append(basic_info)
-                        logger.info(f"✅ [統一基本面工具] 港股备用信息成功")
+                        logger.info(f"✅ [統一基本面工具] 港股備用信息成功")
 
                     except Exception as e2:
-                        # 最终备用方案
-                        fallback_info = f"""## 港股信息（备用）
+                        # 最終備用方案
+                        fallback_info = f"""## 港股信息（備用）
 
 **股票代碼**: {ticker}
 **股票類型**: 港股
@@ -851,14 +851,14 @@ class Toolkit:
 
 ❌ 數據獲取遇到問題: {str(e2)}
 
-**建议**：
+**建議**：
 1. 檢查網絡連接
 2. 稍後重試分析
 3. 使用其他港股數據源
 4. 查看公司官方財報
 """
                         result_data.append(fallback_info)
-                        logger.warning(f"⚠️ [統一基本面工具] 港股使用最终备用方案")
+                        logger.warning(f"⚠️ [統一基本面工具] 港股使用最終備用方案")
 
             else:
                 # 美股：使用OpenAI/Finnhub數據源
@@ -1161,7 +1161,7 @@ class Toolkit:
 
 ### 市場情绪概况
 - 由於中文社交媒體情绪數據源暂未完全集成，當前提供基础分析
-- 建议關註雪球、东方財富、同花顺等平台的討論熱度
+- 建議關註雪球、东方財富、同花顺等平台的討論熱度
 - 港股市場还需關註香港本地財經媒體情绪
 
 ### 情绪指標

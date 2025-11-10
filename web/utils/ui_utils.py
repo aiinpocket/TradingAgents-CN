@@ -8,12 +8,12 @@ import streamlit as st
 
 def apply_hide_deploy_button_css():
     """
-    應用隐藏Deploy按钮和工具栏的CSS樣式
+    應用隱藏Deploy按钮和工具栏的CSS樣式
     在所有页面中調用此函數以確保一致的UI體驗
     """
     st.markdown("""
     <style>
-        /* 隐藏Streamlit顶部工具栏和Deploy按钮 - 多種選擇器確保兼容性 */
+        /* 隱藏Streamlit顶部工具栏和Deploy按钮 - 多種選擇器確保兼容性 */
         .stAppToolbar {
             display: none !important;
         }
@@ -39,7 +39,7 @@ def apply_hide_deploy_button_css():
             display: none !important;
         }
         
-        /* 隐藏整個顶部区域 */
+        /* 隱藏整個顶部區域 */
         .stApp > header {
             display: none !important;
         }
@@ -48,29 +48,29 @@ def apply_hide_deploy_button_css():
             display: none !important;
         }
         
-        /* 隐藏主菜單按钮 */
+        /* 隱藏主菜單按钮 */
         #MainMenu {
             visibility: hidden !important;
             display: none !important;
         }
         
-        /* 隐藏页腳 */
+        /* 隱藏页腳 */
         footer {
             visibility: hidden !important;
             display: none !important;
         }
         
-        /* 隐藏"Made with Streamlit"標识 */
+        /* 隱藏"Made with Streamlit"標识 */
         .viewerBadge_container__1QSob {
             display: none !important;
         }
         
-        /* 隐藏所有可能的工具栏元素 */
+        /* 隱藏所有可能的工具栏元素 */
         div[data-testid="stToolbar"] {
             display: none !important;
         }
         
-        /* 隐藏右上角的所有按钮 */
+        /* 隱藏右上角的所有按钮 */
         .stApp > div > div > div > div > section > div {
             padding-top: 0 !important;
         }
@@ -80,9 +80,9 @@ def apply_hide_deploy_button_css():
 def apply_common_styles():
     """
     應用通用的页面樣式
-    包括隐藏Deploy按钮和其他美化樣式
+    包括隱藏Deploy按钮和其他美化樣式
     """
-    # 隐藏Deploy按钮
+    # 隱藏Deploy按钮
     apply_hide_deploy_button_css()
     
     # 其他通用樣式

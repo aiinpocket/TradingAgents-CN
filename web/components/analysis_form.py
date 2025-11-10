@@ -163,7 +163,7 @@ def render_analysis_form():
         # 添加JavaScript來改善用戶體驗
         st.markdown("""
         <script>
-        // 監聽輸入框的變化，提供更好的用戶反馈
+        // 監聽輸入框的變化，提供更好的用戶反饋
         document.addEventListener('DOMContentLoaded', function() {
             const inputs = document.querySelectorAll('input[type="text"]');
             inputs.forEach(input => {

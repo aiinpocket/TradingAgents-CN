@@ -1,6 +1,6 @@
 """
 基於文件的會話管理器 - 不依賴Redis的可靠方案
-適用於没有Redis或Redis連接失败的情况
+適用於没有Redis或Redis連接失败的情況
 """
 
 import streamlit as st

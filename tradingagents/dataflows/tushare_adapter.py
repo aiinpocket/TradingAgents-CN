@@ -244,7 +244,7 @@ class TushareDataAdapter:
 
             logger.info(f"🔍 [數據標準化] 完成列映射: {mapped_columns}")
 
-            # 驗證關键列是否存在，添加备用處理
+            # 驗證關键列是否存在，添加備用處理
             required_columns = ['volume', 'close', 'high', 'low']
             missing_columns = [col for col in required_columns if col not in standardized.columns]
             if missing_columns:
@@ -276,7 +276,7 @@ class TushareDataAdapter:
             return data
 
     def _add_fallback_columns(self, standardized: pd.DataFrame, missing_columns: list, original_data: pd.DataFrame):
-        """為缺失的關键列添加备用值"""
+        """為缺失的關键列添加備用值"""
         try:
             import numpy as np
             for col in missing_columns:
@@ -286,7 +286,7 @@ class TushareDataAdapter:
                     for candidate in volume_candidates:
                         if candidate in original_data.columns:
                             standardized['volume'] = original_data[candidate]
-                            logger.info(f"✅ [數據標準化] 使用备用列 {candidate} 作為 volume")
+                            logger.info(f"✅ [數據標準化] 使用備用列 {candidate} 作為 volume")
                             break
                     else:
                         # 如果找不到任何成交量列，設置為0
@@ -300,7 +300,7 @@ class TushareDataAdapter:
                         logger.warning(f"⚠️ [數據標準化] 缺失價格列 {col}，設置為NaN")
 
         except Exception as e:
-            logger.error(f"❌ [數據標準化] 添加备用列失败: {e}")
+            logger.error(f"❌ [數據標準化] 添加備用列失败: {e}")
 
     def _standardize_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """標準化數據格式 - 保持向後兼容性，調用增强版本"""

@@ -22,7 +22,7 @@ _bootstrap_logger = logging.getLogger("tradingagents.logging_manager")
 class ColoredFormatter(logging.Formatter):
     """彩色日誌格式化器"""
     
-    # ANSI颜色代碼
+    # ANSI顏色代碼
     COLORS = {
         'DEBUG': '\033[36m',    # 青色
         'INFO': '\033[32m',     # 绿色
@@ -33,7 +33,7 @@ class ColoredFormatter(logging.Formatter):
     }
     
     def format(self, record):
-        # 添加颜色
+        # 添加顏色
         if hasattr(record, 'levelname') and record.levelname in self.COLORS:
             record.levelname = f"{self.COLORS[record.levelname]}{record.levelname}{self.COLORS['RESET']}"
         

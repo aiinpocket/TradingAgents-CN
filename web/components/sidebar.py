@@ -145,7 +145,7 @@ def render_sidebar():
         margin: 0.2rem 0 !important;
     }
 
-    /* 强制覆蓋默認樣式 */
+    /* 強制覆蓋默認樣式 */
     .css-1d391kg .element-container {
         padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
@@ -438,7 +438,7 @@ def render_sidebar():
                     "gpt-4": "GPT-4 - 經典版",
                     "gpt-3.5-turbo": "GPT-3.5 Turbo - 經濟版",
                     "claude-3.5-sonnet": "Claude 3.5 Sonnet - Anthropic旗舰",
-                    "claude-3-opus": "Claude 3 Opus - 强大性能",
+                    "claude-3-opus": "Claude 3 Opus - 強大性能",
                     "claude-3-sonnet": "Claude 3 Sonnet - 平衡版",
                     "claude-3-haiku": "Claude 3 Haiku - 快速版",
                     "gemini-pro": "Gemini Pro - Google AI",
@@ -531,7 +531,7 @@ def render_sidebar():
                     "google": "🌟 Google (Gemini系列)",
                     "custom": "✏️ 自定義模型"
                 }[x],
-                help="選擇模型厂商類別或自定義輸入",
+                help="選擇模型廠商類別或自定義輸入",
                 key="model_category_select"
             )
 
@@ -544,7 +544,7 @@ def render_sidebar():
             # 保存到持久化存储
             save_model_selection(st.session_state.llm_provider, model_category, st.session_state.llm_model)
 
-            # 根據厂商顯示不同的模型
+            # 根據廠商顯示不同的模型
             if model_category == "openai":
                 openai_options = [
                     "openai/o4-mini-high",
@@ -671,7 +671,7 @@ def render_sidebar():
                     format_func=lambda x: {
                         "meta-llama/llama-4-maverick": "🚀 Llama 4 Maverick - 最新旗舰",
                         "meta-llama/llama-4-scout": "🚀 Llama 4 Scout - 最新預覽",
-                        "meta-llama/llama-3.3-70b-instruct": "Llama 3.3 70B - 强大性能",
+                        "meta-llama/llama-3.3-70b-instruct": "Llama 3.3 70B - 強大性能",
                         "meta-llama/llama-3.2-90b-vision-instruct": "Llama 3.2 90B Vision - 多模態",
                         "meta-llama/llama-3.1-405b-instruct": "Llama 3.1 405B - 超大模型",
                         "meta-llama/llama-3.1-70b-instruct": "Llama 3.1 70B - 平衡性能",
@@ -824,8 +824,8 @@ def render_sidebar():
                     st.markdown("""
                     **📚 查找更多模型:**
                     - [OpenRouter模型列表](https://openrouter.ai/models)
-                    - [Anthropic模型文档](https://docs.anthropic.com/claude/docs/models-overview)
-                    - [OpenAI模型文档](https://platform.openai.com/docs/models)
+                    - [Anthropic模型文檔](https://docs.anthropic.com/claude/docs/models-overview)
+                    - [OpenAI模型文檔](https://platform.openai.com/docs/models)
                     """)
                 else:
                     st.warning("⚠️ 請輸入有效的模型ID")
@@ -959,9 +959,9 @@ def render_sidebar():
         st.markdown("**📚 幫助資源**")
         
         st.markdown("""
-        - [📖 使用文档](https://github.com/TauricResearch/TradingAgents)
-        - [🐛 問題反馈](https://github.com/TauricResearch/TradingAgents/issues)
-        - [💬 討論社区](https://github.com/TauricResearch/TradingAgents/discussions)
+        - [📖 使用文檔](https://github.com/TauricResearch/TradingAgents)
+        - [🐛 問題反饋](https://github.com/TauricResearch/TradingAgents/issues)
+        - [💬 討論社區](https://github.com/TauricResearch/TradingAgents/discussions)
         - [🔧 API密鑰配置](../docs/security/api_keys_security.md)
         """)
     

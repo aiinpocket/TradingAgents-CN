@@ -54,7 +54,7 @@ def create_bull_researcher(llm, memory):
         for i, rec in enumerate(past_memories, 1):
             past_memory_str += rec["recommendation"] + "\n\n"
 
-        prompt = f"""你是一位看涨分析師，负责為股票 {company_name} 的投資建立强有力的論證。
+        prompt = f"""你是一位看涨分析師，負責為股票 {company_name} 的投資建立强有力的論證。
 
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 
@@ -76,9 +76,9 @@ def create_bull_researcher(llm, memory):
 公司基本面報告：{fundamentals_report}
 辩論對話歷史：{history}
 最後的看跌論點：{current_response}
-類似情况的反思和經驗教训：{past_memory_str}
+類似情況的反思和經驗教訓：{past_memory_str}
 
-請使用這些信息提供令人信服的看涨論點，反驳看跌擔忧，並參与動態辩論，展示看涨立場的優势。你还必须處理反思並從過去的經驗教训和錯誤中學习。
+請使用這些信息提供令人信服的看涨論點，反驳看跌擔忧，並參与動態辩論，展示看涨立場的優势。你还必须處理反思並從過去的經驗教訓和錯誤中學习。
 
 請確保所有回答都使用中文。
 """

@@ -71,7 +71,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
             
         except Exception as e:
             logger.error(f"❌ Google AI 生成失败: {e}")
-            # 返回一個包含錯誤信息的結果，而不是抛出異常
+            # 返回一個包含錯誤信息的結果，而不是拋出異常
             from langchain_core.outputs import ChatGeneration
             error_message = AIMessage(content=f"Google AI 調用失败: {str(e)}")
             error_generation = ChatGeneration(message=error_message)
@@ -171,10 +171,10 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
 GOOGLE_OPENAI_MODELS = {
     # Gemini 2.5 系列 - 最新驗證模型
     "gemini-2.5-pro": {
-        "description": "Gemini 2.5 Pro - 最新旗舰模型，功能强大 (16.68s)",
+        "description": "Gemini 2.5 Pro - 最新旗舰模型，功能強大 (16.68s)",
         "context_length": 32768,
         "supports_function_calling": True,
-        "recommended_for": ["複雜推理", "專業分析", "高质量輸出"],
+        "recommended_for": ["複雜推理", "專業分析", "高質量輸出"],
         "avg_response_time": 16.68
     },
     "gemini-2.5-flash": {
@@ -201,14 +201,14 @@ GOOGLE_OPENAI_MODELS = {
     },
     # Gemini 1.5 系列
     "gemini-1.5-pro": {
-        "description": "Gemini 1.5 Pro - 强大性能，平衡選擇 (2.25s)",
+        "description": "Gemini 1.5 Pro - 強大性能，平衡選擇 (2.25s)",
         "context_length": 32768,
         "supports_function_calling": True,
         "recommended_for": ["複雜分析", "專業任務", "深度思考"],
         "avg_response_time": 2.25
     },
     "gemini-1.5-flash": {
-        "description": "Gemini 1.5 Flash - 快速響應，备用選擇 (2.87s)",
+        "description": "Gemini 1.5 Flash - 快速響應，備用選擇 (2.87s)",
         "context_length": 32768,
         "supports_function_calling": True,
         "recommended_for": ["快速任務", "日常對話", "簡單分析"],

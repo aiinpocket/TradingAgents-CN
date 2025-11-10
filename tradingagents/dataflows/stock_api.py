@@ -116,6 +116,6 @@ def check_data_sources() -> Dict[str, Any]:
         'fallback_mode': service.db_manager is None or service.db_manager.mongodb_db is None,
         'recommendation': (
             "所有數據源正常" if service.db_manager and service.db_manager.mongodb_db 
-            else "建议配置MongoDB以獲得最佳性能，當前使用統一數據接口降級模式"
+            else "建議配置MongoDB以獲得最佳性能，當前使用統一數據接口降級模式"
         )
     }

@@ -36,7 +36,7 @@ class SignalProcessor:
                 'target_price': None,
                 'confidence': 0.5,
                 'risk_score': 0.5,
-                'reasoning': '輸入信號無效，默認持有建议'
+                'reasoning': '輸入信號無效，默認持有建議'
             }
 
         # 清理和驗證信號內容
@@ -48,7 +48,7 @@ class SignalProcessor:
                 'target_price': None,
                 'confidence': 0.5,
                 'risk_score': 0.5,
-                'reasoning': '信號內容為空，默認持有建议'
+                'reasoning': '信號內容為空，默認持有建議'
             }
 
         # 檢測股票類型和貨币
@@ -66,7 +66,7 @@ class SignalProcessor:
         messages = [
             (
                 "system",
-                f"""您是一位專業的金融分析助手，负责從交易員的分析報告中提取結構化的投資決策信息。
+                f"""您是一位專業的金融分析助手，負責從交易員的分析報告中提取結構化的投資決策信息。
 
 請從提供的分析報告中提取以下信息，並以JSON格式返回：
 
@@ -83,7 +83,7 @@ class SignalProcessor:
 2. target_price必须是具體的數字,target_price應该是合理的{currency}價格數字（使用{currency_symbol}符號）
 3. confidence和risk_score應该在0-1之間
 4. reasoning應该是簡潔的中文摘要
-5. 所有內容必须使用中文，不允許任何英文投資建议
+5. 所有內容必须使用中文，不允許任何英文投資建議
 
 特別註意：
 - 股票代碼 {stock_symbol or '未知'} 是{market_info['market_name']}，使用{currency}計價
@@ -134,7 +134,7 @@ class SignalProcessor:
                     }
                     action = action_map.get(action, '持有')
                     if action != decision_data.get('action', '持有'):
-                        logger.debug(f"🔍 [SignalProcessor] 投資建议映射: {decision_data.get('action')} -> {action}")
+                        logger.debug(f"🔍 [SignalProcessor] 投資建議映射: {decision_data.get('action')} -> {action}")
 
                 # 處理目標價格，確保正確提取
                 target_price = decision_data.get('target_price')
@@ -154,7 +154,7 @@ class SignalProcessor:
                         r'[¥\$](\d+(?:\.\d+)?)',                      # ¥45.50 或 $190
                         r'(\d+(?:\.\d+)?)元',                         # 45.50元
                         r'(\d+(?:\.\d+)?)美元',                       # 190美元
-                        r'建议[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',        # 建议: 45.50
+                        r'建議[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',        # 建議: 45.50
                         r'預期[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',        # 預期: 45.50
                         r'看[到至]\s*[¥\$]?(\d+(?:\.\d+)?)',          # 看到45.50
                         r'上涨[到至]\s*[¥\$]?(\d+(?:\.\d+)?)',        # 上涨到45.50
@@ -198,7 +198,7 @@ class SignalProcessor:
                     'target_price': target_price,
                     'confidence': float(decision_data.get('confidence', 0.7)),
                     'risk_score': float(decision_data.get('risk_score', 0.5)),
-                    'reasoning': decision_data.get('reasoning', '基於综合分析的投資建议')
+                    'reasoning': decision_data.get('reasoning', '基於綜合分析的投資建議')
                 }
                 logger.info(f"🔍 [SignalProcessor] 處理結果: {result}",
                            extra={'action': result['action'], 'target_price': result['target_price'],
@@ -265,21 +265,21 @@ class SignalProcessor:
         # 如果有當前價格但没有涨跌幅，使用默認估算
         if current_price:
             if action == '买入':
-                # 买入建议默認10-20%涨幅
+                # 买入建議默認10-20%涨幅
                 multiplier = 1.15 if is_china else 1.12
                 return round(current_price * multiplier, 2)
             elif action == '卖出':
-                # 卖出建议默認5-10%跌幅
+                # 卖出建議默認5-10%跌幅
                 multiplier = 0.95 if is_china else 0.92
                 return round(current_price * multiplier, 2)
             else:  # 持有
-                # 持有建议使用當前價格
+                # 持有建議使用當前價格
                 return current_price
         
         return None
 
     def _extract_simple_decision(self, text: str) -> dict:
-        """簡單的決策提取方法作為备用"""
+        """簡單的決策提取方法作為備用"""
         import re
 
         # 提取動作
@@ -322,7 +322,7 @@ class SignalProcessor:
             'target_price': target_price,
             'confidence': 0.7,
             'risk_score': 0.5,
-            'reasoning': '基於综合分析的投資建议'
+            'reasoning': '基於綜合分析的投資建議'
         }
 
     def _get_default_decision(self) -> dict:
@@ -332,5 +332,5 @@ class SignalProcessor:
             'target_price': None,
             'confidence': 0.5,
             'risk_score': 0.5,
-            'reasoning': '輸入數據無效，默認持有建议'
+            'reasoning': '輸入數據無效，默認持有建議'
         }

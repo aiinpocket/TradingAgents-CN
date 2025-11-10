@@ -273,7 +273,7 @@ class StockDataService:
 
             return get_china_stock_data_unified(stock_code, start_date, end_date)
         except Exception as e:
-            return f"❌ 獲取股票數據失败: {str(e)}\n\n💡 建议：\n1. 檢查網絡連接\n2. 確認股票代碼格式正確\n3. 檢查MongoDB配置"
+            return f"❌ 獲取股票數據失败: {str(e)}\n\n💡 建議：\n1. 檢查網絡連接\n2. 確認股票代碼格式正確\n3. 檢查MongoDB配置"
 
 # 全局服務實例
 _stock_data_service = None

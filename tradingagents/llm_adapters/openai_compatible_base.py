@@ -284,7 +284,7 @@ class ChatQianfanOpenAI(OpenAICompatibleBase):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> ChatResult:
-        """生成聊天響應，包含千帆模型的token截斷逻辑"""
+        """生成聊天響應，包含千帆模型的token截斷邏輯"""
         
         # 對千帆模型進行輸入token截斷
         truncated_messages = self._truncate_messages(messages)

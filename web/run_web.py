@@ -45,7 +45,7 @@ def clean_cache_files(force_clean=False):
     清理Python緩存文件，避免Streamlit文件監控錯誤
 
     Args:
-        force_clean: 是否强制清理，默認False（可選清理）
+        force_clean: 是否強制清理，默認False（可選清理）
     """
 
     project_root = Path(__file__).parent.parent
@@ -144,8 +144,8 @@ def clean_cache_files(force_clean=False):
         else:
             logger.info(f"✅ 無需清理項目緩存")
     else:
-        # 强制清理：清理所有緩存
-        logger.info(f"🧹 强制清理所有緩存文件...")
+        # 強制清理：清理所有緩存
+        logger.info(f"🧹 強制清理所有緩存文件...")
         for cache_dir in cache_dirs:
             try:
                 import shutil
@@ -267,7 +267,7 @@ def main():
                 parent.wait(timeout=5)
                 logger.info(f"✅ Web應用已成功停止")
             except (psutil.NoSuchProcess, psutil.TimeoutExpired):
-                logger.warning(f"⚠️ 强制终止進程")
+                logger.warning(f"⚠️ 強制终止進程")
                 if process:
                     process.kill()
         sys.exit(0)
@@ -296,8 +296,8 @@ if __name__ == "__main__":
             os.environ['SKIP_CACHE_CLEAN'] = 'true'
             logger.info(f"🚀 啟動模式: 跳過緩存清理")
         elif sys.argv[1] == "--force-clean":
-            # 强制清理所有緩存
-            logger.info(f"🚀 啟動模式: 强制清理所有緩存")
+            # 強制清理所有緩存
+            logger.info(f"🚀 啟動模式: 強制清理所有緩存")
             clean_cache_files(force_clean=True)
         elif sys.argv[1] == "--help":
             logger.info(f"🚀 TradingAgents-CN Web應用啟動器")
@@ -305,7 +305,7 @@ if __name__ == "__main__":
             logger.info(f"用法:")
             logger.info(f"  python run_web.py           # 默認啟動（清理項目緩存）")
             logger.info(f"  python run_web.py --no-clean      # 跳過緩存清理")
-            logger.info(f"  python run_web.py --force-clean   # 强制清理所有緩存")
+            logger.info(f"  python run_web.py --force-clean   # 強制清理所有緩存")
             logger.info(f"  python run_web.py --help          # 顯示幫助")
             logger.info(f"\n環境變量:")
             logger.info(f"  SKIP_CACHE_CLEAN=true       # 跳過緩存清理")

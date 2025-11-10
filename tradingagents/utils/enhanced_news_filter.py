@@ -204,7 +204,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
     
     def calculate_enhanced_relevance_score(self, title: str, content: str) -> Dict[str, float]:
         """
-        計算增强相關性評分（综合多種方法）
+        計算增强相關性評分（綜合多種方法）
         
         Args:
             title: 新聞標題
@@ -233,7 +233,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
         else:
             scores['classification_score'] = 0
         
-        # 4. 综合評分（加權平均）
+        # 4. 綜合評分（加權平均）
         weights = {
             'rule': 0.4,      # 規則過濾權重40%
             'semantic': 0.35,  # 語義相似度權重35%
@@ -248,8 +248,8 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
         
         scores['final_score'] = final_score
         
-        logger.debug(f"[增强過濾器] 综合評分 - 規則:{rule_score:.1f}, 語義:{scores['semantic_score']:.1f}, "
-                    f"分類:{scores['classification_score']:.1f}, 最终:{final_score:.1f}")
+        logger.debug(f"[增强過濾器] 綜合評分 - 規則:{rule_score:.1f}, 語義:{scores['semantic_score']:.1f}, "
+                    f"分類:{scores['classification_score']:.1f}, 最終:{final_score:.1f}")
         
         return scores
     
@@ -259,7 +259,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
         
         Args:
             news_df: 原始新聞DataFrame
-            min_score: 最低综合評分阈值
+            min_score: 最低綜合評分阈值
             
         Returns:
             pd.DataFrame: 過濾後的新聞DataFrame，包含詳細評分信息
@@ -284,14 +284,14 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
                 row_dict.update(scores)  # 添加所有評分信息
                 filtered_news.append(row_dict)
                 
-                logger.debug(f"[增强過濾器] 保留新聞 (综合評分: {scores['final_score']:.1f}): {title[:50]}...")
+                logger.debug(f"[增强過濾器] 保留新聞 (綜合評分: {scores['final_score']:.1f}): {title[:50]}...")
             else:
-                logger.debug(f"[增强過濾器] 過濾新聞 (综合評分: {scores['final_score']:.1f}): {title[:50]}...")
+                logger.debug(f"[增强過濾器] 過濾新聞 (綜合評分: {scores['final_score']:.1f}): {title[:50]}...")
         
         # 創建過濾後的DataFrame
         if filtered_news:
             filtered_df = pd.DataFrame(filtered_news)
-            # 按综合評分排序
+            # 按綜合評分排序
             filtered_df = filtered_df.sort_values('final_score', ascending=False)
             logger.info(f"[增强過濾器] 增强過濾完成，保留 {len(filtered_df)}條 新聞")
         else:
@@ -326,7 +326,7 @@ if __name__ == "__main__":
     test_news = pd.DataFrame([
         {
             '新聞標題': '招商銀行發布2024年第三季度業绩報告',
-            '新聞內容': '招商銀行今日發布第三季度財報，净利润同比增長8%，資產质量持续改善...'
+            '新聞內容': '招商銀行今日發布第三季度財報，净利润同比增長8%，資產質量持续改善...'
         },
         {
             '新聞標題': '上證180ETF指數基金（530280）自帶杠铃策略',
@@ -337,8 +337,8 @@ if __name__ == "__main__":
             '新聞內容': '銀行板塊今日表現强势，招商銀行、工商銀行等多只成分股上涨...'
         },
         {
-            '新聞標題': '招商銀行与某科技公司簽署战略合作協议',
-            '新聞內容': '招商銀行宣布与知名科技公司達成战略合作，将在數字化轉型方面深度合作...'
+            '新聞標題': '招商銀行与某科技公司簽署戰略合作協议',
+            '新聞內容': '招商銀行宣布与知名科技公司達成戰略合作，将在數字化轉型方面深度合作...'
         }
     ])
     
@@ -356,5 +356,5 @@ if __name__ == "__main__":
     if not filtered_news.empty:
         print("\n過濾後的新聞:")
         for _, row in filtered_news.iterrows():
-            print(f"- {row['新聞標題']} (综合評分: {row['final_score']:.1f})")
+            print(f"- {row['新聞標題']} (綜合評分: {row['final_score']:.1f})")
             print(f"  規則評分: {row['rule_score']:.1f}, 語義評分: {row['semantic_score']:.1f}, 分類評分: {row['classification_score']:.1f}")

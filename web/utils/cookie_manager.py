@@ -55,7 +55,7 @@ class CookieManager:
                 "created_at": datetime.now().isoformat()
             }
 
-            # 存储到session state（作為备份）
+            # 存储到session state（作為備份）
             st.session_state[f"cookie_{self.cookie_name}"] = state_data
 
             # 使用專業的Cookie管理器設置cookie

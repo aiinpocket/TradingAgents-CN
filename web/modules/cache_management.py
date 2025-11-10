@@ -35,7 +35,7 @@ def main():
         layout="wide"
     )
     
-    # 應用隐藏Deploy按钮的CSS樣式
+    # 應用隱藏Deploy按钮的CSS樣式
     apply_hide_deploy_button_css()
     
     st.title("💾 股票數據緩存管理")
@@ -75,7 +75,7 @@ def main():
             st.success(f"✅ 已清理 {max_age_days} 天前的緩存")
             st.rerun()
     
-    # 主要內容区域
+    # 主要內容區域
     col1, col2 = st.columns([1, 1])
     
     with col1:

@@ -94,7 +94,7 @@ def integrate_news_filtering(original_get_stock_news_em):
                 
             except Exception as filter_error:
                 logger.error(f"[新聞過濾集成] 新聞過濾失败: {filter_error}")
-                logger.error(f"[新聞過濾集成] 返回原始新聞數據作為备用")
+                logger.error(f"[新聞過濾集成] 返回原始新聞數據作為備用")
                 return news_df
                 
         except Exception as fetch_error:
@@ -218,7 +218,7 @@ def create_filtered_realtime_news_function():
                             report += f"🔗 {row.get('新聞鏈接', '無鏈接')}\n\n"
                             report += f"{row.get('新聞內容', '無內容')}\n\n"
                         
-                        logger.info(f"[增强實時新聞] ✅ 成功生成過濾新聞報告，包含 {news_count} 條高质量新聞")
+                        logger.info(f"[增强實時新聞] ✅ 成功生成過濾新聞報告，包含 {news_count} 條高質量新聞")
                         return report
                     else:
                         logger.warning(f"[增强實時新聞] 過濾後無符合條件的新聞，返回原始報告")

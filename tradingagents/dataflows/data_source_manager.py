@@ -333,7 +333,7 @@ class DataSourceManager:
                            })
                 return result
             else:
-                logger.warning(f"⚠️ [數據獲取] 數據质量異常，嘗試降級到其他數據源",
+                logger.warning(f"⚠️ [數據獲取] 數據質量異常，嘗試降級到其他數據源",
                               extra={
                                   'symbol': symbol,
                                   'start_date': start_date,
@@ -345,7 +345,7 @@ class DataSourceManager:
                                   'event_type': 'data_fetch_warning'
                               })
 
-                # 數據质量異常時也嘗試降級到其他數據源
+                # 數據質量異常時也嘗試降級到其他數據源
                 fallback_result = self._try_fallback_sources(symbol, start_date, end_date)
                 if fallback_result and "❌" not in fallback_result and "錯誤" not in fallback_result:
                     logger.info(f"✅ [數據獲取] 降級成功獲取數據")
@@ -542,10 +542,10 @@ class DataSourceManager:
             return 0
 
     def _try_fallback_sources(self, symbol: str, start_date: str, end_date: str) -> str:
-        """嘗試备用數據源 - 避免遞歸調用"""
-        logger.error(f"🔄 {self.current_source.value}失败，嘗試备用數據源...")
+        """嘗試備用數據源 - 避免遞歸調用"""
+        logger.error(f"🔄 {self.current_source.value}失败，嘗試備用數據源...")
 
-        # 备用數據源優先級: AKShare > Tushare > BaoStock
+        # 備用數據源優先級: AKShare > Tushare > BaoStock
         fallback_order = [
             ChinaDataSource.AKSHARE,
             ChinaDataSource.TUSHARE,
@@ -555,7 +555,7 @@ class DataSourceManager:
         for source in fallback_order:
             if source != self.current_source and source in self.available_sources:
                 try:
-                    logger.info(f"🔄 嘗試备用數據源: {source.value}")
+                    logger.info(f"🔄 嘗試備用數據源: {source.value}")
 
                     # 直接調用具體的數據源方法，避免遞歸
                     if source == ChinaDataSource.TUSHARE:
@@ -569,13 +569,13 @@ class DataSourceManager:
                         continue
 
                     if "❌" not in result:
-                        logger.info(f"✅ 备用數據源{source.value}獲取成功")
+                        logger.info(f"✅ 備用數據源{source.value}獲取成功")
                         return result
                     else:
-                        logger.warning(f"⚠️ 备用數據源{source.value}返回錯誤結果")
+                        logger.warning(f"⚠️ 備用數據源{source.value}返回錯誤結果")
 
                 except Exception as e:
-                    logger.error(f"❌ 备用數據源{source.value}也失败: {e}")
+                    logger.error(f"❌ 備用數據源{source.value}也失败: {e}")
                     continue
         
         return f"❌ 所有數據源都無法獲取{symbol}的數據"
@@ -617,8 +617,8 @@ class DataSourceManager:
             return self._try_fallback_stock_info(symbol)
 
     def _try_fallback_stock_info(self, symbol: str) -> Dict:
-        """嘗試使用备用數據源獲取股票基本信息"""
-        logger.info(f"🔄 [股票信息] {self.current_source.value}失败，嘗試备用數據源...")
+        """嘗試使用備用數據源獲取股票基本信息"""
+        logger.info(f"🔄 [股票信息] {self.current_source.value}失败，嘗試備用數據源...")
 
         # 獲取所有可用數據源
         available_sources = self.available_sources.copy()
@@ -627,11 +627,11 @@ class DataSourceManager:
         if self.current_source.value in available_sources:
             available_sources.remove(self.current_source.value)
 
-        # 嘗試所有备用數據源
+        # 嘗試所有備用數據源
         for source_name in available_sources:
             try:
                 source = ChinaDataSource(source_name)
-                logger.info(f"🔄 [股票信息] 嘗試备用數據源: {source_name}")
+                logger.info(f"🔄 [股票信息] 嘗試備用數據源: {source_name}")
 
                 # 根據數據源類型獲取股票信息
                 if source == ChinaDataSource.TUSHARE:
@@ -657,13 +657,13 @@ class DataSourceManager:
 
                 # 檢查是否獲取到有效信息
                 if result.get('name') and result['name'] != f'股票{symbol}':
-                    logger.info(f"✅ [股票信息] 备用數據源{source_name}成功獲取{symbol}信息")
+                    logger.info(f"✅ [股票信息] 備用數據源{source_name}成功獲取{symbol}信息")
                     return result
                 else:
-                    logger.warning(f"⚠️ [股票信息] 备用數據源{source_name}返回無效信息")
+                    logger.warning(f"⚠️ [股票信息] 備用數據源{source_name}返回無效信息")
 
             except Exception as e:
-                logger.error(f"❌ [股票信息] 备用數據源{source_name}失败: {e}")
+                logger.error(f"❌ [股票信息] 備用數據源{source_name}失败: {e}")
                 continue
 
         # 所有數據源都失败，返回默認值
@@ -796,7 +796,7 @@ def get_data_source_manager() -> DataSourceManager:
 def get_china_stock_data_unified(symbol: str, start_date: str, end_date: str) -> str:
     """
     統一的中國股票數據獲取接口
-    自動使用配置的數據源，支持备用數據源
+    自動使用配置的數據源，支持備用數據源
 
     Args:
         symbol: 股票代碼

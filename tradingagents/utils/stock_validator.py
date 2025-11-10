@@ -171,7 +171,7 @@ class StockDataPreparer:
         return "未知"
 
     def _get_hk_network_limitation_suggestion(self) -> str:
-        """獲取港股網絡限制的詳細建议"""
+        """獲取港股網絡限制的詳細建議"""
         suggestions = [
             "🌐 港股數據獲取受到網絡API限制，這是常见的臨時問題",
             "",
@@ -187,7 +187,7 @@ class StockDataPreparer:
             "• 美团：3690.HK",
             "• 小米集团：1810.HK",
             "",
-            "⏰ 建议稍後重試，或聯系技術支持獲取幫助"
+            "⏰ 建議稍後重試，或聯系技術支持獲取幫助"
         ]
         return "\n".join(suggestions)
 
@@ -746,7 +746,7 @@ def get_stock_preparation_message(stock_code: str, market_type: str = "auto",
     if result.is_valid:
         return f"✅ 數據準备成功: {result.stock_code} ({result.market_type}) - {result.stock_name}\n📊 {result.cache_status}"
     else:
-        return f"❌ 數據準备失败: {result.error_message}\n💡 建议: {result.suggestion}"
+        return f"❌ 數據準备失败: {result.error_message}\n💡 建議: {result.suggestion}"
 
 
 # 保持向後兼容的別名

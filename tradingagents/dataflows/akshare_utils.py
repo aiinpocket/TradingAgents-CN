@@ -258,7 +258,7 @@ class AKShareProvider:
 
             if thread.is_alive():
                 # 超時了
-                logger.warning(f"⚠️ AKShare港股信息獲取超時（60秒），使用备用方案")
+                logger.warning(f"⚠️ AKShare港股信息獲取超時（60秒），使用備用方案")
                 raise Exception("AKShare港股信息獲取超時（60秒）")
             elif exception[0]:
                 # 有異常
@@ -393,7 +393,7 @@ class AKShareProvider:
             except Exception as e:
                 logger.debug(f"❌ 獲取{symbol}現金流量表失败: {e}")
             
-            # 記錄最终結果
+            # 記錄最終結果
             if financial_data:
                 logger.info(f"✅ AKShare財務數據獲取完成: {symbol}, 包含{len(financial_data)}個數據集")
                 for key, value in financial_data.items():

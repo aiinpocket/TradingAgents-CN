@@ -118,7 +118,7 @@ class MongoDBReportManager:
             timestamp = datetime.now()
             analysis_id = f"{stock_symbol}_{timestamp.strftime('%Y%m%d_%H%M%S')}"
 
-            # 構建文档
+            # 構建文檔
             document = {
                 "analysis_id": analysis_id,
                 "stock_symbol": stock_symbol,
@@ -140,7 +140,7 @@ class MongoDBReportManager:
                 "updated_at": timestamp
             }
             
-            # 插入文档
+            # 插入文檔
             result = self.collection.insert_one(document)
             
             if result.inserted_id:
@@ -189,7 +189,7 @@ class MongoDBReportManager:
                     # 已經是時間戳
                     timestamp = float(timestamp_value)
                 else:
-                    # 其他情况，使用當前時間
+                    # 其他情況，使用當前時間
                     from datetime import datetime
                     timestamp = datetime.now().timestamp()
                 
@@ -297,7 +297,7 @@ class MongoDBReportManager:
             return False
 
         try:
-            # 查找缺少reports字段或reports字段為空的文档
+            # 查找缺少reports字段或reports字段為空的文檔
             query = {
                 "$or": [
                     {"reports": {"$exists": False}},
@@ -318,7 +318,7 @@ class MongoDBReportManager:
             fixed_count = 0
             for doc in inconsistent_docs:
                 try:
-                    # 為缺少reports字段的文档添加空的reports字段
+                    # 為缺少reports字段的文檔添加空的reports字段
                     update_data = {
                         "$set": {
                             "reports": {},

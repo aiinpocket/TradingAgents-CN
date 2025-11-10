@@ -1,11 +1,11 @@
 """
-页面头部組件
+页面頭部組件
 """
 
 import streamlit as st
 
 def render_header():
-    """渲染页面头部"""
+    """渲染页面頭部"""
     
     # 主標題
     st.markdown("""
@@ -45,8 +45,8 @@ def render_header():
     with col4:
         st.markdown("""
         <div class="metric-card">
-            <h4>🎯 專業建议</h4>
-            <p>基於AI的投資決策建议</p>
+            <h4>🎯 專業建議</h4>
+            <p>基於AI的投資決策建議</p>
         </div>
         """, unsafe_allow_html=True)
     

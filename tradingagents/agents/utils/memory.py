@@ -60,7 +60,7 @@ class ChromaDBManager:
                 self._initialized = True
             except Exception as e:
                 logger.error(f"❌ [ChromaDB] 初始化失败: {e}")
-                # 使用最簡單的配置作為备用
+                # 使用最簡單的配置作為備用
                 try:
                     settings = Settings(
                         allow_reset=True,
@@ -68,9 +68,9 @@ class ChromaDBManager:
                         is_persistent=False
                     )
                     self._client = chromadb.Client(settings)
-                    logger.info(f"📚 [ChromaDB] 使用备用配置初始化完成")
+                    logger.info(f"📚 [ChromaDB] 使用備用配置初始化完成")
                 except Exception as backup_error:
-                    # 最後的备用方案
+                    # 最後的備用方案
                     self._client = chromadb.Client()
                     logger.warning(f"⚠️ [ChromaDB] 使用最簡配置初始化: {backup_error}")
                 self._initialized = True
@@ -174,7 +174,7 @@ class FinancialSituationMemory:
         front_part = text[:max_length//2]
         back_part = text[-(max_length//2-100):]  # 留100字符給連接符
         truncated = front_part + "\n...[內容截斷]...\n" + back_part
-        logger.warning(f"⚠️ 强制截斷：保留首尾關键信息，{len(text)}字符截斷為{len(truncated)}字符")
+        logger.warning(f"⚠️ 強制截斷：保留首尾關键信息，{len(text)}字符截斷為{len(truncated)}字符")
         return truncated, True
 
     def get_embedding(self, text):
@@ -282,7 +282,7 @@ class FinancialSituationMemory:
                             return [0.0] * 1024
                     else:
                         logger.error(f"❌ DashScope API錯誤: {error_msg}")
-                        return [0.0] * 1024  # 返回空向量而不是抛出異常
+                        return [0.0] * 1024  # 返回空向量而不是拋出異常
 
             except Exception as e:
                 error_str = str(e).lower()
@@ -411,7 +411,7 @@ class FinancialSituationMemory:
     def get_memories(self, current_situation, n_matches=1):
         """Find matching recommendations using embeddings with smart truncation handling"""
         
-        # 獲取當前情况的embedding
+        # 獲取當前情況的embedding
         query_embedding = self.get_embedding(current_situation)
         
         # 檢查是否為空向量（記忆功能被禁用或出錯）
@@ -425,7 +425,7 @@ class FinancialSituationMemory:
             logger.debug(f"📭 記忆庫為空，返回空結果")
             return []
         
-        # 調整查詢數量，不能超過集合中的文档數量
+        # 調整查詢數量，不能超過集合中的文檔數量
         actual_n_matches = min(n_matches, collection_count)
         
         try:

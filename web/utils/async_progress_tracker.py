@@ -79,7 +79,7 @@ class AsyncProgressTracker:
         self.llm_provider = llm_provider
         self.start_time = time.time()
         
-        # 生成分析步骤
+        # 生成分析步驟
         self.analysis_steps = self._generate_dynamic_steps()
         self.estimated_duration = self._estimate_total_duration()
         
@@ -188,7 +188,7 @@ class AsyncProgressTracker:
             return False
     
     def _generate_dynamic_steps(self) -> List[Dict]:
-        """根據分析師數量和研究深度動態生成分析步骤"""
+        """根據分析師數量和研究深度動態生成分析步驟"""
         steps = [
             {"name": "📋 準备階段", "description": "驗證股票代碼，檢查數據源可用性", "weight": 0.05},
             {"name": "🔧 環境檢查", "description": "檢查API密鑰配置，確保數據獲取正常", "weight": 0.02},
@@ -197,7 +197,7 @@ class AsyncProgressTracker:
             {"name": "🚀 啟動引擎", "description": "初始化AI分析引擎，準备開始分析", "weight": 0.05},
         ]
 
-        # 為每個分析師添加專門的步骤
+        # 為每個分析師添加專門的步驟
         analyst_base_weight = 0.6 / len(self.analysts)  # 60%的時間用於分析師工作
         for analyst in self.analysts:
             analyst_info = self._get_analyst_step_info(analyst)
@@ -207,17 +207,17 @@ class AsyncProgressTracker:
                 "weight": analyst_base_weight
             })
 
-        # 根據研究深度添加後续步骤
+        # 根據研究深度添加後续步驟
         if self.research_depth >= 2:
             # 標準和深度分析包含研究員辩論
             steps.extend([
                 {"name": "📈 多头觀點", "description": "從乐觀角度分析投資機會和上涨潜力", "weight": 0.06},
-                {"name": "📉 空头觀點", "description": "從谨慎角度分析投資風險和下跌可能", "weight": 0.06},
-                {"name": "🤝 觀點整合", "description": "综合多空觀點，形成平衡的投資建议", "weight": 0.05},
+                {"name": "📉 空头觀點", "description": "從謹慎角度分析投資風險和下跌可能", "weight": 0.06},
+                {"name": "🤝 觀點整合", "description": "綜合多空觀點，形成平衡的投資建議", "weight": 0.05},
             ])
 
         # 所有深度都包含交易決策
-        steps.append({"name": "💡 投資建议", "description": "基於分析結果制定具體的买卖建议", "weight": 0.06})
+        steps.append({"name": "💡 投資建議", "description": "基於分析結果制定具體的买卖建議", "weight": 0.06})
 
         if self.research_depth >= 3:
             # 深度分析包含詳細風險評估
@@ -231,8 +231,8 @@ class AsyncProgressTracker:
             # 快速和標準分析的簡化風險評估
             steps.append({"name": "⚠️ 風險提示", "description": "识別主要投資風險並提供風險提示", "weight": 0.05})
 
-        # 最後的整理步骤
-        steps.append({"name": "📊 生成報告", "description": "整理所有分析結果，生成最终投資報告", "weight": 0.04})
+        # 最後的整理步驟
+        steps.append({"name": "📊 生成報告", "description": "整理所有分析結果，生成最終投資報告", "weight": 0.04})
 
         # 重新平衡權重，確保总和為1.0
         total_weight = sum(step["weight"] for step in steps)
@@ -253,7 +253,7 @@ class AsyncProgressTracker:
         return name_map.get(analyst, f'{analyst}分析師')
 
     def _get_analyst_step_info(self, analyst: str) -> Dict[str, str]:
-        """獲取分析師步骤信息（名稱和描述）"""
+        """獲取分析師步驟信息（名稱和描述）"""
         analyst_info = {
             'market': {
                 "name": "📊 市場分析",
@@ -326,19 +326,19 @@ class AsyncProgressTracker:
         current_time = time.time()
         elapsed_time = current_time - self.start_time
 
-        # 自動檢測步骤
+        # 自動檢測步驟
         if step is None:
             step = self._detect_step_from_message(message)
 
-        # 更新步骤（防止倒退）
+        # 更新步驟（防止倒退）
         if step is not None and step >= self.current_step:
             self.current_step = step
-            logger.debug(f"📊 [異步進度] 步骤推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
+            logger.debug(f"📊 [異步進度] 步驟推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
 
         # 如果是完成消息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "✅ 分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
-            logger.info(f"📊 [異步進度] 分析完成，設置為最终步骤")
+            logger.info(f"📊 [異步進度] 分析完成，設置為最終步驟")
 
         # 計算進度
         progress_percentage = self._calculate_weighted_progress() * 100
@@ -347,7 +347,7 @@ class AsyncProgressTracker:
         # 更新進度數據
         current_step_info = self.analysis_steps[self.current_step] if self.current_step < len(self.analysis_steps) else self.analysis_steps[-1]
 
-        # 特殊處理工具調用消息，更新步骤描述但不改變步骤
+        # 特殊處理工具調用消息，更新步驟描述但不改變步驟
         step_description = current_step_info['description']
         if "工具調用" in message:
             # 提取工具名稱並更新描述
@@ -384,10 +384,10 @@ class AsyncProgressTracker:
         # 詳細的更新日誌
         step_name = current_step_info.get('name', '未知')
         logger.info(f"📊 [進度更新] {self.analysis_id}: {message[:50]}...")
-        logger.debug(f"📊 [進度詳情] 步骤{self.current_step + 1}/{len(self.analysis_steps)} ({step_name}), 進度{progress_percentage:.1f}%, 耗時{elapsed_time:.1f}s")
+        logger.debug(f"📊 [進度詳情] 步驟{self.current_step + 1}/{len(self.analysis_steps)} ({step_name}), 進度{progress_percentage:.1f}%, 耗時{elapsed_time:.1f}s")
     
     def _detect_step_from_message(self, message: str) -> Optional[int]:
-        """根據消息內容智能檢測當前步骤"""
+        """根據消息內容智能檢測當前步驟"""
         message_lower = message.lower()
 
         # 開始分析階段 - 只匹配最初的開始消息
@@ -408,9 +408,9 @@ class AsyncProgressTracker:
         # 引擎初始化階段
         elif "初始化" in message or "引擎" in message:
             return 4
-        # 模塊開始日誌 - 只在第一次開始時推進步骤
+        # 模塊開始日誌 - 只在第一次開始時推進步驟
         elif "模塊開始" in message:
-            # 從日誌中提取分析師類型，匹配新的步骤名稱
+            # 從日誌中提取分析師類型，匹配新的步驟名稱
             if "market_analyst" in message or "market" in message:
                 return self._find_step_by_keyword(["市場分析", "市場"])
             elif "fundamentals_analyst" in message or "fundamentals" in message:
@@ -432,27 +432,27 @@ class AsyncProgressTracker:
             elif "research_manager" in message:
                 return self._find_step_by_keyword(["觀點整合", "整合"])
             elif "trader" in message:
-                return self._find_step_by_keyword(["投資建议", "建议"])
+                return self._find_step_by_keyword(["投資建議", "建議"])
             elif "risk_manager" in message:
                 return self._find_step_by_keyword(["風險控制", "控制"])
             elif "graph_signal_processing" in message or "signal" in message:
                 return self._find_step_by_keyword(["生成報告", "報告"])
-        # 工具調用日誌 - 不推進步骤，只更新描述
+        # 工具調用日誌 - 不推進步驟，只更新描述
         elif "工具調用" in message:
-            # 保持當前步骤，不推進
+            # 保持當前步驟，不推進
             return None
         # 模塊完成日誌 - 推進到下一步
         elif "模塊完成" in message:
-            # 模塊完成時，從當前步骤推進到下一步
+            # 模塊完成時，從當前步驟推進到下一步
             # 不再依賴模塊名稱，而是基於當前進度推進
             next_step = min(self.current_step + 1, len(self.analysis_steps) - 1)
-            logger.debug(f"📊 [步骤推進] 模塊完成，從步骤{self.current_step}推進到步骤{next_step}")
+            logger.debug(f"📊 [步驟推進] 模塊完成，從步驟{self.current_step}推進到步驟{next_step}")
             return next_step
 
         return None
 
     def _find_step_by_keyword(self, keywords) -> Optional[int]:
-        """根據關键詞查找步骤索引"""
+        """根據關键詞查找步驟索引"""
         if isinstance(keywords, str):
             keywords = [keywords]
 
@@ -463,14 +463,14 @@ class AsyncProgressTracker:
         return None
 
     def _get_next_step(self, keyword: str) -> Optional[int]:
-        """獲取指定步骤的下一步"""
+        """獲取指定步驟的下一步"""
         current_step_index = self._find_step_by_keyword(keyword)
         if current_step_index is not None:
             return min(current_step_index + 1, len(self.analysis_steps) - 1)
         return None
 
     def _calculate_weighted_progress(self) -> float:
-        """根據步骤權重計算進度"""
+        """根據步驟權重計算進度"""
         if self.current_step >= len(self.analysis_steps):
             return 1.0
 
@@ -527,7 +527,7 @@ class AsyncProgressTracker:
 
         except Exception as e:
             logger.error(f"📊 [異步進度] 保存失败: {e}")
-            # 嘗試备用存储方式
+            # 嘗試備用存储方式
             try:
                 if self.use_redis:
                     # Redis失败，嘗試文件存储
@@ -537,7 +537,7 @@ class AsyncProgressTracker:
                     safe_data = safe_serialize(self.progress_data)
                     with open(backup_file, 'w', encoding='utf-8') as f:
                         json.dump(safe_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"📊 [备用存储] 文件保存成功: {backup_file}")
+                    logger.info(f"📊 [備用存储] 文件保存成功: {backup_file}")
                 else:
                     # 文件存储失败，嘗試簡化數據
                     logger.warning(f"📊 [異步進度] 文件保存失败，嘗試簡化數據")
@@ -551,9 +551,9 @@ class AsyncProgressTracker:
                     backup_file = f"./data/progress_{self.analysis_id}.json"
                     with open(backup_file, 'w', encoding='utf-8') as f:
                         json.dump(simplified_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"📊 [备用存储] 簡化數據保存成功: {backup_file}")
+                    logger.info(f"📊 [備用存储] 簡化數據保存成功: {backup_file}")
             except Exception as backup_e:
-                logger.error(f"📊 [異步進度] 备用存储也失败: {backup_e}")
+                logger.error(f"📊 [異步進度] 備用存储也失败: {backup_e}")
     
     def get_progress(self) -> Dict[str, Any]:
         """獲取當前進度"""

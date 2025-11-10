@@ -40,7 +40,7 @@ def safe_timestamp_to_datetime(timestamp_value):
             # 時間戳無效，使用當前時間
             return datetime.now()
     else:
-        # 其他情况，使用當前時間
+        # 其他情況，使用當前時間
         return datetime.now()
 
 def get_analysis_results_dir():
@@ -168,7 +168,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
     # 只有在MongoDB加載失败或不可用時才從文件系統加載
     if not mongodb_loaded:
-        print("🔄 [备用數據源] 從文件系統加載分析結果")
+        print("🔄 [備用數據源] 從文件系統加載分析結果")
 
         # 首先嘗試從Web界面的保存位置讀取
         web_results_dir = get_analysis_results_dir()
@@ -222,7 +222,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                                 report_name = report_file.stem
                                 reports[report_name] = content
 
-                                # 如果是最终決策報告，提取摘要
+                                # 如果是最終決策報告，提取摘要
                                 if report_name == "final_trade_decision":
                                     # 提取前200個字符作為摘要
                                     summary_content = content[:200].replace('#', '').replace('*', '').strip()
@@ -255,13 +255,13 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                                     research_depth = metadata.get('research_depth', 1)
                                     analysts = metadata.get('analysts', analysts)
                             except Exception as e:
-                                # 如果讀取元數據失败，使用推斷逻辑
+                                # 如果讀取元數據失败，使用推斷邏輯
                                 if len(reports) >= 5:
                                     research_depth = 3
                                 elif len(reports) >= 3:
                                     research_depth = 2
                         else:
-                            # 如果没有元數據文件，使用推斷逻辑
+                            # 如果没有元數據文件，使用推斷邏輯
                             if len(reports) >= 5:
                                 research_depth = 3
                             elif len(reports) >= 3:
@@ -284,7 +284,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                         all_results.append(result)
 
-        print(f"🔄 [备用數據源] 從文件系統加載了 {len(all_results)} 個分析結果")
+        print(f"🔄 [備用數據源] 從文件系統加載了 {len(all_results)} 個分析結果")
     
     # 過濾結果
     filtered_results = []
@@ -516,7 +516,7 @@ def render_results_cards(results: List[Dict[str, Any]]):
         analysis_id = result.get('analysis_id', '')
         
         with st.container():
-            # 卡片头部
+            # 卡片頭部
             col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
             
             with col1:
@@ -1131,8 +1131,8 @@ def render_results_comparison(results: List[Dict[str, Any]]):
         ('sentiment_report', '💭 市場情绪分析'),
         ('news_report', '📰 新聞事件分析'),
         ('risk_assessment', '⚠️ 風險評估'),
-        ('investment_plan', '📋 投資建议'),
-        ('final_trade_decision', '🎯 最终交易決策')
+        ('investment_plan', '📋 投資建議'),
+        ('final_trade_decision', '🎯 最終交易決策')
     ]
     
     # 創建對比標簽页
@@ -1260,7 +1260,7 @@ def render_detailed_analysis_content(selected_result):
 
         # 為報告名稱添加中文標題和圖標
         report_display_names = {
-            'final_trade_decision': '🎯 最终交易決策',
+            'final_trade_decision': '🎯 最終交易決策',
             'fundamentals_report': '💰 基本面分析',
             'technical_report': '📈 技術面分析',
             'market_sentiment_report': '💭 市場情绪分析',
@@ -1337,7 +1337,7 @@ def render_detailed_analysis_content(selected_result):
         transform: translateY(-2px);
     }
 
-    /* 標簽页內容区域 */
+    /* 標簽页內容區域 */
     .stTabs [data-baseweb="tab-panel"] {
         padding: 20px;
         background-color: #ffffff;
@@ -1395,15 +1395,15 @@ def render_detailed_analysis_content(selected_result):
         },
         {
             'key': 'investment_plan',
-            'title': '📋 投資建议',
+            'title': '📋 投資建議',
             'icon': '📋',
-            'description': '具體投資策略、仓位管理建议'
+            'description': '具體投資策略、仓位管理建議'
         },
         {
             'key': 'investment_debate_state',
             'title': '🔬 研究团隊決策',
             'icon': '🔬',
-            'description': '多头/空头研究員辩論分析，研究經理综合決策'
+            'description': '多头/空头研究員辩論分析，研究經理綜合決策'
         },
         {
             'key': 'trader_investment_plan',
@@ -1415,13 +1415,13 @@ def render_detailed_analysis_content(selected_result):
             'key': 'risk_debate_state',
             'title': '⚖️ 風險管理团隊',
             'icon': '⚖️',
-            'description': '激進/保守/中性分析師風險評估，投資組合經理最终決策'
+            'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'
         },
         {
             'key': 'final_trade_decision',
-            'title': '🎯 最终交易決策',
+            'title': '🎯 最終交易決策',
             'icon': '🎯',
-            'description': '综合所有团隊分析後的最终投資決策'
+            'description': '綜合所有团隊分析後的最終投資決策'
         }
     ]
     
@@ -1531,7 +1531,7 @@ def render_detailed_analysis_content(selected_result):
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
         with tab:
-            # 在內容区域顯示圖標和描述
+            # 在內容區域顯示圖標和描述
             st.markdown(f"## {module['icon']} {module['title']}")
             st.markdown(f"*{module['description']}*")
             st.markdown("---")
@@ -1717,8 +1717,8 @@ def show_expanded_detail(result):
                         ('sentiment_report', '💭 情感分析'),
                         ('news_report', '📰 新聞分析'),
                         ('risk_assessment', '⚠️ 風險評估'),
-                        ('investment_plan', '📋 投資建议'),
-                        ('final_trade_decision', '🎯 最终決策')
+                        ('investment_plan', '📋 投資建議'),
+                        ('final_trade_decision', '🎯 最終決策')
                     ]
 
                     available_reports = []
@@ -1755,7 +1755,7 @@ def show_expanded_detail(result):
 
         # 為報告名稱添加中文標題和圖標
         report_display_names = {
-            'final_trade_decision': '🎯 最终交易決策',
+            'final_trade_decision': '🎯 最終交易決策',
             'fundamentals_report': '💰 基本面分析',
             'technical_report': '📈 技術面分析',
             'market_sentiment_report': '💭 市場情绪分析',

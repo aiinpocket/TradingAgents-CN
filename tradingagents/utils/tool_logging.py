@@ -106,7 +106,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                     exc_info=True
                 )
                 
-                # 重新抛出異常
+                # 重新拋出異常
                 raise
         
         return wrapper
@@ -260,7 +260,7 @@ def log_llm_call(provider: str, model: str):
 # 便捷函數
 def log_tool_usage(tool_name: str, symbol: str = None, **extra_data):
     """
-    記錄工具使用情况的便捷函數
+    記錄工具使用情況的便捷函數
     
     Args:
         tool_name: 工具名稱
@@ -282,10 +282,10 @@ def log_tool_usage(tool_name: str, symbol: str = None, **extra_data):
 
 def log_analysis_step(step_name: str, symbol: str, **extra_data):
     """
-    記錄分析步骤的便捷函數
+    記錄分析步驟的便捷函數
 
     Args:
-        step_name: 步骤名稱
+        step_name: 步驟名稱
         symbol: 股票代碼
         **extra_data: 額外的數據
     """
@@ -297,7 +297,7 @@ def log_analysis_step(step_name: str, symbol: str, **extra_data):
         **extra_data
     }
 
-    tool_logger.info(f"📈 [分析步骤] {step_name} - {symbol}", extra=extra)
+    tool_logger.info(f"📈 [分析步驟] {step_name} - {symbol}", extra=extra)
 
 
 def log_analysis_module(module_name: str, session_id: str = None):
@@ -324,7 +324,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
                     symbol = str(kwargs['stock_symbol']) if kwargs['stock_symbol'] else None
             else:
                 if args:
-                    # 檢查第一個參數是否是state字典（分析師節點的情况）
+                    # 檢查第一個參數是否是state字典（分析師節點的情況）
                     first_arg = args[0]
                     if isinstance(first_arg, dict) and 'company_of_interest' in first_arg:
                         symbol = str(first_arg['company_of_interest'])
@@ -386,7 +386,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
                     function_name=func.__name__
                 )
 
-                # 重新抛出異常
+                # 重新拋出異常
                 raise
 
         return wrapper

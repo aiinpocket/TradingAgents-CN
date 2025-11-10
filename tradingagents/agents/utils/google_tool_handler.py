@@ -5,7 +5,7 @@
 Google模型工具調用統一處理器
 
 解決Google模型在工具調用時result.content為空的問題，
-提供統一的工具調用處理逻辑供所有分析師使用。
+提供統一的工具調用處理邏輯供所有分析師使用。
 """
 
 import logging
@@ -101,7 +101,7 @@ class GoogleToolCallHandler:
             
             # 檢查內容是否包含分析報告的特征
             is_analysis_report = False
-            analysis_keywords = ["分析", "報告", "总結", "評估", "建议", "風險", "趋势", "市場", "股票", "投資"]
+            analysis_keywords = ["分析", "報告", "总結", "評估", "建議", "風險", "趋势", "市場", "股票", "投資"]
             
             if content:
                 # 檢查內容長度和關键詞
@@ -224,8 +224,8 @@ class GoogleToolCallHandler:
             
             logger.info(f"[{analyst_name}] 🔧 工具調用完成，成功: {len(tool_results)}, 总計: {len(result.tool_calls)}")
             
-            # 第二次調用模型生成最终分析報告
-            logger.info(f"[{analyst_name}] 🚀 基於工具結果生成最终分析報告...")
+            # 第二次調用模型生成最終分析報告
+            logger.info(f"[{analyst_name}] 🚀 基於工具結果生成最終分析報告...")
             
             # 安全地構建消息序列，確保所有消息都是有效的LangChain消息類型
             safe_messages = []
@@ -290,7 +290,7 @@ class GoogleToolCallHandler:
                 safe_messages = optimized_messages
                 logger.info(f"[{analyst_name}] ✅ 消息序列優化完成，新長度: {sum(len(str(msg.content)) for msg in safe_messages)} 字符")
             
-            logger.info(f"[{analyst_name}] 📊 最终消息序列: {len(safe_messages)} 條消息")
+            logger.info(f"[{analyst_name}] 📊 最終消息序列: {len(safe_messages)} 條消息")
             
             # 檢查消息序列是否為空
             if not safe_messages:
@@ -299,9 +299,9 @@ class GoogleToolCallHandler:
                 report = f"{analyst_name}工具調用完成，獲得以下數據：\n\n{tool_summary}"
                 return report, [result] + tool_messages
             
-            # 生成最终分析報告
+            # 生成最終分析報告
             try:
-                logger.info(f"[{analyst_name}] 🔄 開始調用Google模型生成最终分析報告...")
+                logger.info(f"[{analyst_name}] 🔄 開始調用Google模型生成最終分析報告...")
                 logger.debug(f"[{analyst_name}] 📋 LLM類型: {llm.__class__.__name__}")
                 logger.debug(f"[{analyst_name}] 📋 消息數量: {len(safe_messages)}")
                 
@@ -337,7 +337,7 @@ class GoogleToolCallHandler:
                         logger.debug(f"[{analyst_name}] 🔍 內容預覽: {content_preview}")
                         
                         report = content
-                        logger.info(f"[{analyst_name}] ✅ Google模型最终分析報告生成成功，長度: {len(report)} 字符")
+                        logger.info(f"[{analyst_name}] ✅ Google模型最終分析報告生成成功，長度: {len(report)} 字符")
                         
                         # 返回完整的消息序列
                         all_messages = [result] + tool_messages + [final_result]
@@ -350,7 +350,7 @@ class GoogleToolCallHandler:
                     logger.debug(f"[{analyst_name}] 🔍 可用屬性: {[attr for attr in dir(final_result) if not attr.startswith('_')]}")
                 
                 # 如果到這里，說明內容為空或没有content屬性
-                logger.warning(f"[{analyst_name}] ⚠️ Google模型最终分析報告生成失败 - 內容為空")
+                logger.warning(f"[{analyst_name}] ⚠️ Google模型最終分析報告生成失败 - 內容為空")
                 # 降級處理：基於工具結果生成簡單報告
                 tool_summary = "\n\n".join([f"工具結果 {i+1}:\n{str(result)}" for i, result in enumerate(tool_results)])
                 report = f"{analyst_name}工具調用完成，獲得以下數據：\n\n{tool_summary}"
@@ -358,7 +358,7 @@ class GoogleToolCallHandler:
                 return report, [result] + tool_messages
                 
             except Exception as final_error:
-                logger.error(f"[{analyst_name}] ❌ 最终分析報告生成失败: {final_error}")
+                logger.error(f"[{analyst_name}] ❌ 最終分析報告生成失败: {final_error}")
                 logger.error(f"[{analyst_name}] ❌ 異常類型: {type(final_error).__name__}")
                 logger.error(f"[{analyst_name}] ❌ 異常詳情: {str(final_error)}")
                 
@@ -528,7 +528,7 @@ class GoogleToolCallHandler:
     @staticmethod
     def generate_final_analysis_report(llm, messages: List, analyst_name: str) -> str:
         """
-        生成最终分析報告 - 增强版，支持重試和模型切換
+        生成最終分析報告 - 增强版，支持重試和模型切換
         
         Args:
             llm: LLM實例
@@ -548,7 +548,7 @@ class GoogleToolCallHandler:
         
         for attempt in range(max_retries):
             try:
-                logger.debug(f"🔍 [{analyst_name}] ===== 最终分析報告生成開始 (嘗試 {attempt + 1}/{max_retries}) =====")
+                logger.debug(f"🔍 [{analyst_name}] ===== 最終分析報告生成開始 (嘗試 {attempt + 1}/{max_retries}) =====")
                 logger.debug(f"🔍 [{analyst_name}] LLM類型: {type(llm).__name__}")
                 logger.debug(f"🔍 [{analyst_name}] LLM模型: {getattr(llm, 'model', 'unknown')}")
                 logger.debug(f"🔍 [{analyst_name}] 消息數量: {len(messages)}")
@@ -568,17 +568,17 @@ class GoogleToolCallHandler:
                     基於以上工具調用的結果，請為{analyst_name}生成一份詳細的分析報告。
                     
                     要求：
-                    1. 综合分析所有工具返回的數據
-                    2. 提供清晰的投資建议和風險評估
+                    1. 綜合分析所有工具返回的數據
+                    2. 提供清晰的投資建議和風險評估
                     3. 報告應该結構化且易於理解
-                    4. 包含具體的數據支撑和分析逻辑
+                    4. 包含具體的數據支撑和分析邏輯
                     
                     請生成完整的分析報告：
                     """
                 elif attempt == 1:
                     analysis_prompt = f"""
-                    請簡要分析{analyst_name}的工具調用結果並提供投資建议。
-                    要求：簡潔明了，包含關键數據和建议。
+                    請簡要分析{analyst_name}的工具調用結果並提供投資建議。
+                    要求：簡潔明了，包含關键數據和建議。
                     """
                 else:
                     analysis_prompt = f"""
@@ -617,7 +617,7 @@ class GoogleToolCallHandler:
                             time.sleep(retry_delay)
                             continue
                         else:
-                            logger.warning(f"[{analyst_name}] ⚠️ Google模型最终分析報告生成失败 - 所有重試均返回空內容")
+                            logger.warning(f"[{analyst_name}] ⚠️ Google模型最終分析報告生成失败 - 所有重試均返回空內容")
                             # 使用降級報告
                             fallback_report = GoogleToolCallHandler._generate_fallback_report(messages, analyst_name)
                             logger.info(f"[{analyst_name}] 🔄 使用降級報告，長度: {len(fallback_report)} 字符")
@@ -737,7 +737,7 @@ class GoogleToolCallHandler:
             tool_summary = "\n\n".join([f"工具結果 {i+1}:\n{result}" for i, result in enumerate(tool_results)])
             report = f"{analyst_name}工具調用完成，獲得以下數據：\n\n{tool_summary}\n\n註：由於模型響應異常，此為基於工具數據的簡化報告。"
         else:
-            report = f"{analyst_name}分析完成，但未能獲取到有效的工具數據。建议檢查數據源或重新嘗試分析。"
+            report = f"{analyst_name}分析完成，但未能獲取到有效的工具數據。建議檢查數據源或重新嘗試分析。"
         
         return report
     
@@ -770,7 +770,7 @@ class GoogleToolCallHandler:
 **分析要求：**
 1. 報告必须基於工具返回的真實數據進行分析
 2. 包含具體的數值和專業分析
-3. 提供明確的投資建议和風險提示
+3. 提供明確的投資建議和風險提示
 4. 報告長度不少於800字
 5. 使用中文撰寫
 6. 確保在分析中正確使用公司名稱"{company_name}"和股票代碼"{ticker}"

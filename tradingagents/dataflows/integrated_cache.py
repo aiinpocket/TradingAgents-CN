@@ -31,7 +31,7 @@ class IntegratedCacheManager:
     def __init__(self, cache_dir: str = None):
         self.logger = setup_dataflow_logging()
         
-        # 初始化原有緩存系統（作為备用）
+        # 初始化原有緩存系統（作為備用）
         self.legacy_cache = StockDataCache(cache_dir)
         
         # 嘗試初始化自適應緩存系統

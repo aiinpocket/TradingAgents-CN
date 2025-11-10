@@ -84,7 +84,7 @@ def extract_risk_assessment(state):
 ### 🟢 保守風險分析師觀點
 {safe_analysis if safe_analysis else '暂無保守風險分析'}
 
-### 🏛️ 風險管理委員會最终決议
+### 🏛️ 風險管理委員會最終決议
 {judge_decision if judge_decision else '暂無風險管理決议'}
 
 ---
@@ -149,7 +149,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 數據預獲取成功
         success_msg = f"✅ 數據準备完成: {preparation_result.stock_name} ({preparation_result.market_type})"
-        update_progress(success_msg)  # 使用智能檢測，不再硬編碼步骤
+        update_progress(success_msg)  # 使用智能檢測，不再硬編碼步驟
         logger.info(f"[{session_id}] {success_msg}")
         logger.info(f"[{session_id}] 緩存狀態: {preparation_result.cache_status}")
 
@@ -226,7 +226,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if research_depth == 1:  # 1級 - 快速分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
-            # 保持內存功能啟用，因為內存操作開銷很小但能顯著提升分析质量
+            # 保持內存功能啟用，因為內存操作開銷很小但能顯著提升分析質量
             config["memory_enabled"] = True
 
             # 統一使用在線工具，避免離線工具的各種問題
@@ -268,7 +268,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             elif research_depth == 3:  # 標準分析 - 平衡性能
                 config["quick_think_llm"] = "gemini-1.5-pro"  # 2.25s
                 config["deep_think_llm"] = "gemini-2.5-flash"  # 2.73s
-            elif research_depth == 4:  # 深度分析 - 使用强大模型
+            elif research_depth == 4:  # 深度分析 - 使用強大模型
                 config["quick_think_llm"] = "gemini-2.5-flash"  # 2.73s
                 config["deep_think_llm"] = "gemini-2.5-pro"  # 16.68s
             else:  # 全面分析 - 使用最强模型
@@ -377,7 +377,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             logger.debug(f"🔍 [RUNNER DEBUG] 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
             update_progress(f"🇺🇸 準备分析美股: {formatted_symbol}")
 
-        logger.debug(f"🔍 [RUNNER DEBUG] 最终傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
+        logger.debug(f"🔍 [RUNNER DEBUG] 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
         # 初始化交易圖
         update_progress("🔧 初始化分析引擎...")
@@ -557,7 +557,7 @@ def format_analysis_results(results):
     # 提取關键信息
     # decision 可能是字符串（如 "BUY", "SELL", "HOLD"）或字典
     if isinstance(decision, str):
-        # 将英文投資建议轉換為中文
+        # 将英文投資建議轉換為中文
         action_translation = {
             'BUY': '买入',
             'SELL': '卖出',
@@ -573,7 +573,7 @@ def format_analysis_results(results):
             'confidence': 0.7,  # 默認置信度
             'risk_score': 0.3,  # 默認風險分數
             'target_price': None,  # 字符串格式没有目標價格
-            'reasoning': f'基於AI分析，建议{decision.strip().upper()}'
+            'reasoning': f'基於AI分析，建議{decision.strip().upper()}'
         }
     elif isinstance(decision, dict):
         # 處理目標價格 - 確保正確提取數值
@@ -594,7 +594,7 @@ def format_analysis_results(results):
         else:
             target_price = None
 
-        # 将英文投資建议轉換為中文
+        # 将英文投資建議轉換為中文
         action_translation = {
             'BUY': '买入',
             'SELL': '卖出',
@@ -638,7 +638,7 @@ def format_analysis_results(results):
         'investment_debate_state',  # 研究团隊辩論（多头/空头研究員）
         'trader_investment_plan',   # 交易团隊計劃
         'risk_debate_state',        # 風險管理团隊決策
-        'final_trade_decision'      # 最终交易決策
+        'final_trade_decision'      # 最終交易決策
     ]
     
     for key in analysis_keys:
@@ -786,15 +786,15 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         'risk_score': round(random.uniform(0.2, 0.7), 2),
         'target_price': round(random.uniform(*price_range), 2),
         'reasoning': f"""
-基於對{market_name}{stock_symbol}的综合分析，我們的AI分析团隊得出以下結論：
+基於對{market_name}{stock_symbol}的綜合分析，我們的AI分析团隊得出以下結論：
 
-**投資建议**: {action}
+**投資建議**: {action}
 **目標價格**: {currency_symbol}{round(random.uniform(*price_range), 2)}
 
 **主要分析要點**:
 1. **技術面分析**: 當前價格趋势顯示{'上涨' if action == '买入' else '下跌' if action == '卖出' else '横盘'}信號
 2. **基本面評估**: 公司財務狀况{'良好' if action == '买入' else '一般' if action == '持有' else '需關註'}
-3. **市場情绪**: 投資者情绪{'乐觀' if action == '买入' else '中性' if action == '持有' else '谨慎'}
+3. **市場情绪**: 投資者情绪{'乐觀' if action == '买入' else '中性' if action == '持有' else '謹慎'}
 4. **風險評估**: 當前風險水平為{'中等' if action == '持有' else '較低' if action == '买入' else '較高'}
 
 **註意**: 這是演示數據，實际分析需要配置正確的API密鑰。
@@ -880,8 +880,8 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 近期重要新聞
 1. **財報發布**: 公司發布{'超預期' if action == 'BUY' else '低於預期' if action == 'SELL' else '符合預期'}的季度財報
-2. **行業動態**: 所在行業面臨{'利好' if action == 'BUY' else '挑战' if action == 'SELL' else '穩定'}政策環境
-3. **公司公告**: 管理層{'乐觀' if action == 'BUY' else '谨慎' if action == 'SELL' else '穩健'}展望未來
+2. **行業動態**: 所在行業面臨{'利好' if action == 'BUY' else '挑戰' if action == 'SELL' else '穩定'}政策環境
+3. **公司公告**: 管理層{'乐觀' if action == 'BUY' else '謹慎' if action == 'SELL' else '穩健'}展望未來
 
 ### 新聞情绪分析
 - **正面新聞占比**: {round(random.uniform(40, 80), 0)}%
@@ -895,7 +895,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 *註意: 這是演示數據，實际分析需要配置API密鑰*
         """
 
-    # 添加風險評估和投資建议
+    # 添加風險評估和投資建議
     demo_state['risk_assessment'] = f"""
 ## ⚠️ {stock_symbol} 風險評估報告
 
@@ -906,17 +906,17 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 風險等級評估
 - **总體風險等級**: {'低風險' if action == 'BUY' else '高風險' if action == 'SELL' else '中等風險'}
-- **建议仓位**: {random.choice(['轻仓', '標準仓位', '重仓']) if action != 'SELL' else '建议减仓'}
+- **建議仓位**: {random.choice(['轻仓', '標準仓位', '重仓']) if action != 'SELL' else '建議减仓'}
 
 *註意: 這是演示數據，實际分析需要配置API密鑰*
     """
 
     demo_state['investment_plan'] = f"""
-## 📋 {stock_symbol} 投資建议
+## 📋 {stock_symbol} 投資建議
 
-### 具體操作建议
+### 具體操作建議
 - **操作方向**: {action}
-- **建议價位**: ${round(random.uniform(90, 310), 2)}
+- **建議價位**: ${round(random.uniform(90, 310), 2)}
 - **止損位**: ${round(random.uniform(80, 200), 2)}
 - **目標價位**: ${round(random.uniform(150, 400), 2)}
 
@@ -944,7 +944,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 - 行業景气度提升，政策環境有利
 - 機構投資者增持，市場信心增强
 
-**建议**: 積極买入，目標價位上調15-20%
+**建議**: 積極买入，目標價位上調15-20%
 
 *註意: 這是演示數據*
         """.strip(),
@@ -952,7 +952,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         'bear_history': f"""
 ## 📉 空头研究員分析
 
-作為空头研究員，我對{stock_symbol}持谨慎態度：
+作為空头研究員，我對{stock_symbol}持謹慎態度：
 
 ### ⚠️ 風險因素
 1. **估值偏高**: 當前市盈率超過行業平均水平
@@ -961,32 +961,32 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 📉 擔忧點
 - 成交量虽然放大，但可能是獲利盘出貨
-- 行業競爭加剧，公司市場份額面臨挑战
+- 行業競爭加剧，公司市場份額面臨挑戰
 - 政策變化可能對行業產生负面影響
 
-**建议**: 谨慎觀望，等待更好的入場時機
+**建議**: 謹慎觀望，等待更好的入場時機
 
 *註意: 這是演示數據*
         """.strip(),
 
         'judge_decision': f"""
-## 🎯 研究經理综合決策
+## 🎯 研究經理綜合決策
 
-經過多头和空头研究員的充分辩論，我的综合判斷如下：
+經過多头和空头研究員的充分辩論，我的綜合判斷如下：
 
-### 📊 综合評估
+### 📊 綜合評估
 - **多头觀點**: 技術面和基本面都顯示積極信號
 - **空头觀點**: 估值和短期風險需要關註
 - **平衡考慮**: 機會与風險並存，需要策略性操作
 
-### 🎯 最终建议
-基於當前市場環境和{stock_symbol}的具體情况，建议採取**{action}**策略：
+### 🎯 最終建議
+基於當前市場環境和{stock_symbol}的具體情況，建議採取**{action}**策略：
 
-1. **操作建议**: {action}
+1. **操作建議**: {action}
 2. **仓位控制**: {'分批建仓' if action == '买入' else '分批减仓' if action == '卖出' else '維持現狀'}
 3. **風險管理**: 設置止損位，控制單只股票仓位不超過10%
 
-**決策依據**: 综合技術面、基本面和市場情绪分析
+**決策依據**: 綜合技術面、基本面和市場情绪分析
 
 *註意: 這是演示數據*
         """.strip()
@@ -1003,7 +1003,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 - **止損價位**: {currency_symbol}{round(random.uniform(*price_range) * 0.9, 2)}
 
 ### 📊 仓位管理
-- **建议仓位**: {'30-50%' if action == '买入' else '减仓至20%' if action == '卖出' else '維持現有仓位'}
+- **建議仓位**: {'30-50%' if action == '买入' else '减仓至20%' if action == '卖出' else '維持現有仓位'}
 - **分批操作**: {'分3次建仓' if action == '买入' else '分2次减仓' if action == '卖出' else '暂不操作'}
 - **時間安排**: {'1-2周內完成' if action != '持有' else '持续觀察'}
 
@@ -1027,7 +1027,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 - **時機把握**: 現在是積極布局的最佳時機
 
 ### 🎯 激進策略
-- **加大仓位**: 建议将仓位提升至60-80%
+- **加大仓位**: 建議将仓位提升至60-80%
 - **杠杆使用**: 可適度使用杠杆放大收益
 - **快速行動**: 機會稍纵即逝，需要果斷決策
 
@@ -1047,11 +1047,11 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 - **流動性風險**: 需要關註市場流動性變化
 
 ### 🔒 保守策略
-- **控制仓位**: 建议仓位不超過30%
+- **控制仓位**: 建議仓位不超過30%
 - **分散投資**: 避免過度集中於單一標的
 - **安全邊际**: 確保有足夠的安全邊际
 
-**風險評級**: 中高風險，需要谨慎操作
+**風險評級**: 中高風險，需要謹慎操作
 
 *註意: 這是演示數據*
         """.strip(),
@@ -1063,12 +1063,12 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 📊 客觀評估
 - **機會与風險並存**: 當前市場既有機會也有風險
-- **適度參与**: 建议採取適度參与的策略
+- **適度參与**: 建議採取適度參与的策略
 - **灵活調整**: 根據市場變化及時調整策略
 
 ### ⚖️ 平衡策略
-- **中等仓位**: 建议仓位控制在40-50%
-- **動態調整**: 根據市場情况動態調整仓位
+- **中等仓位**: 建議仓位控制在40-50%
+- **動態調整**: 根據市場情況動態調整仓位
 - **風險監控**: 持续監控風險指標變化
 
 **風險評級**: 中等風險，平衡收益
@@ -1077,20 +1077,20 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         """.strip(),
 
         'judge_decision': f"""
-## 🎯 投資組合經理最终風險決策
+## 🎯 投資組合經理最終風險決策
 
-综合三位風險分析師的意见，最终風險管理決策如下：
+綜合三位風險分析師的意见，最終風險管理決策如下：
 
-### 📊 風險综合評估
-- **激進觀點**: 高收益機會，建议積極參与
-- **保守觀點**: 風險較高，建议谨慎操作
+### 📊 風險綜合評估
+- **激進觀點**: 高收益機會，建議積極參与
+- **保守觀點**: 風險較高，建議謹慎操作
 - **中性觀點**: 機會与風險並存，適度參与
 
-### 🎯 最终風險決策
+### 🎯 最終風險決策
 基於當前市場環境和{stock_symbol}的風險特征：
 
 1. **風險等級**: 中等風險
-2. **建议仓位**: 40%（平衡收益与風險）
+2. **建議仓位**: 40%（平衡收益与風險）
 3. **風險控制**: 嚴格執行止損策略
 4. **監控頻率**: 每日監控，及時調整
 
@@ -1101,12 +1101,12 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
     }
 
     demo_state['final_trade_decision'] = f"""
-## 🎯 最终投資決策
+## 🎯 最終投資決策
 
-經過分析師团隊、研究团隊、交易团隊和風險管理团隊的全面分析，最终投資決策如下：
+經過分析師团隊、研究团隊、交易团隊和風險管理团隊的全面分析，最終投資決策如下：
 
 ### 📊 決策摘要
-- **投資建议**: **{action}**
+- **投資建議**: **{action}**
 - **置信度**: {confidence:.1%}
 - **風險評級**: 中等風險
 - **預期收益**: {'10-20%' if action == '买入' else '規避損失' if action == '卖出' else '穩健持有'}
@@ -1123,9 +1123,9 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 - **投資期限**: {'3-6個月' if research_depth >= 3 else '1-3個月'}
 
 ### ⚠️ 重要提醒
-這是基於當前市場環境和{stock_symbol}基本面的综合判斷。投資有風險，請根據個人風險承受能力谨慎決策。
+這是基於當前市場環境和{stock_symbol}基本面的綜合判斷。投資有風險，請根據個人風險承受能力謹慎決策。
 
-**免责聲明**: 本分析仅供參考，不構成投資建议。
+**免責聲明**: 本分析僅供參考，不構成投資建議。
 
 *註意: 這是演示數據，實际分析需要配置正確的API密鑰*
     """

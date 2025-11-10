@@ -51,7 +51,7 @@ except ImportError:
                         return st.session_state.get('authenticated', False)
                     
                     def authenticate(self, username, password):
-                        # 簡單的認證逻辑
+                        # 簡單的認證邏輯
                         if username == "admin" and password == "admin123":
                             return True, {"username": username, "role": "admin"}
                         elif username == "user" and password == "user123":
@@ -230,39 +230,43 @@ def render_login_form():
     # 登錄表單
     with st.container():
         st.markdown('<div class="login-form">', unsafe_allow_html=True)
-        
+
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             st.markdown("### 🔐 用戶登錄")
 
-            username = st.text_input(
-                "用戶名",
-                placeholder="請輸入您的用戶名（首次使用：admin）",
-                key="username_input",
-                label_visibility="collapsed"
-            )
-            password = st.text_input(
-                "密碼",
-                type="password",
-                placeholder="請輸入您的密碼（首次使用：admin123）",
-                key="password_input",
-                label_visibility="collapsed"
-            )
+            # 使用表單防止每次輸入都觸發頁面重新渲染
+            with st.form(key="login_form", clear_on_submit=False):
+                username = st.text_input(
+                    "用戶名",
+                    placeholder="請輸入您的用戶名（首次使用：admin）",
+                    key="username_input",
+                    label_visibility="collapsed"
+                )
+                password = st.text_input(
+                    "密碼",
+                    type="password",
+                    placeholder="請輸入您的密碼（首次使用：admin123）",
+                    key="password_input",
+                    label_visibility="collapsed"
+                )
 
-            st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown("<br>", unsafe_allow_html=True)
 
-            if st.button("🚀 立即登錄", use_container_width=True, key="login_button"):
-                if username and password:
-                    # 使用auth_manager.login()方法來確保前端緩存被正確保存
-                    if auth_manager.login(username, password):
-                        st.success("✅ 登錄成功！正在為您跳轉...")
-                        time.sleep(1)
-                        st.rerun()
+                submit_button = st.form_submit_button("🚀 立即登錄", use_container_width=True)
+
+                if submit_button:
+                    if username and password:
+                        # 使用auth_manager.login()方法來確保前端緩存被正確保存
+                        if auth_manager.login(username, password):
+                            st.success("✅ 登錄成功！正在為您跳轉...")
+                            time.sleep(1)
+                            st.rerun()
+                        else:
+                            st.error("❌ 用戶名或密碼錯誤，請重試")
                     else:
-                        st.error("❌ 用戶名或密碼錯誤，請重試")
-                else:
-                    st.warning("⚠️ 請輸入完整的登錄信息")
-        
+                        st.warning("⚠️ 請輸入完整的登錄信息")
+
         st.markdown('</div>', unsafe_allow_html=True)
     
     # 功能特色展示
@@ -523,7 +527,7 @@ def render_user_info():
         <div class="user-info-container">
             <div class="user-welcome">
                 <div>
-                    <h3 class="user-name">👋 欢迎回來，{user_info['username']}</h3>
+                    <h3 class="user-name">👋 歡迎回來，{user_info['username']}</h3>
                     <div class="user-details">
                         <span>🎯 {role_display}</span>
                         {f'<span>🕐 {login_time_str} 登錄</span>' if login_time_str else ''}

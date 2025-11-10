@@ -87,11 +87,11 @@ class AsyncProgressDisplay:
             # 顯示當前狀態
             self.status_text.info(f"{status_icon} **當前狀態**: {last_message}")
             
-            # 顯示步骤信息
+            # 顯示步驟信息
             if status == 'failed':
                 self.step_info.error(f"❌ **分析失败**: {last_message}")
             elif status == 'completed':
-                self.step_info.success(f"🎉 **分析完成**: 所有步骤已完成")
+                self.step_info.success(f"🎉 **分析完成**: 所有步驟已完成")
 
                 # 添加查看報告按钮
                 with self.step_info:
@@ -116,8 +116,8 @@ class AsyncProgressDisplay:
                         st.rerun()
             else:
                 self.step_info.info(f"📊 **進度**: 第 {current_step + 1} 步，共 {total_steps} 步 ({progress_percentage:.1f}%)\n\n"
-                                  f"**當前步骤**: {step_name}\n\n"
-                                  f"**步骤說明**: {step_description}")
+                                  f"**當前步驟**: {step_name}\n\n"
+                                  f"**步驟說明**: {step_description}")
             
             # 時間信息 - 實時計算已用時間
             start_time = progress_data.get('start_time', 0)
@@ -126,13 +126,13 @@ class AsyncProgressDisplay:
             # 計算已用時間
             import time
             if status == 'completed':
-                # 已完成的分析使用存储的最终耗時
+                # 已完成的分析使用存储的最終耗時
                 real_elapsed_time = progress_data.get('elapsed_time', 0)
             elif start_time > 0:
                 # 進行中的分析使用實時計算
                 real_elapsed_time = time.time() - start_time
             else:
-                # 备用方案
+                # 備用方案
                 real_elapsed_time = progress_data.get('elapsed_time', 0)
 
             # 重新計算剩余時間
@@ -228,7 +228,7 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
     if status == 'failed':
         st.error(f"❌ **分析失败**: {last_message}")
     elif status == 'completed':
-        st.success(f"🎉 **分析完成**: 所有步骤已完成")
+        st.success(f"🎉 **分析完成**: 所有步驟已完成")
 
         # 添加查看報告按钮
         if st.button("📊 查看分析報告", key=f"view_report_streamlit_{progress_data.get('analysis_id', 'unknown')}", type="primary"):
@@ -252,8 +252,8 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
             st.rerun()
     else:
         st.info(f"📊 **進度**: 第 {current_step + 1} 步，共 {total_steps} 步 ({progress_percentage:.1f}%)\n\n"
-               f"**當前步骤**: {step_name}\n\n"
-               f"**步骤說明**: {step_description}")
+               f"**當前步驟**: {step_name}\n\n"
+               f"**步驟說明**: {step_description}")
 
     # 時間信息 - 實時計算已用時間
     start_time = progress_data.get('start_time', 0)
@@ -262,13 +262,13 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
     # 計算已用時間
     import time
     if status == 'completed':
-        # 已完成的分析使用存储的最终耗時
+        # 已完成的分析使用存储的最終耗時
         elapsed_time = progress_data.get('elapsed_time', 0)
     elif start_time > 0:
         # 進行中的分析使用實時計算
         elapsed_time = time.time() - start_time
     else:
-        # 备用方案
+        # 備用方案
         elapsed_time = progress_data.get('elapsed_time', 0)
 
     # 重新計算剩余時間
@@ -334,7 +334,7 @@ def display_static_progress(analysis_id: str) -> bool:
 
     with col1:
         step_name = progress_data.get('current_step_name', '未知')
-        st.write(f"**當前步骤**: {step_name}")
+        st.write(f"**當前步驟**: {step_name}")
 
     with col2:
         progress_percentage = progress_data.get('progress_percentage', 0.0)
@@ -345,13 +345,13 @@ def display_static_progress(analysis_id: str) -> bool:
         start_time = progress_data.get('start_time', 0)
         import time
         if status == 'completed':
-            # 已完成的分析使用存储的最终耗時
+            # 已完成的分析使用存储的最終耗時
             elapsed_time = progress_data.get('elapsed_time', 0)
         elif start_time > 0:
             # 進行中的分析使用實時計算
             elapsed_time = time.time() - start_time
         else:
-            # 备用方案
+            # 備用方案
             elapsed_time = progress_data.get('elapsed_time', 0)
         st.metric("已用時間", format_time(elapsed_time))
 
@@ -369,7 +369,7 @@ def display_static_progress(analysis_id: str) -> bool:
     # 進度條
     st.progress(min(progress_percentage / 100, 1.0))
 
-    # 步骤詳情
+    # 步驟詳情
     step_description = progress_data.get('current_step_description', '正在處理...')
     st.write(f"**當前任務**: {step_description}")
 
@@ -455,8 +455,8 @@ def display_unified_progress(analysis_id: str, show_refresh_controls: bool = Tru
     """
     import streamlit as st
 
-    # 簡化逻辑：直接調用顯示函數，通過參數控制是否顯示刷新按钮
-    # 調用方负责確保只在需要的地方傳入show_refresh_controls=True
+    # 簡化邏輯：直接調用顯示函數，通過參數控制是否顯示刷新按钮
+    # 調用方負責確保只在需要的地方傳入show_refresh_controls=True
     return display_static_progress_with_controls(analysis_id, show_refresh_controls)
 
 
@@ -509,13 +509,13 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
     estimated_total_time = progress_data.get('estimated_total_time', 0)
     import time
     if status == 'completed':
-        # 已完成的分析使用存储的最终耗時
+        # 已完成的分析使用存储的最終耗時
         elapsed_time = progress_data.get('elapsed_time', 0)
     elif start_time > 0:
         # 進行中的分析使用實時計算
         elapsed_time = time.time() - start_time
     else:
-        # 备用方案
+        # 備用方案
         elapsed_time = progress_data.get('elapsed_time', 0)
 
     # 重新計算剩余時間
@@ -523,8 +523,8 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
     current_step_description = progress_data.get('current_step_description', '初始化分析引擎')
     last_message = progress_data.get('last_message', '準备開始分析')
 
-    # 顯示當前步骤
-    st.write(f"**當前步骤**: {current_step_name}")
+    # 顯示當前步驟
+    st.write(f"**當前步驟**: {current_step_name}")
 
     # 顯示進度條和統計信息
     col1, col2, col3 = st.columns(3)

@@ -60,7 +60,7 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* 隐藏Streamlit顶部工具栏和Deploy按钮 - 多種選擇器確保兼容性 */
+    /* 隱藏Streamlit顶部工具栏和Deploy按钮 - 多種選擇器確保兼容性 */
     .stAppToolbar {
         display: none !important;
     }
@@ -86,7 +86,7 @@ st.markdown("""
         display: none !important;
     }
     
-    /* 隐藏整個顶部区域 */
+    /* 隱藏整個顶部區域 */
     .stApp > header {
         display: none !important;
     }
@@ -95,29 +95,29 @@ st.markdown("""
         display: none !important;
     }
     
-    /* 隐藏主菜單按钮 */
+    /* 隱藏主菜單按钮 */
     #MainMenu {
         visibility: hidden !important;
         display: none !important;
     }
     
-    /* 隐藏页腳 */
+    /* 隱藏页腳 */
     footer {
         visibility: hidden !important;
         display: none !important;
     }
     
-    /* 隐藏"Made with Streamlit"標识 */
+    /* 隱藏"Made with Streamlit"標识 */
     .viewerBadge_container__1QSob {
         display: none !important;
     }
     
-    /* 隐藏所有可能的工具栏元素 */
+    /* 隱藏所有可能的工具栏元素 */
     div[data-testid="stToolbar"] {
         display: none !important;
     }
     
-    /* 隐藏右上角的所有按钮 */
+    /* 隱藏右上角的所有按钮 */
     .stApp > div > div > div > div > section > div {
         padding-top: 0 !important;
     }
@@ -638,7 +638,7 @@ def main():
         max-width: 320px !important;
     }
 
-    /* 主內容区域適配320px侧邊栏 */
+    /* 主內容區域適配320px侧邊栏 */
     .main .block-container {
         width: calc(100vw - 336px) !important;
         max-width: calc(100vw - 336px) !important;
@@ -661,7 +661,7 @@ def main():
         overflow-wrap: break-word !important;
     }
 
-    /* 隐藏侧邊栏的隐藏按钮 - 更全面的選擇器 */
+    /* 隱藏侧邊栏的隱藏按钮 - 更全面的選擇器 */
     button[kind="header"],
     button[data-testid="collapsedControl"],
     .css-1d391kg,
@@ -679,7 +679,7 @@ def main():
         pointer-events: none !important;
     }
 
-    /* 隐藏侧邊栏顶部区域的特定按钮（更精確的選擇器，避免影響表單按钮） */
+    /* 隱藏侧邊栏顶部區域的特定按钮（更精確的選擇器，避免影響表單按钮） */
     section[data-testid="stSidebar"] > div:first-child > button[kind="header"],
     section[data-testid="stSidebar"] > div:first-child > div > button[kind="header"],
     section[data-testid="stSidebar"] .css-1lcbmhc > button[kind="header"],
@@ -695,7 +695,7 @@ def main():
         padding-right: 0.5rem !important;
     }
 
-    /* 調整主內容区域，設置8px邊距 - 使用更强的選擇器 */
+    /* 調整主內容區域，設置8px邊距 - 使用更强的選擇器 */
     .main .block-container,
     section.main .block-container,
     div.main .block-container,
@@ -733,7 +733,7 @@ def main():
         margin: 0.8rem 0 !important;
     }
 
-    /* 簡化功能選擇区域樣式 */
+    /* 簡化功能選擇區域樣式 */
     section[data-testid="stSidebar"] .stSelectbox > div > div {
         font-size: 1.1rem !important;
         font-weight: 500 !important;
@@ -746,7 +746,7 @@ def main():
         overflow-x: visible !important;
     }
 
-    /* 强制設置8px邊距給所有可能的容器 */
+    /* 強制設置8px邊距給所有可能的容器 */
     .stApp,
     .stApp > div,
     .stApp > div > div,
@@ -777,7 +777,7 @@ def main():
 
     /* 容器宽度已在global_sidebar.css中定義 */
 
-    /* 優化使用指南区域的樣式 */
+    /* 優化使用指南區域的樣式 */
     div[data-testid="column"]:last-child {
         background-color: #f8f9fa !important;
         border-radius: 8px !important;
@@ -809,9 +809,9 @@ def main():
     </style>
 
     <script>
-    // JavaScript來强制隐藏侧邊栏按钮
+    // JavaScript來強制隱藏侧邊栏按钮
     function hideSidebarButtons() {
-        // 隐藏所有可能的侧邊栏控制按钮
+        // 隱藏所有可能的侧邊栏控制按钮
         const selectors = [
             'button[kind="header"]',
             'button[data-testid="collapsedControl"]',
@@ -839,10 +839,10 @@ def main():
     // 页面加載後執行
     document.addEventListener('DOMContentLoaded', hideSidebarButtons);
 
-    // 定期檢查並隐藏按钮（防止動態生成）
+    // 定期檢查並隱藏按钮（防止動態生成）
     setInterval(hideSidebarButtons, 1000);
 
-    // 强制修改页面邊距為8px
+    // 強制修改页面邊距為8px
     function forceOptimalPadding() {
         const selectors = [
             '.main .block-container',
@@ -876,7 +876,7 @@ def main():
     // 页面加載後執行
     document.addEventListener('DOMContentLoaded', forceOptimalPadding);
 
-    // 定期强制應用樣式
+    // 定期強制應用樣式
     setInterval(forceOptimalPadding, 500);
     </script>
     """, unsafe_allow_html=True)
@@ -887,7 +887,7 @@ def main():
             st.session_state.clear()
             st.experimental_rerun()
 
-    # 渲染页面头部
+    # 渲染页面頭部
     render_header()
 
     # 侧邊栏布局 - 標題在最顶部
@@ -1047,7 +1047,7 @@ def main():
     config = render_sidebar()
     
     # 添加使用指南顯示切換
-    # 如果正在分析或有分析結果，默認隐藏使用指南
+    # 如果正在分析或有分析結果，默認隱藏使用指南
     default_show_guide = not (st.session_state.get('analysis_running', False) or st.session_state.get('analysis_results') is not None)
     
     # 如果用戶没有手動設置過，使用默認值
@@ -1058,7 +1058,7 @@ def main():
     show_guide = st.sidebar.checkbox(
         "📖 顯示使用指南", 
         value=st.session_state.get('show_guide_preference', default_show_guide), 
-        help="顯示/隐藏右侧使用指南",
+        help="顯示/隱藏右侧使用指南",
         key="guide_checkbox"
     )
     
@@ -1094,7 +1094,7 @@ def main():
     # 在侧邊栏底部添加退出按钮
     render_sidebar_logout()
 
-    # 主內容区域 - 根據是否顯示指南調整布局
+    # 主內容區域 - 根據是否顯示指南調整布局
     if show_guide:
         col1, col2 = st.columns([2, 1])  # 2:1比例，使用指南占三分之一
     else:
@@ -1102,7 +1102,7 @@ def main():
         col2 = None
     
     with col1:
-        # 1. 分析配置区域
+        # 1. 分析配置區域
 
         st.header("⚙️ 分析配置")
 
@@ -1156,10 +1156,10 @@ def main():
                 st.session_state.analysis_results = None
                 logger.info("🧹 [新分析] 清空旧的分析結果")
                 
-                # 自動隐藏使用指南（除非用戶明確設置要顯示）
+                # 自動隱藏使用指南（除非用戶明確設置要顯示）
                 if not st.session_state.get('user_set_guide_preference', False):
                     st.session_state.show_guide_preference = False
-                    logger.info("📖 [界面] 開始分析，自動隐藏使用指南")
+                    logger.info("📖 [界面] 開始分析，自動隱藏使用指南")
 
                 # 生成分析ID
                 import uuid
@@ -1192,7 +1192,7 @@ def main():
 
                 # 添加加載動效
                 with st.spinner("🔄 正在初始化分析..."):
-                    time.sleep(1.5)  # 让用戶看到反馈
+                    time.sleep(1.5)  # 让用戶看到反饋
 
                 st.info(f"📊 正在分析: {form_data.get('market_type', '美股')} {form_data['stock_symbol']}")
                 st.info("""
@@ -1313,7 +1313,7 @@ def main():
                 time.sleep(2)
                 st.rerun()
 
-        # 2. 股票分析区域（只有在有分析ID時才顯示）
+        # 2. 股票分析區域（只有在有分析ID時才顯示）
         current_analysis_id = st.session_state.get('current_analysis_id')
         if current_analysis_id:
             st.markdown("---")
@@ -1421,7 +1421,7 @@ def main():
 
 
 
-        # 3. 分析報告区域（只有在有結果且分析完成時才顯示）
+        # 3. 分析報告區域（只有在有結果且分析完成時才顯示）
 
         current_analysis_id = st.session_state.get('current_analysis_id')
         analysis_results = st.session_state.get('analysis_results')
@@ -1463,7 +1463,7 @@ def main():
             # 快速開始指南
             with st.expander("🎯 快速開始", expanded=True):
                 st.markdown("""
-                ### 📋 操作步骤
+                ### 📋 操作步驟
 
                 1. **輸入股票代碼**
                    - 美股示例: `AAPL` (蘋果), `TSLA` (特斯拉), `MSFT` (微軟)
@@ -1476,7 +1476,7 @@ def main():
 
                 3. **選擇分析師团隊**
                    - 至少選擇一個分析師
-                   - 建议選擇多個分析師獲得全面分析
+                   - 建議選擇多個分析師獲得全面分析
 
                 4. **設置研究深度**
                    - 1-2級: 快速概覽
@@ -1520,7 +1520,7 @@ def main():
                   - 行業對比分析
                   - 盈利能力評估
 
-                💡 **建议**: 選擇多個分析師可獲得更全面的投資建议
+                💡 **建議**: 選擇多個分析師可獲得更全面的投資建議
                 """)
 
             # 模型選擇說明
@@ -1568,10 +1568,10 @@ def main():
             st.warning("""
             ⚠️ **投資風險提示**
 
-            - 本系統提供的分析結果仅供參考，不構成投資建议
-            - 投資有風險，入市需谨慎，請理性投資
-            - 請結合多方信息和專業建议進行投資決策
-            - 重大投資決策建议咨詢專業的投資顧問
+            - 本系統提供的分析結果僅供參考，不構成投資建議
+            - 投資有風險，入市需謹慎，請理性投資
+            - 請結合多方信息和專業建議進行投資決策
+            - 重大投資決策建議咨詢專業的投資顧問
             - AI分析存在局限性，市場變化難以完全預測
             """)
         

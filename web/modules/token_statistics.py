@@ -2,7 +2,7 @@
 """
 Token使用統計页面
 
-展示Token使用情况、成本分析和統計圖表
+展示Token使用情況、成本分析和統計圖表
 """
 
 import streamlit as st
@@ -30,7 +30,7 @@ from tradingagents.config.config_manager import config_manager, token_tracker, U
 
 def render_token_statistics():
     """渲染Token統計页面"""
-    # 應用隐藏Deploy按钮的CSS樣式
+    # 應用隱藏Deploy按钮的CSS樣式
     apply_hide_deploy_button_css()
     
     st.markdown("**💰 Token使用統計与成本分析**")
@@ -78,7 +78,7 @@ def render_token_statistics():
             2. **確保API配置**: 檢查DashScope API密鑰是否正確配置
             3. **啟用成本跟蹤**: 在配置管理中啟用Token成本跟蹤
             
-            系統會自動記錄所有LLM調用的Token使用情况。
+            系統會自動記錄所有LLM調用的Token使用情況。
             """)
             return
         

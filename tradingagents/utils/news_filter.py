@@ -1,6 +1,6 @@
 """
 新聞相關性過濾器
-用於過濾与特定股票/公司不相關的新聞，提高新聞分析质量
+用於過濾与特定股票/公司不相關的新聞，提高新聞分析質量
 """
 
 import pandas as pd
@@ -127,7 +127,7 @@ class NewsRelevanceFilter:
         # 確保評分在0-100範围內
         final_score = max(0, min(100, score))
         
-        logger.debug(f"[過濾器] 最终評分: {final_score}分 - 標題: {title[:30]}...")
+        logger.debug(f"[過濾器] 最終評分: {final_score}分 - 標題: {title[:30]}...")
         
         return final_score
     
