@@ -28,10 +28,7 @@ def check_dependencies():
 
     for package in required_packages:
         try:
-            if package == 'streamlit':
-                pass
-            elif package == 'plotly':
-                pass
+            __import__(package)
         except ImportError:
             missing_packages.append(package)
 

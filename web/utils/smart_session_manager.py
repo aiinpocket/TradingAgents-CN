@@ -3,8 +3,11 @@
 優先級：Redis > 檔案儲存
 """
 
+import logging
 import streamlit as st
 from typing import Optional, Dict, Any
+
+logger = logging.getLogger(__name__)
 
 class SmartSessionManager:
     """智慧會話管理器"""
@@ -93,15 +96,15 @@ class SmartSessionManager:
         if self.use_redis and self.redis_manager:
             try:
                 self.redis_manager.clear_analysis_state()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"清除Redis分析狀態失敗: {e}")
 
         # 清除檔案中的資料
         if self.file_manager:
             try:
                 self.file_manager.clear_analysis_state()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"清除檔案分析狀態失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
         """取得除錯資訊"""
@@ -158,11 +161,11 @@ def get_persistent_analysis_id() -> Optional[str]:
             if latest_id:
                 st.session_state.current_analysis_id = latest_id
                 return latest_id
-        except Exception:
-            pass
-        
+        except Exception as e:
+            logger.debug(f"從分析資料恢復最新分析失敗: {e}")
+
         return None
-        
+
     except Exception as e:
         st.warning(f"取得持久化分析ID失敗: {e}")
         return None

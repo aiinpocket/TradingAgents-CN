@@ -226,12 +226,8 @@ class DatabaseCacheManager:
                                            end_date=end_date,
                                            source=data_source)
         
-        # 自動推斷市場類型
+        # 自動推斷市場類型（本專案僅支援美股）
         if market_type is None:
-            # 根據股票代碼格式推斷市場類型
-            pass
-
-            # 統一視為美股
             market_type = "us"
         
         # 準備檔案資料

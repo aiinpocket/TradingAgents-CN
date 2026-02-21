@@ -14,8 +14,7 @@ logger = get_logger('agents')
 
 # 匯入快取管理器
 try:
-    pass
-
+    from tradingagents.dataflows.cache_manager import CacheManager
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False

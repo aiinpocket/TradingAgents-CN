@@ -222,9 +222,9 @@ class OptimizedUSDataProvider:
                             return cached_data + "\n\n註意: 使用的是過期快取資料"
                 except (json.JSONDecodeError, KeyError, IOError):
                     continue
-        except OSError:
-            pass
-        
+        except OSError as e:
+            logger.debug(f"讀取快取目錄失敗: {e}")
+
         return None
 
     def _get_data_from_finnhub(self, symbol: str, start_date: str, end_date: str) -> str:
