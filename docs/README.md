@@ -1,121 +1,95 @@
-# TradingAgents-CN (v0.1.12)
+# TradingAgents-CN 文檔索引
 
- TradingAgents-CN v0.1.12LLMDocker
+## 快速上手
 
-## (v0.1.12)
+- [專案總覽](./overview/project-overview.md)
+- [快速開始](./overview/quick-start.md)
+- [安裝指南](./overview/installation.md)
 
-- **** - AI
-- **** - 
-- **** - 
-- **** - 15+8
-- **** - 
-- **LLM** - 60+AI
-- **** - URL
+## 架構設計
 
-## 
+- [系統架構](./architecture/v0.1.13/system-architecture.md)
+- [智慧體架構](./architecture/v0.1.13/agent-architecture.md)
+- [資料流架構](./architecture/v0.1.13/data-flow-architecture.md)
+- [LangGraph 圖結構](./architecture/v0.1.13/graph-structure.md)
+- [分析節點與工具](./analysis-nodes-and-tools.md)
+- [節點工具快速參考](./quick-reference-nodes-tools.md)
 
-### 
-- [](./overview/project-overview.md) - 
-- [](./overview/quick-start.md) - 
-- [](./overview/installation.md) - 
+## 智慧體
 
-### 
-- [](./architecture/system-architecture.md) - (v0.1.7) 
-- [](./architecture/containerization-architecture.md) - Docker (v0.1.7) 
-- [](./architecture/database-architecture.md) - MongoDB+Redis
-- [](./architecture/agent-architecture.md) - 
-- [](./architecture/data-flow-architecture.md) - 
-- [](./architecture/graph-structure.md) - LangGraph 
-- [](./architecture/configuration-optimization.md) - 
+- [分析師](./agents/v0.1.13/analysts.md)
+- [研究員](./agents/v0.1.13/researchers.md)
+- [交易員](./agents/v0.1.13/trader.md)
+- [風險管理](./agents/v0.1.13/risk-management.md)
+- [管理層](./agents/v0.1.13/managers.md)
 
-### 
-- [](./agents/analysts.md) - 
-- [](./agents/researchers.md) - 
-- [](./agents/trader.md) - 
-- [](./agents/risk-management.md) - 
-- [](./agents/managers.md) - 
+## 資料來源
 
-### 
-- [](./data/data-sources.md) - API 
-- [](./data/data-processing.md) - 
-- [](./data/caching.md) - 
+- [資料來源說明](./data/data-sources.md)
+- [資料處理流程](./data/data-processing.md)
+- [快取機制](./data/caching.md)
 
-### 
-- [ ](./features/NEWS_FILTERING_SOLUTION_DESIGN.md) - AI (v0.1.12) 
-- [ ](./features/NEWS_QUALITY_ANALYSIS_REPORT.md) - (v0.1.12) 
-- [ ](./features/NEWS_ANALYST_TOOL_CALL_FIX_REPORT.md) - (v0.1.12) 
-- [ LLM](./features/multi-llm-integration.md) - 60+ (v0.1.11) 
-- [ ](./features/model-persistence.md) - URL (v0.1.11) 
-- [ ](./features/report-export.md) - Word/PDF/Markdown (v0.1.7) 
-- [ Docker](./features/docker-deployment.md) - (v0.1.7) 
-- [ ](./features/news-analysis-system.md) - 
+## 功能說明
 
-### 
-- [](./configuration/config-guide.md) - (v0.1.11) 
-- [LLM](./configuration/llm-config.md) - (v0.1.11) 
-- [](./configuration/multi-provider-config.md) - LLM (v0.1.11) 
-- [Docker](./configuration/docker-config.md) - Docker (v0.1.7) 
-- [Token](./configuration/token-tracking-guide.md) - Token (v0.1.7) 
-- [](./configuration/data-directory-configuration.md) - 
-- [Web](../web/README.md) - Web
+- [新聞分析系統](./features/news-analysis-system.md)
+- [報告匯出](./features/report-export.md)
+- [Docker 部署](./features/docker-deployment.md)
 
-### LLM
-- [ LLM](./llm/README.md) - 
-- [ LLM](./llm/LLM_INTEGRATION_GUIDE.md) - LLM 
-- [ LLM](./llm/LLM_TESTING_VALIDATION_GUIDE.md) - LLM 
+## 配置指南
 
-### 
-- [](./development/dev-setup.md) - 
-- [](./development/code-structure.md) - 
-- [](./development/extending.md) - 
-- [](./development/testing.md) - 
+- [配置說明](./configuration/config-guide.md)
+- [LLM 配置](./configuration/llm-config.md)
+- [Docker 配置](./configuration/docker-config.md)
+- [Token 追蹤](./configuration/token-tracking-guide.md)
+- [資料目錄配置](./configuration/data-directory-configuration.md)
+- [線上工具配置](./configuration/online-tools-config.md)
 
-### (v0.1.7)
-- [](./releases/CHANGELOG.md) - 
-- [v0.1.7](./releases/v0.1.7-release-notes.md) - 
-- [](./releases/version-comparison.md) - 
-- [](./releases/upgrade-guide.md) - 
+## 使用指南
 
-### API
-- [API](./api/core-api.md) - 
-- [API](./api/agents-api.md) - 
-- [API](./api/data-api.md) - 
+- [Web 介面指南](./usage/web-interface-guide.md)
+- [Web 介面詳細指南](./usage/web-interface-detailed-guide.md)
+- [投資分析指南](./usage/investment_analysis_guide.md)
+- [配置管理指南](./guides/config-management-guide.md)
+- [Docker 部署指南](./guides/docker-deployment-guide.md)
+- [報告匯出指南](./guides/report-export-guide.md)
+- [新聞分析指南](./guides/news-analysis-guide.md)
+- [測試指南](./guides/TESTING_GUIDE.md)
 
-### 
-- [ ](./guides/NEWS_FILTERING_USER_GUIDE.md) - (v0.1.12) 
-- [ LLM](./guides/multi-llm-usage-guide.md) - (v0.1.11) 
-- [ ](./guides/model-persistence-guide.md) - (v0.1.11) 
-- [ Web](./usage/web-interface-guide.md) - Web (v0.1.11) 
-- [ ](./usage/investment_analysis_guide.md) - 
-- [ ](./guides/config-management-guide.md) - (v0.1.7) 
-- [ Docker](./guides/docker-deployment-guide.md) - Docker (v0.1.7) 
-- [ ](./guides/report-export-guide.md) - (v0.1.7) 
-- [ ](./guides/news-analysis-guide.md) - 
+## 範例
 
-### 
-- [](./examples/basic-examples.md) - 
-- [](./examples/advanced-examples.md) - 
-- [](./examples/custom-agents.md) - 
+- [基礎範例](./examples/basic-examples.md)
+- [進階範例](./examples/advanced-examples.md)
 
-### 
-- [FAQ](./faq/faq.md) - 
-- [](./faq/troubleshooting.md) - 
+## 開發
 
-### 
-- [ v0.1.12 ](./releases/v0.1.12-release-notes.md) - 
-- [ v0.1.12 ](./releases/CHANGELOG_v0.1.12.md) - 
-- [ v0.1.11 ](./releases/v0.1.11-release-notes.md) - LLM
-- [ v0.1.11 ](./releases/CHANGELOG_v0.1.11.md) - 
-- [ ](./releases/CHANGELOG.md) - 
-- [ ](./releases/upgrade-guide.md) - 
-- [ ](./releases/version-comparison.md) - 
+- [專案結構](./development/project-structure.md)
+- [開發工作流程](./development/development-workflow.md)
+- [分支策略](./development/branch-strategy.md)
+- [貢獻指南](./development/CONTRIBUTING.md)
 
-## 
+## 疑難排解
 
- [](../CONTRIBUTING.md)
+- [FAQ](./faq/faq.md)
+- [Web 啟動問題](./troubleshooting/web-startup-issues.md)
+- [Docker 疑難排解](./troubleshooting/docker-troubleshooting.md)
+- [匯出問題](./troubleshooting/export-issues.md)
+- [FinnHub 新聞設定](./troubleshooting/finnhub-news-data-setup.md)
+- [Streamlit FileWatcher 修復](./troubleshooting/streamlit-file-watcher-fix.md)
+- [Windows ChromaDB 修復](./troubleshooting/windows10-chromadb-fix.md)
 
-## 
+## 版本紀錄
 
-- **GitHub Issues**: [](https://github.com/aiinpocket/TradingAgents-CN/issues)
-- **Email**: hsliup@163.com
-- ****: [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents)
+- [完整變更日誌](./releases/CHANGELOG.md)
+- [v0.1.12 發布說明](./releases/v0.1.12-release-notes.md)
+- [v0.1.11 發布說明](./releases/v0.1.11-release-notes.md)
+- [v0.1.7 發布說明](./releases/v0.1.7-release-notes.md)
+
+## 其他
+
+- [API 密鑰安全](./security/api_keys_security.md)
+- [上游同步](./maintenance/upstream-sync.md)
+- [系統設計](./design/stock_analysis_system_design.md)
+
+---
+
+**GitHub Issues**: [回報問題](https://github.com/aiinpocket/TradingAgents-CN/issues)
