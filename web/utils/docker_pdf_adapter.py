@@ -25,7 +25,7 @@ def is_docker_environment() -> bool:
             content = f.read()
             if 'docker' in content or 'containerd' in content:
                 return True
-    except:
+    except Exception:
         pass
     
     # 檢查環境變量
@@ -44,7 +44,7 @@ def setup_xvfb_display():
                 logger.info(f"Xvfb已在運行")
                 os.environ['DISPLAY'] = ':99'
                 return True
-        except:
+        except Exception:
             pass
 
         # 啟動Xvfb虛擬顯示器 (後台運行)
@@ -172,7 +172,7 @@ def check_docker_pdf_dependencies():
                               capture_output=True, timeout=10)
         if result.returncode != 0:
             missing_deps.append('wkhtmltopdf')
-    except:
+    except Exception:
         missing_deps.append('wkhtmltopdf')
     
     # 檢查Xvfb
@@ -181,7 +181,7 @@ def check_docker_pdf_dependencies():
                               capture_output=True, timeout=10)
         if result.returncode not in [0, 1]:  # Xvfb -help 返回1是正常的
             missing_deps.append('xvfb')
-    except:
+    except Exception:
         missing_deps.append('xvfb')
     
     # 檢查字體

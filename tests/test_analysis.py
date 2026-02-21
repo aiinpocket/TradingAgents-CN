@@ -59,7 +59,7 @@ def test_graph_initialization():
         os.makedirs(config["data_cache_dir"], exist_ok=True)
         
         # 初始化圖
-        graph = TradingAgentsGraph(["market"], config=config, debug=True)
+        graph = TradingAgentsGraph(["market"], config=config, debug=False)
         print(" 圖初始化成功")
         return True, graph
     except Exception as e:

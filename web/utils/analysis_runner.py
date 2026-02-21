@@ -394,7 +394,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if TOKEN_TRACKING_ENABLED:
             try:
                 total_cost = token_tracker.get_session_cost(session_id)
-            except:
+            except Exception:
                 pass
 
         logger_manager.log_analysis_complete(

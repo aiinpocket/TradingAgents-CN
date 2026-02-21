@@ -1013,7 +1013,7 @@ def run_analysis():
     ui.show_progress("正在初始化分析系統...")
     try:
         graph = TradingAgentsGraph(
-            [analyst.value for analyst in selections["analysts"]], config=config, debug=True
+            [analyst.value for analyst in selections["analysts"]], config=config, debug=False
         )
         ui.show_success("分析系統初始化完成")
     except ImportError as e:

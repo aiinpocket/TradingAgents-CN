@@ -37,7 +37,7 @@ class FileSessionManager:
                     file_age = current_time - session_file.stat().st_mtime
                     if file_age < (24 * 3600):  # 24小時內的文件
                         recent_files.append((session_file, file_age))
-                except:
+                except Exception:
                     continue
 
             if recent_files:

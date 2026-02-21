@@ -378,7 +378,7 @@ def load_detailed_records(days: int) -> List[UsageRecord]:
                 record_date = datetime.fromisoformat(record.timestamp)
                 if record_date >= cutoff_date:
                     filtered_records.append(record)
-            except:
+            except Exception:
                 continue
         
         return filtered_records

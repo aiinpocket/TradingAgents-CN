@@ -64,7 +64,7 @@ def load_favorites():
         try:
             with open(favorites_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except:
+        except Exception:
             return []
     return []
 
@@ -75,7 +75,7 @@ def save_favorites(favorites):
         with open(favorites_file, 'w', encoding='utf-8') as f:
             json.dump(favorites, f, ensure_ascii=False, indent=2)
         return True
-    except:
+    except Exception:
         return False
 
 def load_tags():
@@ -85,7 +85,7 @@ def load_tags():
         try:
             with open(tags_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except:
+        except Exception:
             return {}
     return {}
 
@@ -96,7 +96,7 @@ def save_tags(tags):
         with open(tags_file, 'w', encoding='utf-8') as f:
             json.dump(tags, f, ensure_ascii=False, indent=2)
         return True
-    except:
+    except Exception:
         return False
 
 def add_tag_to_analysis(analysis_id, tag):
@@ -237,7 +237,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                         try:
                             analysis_date = datetime.strptime(date_str, '%Y-%m-%d')
                             timestamp = analysis_date.timestamp()
-                        except:
+                        except Exception:
                             timestamp = datetime.now().timestamp()
 
                         # 創建分析結果條目

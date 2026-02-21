@@ -15,7 +15,7 @@ config["max_debate_rounds"] = 1
 config["online_tools"] = True
 
 # 使用自訂配置初始化
-ta = TradingAgentsGraph(debug=True, config=config)
+ta = TradingAgentsGraph(debug=False, config=config)
 
 # 執行分析
 _, decision = ta.propagate("NVDA", "2024-05-10")
