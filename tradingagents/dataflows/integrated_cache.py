@@ -22,7 +22,7 @@ except ImportError:
     ADAPTIVE_CACHE_AVAILABLE = False
 
 class IntegratedCacheManager:
-    """集成快取管理器 - 智能選擇快取策略"""
+    """集成快取管理器 - 智慧選擇快取策略"""
     
     def __init__(self, cache_dir: str = None):
         self.logger = setup_dataflow_logging()
@@ -262,7 +262,7 @@ class IntegratedCacheManager:
         elif mongodb_available:
             return "持久化模式 (MongoDB + 檔案)"
         else:
-            return "標準模式 (智能檔案快取)"
+            return "標準模式 (智慧檔案快取)"
 
 
 # 全局集成快取管理器實例

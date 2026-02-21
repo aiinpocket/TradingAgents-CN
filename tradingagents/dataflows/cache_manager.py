@@ -191,7 +191,7 @@ class StockDataCache:
             return None
     
     def is_cache_valid(self, cache_key: str, max_age_hours: int = None, symbol: str = None, data_type: str = None) -> bool:
-        """檢查快取是否有效 - 支援智能TTL配置"""
+        """檢查快取是否有效 - 支援智慧TTL配置"""
         metadata = self._load_metadata(cache_key)
         if not metadata:
             return False
@@ -315,21 +315,21 @@ class StockDataCache:
                               end_date: str = None, data_source: str = None,
                               max_age_hours: int = None) -> Optional[str]:
         """
-        查找匹配的快取資料 - 支援智能市場分類查找
+        查找匹配的快取資料 - 支援智慧市場分類查找
 
         Args:
             symbol: 股票代碼
             start_date: 開始日期
             end_date: 結束日期
             data_source: 資料來源
-            max_age_hours: 最大快取時間（小時），None時使用智能配置
+            max_age_hours: 最大快取時間（小時），None時使用智慧配置
 
         Returns:
             cache_key: 如果找到有效快取則返回快取鍵，否則返回None
         """
         market_type = self._determine_market_type(symbol)
 
-        # 如果沒有指定TTL，使用智能配置
+        # 如果沒有指定TTL，使用智慧配置
         if max_age_hours is None:
             cache_type = f"{market_type}_stock_data"
             max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
@@ -476,14 +476,14 @@ class StockDataCache:
         Args:
             symbol: 股票代碼
             data_source: 資料來源（如 "openai", "finnhub"）
-            max_age_hours: 最大快取時間（小時），None時使用智能配置
+            max_age_hours: 最大快取時間（小時），None時使用智慧配置
         
         Returns:
             cache_key: 如果找到有效快取則返回快取鍵，否則返回None
         """
         market_type = self._determine_market_type(symbol)
         
-        # 如果沒有指定TTL，使用智能配置
+        # 如果沒有指定TTL，使用智慧配置
         if max_age_hours is None:
             cache_type = f"{market_type}_fundamentals"
             max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)

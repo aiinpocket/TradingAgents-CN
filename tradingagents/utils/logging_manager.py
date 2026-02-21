@@ -22,7 +22,7 @@ _bootstrap_logger = logging.getLogger("tradingagents.logging_manager")
 class ColoredFormatter(logging.Formatter):
     """彩色日誌格式化器"""
     
-    # ANSI顏色代碼
+    # ANSI顏色碼
     COLORS = {
         'DEBUG': '\033[36m',    # 青色
         'INFO': '\033[32m',     # 綠色

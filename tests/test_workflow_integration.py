@@ -149,7 +149,7 @@ def test_news_analyst_integration():
         print(f"   新聞分析師: 已使用統一工具替代原有多個工具")
         print(f"   工具綁定: 已實現LLM工具綁定機制")
         print(f"   系統提示詞: 已更新為強制呼叫統一工具")
-        print(f"   工作流程: 已集成到整體交易智能體流程")
+        print(f"   工作流程: 已集成到整體交易智慧體流程")
         
         print(f"\n 在整體流程中的使用情況：")
         print(f"  1. 當用戶選擇包含'news'的分析師時，系統會自動載入新聞分析師")
@@ -158,7 +158,7 @@ def test_news_analyst_integration():
         print(f"  4. 統一工具會自動識別美股股票並取得相應新聞")
         print(f"  6. 分析結果會傳遞給後續的研究員和管理員節點")
         
-        print(f"\n 確認：統一新聞工具已完全集成到整體交易智能體流程中！")
+        print(f"\n 確認：統一新聞工具已完全集成到整體交易智慧體流程中！")
         print(f" 大模型已透過 llm.bind_tools(tools) 綁定了統一新聞工具！")
         
     except Exception as e:

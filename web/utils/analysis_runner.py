@@ -145,7 +145,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 資料預取得成功
         success_msg = f"資料準備完成: {preparation_result.stock_name} ({preparation_result.market_type})"
-        update_progress(success_msg)  # 使用智能檢測，不再硬編碼步驟
+        update_progress(success_msg)  # 使用智慧檢測，不再硬編碼步驟
         logger.info(f"[{session_id}] {success_msg}")
         logger.info(f"[{session_id}] 快取狀態: {preparation_result.cache_status}")
 
@@ -569,7 +569,7 @@ def format_analysis_results(results):
     # 格式化狀態資訊
     formatted_state = {}
     
-    # 處理各個分析模組的結果 - 包含完整的智能體團隊分析
+    # 處理各個分析模組的結果 - 包含完整的智慧體團隊分析
     analysis_keys = [
         'market_report',
         'fundamentals_report',

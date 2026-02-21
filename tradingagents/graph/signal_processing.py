@@ -169,11 +169,11 @@ class SignalProcessor:
                             except (ValueError, IndexError):
                                 continue
 
-                    # 如果仍然沒有找到價格，嘗試智能推算
+                    # 如果仍然沒有找到價格，嘗試智慧推算
                     if target_price is None or target_price == "null" or target_price == "":
                         target_price = self._smart_price_estimation(full_text, action)
                         if target_price:
-                            logger.debug(f"[SignalProcessor] 智能推算目標價格: {target_price}")
+                            logger.debug(f"[SignalProcessor] 智慧推算目標價格: {target_price}")
                         else:
                             target_price = None
                             logger.warning("[SignalProcessor] 未能提取到目標價格，設定為None")
@@ -212,7 +212,7 @@ class SignalProcessor:
             return self._extract_simple_decision(full_signal)
 
     def _smart_price_estimation(self, text: str, action: str) -> float:
-        """智能價格推算方法（僅支援美股）"""
+        """智慧價格推算方法（僅支援美股）"""
         import re
         
         # 嘗試從文本中提取當前價格和漲跌幅資訊
@@ -307,7 +307,7 @@ class SignalProcessor:
                 except ValueError:
                     continue
 
-        # 如果沒有找到價格，嘗試智能推算（僅美股）
+        # 如果沒有找到價格，嘗試智慧推算（僅美股）
         if target_price is None:
             target_price = self._smart_price_estimation(text, action)
 

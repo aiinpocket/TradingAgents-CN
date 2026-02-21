@@ -44,8 +44,8 @@ def test_complete_analysis_flow():
         time.sleep(0.3)
         ui.show_success("資料取得準備完成")
         
-        # 步驟3: 智能分析階段
-        ui.show_step_header(3, "智能分析階段 | AI Analysis Phase")
+        # 步驟3: 智慧分析階段
+        ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase")
         ui.show_progress("啟動分析師團隊...")
         time.sleep(0.3)
         
@@ -287,7 +287,7 @@ def main():
         
         print("\n 技術實現亮點:")
         print("- 多階段進度跟蹤")
-        print("- 智能重複提示防止")
+        print("- 智慧重複提示防止")
         print("- 用戶友好的進度描述")
         print("- 完整的分析流程可視化")
     else:

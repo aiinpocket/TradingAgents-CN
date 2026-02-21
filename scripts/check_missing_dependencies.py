@@ -1,7 +1,7 @@
 """
 檢查 pyproject.toml 中缺失的依賴套件
 
-掃描代碼中實際使用的第三方包，與 pyproject.toml 中聲明的依賴進行對比
+掃描程式碼中實際使用的第三方包，與 pyproject.toml 中聲明的依賴進行對比
 """
 
 import os
@@ -150,8 +150,8 @@ def main():
     print(" 檢查 pyproject.toml 中缺失的依賴套件")
     print("=" * 80)
     
-    # 掃描代碼中的匯入
-    print("\n 掃描代碼目錄...")
+    # 掃描程式碼中的匯入
+    print("\n 掃描程式碼目錄...")
     directories_to_scan = [
         project_root / 'tradingagents',
         project_root / 'web',

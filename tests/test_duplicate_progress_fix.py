@@ -187,7 +187,7 @@ def test_real_scenario_simulation():
         print("-" * 40)
         
         # 模擬真實的分析流程
-        ui.show_step_header(3, "智能分析階段 | AI Analysis Phase")
+        ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase")
         ui.show_progress("啟動分析師團隊...")
         
         # 模擬市場分析師的多次輸出（這是導致重複的原因）

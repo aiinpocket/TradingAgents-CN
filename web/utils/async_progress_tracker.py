@@ -384,7 +384,7 @@ class AsyncProgressTracker:
         logger.debug(f"[進度詳情] 步驟{self.current_step + 1}/{len(self.analysis_steps)} ({step_name}), 進度{progress_percentage:.1f}%, 耗時{elapsed_time:.1f}s")
     
     def _detect_step_from_message(self, message: str) -> Optional[int]:
-        """根據訊息內容智能檢測當前步驟"""
+        """根據訊息內容智慧檢測當前步驟"""
         message_lower = message.lower()
 
         # 開始分析階段 - 只匹配最初的開始訊息

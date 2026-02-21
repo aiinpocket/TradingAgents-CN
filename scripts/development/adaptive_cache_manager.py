@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 自適應快取管理器 - 根據可用服務自動選擇最佳快取策略
-支援檔案快取、Redis快取、MongoDB快取的智能切換
+支援檔案快取、Redis快取、MongoDB快取的智慧切換
 """
 
 import os
@@ -17,7 +17,7 @@ import pandas as pd
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
-# 匯入智能配置
+# 匯入智慧配置
 try:
     from smart_config import get_smart_config, get_config
     SMART_CONFIG_AVAILABLE = True
@@ -25,7 +25,7 @@ except ImportError:
     SMART_CONFIG_AVAILABLE = False
 
 class AdaptiveCacheManager:
-    """自適應快取管理器 - 智能選擇快取後端"""
+    """自適應快取管理器 - 智慧選擇快取後端"""
     
     def __init__(self, cache_dir: str = "data_cache"):
         self.cache_dir = Path(cache_dir)
@@ -35,7 +35,7 @@ class AdaptiveCacheManager:
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         
-        # 取得智能配置
+        # 取得智慧配置
         self._load_smart_config()
         
         # 初始化快取後端
@@ -44,7 +44,7 @@ class AdaptiveCacheManager:
         self.logger.info(f"快取管理器初始化完成，主要後端: {self.primary_backend}")
     
     def _load_smart_config(self):
-        """載入智能配置"""
+        """載入智慧配置"""
         if SMART_CONFIG_AVAILABLE:
             try:
                 config_manager = get_smart_config()
@@ -55,10 +55,10 @@ class AdaptiveCacheManager:
                 self.fallback_enabled = self.config["cache"]["fallback_enabled"]
                 self.ttl_settings = self.config["cache"]["ttl_settings"]
                 
-                self.logger.info(" 智能配置載入成功")
+                self.logger.info(" 智慧配置載入成功")
                 return
             except Exception as e:
-                self.logger.warning(f"智能配置載入失敗: {e}")
+                self.logger.warning(f"智慧配置載入失敗: {e}")
         
         # 預設配置（純檔案快取）
         self.config = {

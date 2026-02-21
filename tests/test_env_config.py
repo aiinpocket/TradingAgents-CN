@@ -154,7 +154,7 @@ def main():
             print(" 預設不依賴資料庫，可以純檔案快取執行")
             print(" 自動檢測和使用可用的資料庫")
             print(" 支援完整的MongoDB和Redis配置")
-            print(" 智能降級，確保系統穩定性")
+            print(" 智慧降級，確保系統穩定性")
         
         return success
         

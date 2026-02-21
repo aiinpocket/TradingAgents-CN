@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-智能資料庫管理器
+智慧資料庫管理器
 自動檢測MongoDB和Redis可用性，提供降級方案
 使用項目現有的.env配置
 """
@@ -10,7 +10,7 @@ import os
 from typing import Dict, Any, Tuple
 
 class DatabaseManager:
-    """智能資料庫管理器"""
+    """智慧資料庫管理器"""
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)

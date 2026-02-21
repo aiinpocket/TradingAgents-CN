@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-智能系統完整測試 - 驗證自適應配置和快取系統
+智慧系統完整測試 - 驗證自適應配置和快取系統
 """
 
 import time
@@ -8,8 +8,8 @@ import sys
 from datetime import datetime
 
 def test_smart_config():
-    """測試智能配置系統"""
-    print(" 測試智能配置系統")
+    """測試智慧配置系統"""
+    print(" 測試智慧配置系統")
     print("-" * 30)
     
     try:
@@ -27,7 +27,7 @@ def test_smart_config():
         return True, config_manager
         
     except Exception as e:
-        print(f" 智能配置測試失敗: {e}")
+        print(f" 智慧配置測試失敗: {e}")
         return False, None
 
 def test_adaptive_cache():
@@ -219,8 +219,8 @@ def generate_test_report(results):
     else:
         print(" 部分測試失敗，需要檢查以下問題:")
         
-        if not results.get("智能配置", True):
-            print("  - 檢查智能配置系統")
+        if not results.get("智慧配置", True):
+            print("  - 檢查智慧配置系統")
         if not results.get("自適應快取", True):
             print("  - 檢查快取系統配置")
         if not results.get("性能測試", True):
@@ -230,16 +230,16 @@ def generate_test_report(results):
 
 def main():
     """主測試函式"""
-    print(" TradingAgents 智能系統完整測試")
+    print(" TradingAgents 智慧系統完整測試")
     print("=" * 50)
     print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     # 執行所有測試
     results = {}
     
-    # 測試1: 智能配置
+    # 測試1: 智慧配置
     config_success, config_manager = test_smart_config()
-    results["智能配置"] = config_success
+    results["智慧配置"] = config_success
     
     # 測試2: 自適應快取
     cache_success, cache_manager = test_adaptive_cache()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-智能配置系統 - 自動檢測和配置資料庫依賴
+智慧配置系統 - 自動檢測和配置資料庫依賴
 確保系統在有或沒有MongoDB/Redis的情況下都能正常執行
 """
 
@@ -16,7 +16,7 @@ from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 class SmartConfigManager:
-    """智能配置管理器 - 自動檢測可用服務並配置系統"""
+    """智慧配置管理器 - 自動檢測可用服務並配置系統"""
     
     def __init__(self):
         self.config = {}
@@ -107,7 +107,7 @@ class SmartConfigManager:
     
     def _generate_config(self):
         """根據檢測結果生成配置"""
-        logger.info(f"\n 生成智能配置...")
+        logger.info(f"\n 生成智慧配置...")
         
         # 基礎配置
         self.config = {
@@ -236,7 +236,7 @@ class SmartConfigManager:
 _config_manager = None
 
 def get_smart_config() -> SmartConfigManager:
-    """取得全局智能配置管理器"""
+    """取得全局智慧配置管理器"""
     global _config_manager
     if _config_manager is None:
         _config_manager = SmartConfigManager()
@@ -261,8 +261,8 @@ def get_cache_backend() -> str:
 
 
 def main():
-    """主函式 - 演示智能配置系統"""
-    logger.info(f" TradingAgents 智能配置系統")
+    """主函式 - 演示智慧配置系統"""
+    logger.info(f" TradingAgents 智慧配置系統")
     logger.info(f"=")
     
     # 建立配置管理器

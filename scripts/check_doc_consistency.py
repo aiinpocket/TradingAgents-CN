@@ -85,17 +85,17 @@ class DocumentationChecker:
         return issues
     
     def check_agent_architecture(self) -> List[str]:
-        """檢查智能體架構描述的一致性"""
-        print(" 檢查智能體架構一致性...")
+        """檢查智慧體架構描述的一致性"""
+        print(" 檢查智慧體架構一致性...")
         issues = []
         
-        # 檢查實際的智能體實現
+        # 檢查實際的智慧體實現
         agents_code_dir = self.code_dir / "agents"
         if not agents_code_dir.exists():
-            issues.append(" 智能體代碼目錄不存在")
+            issues.append(" 智慧體程式碼目錄不存在")
             return issues
         
-        # 取得實際的智能體列表
+        # 取得實際的智慧體列表
         actual_agents = {}
         for category in ["analysts", "researchers", "managers", "trader", "risk_mgmt"]:
             category_dir = agents_code_dir / category
@@ -105,9 +105,9 @@ class DocumentationChecker:
                     if py_file.name != "__init__.py":
                         actual_agents[category].append(py_file.stem)
         
-        print(f"   發現的智能體: {actual_agents}")
+        print(f"   發現的智慧體: {actual_agents}")
         
-        # 檢查檔案中的智能體描述
+        # 檢查檔案中的智慧體描述
         agents_doc_dir = self.docs_dir / "agents"
         if agents_doc_dir.exists():
             for doc_file in agents_doc_dir.glob("*.md"):
@@ -124,7 +124,7 @@ class DocumentationChecker:
                             issues.append(f" {doc_file.name}: 提到create函式但沒有正確的函式簽名")
                     
                 except Exception as e:
-                    issues.append(f" 讀取智能體檔案失敗 {doc_file}: {e}")
+                    issues.append(f" 讀取智慧體檔案失敗 {doc_file}: {e}")
         
         return issues
     
@@ -176,10 +176,10 @@ class DocumentationChecker:
             issues.append(" 缺少API參考檔案目錄")
             return issues
         
-        # 檢查智能體API檔案
+        # 檢查智慧體API檔案
         agents_ref = api_ref_dir / "agents"
         if not agents_ref.exists():
-            issues.append(" 缺少智能體API參考檔案")
+            issues.append(" 缺少智慧體API參考檔案")
         
         return issues
     

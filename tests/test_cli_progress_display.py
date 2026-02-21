@@ -98,8 +98,8 @@ def test_analysis_flow_simulation():
         time.sleep(0.5)
         ui.show_success("資料取得準備完成")
         
-        # 步驟3: 智能分析階段
-        ui.show_step_header(3, "智能分析階段 | AI Analysis Phase")
+        # 步驟3: 智慧分析階段
+        ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase")
         ui.show_progress("啟動分析師團隊...")
         time.sleep(0.5)
         

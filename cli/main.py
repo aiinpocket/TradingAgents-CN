@@ -138,7 +138,7 @@ ui = CLIUserInterface()
 
 app = typer.Typer(
     name="TradingAgents",
-    help="TradingAgents CLI: 多智能體大語言模型金融交易框架 | Multi-Agents LLM Financial Trading Framework",
+    help="TradingAgents CLI: 多智慧體大語言模型金融交易框架 | Multi-Agents LLM Financial Trading Framework",
     add_completion=True,  # Enable shell completion
     rich_markup_mode="rich",  # Enable rich markup
     no_args_is_help=False,  # 不顯示幫助，直接進入分析模式
@@ -526,7 +526,7 @@ def get_user_selections():
 
     # Create welcome box content
     welcome_content = f"{welcome_ascii}\n"
-    welcome_content += "[bold green]TradingAgents: 多智能體大語言模型金融交易框架 - CLI[/bold green]\n"
+    welcome_content += "[bold green]TradingAgents: 多智慧體大語言模型金融交易框架 - CLI[/bold green]\n"
     welcome_content += "[bold green]Multi-Agents LLM Financial Trading Framework - CLI[/bold green]\n\n"
     welcome_content += "[bold]工作流程 | Workflow Steps:[/bold]\n"
     welcome_content += "I. 分析師團隊 | Analyst Team → II. 研究團隊 | Research Team → III. 交易員 | Trader → IV. 風險管理 | Risk Management → V. 投資組合管理 | Portfolio Management\n\n"
@@ -540,7 +540,7 @@ def get_user_selections():
         border_style="green",
         padding=(1, 2),
         title="歡迎使用 TradingAgents | Welcome to TradingAgents",
-        subtitle="多智能體大語言模型金融交易框架 | Multi-Agents LLM Financial Trading Framework",
+        subtitle="多智慧體大語言模型金融交易框架 | Multi-Agents LLM Financial Trading Framework",
     )
     console.print(Align.center(welcome_box))
     console.print()  # Add a blank line after the welcome box
@@ -588,7 +588,7 @@ def get_user_selections():
     console.print(
         create_question_box(
             "步驟 4: 分析師團隊 | Step 4: Analysts Team",
-            "選擇您的LLM分析師智能體進行分析 | Select your LLM analyst agents for the analysis"
+            "選擇您的LLM分析師智慧體進行分析 | Select your LLM analyst agents for the analysis"
         )
     )
     selected_analysts = select_analysts(selected_ticker)
@@ -617,8 +617,8 @@ def get_user_selections():
     # Step 7: Thinking agents
     console.print(
         create_question_box(
-            "步驟 7: 思考智能體 | Step 7: Thinking Agents",
-            "選擇您的思考智能體進行分析 | Select your thinking agents for analysis"
+            "步驟 7: 思考智慧體 | Step 7: Thinking Agents",
+            "選擇您的思考智慧體進行分析 | Select your thinking agents for analysis"
         )
     )
     selected_shallow_thinker = select_shallow_thinking_agent(selected_llm_provider)
@@ -1160,9 +1160,9 @@ def run_analysis():
         ui.show_success("資料取得準備完成")
 
         # 顯示分析階段
-        ui.show_step_header(4, "智能分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
+        ui.show_step_header(4, "智慧分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
         ui.show_progress("啟動分析師團隊...")
-        ui.show_user_message("提示：智能分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
+        ui.show_user_message("提示：智慧分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
 
         # Stream the analysis
         trace = []
@@ -1624,7 +1624,7 @@ def version():
     logger.info(f"\n[bold blue]TradingAgents 版本資訊 | Version Information[/bold blue]")
     logger.info(f"[green]版本 | Version:[/green] {version} [yellow](預覽版 | Preview)[/yellow]")
     logger.info(f"[green]發布日期 | Release Date:[/green] 2025-06-26")
-    logger.info(f"[green]框架 | Framework:[/green] 多智能體金融交易分析 | Multi-Agent Financial Trading Analysis")
+    logger.info(f"[green]框架 | Framework:[/green] 多智慧體金融交易分析 | Multi-Agent Financial Trading Analysis")
     logger.info(f"[green]支援的語言 | Languages:[/green] 中文 | English")
     logger.info(f"[green]開發狀態 | Development Status:[/green] [yellow]早期預覽版，功能持續完善中[/yellow]")
     logger.info(f"[green]基於項目 | Based on:[/green] [blue]TauricResearch/TradingAgents[/blue]")
@@ -1835,7 +1835,7 @@ def help_chinese():
     commands_table.add_row(
         "analyze",
         "股票分析 | Stock Analysis",
-        "啟動交互式多智能體股票分析工具"
+        "啟動交互式多智慧體股票分析工具"
     )
     commands_table.add_row(
         "config",
@@ -1878,7 +1878,7 @@ def main():
         try:
             app()
         except SystemExit as e:
-            # 只在退出碼為2（typer的未知命令錯誤）時提供智能建議
+            # 只在退出碼為2（typer的未知命令錯誤）時提供智慧建議
             if e.code == 2 and len(sys.argv) > 1:
                 unknown_command = sys.argv[1]
                 available_commands = ['analyze', 'config', 'version', 'data-config', 'examples', 'test', 'help']

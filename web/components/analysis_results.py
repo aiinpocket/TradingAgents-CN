@@ -192,7 +192,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
         project_results_dir = Path(__file__).parent.parent.parent / "data"/ "analysis_results"/ "detailed"
 
         if project_results_dir.exists():
-            # 遍歷股票代碼目錄
+            # 遍歷股票程式碼目錄
             for stock_dir in project_results_dir.iterdir():
                 if not stock_dir.is_dir():
                     continue

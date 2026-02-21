@@ -86,23 +86,23 @@ def test_cli_command_format_consistency():
 
 def test_cli_smart_suggestions():
     """
-    測試 CLI 智能建議功能
+    測試 CLI 智慧建議功能
     Test CLI smart suggestions feature
     """
-    print("\n 測試 CLI 智能建議功能...")
+    print("\n 測試 CLI 智慧建議功能...")
     
-    # 檢查 cli/main.py 是否包含智能建議代碼
+    # 檢查 cli/main.py 是否包含智慧建議代碼
     cli_main_path = project_root / "cli" / "main.py"
     if cli_main_path.exists():
         with open(cli_main_path, 'r', encoding='utf-8') as f:
             content = f.read()
             
-            # 檢查是否包含智能建議相關代碼
+            # 檢查是否包含智慧建議相關代碼
             if "get_close_matches" in content and "您是否想要使用以下命令之一" in content:
-                print(" CLI 智能建議功能已實現")
+                print(" CLI 智慧建議功能已實現")
                 return True
             else:
-                print(" CLI 智能建議功能未找到")
+                print(" CLI 智慧建議功能未找到")
                 return False
     
     return False

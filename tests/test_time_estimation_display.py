@@ -43,10 +43,10 @@ def test_time_estimation_display():
         time.sleep(0.3)
         ui.show_success("資料取得準備完成")
         
-        # 步驟3: 智能分析階段（帶時間預估）
-        ui.show_step_header(3, "智能分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
+        # 步驟3: 智慧分析階段（帶時間預估）
+        ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
         ui.show_progress("啟動分析師團隊...")
-        ui.show_user_message(" 提示：智能分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
+        ui.show_user_message(" 提示：智慧分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
         time.sleep(0.5)
         
         # 模擬分析過程
@@ -110,14 +110,14 @@ def test_user_expectation_management():
         print("-" * 50)
         
         print("\n 沒有時間預估的體驗:")
-        print("   步驟 3: 智能分析階段")
+        print("   步驟 3: 智慧分析階段")
         print("    啟動分析師團隊...")
         print("   [用戶不知道要等多久，可能會焦慮]")
         
         print("\n 有時間預估的體驗:")
-        ui.show_step_header(3, "智能分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
+        ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
         ui.show_progress("啟動分析師團隊...")
-        ui.show_user_message(" 提示：智能分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
+        ui.show_user_message(" 提示：智慧分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
         
         print("\n 改進效果:")
         print("    用戶知道大概需要等待的時間")
@@ -168,13 +168,13 @@ def test_time_estimation_scenarios():
             print(f"   預估時間: {scenario['estimated_time']}")
             
             # 模擬顯示
-            header = f"智能分析階段 | AI Analysis Phase (預計耗時約{scenario['estimated_time']})"
+            header = f"智慧分析階段 | AI Analysis Phase (預計耗時約{scenario['estimated_time']})"
             ui.show_step_header(3, header)
             
             if len(scenario['analysts']) > 2:
                 ui.show_user_message(" 提示：完整分析包含多個團隊深度協作，請耐心等待", "dim")
             elif len(scenario['analysts']) > 1:
-                ui.show_user_message(" 提示：智能分析包含多個團隊協作，請耐心等待", "dim")
+                ui.show_user_message(" 提示：智慧分析包含多個團隊協作，請耐心等待", "dim")
             else:
                 ui.show_user_message(" 提示：正在進行專業分析，請稍候", "dim")
         
@@ -202,12 +202,12 @@ def test_progress_communication():
         
         # 策略1: 明確時間預估
         print("\n策略1: 明確時間預估")
-        ui.show_step_header(3, "智能分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
+        ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
         print("    讓用戶知道大概需要等待多長時間")
         
         # 策略2: 解釋原因
         print("\n策略2: 解釋原因")
-        ui.show_user_message(" 提示：智能分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
+        ui.show_user_message(" 提示：智慧分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
         print("    解釋為什麼需要這麼長時間")
         
         # 策略3: 實時進度更新
@@ -298,7 +298,7 @@ def main():
     if passed == total:
         print(" 所有測試通過！時間預估顯示效果優秀")
         print("\n 改進效果:")
-        print("1.  用戶知道智能分析階段大約需要10分鐘")
+        print("1.  用戶知道智慧分析階段大約需要10分鐘")
         print("2.  設定合理期望，減少等待焦慮")
         print("3.  解釋分析複雜性，增強專業感")
         print("4.  提升用戶對系統能力的認知")

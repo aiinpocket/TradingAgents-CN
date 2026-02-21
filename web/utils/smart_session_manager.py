@@ -1,5 +1,5 @@
 """
-智能會話管理器 - 自動選擇最佳儲存方案
+智慧會話管理器 - 自動選擇最佳儲存方案
 優先級：Redis > 檔案儲存
 """
 
@@ -7,7 +7,7 @@ import streamlit as st
 from typing import Optional, Dict, Any
 
 class SmartSessionManager:
-    """智能會話管理器"""
+    """智慧會話管理器"""
     
     def __init__(self):
         self.redis_manager = None
@@ -129,7 +129,7 @@ class SmartSessionManager:
         
         return debug_info
 
-# 全局智能會話管理器實例
+# 全局智慧會話管理器實例
 smart_session_manager = SmartSessionManager()
 
 def get_persistent_analysis_id() -> Optional[str]:

@@ -105,7 +105,7 @@ def clean_cache_files(force_clean=False):
         return
 
     if not force_clean:
-        # 可選清理：只清理項目代碼的快取，不清理虛擬環境
+        # 可選清理：只清理專案程式碼的快取，不清理虛擬環境
         project_cache_dirs = [d for d in cache_dirs if 'env' not in str(d)]
         if project_cache_dirs:
             logger.info("清理項目快取檔案...")

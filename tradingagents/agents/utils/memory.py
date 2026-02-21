@@ -139,7 +139,7 @@ class FinancialSituationMemory:
         self.situation_collection = self.chroma_manager.get_or_create_collection(name)
 
     def _smart_text_truncation(self, text, max_length=8192):
-        """智能文本截斷，保持語義完整性和快取相容性"""
+        """智慧文本截斷，保持語義完整性和快取相容性"""
         if len(text) <= max_length:
             return text, False  # 返回原文本和是否截斷的標誌
         
@@ -153,7 +153,7 @@ class FinancialSituationMemory:
                 else:
                     break
             if len(truncated) > max_length // 2:  # 至少保留一半內容
-                logger.info(f"智能截斷：在句子邊界截斷，保留{len(truncated)}/{len(text)}字符")
+                logger.info(f"智慧截斷：在句子邊界截斷，保留{len(truncated)}/{len(text)}字符")
                 return truncated, True
         
         # 嘗試在段落邊界截斷
@@ -166,7 +166,7 @@ class FinancialSituationMemory:
                 else:
                     break
             if len(truncated) > max_length // 2:
-                logger.info(f"智能截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字符")
+                logger.info(f"智慧截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字符")
                 return truncated, True
         
         # 最後選擇：保留前半部分和後半部分的關鍵資訊
