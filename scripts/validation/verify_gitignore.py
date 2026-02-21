@@ -14,13 +14,14 @@ logger = get_logger('scripts')
 
 
 def run_git_command(cmd, cwd=None):
-    """運行Git命令"""
+    """運行 Git 命令（不使用 shell=True，避免命令注入風險）"""
+    import shlex
     try:
+        args = shlex.split(cmd) if isinstance(cmd, str) else cmd
         result = subprocess.run(
-            cmd, 
-            shell=True, 
-            capture_output=True, 
-            text=True, 
+            args,
+            capture_output=True,
+            text=True,
             cwd=cwd
         )
         return result.returncode == 0, result.stdout.strip(), result.stderr.strip()

@@ -62,7 +62,7 @@ def migrate_model_configs(env_config):
         config_manager.save_models(models)
         logger.info(f" 模型配置已保存")
     else:
-        logger.info(f"ℹ 模型配置無需更新")
+        logger.info(f"[INFO]模型配置無需更新")
 
 def migrate_system_settings(env_config):
     """遷移系統設置"""
@@ -92,7 +92,7 @@ def migrate_system_settings(env_config):
         config_manager.save_settings(settings)
         logger.info(f" 系統設置已保存")
     else:
-        logger.info(f"ℹ 系統設置無需更新")
+        logger.info(f"[INFO]系統設置無需更新")
 
 def main():
     """主函數"""

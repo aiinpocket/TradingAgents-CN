@@ -9,9 +9,11 @@ import time
 from pathlib import Path
 
 def run_command(cmd):
-    """運行命令並返回結果"""
+    """運行命令並返回結果（不使用 shell=True，避免命令注入風險）"""
+    import shlex
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        args = shlex.split(cmd) if isinstance(cmd, str) else cmd
+        result = subprocess.run(args, capture_output=True, text=True)
         return result.returncode == 0, result.stdout, result.stderr
     except Exception as e:
         return False, "", str(e)
@@ -79,8 +81,10 @@ except Exception as e:
     traceback.print_exc()
 "'''
     
-    success, output, error = run_command(f"docker exec TradingAgents-web {test_cmd}")
-    
+    success, output, error = run_command([
+        "docker", "exec", "TradingAgents-web", "python", "-c", test_cmd
+    ])
+
     if success:
         print(" 容器內日誌測試:")
         print(output)
@@ -142,7 +146,10 @@ def check_container_logs():
         print(output)
         
         # 檢查具體的日誌文件
-        success2, output2, error2 = run_command("docker exec TradingAgents-web find /app/logs -name '*.log*' -type f")
+        success2, output2, error2 = run_command([
+            "docker", "exec", "TradingAgents-web",
+            "find", "/app/logs", "-name", "*.log*", "-type", "f"
+        ])
         if success2 and output2.strip():
             print(" 容器內日誌文件:")
             for log_file in output2.strip().split('\n'):
@@ -192,7 +199,7 @@ def main():
     results.append(("日誌生成", trigger_logs_in_container()))
     
     # 等待一下讓日誌寫入
-    print("\n⏳ 等待日誌寫入...")
+    print("\n 等待日誌寫入...")
     time.sleep(3)
     
     # 3. 檢查本地日誌

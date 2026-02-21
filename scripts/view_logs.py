@@ -111,7 +111,7 @@ def tail_log_file(log_file):
                     time.sleep(0.1)
                     
     except KeyboardInterrupt:
-        print("\n⏹ 停止跟蹤")
+        print("\n[STOP]停止跟蹤")
     except Exception as e:
         print(f" 跟蹤失敗: {e}")
 

@@ -222,7 +222,7 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
                 
                 logger.info(" .env文件更新完成")
             else:
-                logger.info("ℹ .env文件已包含數據目錄配置")
+                logger.info("[INFO].env文件已包含數據目錄配置")
             
             return True
             

@@ -10,13 +10,15 @@ import sys
 from datetime import datetime
 
 def run_command(cmd, capture_output=True):
-    """執行命令"""
+    """執行命令（不使用 shell=True，避免命令注入風險）"""
+    import shlex
     try:
+        args = shlex.split(cmd) if isinstance(cmd, str) else cmd
         if capture_output:
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            result = subprocess.run(args, capture_output=True, text=True)
             return result.returncode == 0, result.stdout, result.stderr
         else:
-            result = subprocess.run(cmd, shell=True)
+            result = subprocess.run(args)
             return result.returncode == 0, "", ""
     except Exception as e:
         return False, "", str(e)
@@ -77,7 +79,10 @@ def explore_container_filesystem(container_name):
                     print(f"   {line}")
             
             # 查找.log文件
-            success, output, error = run_command(f"docker exec {container_name} find {location} -maxdepth 2 -name '*.log' -type f 2>/dev/null")
+            success, output, error = run_command([
+                "docker", "exec", container_name,
+                "find", location, "-maxdepth", "2", "-name", "*.log", "-type", "f"
+            ])
             if success and output.strip():
                 log_files = output.strip().split('\n')
                 for log_file in log_files:

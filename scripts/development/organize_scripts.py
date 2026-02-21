@@ -144,7 +144,7 @@ python scripts/{category}/script_name.py
                 except Exception as e:
                     logger.error(f" 移動失敗 {script_name}: {e}")
             else:
-                logger.info(f"ℹ 腳本不存在: {script_name}")
+                logger.info(f"[INFO]腳本不存在: {script_name}")
     
     # 創建主README
     logger.info(f"\n 創建主README...")

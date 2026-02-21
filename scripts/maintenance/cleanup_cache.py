@@ -64,7 +64,7 @@ def cleanup_database_cache(max_age_days: int = 7):
             logger.info(f" 數據庫緩存清理完成，刪除了 {cleared_count} 條記錄")
             return cleared_count
         else:
-            logger.info(f"ℹ 當前緩存系統不支持自動清理")
+            logger.info(f"[INFO]當前緩存系統不支持自動清理")
             return 0
             
     except Exception as e:

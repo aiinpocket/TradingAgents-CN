@@ -41,9 +41,11 @@ class BranchManager:
         }
     
     def run_git_command(self, command):
-        """執行Git命令"""
+        """執行Git命令（不使用 shell=True，避免命令注入風險）"""
+        import shlex
         try:
-            result = subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
+            args = shlex.split(command) if isinstance(command, str) else command
+            result = subprocess.run(args, capture_output=True, text=True, check=True)
             return result.stdout.strip()
         except subprocess.CalledProcessError as e:
             logger.error(f" Git命令執行失敗: {e}")

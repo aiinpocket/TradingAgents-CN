@@ -15,14 +15,15 @@ logger = get_logger('scripts')
 
 
 def run_command(command, cwd=None):
-    """運行命令並返回結果"""
+    """運行命令並返回結果（不使用 shell=True，避免命令注入風險）"""
+    import shlex
     try:
+        args = shlex.split(command) if isinstance(command, str) else command
         result = subprocess.run(
-            command, 
-            shell=True, 
+            args,
             cwd=cwd,
-            capture_output=True, 
-            text=True, 
+            capture_output=True,
+            text=True,
             encoding='utf-8'
         )
         return result.returncode == 0, result.stdout, result.stderr

@@ -217,7 +217,7 @@ def check_system_status():
         if cache.is_database_available():
             logger.info(f" 數據庫可用，系統運行在最佳性能模式")
         else:
-            logger.info(f"ℹ 數據庫不可用，系統使用文件緩存模式")
+            logger.info(f"[INFO]數據庫不可用，系統使用文件緩存模式")
             logger.info(f" 提升性能建議:")
             logger.info(f"  1. 配置環境變量啟用數據庫:")
             logger.info(f"     MONGODB_ENABLED=true")

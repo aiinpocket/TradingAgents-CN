@@ -244,11 +244,11 @@ def main():
         return False
     
     if not pymongo_available and not redis_available:
-        logger.info(f"ℹ 數據庫依賴未安裝，將使用文件緩存模式")
+        logger.info(f"[INFO]數據庫依賴未安裝，將使用文件緩存模式")
         logger.info(f" 系統可以正常運行，性能良好")
         
     elif not mongodb_running and not redis_running:
-        logger.info(f"ℹ 數據庫服務未運行，將使用文件緩存模式")
+        logger.info(f"[INFO]數據庫服務未運行，將使用文件緩存模式")
         logger.info(f" 系統可以正常運行")
         
     else:

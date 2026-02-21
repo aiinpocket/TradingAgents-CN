@@ -39,7 +39,7 @@ def initialize_system():
     config_file = config_dir / "database_config.json"
     
     if config_file.exists():
-        logger.info(f"ℹ 配置文件已存在: {config_file}")
+        logger.info(f"[INFO]配置文件已存在: {config_file}")
         
         # 讀取現有配置
         try:

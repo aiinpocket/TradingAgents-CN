@@ -15,12 +15,14 @@ from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 def run_command(command, description=""):
-    """運行命令並處理錯誤"""
+    """運行命令並處理錯誤（不使用 shell=True，避免命令注入風險）"""
+    import shlex
     logger.info(f" {description}")
     logger.info(f"   執行: {command}")
-    
+
     try:
-        result = subprocess.run(command, shell=True, check=True, 
+        args = shlex.split(command) if isinstance(command, str) else command
+        result = subprocess.run(args, check=True,
                               capture_output=True, text=True)
         logger.info(f" {description} 成功")
         return True

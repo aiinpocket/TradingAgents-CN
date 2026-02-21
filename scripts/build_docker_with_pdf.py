@@ -19,9 +19,10 @@ def run_command(command, description, timeout=300):
     logger.info(f"命令: {command}")
     
     try:
+        import shlex
+        args = shlex.split(command) if isinstance(command, str) else command
         result = subprocess.run(
-            command,
-            shell=True,
+            args,
             capture_output=True,
             text=True,
             timeout=timeout
