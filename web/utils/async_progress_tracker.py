@@ -125,9 +125,9 @@ class AsyncProgressTracker:
             def register_with_timeout():
                 try:
                     register_analysis_tracker(self.analysis_id, self)
-                    print(f"[進度集成] 跟蹤器註冊成功: {self.analysis_id}")
+                    logger.debug(f"[進度集成] 跟蹤器註冊成功: {self.analysis_id}")
                 except Exception as e:
-                    print(f"[進度集成] 跟蹤器註冊失敗: {e}")
+                    logger.debug(f"[進度集成] 跟蹤器註冊失敗: {e}")
 
             # 在單獨線程中註冊，避免阻塞主線程
             register_thread = threading.Thread(target=register_with_timeout, daemon=True)
@@ -135,12 +135,12 @@ class AsyncProgressTracker:
             register_thread.join(timeout=2.0)  # 2秒超時
 
             if register_thread.is_alive():
-                print(f"[進度集成] 跟蹤器註冊超時，繼續執行: {self.analysis_id}")
+                logger.debug(f"[進度集成] 跟蹤器註冊超時，繼續執行: {self.analysis_id}")
 
         except ImportError:
             logger.debug("[異步進度] 日誌集成不可用")
         except Exception as e:
-            print(f"[進度集成] 跟蹤器註冊異常: {e}")
+            logger.debug(f"[進度集成] 跟蹤器註冊異常: {e}")
     
     def _init_redis(self) -> bool:
         """初始化Redis連接"""

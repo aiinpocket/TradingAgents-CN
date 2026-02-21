@@ -19,10 +19,8 @@ import logging
 try:
     from web.utils.mongodb_report_manager import MongoDBReportManager
     MONGODB_AVAILABLE = True
-    print("MongoDB模塊導入成功")
 except ImportError as e:
     MONGODB_AVAILABLE = False
-    print(f"MongoDB模塊導入失敗: {e}")
 
 # 設置日誌
 logger = logging.getLogger(__name__)
@@ -133,10 +131,10 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
     # 優先從MongoDB加載數據
     if MONGODB_AVAILABLE:
         try:
-            print("[數據加載] 從MongoDB加載分析結果")
+            logger.debug("[數據加載] 從MongoDB加載分析結果")
             mongodb_manager = MongoDBReportManager()
             mongodb_results = mongodb_manager.get_all_reports()
-            print(f"[數據加載] MongoDB返回 {len(mongodb_results)} 個結果")
+            logger.debug(f"[數據加載] MongoDB返回 {len(mongodb_results)} 個結果")
 
             for mongo_result in mongodb_results:
                 # 轉換MongoDB結果格式
@@ -157,18 +155,18 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                 all_results.append(result)
 
             mongodb_loaded = True
-            print(f"從MongoDB加載了 {len(mongodb_results)} 個分析結果")
+            logger.info(f"從MongoDB加載了 {len(mongodb_results)} 個分析結果")
 
         except Exception as e:
-            print(f"MongoDB加載失敗: {e}")
+            logger.warning(f"MongoDB加載失敗: {e}")
             logger.error(f"MongoDB加載失敗: {e}")
             mongodb_loaded = False
     else:
-        print("MongoDB不可用，將使用文件系統數據")
+        logger.info("MongoDB不可用，將使用文件系統數據")
 
     # 只有在MongoDB加載失敗或不可用時才從文件系統加載
     if not mongodb_loaded:
-        print("[備用數據源] 從文件系統加載分析結果")
+        logger.debug("[備用數據源] 從文件系統加載分析結果")
 
         # 首先嘗試從Web界面的保存位置讀取
         web_results_dir = get_analysis_results_dir()
@@ -284,7 +282,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                         all_results.append(result)
 
-        print(f"[備用數據源] 從文件系統加載了 {len(all_results)} 個分析結果")
+        logger.debug(f"[備用數據源] 從文件系統加載了 {len(all_results)} 個分析結果")
     
     # 過濾結果
     filtered_results = []
@@ -1236,9 +1234,9 @@ def render_detailed_analysis_content(selected_result):
             return
         
         # 調試信息：顯示所有可用的報告
-        print(f"[彈窗調試] 數據來源: {selected_result.get('source', '未知')}")
-        print(f"[彈窗調試] 可用報告數量: {len(reports)}")
-        print(f"[彈窗調試] 報告類型: {list(reports.keys())}")
+        logger.debug(f"[彈窗調試] 數據來源: {selected_result.get('source', '未知')}")
+        logger.debug(f"[彈窗調試] 可用報告數量: {len(reports)}")
+        logger.debug(f"[彈窗調試] 報告類型: {list(reports.keys())}")
 
         # 創建標籤頁顯示不同的報告
         report_tabs = list(reports.keys())
@@ -1261,9 +1259,9 @@ def render_detailed_analysis_content(selected_result):
         for report_key in report_tabs:
             display_name = report_display_names.get(report_key, f"{report_key.replace('_', '').title()}")
             tab_names.append(display_name)
-            print(f"[彈窗調試] 添加標簽: {display_name}")
+            logger.debug(f"[彈窗調試] 添加標簽: {display_name}")
 
-        print(f"[彈窗調試] 總標簽數: {len(tab_names)}")
+        logger.debug(f"[彈窗調試] 總標簽數: {len(tab_names)}")
         
         if len(tab_names) == 1:
             # 只有一個報告，直接顯示
@@ -1599,7 +1597,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
         # 2. 保存到MongoDB（如果可用）
         if MONGODB_AVAILABLE:
             try:
-                print(f"[MongoDB保存] 開始保存分析結果: {analysis_id}")
+                logger.debug(f"[MongoDB保存] 開始保存分析結果: {analysis_id}")
                 mongodb_manager = MongoDBReportManager()
 
                 # 使用標準的save_analysis_report方法，確保數據結構一致
@@ -1626,7 +1624,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
 
                     # 確保路徑在Windows上正確顯示（避免雙反斜杠）
                     reports_dir_str = os.path.normpath(str(reports_dir))
-                    print(f"[MongoDB保存] 查找報告目錄: {reports_dir_str}")
+                    logger.debug(f"[MongoDB保存] 查找報告目錄: {reports_dir_str}")
 
                     if reports_dir.exists():
                         # 讀取所有報告文件
@@ -1636,16 +1634,16 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                                     content = f.read()
                                     report_name = report_file.stem
                                     reports[report_name] = content
-                                    print(f"[MongoDB保存] 讀取報告: {report_name} ({len(content)} 字符)")
+                                    logger.debug(f"[MongoDB保存] 讀取報告: {report_name} ({len(content)} 字符)")
                             except Exception as e:
-                                print(f"[MongoDB保存] 讀取報告文件失敗 {report_file}: {e}")
+                                logger.debug(f"[MongoDB保存] 讀取報告文件失敗 {report_file}: {e}")
 
-                        print(f"[MongoDB保存] 共讀取 {len(reports)} 個報告文件")
+                        logger.debug(f"[MongoDB保存] 共讀取 {len(reports)} 個報告文件")
                     else:
-                        print(f"[MongoDB保存] 報告目錄不存在: {reports_dir_str}")
+                        logger.debug(f"[MongoDB保存] 報告目錄不存在: {reports_dir_str}")
 
                 except Exception as e:
-                    print(f"[MongoDB保存] 讀取報告文件異常: {e}")
+                    logger.debug(f"[MongoDB保存] 讀取報告文件異常: {e}")
                     reports = {}
 
                 # 使用標準保存方法，確保字段結構一致
@@ -1656,18 +1654,18 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                 )
 
                 if success:
-                    print(f"[MongoDB保存] 分析結果已保存到MongoDB: {analysis_id} (包含 {len(reports)} 個報告)")
+                    logger.debug(f"[MongoDB保存] 分析結果已保存到MongoDB: {analysis_id} (包含 {len(reports)} 個報告)")
                 else:
-                    print(f"[MongoDB保存] 保存失敗: {analysis_id}")
+                    logger.debug(f"[MongoDB保存] 保存失敗: {analysis_id}")
 
             except Exception as e:
-                print(f"[MongoDB保存] 保存異常: {e}")
+                logger.debug(f"[MongoDB保存] 保存異常: {e}")
                 logger.error(f"MongoDB保存異常: {e}")
 
         return True
 
     except Exception as e:
-        print(f"[保存分析結果] 保存失敗: {e}")
+        logger.error(f"[保存分析結果] 保存失敗: {e}")
         logger.error(f"保存分析結果異常: {e}")
         return False
 
