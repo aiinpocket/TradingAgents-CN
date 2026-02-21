@@ -10,7 +10,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # ghcr.io 要求 repository 名稱全小寫
+  IMAGE_NAME: ${{ github.repository_owner }}/tradingagents-cn
 
 jobs:
   # ============================================================
