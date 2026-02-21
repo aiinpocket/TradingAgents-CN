@@ -45,7 +45,7 @@ class ModelPersistence:
             query_params = st.query_params
             if 'provider' in query_params:
                 config = {
-                    'provider': query_params.get('provider', 'google'),
+                    'provider': query_params.get('provider', 'openai'),
                     'category': query_params.get('category', 'openai'),
                     'model': query_params.get('model', '')
                 }
@@ -62,7 +62,7 @@ class ModelPersistence:
         
         # 返回默認配置
         default_config = {
-            'provider': 'google',
+            'provider': 'openai',
             'category': 'openai',
             'model': ''
         }

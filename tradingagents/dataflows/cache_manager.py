@@ -69,7 +69,7 @@ class StockDataCache:
         # 內容長度限制配置（文件緩存默認不限制）
         self.content_length_config = {
             'max_content_length': int(os.getenv('MAX_CACHE_CONTENT_LENGTH', '50000')),  # 50K字符
-            'long_text_providers': ['openai', 'google', 'anthropic'],  # 支援長文本的提供商
+            'long_text_providers': ['openai', 'anthropic'],  # 支援長文本的提供商
             'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 文件緩存默認不限制
         }
 

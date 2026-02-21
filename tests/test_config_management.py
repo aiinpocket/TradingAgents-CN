@@ -220,7 +220,7 @@ def test_usage_statistics():
         # 測試按供應商統計
         provider_stats = stats["provider_stats"]
         assert "openai" in provider_stats, "應該有openai統計"
-        assert "google" in provider_stats, "應該有google統計"
+        assert "anthropic" in provider_stats, "應該有anthropic統計"
         
         print(" 使用統計測試通過")
 
