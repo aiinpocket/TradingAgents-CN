@@ -28,12 +28,8 @@ def load_env_config():
     load_dotenv(env_file)
     return {
         'openai_api_key': os.getenv('OPENAI_API_KEY', ''),
-        'google_api_key': os.getenv('GOOGLE_API_KEY', ''),
         'anthropic_api_key': os.getenv('ANTHROPIC_API_KEY', ''),
         'finnhub_api_key': os.getenv('FINNHUB_API_KEY', ''),
-        'reddit_client_id': os.getenv('REDDIT_CLIENT_ID', ''),
-        'reddit_client_secret': os.getenv('REDDIT_CLIENT_SECRET', ''),
-        'reddit_user_agent': os.getenv('REDDIT_USER_AGENT', ''),
         'results_dir': os.getenv('TRADINGAGENTS_RESULTS_DIR', './results'),
         'log_level': os.getenv('TRADINGAGENTS_LOG_LEVEL', 'INFO'),
     }
@@ -51,13 +47,6 @@ def migrate_model_configs(env_config):
         if model.provider == "openai" and env_config['openai_api_key']:
             if model.api_key != env_config['openai_api_key']:
                 model.api_key = env_config['openai_api_key']
-                model.enabled = True
-                updated = True
-                logger.info(f" 更新 {model.provider} - {model.model_name} API密鑰")
-        
-        elif model.provider == "google" and env_config['google_api_key']:
-            if model.api_key != env_config['google_api_key']:
-                model.api_key = env_config['google_api_key']
                 model.enabled = True
                 updated = True
                 logger.info(f" 更新 {model.provider} - {model.model_name} API密鑰")
@@ -98,21 +87,6 @@ def migrate_system_settings(env_config):
         settings['finnhub_api_key'] = env_config['finnhub_api_key']
         updated = True
         logger.info(f" 添加 FinnHub API密鑰")
-    
-    if env_config['reddit_client_id']:
-        settings['reddit_client_id'] = env_config['reddit_client_id']
-        updated = True
-        logger.info(f" 添加 Reddit 客戶端ID")
-    
-    if env_config['reddit_client_secret']:
-        settings['reddit_client_secret'] = env_config['reddit_client_secret']
-        updated = True
-        logger.info(f" 添加 Reddit 客戶端密鑰")
-    
-    if env_config['reddit_user_agent']:
-        settings['reddit_user_agent'] = env_config['reddit_user_agent']
-        updated = True
-        logger.info(f" 添加 Reddit 用戶代理")
     
     if updated:
         config_manager.save_settings(settings)

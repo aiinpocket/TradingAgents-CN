@@ -458,9 +458,6 @@ class ConfigManager:
         # 合並.env中的其他配置
         env_settings = {
             "finnhub_api_key": os.getenv("FINNHUB_API_KEY", ""),
-            "reddit_client_id": os.getenv("REDDIT_CLIENT_ID", ""),
-            "reddit_client_secret": os.getenv("REDDIT_CLIENT_SECRET", ""),
-            "reddit_user_agent": os.getenv("REDDIT_USER_AGENT", ""),
             "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", ""),
             "log_level": os.getenv("TRADINGAGENTS_LOG_LEVEL", "INFO"),
             "data_dir": os.getenv("TRADINGAGENTS_DATA_DIR", ""),  # 數據目錄環境變量
@@ -489,12 +486,10 @@ class ConfigManager:
             "env_file_exists": (Path(__file__).parent.parent.parent / ".env").exists(),
             "api_keys": {
                 "openai": bool(os.getenv("OPENAI_API_KEY")),
-                "google": bool(os.getenv("GOOGLE_API_KEY")),
                 "anthropic": bool(os.getenv("ANTHROPIC_API_KEY")),
                 "finnhub": bool(os.getenv("FINNHUB_API_KEY")),
             },
             "other_configs": {
-                "reddit_configured": bool(os.getenv("REDDIT_CLIENT_ID") and os.getenv("REDDIT_CLIENT_SECRET")),
                 "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", "./results"),
                 "log_level": os.getenv("TRADINGAGENTS_LOG_LEVEL", "INFO"),
             }

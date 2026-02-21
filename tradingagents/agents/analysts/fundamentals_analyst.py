@@ -13,8 +13,6 @@ from tradingagents.utils.tool_logging import log_analyst_module
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
-# 導入Google工具調用處理器
-from tradingagents.agents.utils.google_tool_handler import GoogleToolCallHandler
 
 
 def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
@@ -218,88 +216,60 @@ def create_fundamentals_analyst(llm, toolkit):
         result = chain.invoke(state["messages"])
         logger.debug(f"[DEBUG] LLM調用完成")
 
-        # 使用統一的Google工具調用處理器
-        if GoogleToolCallHandler.is_google_model(fresh_llm):
-            logger.info(f"[基本面分析師] 檢測到Google模型，使用統一工具調用處理器")
-            
-            # 創建分析提示詞
-            analysis_prompt_template = GoogleToolCallHandler.create_analysis_prompt(
-                ticker=ticker,
-                company_name=company_name,
-                analyst_type="基本面分析",
-                specific_requirements="重點關注財務數據、盈利能力、估值指標、行業地位等基本面因素。"
-            )
-            
-            # 處理Google模型工具調用
-            report, messages = GoogleToolCallHandler.handle_google_tool_calls(
-                result=result,
-                llm=fresh_llm,
-                tools=tools,
-                state=state,
-                analysis_prompt_template=analysis_prompt_template,
-                analyst_name="基本面分析師"
-            )
-            
-            return {"fundamentals_report": report}
-        else:
-            # 非Google模型的處理邏輯
-            logger.debug(f"[DEBUG] 非Google模型 ({fresh_llm.__class__.__name__})，使用標準處理邏輯")
-            
-            # 檢查工具調用情況
-            tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
-            logger.debug(f"[DEBUG] 工具調用數量: {tool_call_count}")
-            
-            if tool_call_count > 0:
-                # 有工具調用，返回狀態讓工具執行
-                tool_calls_info = []
-                for tc in result.tool_calls:
-                    tool_calls_info.append(tc['name'])
-                    logger.debug(f"[DEBUG] 工具調用 {len(tool_calls_info)}: {tc}")
-                
-                logger.info(f"[基本面分析師] 工具調用: {tool_calls_info}")
-                return {
-                    "messages": [result],
-                    "fundamentals_report": result.content if hasattr(result, 'content') else str(result)
-                }
-            else:
-                # 沒有工具調用，使用強制工具調用修複
-                logger.debug(f"[DEBUG] 檢測到模型未調用工具，啟用強制工具調用模式")
-                
-                # 強制調用統一基本面分析工具
-                try:
-                    logger.debug(f"[DEBUG] 強制調用 get_stock_fundamentals_unified...")
-                    # 安全地查找統一基本面分析工具
-                    unified_tool = None
-                    for tool in tools:
-                        tool_name = None
-                        if hasattr(tool, 'name'):
-                            tool_name = tool.name
-                        elif hasattr(tool, '__name__'):
-                            tool_name = tool.__name__
+        # 檢查工具調用情況
+        tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
+        logger.debug(f"[DEBUG] 工具調用數量: {tool_call_count}")
 
-                        if tool_name == 'get_stock_fundamentals_unified':
-                            unified_tool = tool
-                            break
-                    if unified_tool:
-                        logger.info(f"[股票代碼追蹤] 強制調用統一工具，傳入ticker: '{ticker}'")
-                        combined_data = unified_tool.invoke({
-                            'ticker': ticker,
-                            'start_date': start_date,
-                            'end_date': current_date,
-                            'curr_date': current_date
-                        })
-                        logger.debug(f"[DEBUG] 統一工具數據獲取成功，長度: {len(combined_data)}字符")
-                    else:
-                        combined_data = "統一基本面分析工具不可用"
-                        logger.debug(f"[DEBUG] 統一工具未找到")
-                except Exception as e:
-                    combined_data = f"統一基本面分析工具調用失敗: {e}"
-                    logger.debug(f"[DEBUG] 統一工具調用異常: {e}")
-                
-                currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
-                
-                # 生成基於真實數據的分析報告
-                analysis_prompt = f"""基於以下真實數據，對{company_name}（股票代碼：{ticker}）進行詳細的基本面分析：
+        if tool_call_count > 0:
+            # 有工具調用，返回狀態讓工具執行
+            tool_calls_info = []
+            for tc in result.tool_calls:
+                tool_calls_info.append(tc['name'])
+                logger.debug(f"[DEBUG] 工具調用 {len(tool_calls_info)}: {tc}")
+
+            logger.info(f"[基本面分析師] 工具調用: {tool_calls_info}")
+            return {
+                "messages": [result],
+                "fundamentals_report": result.content if hasattr(result, 'content') else str(result)
+            }
+
+        # 沒有工具調用，使用強制工具調用修復
+        logger.debug(f"[DEBUG] 檢測到模型未調用工具，啟用強制工具調用模式")
+
+        # 強制調用統一基本面分析工具
+        try:
+            logger.debug(f"[DEBUG] 強制調用 get_stock_fundamentals_unified...")
+            unified_tool = None
+            for tool in tools:
+                tool_name = None
+                if hasattr(tool, 'name'):
+                    tool_name = tool.name
+                elif hasattr(tool, '__name__'):
+                    tool_name = tool.__name__
+
+                if tool_name == 'get_stock_fundamentals_unified':
+                    unified_tool = tool
+                    break
+            if unified_tool:
+                logger.info(f"[股票代碼追蹤] 強制調用統一工具，傳入ticker: '{ticker}'")
+                combined_data = unified_tool.invoke({
+                    'ticker': ticker,
+                    'start_date': start_date,
+                    'end_date': current_date,
+                    'curr_date': current_date
+                })
+                logger.debug(f"[DEBUG] 統一工具數據獲取成功，長度: {len(combined_data)}字符")
+            else:
+                combined_data = "統一基本面分析工具不可用"
+                logger.debug(f"[DEBUG] 統一工具未找到")
+        except Exception as e:
+            combined_data = f"統一基本面分析工具調用失敗: {e}"
+            logger.debug(f"[DEBUG] 統一工具調用異常: {e}")
+
+        currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
+
+        # 生成基於真實數據的分析報告
+        analysis_prompt = f"""基於以下真實數據，對{company_name}（股票代碼：{ticker}）進行詳細的基本面分析：
 
 {combined_data}
 
@@ -317,34 +287,26 @@ def create_fundamentals_analyst(llm, toolkit):
 - 投資建議使用中文
 - 分析要詳細且專業"""
 
-                try:
-                    # 創建簡單的分析鏈
-                    analysis_prompt_template = ChatPromptTemplate.from_messages([
-                        ("system", "你是專業的股票基本面分析師，基於提供的真實數據進行分析。"),
-                        ("human", "{analysis_request}")
-                    ])
-                    
-                    analysis_chain = analysis_prompt_template | fresh_llm
-                    analysis_result = analysis_chain.invoke({"analysis_request": analysis_prompt})
-                    
-                    if hasattr(analysis_result, 'content'):
-                        report = analysis_result.content
-                    else:
-                        report = str(analysis_result)
+        try:
+            analysis_prompt_template = ChatPromptTemplate.from_messages([
+                ("system", "你是專業的股票基本面分析師，基於提供的真實數據進行分析。"),
+                ("human", "{analysis_request}")
+            ])
 
-                    logger.info(f"[基本面分析師] 強制工具調用完成，報告長度: {len(report)}")
-                    
-                except Exception as e:
-                    logger.error(f"[DEBUG] 強制工具調用分析失敗: {e}")
-                    report = f"基本面分析失敗：{str(e)}"
-                
-                return {"fundamentals_report": report}
+            analysis_chain = analysis_prompt_template | fresh_llm
+            analysis_result = analysis_chain.invoke({"analysis_request": analysis_prompt})
 
-        # 這裡不應該到達，但作為備用
-        logger.debug(f"[DEBUG] 返回狀態: fundamentals_report長度={len(result.content) if hasattr(result, 'content') else 0}")
-        return {
-            "messages": [result],
-            "fundamentals_report": result.content if hasattr(result, 'content') else str(result)
-        }
+            if hasattr(analysis_result, 'content'):
+                report = analysis_result.content
+            else:
+                report = str(analysis_result)
+
+            logger.info(f"[基本面分析師] 強制工具調用完成，報告長度: {len(report)}")
+
+        except Exception as e:
+            logger.error(f"[DEBUG] 強制工具調用分析失敗: {e}")
+            report = f"基本面分析失敗：{str(e)}"
+
+        return {"fundamentals_report": report}
 
     return fundamentals_analyst_node

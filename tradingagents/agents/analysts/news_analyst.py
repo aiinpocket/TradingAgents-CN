@@ -10,9 +10,6 @@ from tradingagents.utils.tool_logging import log_analyst_module
 from tradingagents.tools.unified_news_tool import create_unified_news_tool
 # 導入股票市場資訊工具
 from tradingagents.utils.stock_utils import get_stock_market_info
-# 導入Google工具調用處理器
-from tradingagents.agents.utils.google_tool_handler import GoogleToolCallHandler
-
 logger = get_logger("analysts.news")
 
 
@@ -175,36 +172,11 @@ def create_news_analyst(llm, toolkit):
         llm_time_taken = (llm_end_time - llm_start_time).total_seconds()
         logger.info(f"[新聞分析師] LLM調用完成，耗時: {llm_time_taken:.2f}秒")
 
-        # 使用統一的Google工具調用處理器
-        if GoogleToolCallHandler.is_google_model(llm):
-            logger.info(f"[新聞分析師] 檢測到Google模型，使用統一工具調用處理器")
-            
-            # 創建分析提示詞
-            analysis_prompt_template = GoogleToolCallHandler.create_analysis_prompt(
-                ticker=ticker,
-                company_name=company_name,
-                analyst_type="新聞分析",
-                specific_requirements="重點關注新聞事件對股價的影響、市場情緒變化、政策影響等。"
-            )
-            
-            # 處理Google模型工具調用
-            report, messages = GoogleToolCallHandler.handle_google_tool_calls(
-                result=result,
-                llm=llm,
-                tools=tools,
-                state=state,
-                analysis_prompt_template=analysis_prompt_template,
-                analyst_name="新聞分析師"
-            )
-        else:
-            # 非Google模型的處理邏輯
-            logger.info(f"[新聞分析師] 非Google模型 ({llm.__class__.__name__})，使用標準處理邏輯")
-            
-            # 檢查工具調用情況
-            tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
-            logger.info(f"[新聞分析師] LLM調用了 {tool_call_count} 個工具")
-            
-            if tool_call_count == 0:
+        # 檢查工具調用情況
+        tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
+        logger.info(f"[新聞分析師] LLM 調用了 {tool_call_count} 個工具")
+
+        if tool_call_count == 0:
                 logger.warning(f"[新聞分析師] {llm.__class__.__name__} 沒有調用任何工具，啟動補救機制...")
                 
                 try:
@@ -244,9 +216,9 @@ def create_news_analyst(llm, toolkit):
                 except Exception as e:
                     logger.error(f"[新聞分析師] 強制補救過程失敗: {e}")
                     report = result.content
-            else:
-                # 有工具調用，直接使用結果
-                report = result.content
+        else:
+            # 有工具調用，直接使用結果
+            report = result.content
         
         total_time_taken = (datetime.now() - start_time).total_seconds()
         logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")

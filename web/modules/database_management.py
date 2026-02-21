@@ -280,7 +280,7 @@ def main():
     3. **API (L3數據源)** - 外部數據源，分鐘級訪問
        - FinnHub API (美股數據)
        - Yahoo Finance API (市場數據)
-       - Google News / Reddit (新聞與社群數據)
+       - Google News (新聞數據)
     
     **數據流向：** API → MongoDB → Redis → 應用程序
     """)

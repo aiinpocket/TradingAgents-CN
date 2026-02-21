@@ -12,8 +12,6 @@ from tradingagents.utils.tool_logging import log_analyst_module
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
-# 導入Google工具調用處理器
-from tradingagents.agents.utils.google_tool_handler import GoogleToolCallHandler
 
 
 def _get_company_name(ticker: str, market_info: dict) -> str:
@@ -291,88 +289,55 @@ def create_market_analyst(llm, toolkit):
 
         result = chain.invoke(state["messages"])
 
-        # 使用統一的Google工具調用處理器
-        if GoogleToolCallHandler.is_google_model(llm):
-            logger.info(f"[市場分析師] 檢測到Google模型，使用統一工具調用處理器")
-            
-            # 創建分析提示詞
-            analysis_prompt_template = GoogleToolCallHandler.create_analysis_prompt(
-                ticker=ticker,
-                company_name=company_name,
-                analyst_type="市場分析",
-                specific_requirements="重點關注市場數據、價格走勢、交易量變化等市場指標。"
-            )
-            
-            # 處理Google模型工具調用
-            report, messages = GoogleToolCallHandler.handle_google_tool_calls(
-                result=result,
-                llm=llm,
-                tools=tools,
-                state=state,
-                analysis_prompt_template=analysis_prompt_template,
-                analyst_name="市場分析師"
-            )
-            
-            return {
-                "messages": [result],
-                "market_report": report,
-            }
+        # 處理市場分析報告
+        if len(result.tool_calls) == 0:
+            # 沒有工具調用，直接使用LLM的回覆
+            report = result.content
+            logger.info(f"[市場分析師] 直接回覆，長度: {len(report)}")
         else:
-            # 非Google模型的處理邏輯
-            logger.debug(f"[DEBUG] 非Google模型 ({llm.__class__.__name__})，使用標準處理邏輯")
-            
-            # 處理市場分析報告
-            if len(result.tool_calls) == 0:
-                # 沒有工具調用，直接使用LLM的回覆
-                report = result.content
-                logger.info(f"[市場分析師] 直接回覆，長度: {len(report)}")
-            else:
-                # 有工具調用，執行工具並生成完整分析報告
-                logger.info(f"[市場分析師] 工具調用: {[call.get('name', 'unknown') for call in result.tool_calls]}")
+            # 有工具調用，執行工具並生成完整分析報告
+            logger.info(f"[市場分析師] 工具調用: {[call.get('name', 'unknown') for call in result.tool_calls]}")
 
-                try:
-                    # 執行工具調用
-                    from langchain_core.messages import ToolMessage, HumanMessage
+            try:
+                from langchain_core.messages import ToolMessage, HumanMessage
 
-                    tool_messages = []
-                    for tool_call in result.tool_calls:
-                        tool_name = tool_call.get('name')
-                        tool_args = tool_call.get('args', {})
-                        tool_id = tool_call.get('id')
+                tool_messages = []
+                for tool_call in result.tool_calls:
+                    tool_name = tool_call.get('name')
+                    tool_args = tool_call.get('args', {})
+                    tool_id = tool_call.get('id')
 
-                        logger.debug(f"[DEBUG] 執行工具: {tool_name}, 參數: {tool_args}")
+                    logger.debug(f"[DEBUG] 執行工具: {tool_name}, 參數: {tool_args}")
 
-                        # 找到對應的工具並執行
-                        tool_result = None
-                        for tool in tools:
-                            # 安全地獲取工具名稱進行比較
-                            current_tool_name = None
-                            if hasattr(tool, 'name'):
-                                current_tool_name = tool.name
-                            elif hasattr(tool, '__name__'):
-                                current_tool_name = tool.__name__
+                    # 找到對應的工具並執行
+                    tool_result = None
+                    for tool in tools:
+                        current_tool_name = None
+                        if hasattr(tool, 'name'):
+                            current_tool_name = tool.name
+                        elif hasattr(tool, '__name__'):
+                            current_tool_name = tool.__name__
 
-                            if current_tool_name == tool_name:
-                                try:
-                                    tool_result = tool.invoke(tool_args)
-                                    logger.debug(f"[DEBUG] 工具執行成功，結果長度: {len(str(tool_result))}")
-                                    break
-                                except Exception as tool_error:
-                                    logger.error(f"[DEBUG] 工具執行失敗: {tool_error}")
-                                    tool_result = f"工具執行失敗: {str(tool_error)}"
+                        if current_tool_name == tool_name:
+                            try:
+                                tool_result = tool.invoke(tool_args)
+                                logger.debug(f"[DEBUG] 工具執行成功，結果長度: {len(str(tool_result))}")
+                                break
+                            except Exception as tool_error:
+                                logger.error(f"[DEBUG] 工具執行失敗: {tool_error}")
+                                tool_result = f"工具執行失敗: {str(tool_error)}"
 
-                        if tool_result is None:
-                            tool_result = f"未找到工具: {tool_name}"
+                    if tool_result is None:
+                        tool_result = f"未找到工具: {tool_name}"
 
-                        # 創建工具訊息
-                        tool_message = ToolMessage(
-                            content=str(tool_result),
-                            tool_call_id=tool_id
-                        )
-                        tool_messages.append(tool_message)
+                    tool_message = ToolMessage(
+                        content=str(tool_result),
+                        tool_call_id=tool_id
+                    )
+                    tool_messages.append(tool_message)
 
-                    # 基於工具結果生成完整分析報告
-                    analysis_prompt = f"""現在請基於上述工具獲取的數據，生成詳細的技術分析報告。
+                # 基於工具結果生成完整分析報告
+                analysis_prompt = f"""現在請基於上述工具獲取的數據，生成詳細的技術分析報告。
 
 要求：
 1. 報告必須基於工具返回的真實數據進行分析
@@ -388,36 +353,32 @@ def create_market_analyst(llm, toolkit):
 - 成交量分析
 - 投資建議"""
 
-                    # 構建完整的訊息序列
-                    messages = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
+                messages = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
 
-                    # 生成最終分析報告
-                    final_result = llm.invoke(messages)
-                    report = final_result.content
+                final_result = llm.invoke(messages)
+                report = final_result.content
 
-                    logger.info(f"[市場分析師] 生成完整分析報告，長度: {len(report)}")
+                logger.info(f"[市場分析師] 生成完整分析報告，長度: {len(report)}")
 
-                    # 返回包含工具調用和最終分析的完整訊息序列
-                    return {
-                        "messages": [result] + tool_messages + [final_result],
-                        "market_report": report,
-                    }
+                return {
+                    "messages": [result] + tool_messages + [final_result],
+                    "market_report": report,
+                }
 
-                except Exception as e:
-                    logger.error(f"[市場分析師] 工具執行或分析生成失敗: {e}")
-                    traceback.print_exc()
+            except Exception as e:
+                logger.error(f"[市場分析師] 工具執行或分析生成失敗: {e}")
+                traceback.print_exc()
 
-                    # 降級處理：返回工具調用信息
-                    report = f"市場分析師調用了工具但分析生成失敗: {[call.get('name', 'unknown') for call in result.tool_calls]}"
+                report = f"市場分析師調用了工具但分析生成失敗: {[call.get('name', 'unknown') for call in result.tool_calls]}"
 
-                    return {
-                        "messages": [result],
-                        "market_report": report,
-                    }
+                return {
+                    "messages": [result],
+                    "market_report": report,
+                }
 
-            return {
-                "messages": [result],
-                "market_report": report,
-            }
+        return {
+            "messages": [result],
+            "market_report": report,
+        }
 
     return market_analyst_node

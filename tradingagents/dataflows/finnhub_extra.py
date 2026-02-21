@@ -150,61 +150,41 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
         logger.warning(f"FinnHub News Sentiment 取得失敗 ({ticker}): {e}")
         report_sections.append("## 新聞情緒分析\n數據取得失敗\n")
 
-    # --- Social Sentiment (Twitter/Reddit) ---
+    # --- Social Sentiment (FinnHub 社交媒體情緒) ---
     try:
-        # 取得近 3 天的社交媒體情緒數據
         end_dt = datetime.strptime(curr_date, "%Y-%m-%d")
         start_dt = end_dt - timedelta(days=3)
 
-        # Twitter 情緒
-        twitter_data = client.stock_social_sentiment(
+        social_data = client.stock_social_sentiment(
             ticker,
             _from=start_dt.strftime("%Y-%m-%d"),
             to=end_dt.strftime("%Y-%m-%d")
         )
 
-        has_twitter = twitter_data and twitter_data.get('twitter') and len(twitter_data['twitter']) > 0
-        has_reddit = twitter_data and twitter_data.get('reddit') and len(twitter_data['reddit']) > 0
+        # 合併所有平台的社交媒體數據
+        all_entries = []
+        for platform in ['twitter', 'reddit']:
+            entries = social_data.get(platform, []) if social_data else []
+            if entries:
+                all_entries.extend(entries)
 
-        if has_twitter or has_reddit:
+        if all_entries:
             report_sections.append("## 社交媒體情緒\n")
 
-            if has_twitter:
-                tw_entries = twitter_data['twitter']
-                # 計算彙總
-                total_mention = sum(e.get('mention', 0) for e in tw_entries)
-                total_positive = sum(e.get('positiveMention', 0) for e in tw_entries)
-                total_negative = sum(e.get('negativeMention', 0) for e in tw_entries)
-                avg_score = sum(e.get('score', 0) for e in tw_entries) / max(len(tw_entries), 1)
+            total_mention = sum(e.get('mention', 0) for e in all_entries)
+            total_positive = sum(e.get('positiveMention', 0) for e in all_entries)
+            total_negative = sum(e.get('negativeMention', 0) for e in all_entries)
+            avg_score = sum(e.get('score', 0) for e in all_entries) / max(len(all_entries), 1)
 
-                report_sections.append("### Twitter/X 情緒")
-                report_sections.append("| 指標 | 數值 |")
-                report_sections.append("|------|------|")
-                report_sections.append(f"| 總提及次數 | {total_mention} |")
-                report_sections.append(f"| 正面提及 | {total_positive} |")
-                report_sections.append(f"| 負面提及 | {total_negative} |")
-                if total_mention > 0:
-                    report_sections.append(f"| 正面比例 | {total_positive / total_mention:.1%} |")
-                report_sections.append(f"| 平均評分 | {avg_score:.4f} |")
-                report_sections.append("")
-
-            if has_reddit:
-                rd_entries = twitter_data['reddit']
-                total_mention = sum(e.get('mention', 0) for e in rd_entries)
-                total_positive = sum(e.get('positiveMention', 0) for e in rd_entries)
-                total_negative = sum(e.get('negativeMention', 0) for e in rd_entries)
-                avg_score = sum(e.get('score', 0) for e in rd_entries) / max(len(rd_entries), 1)
-
-                report_sections.append("### Reddit 情緒")
-                report_sections.append("| 指標 | 數值 |")
-                report_sections.append("|------|------|")
-                report_sections.append(f"| 總提及次數 | {total_mention} |")
-                report_sections.append(f"| 正面提及 | {total_positive} |")
-                report_sections.append(f"| 負面提及 | {total_negative} |")
-                if total_mention > 0:
-                    report_sections.append(f"| 正面比例 | {total_positive / total_mention:.1%} |")
-                report_sections.append(f"| 平均評分 | {avg_score:.4f} |")
-                report_sections.append("")
+            report_sections.append("| 指標 | 數值 |")
+            report_sections.append("|------|------|")
+            report_sections.append(f"| 總提及次數 | {total_mention} |")
+            report_sections.append(f"| 正面提及 | {total_positive} |")
+            report_sections.append(f"| 負面提及 | {total_negative} |")
+            if total_mention > 0:
+                report_sections.append(f"| 正面比例 | {total_positive / total_mention:.1%} |")
+            report_sections.append(f"| 平均評分 | {avg_score:.4f} |")
+            report_sections.append("")
         else:
             report_sections.append("## 社交媒體情緒\n近期無社交媒體討論數據\n")
     except Exception as e:

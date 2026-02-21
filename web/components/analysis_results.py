@@ -368,7 +368,7 @@ def render_analysis_results():
         analyst_filter = st.selectbox(
             "分析師類型",
             ["全部", "market_analyst", "social_media_analyst", "news_analyst", "fundamental_analyst"],
-            help="社交媒體分析師透過 Reddit 等平台分析美股市場情緒"
+            help="社交媒體分析師透過 FinnHub 情緒數據分析美股市場情緒"
         )
         
         if analyst_filter == "全部":

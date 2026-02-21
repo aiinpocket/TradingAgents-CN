@@ -139,20 +139,20 @@ class TradingAgentsGraph:
             ),
             "social": ToolNode(
                 [
-                    # online tools
+                    # 新聞情緒工具
                     self.toolkit.get_stock_news_openai,
-                    # offline tools
-                    self.toolkit.get_reddit_stock_info,
+                    # FinnHub 情緒量化數據
+                    self.toolkit.get_finnhub_sentiment_data,
                 ]
             ),
             "news": ToolNode(
                 [
-                    # online tools
+                    # 新聞來源
                     self.toolkit.get_global_news_openai,
                     self.toolkit.get_google_news,
-                    # offline tools
                     self.toolkit.get_finnhub_news,
-                    self.toolkit.get_reddit_news,
+                    # FinnHub 情緒量化數據
+                    self.toolkit.get_finnhub_sentiment_data,
                 ]
             ),
             "fundamentals": ToolNode(

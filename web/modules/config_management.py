@@ -538,9 +538,6 @@ def render_env_status():
             finnhub_status = "已配置" if env_status["api_keys"]["finnhub"] else "未配置"
             st.write(f"- FinnHub (金融數據): {finnhub_status}")
 
-            reddit_status = "已配置" if env_status["other_configs"]["reddit_configured"] else "未配置"
-            st.write(f"- Reddit API: {reddit_status}")
-
     # 配置優先級說明
     st.info("""
      **配置優先級說明:**

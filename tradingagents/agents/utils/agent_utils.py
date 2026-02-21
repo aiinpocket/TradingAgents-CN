@@ -63,23 +63,6 @@ class Toolkit:
 
     @staticmethod
     @tool
-    def get_reddit_news(
-        curr_date: Annotated[str, "Date you want to get news for in yyyy-mm-dd format"],
-    ) -> str:
-        """
-        Retrieve global news from Reddit within a specified time frame.
-        Args:
-            curr_date (str): Date you want to get news for in yyyy-mm-dd format
-        Returns:
-            str: A formatted dataframe containing the latest global news from Reddit in the specified time frame.
-        """
-        
-        global_news_result = interface.get_reddit_global_news(curr_date, 7, 5)
-
-        return global_news_result
-
-    @staticmethod
-    @tool
     def get_finnhub_news(
         ticker: Annotated[
             str,
@@ -109,28 +92,6 @@ class Toolkit:
         )
 
         return finnhub_news_result
-
-    @staticmethod
-    @tool
-    def get_reddit_stock_info(
-        ticker: Annotated[
-            str,
-            "Ticker of a company. e.g. AAPL, TSM",
-        ],
-        curr_date: Annotated[str, "Current date you want to get news for"],
-    ) -> str:
-        """
-        Retrieve the latest news about a given stock from Reddit, given the current date.
-        Args:
-            ticker (str): Ticker of a company. e.g. AAPL, TSM
-            curr_date (str): current date in yyyy-mm-dd format to get news for
-        Returns:
-            str: A formatted dataframe containing the latest news about the company on the given date
-        """
-
-        stock_news_results = interface.get_reddit_company_news(ticker, curr_date, 7, 5)
-
-        return stock_news_results
 
     @staticmethod
     @tool
@@ -616,7 +577,7 @@ class Toolkit:
         curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        統一的股票情緒分析工具，使用 Reddit 情緒數據源
+        統一的股票情緒分析工具，使用 FinnHub 社交媒體情緒數據
 
         Args:
             ticker: 股票代碼（如：AAPL、TSLA）
@@ -628,27 +589,23 @@ class Toolkit:
         logger.info(f"[統一情緒工具] 分析股票: {ticker}")
 
         try:
-            result_data = []
-
-            # 使用 Reddit 情緒分析
-            logger.info(f"[統一情緒工具] 處理美股情緒: {ticker}")
+            # 使用 FinnHub 情緒數據
+            logger.info(f"[統一情緒工具] 透過 FinnHub 獲取情緒數據: {ticker}")
 
             try:
-                from tradingagents.dataflows.interface import get_reddit_sentiment
-                sentiment_data = get_reddit_sentiment(ticker, curr_date)
-                result_data.append(f"## Reddit 情緒\n{sentiment_data}")
+                from tradingagents.dataflows.finnhub_extra import get_finnhub_sentiment_report
+                sentiment_data = get_finnhub_sentiment_report(ticker, curr_date)
             except Exception as e:
-                result_data.append(f"## Reddit 情緒\n獲取失敗: {e}")
+                sentiment_data = f"FinnHub 情緒數據獲取失敗: {e}"
 
-            # 組合所有資料
             combined_result = f"""# {ticker} 情緒分析
 
 **分析日期**: {curr_date}
 
-{chr(10).join(result_data)}
+{sentiment_data}
 
 ---
-*數據來源: Reddit*
+*數據來源: FinnHub*
 """
 
             logger.info(f"[統一情緒工具] 數據獲取完成，總長度: {len(combined_result)}")
@@ -668,7 +625,7 @@ class Toolkit:
         """
         取得 FinnHub 情緒量化數據，包含新聞情緒評分和社交媒體情緒分析。
         整合 News Sentiment（看多/看空比例、行業比較）和
-        Social Sentiment（Twitter/Reddit 提及次數、正負面比例）。
+        Social Sentiment（社交媒體提及次數、正負面比例）。
 
         Args:
             ticker: 股票代碼（如 AAPL、TSLA）
