@@ -364,8 +364,8 @@ class ReportExporter:
         logger.info(f"Markdown內容生成完成，長度: {len(md_content)} 字符")
 
         try:
-            logger.info("創建臨時文件用於docx輸出...")
-            # 創建臨時文件用於docx輸出
+            logger.info("創建暫存檔案用於docx輸出...")
+            # 創建暫存檔案用於docx輸出
             with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as tmp_file:
                 output_file = tmp_file.name
             logger.info(f"臨時檔案路徑: {output_file}")
@@ -390,7 +390,7 @@ class ReportExporter:
                 for i, line in enumerate(lines, 1):
                     logger.info(f"{i}: {repr(line)}")
             except Exception as e:
-                logger.error(f"保存調試文件失敗: {e}")
+                logger.error(f"保存除錯檔案失敗: {e}")
 
             # 清理內容避免YAML解析問題
             cleaned_content = self._clean_markdown_for_pandoc(md_content)
@@ -406,16 +406,16 @@ class ReportExporter:
             )
             logger.info("pypandoc轉換完成")
 
-            logger.info("讀取生成的docx文件...")
-            # 讀取生成的docx文件
+            logger.info("讀取生成的docx 檔案...")
+            # 讀取生成的docx 檔案
             with open(output_file, 'rb') as f:
                 docx_content = f.read()
             logger.info(f"檔案讀取完成，大小: {len(docx_content)} 字節")
 
-            logger.info("清理臨時文件...")
-            # 清理臨時文件
+            logger.info("清理暫存檔案...")
+            # 清理暫存檔案
             os.unlink(output_file)
-            logger.info("臨時文件清理完成")
+            logger.info("暫存檔案清理完成")
 
             return docx_content
         except Exception as e:
@@ -449,7 +449,7 @@ class ReportExporter:
         for engine_info in pdf_engines:
             engine, description = engine_info
             try:
-                # 創建臨時文件用於PDF輸出
+                # 創建暫存檔案用於PDF輸出
                 with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
                     output_file = tmp_file.name
 
@@ -483,7 +483,7 @@ class ReportExporter:
                     with open(output_file, 'rb') as f:
                         pdf_content = f.read()
 
-                    # 清理臨時文件
+                    # 清理暫存檔案
                     os.unlink(output_file)
 
                     logger.info(f"PDF生成成功，使用引擎: {engine or '預設'}")
@@ -495,7 +495,7 @@ class ReportExporter:
                 last_error = str(e)
                 logger.error(f"PDF引擎 {engine or '預設'} 失敗: {e}")
 
-                # 清理可能存在的臨時文件
+                # 清理可能存在的暫存檔案
                 try:
                     if 'output_file' in locals() and os.path.exists(output_file):
                         os.unlink(output_file)
@@ -702,7 +702,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             }
         }
 
-        # 生成各個模塊的報告文件
+        # 生成各個模塊的報告檔案
         for module_key, module_info in report_modules.items():
             content = state.get(module_info['state_key'])
 
@@ -786,7 +786,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 # 收集所有報告內容
                 reports_content = {}
 
-                logger.info(f"[MongoDB調試] 開始讀取 {len(saved_files)} 個報告文件")
+                logger.info(f"[MongoDB調試] 開始讀取 {len(saved_files)} 個報告檔案")
                 # 讀取已保存的文件內容
                 for module_key, file_path in saved_files.items():
                     try:
@@ -795,7 +795,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                             reports_content[module_key] = content
                             logger.info(f"[MongoDB調試] 成功讀取 {module_key}: {len(content)} 字符")
                     except Exception as e:
-                        logger.warning(f"讀取報告文件失敗 {file_path}: {e}")
+                        logger.warning(f"讀取報告檔案失敗 {file_path}: {e}")
 
                 # 保存到MongoDB
                 if reports_content:
@@ -811,7 +811,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                     if success:
                         logger.info("分析報告已同時保存到MongoDB")
                     else:
-                        logger.warning("MongoDB保存失敗，但文件保存成功")
+                        logger.warning("MongoDB保存失敗，但檔案保存成功")
                 else:
                     logger.warning("沒有報告內容可保存到MongoDB")
 
@@ -819,7 +819,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 logger.error(f"MongoDB保存過程出錯: {e}")
                 import traceback
                 logger.error(f"MongoDB保存詳細錯誤: {traceback.format_exc()}")
-                # 不影響文件保存的成功返回
+                # 不影響檔案保存的成功返回
         else:
             logger.warning(f"MongoDB保存跳過 - AVAILABLE: {MONGODB_REPORT_AVAILABLE}, Manager: {mongodb_report_manager is not None}")
 

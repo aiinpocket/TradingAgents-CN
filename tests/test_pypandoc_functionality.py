@@ -122,7 +122,7 @@ def test_markdown_conversion():
                 print(f" Markdown → DOCX 轉換成功")
                 print(f"   檔案大小: {file_size} 字節")
                 
-                # 清理臨時文件
+                # 清理暫存檔案
                 os.unlink(output_file)
             else:
                 print(" DOCX文件未生成")
@@ -150,7 +150,7 @@ def test_markdown_conversion():
                 print(f" Markdown → PDF 轉換成功")
                 print(f"   檔案大小: {file_size} 字節")
                 
-                # 清理臨時文件
+                # 清理暫存檔案
                 os.unlink(output_file)
             else:
                 print(" PDF文件未生成 (可能缺少PDF引擎)")

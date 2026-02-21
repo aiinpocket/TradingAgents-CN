@@ -204,7 +204,7 @@ class UnifiedDataDirectoryManager:
             ' 會話數據': ['sessions', 'sessions_web', 'sessions_cli'],
             ' 日誌檔案': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
             ' 配置檔': ['config', 'config_user', 'config_system'],
-            ' 臨時文件': ['temp', 'temp_downloads', 'temp_processing'],
+            ' 暫存檔案': ['temp', 'temp_downloads', 'temp_processing'],
         }
         
         for category, keys in structure.items():

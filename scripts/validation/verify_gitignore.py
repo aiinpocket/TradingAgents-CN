@@ -147,7 +147,7 @@ def main():
     
     logger.info(f"\n 總結:")
     logger.info(f" docs/contribution 目錄已成功配置為不被Git管理")
-    logger.info(f" 本地文件保留，但不會被版本控制")
+    logger.info(f" 本地檔案保留，但不會被版本控制")
     logger.info(f" 新增的contribution文件將自動被忽略")
     
     return True

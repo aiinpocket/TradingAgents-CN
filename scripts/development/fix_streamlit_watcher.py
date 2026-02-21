@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Streamlit文件監控錯誤修復腳本
+Streamlit檔案監控錯誤修復腳本
 
-這個腳本用於修復Streamlit應用中的文件監控錯誤：
+這個腳本用於修復Streamlit應用中的檔案監控錯誤：
 FileNotFoundError: [WinError 2] 系統找不到指定的文件。: '__pycache__\\*.pyc.*'
 
 使用方法:
@@ -119,7 +119,7 @@ def set_environment_variables():
 def main():
     """主函數"""
     
-    logger.error(f" Streamlit文件監控錯誤修復工具")
+    logger.error(f" Streamlit檔案監控錯誤修復工具")
     logger.info(f"=")
     
     logger.info(f"\n 此工具將執行以下操作:")

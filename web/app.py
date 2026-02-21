@@ -293,7 +293,7 @@ def initialize_session_state():
         except Exception as e:
             logger.warning(f"[結果恢複] 恢複失敗: {e}")
 
-    # 使用cookie管理器恢複分析ID（優先級：session state > cookie > Redis/文件）
+    # 使用cookie管理器恢複分析ID（優先級：session state > cookie > Redis/檔案）
     try:
         persistent_analysis_id = get_persistent_analysis_id()
         if persistent_analysis_id:

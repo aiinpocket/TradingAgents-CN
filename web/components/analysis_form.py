@@ -109,8 +109,8 @@ def render_analysis_form():
         if not selected_analysts:
             st.warning("請至少選擇一個分析師")
 
-        # 高級選項
-        with st.expander("高級選項"):
+        # 進階選項
+        with st.expander("進階選項"):
             include_sentiment = st.checkbox(
                 "包含情緒分析",
                 value=True,

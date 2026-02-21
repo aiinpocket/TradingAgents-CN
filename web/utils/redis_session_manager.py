@@ -137,7 +137,7 @@ class RedisSessionManager:
                 if data:
                     return json.loads(data)
             else:
-                # 從文件載入（fallback）
+                # 從檔案載入（fallback）
                 return self._load_from_file(session_key)
             
             return None
@@ -178,10 +178,10 @@ class RedisSessionManager:
                 json.dump(session_data, f, ensure_ascii=False, indent=2)
                 
         except Exception as e:
-            st.warning(f"文件保存失敗: {e}")
+            st.warning(f"檔案保存失敗: {e}")
     
     def _load_from_file(self, session_key: str) -> Optional[Dict[str, Any]]:
-        """從文件載入（fallback方案）"""
+        """從檔案載入（fallback方案）"""
         try:
             filename = f"./data/{session_key.replace(':', '_')}.json"
             if os.path.exists(filename):
@@ -199,7 +199,7 @@ class RedisSessionManager:
             return None
             
         except Exception as e:
-            st.warning(f"文件載入失敗: {e}")
+            st.warning(f"檔案載入失敗: {e}")
             return None
     
     def _delete_file(self, session_key: str):
@@ -271,7 +271,7 @@ def get_persistent_analysis_id() -> Optional[str]:
                 st.session_state.last_market_type = session_data.get('market_type', '')
                 return analysis_id
         
-        # 3. 最後從Redis/文件恢複最新分析
+        # 3. 最後從Redis/檔案恢複最新分析
         from .async_progress_tracker import get_latest_analysis_id
         latest_id = get_latest_analysis_id()
         if latest_id:

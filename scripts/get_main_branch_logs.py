@@ -180,7 +180,7 @@ def copy_log_files(container_name, log_files):
         if success:
             print(f"    複制成功")
             
-            # 檢查本地文件
+            # 檢查本地檔案
             if os.path.exists(local_file):
                 size = os.path.getsize(local_file)
                 print(f"    檔案大小: {size:,} 字節")

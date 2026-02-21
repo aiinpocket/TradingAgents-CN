@@ -418,11 +418,11 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             logger.info(" [本地保存] 開始保存分模塊報告到本地目錄")
             local_files = save_modular_reports_to_results_dir(results, stock_symbol)
             if local_files:
-                logger.info(f" [本地保存] 已保存 {len(local_files)} 個本地報告文件")
+                logger.info(f" [本地保存] 已保存 {len(local_files)} 個本地報告檔案")
                 for module, path in local_files.items():
                     logger.info(f"  - {module}: {path}")
             else:
-                logger.warning(" [本地保存] 本地報告文件保存失敗")
+                logger.warning(" [本地保存] 本地報告檔案保存失敗")
             
             # 2. 保存分析報告到MongoDB
             logger.info(" [MongoDB保存] 開始保存分析報告到MongoDB")
@@ -433,7 +433,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             
             if save_success:
                 logger.info(" [MongoDB保存] 分析報告已成功保存到MongoDB")
-                update_progress("分析報告已保存到數據庫和本地文件")
+                update_progress("分析報告已保存到數據庫和本地檔案")
             else:
                 logger.warning(" [MongoDB保存] MongoDB報告保存失敗")
                 if local_files:

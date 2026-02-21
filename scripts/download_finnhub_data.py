@@ -171,15 +171,15 @@ class FinnhubDataDownloader:
                     with open(file_path, 'w', encoding='utf-8') as f:
                         json.dump(formatted_data, f, ensure_ascii=False, indent=2)
 
-                    # 驗證文件保存
+                    # 驗證檔案保存
                     if file_path.exists():
                         file_size = file_path.stat().st_size
                         logger.info(f" {symbol} 新聞數據已保存: {len(formatted_data)} 條, 檔案大小: {file_size} 字節")
                     else:
-                        logger.error(f" {symbol} 文件保存失敗，文件不存在")
+                        logger.error(f" {symbol} 檔案保存失敗，文件不存在")
 
                 except Exception as e:
-                    logger.error(f" {symbol} 文件保存異常: {e}")
+                    logger.error(f" {symbol} 檔案保存異常: {e}")
 
             elif news_data and isinstance(news_data, dict):
                 logger.warning(f" {symbol} API返回字典而非列表: {news_data}")

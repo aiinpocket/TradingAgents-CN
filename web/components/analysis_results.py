@@ -211,7 +211,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                     if not reports_dir.exists():
                         continue
 
-                    # 讀取所有報告文件
+                    # 讀取所有報告檔案
                     reports = {}
                     summary_content = ""
 
@@ -1473,7 +1473,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                     logger.debug(f"[MongoDB保存] 查找報告目錄: {reports_dir_str}")
 
                     if reports_dir.exists():
-                        # 讀取所有報告文件
+                        # 讀取所有報告檔案
                         for report_file in reports_dir.glob("*.md"):
                             try:
                                 with open(report_file, 'r', encoding='utf-8') as f:
@@ -1482,14 +1482,14 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                                     reports[report_name] = content
                                     logger.debug(f"[MongoDB保存] 讀取報告: {report_name} ({len(content)} 字符)")
                             except Exception as e:
-                                logger.debug(f"[MongoDB保存] 讀取報告文件失敗 {report_file}: {e}")
+                                logger.debug(f"[MongoDB保存] 讀取報告檔案失敗 {report_file}: {e}")
 
-                        logger.debug(f"[MongoDB保存] 共讀取 {len(reports)} 個報告文件")
+                        logger.debug(f"[MongoDB保存] 共讀取 {len(reports)} 個報告檔案")
                     else:
                         logger.debug(f"[MongoDB保存] 報告目錄不存在: {reports_dir_str}")
 
                 except Exception as e:
-                    logger.debug(f"[MongoDB保存] 讀取報告文件異常: {e}")
+                    logger.debug(f"[MongoDB保存] 讀取報告檔案異常: {e}")
                     reports = {}
 
                 # 使用標準保存方法，確保字段結構一致

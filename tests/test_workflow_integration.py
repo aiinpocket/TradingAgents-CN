@@ -159,7 +159,7 @@ def test_news_analyst_integration():
         print(f"  6. 分析結果會傳遞給後續的研究員和管理員節點")
         
         print(f"\n 確認：統一新聞工具已完全集成到整體交易智能體流程中！")
-        print(f" 大模型已通過 llm.bind_tools(tools) 綁定了統一新聞工具！")
+        print(f" 大模型已透過 llm.bind_tools(tools) 綁定了統一新聞工具！")
         
     except Exception as e:
         print(f" 驗證過程中出現錯誤: {str(e)}")

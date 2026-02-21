@@ -105,7 +105,7 @@ def start_web_app():
     app_file = web_dir / "app.py"
     
     if not app_file.exists():
-        print(f" 找不到應用文件: {app_file}")
+        print(f" 找不到應用檔案: {app_file}")
         return False
     
     # 構建啟動命令

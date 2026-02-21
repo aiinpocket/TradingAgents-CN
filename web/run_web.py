@@ -46,7 +46,7 @@ def check_dependencies():
 
 def clean_cache_files(force_clean=False):
     """
-    清理Python快取檔案，避免Streamlit文件監控錯誤
+    清理Python快取檔案，避免Streamlit檔案監控錯誤
 
     Args:
         force_clean: 是否強制清理，預設False（可選清理）
@@ -168,7 +168,7 @@ def main():
     logger.info("TradingAgents-CN Web應用啟動器")
     logger.info("=")
     
-    # 清理快取檔案（可選，避免Streamlit文件監控錯誤）
+    # 清理快取檔案（可選，避免Streamlit檔案監控錯誤）
     clean_cache_files(force_clean=False)
     
     # 檢查依賴
@@ -191,7 +191,7 @@ def main():
     app_file = web_dir / "app.py"
     
     if not app_file.exists():
-        logger.error(f"找不到應用文件: {app_file}")
+        logger.error(f"找不到應用檔案: {app_file}")
         return
     
     # 構建Streamlit命令
@@ -209,7 +209,7 @@ def main():
     # 如果配置目錄存在，添加配置路徑
     if config_dir.exists():
         logger.info(f"使用配置目錄: {config_dir}")
-        # Streamlit會自動查找.streamlit/config.toml文件
+        # Streamlit會自動查找.streamlit/config.toml 檔案
     
     logger.info(f"執行命令: {' '.join(cmd)}")
     logger.info("\n Web應用啟動中...")

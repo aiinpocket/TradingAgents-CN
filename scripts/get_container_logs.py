@@ -245,7 +245,7 @@ def main():
             local_file = copy_log_file(container_name, selected_log)
             if local_file:
                 print(f"\n 日誌檔案獲取完成!")
-                print(f" 本地文件: {local_file}")
+                print(f" 本地檔案: {local_file}")
     else:
         # 多個文件處理
         print(f"\n 複制所有 {len(selected_logs)} 個日誌檔案...")

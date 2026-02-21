@@ -535,10 +535,10 @@ class AsyncProgressTracker:
                     safe_data = safe_serialize(self.progress_data)
                     with open(backup_file, 'w', encoding='utf-8') as f:
                         json.dump(safe_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"[備用儲存] 文件保存成功: {backup_file}")
+                    logger.info(f"[備用儲存] 檔案保存成功: {backup_file}")
                 else:
                     # 文件儲存失敗，嘗試簡化數據
-                    logger.warning("[異步進度] 文件保存失敗，嘗試簡化數據")
+                    logger.warning("[異步進度] 檔案保存失敗，嘗試簡化數據")
                     simplified_data = {
                         'analysis_id': self.analysis_id,
                         'status': self.progress_data.get('status', 'unknown'),

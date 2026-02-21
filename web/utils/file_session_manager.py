@@ -206,7 +206,7 @@ class FileSessionManager:
 file_session_manager = FileSessionManager()
 
 def get_persistent_analysis_id() -> Optional[str]:
-    """獲取持久化的分析ID（優先級：session state > 文件會話 > Redis/文件）"""
+    """獲取持久化的分析ID（優先級：session state > 文件會話 > Redis/檔案）"""
     try:
         # 1. 首先檢查session state
         if st.session_state.get('current_analysis_id'):
@@ -230,7 +230,7 @@ def get_persistent_analysis_id() -> Optional[str]:
 
                 return analysis_id
         
-        # 3. 最後從Redis/文件恢複最新分析
+        # 3. 最後從Redis/檔案恢複最新分析
         try:
             from .async_progress_tracker import get_latest_analysis_id
             latest_id = get_latest_analysis_id()

@@ -90,11 +90,11 @@ def test_word_conversion(md_content):
     print("\n 測試Word轉換...")
     
     try:
-        # 創建臨時文件
+        # 創建暫存檔案
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as tmp_file:
             output_file = tmp_file.name
         
-        print(f" 臨時文件: {output_file}")
+        print(f" 暫存檔案: {output_file}")
         
         # 測試不同的轉換參數
         test_cases = [
@@ -144,7 +144,7 @@ def test_word_conversion(md_content):
             except Exception as e:
                 print(f" 轉換失敗: {e}")
                 
-            # 清理臨時文件
+            # 清理暫存檔案
             if os.path.exists(output_file):
                 os.unlink(output_file)
         
@@ -159,11 +159,11 @@ def test_pdf_conversion(md_content):
     print("\n 測試PDF轉換...")
     
     try:
-        # 創建臨時文件
+        # 創建暫存檔案
         with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
             output_file = tmp_file.name
         
-        print(f" 臨時文件: {output_file}")
+        print(f" 暫存檔案: {output_file}")
         
         # 測試不同的PDF引擎
         test_engines = [
@@ -207,7 +207,7 @@ def test_pdf_conversion(md_content):
             except Exception as e:
                 print(f" 轉換失敗: {e}")
                 
-            # 清理臨時文件
+            # 清理暫存檔案
             if os.path.exists(output_file):
                 os.unlink(output_file)
         

@@ -135,10 +135,10 @@ def test_save_analysis_result():
             if reports_dir.exists():
                 print(" 詳細報告目錄已創建")
                 
-                # 列出報告文件
+                # 列出報告檔案
                 report_files = list(reports_dir.glob("*.md"))
                 if report_files:
-                    print(f" 報告文件 ({len(report_files)} 個):")
+                    print(f" 報告檔案 ({len(report_files)} 個):")
                     for file in report_files:
                         print(f"   - {file.name}")
                 else:
@@ -202,7 +202,7 @@ def main():
     mongodb_success = test_mongodb_save()
     
     print(f"\n 測試完成")
-    print(f" 文件保存: {' 成功' if save_success else ' 失敗'}")
+    print(f" 檔案保存: {' 成功' if save_success else ' 失敗'}")
     print(f" MongoDB保存: {' 成功' if mongodb_success else ' 失敗'}")
 
 if __name__ == "__main__":
