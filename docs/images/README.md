@@ -61,7 +61,7 @@ README.mdWeb
 1. ****: AAPLTSLA
 2. ****: 50%
 3. ****: 
-4. ****: Google AIOpenAILLM
+4. ****: OpenAI / Anthropic LLM
 
 ## 
 

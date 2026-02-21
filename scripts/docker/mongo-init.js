@@ -68,7 +68,6 @@ db.configurations.insertOne({
         "default_provider": "openai",
         "models": {
             "openai": "gpt-4o-mini",
-            "google": "gemini-2.5-flash",
             "anthropic": "claude-sonnet-4"
         }
     },

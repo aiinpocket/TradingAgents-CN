@@ -139,7 +139,7 @@ streamlit run web/app.py
 ### 
 
 #### 
-- **LLM**: AI (Google AI/OpenAI)
+- **LLM**: AI (OpenAI/Anthropic)
 - ****: AI
 
 #### 

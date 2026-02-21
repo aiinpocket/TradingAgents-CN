@@ -78,8 +78,9 @@ class FileSessionManager:
                 except OSError:
                     continue
 
-        except OSError:
-            pass
+        except OSError as e:
+            import logging
+            logging.getLogger(__name__).debug(f"清理過期會話時發生錯誤: {e}")
     
     def save_analysis_state(self, analysis_id: str, status: str = "running",
                            stock_symbol: str = "", market_type: str = "",
@@ -238,8 +239,9 @@ def get_persistent_analysis_id() -> Optional[str]:
                 st.session_state.current_analysis_id = latest_id
                 return latest_id
         except Exception as e:
-            pass
-        
+            import logging
+            logging.getLogger(__name__).debug(f"從 async_progress_tracker 獲取分析 ID 失敗: {e}")
+
         return None
         
     except Exception as e:

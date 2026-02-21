@@ -189,7 +189,7 @@ feat(agents):
 feat(data): FinnHub
 
 # 
-enhance(llm): Google AI API
+enhance(llm): LLM API
 enhance(docs): 
 
 # Bug

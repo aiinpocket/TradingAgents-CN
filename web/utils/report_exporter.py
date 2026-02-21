@@ -304,50 +304,12 @@ class ReportExporter:
                 md_content += f"{self._clean_text_for_markdown(risk_state['judge_decision'])}\n\n"
 
         # V. 最終交易決策
-        if 'final_trade_decision'in state and state['final_trade_decision']:
+        if 'final_trade_decision' in state and state['final_trade_decision']:
             md_content += "\n---\n\n## 最終交易決策\n\n"
             md_content += "*綜合所有團隊分析後的最終投資決策*\n\n"
             md_content += f"{self._clean_text_for_markdown(state['final_trade_decision'])}\n\n"
 
         return md_content
-
-    def _format_team_decision_content(self, content: Dict[str, Any], module_key: str) -> str:
-        """格式化團隊決策內容"""
-        formatted_content = ""
-
-        if module_key == 'investment_debate_state':
-            # 研究團隊決策格式化
-            if content.get('bull_history'):
-                formatted_content += "## 多頭研究員分析\n\n"
-                formatted_content += f"{content['bull_history']}\n\n"
-
-            if content.get('bear_history'):
-                formatted_content += "## 空頭研究員分析\n\n"
-                formatted_content += f"{content['bear_history']}\n\n"
-
-            if content.get('judge_decision'):
-                formatted_content += "## 研究經理綜合決策\n\n"
-                formatted_content += f"{content['judge_decision']}\n\n"
-
-        elif module_key == 'risk_debate_state':
-            # 風險管理團隊決策格式化
-            if content.get('risky_history'):
-                formatted_content += "## 激進分析師評估\n\n"
-                formatted_content += f"{content['risky_history']}\n\n"
-
-            if content.get('safe_history'):
-                formatted_content += "## 保守分析師評估\n\n"
-                formatted_content += f"{content['safe_history']}\n\n"
-
-            if content.get('neutral_history'):
-                formatted_content += "## 中性分析師評估\n\n"
-                formatted_content += f"{content['neutral_history']}\n\n"
-
-            if content.get('judge_decision'):
-                formatted_content += "## 投資組合經理最終決策\n\n"
-                formatted_content += f"{content['judge_decision']}\n\n"
-
-        return formatted_content
 
     def generate_docx_report(self, results: Dict[str, Any]) -> bytes:
         """生成Word文檔格式的報告"""

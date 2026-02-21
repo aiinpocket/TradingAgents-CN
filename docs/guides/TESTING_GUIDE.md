@@ -27,7 +27,7 @@ cp .env.example .env
 
 ### 
 
-1. [OpenAI Platform](https://platform.openai.com/) [Google AI Studio](https://aistudio.google.com/)
+1. [OpenAI Platform](https://platform.openai.com/) [Anthropic Console](https://console.anthropic.com/)
 2. 
 3. → API Keys
 4. API Key
