@@ -1,10 +1,8 @@
 # 標準庫匯入
 import datetime
 import os
-import re
 import subprocess
 import sys
-import time
 from collections import deque
 from difflib import get_close_matches
 from functools import wraps

@@ -5,7 +5,7 @@
 """
 
 import re
-from typing import Dict, Tuple, Optional
+from typing import Dict
 from datetime import datetime, timedelta
 
 # 匯入日誌模塊

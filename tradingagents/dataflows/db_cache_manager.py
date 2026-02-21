@@ -8,7 +8,7 @@ import os
 import json
 import hashlib
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any, List, Union
+from typing import Optional, Dict, Any, Union
 import pandas as pd
 
 # 匯入日誌模塊
@@ -18,7 +18,6 @@ logger = get_logger('agents')
 # MongoDB
 try:
     from pymongo import MongoClient
-    from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
     MONGODB_AVAILABLE = True
 except ImportError:
     MONGODB_AVAILABLE = False
@@ -27,7 +26,6 @@ except ImportError:
 # Redis
 try:
     import redis
-    from redis.exceptions import ConnectionError as RedisConnectionError
     REDIS_AVAILABLE = True
 except ImportError:
     REDIS_AVAILABLE = False
@@ -231,7 +229,7 @@ class DatabaseCacheManager:
         # 自動推斷市場類型
         if market_type is None:
             # 根據股票代碼格式推斷市場類型
-            import re
+            pass
 
             # 統一視為美股
             market_type = "us"

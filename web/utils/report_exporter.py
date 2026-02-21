@@ -8,7 +8,6 @@ import streamlit as st
 import json
 import os
 from datetime import datetime
-from pathlib import Path
 from typing import Dict, Any, Optional
 import tempfile
 
@@ -875,7 +874,6 @@ def render_export_buttons(results: Dict[str, Any]):
             """)
 
         # 在Docker環境下，即使pandoc有問題也顯示所有按鈕，讓用戶嘗試
-        pass
     
     # 生成檔案名稱
     stock_symbol = results.get('stock_symbol', 'analysis')

@@ -6,7 +6,7 @@
 
 import time
 import functools
-from typing import Any, Dict, Optional, Callable
+from typing import Optional, Callable
 from datetime import datetime
 
 from tradingagents.utils.logging_init import get_logger

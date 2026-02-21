@@ -6,7 +6,7 @@ from pandas import DataFrame
 import pandas as pd
 from functools import wraps
 
-from .utils import save_output, SavePathType, decorate_all_methods
+from .utils import SavePathType, decorate_all_methods
 
 # 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
@@ -14,7 +14,7 @@ logger = get_logger('agents')
 
 # 匯入快取管理器
 try:
-    from .cache_manager import get_cache
+    pass
 
     CACHE_AVAILABLE = True
 except ImportError:

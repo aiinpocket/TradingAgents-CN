@@ -1,5 +1,4 @@
 # Windows 11 ChromaDB 優化配置
-import os
 import platform
 import chromadb
 from chromadb.config import Settings

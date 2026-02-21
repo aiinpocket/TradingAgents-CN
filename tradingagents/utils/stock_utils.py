@@ -4,7 +4,7 @@
 """
 
 import re
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger

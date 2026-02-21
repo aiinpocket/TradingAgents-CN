@@ -7,7 +7,6 @@
 
 import logging
 from datetime import datetime, timedelta
-import re
 import hashlib
 import os
 

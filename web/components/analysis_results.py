@@ -10,7 +10,6 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 import json
-import os
 from pathlib import Path
 # 日誌模組
 try:

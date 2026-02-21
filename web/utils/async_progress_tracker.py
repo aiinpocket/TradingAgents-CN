@@ -8,7 +8,6 @@ import json
 import time
 import os
 from typing import Dict, Any, Optional, List
-import threading
 from pathlib import Path
 
 # 匯入日誌模塊

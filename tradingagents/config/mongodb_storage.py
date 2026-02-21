@@ -6,7 +6,7 @@ MongoDB儲存適配器
 
 import os
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Any
 from dataclasses import asdict
 from .config_manager import UsageRecord
 

@@ -32,7 +32,7 @@ except ImportError as e:
     logger.warning(f"yfinance庫不可用: {e}")
     yf = None
     YF_AVAILABLE = False
-from .config import get_config, set_config, DATA_DIR
+from .config import get_config, DATA_DIR
 
 
 def get_finnhub_news(

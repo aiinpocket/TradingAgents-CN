@@ -5,10 +5,8 @@
 """
 
 import requests
-import json
 from datetime import datetime, timedelta
-from typing import List, Dict, Optional
-import time
+from typing import List
 import os
 from dataclasses import dataclass
 

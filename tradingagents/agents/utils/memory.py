@@ -3,8 +3,7 @@ from chromadb.config import Settings
 from openai import OpenAI
 import os
 import threading
-import hashlib
-from typing import Dict, Optional
+from typing import Dict
 
 # 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger

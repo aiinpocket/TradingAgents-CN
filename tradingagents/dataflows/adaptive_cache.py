@@ -4,13 +4,12 @@
 根據資料庫可用性自動選擇最佳快取策略
 """
 
-import os
 import json
 import hashlib
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 import pandas as pd
 
 from ..config.database_manager import get_database_manager

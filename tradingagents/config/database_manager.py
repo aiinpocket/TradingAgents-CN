@@ -7,8 +7,7 @@
 
 import logging
 import os
-from pathlib import Path
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Tuple
 
 class DatabaseManager:
     """智能資料庫管理器"""
@@ -85,7 +84,6 @@ class DatabaseManager:
             return False, "MongoDB未啟用 (MONGODB_ENABLED=false)"
 
         try:
-            import pymongo
             from pymongo import MongoClient
 
             # 構建連接參數

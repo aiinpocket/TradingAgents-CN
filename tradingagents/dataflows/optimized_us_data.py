@@ -4,11 +4,10 @@
 集成快取策略，減少API調用，提高響應速度
 """
 
-import os
 import time
 import random
-from datetime import datetime, timedelta
-from typing import Optional, Dict, Any
+from datetime import datetime
+from typing import Optional
 import yfinance as yf
 import pandas as pd
 from .cache_manager import get_cache
@@ -233,7 +232,7 @@ class OptimizedUSDataProvider:
         try:
             import finnhub
             import os
-            from datetime import datetime, timedelta
+            from datetime import datetime
 
 
             # 獲取API密鑰

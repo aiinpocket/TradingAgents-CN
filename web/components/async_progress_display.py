@@ -7,7 +7,7 @@
 import streamlit as st
 import time
 
-from web.utils.async_progress_tracker import get_progress_by_id, format_time
+from web.utils.async_progress_tracker import format_time
 
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('async_display')
