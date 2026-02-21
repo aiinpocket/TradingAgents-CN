@@ -92,7 +92,7 @@ def quick_redis_test(host=None, port=None, password=None):
         print(f"  Redis版本: {info.get('redis_version', 'N/A')}")
         print(f"  執行模式: {info.get('redis_mode', 'N/A')}")
         print(f"  已連接客戶端: {info.get('connected_clients', 'N/A')}")
-        print(f"  內存使用: {info.get('used_memory_human', 'N/A')}")
+        print(f"  記憶體使用: {info.get('used_memory_human', 'N/A')}")
         
         return True
         

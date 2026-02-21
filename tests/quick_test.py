@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-快速集成測試 - 驗證複製的檔案是否正常工作
+快速整合測試 - 驗證複製的檔案是否正常工作
 """
 
 import os
@@ -8,7 +8,7 @@ import sys
 import traceback
 from datetime import datetime
 
-print(" TradingAgents 集成測試")
+print(" TradingAgents 整合測試")
 print("=" * 40)
 
 # 測試1：檢查檔案是否存在
@@ -179,7 +179,7 @@ except Exception as e:
     print(f" 快取統計失敗: {e}")
 
 print("\n" + "=" * 40)
-print(" 集成測試完成!")
+print(" 整合測試完成!")
 print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # 生成測試報告

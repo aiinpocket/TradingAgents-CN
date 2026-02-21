@@ -197,7 +197,7 @@ python scripts/{category}/script_name.py
 ## 使用原則
 
 ### 指令碼分類
-- **tests/** - 單元測試和集成測試（pytest執行）
+- **tests/** - 單元測試和整合測試（pytest執行）
 - **scripts/** - 工具指令碼和驗證指令碼（獨立執行）
 - **tools/** - 複雜的獨立工具程式
 

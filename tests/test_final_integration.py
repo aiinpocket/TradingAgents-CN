@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-驗證統一新聞工具集成效果的最終測試
+驗證統一新聞工具整合效果的最終測試
 """
 
 import os
@@ -12,9 +12,9 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_final_integration():
-    """最終集成測試"""
+    """最終整合測試"""
     
-    print(" 統一新聞工具集成效果驗證")
+    print(" 統一新聞工具整合效果驗證")
     print("=" * 60)
     
     try:
@@ -82,8 +82,8 @@ def test_final_integration():
         # 檢查新聞分析師是否正確匯入了統一新聞工具
         print(f"   新聞分析師模組匯入成功")
         
-        # 3. 驗證工具集成
-        print(f"\n 第三步：驗證工具集成...")
+        # 3. 驗證工具整合
+        print(f"\n 第三步：驗證工具整合...")
         
         # 檢查新聞分析師檔案中的統一新聞工具匯入
         with open("tradingagents/agents/analysts/news_analyst.py", "r", encoding="utf-8") as f:
@@ -99,16 +99,16 @@ def test_final_integration():
         
         for check_name, check_pattern in checks:
             if check_pattern in content:
-                print(f"   {check_name}: 已正確集成")
+                print(f"   {check_name}: 已正確整合")
             else:
                 print(f"   {check_name}: 未找到")
         
         # 4. 總結
-        print(f"\n 集成驗證總結")
+        print(f"\n 整合驗證總結")
         print("=" * 60)
         print(" 統一新聞工具建立成功")
         print(" 支援美股自動識別")
-        print(" 新聞分析師已集成統一工具")
+        print(" 新聞分析師已整合統一工具")
         print(" 系統提示詞已更新")
         print(" 補救機制已優化")
         
@@ -119,7 +119,7 @@ def test_final_integration():
         print("4. 統一了新聞格式，便於分析")
         print("5. 減少了補救機制的複雜度")
         
-        print(f"\n 集成測試完成！統一新聞工具已成功集成到新聞分析師中。")
+        print(f"\n 整合測試完成！統一新聞工具已成功整合到新聞分析師中。")
         
     except Exception as e:
         print(f" 測試過程中出現錯誤: {e}")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-集成快取管理器
+整合快取管理器
 結合原有快取系統和新的自適應資料庫支援
 提供向後相容的介面
 """
@@ -22,7 +22,7 @@ except ImportError:
     ADAPTIVE_CACHE_AVAILABLE = False
 
 class IntegratedCacheManager:
-    """集成快取管理器 - 智慧選擇快取策略"""
+    """整合快取管理器 - 智慧選擇快取策略"""
     
     def __init__(self, cache_dir: str = None):
         self.logger = setup_dataflow_logging()
@@ -265,11 +265,11 @@ class IntegratedCacheManager:
             return "標準模式 (智慧檔案快取)"
 
 
-# 全局集成快取管理器實例
+# 全局整合快取管理器實例
 _integrated_cache = None
 
 def get_cache() -> IntegratedCacheManager:
-    """取得全局集成快取管理器實例"""
+    """取得全局整合快取管理器實例"""
     global _integrated_cache
     if _integrated_cache is None:
         _integrated_cache = IntegratedCacheManager()

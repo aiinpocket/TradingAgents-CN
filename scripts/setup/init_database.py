@@ -193,7 +193,7 @@ def init_redis():
         # 顯示Redis統計
         info = redis_client.info()
         logger.info(f"\n Redis統計:")
-        logger.info(f"  - 已用內存: {info.get('used_memory_human', 'N/A')}")
+        logger.info(f"  - 已用記憶體: {info.get('used_memory_human', 'N/A')}")
         logger.info(f"  - 連接客戶端: {info.get('connected_clients', 0)}")
         logger.info(f"  - 總命令數: {info.get('total_commands_processed', 0)}")
         

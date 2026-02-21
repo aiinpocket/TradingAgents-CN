@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-測試新聞分析師與統一新聞工具的集成
+測試新聞分析師與統一新聞工具的整合
 """
 
 import os
@@ -12,9 +12,9 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_news_analyst_integration():
-    """測試新聞分析師與統一新聞工具的集成"""
+    """測試新聞分析師與統一新聞工具的整合"""
     
-    print(" 開始測試新聞分析師集成...")
+    print(" 開始測試新聞分析師整合...")
     
     try:
         # 匯入必要的模組
@@ -157,7 +157,7 @@ def test_news_analyst_integration():
                         print(f" 包含真實新聞特征: {'是' if has_real_news else '否'}")
                         
                         if has_real_news:
-                            print(" 集成測試成功！")
+                            print(" 整合測試成功！")
                         else:
                             print(" 可能需要進一步優化")
                     else:
@@ -171,7 +171,7 @@ def test_news_analyst_integration():
                 traceback.print_exc()
         
         print(f"\n{'='*60}")
-        print(" 新聞分析師集成測試完成!")
+        print(" 新聞分析師整合測試完成!")
         print(f"{'='*60}")
         
     except Exception as e:

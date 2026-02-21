@@ -84,8 +84,8 @@ def test_data_dir_configuration():
         # 清理環境變數
         del os.environ["TRADINGAGENTS_DATA_DIR"]
     
-    # 4. 測試配置管理器集成
-    print("\n4. 測試配置管理器集成 | Testing Configuration Manager Integration")
+    # 4. 測試配置管理器整合
+    print("\n4. 測試配置管理器整合 | Testing Configuration Manager Integration")
     settings = config_manager.load_settings()
     print(f"配置管理器設定 | Configuration manager settings:")
     for key, value in settings.items():
@@ -144,7 +144,7 @@ def main():
         print(" 資料目錄配置功能已實作 | Data directory configuration feature implemented")
         print(" 支援自定義路徑設定 | Custom path setting supported")
         print(" 支援環境變數配置 | Environment variable configuration supported")
-        print(" 集成配置管理器 | Configuration manager integrated")
+        print(" 整合配置管理器 | Configuration manager integrated")
         print(" CLI命令介面完整 | CLI command interface complete")
         print(" 自動目錄建立功能 | Auto directory creation feature")
         

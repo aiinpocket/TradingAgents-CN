@@ -32,8 +32,8 @@ def render_analysis_form():
             stock_symbol = st.text_input(
                 "股票代碼",
                 value=cached_stock if (cached_config and cached_config.get('market_type') in ('美股', 'US Market')) else '',
-                placeholder="輸入美股代碼，如 AAPL, TSLA, MSFT，然後按回車確認",
-                help="輸入要分析的美股代碼，輸入完成後請按回車鍵確認",
+                placeholder="輸入美股代碼，如 AAPL, TSLA, MSFT，然後按Enter確認",
+                help="輸入要分析的美股代碼，輸入完成後請按Enter 鍵確認",
                 key="us_stock_input",
                 autocomplete="off").upper().strip()
 
@@ -132,7 +132,7 @@ def render_analysis_form():
 
         # 顯示輸入提示（僅在未輸入時）
         if not stock_symbol:
-            st.caption("請輸入股票代碼後按回車確認")
+            st.caption("請輸入股票代碼後按Enter確認")
 
         # 在提交按鈕前檢測配置變化並保存
         current_config = {

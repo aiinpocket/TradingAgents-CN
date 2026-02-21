@@ -181,7 +181,7 @@ class FinancialSituationMemory:
 
         # 檢查記憶功能是否被禁用
         if self.client == "DISABLED":
-            # 內存功能已禁用，返回空向量
+            # 記憶功能已禁用，返回空向量
             logger.debug("記憶功能已禁用，返回空向量")
             return [0.0] * 1024  # 返回1024維的零向量
 
@@ -230,8 +230,8 @@ class FinancialSituationMemory:
                 logger.warning("嵌入客戶端未初始化，返回空向量")
                 return [0.0] * 1024  # 返回空向量
             elif self.client == "DISABLED":
-                # 內存功能已禁用，返回空向量
-                logger.debug("內存功能已禁用，返回空向量")
+                # 記憶功能已禁用，返回空向量
+                logger.debug("記憶功能已禁用，返回空向量")
                 return [0.0] * 1024  # 返回1024維的零向量
 
             # 嘗試呼叫OpenAI相容的embedding API

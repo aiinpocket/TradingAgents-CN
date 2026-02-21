@@ -222,7 +222,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if research_depth == 1:  # 1級 - 快速分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
-            # 保持內存功能啟用，因為內存操作開銷很小但能顯著提升分析質量
+            # 保持記憶功能啟用，因為記憶操作開銷很小但能顯著提升分析質量
             config["memory_enabled"] = True
 
             # 統一使用在線工具，避免離線工具的各種問題

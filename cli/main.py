@@ -1788,7 +1788,7 @@ def test():
     """
     logger.info(f"\n[bold blue]TradingAgents 測試 | Tests[/bold blue]")
 
-    logger.info(f"[yellow]正在執行集成測試... | Running integration tests...[/yellow]")
+    logger.info(f"[yellow]正在執行整合測試... | Running integration tests...[/yellow]")
 
     try:
         result = subprocess.run([
@@ -1850,7 +1850,7 @@ def help_chinese():
     commands_table.add_row(
         "test",
         "執行測試 | Run Tests",
-        "執行系統集成測試，驗證功能正常"
+        "執行系統整合測試，驗證功能正常"
     )
     commands_table.add_row(
         "version",

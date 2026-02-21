@@ -98,7 +98,7 @@ class TradingAgentsGraph:
             self.invest_judge_memory = FinancialSituationMemory("invest_judge_memory", self.config)
             self.risk_manager_memory = FinancialSituationMemory("risk_manager_memory", self.config)
         else:
-            # 建立空的內存物件
+            # 建立空的記憶物件
             self.bull_memory = None
             self.bear_memory = None
             self.trader_memory = None

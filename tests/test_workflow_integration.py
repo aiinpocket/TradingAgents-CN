@@ -36,7 +36,7 @@ class MockToolkit:
         return "模擬OpenAI新聞"
 
 def test_news_analyst_integration():
-    """測試新聞分析師的統一工具集成"""
+    """測試新聞分析師的統一工具整合"""
     print(f" 驗證統一新聞工具在整體流程中的使用情況")
     print("=" * 70)
     
@@ -54,7 +54,7 @@ def test_news_analyst_integration():
         print(f"   新聞分析師建立成功")
         
         # 2. 檢查統一新聞工具的匯入和使用
-        print(f"\n 第二步：檢查統一新聞工具的集成...")
+        print(f"\n 第二步：檢查統一新聞工具的整合...")
         
         # 檢查統一新聞工具是否能正常匯入
         try:
@@ -66,8 +66,8 @@ def test_news_analyst_integration():
         except Exception as e:
             print(f"   統一新聞工具匯入失敗: {e}")
         
-        # 3. 檢查新聞分析師原始碼中的集成情況
-        print(f"\n 第三步：檢查新聞分析師原始碼集成...")
+        # 3. 檢查新聞分析師原始碼中的整合情況
+        print(f"\n 第三步：檢查新聞分析師原始碼整合...")
         
         # 讀取新聞分析師原始碼
         news_analyst_file = "tradingagents/agents/analysts/news_analyst.py"
@@ -75,7 +75,7 @@ def test_news_analyst_integration():
             with open(news_analyst_file, "r", encoding="utf-8") as f:
                 source_code = f.read()
             
-            # 檢查關鍵集成點
+            # 檢查關鍵整合點
             integration_checks = [
                 ("統一新聞工具匯入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
                 ("工具建立", "unified_news_tool = create_unified_news_tool(toolkit)"),
@@ -89,7 +89,7 @@ def test_news_analyst_integration():
             
             for check_name, check_pattern in integration_checks:
                 if check_pattern in source_code:
-                    print(f"   {check_name}: 已正確集成")
+                    print(f"   {check_name}: 已正確整合")
                 else:
                     print(f"   {check_name}: 未找到")
                     
@@ -113,7 +113,7 @@ def test_news_analyst_integration():
             
             for check_name, check_pattern in workflow_checks:
                 if check_pattern in setup_code:
-                    print(f"   {check_name}: 已在工作流程中集成")
+                    print(f"   {check_name}: 已在工作流程中整合")
                 else:
                     print(f"   {check_name}: 未在工作流程中找到")
                     
@@ -144,12 +144,12 @@ def test_news_analyst_integration():
         print(f"\n 驗證完成！")
         
         # 總結
-        print(f"\n 集成狀態總結:")
-        print(f"   統一新聞工具: 已建立並集成到新聞分析師")
+        print(f"\n 整合狀態總結:")
+        print(f"   統一新聞工具: 已建立並整合到新聞分析師")
         print(f"   新聞分析師: 已使用統一工具替代原有多個工具")
         print(f"   工具綁定: 已實作LLM工具綁定機制")
         print(f"   系統提示詞: 已更新為強制呼叫統一工具")
-        print(f"   工作流程: 已集成到整體交易智慧體流程")
+        print(f"   工作流程: 已整合到整體交易智慧體流程")
         
         print(f"\n 在整體流程中的使用情況：")
         print(f"  1. 當使用者選擇包含'news'的分析師時，系統會自動載入新聞分析師")
@@ -158,7 +158,7 @@ def test_news_analyst_integration():
         print(f"  4. 統一工具會自動識別美股股票並取得相應新聞")
         print(f"  6. 分析結果會傳遞給後續的研究員和管理員節點")
         
-        print(f"\n 確認：統一新聞工具已完全集成到整體交易智慧體流程中！")
+        print(f"\n 確認：統一新聞工具已完全整合到整體交易智慧體流程中！")
         print(f" 大模型已透過 llm.bind_tools(tools) 綁定了統一新聞工具！")
         
     except Exception as e:

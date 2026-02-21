@@ -276,7 +276,7 @@ def main():
         print("\n VSCode配置完全正確！")
         print("\n 現在您可以:")
         print("    在VSCode中正常開發和除錯")
-        print("    使用集成終端執行Python程式碼")
+        print("    使用整合終端執行Python程式碼")
         print("    執行測試和格式化程式碼")
         print("    使用智慧程式碼補全和錯誤檢查")
     elif passed >= total * 0.8:
@@ -290,7 +290,7 @@ def main():
     print("   1. 確保在VSCode中選擇了正確的Python解釋器")
     print("   2. 重啟VSCode以應用新的配置")
     print("   3. 使用Ctrl+Shift+P -> 'Python: Select Interpreter'")
-    print("   4. 在集成終端中驗證虛擬環境已啟用")
+    print("   4. 在整合終端中驗證虛擬環境已啟用")
 
 if __name__ == "__main__":
     main()

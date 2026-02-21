@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 優化的美股資料取得工具
-集成快取策略，減少API呼叫，提高回應速度
+整合快取策略，減少API呼叫，提高回應速度
 """
 
 import time
@@ -19,7 +19,7 @@ logger = get_logger('agents')
 
 
 class OptimizedUSDataProvider:
-    """優化的美股資料提供器 - 集成快取和API限制處理"""
+    """優化的美股資料提供器 - 整合快取和API限制處理"""
     
     def __init__(self):
         self.cache = get_cache()

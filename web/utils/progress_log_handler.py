@@ -27,9 +27,9 @@ class ProgressLogHandler(logging.Handler):
             with cls._lock:
                 cls._trackers[analysis_id] = tracker
             # 在鎖外面打印，避免死鎖
-            _internal_logger.debug(f"[進度集成] 註冊追蹤器: {analysis_id}")
+            _internal_logger.debug(f"[進度整合] 註冊追蹤器: {analysis_id}")
         except Exception as e:
-            _internal_logger.debug(f"[進度集成] 註冊追蹤器失敗: {e}")
+            _internal_logger.debug(f"[進度整合] 註冊追蹤器失敗: {e}")
 
     @classmethod
     def unregister_tracker(cls, analysis_id: str):
@@ -42,9 +42,9 @@ class ProgressLogHandler(logging.Handler):
                     removed = True
             # 在鎖外面打印，避免死鎖
             if removed:
-                _internal_logger.debug(f"[進度集成] 註銷追蹤器: {analysis_id}")
+                _internal_logger.debug(f"[進度整合] 註銷追蹤器: {analysis_id}")
         except Exception as e:
-            _internal_logger.debug(f"[進度集成] 註銷追蹤器失敗: {e}")
+            _internal_logger.debug(f"[進度整合] 註銷追蹤器失敗: {e}")
     
     def emit(self, record):
         """處理日誌記錄"""
@@ -67,14 +67,14 @@ class ProgressLogHandler(logging.Handler):
                     if hasattr(tracker, 'progress_data') and tracker.progress_data.get('status') == 'running':
                         try:
                             tracker.update_progress(message)
-                            _internal_logger.debug(f"[進度集成] 轉發訊息到 {analysis_id}: {message[:50]}...")
+                            _internal_logger.debug(f"[進度整合] 轉發訊息到 {analysis_id}: {message[:50]}...")
                             break  # 只更新第一個匹配的追蹤器
                         except Exception as e:
-                            _internal_logger.debug(f"[進度集成] 更新失敗: {e}")
+                            _internal_logger.debug(f"[進度整合] 更新失敗: {e}")
                         
         except Exception as e:
             # 不要讓日誌處理器的錯誤影響主程式
-            _internal_logger.debug(f"[進度集成] 日誌處理錯誤: {e}")
+            _internal_logger.debug(f"[進度整合] 日誌處理錯誤: {e}")
     
     def _extract_stock_symbol(self, message: str) -> Optional[str]:
         """從訊息中提取股票代碼"""
@@ -91,7 +91,7 @@ class ProgressLogHandler(logging.Handler):
 _progress_handler = None
 
 def setup_progress_log_integration():
-    """設定進度日誌集成"""
+    """設定進度日誌整合"""
     global _progress_handler
     
     if _progress_handler is None:
@@ -102,7 +102,7 @@ def setup_progress_log_integration():
         tools_logger = logging.getLogger('tools')
         tools_logger.addHandler(_progress_handler)
         
-        _internal_logger.debug("[進度集成] 日誌處理器已設定")
+        _internal_logger.debug("[進度整合] 日誌處理器已設定")
     
     return _progress_handler
 

@@ -239,8 +239,8 @@ class RedisPerformanceTester:
         }
     
     def test_memory_usage(self):
-        """測試Redis內存使用情況"""
-        print(f"\n Redis內存使用情況:")
+        """測試Redis記憶體使用情況"""
+        print(f"\n Redis記憶體使用情況:")
         
         try:
             info = self.redis_client.info('memory')
@@ -250,8 +250,8 @@ class RedisPerformanceTester:
             used_memory_peak = info.get('used_memory_peak', 0)
             used_memory_peak_human = info.get('used_memory_peak_human', 'N/A')
             
-            print(f"  當前內存使用: {used_memory_human} ({used_memory} bytes)")
-            print(f"  峰值內存使用: {used_memory_peak_human} ({used_memory_peak} bytes)")
+            print(f"  當前記憶體使用: {used_memory_human} ({used_memory} bytes)")
+            print(f"  峰值記憶體使用: {used_memory_peak_human} ({used_memory_peak} bytes)")
             
             return {
                 'used_memory': used_memory,
@@ -261,7 +261,7 @@ class RedisPerformanceTester:
             }
             
         except Exception as e:
-            print(f" 取得內存資訊失敗: {e}")
+            print(f" 取得記憶體資訊失敗: {e}")
             return None
     
     def run_full_test(self):
@@ -284,7 +284,7 @@ class RedisPerformanceTester:
         # 3. 並發測試
         results['concurrent'] = self.test_concurrent_connections(10, 50)
         
-        # 4. 內存使用
+        # 4. 記憶體使用
         results['memory'] = self.test_memory_usage()
         
         # 清理測試資料

@@ -79,7 +79,7 @@ def select_analysts(ticker: str = None) -> List[AnalystType]:
         choices=[
             questionary.Choice(display, value=value) for display, value in available_analysts
         ],
-        instruction="\n- 按空格鍵選擇/取消選擇分析師 | Press Space to select/unselect analysts\n- 按 'a' 鍵全選/取消全選 | Press 'a' to select/unselect all\n- 按回車鍵完成選擇 | Press Enter when done",
+        instruction="\n- 按空格鍵選擇/取消選擇分析師 | Press Space to select/unselect analysts\n- 按 'a' 鍵全選/取消全選 | Press 'a' to select/unselect all\n- 按Enter 鍵完成選擇 | Press Enter when done",
         validate=lambda x: len(x) > 0 or "您必須至少選擇一個分析師 | You must select at least one analyst.",
         style=questionary.Style(
             [
@@ -113,7 +113,7 @@ def select_research_depth() -> int:
         choices=[
             questionary.Choice(display, value=value) for display, value in DEPTH_OPTIONS
         ],
-        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按回車鍵選擇 | Press Enter to select",
+        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按Enter 鍵選擇 | Press Enter to select",
         style=questionary.Style(
             [
                 ("selected", "fg:yellow noinherit"),
@@ -161,7 +161,7 @@ def select_shallow_thinking_agent(provider) -> str:
             for display, value in options
         ],
         default=default_choice,
-        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按回車鍵選擇 | Press Enter to select",
+        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按Enter 鍵選擇 | Press Enter to select",
         style=questionary.Style(
             [
                 ("selected", "fg:green noinherit"),
@@ -215,7 +215,7 @@ def select_deep_thinking_agent(provider) -> str:
             for display, value in options
         ],
         default=default_choice,
-        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按回車鍵選擇 | Press Enter to select",
+        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按Enter 鍵選擇 | Press Enter to select",
         style=questionary.Style(
             [
                 ("selected", "fg:green noinherit"),
@@ -246,7 +246,7 @@ def select_llm_provider() -> tuple[str, str]:
             for display, value in BASE_URLS
         ],
         default=(BASE_URLS[0][0], BASE_URLS[0][1]),
-        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按回車鍵選擇 | Press Enter to select",
+        instruction="\n- 使用方向鍵導航 | Use arrow keys to navigate\n- 按Enter 鍵選擇 | Press Enter to select",
         style=questionary.Style(
             [
                 ("selected", "fg:green noinherit"),
