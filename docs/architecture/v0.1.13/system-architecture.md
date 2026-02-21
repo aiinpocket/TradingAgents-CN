@@ -28,7 +28,6 @@ graph TB
 
     subgraph "LLM整合層 (LLM Integration Layer)"
         OPENAI[OpenAI]
-        GOOGLE[Google AI]
         ANTHROPIC[Anthropic]
         ADAPTERS[LLM適配器]
     end
@@ -79,7 +78,6 @@ graph TB
 
     GRAPH --> ADAPTERS
     ADAPTERS --> OPENAI
-    ADAPTERS --> GOOGLE
     ADAPTERS --> ANTHROPIC
 
     GRAPH --> SETUP
@@ -124,7 +122,7 @@ graph TB
     classDef storageLayer fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
 
     class CLI,WEB,API,DOCKER uiLayer
-    class OPENAI,GOOGLE,ANTHROPIC,ADAPTERS llmLayer
+    class OPENAI,ANTHROPIC,ADAPTERS llmLayer
     class GRAPH,SETUP,CONDITIONAL,PROPAGATOR,REFLECTOR,SIGNAL coreLayer
     class ANALYSTS,RESEARCHERS,TRADER,RISKMGMT,MANAGERS agentLayer
     class TOOLKIT,DATAFLOW,MEMORY,LOGGING toolLayer
@@ -145,9 +143,9 @@ from tradingagents.default_config import DEFAULT_CONFIG
 
 # 建立自訂設定
 config = DEFAULT_CONFIG.copy()
-config["llm_provider"] = "google"
-config["deep_think_llm"] = "gemini-2.0-flash"
-config["quick_think_llm"] = "gemini-2.0-flash"
+config["llm_provider"] = "openai"
+config["deep_think_llm"] = "gpt-4o"
+config["quick_think_llm"] = "gpt-4o-mini"
 config["max_debate_rounds"] = 1
 config["online_tools"] = True
 
@@ -181,7 +179,6 @@ tradingagents = "main:main"
 ```python
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 # LLM提供商設定
 if config["llm_provider"].lower() == "openai":
@@ -193,20 +190,19 @@ if config["llm_provider"].lower() == "openai":
         model=config["quick_think_llm"],
         base_url=config["backend_url"]
     )
-elif config["llm_provider"] == "google":
-    deep_thinking_llm = ChatGoogleGenerativeAI(
+elif config["llm_provider"] == "anthropic":
+    deep_thinking_llm = ChatAnthropic(
         model=config["deep_think_llm"]
     )
-    quick_thinking_llm = ChatGoogleGenerativeAI(
+    quick_thinking_llm = ChatAnthropic(
         model=config["quick_think_llm"]
     )
 ```
 
 #### 支援的LLM提供商
 
-- **OpenAI**: GPT-4o, GPT-4o-mini, o1-preview, o1-mini
-- **Google AI**: Gemini-2.0-flash, Gemini-1.5-pro, Gemini-1.5-flash
-- **Anthropic**: Claude系列模型
+- **OpenAI**: GPT-4o, GPT-4o-mini
+- **Anthropic**: Claude Opus 4, Claude Sonnet 4
 
 ### 3. 核心框架層 (Core Framework Layer)
 
@@ -383,7 +379,6 @@ sequenceDiagram
 
 ### LLM整合
 - **OpenAI**: GPT系列模型
-- **Google AI**: Gemini系列模型
 - **Anthropic**: Claude系列模型
 
 ### 資料處理
@@ -409,7 +404,6 @@ sequenceDiagram
 ```bash
 # LLM API密鑰
 OPENAI_API_KEY=your_openai_key
-GOOGLE_API_KEY=your_google_key
 ANTHROPIC_API_KEY=your_anthropic_key
 
 # 資料來源API密鑰
@@ -426,9 +420,9 @@ TRADINGAGENTS_LOG_LEVEL=INFO
 ```python
 # 自訂設定範例
 custom_config = {
-    "llm_provider": "google",
-    "deep_think_llm": "gemini-2.0-flash",
-    "quick_think_llm": "gemini-1.5-flash",
+    "llm_provider": "openai",
+    "deep_think_llm": "gpt-4o",
+    "quick_think_llm": "gpt-4o-mini",
     "max_debate_rounds": 3,
     "max_risk_discuss_rounds": 2,
     "online_tools": True,

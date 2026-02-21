@@ -11,8 +11,8 @@
 - 專業的 UI 設計和使用者體驗
 
 ### 多 LLM 提供商支援
-- **Google AI**: gemini-2.0-flash, gemini-1.5-pro, gemini-1.5-flash
 - **OpenAI**: gpt-4o, gpt-4o-mini
+- **Anthropic Claude**: claude-opus-4, claude-sonnet-4
 - **智慧切換**: 一鍵切換不同的 AI 模型
 
 ### 專業分析功能
@@ -76,10 +76,10 @@ python -m streamlit run web/app.py
    - 綠色表示已配置，紅色表示未配置
 
 2. **AI 模型配置**
-   - **選擇 LLM 提供商**: OpenAI 或 Google AI
+   - **選擇 LLM 提供商**: OpenAI 或 Anthropic Claude
    - **選擇具體模型**:
      - OpenAI: gpt-4o(推薦) / gpt-4o-mini(快速)
-     - Google AI: gemini-2.0-flash(推薦) / gemini-1.5-pro(強大) / gemini-1.5-flash(快速)
+     - Anthropic: claude-opus-4(強大) / claude-sonnet-4(平衡)
 
 3. **進階設定**
    - **啟用記憶功能**: 讓 AI 學習和記住分析歷史
@@ -180,9 +180,6 @@ web/
 # OpenAI API (recommended)
 OPENAI_API_KEY=your_openai_api_key
 
-# Google AI API (optional, Gemini models)
-GOOGLE_API_KEY=your_google_api_key
-
 # Anthropic API (optional, Claude models)
 ANTHROPIC_API_KEY=your_anthropic_api_key
 
@@ -199,10 +196,9 @@ FINNHUB_API_KEY=your_finnhub_key
 - **gpt-4o**: 強大性能，推薦日常使用
 - **gpt-4o-mini**: 快速回應，適合簡單分析
 
-#### Google AI 模型
-- **gemini-2.0-flash**: 最新模型，推薦使用
-- **gemini-1.5-pro**: 強大性能，適合深度分析
-- **gemini-1.5-flash**: 快速回應，適合簡單分析
+#### Anthropic Claude 模型
+- **claude-opus-4**: 頂級性能，適合深度分析
+- **claude-sonnet-4**: 平衡效能，推薦日常使用
 
 ## 故障排除
 

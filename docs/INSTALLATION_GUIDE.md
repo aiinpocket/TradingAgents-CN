@@ -353,8 +353,8 @@ python -m streamlit run web/app.py
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_BASE_URL=https://api.openai.com/v1  # 可選，自訂API端點
 
-# Google Gemini配置
-GOOGLE_API_KEY=your_google_api_key_here
+# Anthropic Claude配置
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 # =============================================================================
 # 資料源配置
@@ -418,13 +418,13 @@ MAX_RETRIES=3  # 最大重試次數
 
 **費用**: 按使用量計費，需要美元支付
 
-#### 2. Google Gemini (免費額度大)
-1. 訪問 [Google AI Studio](https://aistudio.google.com/)
-2. 登入Google帳號
+#### 2. Anthropic Claude (分析能力強)
+1. 訪問 [Anthropic Console](https://console.anthropic.com/)
+2. 註冊帳號並完成驗證
 3. 建立API密鑰
-4. 複製到`.env`檔案的`GOOGLE_API_KEY`
+4. 複製到`.env`檔案的`ANTHROPIC_API_KEY`
 
-**費用**: 有較大免費額度
+**費用**: 按使用量計費
 
 ### 獲取資料源API密鑰
 
@@ -457,7 +457,7 @@ python -c "import openai; print('OpenAI正常')"
 python -c "import finnhub; print('FinnHub正常')"
 
 # 3. 檢查環境變數
-python -c "import os; print('✅ API密鑰已配置' if os.getenv('OPENAI_API_KEY') or os.getenv('GOOGLE_API_KEY') else '❌ 需要配置API密鑰')"
+python -c "import os; print('API密鑰已配置' if os.getenv('OPENAI_API_KEY') or os.getenv('ANTHROPIC_API_KEY') else '需要配置API密鑰')"
 ```
 
 ### Web界面驗證

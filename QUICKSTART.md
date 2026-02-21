@@ -98,27 +98,19 @@ streamlit run web/app.py
 ```bash
 # === LLM 模型配置（至少選擇一個）===
 
-# Google AI Gemini（推薦 - 免費額度、推理能力強）
-GOOGLE_API_KEY=your_google_api_key
-
 # OpenAI（通用能力強）
 OPENAI_API_KEY=your_openai_api_key
 
 # Anthropic Claude（分析能力強）
 ANTHROPIC_API_KEY=your_anthropic_api_key
-
-# OpenRouter（多模型存取、統一介面）
-OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
 ### API 密鑰取得
 
 | 提供商 | 取得位址 | 特色 | 成本 |
 | --- | --- | --- | --- |
-| **Google AI** | [aistudio.google.com](https://aistudio.google.com/) | 推理能力、多模態、有免費額度 | 免費 / 中等 |
 | **OpenAI** | [platform.openai.com](https://platform.openai.com/) | 通用能力強、工具呼叫 | 中高 |
 | **Anthropic** | [console.anthropic.com](https://console.anthropic.com/) | 分析推理、長文本處理 | 中高 |
-| **OpenRouter** | [openrouter.ai](https://openrouter.ai/) | 統一存取多種模型 | 依模型而定 |
 
 ### 可選配置
 
@@ -146,7 +138,7 @@ http://localhost:8501
 
 ### 2. 配置分析參數
 
-- **選擇 LLM 模型**: Gemini / GPT-4 / Claude / OpenRouter
+- **選擇 LLM 模型**: GPT-4 / Claude
 - **選擇分析深度**: 快速 / 標準 / 深度
 - **選擇分析師**: 市場分析 / 基本面分析 / 新聞分析
 
@@ -206,10 +198,8 @@ AMZN    # Amazon
 
 ### 智能模型選擇
 
-- **Gemini**: 推理能力強，多模態，Google
 - **GPT-4**: 通用能力最強，工具呼叫優秀
 - **Claude**: 分析推理強，長文本處理佳
-- **OpenRouter**: 統一存取多種模型
 
 ### 全面資料支援
 
@@ -228,7 +218,7 @@ AMZN    # Amazon
 
 ### 如何提高分析速度？
 
-1. **選擇快速模型**: Gemini Flash 回應最快
+1. **選擇快速模型**: gpt-4o-mini 回應最快
 2. **啟用快取**: 使用 Redis 快取重複資料
 3. **快速模式**: 選擇快速分析深度
 4. **網路最佳化**: 確保網路環境穩定

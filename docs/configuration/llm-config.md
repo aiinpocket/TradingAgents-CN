@@ -2,7 +2,7 @@
 
 ## 概述
 
-TradingAgents-CN 框架支援多種大語言模型提供商，包括 Google AI、OpenAI 和 Anthropic。本文件詳細介紹了如何配置和優化不同的 LLM 以獲得最佳效能和成本效益。
+TradingAgents-CN 框架支援 OpenAI 和 Anthropic 兩大語言模型提供商。本文件詳細介紹了如何配置和優化不同的 LLM 以獲得最佳效能和成本效益。
 
 ## 🎯 v0.1.7 LLM支援更新
 
@@ -12,29 +12,7 @@ TradingAgents-CN 框架支援多種大語言模型提供商，包括 Google AI�
 
 ## 支援的 LLM 提供商
 
-### 1. 🌍 Google AI (推薦)
-
-#### 支援的模型
-```python
-gemini_models = {
-    "gemini-1.5-pro": {
-        "description": "Gemini 1.5 Pro模型",
-        "context_length": 1000000,
-        "cost_per_1k_tokens": {"input": 0.0035, "output": 0.0105},
-        "recommended_for": ["複雜推理", "長文字處理", "多模態分析"],
-        "features": ["超長上下文", "推理能力強", "多模態支援"]
-    },
-    "gemini-1.5-flash": {
-        "description": "Gemini 1.5 Flash模型",
-        "context_length": 1000000,
-        "cost_per_1k_tokens": {"input": 0.00035, "output": 0.00105},
-        "recommended_for": ["快速任務", "批次處理", "成本敏感"],
-        "features": ["響應快速", "成本低", "效能均衡"]
-    }
-}
-```
-
-### 2. OpenAI
+### 1. OpenAI
 
 #### 支援的模型
 ```python
@@ -100,7 +78,7 @@ openai_config = {
 }
 ```
 
-### 3. Anthropic Claude
+### 2. Anthropic Claude
 
 #### 支援的模型
 ```python
@@ -152,52 +130,6 @@ anthropic_config = {
 }
 ```
 
-### 4. Google AI (Gemini)
-
-#### 支援的模型
-```python
-google_models = {
-    "gemini-pro": {
-        "description": "Google 的主力模型",
-        "context_length": 32768,
-        "cost_per_1k_tokens": {"input": 0.0005, "output": 0.0015},
-        "recommended_for": ["多模態任務", "程式碼分析", "推理任務"]
-    },
-    "gemini-pro-vision": {
-        "description": "支援圖像的 Gemini 版本",
-        "context_length": 16384,
-        "cost_per_1k_tokens": {"input": 0.0005, "output": 0.0015},
-        "recommended_for": ["圖表分析", "多模態輸入"]
-    },
-    "gemini-2.0-flash": {
-        "description": "最新的快速版本",
-        "context_length": 32768,
-        "cost_per_1k_tokens": {"input": 0.0002, "output": 0.0008},
-        "recommended_for": ["快速響應", "即時分析"]
-    }
-}
-```
-
-#### 配置示例
-```python
-# Google AI 配置
-google_config = {
-    "llm_provider": "google",
-    "backend_url": "https://generativelanguage.googleapis.com/v1",
-    "deep_think_llm": "gemini-pro",
-    "quick_think_llm": "gemini-2.0-flash",
-    "api_key": os.getenv("GOOGLE_API_KEY"),
-
-    # 模型參數
-    "model_params": {
-        "temperature": 0.1,
-        "max_output_tokens": 2000,
-        "top_p": 0.9,
-        "top_k": 40,
-    }
-}
-```
-
 ## LLM 選擇策略
 
 ### 基於任務類型的選擇
@@ -237,12 +169,12 @@ class LLMSelector:
             "news_analysis": {
                 "high_complexity": "gpt-4o",
                 "medium_complexity": "gpt-4o-mini",
-                "low_complexity": "gemini-pro"
+                "low_complexity": "gpt-4o-mini"
             },
             "social_sentiment": {
                 "high_complexity": "claude-3-sonnet-20240229",
                 "medium_complexity": "gpt-4o-mini",
-                "low_complexity": "gemini-2.0-flash"
+                "low_complexity": "gpt-4o-mini"
             },
             "risk_assessment": {
                 "high_complexity": "gpt-4o",
@@ -322,8 +254,6 @@ class PromptOptimizer:
             optimized_prompt = self._optimize_for_gpt(base_prompt, context)
         elif "claude" in model.lower():
             optimized_prompt = self._optimize_for_claude(base_prompt, context)
-        elif "gemini" in model.lower():
-            optimized_prompt = self._optimize_for_gemini(base_prompt, context)
         else:
             optimized_prompt = base_prompt
 
@@ -388,7 +318,6 @@ class LLMConcurrencyManager:
         return {
             "openai": asyncio.Semaphore(10),      # OpenAI 最多10個並行
             "anthropic": asyncio.Semaphore(5),    # Anthropic 最多5個並行
-            "google": asyncio.Semaphore(8)        # Google 最多8個並行
         }
 
     async def execute_with_concurrency_control(self, provider: str, llm_call: callable) -> Any:
@@ -467,7 +396,6 @@ class LLMMonitor:
 - **高精度任務**: 使用 GPT-4o 或 Claude-3-Opus
 - **平衡場景**: 使用 GPT-4o-mini 或 Claude-3-Sonnet
 - **成本敏感**: 使用 GPT-3.5-turbo 或 Claude-3-Haiku
-- **快速響應**: 使用 Gemini-2.0-flash
 
 ### 2. 成本控制策略
 - 設定每日預算限制

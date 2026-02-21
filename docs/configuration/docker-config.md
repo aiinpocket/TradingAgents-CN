@@ -70,14 +70,15 @@ REDIS_PASSWORD=${REDIS_PASSWORD}
 
 ```bash
 # === LLM模型配置 ===
-# Google AI配置
-GOOGLE_API_KEY=${GOOGLE_API_KEY}
-GOOGLE_ENABLED=true
-GOOGLE_MODEL=gemini-1.5-pro
+# OpenAI配置
+OPENAI_API_KEY=${OPENAI_API_KEY}
+
+# Anthropic Claude配置
+ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
 
 # 模型路由配置
 LLM_SMART_ROUTING=true
-LLM_PRIORITY_ORDER=gemini
+LLM_PRIORITY_ORDER=openai,anthropic
 ```
 
 ## 📊 Docker Compose配置
@@ -100,7 +101,8 @@ services:
       - REDIS_URL=redis://redis:6379
 
       # LLM配置
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
 
       # 應用配置
       - APP_ENV=docker

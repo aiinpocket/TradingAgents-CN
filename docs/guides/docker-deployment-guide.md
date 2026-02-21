@@ -137,9 +137,8 @@ cp .env.example .env
 OPENAI_API_KEY=your_openai_api_key
 OPENAI_ENABLED=true
 
-# Google AI (推薦 - 推理能力強)
-GOOGLE_API_KEY=your_google_api_key
-GOOGLE_ENABLED=true
+# Anthropic Claude (可選 - 分析能力強)
+ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
 #### 可選配置
@@ -207,7 +206,7 @@ docker-compose ps
 ### 進行股票分析
 
 1. **訪問主界面**: http://localhost:8501
-2. **選擇LLM模型**: 推薦 GPT-4 或 Google Gemini
+2. **選擇LLM模型**: 推薦 GPT-4 或 Claude
 3. **輸入股票代碼**:
    - 美股: AAPL, TSLA, MSFT, GOOGL
 4. **選擇分析深度**: 快速/標準/深度

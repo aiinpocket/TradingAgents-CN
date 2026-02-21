@@ -48,14 +48,14 @@ python examples/cli_demo.py
 python examples/batch_analysis.py
 ```
 
-### 使用 Google AI 模型
+### 使用 Anthropic Claude 模型
 
-如果您有 Google AI API 密鑰，可以使用：
+如果您有 Anthropic API 密鑰，可以使用：
 
 #### 1. 設定 API 密鑰
 
 ```bash
-set GOOGLE_API_KEY=your_google_api_key
+set ANTHROPIC_API_KEY=your_anthropic_api_key
 set FINNHUB_API_KEY=your_finnhub_api_key
 ```
 
@@ -150,7 +150,7 @@ python examples/simple_analysis_demo.py
 | 模型 | 優勢 | 適用場景 | 設定方式 |
 |------|------|----------|----------|
 | OpenAI GPT-4 | 功能強大 | 高品質分析 | OPENAI_API_KEY |
-| Google Gemini | 多模態支援 | 綜合分析 | GOOGLE_API_KEY |
+| Anthropic Claude | 分析推理強 | 深度分析 | ANTHROPIC_API_KEY |
 
 ## 獲取 API 密鑰
 
@@ -166,11 +166,11 @@ python examples/simple_analysis_demo.py
 2. 註冊帳戶並完成驗證
 3. 在 API 密鑰頁面建立新密鑰
 
-### Google AI API 密鑰
+### Anthropic API 密鑰
 
-1. 訪問 [Google AI Studio](https://makersuite.google.com/)
-2. 建立新專案
-3. 啟用 Gemini API 並獲取密鑰
+1. 訪問 [Anthropic Console](https://console.anthropic.com/)
+2. 註冊帳戶並完成驗證
+3. 在 API 密鑰頁面建立新密鑰
 
 ## 故障排除
 

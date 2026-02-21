@@ -206,7 +206,6 @@ python -m ipykernel install --user --name=tradingagents
 
 **其他可選 API**
 - **Anthropic**: [console.anthropic.com](https://console.anthropic.com/)
-- **Google AI**: [ai.google.dev](https://ai.google.dev/)
 
 #### 設置環境變量
 
@@ -251,7 +250,6 @@ cat > .env << EOF
 OPENAI_API_KEY=your_openai_api_key
 FINNHUB_API_KEY=your_finnhub_api_key
 ANTHROPIC_API_KEY=your_anthropic_api_key
-GOOGLE_API_KEY=your_google_api_key
 TRADINGAGENTS_RESULTS_DIR=./results
 TRADINGAGENTS_LOG_LEVEL=INFO
 EOF

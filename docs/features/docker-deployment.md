@@ -192,7 +192,7 @@ volumes:
 # .env 文件示例
 # LLM API配置
 OPENAI_API_KEY=your_openai_key
-GOOGLE_API_KEY=your_google_key
+ANTHROPIC_API_KEY=your_anthropic_key
 
 # 數據源配置
 FINNHUB_API_KEY=your_finnhub_key

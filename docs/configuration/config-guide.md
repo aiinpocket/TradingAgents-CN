@@ -28,14 +28,12 @@ TradingAgents-CN 提供了統一的配置系統，所有配置透過 `.env` 檔�
 # TradingAgents-CN 配置檔案 (v0.1.7)
 # ===========================================
 
-# 🧠 LLM 配置 (多模型支援)
-# 🌍 Google AI Gemini (推薦 - 推理能力強)
-GOOGLE_API_KEY=your_google_api_key_here
-GOOGLE_ENABLED=true
-
-# 🤖 OpenAI (可選 - 通用能力強，成本較高)
+# LLM 配置 (多模型支援)
+# OpenAI (推薦 - 通用能力強)
 OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_ENABLED=false
+
+# Anthropic Claude (可選 - 分析能力強)
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 # 📊 資料源配置
 FINNHUB_API_KEY=your_finnhub_api_key_here
@@ -83,7 +81,7 @@ config = {
 
 #### llm_provider
 - **類型**: `str`
-- **可選值**: `"openai"`, `"anthropic"`, `"google"`
+- **可選值**: `"openai"`, `"anthropic"`
 - **預設值**: `"openai"`
 - **說明**: 大語言模型提供商
 
@@ -104,13 +102,6 @@ config = {
     "quick_think_llm": "claude-3-haiku-20240307",
 }
 
-# Google 配置
-config = {
-    "llm_provider": "google",
-    "backend_url": "https://generativelanguage.googleapis.com/v1",
-    "deep_think_llm": "gemini-pro",
-    "quick_think_llm": "gemini-pro",
-}
 ```
 
 #### deep_think_llm
@@ -238,7 +229,6 @@ export FINNHUB_API_KEY="your_finnhub_api_key"
 
 # 可選的環境變數
 export ANTHROPIC_API_KEY="your_anthropic_api_key"
-export GOOGLE_API_KEY="your_google_api_key"
 export TRADINGAGENTS_RESULTS_DIR="/custom/results/path"
 ```
 
@@ -248,7 +238,6 @@ export TRADINGAGENTS_RESULTS_DIR="/custom/results/path"
 OPENAI_API_KEY=your_openai_api_key
 FINNHUB_API_KEY=your_finnhub_api_key
 ANTHROPIC_API_KEY=your_anthropic_api_key
-GOOGLE_API_KEY=your_google_api_key
 TRADINGAGENTS_RESULTS_DIR=./custom_results
 TRADINGAGENTS_LOG_LEVEL=INFO
 ```
@@ -340,7 +329,7 @@ class ConfigValidator:
                 errors.append(f"Missing required field: {field}")
 
         # 檢查LLM提供商
-        valid_providers = ["openai", "anthropic", "google"]
+        valid_providers = ["openai", "anthropic"]
         if config.get("llm_provider") not in valid_providers:
             errors.append(f"Invalid llm_provider. Must be one of: {valid_providers}")
 
@@ -437,7 +426,7 @@ WKHTMLTOPDF_PATH=/usr/bin/wkhtmltopdf
 LLM_SMART_ROUTING=true
 
 # 預設模型優先順序
-LLM_PRIORITY_ORDER=gemini,openai
+LLM_PRIORITY_ORDER=openai,anthropic
 
 # 成本控制
 LLM_DAILY_COST_LIMIT=10.0

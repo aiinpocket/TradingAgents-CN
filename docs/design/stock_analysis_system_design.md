@@ -36,9 +36,9 @@ graph TB
         API[Python API]
     end
 
-    subgraph "🧠 LLM集成層"
-        GEMINI[Google Gemini]
+    subgraph "LLM集成層"
         OPENAI[OpenAI GPT]
+        ANTHROPIC[Anthropic Claude]
         ROUTER[智慧路由器]
     end
 
@@ -479,23 +479,23 @@ class CacheManager:
 class LLMRouter:
     def __init__(self):
         self.models = {
-            "google": GoogleAdapter(),
-            "openai": OpenAIAdapter()
+            "openai": OpenAIAdapter(),
+            "anthropic": AnthropicAdapter()
         }
 
     def route_request(self, task_type, content):
         if task_type == "analysis":
-            return self.models["google"]
+            return self.models["openai"]
         elif task_type == "summary":
             return self.models["openai"]
         else:
-            return self.models["google"]
+            return self.models["anthropic"]
 ```
 
 #### 模型選擇策略
-- **深度分析**: 使用Google Gemini (推理能力強)
-- **快速總結**: 使用OpenAI GPT (速度快)
-- **多語言處理**: 使用Google Gemini (多語言支援佳)
+- **深度分析**: 使用OpenAI GPT-4o (通用能力強)
+- **快速總結**: 使用OpenAI GPT-4o-mini (速度快)
+- **長文本處理**: 使用Anthropic Claude (長文本處理佳)
 
 ---
 
@@ -542,8 +542,8 @@ class SecureConfig:
     def __init__(self):
         self.api_keys = {
             "finnhub": os.getenv("FINNHUB_API_KEY"),
-            "google": os.getenv("GOOGLE_API_KEY"),
-            "openai": os.getenv("OPENAI_API_KEY")
+            "openai": os.getenv("OPENAI_API_KEY"),
+            "anthropic": os.getenv("ANTHROPIC_API_KEY")
         }
 
     def validate_keys(self):
@@ -627,8 +627,8 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     depends_on:
       - mongodb
       - redis

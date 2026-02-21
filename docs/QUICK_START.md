@@ -66,10 +66,10 @@ python scripts/setup/quick_install.py
 - 💰 **費用**: 按使用量計費，需美元支付
 - 🔧 **配置**: 在`.env`檔案中設定 `OPENAI_API_KEY`
 
-#### 2. Google AI（免費額度大）
-- 🌐 **註冊地址**: https://aistudio.google.com/
-- 💰 **費用**: 有較大免費額度
-- 🔧 **配置**: 在`.env`檔案中設定 `GOOGLE_API_KEY`
+#### 2. Anthropic Claude（分析能力強）
+- **註冊地址**: https://console.anthropic.com/
+- **費用**: 按使用量計費
+- **配置**: 在`.env`檔案中設定 `ANTHROPIC_API_KEY`
 
 ## 📝 配置範例
 
@@ -79,8 +79,8 @@ python scripts/setup/quick_install.py
 # 選擇一個AI模型（必須）
 OPENAI_API_KEY=sk-your-openai-key-here
 
-# 或者使用Google AI
-# GOOGLE_API_KEY=your-google-api-key-here
+# 或者使用Anthropic Claude
+# ANTHROPIC_API_KEY=your-anthropic-api-key-here
 
 # 資料庫（可選，提升效能）
 MONGODB_ENABLED=false

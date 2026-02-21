@@ -209,8 +209,8 @@ LOG_LEVEL=INFO
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_BASE_URL=https://api.openai.com/v1
 
-# Google AI配置
-GOOGLE_API_KEY=your_google_api_key_here
+# Anthropic Claude配置
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 # ===========================================
 # 數據源API配置
@@ -261,11 +261,11 @@ LOG_FILE=tradingagents.log
 3. 進入 API Keys 頁面
 4. 建立新的API密鑰
 
-#### Google AI API
-1. 訪問 [Google AI Studio](https://ai.google.dev/)
-2. 使用Google帳戶登入
-3. 建立新專案
-4. 獲取API Key
+#### Anthropic Claude API
+1. 訪問 [Anthropic Console](https://console.anthropic.com/)
+2. 註冊帳戶並登入
+3. 建立新的API密鑰
+4. 複製API Key
 
 #### FinnHub API
 1. 訪問 [FinnHub](https://finnhub.io/)

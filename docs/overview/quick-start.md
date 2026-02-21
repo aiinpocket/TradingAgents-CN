@@ -34,13 +34,12 @@
    - 訪問 [FinnHub](https://finnhub.io/)
    - 註冊免費帳戶並獲取API金鑰
 
-2. **Google AI API Key** (推薦)
-   - 訪問 [Google AI Studio](https://aistudio.google.com/)
-   - 獲取免費API金鑰，支援Gemini模型
+2. **OpenAI API Key** (推薦)
+   - 訪問 [OpenAI Platform](https://platform.openai.com/)
+   - 註冊帳戶並獲取API金鑰
 
 3. **其他API金鑰** (可選)
-   - OpenAI API
-   - Anthropic API
+   - Anthropic API: [console.anthropic.com](https://console.anthropic.com/)
 
 ## 快速安裝
 
@@ -80,8 +79,8 @@ cp .env.example .env
 # FinnHub (必需)
 FINNHUB_API_KEY=your_finnhub_api_key_here
 
-# Google AI (可選)
-GOOGLE_API_KEY=your_google_api_key_here
+# OpenAI (可選)
+OPENAI_API_KEY=your_openai_api_key_here
 
 # 資料庫配置 (可選，預設停用)
 MONGODB_ENABLED=false
@@ -158,7 +157,7 @@ python quick_start.py
 ```python
 config = {
     # LLM 設定
-    "llm_provider": "openai",           # 或 "anthropic", "google"
+    "llm_provider": "openai",           # 或 "anthropic"
     "deep_think_llm": "gpt-4o-mini",    # 深度思考模型
     "quick_think_llm": "gpt-4o-mini",   # 快速思考模型
 

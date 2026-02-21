@@ -16,11 +16,11 @@
 # ===========================================
 
 # ===== LLM配置 =====
-# Google Gemini配置
-GOOGLE_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
 # OpenAI配置
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Anthropic Claude配置
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # ===== 數據源配置 =====
 # FinnHub配置
@@ -72,16 +72,16 @@ DEFAULT_CONFIG = {
 
     # ===== LLM配置 =====
     "llm": {
-        "default_model": "google",
+        "default_model": "openai",
         "models": {
-            "google": {
-                "model_name": "gemini-pro",
+            "openai": {
+                "model_name": "gpt-4o",
                 "temperature": 0.1,
                 "max_tokens": 4000,
                 "timeout": 60
             },
-            "openai": {
-                "model_name": "gpt-4",
+            "anthropic": {
+                "model_name": "claude-sonnet-4",
                 "temperature": 0.1,
                 "max_tokens": 4000,
                 "timeout": 60
@@ -160,7 +160,7 @@ DEVELOPMENT_CONFIG = {
     },
     "llm": {
         "models": {
-            "google": {
+            "openai": {
                 "temperature": 0.2,
                 "max_tokens": 2000
             }
@@ -184,7 +184,7 @@ PRODUCTION_CONFIG = {
     },
     "llm": {
         "models": {
-            "google": {
+            "openai": {
                 "temperature": 0.1,
                 "max_tokens": 4000
             }
@@ -237,11 +237,11 @@ class ConfigManager:
         env_config = {}
 
         # LLM配置
-        if os.getenv("GOOGLE_API_KEY"):
-            env_config["google_api_key"] = os.getenv("GOOGLE_API_KEY")
-
         if os.getenv("OPENAI_API_KEY"):
             env_config["openai_api_key"] = os.getenv("OPENAI_API_KEY")
+
+        if os.getenv("ANTHROPIC_API_KEY"):
+            env_config["anthropic_api_key"] = os.getenv("ANTHROPIC_API_KEY")
 
         # 數據源配置
         if os.getenv("FINNHUB_API_KEY"):
@@ -284,7 +284,7 @@ class ConfigManager:
 
         # 驗證必需的API密鑰
         required_keys = [
-            "google_api_key",
+            "openai_api_key",
             "finnhub_api_key"
         ]
 
@@ -379,7 +379,7 @@ class SecureConfigManager:
 class ConfigValidator:
     def __init__(self):
         self.validation_rules = {
-            "google_api_key": self._validate_google_key,
+            "openai_api_key": self._validate_openai_key,
             "finnhub_api_key": self._validate_finnhub_key,
             "mongodb_url": self._validate_mongodb_url,
             "redis_url": self._validate_redis_url
@@ -397,9 +397,9 @@ class ConfigValidator:
 
         return errors
 
-    def _validate_google_key(self, key: str) -> str:
+    def _validate_openai_key(self, key: str) -> str:
         if len(key) < 20:
-            return "Google API密鑰長度不足"
+            return "OpenAI API密鑰長度不足"
         return None
 
     def _validate_finnhub_key(self, key: str) -> str:
@@ -531,7 +531,8 @@ metadata:
   name: tradingagents-secrets
 type: Opaque
 data:
-  google-api-key: <base64-encoded-key>
+  openai-api-key: <base64-encoded-key>
+  anthropic-api-key: <base64-encoded-key>
   finnhub-api-key: <base64-encoded-key>
 ```
 
