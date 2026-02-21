@@ -50,7 +50,7 @@ def _get_company_name(ticker: str, market_info: dict) -> str:
 
 
 def create_market_analyst_react(llm, toolkit):
-    """使用ReAct Agent模式的市場分析師（適用於通義千問）"""
+    """使用 ReAct Agent 模式的市場分析師"""
     @log_analyst_module("market_react")
     def market_analyst_react_node(state):
         logger.debug(f"📈 [DEBUG] ===== ReAct市場分析師節點開始 =====")

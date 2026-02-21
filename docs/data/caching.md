@@ -213,7 +213,7 @@ class MemoryCache:
             if key in self.access_times:
                 del self.access_times[key]
         
-        # 如果还是太多，使用LRU策略清理
+        # 如果還是太多，使用 LRU 策略清理
         if len(self.cache) >= self.max_size * self.cleanup_threshold:
             # 按訪問時間排序，刪除最少使用的
             sorted_keys = sorted(self.access_times.keys(), key=lambda k: self.access_times[k])
@@ -585,7 +585,7 @@ class CacheBestPractices:
     
     @staticmethod
     def should_cache_data(data: Any, data_type: str) -> bool:
-        """判斷是否應该緩存數據"""
+        """判斷是否應該快取資料"""
         
         # 不緩存空數據
         if not data:

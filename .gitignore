@@ -100,7 +100,6 @@ tradingagents.egg-info/
 # 過時的版本文件
 *_PREVIEW_README.md
 RELEASE_NOTES_PREVIEW.md
-DEEPSEEK_PREVIEW_README.md
 
 # 最佳化計畫文件（內部參考，不納入版本控制）
 docs/OPTIMIZATION_PLAN.md
@@ -128,6 +127,9 @@ COMMIT_SUMMARY.md
 *.temp
 *.pyc.*
 *.pyo.*
+
+# 使用者配置資料（不納入版本控制）
+web/config/users.json
 
 # Claude Code 相關（不納入版本控制）
 .claude
