@@ -8,7 +8,7 @@ import os
 import sys
 from pathlib import Path
 
-# 新增項目根目錄到路徑
+# 新增專案根目錄到路徑
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 

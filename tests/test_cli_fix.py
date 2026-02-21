@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 

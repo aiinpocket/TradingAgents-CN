@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 

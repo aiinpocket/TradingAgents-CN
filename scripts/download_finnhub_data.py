@@ -22,7 +22,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -33,7 +33,7 @@ try:
     logger = get_logger('finnhub_downloader')
 except ImportError as e:
     print(f" 匯入模組失敗: {e}")
-    print("請確保在項目根目錄執行此指令碼")
+    print("請確保在專案根目錄執行此指令碼")
     sys.exit(1)
 
 class FinnhubDataDownloader:
@@ -56,15 +56,15 @@ class FinnhubDataDownloader:
         if data_dir:
             self.data_dir = data_dir
         else:
-            # 優先使用環境變數，然後是項目根目錄
+            # 優先使用環境變數，然後是專案根目錄
             env_data_dir = os.getenv('TRADINGAGENTS_DATA_DIR')
             if env_data_dir:
                 self.data_dir = env_data_dir
             else:
-                # 使用項目根目錄下的data目錄
+                # 使用專案根目錄下的data目錄
                 self.data_dir = str(project_root / "data")
 
-            logger.info(f" 資料目錄來源: {'環境變數' if env_data_dir else '項目根目錄'}")
+            logger.info(f" 資料目錄來源: {'環境變數' if env_data_dir else '專案根目錄'}")
         
         self.base_url = "https://finnhub.io/api/v1"
         self.session = requests.Session()

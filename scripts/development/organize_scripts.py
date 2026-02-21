@@ -109,7 +109,7 @@ def create_scripts_structure():
 ## 使用方法
 
 ```bash
-# 進入項目根目錄
+# 進入專案根目錄
 cd TradingAgents-CN
 
 # 執行指令碼
@@ -118,7 +118,7 @@ python scripts/{category}/script_name.py
 
 ## 註意事項
 
-- 確保在項目根目錄下執行指令碼
+- 確保在專案根目錄下執行指令碼
 - 檢查指令碼的依賴要求
 - 某些指令碼可能需要管理員權限
 """
@@ -203,7 +203,7 @@ python scripts/{category}/script_name.py
 
 ### 執行方式
 ```bash
-# 從項目根目錄執行
+# 從專案根目錄執行
 cd TradingAgents-CN
 
 # Python指令碼
@@ -215,7 +215,7 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
 
 ## 註意事項
 
-- 所有指令碼應該從項目根目錄執行
+- 所有指令碼應該從專案根目錄執行
 - 檢查指令碼的依賴要求
 - 某些指令碼可能需要特殊權限
 - 保持指令碼的獨立性和可重用性

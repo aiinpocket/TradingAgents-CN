@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -222,7 +222,7 @@ docker-compose up -d
 
 - **分辨率**: 1920x1080 或更高
 - **格式**: PNG格式
-- **質量**: 高清，文字清晰
+- **品質**: 高清，文字清晰
 - **內容**: 完整功能區域，真實資料
 
 ##  故障排除

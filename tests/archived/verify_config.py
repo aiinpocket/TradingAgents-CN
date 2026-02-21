@@ -6,7 +6,7 @@
 import os
 import sys
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 print(" 驗證.env配置")

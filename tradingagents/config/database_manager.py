@@ -2,7 +2,7 @@
 """
 智慧資料庫管理器
 自動檢測MongoDB和Redis可用性，提供降級方案
-使用項目現有的.env配置
+使用專案現有的.env配置
 """
 
 import logging

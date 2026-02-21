@@ -83,7 +83,7 @@ class ConfigManager:
 
     def _load_env_file(self):
         """載入.env 檔案（保持向後相容）"""
-        # 嘗試從項目根目錄載入.env 檔案
+        # 嘗試從專案根目錄載入.env 檔案
         project_root = Path(__file__).parent.parent.parent
         env_file = project_root / ".env"
 
@@ -689,12 +689,12 @@ class TokenTracker:
 
 
 
-# 全局配置管理器實例 - 使用項目根目錄的配置
+# 全局配置管理器實例 - 使用專案根目錄的配置
 def _get_project_config_dir():
-    """取得項目根目錄的配置目錄"""
-    # 從當前檔案位置推斷項目根目錄
+    """取得專案根目錄的配置目錄"""
+    # 從當前檔案位置推斷專案根目錄
     current_file = Path(__file__)  # tradingagents/config/config_manager.py
-    project_root = current_file.parent.parent.parent  # 向上三級到項目根目錄
+    project_root = current_file.parent.parent.parent  # 向上三級到專案根目錄
     return str(project_root / "config")
 
 config_manager = ConfigManager(_get_project_config_dir())

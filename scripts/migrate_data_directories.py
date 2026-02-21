@@ -314,7 +314,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='資料目錄重新組織遷移指令碼')
-    parser.add_argument('--project-root', help='項目根目錄路徑')
+    parser.add_argument('--project-root', help='專案根目錄路徑')
     parser.add_argument('--cleanup-old', action='store_true', help='遷移後清理舊目錄')
     parser.add_argument('--dry-run', action='store_true', help='僅顯示遷移計劃，不執行實際遷移')
     
@@ -324,7 +324,7 @@ def main():
     
     if args.dry_run:
         logger.info(" 遷移計劃預覽:")
-        logger.info(f" 項目根目錄: {migrator.project_root}")
+        logger.info(f" 專案根目錄: {migrator.project_root}")
         logger.info(f" 備份目錄: {migrator.backup_dir}")
         logger.info("\n 遷移映射:")
         for source, target in migrator.migration_map:

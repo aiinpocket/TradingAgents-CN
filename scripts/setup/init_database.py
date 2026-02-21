@@ -12,7 +12,7 @@ from datetime import datetime
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
-# 新增項目根目錄到路徑
+# 新增專案根目錄到路徑
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
 

@@ -8,7 +8,7 @@ import sys
 import os
 from datetime import datetime
 
-# 新增項目路徑
+# 新增專案路徑
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def create_mock_analysis_results():
@@ -118,7 +118,7 @@ def test_save_analysis_result():
             import os
             from pathlib import Path
             
-            # 取得項目根目錄
+            # 取得專案根目錄
             project_root = Path(__file__).parent
             results_dir_env = os.getenv("TRADINGAGENTS_RESULTS_DIR", "./data/analysis_results")
             

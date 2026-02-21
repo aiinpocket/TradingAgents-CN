@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 from typing import Set
 
-# 項目根目錄
+# 專案根目錄
 project_root = Path(__file__).parent.parent
 
 # 標準庫模組（Python 3.10）

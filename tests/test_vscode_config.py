@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 VSCode配置驗證測試
-驗證Python虛擬環境和項目配置是否正確
+驗證Python虛擬環境和專案配置是否正確
 """
 
 import os
@@ -29,11 +29,11 @@ def test_python_environment():
     # 檢查工作目錄
     print(f"工作目錄: {os.getcwd()}")
     
-    # 檢查是否在項目根目錄
+    # 檢查是否在專案根目錄
     if os.path.exists('tradingagents') and os.path.exists('.env'):
-        print(" 在項目根目錄")
+        print(" 在專案根目錄")
     else:
-        print(" 不在項目根目錄")
+        print(" 不在專案根目錄")
     
     return True
 

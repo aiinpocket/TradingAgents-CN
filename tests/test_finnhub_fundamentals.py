@@ -8,7 +8,7 @@ import sys
 import time
 from datetime import datetime
 
-# 新增項目根目錄到路徑
+# 新增專案根目錄到路徑
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_finnhub_api_key():

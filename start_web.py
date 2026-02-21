@@ -13,7 +13,7 @@ def main():
     """設定環境並啟動 Web 應用"""
     project_root = Path(__file__).parent
 
-    # 確保項目根目錄在 Python 路徑中（未安裝套件時必要）
+    # 確保專案根目錄在 Python 路徑中（未安裝套件時必要）
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 

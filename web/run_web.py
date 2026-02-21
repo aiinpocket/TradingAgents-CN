@@ -12,7 +12,7 @@ from pathlib import Path
 
 import psutil
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -105,16 +105,16 @@ def clean_cache_files(force_clean=False):
         # 可選清理：只清理專案程式碼的快取，不清理虛擬環境
         project_cache_dirs = [d for d in cache_dirs if 'env' not in str(d)]
         if project_cache_dirs:
-            logger.info("清理項目快取檔案...")
+            logger.info("清理專案快取檔案...")
             for cache_dir in project_cache_dirs:
                 try:
                     shutil.rmtree(cache_dir)
                     logger.info(f"已清理: {cache_dir.relative_to(project_root)}")
                 except Exception as e:
                     logger.error(f"清理失敗: {cache_dir.relative_to(project_root)} - {e}")
-            logger.info("項目快取清理完成")
+            logger.info("專案快取清理完成")
         else:
-            logger.info("無需清理項目快取")
+            logger.info("無需清理專案快取")
     else:
         # 強制清理：清理所有快取
         logger.info("強制清理所有快取檔案...")
@@ -264,7 +264,7 @@ if __name__ == "__main__":
             logger.info("TradingAgents-CN Web應用啟動器")
             logger.info("=")
             logger.info("用法:")
-            logger.info("python run_web.py # 預設啟動（清理項目快取）")
+            logger.info("python run_web.py # 預設啟動（清理專案快取）")
             logger.info("python run_web.py --no-clean # 跳過快取清理")
             logger.info("python run_web.py --force-clean # 強制清理所有快取")
             logger.info("python run_web.py --help # 顯示幫助")

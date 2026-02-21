@@ -10,13 +10,13 @@ from pathlib import Path
 
 def ensure_logs_directory():
     """確保logs目錄存在"""
-    # 取得項目根目錄
+    # 取得專案根目錄
     project_root = Path(__file__).parent
     logs_dir = project_root / "logs"
     
     print(" TradingAgents 日誌目錄檢查")
     print("=" * 40)
-    print(f" 項目根目錄: {project_root}")
+    print(f" 專案根目錄: {project_root}")
     print(f" 日誌目錄: {logs_dir}")
     
     # 建立logs目錄

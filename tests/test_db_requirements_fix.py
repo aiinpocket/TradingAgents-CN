@@ -10,7 +10,7 @@ import subprocess
 import tempfile
 import shutil
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 

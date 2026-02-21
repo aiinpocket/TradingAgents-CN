@@ -570,7 +570,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         import os
         from pathlib import Path
 
-        # 取得項目根目錄
+        # 取得專案根目錄
         current_file = Path(__file__)
         project_root = current_file.parent.parent.parent
 
@@ -783,20 +783,20 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
         import os
         from pathlib import Path
 
-        # 取得項目根目錄（Web應用在web/子目錄中執行）
+        # 取得專案根目錄（Web應用在web/子目錄中執行）
         current_file = Path(__file__)
-        project_root = current_file.parent.parent.parent # web/utils/report_exporter.py -> 項目根目錄
+        project_root = current_file.parent.parent.parent # web/utils/report_exporter.py -> 專案根目錄
 
         # 取得results目錄配置
         results_dir_env = os.getenv("TRADINGAGENTS_RESULTS_DIR")
         if results_dir_env:
-            # 如果環境變數是相對路徑，相對於項目根目錄解析
+            # 如果環境變數是相對路徑，相對於專案根目錄解析
             if not os.path.isabs(results_dir_env):
                 results_dir = project_root / results_dir_env
             else:
                 results_dir = Path(results_dir_env)
         else:
-            # 預設使用項目根目錄下的results
+            # 預設使用專案根目錄下的results
             results_dir = project_root / "results"
 
         # 建立股票專用目錄
@@ -810,7 +810,7 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
             f.write(content)
 
         logger.info(f"報告已保存到: {file_path}")
-        logger.info(f"項目根目錄: {project_root}")
+        logger.info(f"專案根目錄: {project_root}")
         logger.info(f"Results目錄: {results_dir}")
         logger.info(f"環境變數TRADINGAGENTS_RESULTS_DIR: {results_dir_env}")
 

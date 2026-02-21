@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('web')
 
-# 新增項目根目錄到Python路徑
+# 新增專案根目錄到Python路徑
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -222,7 +222,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if research_depth == 1:  # 1級 - 快速分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
-            # 保持記憶功能啟用，因為記憶操作開銷很小但能顯著提升分析質量
+            # 保持記憶功能啟用，因為記憶操作開銷很小但能顯著提升分析品質
             config["memory_enabled"] = True
 
             # 統一使用在線工具，避免離線工具的各種問題
@@ -262,7 +262,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if not config.get("data_dir") or config["data_dir"] == "./data":
             env_data_dir = os.getenv("TRADINGAGENTS_DATA_DIR")
             if env_data_dir:
-                # 如果環境變數是相對路徑，相對於項目根目錄解析
+                # 如果環境變數是相對路徑，相對於專案根目錄解析
                 if not os.path.isabs(env_data_dir):
                     config["data_dir"] = str(project_root / env_data_dir)
                 else:
@@ -274,7 +274,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if not config.get("results_dir") or config["results_dir"] == "./results":
             env_results_dir = os.getenv("TRADINGAGENTS_RESULTS_DIR")
             if env_results_dir:
-                # 如果環境變數是相對路徑，相對於項目根目錄解析
+                # 如果環境變數是相對路徑，相對於專案根目錄解析
                 if not os.path.isabs(env_results_dir):
                     config["results_dir"] = str(project_root / env_results_dir)
                 else:
@@ -286,7 +286,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if not config.get("data_cache_dir"):
             env_cache_dir = os.getenv("TRADINGAGENTS_CACHE_DIR")
             if env_cache_dir:
-                # 如果環境變數是相對路徑，相對於項目根目錄解析
+                # 如果環境變數是相對路徑，相對於專案根目錄解析
                 if not os.path.isabs(env_cache_dir):
                     config["data_cache_dir"] = str(project_root / env_cache_dir)
                 else:

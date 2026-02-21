@@ -105,7 +105,7 @@ def docker_install():
     # 檢查項目目錄
     if not Path('docker-compose.yml').exists():
         print_colored(" 未找到docker-compose.yml檔案", Colors.RED)
-        print_colored("請確保在項目根目錄執行此指令碼", Colors.YELLOW)
+        print_colored("請確保在專案根目錄執行此指令碼", Colors.YELLOW)
         return False
     
     # 檢查.env 檔案

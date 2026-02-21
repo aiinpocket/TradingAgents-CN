@@ -120,7 +120,7 @@ def main():
     
     # 檢查當前目錄
     if not Path("Dockerfile").exists():
-        logger.error(f" 請在項目根目錄執行此指令碼")
+        logger.error(f" 請在專案根目錄執行此指令碼")
         return False
     
     steps = [

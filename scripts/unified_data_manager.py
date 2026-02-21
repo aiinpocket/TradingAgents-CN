@@ -21,7 +21,7 @@ class UnifiedDataDirectoryManager:
         初始化資料目錄管理器
         
         Args:
-            project_root: 項目根目錄，預設為當前檔案的上級目錄
+            project_root: 專案根目錄，預設為當前檔案的上級目錄
         """
         if project_root is None:
             # 假設此檔案在 scripts/ 目錄下
@@ -192,7 +192,7 @@ class UnifiedDataDirectoryManager:
     def print_structure(self):
         """打印目錄結構"""
         print(" 統一資料目錄結構:")
-        print(f" 項目根目錄: {self.project_root}")
+        print(f" 專案根目錄: {self.project_root}")
         print()
         
         # 按層級組織顯示
@@ -228,7 +228,7 @@ def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> Unified
     取得全局資料目錄管理器實例
     
     Args:
-        project_root: 項目根目錄
+        project_root: 專案根目錄
         
     Returns:
         UnifiedDataDirectoryManager: 資料目錄管理器實例
@@ -256,7 +256,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='統一資料目錄配置管理器')
-    parser.add_argument('--project-root', help='項目根目錄路徑')
+    parser.add_argument('--project-root', help='專案根目錄路徑')
     parser.add_argument('--create', action='store_true', help='建立所有目錄')
     parser.add_argument('--validate', action='store_true', help='驗證目錄結構')
     parser.add_argument('--show-config', action='store_true', help='顯示配置摘要')
