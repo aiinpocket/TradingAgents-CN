@@ -278,7 +278,7 @@ if __name__ == "__main__":
     if success:
         print("\n下一步:")
         print("1. 清理中文內容")
-        print("2. 添加英文件案")
+        print("2. 添加英文檔案")
         print("3. 準備上游貢獻")
     else:
         print("\n需要解決的問題:")

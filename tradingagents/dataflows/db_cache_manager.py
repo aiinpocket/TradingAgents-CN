@@ -234,7 +234,7 @@ class DatabaseCacheManager:
             # 統一視為美股
             market_type = "us"
         
-        # 準備文件資料
+        # 準備檔案資料
         doc = {
             "_id": cache_key,
             "symbol": symbol,

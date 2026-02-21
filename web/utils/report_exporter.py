@@ -311,13 +311,13 @@ class ReportExporter:
         return md_content
 
     def generate_docx_report(self, results: Dict[str, Any]) -> bytes:
-        """生成Word文件格式的報告"""
+        """生成Word 檔案格式的報告"""
 
-        logger.info("開始生成Word文件...")
+        logger.info("開始生成Word 檔案...")
 
         if not self.pandoc_available:
             logger.error("Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成Word文件。請安裝pandoc或使用Markdown格式匯出。")
+            raise Exception("Pandoc不可用，無法生成Word 檔案。請安裝pandoc或使用Markdown格式匯出。")
 
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
@@ -364,18 +364,18 @@ class ReportExporter:
 
             return docx_content
         except Exception as e:
-            logger.error(f"Word文件生成失敗: {e}", exc_info=True)
-            raise Exception(f"生成Word文件失敗: {e}")
+            logger.error(f"Word 檔案生成失敗: {e}", exc_info=True)
+            raise Exception(f"生成Word 檔案失敗: {e}")
     
     
     def generate_pdf_report(self, results: Dict[str, Any]) -> bytes:
         """生成PDF格式的報告"""
 
-        logger.info("開始生成PDF文件...")
+        logger.info("開始生成PDF 檔案...")
 
         if not self.pandoc_available:
             logger.error("Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成PDF文件。請安裝pandoc或使用Markdown格式匯出。")
+            raise Exception("Pandoc不可用，無法生成PDF 檔案。請安裝pandoc或使用Markdown格式匯出。")
 
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
@@ -491,23 +491,23 @@ class ReportExporter:
                 return content.encode('utf-8')
 
             elif format_type == 'docx':
-                logger.info("生成Word文件...")
+                logger.info("生成Word 檔案...")
                 if not self.pandoc_available:
-                    logger.error("pandoc不可用，無法生成Word文件")
-                    st.error("pandoc不可用，無法生成Word文件")
+                    logger.error("pandoc不可用，無法生成Word 檔案")
+                    st.error("pandoc不可用，無法生成Word 檔案")
                     return None
                 content = self.generate_docx_report(results)
-                logger.info(f"Word文件生成成功，大小: {len(content)} 位元組")
+                logger.info(f"Word 檔案生成成功，大小: {len(content)} 位元組")
                 return content
 
             elif format_type == 'pdf':
-                logger.info("生成PDF文件...")
+                logger.info("生成PDF 檔案...")
                 if not self.pandoc_available:
-                    logger.error("pandoc不可用，無法生成PDF文件")
-                    st.error("pandoc不可用，無法生成PDF文件")
+                    logger.error("pandoc不可用，無法生成PDF 檔案")
+                    st.error("pandoc不可用，無法生成PDF 檔案")
                     return None
                 content = self.generate_pdf_report(results)
-                logger.info(f"PDF文件生成成功，大小: {len(content)} 位元組")
+                logger.info(f"PDF 檔案生成成功，大小: {len(content)} 位元組")
                 return content
 
             else:
@@ -919,9 +919,9 @@ def render_export_buttons(results: Dict[str, Any]):
                 logger.error("Markdown匯出失敗，content為空")
     
     with col2:
-        if st.button("匯出 Word", help="匯出為Word文件格式"):
+        if st.button("匯出 Word", help="匯出為Word 檔案格式"):
             logger.info(f"用戶點擊Word匯出按鈕 - 股票: {stock_symbol}")
-            with st.spinner("正在生成Word文件，請稍候..."):
+            with st.spinner("正在生成Word 檔案，請稍候..."):
                 try:
                     logger.info("開始Word匯出流程...")
 
@@ -948,9 +948,9 @@ def render_export_buttons(results: Dict[str, Any]):
                                 st.write("**Word彙總報告:**")
                                 st.write(f"- Word報告: `{saved_path}`")
                         elif saved_path:
-                            st.success(f"Word文件已保存到: {saved_path}")
+                            st.success(f"Word 檔案已保存到: {saved_path}")
                         else:
-                            st.success("Word文件生成成功！")
+                            st.success("Word 檔案生成成功！")
 
                         st.download_button(
                             label="下載 Word",
@@ -960,10 +960,10 @@ def render_export_buttons(results: Dict[str, Any]):
                         )
                     else:
                         logger.error("Word匯出失敗，content為空")
-                        st.error("Word文件生成失敗")
+                        st.error("Word 檔案生成失敗")
                 except Exception as e:
                     logger.error(f"Word匯出異常: {str(e)}", exc_info=True)
-                    st.error(f"Word文件生成失敗: {str(e)}")
+                    st.error(f"Word 檔案生成失敗: {str(e)}")
 
                     # 顯示詳細錯誤訊息
                     with st.expander("查看詳細錯誤訊息"):

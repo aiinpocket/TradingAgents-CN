@@ -123,7 +123,7 @@ class MongoDBReportManager:
             timestamp = datetime.now()
             analysis_id = f"{stock_symbol}_{timestamp.strftime('%Y%m%d_%H%M%S')}"
 
-            # 構建文件
+            # 構建檔案
             document = {
                 "analysis_id": analysis_id,
                 "stock_symbol": stock_symbol,
@@ -145,7 +145,7 @@ class MongoDBReportManager:
                 "updated_at": timestamp
             }
             
-            # 插入文件
+            # 插入檔案
             result = self.collection.insert_one(document)
             
             if result.inserted_id:
@@ -302,7 +302,7 @@ class MongoDBReportManager:
             return False
 
         try:
-            # 查找缺少reports字段或reports字段為空的文件
+            # 查找缺少reports字段或reports字段為空的檔案
             query = {
                 "$or": [
                     {"reports": {"$exists": False}},
@@ -323,7 +323,7 @@ class MongoDBReportManager:
             fixed_count = 0
             for doc in inconsistent_docs:
                 try:
-                    # 為缺少reports字段的文件添加空的reports字段
+                    # 為缺少reports字段的檔案添加空的reports字段
                     update_data = {
                         "$set": {
                             "reports": {},

@@ -416,7 +416,7 @@ class AdaptiveCacheSystem:
 
         self.logger.info(f"檔案快取清理完成，刪除 {cleared_files} 個過期/不安全檔案")
 
-        # MongoDB 會自動清理過期文件（透過 expires_at 字段）
+        # MongoDB 會自動清理過期檔案（透過 expires_at 字段）
         # Redis 會自動清理過期鍵
 
 

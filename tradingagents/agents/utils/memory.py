@@ -329,7 +329,7 @@ class FinancialSituationMemory:
             logger.debug("記憶庫為空，返回空結果")
             return []
         
-        # 調整查詢數量，不能超過集合中的文件數量
+        # 調整查詢數量，不能超過集合中的檔案數量
         actual_n_matches = min(n_matches, collection_count)
         
         try:
