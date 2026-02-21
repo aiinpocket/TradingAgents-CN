@@ -15,7 +15,7 @@ logger = get_logger('scripts')
 
 def run_command(command, description, timeout=300):
     """運行命令並顯示進度"""
-    logger.info(f"\n🔄 {description}...")
+    logger.info(f"\n {description}...")
     logger.info(f"命令: {command}")
     
     try:
@@ -28,29 +28,29 @@ def run_command(command, description, timeout=300):
         )
         
         if result.returncode == 0:
-            logger.info(f"✅ {description}成功")
+            logger.info(f" {description}成功")
             if result.stdout.strip():
                 logger.info(f"輸出: {result.stdout.strip()}")
             return True
         else:
-            logger.error(f"❌ {description}失敗")
+            logger.error(f" {description}失敗")
             logger.error(f"錯誤: {result.stderr.strip()}")
             return False
             
     except subprocess.TimeoutExpired:
-        logger.error(f"❌ {description}超時")
+        logger.error(f" {description}超時")
         return False
     except Exception as e:
-        logger.error(f"❌ {description}異常: {e}")
+        logger.error(f" {description}異常: {e}")
         return False
 
 def check_dockerfile():
     """檢查Dockerfile是否包含PDF依賴"""
-    logger.debug(f"🔍 檢查Dockerfile配置...")
+    logger.debug(f" 檢查Dockerfile配置...")
     
     dockerfile_path = Path("Dockerfile")
     if not dockerfile_path.exists():
-        logger.error(f"❌ Dockerfile不存在")
+        logger.error(f" Dockerfile不存在")
         return False
     
     content = dockerfile_path.read_text()
@@ -68,13 +68,13 @@ def check_dockerfile():
             missing_packages.append(package)
     
     if missing_packages:
-        logger.warning(f"⚠️ Dockerfile缺少PDF依賴: {', '.join(missing_packages)}")
+        logger.warning(f" Dockerfile缺少PDF依賴: {', '.join(missing_packages)}")
         logger.info(f"請確保Dockerfile包含以下包:")
         for package in required_packages:
             logger.info(f"  - {package}")
         return False
     
-    logger.info(f"✅ Dockerfile包含所有PDF依賴")
+    logger.info(f" Dockerfile包含所有PDF依賴")
     return True
 
 def build_docker_image():
@@ -87,7 +87,7 @@ def build_docker_image():
 
 def test_docker_container():
     """測試Docker容器"""
-    logger.info(f"\n🧪 測試Docker容器...")
+    logger.info(f"\n 測試Docker容器...")
     
     # 啟動容器進行測試
     start_cmd = """docker run -d --name tradingagents-test \
@@ -114,12 +114,12 @@ def test_docker_container():
 
 def main():
     """主函數"""
-    logger.info(f"🐳 構建包含PDF支持的Docker鏡像")
+    logger.info(f" 構建包含PDF支持的Docker鏡像")
     logger.info(f"=")
     
     # 檢查當前目錄
     if not Path("Dockerfile").exists():
-        logger.error(f"❌ 請在項目根目錄運行此腳本")
+        logger.error(f" 請在項目根目錄運行此腳本")
         return False
     
     steps = [
@@ -132,14 +132,14 @@ def main():
         logger.info(f"\n{'='*20} {step_name} {'='*20}")
         
         if not step_func():
-            logger.error(f"\n❌ {step_name}失敗，構建中止")
+            logger.error(f"\n {step_name}失敗，構建中止")
             return False
     
     logger.info(f"\n")
-    logger.info(f"🎉 Docker鏡像構建完成！")
+    logger.info(f" Docker鏡像構建完成！")
     logger.info(f"=")
     
-    logger.info(f"\n📋 使用說明:")
+    logger.info(f"\n 使用說明:")
     logger.info(f"1. 啟動完整服務:")
     logger.info(f"   docker-compose up -d")
     logger.info(f"\n2. 僅啟動Web服務:")
@@ -147,7 +147,7 @@ def main():
     logger.info(f"\n3. 測試PDF功能:")
     logger.info(f"   docker run tradingagents-cn:latest python scripts/test_docker_pdf.py")
     
-    logger.info(f"\n💡 提示:")
+    logger.info(f"\n 提示:")
     logger.info(f"- PDF導出功能已在Docker環境中優化")
     logger.info(f"- 支持中文字體和虛擬顯示器")
     logger.info(f"- 如遇問題請查看容器日誌")

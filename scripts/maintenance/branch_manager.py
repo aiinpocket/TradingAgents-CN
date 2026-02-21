@@ -46,7 +46,7 @@ class BranchManager:
             result = subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
             return result.stdout.strip()
         except subprocess.CalledProcessError as e:
-            logger.error(f"❌ Git命令執行失敗: {e}")
+            logger.error(f" Git命令執行失敗: {e}")
             logger.error(f"錯誤輸出: {e.stderr}")
             return None
     
@@ -57,7 +57,7 @@ class BranchManager:
             return False
         
         if status:
-            logger.warning(f"⚠️  檢測到未提交的更改:")
+            logger.warning(f"  檢測到未提交的更改:")
             print(status)
             response = input("是否繼續？(y/N): ")
             return response.lower() == 'y'
@@ -81,7 +81,7 @@ class BranchManager:
     def create_branch(self, branch_type, branch_name, description=None):
         """創建新分支"""
         if branch_type not in self.branch_types:
-            logger.error(f"❌ 不支持的分支類型: {branch_type}")
+            logger.error(f" 不支持的分支類型: {branch_type}")
             logger.info(f"支持的類型: {', '.join(self.branch_types.keys())}")
             return False
         
@@ -89,8 +89,8 @@ class BranchManager:
         full_branch_name = f"{config['prefix']}{branch_name}"
         base_branch = config['base']
         
-        logger.info(f"🌿 創建{config['description']}: {full_branch_name}")
-        logger.info(f"📍 基於分支: {base_branch}")
+        logger.info(f" 創建{config['description']}: {full_branch_name}")
+        logger.info(f" 基於分支: {base_branch}")
         
         # 檢查Git狀態
         if not self.check_git_status():
@@ -98,32 +98,32 @@ class BranchManager:
         
         # 檢查分支是否已存在
         if self.branch_exists(full_branch_name):
-            logger.error(f"❌ 分支 {full_branch_name} 已存在")
+            logger.error(f" 分支 {full_branch_name} 已存在")
             return False
         
         # 確保基礎分支是最新的
-        logger.info(f"🔄 更新基礎分支 {base_branch}...")
+        logger.info(f" 更新基礎分支 {base_branch}...")
         if not self.run_git_command(f'git checkout {base_branch}'):
             return False
         
         if not self.run_git_command(f'git pull origin {base_branch}'):
-            logger.error(f"⚠️  拉取基礎分支失敗，繼續使用本地版本")
+            logger.error(f"  拉取基礎分支失敗，繼續使用本地版本")
         
         # 創建新分支
-        logger.info(f"✨ 創建分支 {full_branch_name}...")
+        logger.info(f" 創建分支 {full_branch_name}...")
         if not self.run_git_command(f'git checkout -b {full_branch_name}'):
             return False
         
         # 推送到遠程
-        logger.info(f"📤 推送分支到遠程...")
+        logger.info(f" 推送分支到遠程...")
         if not self.run_git_command(f'git push -u origin {full_branch_name}'):
-            logger.error(f"⚠️  推送到遠程失敗，分支僅在本地創建")
+            logger.error(f"  推送到遠程失敗，分支僅在本地創建")
         
         # 創建分支信息文件
         self.create_branch_info(full_branch_name, branch_type, description)
         
-        logger.info(f"✅ 分支 {full_branch_name} 創建成功！")
-        logger.info(f"💡 現在可以開始在此分支上開發")
+        logger.info(f" 分支 {full_branch_name} 創建成功！")
+        logger.info(f" 現在可以開始在此分支上開發")
         
         return True
     
@@ -149,14 +149,14 @@ class BranchManager:
     
     def list_branches(self, branch_type=None):
         """列出分支"""
-        logger.info(f"🌿 分支列表:")
+        logger.info(f" 分支列表:")
         
         # 獲取所有分支
         local_branches = self.run_git_command('git branch --format="%(refname:short)"')
         remote_branches = self.run_git_command('git branch -r --format="%(refname:short)"')
         
         if not local_branches:
-            logger.error(f"❌ 獲取分支列表失敗")
+            logger.error(f" 獲取分支列表失敗")
             return
         
         current_branch = self.get_current_branch()
@@ -170,10 +170,10 @@ class BranchManager:
             matching_branches = [b for b in local_branches.split('\n') if b.startswith(prefix)]
             
             if matching_branches:
-                logger.info(f"\n📂 {config['description']}:")
+                logger.info(f"\n {config['description']}:")
                 for branch in matching_branches:
-                    marker = " 👈 當前" if branch == current_branch else ""
-                    remote_marker = " 📤" if f"origin/{branch}" in remote_branches else " 📍本地"
+                    marker = "  當前" if branch == current_branch else ""
+                    remote_marker = " " if f"origin/{branch}" in remote_branches else " 本地"
                     logger.info(f"  - {branch}{marker}{remote_marker}")
     
     def switch_branch(self, branch_name):
@@ -181,23 +181,23 @@ class BranchManager:
         if not self.check_git_status():
             return False
         
-        logger.info(f"🔄 切換到分支: {branch_name}")
+        logger.info(f" 切換到分支: {branch_name}")
         
         # 檢查分支是否存在
         if not self.branch_exists(branch_name):
             # 檢查是否是遠程分支
             if self.remote_branch_exists(branch_name):
-                logger.info(f"📥 檢出遠程分支: {branch_name}")
+                logger.info(f" 檢出遠程分支: {branch_name}")
                 if not self.run_git_command(f'git checkout -b {branch_name} origin/{branch_name}'):
                     return False
             else:
-                logger.error(f"❌ 分支 {branch_name} 不存在")
+                logger.error(f" 分支 {branch_name} 不存在")
                 return False
         else:
             if not self.run_git_command(f'git checkout {branch_name}'):
                 return False
         
-        logger.info(f"✅ 已切換到分支: {branch_name}")
+        logger.info(f" 已切換到分支: {branch_name}")
         return True
     
     def delete_branch(self, branch_name, force=False):
@@ -205,20 +205,20 @@ class BranchManager:
         current_branch = self.get_current_branch()
         
         if branch_name == current_branch:
-            logger.error(f"❌ 不能刪除當前分支: {branch_name}")
+            logger.error(f" 不能刪除當前分支: {branch_name}")
             return False
         
         if branch_name in ['main', 'develop']:
-            logger.error(f"❌ 不能刪除保護分支: {branch_name}")
+            logger.error(f" 不能刪除保護分支: {branch_name}")
             return False
         
-        logger.info(f"🗑️  刪除分支: {branch_name}")
+        logger.info(f"  刪除分支: {branch_name}")
         
         # 檢查分支是否已合並
         merged = self.run_git_command(f'git branch --merged develop | grep {branch_name}')
         
         if not merged and not force:
-            logger.warning(f"⚠️  分支尚未合並到develop")
+            logger.warning(f"  分支尚未合並到develop")
             response = input("確定要刪除嗎？(y/N): ")
             if response.lower() != 'y':
                 return False
@@ -234,17 +234,17 @@ class BranchManager:
             if response.lower() != 'n':
                 self.run_git_command(f'git push origin --delete {branch_name}')
         
-        logger.info(f"✅ 分支 {branch_name} 刪除成功")
+        logger.info(f" 分支 {branch_name} 刪除成功")
         return True
     
     def cleanup_branches(self):
         """清理已合並的分支"""
-        logger.info(f"🧹 清理已合並的分支...")
+        logger.info(f" 清理已合並的分支...")
         
         # 獲取已合並到develop的分支
         merged_branches = self.run_git_command('git branch --merged develop')
         if not merged_branches:
-            logger.error(f"❌ 獲取已合並分支失敗")
+            logger.error(f" 獲取已合並分支失敗")
             return
         
         branches_to_delete = []
@@ -254,10 +254,10 @@ class BranchManager:
                 branches_to_delete.append(branch)
         
         if not branches_to_delete:
-            logger.info(f"✅ 沒有需要清理的分支")
+            logger.info(f" 沒有需要清理的分支")
             return
         
-        logger.info(f"📋 以下分支已合並到develop:")
+        logger.info(f" 以下分支已合並到develop:")
         for branch in branches_to_delete:
             logger.info(f"  - {branch}")
         
@@ -265,7 +265,7 @@ class BranchManager:
         if response.lower() == 'y':
             for branch in branches_to_delete:
                 self.run_git_command(f'git branch -d {branch}')
-            logger.info(f"✅ 已刪除 {len(branches_to_delete)} 個分支")
+            logger.info(f" 已刪除 {len(branches_to_delete)} 個分支")
 
 def main():
     """主函數"""

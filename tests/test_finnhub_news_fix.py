@@ -34,11 +34,11 @@ def test_data_dir_config():
     # 檢查是否為跨平台路徑
     if data_dir:
         if '/' in data_dir and '\\' in data_dir:
-            print("⚠️ 警告: 數據目錄路徑混合了Unix和Windows分隔符")
+            print(" 警告: 數據目錄路徑混合了Unix和Windows分隔符")
         elif data_dir.startswith('/Users/') and os.name == 'nt':
-            print("⚠️ 警告: 在Windows系統上使用了Unix路徑")
+            print(" 警告: 在Windows系統上使用了Unix路徑")
         else:
-            print("✅ 數據目錄路徑格式正確")
+            print(" 數據目錄路徑格式正確")
     
     return data_dir
 
@@ -50,7 +50,7 @@ def test_finnhub_news_path():
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        print("❌ 數據目錄未配置")
+        print(" 數據目錄未配置")
         return False
     
     # 測試AAPL新聞數據路徑
@@ -81,7 +81,7 @@ def test_get_data_in_range():
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        print("❌ 數據目錄未配置")
+        print(" 數據目錄未配置")
         return
     
     # 測試不存在的股票代碼
@@ -119,7 +119,7 @@ def create_sample_data_structure():
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        print("❌ 數據目錄未配置")
+        print(" 數據目錄未配置")
         return
     
     # 創建目錄結構
@@ -128,7 +128,7 @@ def create_sample_data_structure():
     
     try:
         os.makedirs(news_dir, exist_ok=True)
-        print(f"✅ 創建目錄結構: {news_dir}")
+        print(f" 創建目錄結構: {news_dir}")
         
         # 創建示例數據文件
         sample_file = os.path.join(news_dir, "AAPL_data_formatted.json")
@@ -145,10 +145,10 @@ def create_sample_data_structure():
         with open(sample_file, 'w', encoding='utf-8') as f:
             json.dump(sample_data, f, ensure_ascii=False, indent=2)
         
-        print(f"✅ 創建示例數據文件: {sample_file}")
+        print(f" 創建示例數據文件: {sample_file}")
         
     except Exception as e:
-        print(f"❌ 創建目錄結構失敗: {e}")
+        print(f" 創建目錄結構失敗: {e}")
 
 def main():
     """主測試函數"""

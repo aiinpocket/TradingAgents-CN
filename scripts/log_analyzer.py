@@ -30,10 +30,10 @@ class LogAnalyzer:
     def parse_logs(self):
         """解析日誌文件"""
         if not self.log_file.exists():
-            logger.error(f"❌ 日誌文件不存在: {self.log_file}")
+            logger.error(f" 日誌文件不存在: {self.log_file}")
             return
             
-        logger.info(f"📖 解析日誌文件: {self.log_file}")
+        logger.info(f" 解析日誌文件: {self.log_file}")
         
         with open(self.log_file, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
@@ -56,7 +56,7 @@ class LogAnalyzer:
                 if entry:
                     self.entries.append(entry)
         
-        logger.info(f"✅ 解析完成: {len(self.entries)} 條普通日誌, {len(self.structured_entries)} 條結構化日誌")
+        logger.info(f" 解析完成: {len(self.entries)} 條普通日誌, {len(self.structured_entries)} 條結構化日誌")
     
     def _parse_regular_log(self, line: str, line_num: int) -> Optional[Dict[str, Any]]:
         """解析普通日誌行"""
@@ -84,7 +84,7 @@ class LogAnalyzer:
     
     def analyze_performance(self) -> Dict[str, Any]:
         """分析性能相關日誌"""
-        logger.info(f"\n📊 性能分析")
+        logger.info(f"\n 性能分析")
         logger.info(f"=")
         
         analysis = {
@@ -128,17 +128,17 @@ class LogAnalyzer:
         
         # 輸出分析結果
         if analysis['slow_operations']:
-            logger.info(f"🐌 慢操作 ({len(analysis['slow_operations'])} 個):")
+            logger.info(f" 慢操作 ({len(analysis['slow_operations'])} 個):")
             for op in analysis['slow_operations'][:5]:  # 顯示前5個
                 logger.info(f"  - {op['duration']:.2f}s: {op['message'][:80]}...")
         
         if analysis['analysis_times']:
             avg_time = sum(analysis['analysis_times']) / len(analysis['analysis_times'])
-            logger.info(f"⏱️  平均分析時間: {avg_time:.2f}s")
-            logger.info(f"📈 分析次數: {len(analysis['analysis_times'])}")
+            logger.info(f"⏱  平均分析時間: {avg_time:.2f}s")
+            logger.info(f" 分析次數: {len(analysis['analysis_times'])}")
         
         if analysis['cost_summary']['total_cost'] > 0:
-            logger.info(f"💰 總成本: ¥{analysis['cost_summary']['total_cost']:.4f}")
+            logger.info(f" 總成本: ¥{analysis['cost_summary']['total_cost']:.4f}")
             for provider, cost in analysis['cost_summary']['by_provider'].items():
                 logger.info(f"  - {provider}: ¥{cost:.4f}")
         
@@ -146,7 +146,7 @@ class LogAnalyzer:
     
     def analyze_errors(self) -> Dict[str, Any]:
         """分析錯誤日誌"""
-        logger.error(f"\n❌ 錯誤分析")
+        logger.error(f"\n 錯誤分析")
         logger.info(f"=")
         
         error_entries = []
@@ -161,8 +161,8 @@ class LogAnalyzer:
             elif level == 'WARNING':
                 warning_entries.append(entry)
         
-        logger.error(f"🔴 錯誤數量: {len(error_entries)}")
-        logger.warning(f"🟡 警告數量: {len(warning_entries)}")
+        logger.error(f" 錯誤數量: {len(error_entries)}")
+        logger.warning(f" 警告數量: {len(warning_entries)}")
         
         # 錯誤分類
         error_patterns = defaultdict(int)
@@ -203,7 +203,7 @@ class LogAnalyzer:
     
     def analyze_usage(self) -> Dict[str, Any]:
         """分析使用情況"""
-        logger.info(f"\n📈 使用情況分析")
+        logger.info(f"\n 使用情況分析")
         logger.info(f"=")
         
         analysis = {
@@ -239,17 +239,17 @@ class LogAnalyzer:
         
         # 輸出結果
         if analysis['daily_usage']:
-            logger.info(f"📅 每日使用量:")
+            logger.info(f" 每日使用量:")
             for date, count in sorted(analysis['daily_usage'].items())[-7:]:  # 最近7天
                 logger.info(f"  - {date}: {count}")
         
         if analysis['module_usage']:
-            logger.info(f"\n📦 模塊使用情況:")
+            logger.info(f"\n 模塊使用情況:")
             for module, count in Counter(analysis['module_usage']).most_common(5):
                 logger.info(f"  - {module}: {count}")
         
         if analysis['analysis_types']:
-            logger.debug(f"\n🔍 分析類型:")
+            logger.debug(f"\n 分析類型:")
             for analysis_type, count in Counter(analysis['analysis_types']).most_common():
                 logger.info(f"  - {analysis_type}: {count}")
         
@@ -297,7 +297,7 @@ class LogAnalyzer:
     
     def generate_report(self) -> str:
         """生成分析報告"""
-        logger.info(f"\n📋 生成分析報告")
+        logger.info(f"\n 生成分析報告")
         logger.info(f"=")
         
         performance = self.analyze_performance()
@@ -330,13 +330,13 @@ class LogAnalyzer:
 
         # 添加建議
         if len(performance['slow_operations']) > 10:
-            report += "- ⚠️ 檢測到較多慢操作，建議優化性能\n"
+            report += "-  檢測到較多慢操作，建議優化性能\n"
 
         if errors['error_count'] > 0:
-            report += f"- ❌ 發現 {errors['error_count']} 個錯誤，建議檢查日誌\n"
+            report += f"-  發現 {errors['error_count']} 個錯誤，建議檢查日誌\n"
 
         if performance['cost_summary']['total_cost'] > 10:
-            report += "- 💰 API成本較高，建議優化調用策略\n"
+            report += "-  API成本較高，建議優化調用策略\n"
         
         return report
 
@@ -359,12 +359,12 @@ def main():
         if args.output:
             with open(args.output, 'w', encoding='utf-8') as f:
                 f.write(report)
-            logger.info(f"📄 報告已保存到: {args.output}")
+            logger.info(f" 報告已保存到: {args.output}")
         else:
             print(report)
             
     except Exception as e:
-        logger.error(f"❌ 分析失敗: {e}")
+        logger.error(f" 分析失敗: {e}")
         sys.exit(1)
 
 

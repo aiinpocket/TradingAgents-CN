@@ -12,7 +12,7 @@ sys.path.insert(0, str(project_root))
 
 def test_form_data_structure():
     """測試表單數據結構"""
-    print("🧪 測試表單數據結構...")
+    print(" 測試表單數據結構...")
     
     try:
         # 模擬表單數據
@@ -42,24 +42,24 @@ def test_form_data_structure():
         
         # 檢查條件判斷
         if form_data_submitted.get('submitted', False):
-            print("\n  ✅ 提交條件判斷正確")
+            print("\n   提交條件判斷正確")
         else:
-            print("\n  ❌ 提交條件判斷錯誤")
+            print("\n   提交條件判斷錯誤")
         
         if form_data_not_submitted.get('submitted', False):
-            print("  ❌ 未提交條件判斷錯誤")
+            print("   未提交條件判斷錯誤")
         else:
-            print("  ✅ 未提交條件判斷正確")
+            print("   未提交條件判斷正確")
         
         return True
         
     except Exception as e:
-        print(f"❌ 表單數據結構測試失敗: {e}")
+        print(f" 表單數據結構測試失敗: {e}")
         return False
 
 def test_validation_function():
     """測試驗證函數"""
-    print("\n🧪 測試驗證函數...")
+    print("\n 測試驗證函數...")
     
     try:
         from web.utils.analysis_runner import validate_analysis_params
@@ -76,26 +76,26 @@ def test_validation_function():
         print(f"  港股驗證結果: {errors}")
         
         if not errors:
-            print("  ✅ 港股驗證通過")
+            print("   港股驗證通過")
         else:
-            print(f"  ❌ 港股驗證失敗: {errors}")
+            print(f"   港股驗證失敗: {errors}")
             return False
         
         return True
         
     except Exception as e:
-        print(f"❌ 驗證函數測試失敗: {e}")
+        print(f" 驗證函數測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_analysis_runner_import():
     """測試分析運行器導入"""
-    print("\n🧪 測試分析運行器導入...")
+    print("\n 測試分析運行器導入...")
     
     try:
         from web.utils.analysis_runner import run_stock_analysis, validate_analysis_params, format_analysis_results
-        print("  ✅ 分析運行器導入成功")
+        print("   分析運行器導入成功")
         
         # 測試函數簽名
         import inspect
@@ -109,33 +109,33 @@ def test_analysis_runner_import():
         return True
         
     except Exception as e:
-        print(f"❌ 分析運行器導入失敗: {e}")
+        print(f" 分析運行器導入失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_streamlit_components():
     """測試Streamlit組件"""
-    print("\n🧪 測試Streamlit組件...")
+    print("\n 測試Streamlit組件...")
     
     try:
         # 測試組件導入
         from web.components.analysis_form import render_analysis_form
         from web.components.results_display import render_results
         
-        print("  ✅ Streamlit組件導入成功")
+        print("   Streamlit組件導入成功")
         
         return True
         
     except Exception as e:
-        print(f"❌ Streamlit組件測試失敗: {e}")
+        print(f" Streamlit組件測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def check_potential_output_sources():
     """檢查可能的輸出源"""
-    print("\n🧪 檢查可能的輸出源...")
+    print("\n 檢查可能的輸出源...")
     
     # 檢查可能輸出"True"的地方
     potential_sources = [
@@ -147,9 +147,9 @@ def check_potential_output_sources():
     ]
     
     for source in potential_sources:
-        print(f"  🔍 檢查: {source}")
+        print(f"   檢查: {source}")
     
-    print("\n  💡 建議檢查:")
+    print("\n   建議檢查:")
     print("    1. 搜索代碼中的 st.write(True) 或類似語句")
     print("    2. 檢查是否有 print(True) 語句")
     print("    3. 查看是否有布爾值被意外顯示")
@@ -159,7 +159,7 @@ def check_potential_output_sources():
 
 def main():
     """運行所有調試測試"""
-    print("🐛 開始調試Web界面'True'顯示問題")
+    print(" 開始調試Web界面'True'顯示問題")
     print("=" * 50)
     
     tests = [
@@ -178,17 +178,17 @@ def main():
             if test_func():
                 passed += 1
         except Exception as e:
-            print(f"❌ 測試 {test_func.__name__} 異常: {e}")
+            print(f" 測試 {test_func.__name__} 異常: {e}")
     
     print("\n" + "=" * 50)
-    print(f"🐛 調試測試完成: {passed}/{total} 通過")
+    print(f" 調試測試完成: {passed}/{total} 通過")
     
     if passed == total:
-        print("✅ 所有測試通過，問題可能在Streamlit運行時環境")
+        print(" 所有測試通過，問題可能在Streamlit運行時環境")
     else:
-        print("⚠️ 發現問題，請檢查失敗的測試項")
+        print(" 發現問題，請檢查失敗的測試項")
     
-    print("\n🔧 解決建議:")
+    print("\n 解決建議:")
     print("1. 重啟Streamlit應用")
     print("2. 清除瀏覽器緩存")
     print("3. 檢查是否有殘留的調試輸出")

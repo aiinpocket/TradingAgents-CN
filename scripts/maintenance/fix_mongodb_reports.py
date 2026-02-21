@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     """主函數"""
-    print("🔧 MongoDB分析報告數據修復工具")
+    print(" MongoDB分析報告數據修復工具")
     print("=" * 50)
     
     try:
@@ -44,15 +44,15 @@ def main():
         mongodb_manager = MongoDBReportManager()
         
         if not mongodb_manager.connected:
-            print("❌ MongoDB未連接，無法執行修復")
+            print(" MongoDB未連接，無法執行修復")
             return False
         
-        print(f"✅ MongoDB連接成功")
+        print(f" MongoDB連接成功")
         
         # 1. 檢查當前數據狀態
-        print(f"\n📊 檢查當前數據狀態...")
+        print(f"\n 檢查當前數據狀態...")
         all_reports = mongodb_manager.get_all_reports(limit=1000)
-        print(f"📈 總報告數量: {len(all_reports)}")
+        print(f" 總報告數量: {len(all_reports)}")
         
         # 統計不一致的報告
         inconsistent_count = 0
@@ -67,31 +67,31 @@ def main():
                 inconsistent_count += 1
                 empty_reports_count += 1
         
-        print(f"⚠️ 不一致報告數量: {inconsistent_count}")
+        print(f" 不一致報告數量: {inconsistent_count}")
         print(f"   - 缺少reports字段: {missing_reports_count}")
         print(f"   - reports字段為空: {empty_reports_count}")
         
         if inconsistent_count == 0:
-            print("✅ 所有報告數據結構一致，無需修復")
+            print(" 所有報告數據結構一致，無需修復")
             return True
         
         # 2. 詢問用戶是否繼續修復
-        print(f"\n🔧 準備修復 {inconsistent_count} 個不一致的報告")
+        print(f"\n 準備修復 {inconsistent_count} 個不一致的報告")
         response = input("是否繼續修復？(y/N): ").strip().lower()
         
         if response not in ['y', 'yes']:
-            print("❌ 用戶取消修復操作")
+            print(" 用戶取消修復操作")
             return False
         
         # 3. 執行修復
-        print(f"\n🔧 開始修復不一致的報告...")
+        print(f"\n 開始修復不一致的報告...")
         success = mongodb_manager.fix_inconsistent_reports()
         
         if success:
-            print("✅ 修復完成")
+            print(" 修復完成")
             
             # 4. 驗證修復結果
-            print(f"\n📊 驗證修復結果...")
+            print(f"\n 驗證修復結果...")
             updated_reports = mongodb_manager.get_all_reports(limit=1000)
             
             # 重新統計
@@ -100,24 +100,24 @@ def main():
                 if 'reports' not in report or not isinstance(report.get('reports'), dict):
                     final_inconsistent_count += 1
             
-            print(f"📈 修復後不一致報告數量: {final_inconsistent_count}")
+            print(f" 修復後不一致報告數量: {final_inconsistent_count}")
             
             if final_inconsistent_count == 0:
-                print("🎉 所有報告數據結構已修復完成！")
+                print(" 所有報告數據結構已修復完成！")
                 return True
             else:
-                print(f"⚠️ 仍有 {final_inconsistent_count} 個報告需要手動處理")
+                print(f" 仍有 {final_inconsistent_count} 個報告需要手動處理")
                 return False
         else:
-            print("❌ 修復失敗")
+            print(" 修復失敗")
             return False
             
     except ImportError as e:
-        print(f"❌ 導入錯誤: {e}")
+        print(f" 導入錯誤: {e}")
         print("請確保MongoDB相關依賴已安裝")
         return False
     except Exception as e:
-        print(f"❌ 修復過程出錯: {e}")
+        print(f" 修復過程出錯: {e}")
         logger.error(f"修復異常: {e}")
         return False
 
@@ -128,12 +128,12 @@ def show_report_details():
         
         mongodb_manager = MongoDBReportManager()
         if not mongodb_manager.connected:
-            print("❌ MongoDB未連接")
+            print(" MongoDB未連接")
             return
         
         reports = mongodb_manager.get_all_reports(limit=10)
         
-        print(f"\n📋 最近10個報告的詳細信息:")
+        print(f"\n 最近10個報告的詳細信息:")
         print("=" * 80)
         
         for i, report in enumerate(reports, 1):
@@ -148,21 +148,21 @@ def show_report_details():
             # 檢查reports字段
             reports_field = report.get('reports')
             if reports_field is None:
-                print(f"   Reports字段: ❌ 缺失")
+                print(f"   Reports字段:  缺失")
             elif isinstance(reports_field, dict):
                 if reports_field:
-                    print(f"   Reports字段: ✅ 存在 ({len(reports_field)} 個報告)")
+                    print(f"   Reports字段:  存在 ({len(reports_field)} 個報告)")
                     for report_type in reports_field.keys():
                         print(f"     - {report_type}")
                 else:
-                    print(f"   Reports字段: ⚠️ 空字典")
+                    print(f"   Reports字段:  空字典")
             else:
-                print(f"   Reports字段: ❌ 類型錯誤 ({type(reports_field)})")
+                print(f"   Reports字段:  類型錯誤 ({type(reports_field)})")
             
             print("-" * 60)
             
     except Exception as e:
-        print(f"❌ 顯示報告詳情失敗: {e}")
+        print(f" 顯示報告詳情失敗: {e}")
 
 if __name__ == "__main__":
     import argparse

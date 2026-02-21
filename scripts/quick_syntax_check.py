@@ -46,13 +46,13 @@ def check_syntax(file_path: str) -> Tuple[bool, str]:
 
 def main():
     """主函數 - 執行語法檢查"""
-    logger.error(f"🔍 快速語法檢查 - 查找有錯誤的文件...\n")
+    logger.error(f" 快速語法檢查 - 查找有錯誤的文件...\n")
     
     current_dir = os.getcwd()
     python_files = find_python_files(current_dir)
     
-    logger.info(f"📊 總共找到 {len(python_files)} 個Python文件")
-    logger.error(f"🔍 正在檢查語法錯誤...\n")
+    logger.info(f" 總共找到 {len(python_files)} 個Python文件")
+    logger.error(f" 正在檢查語法錯誤...\n")
     
     error_files = []
     
@@ -62,22 +62,22 @@ def main():
         
         if has_error:
             error_files.append((relative_path, error_msg))
-            logger.error(f"❌ {relative_path}")
+            logger.error(f" {relative_path}")
     
-    logger.info(f"\n📋 檢查完成!")
-    logger.info(f"✅ 語法正確: {len(python_files) - len(error_files)} 個文件")
-    logger.error(f"❌ 語法錯誤: {len(error_files)} 個文件")
+    logger.info(f"\n 檢查完成!")
+    logger.info(f" 語法正確: {len(python_files) - len(error_files)} 個文件")
+    logger.error(f" 語法錯誤: {len(error_files)} 個文件")
     
     if error_files:
-        logger.error(f"\n🚨 有語法錯誤的文件列表:")
+        logger.error(f"\n 有語法錯誤的文件列表:")
         logger.info(f"-")
         for i, (file_path, _) in enumerate(error_files, 1):
             logger.info(f"{i:2d}. {file_path}")
         
-        logger.error(f"\n💡 使用詳細檢查腳本查看具體錯誤信息:")
+        logger.error(f"\n 使用詳細檢查腳本查看具體錯誤信息:")
         logger.info(f"   python syntax_checker.py")
     else:
-        logger.info(f"\n🎉 所有文件語法檢查通過!")
+        logger.info(f"\n 所有文件語法檢查通過!")
 
 
 if __name__ == "__main__":

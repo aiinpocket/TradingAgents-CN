@@ -138,18 +138,18 @@ class UnifiedDataDirectoryManager:
             bool: 是否成功創建所有目錄
         """
         try:
-            logger.info("🔄 創建統一數據目錄結構...")
+            logger.info(" 創建統一數據目錄結構...")
             
             paths = self.get_all_paths(create=True)
             
             for key, path in paths.items():
-                logger.info(f"  ✅ {key}: {path}")
+                logger.info(f"   {key}: {path}")
             
-            logger.info("✅ 統一數據目錄結構創建完成")
+            logger.info(" 統一數據目錄結構創建完成")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 創建目錄結構失敗: {e}")
+            logger.error(f" 創建目錄結構失敗: {e}")
             return False
     
     def get_config_summary(self) -> Dict[str, str]:
@@ -191,20 +191,20 @@ class UnifiedDataDirectoryManager:
     
     def print_structure(self):
         """打印目錄結構"""
-        print("📁 統一數據目錄結構:")
-        print(f"📂 項目根目錄: {self.project_root}")
+        print(" 統一數據目錄結構:")
+        print(f" 項目根目錄: {self.project_root}")
         print()
         
         # 按層級組織顯示
         structure = {
-            '📊 數據根目錄': ['data_root'],
-            '💾 緩存目錄': ['cache', 'cache_stock_data', 'cache_news_data', 'cache_fundamentals', 'cache_metadata'],
-            '📈 分析結果': ['analysis_results', 'results_summary', 'results_detailed', 'results_exports'],
-            '🗄️ 數據庫': ['databases', 'db_mongodb', 'db_redis'],
-            '📝 會話數據': ['sessions', 'sessions_web', 'sessions_cli'],
-            '📋 日誌文件': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
-            '🔧 配置文件': ['config', 'config_user', 'config_system'],
-            '📦 臨時文件': ['temp', 'temp_downloads', 'temp_processing'],
+            ' 數據根目錄': ['data_root'],
+            ' 緩存目錄': ['cache', 'cache_stock_data', 'cache_news_data', 'cache_fundamentals', 'cache_metadata'],
+            ' 分析結果': ['analysis_results', 'results_summary', 'results_detailed', 'results_exports'],
+            ' 數據庫': ['databases', 'db_mongodb', 'db_redis'],
+            ' 會話數據': ['sessions', 'sessions_web', 'sessions_cli'],
+            ' 日誌文件': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
+            ' 配置文件': ['config', 'config_user', 'config_system'],
+            ' 臨時文件': ['temp', 'temp_downloads', 'temp_processing'],
         }
         
         for category, keys in structure.items():
@@ -212,11 +212,11 @@ class UnifiedDataDirectoryManager:
             for key in keys:
                 try:
                     path = self.get_path(key, create=False)
-                    exists = "✅" if path.exists() else "❌"
+                    exists = "" if path.exists() else ""
                     relative_path = path.relative_to(self.project_root)
                     print(f"  {exists} {key}: {relative_path}")
                 except Exception as e:
-                    print(f"  ❌ {key}: 錯誤 - {e}")
+                    print(f"   {key}: 錯誤 - {e}")
             print()
 
 
@@ -273,18 +273,18 @@ def main():
         manager.create_all_directories()
     
     if args.validate:
-        print("🔍 驗證目錄結構:")
+        print(" 驗證目錄結構:")
         results = manager.validate_structure()
         for key, exists in results.items():
-            status = "✅" if exists else "❌"
+            status = "" if exists else ""
             print(f"  {status} {key}")
         
         total = len(results)
         existing = sum(results.values())
-        print(f"\n📊 統計: {existing}/{total} 個目錄存在")
+        print(f"\n 統計: {existing}/{total} 個目錄存在")
     
     if args.show_config:
-        print("⚙️ 配置摘要:")
+        print(" 配置摘要:")
         config = manager.get_config_summary()
         for key, value in config.items():
             print(f"  {key}: {value}")

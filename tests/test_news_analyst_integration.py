@@ -14,13 +14,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 def test_news_analyst_integration():
     """測試新聞分析師與統一新聞工具的集成"""
     
-    print("🚀 開始測試新聞分析師集成...")
+    print(" 開始測試新聞分析師集成...")
     
     try:
         # 導入必要的模塊
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         from tradingagents.tools.unified_news_tool import create_unified_news_tool
-        print("✅ 成功導入必要模塊")
+        print(" 成功導入必要模塊")
         
         # 創建模擬工具包
         class MockToolkit:
@@ -56,7 +56,7 @@ def test_news_analyst_integration():
                 return f"OpenAI全球新聞 - {query}: 國際財經新聞內容"
         
         toolkit = MockToolkit()
-        print("✅ 創建模擬工具包成功")
+        print(" 創建模擬工具包成功")
         
         # 創建模擬LLM
         class MockLLM:
@@ -73,15 +73,15 @@ def test_news_analyst_integration():
                         self.content = """
 # 股票新聞分析報告
 
-## 📈 核心要點
+##  核心要點
 基於最新獲取的新聞數據，該股票展現出強勁的業績增長態勢：
 
-### 🎯 業績亮點
+###  業績亮點
 - Q2營收同比增長25%，超出市場預期
 - 淨利潤增長30%，盈利能力顯著提升
 - 新產品線獲得重大突破
 
-### 📊 市場影響分析
+###  市場影響分析
 **短期影響（1-3個月）**：
 - 預期股價上漲5-10%
 - 市場情緒轉向積極
@@ -90,7 +90,7 @@ def test_news_analyst_integration():
 - 新產品線貢獻增量收入
 - 估值有望修複至合理水平
 
-### 💰 投資建議
+###  投資建議
 - **評級**：買入
 - **目標價**：50元
 - **風險等級**：中等
@@ -106,11 +106,11 @@ def test_news_analyst_integration():
                 return MockResult()
         
         llm = MockLLM()
-        print("✅ 創建模擬LLM成功")
+        print(" 創建模擬LLM成功")
         
         # 創建新聞分析師
         news_analyst = create_news_analyst(llm, toolkit)
-        print("✅ 創建新聞分析師成功")
+        print(" 創建新聞分析師成功")
         
         # 測試不同股票
         test_stocks = [
@@ -121,7 +121,7 @@ def test_news_analyst_integration():
         
         for stock_code, description in test_stocks:
             print(f"\n{'='*60}")
-            print(f"🔍 測試股票: {stock_code} ({description})")
+            print(f" 測試股票: {stock_code} ({description})")
             print(f"{'='*60}")
             
             try:
@@ -135,47 +135,47 @@ def test_news_analyst_integration():
                 })
                 end_time = datetime.now()
                 
-                print(f"⏱️ 分析耗時: {(end_time - start_time).total_seconds():.2f}秒")
+                print(f"⏱ 分析耗時: {(end_time - start_time).total_seconds():.2f}秒")
                 
                 # 檢查結果
                 if result and "messages" in result and len(result["messages"]) > 0:
                     final_message = result["messages"][-1]
                     if hasattr(final_message, 'content'):
                         report = final_message.content
-                        print(f"✅ 成功獲取新聞分析報告")
-                        print(f"📊 報告長度: {len(report)} 字符")
+                        print(f" 成功獲取新聞分析報告")
+                        print(f" 報告長度: {len(report)} 字符")
                         
                         # 顯示報告摘要
                         if len(report) > 300:
-                            print(f"📝 報告摘要: {report[:300]}...")
+                            print(f" 報告摘要: {report[:300]}...")
                         else:
-                            print(f"📝 完整報告: {report}")
+                            print(f" 完整報告: {report}")
                         
                         # 檢查是否包含真實新聞特征
                         news_indicators = ['發布時間', '新聞標題', '文章來源', '東方財富', '業績', '營收']
                         has_real_news = any(indicator in report for indicator in news_indicators)
-                        print(f"🔍 包含真實新聞特征: {'是' if has_real_news else '否'}")
+                        print(f" 包含真實新聞特征: {'是' if has_real_news else '否'}")
                         
                         if has_real_news:
-                            print("🎉 集成測試成功！")
+                            print(" 集成測試成功！")
                         else:
-                            print("⚠️ 可能需要進一步優化")
+                            print(" 可能需要進一步優化")
                     else:
-                        print("❌ 消息內容為空")
+                        print(" 消息內容為空")
                 else:
-                    print("❌ 未獲取到分析結果")
+                    print(" 未獲取到分析結果")
                     
             except Exception as e:
-                print(f"❌ 測試股票 {stock_code} 時出錯: {e}")
+                print(f" 測試股票 {stock_code} 時出錯: {e}")
                 import traceback
                 traceback.print_exc()
         
         print(f"\n{'='*60}")
-        print("🎉 新聞分析師集成測試完成!")
+        print(" 新聞分析師集成測試完成!")
         print(f"{'='*60}")
         
     except Exception as e:
-        print(f"❌ 測試過程中出現錯誤: {e}")
+        print(f" 測試過程中出現錯誤: {e}")
         import traceback
         traceback.print_exc()
 

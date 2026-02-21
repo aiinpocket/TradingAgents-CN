@@ -63,20 +63,20 @@ def parse_pyproject_toml() -> Dict[str, str]:
 def main():
     """主函數"""
     print("=" * 80)
-    print("🔍 比較 requirements.txt 和 pyproject.toml")
+    print(" 比較 requirements.txt 和 pyproject.toml")
     print("=" * 80)
     
     # 解析兩個文件
-    print("\n📋 解析 requirements.txt...")
+    print("\n 解析 requirements.txt...")
     req_packages = parse_requirements_txt()
-    print(f"✅ 發現 {len(req_packages)} 個包")
+    print(f" 發現 {len(req_packages)} 個包")
     
-    print("\n📋 解析 pyproject.toml...")
+    print("\n 解析 pyproject.toml...")
     pyproject_packages = parse_pyproject_toml()
-    print(f"✅ 發現 {len(pyproject_packages)} 個包")
+    print(f" 發現 {len(pyproject_packages)} 個包")
     
     # 比較差異
-    print("\n🔎 檢查差異...")
+    print("\n 檢查差異...")
     
     # 在 pyproject.toml 中但不在 requirements.txt 中
     missing_in_req = set(pyproject_packages.keys()) - set(req_packages.keys())
@@ -96,26 +96,26 @@ def main():
     
     # 輸出結果
     if not missing_in_req and not missing_in_pyproject and not version_mismatch:
-        print("\n✅ 兩個文件完全一致！")
+        print("\n 兩個文件完全一致！")
     else:
         if missing_in_req:
-            print(f"\n❌ 在 pyproject.toml 中但不在 requirements.txt 中 ({len(missing_in_req)} 個):")
+            print(f"\n 在 pyproject.toml 中但不在 requirements.txt 中 ({len(missing_in_req)} 個):")
             print("-" * 80)
             for package in sorted(missing_in_req):
                 version = pyproject_packages[package]
                 print(f"  • {package}{version}")
-            print("\n💡 建議在 requirements.txt 中添加這些包")
+            print("\n 建議在 requirements.txt 中添加這些包")
         
         if missing_in_pyproject:
-            print(f"\n❌ 在 requirements.txt 中但不在 pyproject.toml 中 ({len(missing_in_pyproject)} 個):")
+            print(f"\n 在 requirements.txt 中但不在 pyproject.toml 中 ({len(missing_in_pyproject)} 個):")
             print("-" * 80)
             for package in sorted(missing_in_pyproject):
                 version = req_packages[package]
                 print(f"  • {package}{version}")
-            print("\n💡 建議在 pyproject.toml 中添加這些包")
+            print("\n 建議在 pyproject.toml 中添加這些包")
         
         if version_mismatch:
-            print(f"\n⚠️  版本不一致 ({len(version_mismatch)} 個):")
+            print(f"\n  版本不一致 ({len(version_mismatch)} 個):")
             print("-" * 80)
             for package, req_ver, pyproject_ver in sorted(version_mismatch):
                 print(f"  • {package}")
@@ -123,7 +123,7 @@ def main():
                 print(f"    pyproject.toml:   {pyproject_ver or '(無版本限制)'}")
     
     # 顯示統計
-    print("\n📊 統計信息:")
+    print("\n 統計信息:")
     print("-" * 80)
     print(f"  requirements.txt:  {len(req_packages)} 個包")
     print(f"  pyproject.toml:    {len(pyproject_packages)} 個包")

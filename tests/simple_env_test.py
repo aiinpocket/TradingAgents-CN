@@ -7,18 +7,18 @@ import os
 
 def test_env_reading():
     """測試.env文件讀取"""
-    print("🔧 測試.env配置讀取")
+    print(" 測試.env配置讀取")
     print("=" * 30)
     
     # 檢查.env文件
     if os.path.exists('.env'):
-        print("✅ .env文件存在")
+        print(" .env文件存在")
     else:
-        print("❌ .env文件不存在")
+        print(" .env文件不存在")
         return False
     
     # 讀取環境變量
-    print("\n📊 數據庫配置:")
+    print("\n 數據庫配置:")
     
     # MongoDB配置
     mongodb_host = os.getenv("MONGODB_HOST", "localhost")
@@ -47,7 +47,7 @@ def test_env_reading():
     print(f"  DB: {redis_db}")
     
     # 測試數據庫連接
-    print("\n🧪 測試數據庫連接...")
+    print("\n 測試數據庫連接...")
     
     # 測試MongoDB
     mongodb_available = False
@@ -64,11 +64,11 @@ def test_env_reading():
         client.server_info()
         client.close()
         mongodb_available = True
-        print("✅ MongoDB 連接成功")
+        print(" MongoDB 連接成功")
     except ImportError:
-        print("❌ pymongo 未安裝")
+        print(" pymongo 未安裝")
     except Exception as e:
-        print(f"❌ MongoDB 連接失敗: {e}")
+        print(f" MongoDB 連接失敗: {e}")
     
     # 測試Redis
     redis_available = False
@@ -83,22 +83,22 @@ def test_env_reading():
         )
         r.ping()
         redis_available = True
-        print("✅ Redis 連接成功")
+        print(" Redis 連接成功")
     except ImportError:
-        print("❌ redis 未安裝")
+        print(" redis 未安裝")
     except Exception as e:
-        print(f"❌ Redis 連接失敗: {e}")
+        print(f" Redis 連接失敗: {e}")
     
     # 總結
-    print(f"\n📊 總結:")
-    print(f"MongoDB: {'✅ 可用' if mongodb_available else '❌ 不可用'}")
-    print(f"Redis: {'✅ 可用' if redis_available else '❌ 不可用'}")
+    print(f"\n 總結:")
+    print(f"MongoDB: {' 可用' if mongodb_available else ' 不可用'}")
+    print(f"Redis: {' 可用' if redis_available else ' 不可用'}")
     
     if mongodb_available or redis_available:
-        print("🚀 數據庫可用，系統將使用高性能模式")
+        print(" 數據庫可用，系統將使用高性能模式")
     else:
-        print("📁 數據庫不可用，系統將使用文件緩存模式")
-        print("💡 這是正常的，系統可以正常工作")
+        print(" 數據庫不可用，系統將使用文件緩存模式")
+        print(" 這是正常的，系統可以正常工作")
     
     return True
 

@@ -30,14 +30,14 @@ def load_users() -> Dict:
     users_file = get_users_file_path()
     
     if not users_file.exists():
-        print(f"❌ 用戶配置文件不存在: {users_file}")
+        print(f" 用戶配置文件不存在: {users_file}")
         return {}
     
     try:
         with open(users_file, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
-        print(f"❌ 加載用戶配置失敗: {e}")
+        print(f" 加載用戶配置失敗: {e}")
         return {}
 
 def save_users(users: Dict) -> bool:
@@ -51,10 +51,10 @@ def save_users(users: Dict) -> bool:
         with open(users_file, 'w', encoding='utf-8') as f:
             json.dump(users, f, indent=2, ensure_ascii=False)
         
-        print(f"✅ 用戶配置已保存到: {users_file}")
+        print(f" 用戶配置已保存到: {users_file}")
         return True
     except Exception as e:
-        print(f"❌ 保存用戶配置失敗: {e}")
+        print(f" 保存用戶配置失敗: {e}")
         return False
 
 def list_users():
@@ -62,10 +62,10 @@ def list_users():
     users = load_users()
     
     if not users:
-        print("📝 沒有找到用戶")
+        print(" 沒有找到用戶")
         return
     
-    print("📋 用戶列表:")
+    print(" 用戶列表:")
     print("-" * 60)
     print(f"{'用戶名':<15} {'角色':<10} {'權限':<30} {'創建時間'}")
     print("-" * 60)
@@ -83,14 +83,14 @@ def change_password(username: str, new_password: str) -> bool:
     users = load_users()
     
     if username not in users:
-        print(f"❌ 用戶不存在: {username}")
+        print(f" 用戶不存在: {username}")
         return False
     
     # 更新密碼哈希
     users[username]['password_hash'] = hash_password(new_password)
     
     if save_users(users):
-        print(f"✅ 用戶 {username} 的密碼已成功修改")
+        print(f" 用戶 {username} 的密碼已成功修改")
         return True
     else:
         return False
@@ -100,7 +100,7 @@ def create_user(username: str, password: str, role: str = "user", permissions: l
     users = load_users()
     
     if username in users:
-        print(f"❌ 用戶已存在: {username}")
+        print(f" 用戶已存在: {username}")
         return False
     
     if permissions is None:
@@ -115,7 +115,7 @@ def create_user(username: str, password: str, role: str = "user", permissions: l
     }
     
     if save_users(users):
-        print(f"✅ 用戶 {username} 創建成功")
+        print(f" 用戶 {username} 創建成功")
         print(f"   角色: {role}")
         print(f"   權限: {', '.join(permissions)}")
         return True
@@ -127,19 +127,19 @@ def delete_user(username: str) -> bool:
     users = load_users()
     
     if username not in users:
-        print(f"❌ 用戶不存在: {username}")
+        print(f" 用戶不存在: {username}")
         return False
     
     # 防止刪除最後一個管理員
     admin_count = sum(1 for user in users.values() if user.get('role') == 'admin')
     if users[username].get('role') == 'admin' and admin_count <= 1:
-        print(f"❌ 不能刪除最後一個管理員用戶")
+        print(f" 不能刪除最後一個管理員用戶")
         return False
     
     del users[username]
     
     if save_users(users):
-        print(f"✅ 用戶 {username} 已刪除")
+        print(f" 用戶 {username} 已刪除")
         return True
     else:
         return False
@@ -162,7 +162,7 @@ def reset_to_default():
     }
     
     if save_users(default_users):
-        print("✅ 用戶配置已重置為默認設置")
+        print(" 用戶配置已重置為默認設置")
         print("   默認用戶:")
         print("   - admin / admin123 (管理員)")
         print("   - user / user123 (普通用戶)")
@@ -224,7 +224,7 @@ def main():
         parser.print_help()
         return
     
-    print("🔧 TradingAgents-CN 用戶密碼管理工具")
+    print(" TradingAgents-CN 用戶密碼管理工具")
     print("=" * 50)
     
     try:
@@ -242,20 +242,20 @@ def main():
             if delete_parser.lower() == 'y':
                 delete_user(args.username)
             else:
-                print("❌ 操作已取消")
+                print(" 操作已取消")
         
         elif args.command == 'reset':
             confirm = input("確認重置為默認用戶配置? 這將刪除所有現有用戶! (y/N): ")
             if confirm.lower() == 'y':
                 reset_to_default()
             else:
-                print("❌ 操作已取消")
+                print(" 操作已取消")
     
     except KeyboardInterrupt:
-        print("\n❌ 操作被用戶中斷")
+        print("\n 操作被用戶中斷")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ 發生錯誤: {e}")
+        print(f" 發生錯誤: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

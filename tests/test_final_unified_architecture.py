@@ -13,7 +13,7 @@ sys.path.insert(0, project_root)
 
 def test_complete_unified_architecture():
     """測試完整的統一工具架構"""
-    print("🔧 測試完整的統一工具架構...")
+    print(" 測試完整的統一工具架構...")
     
     try:
         from tradingagents.agents.utils.agent_utils import Toolkit
@@ -43,19 +43,19 @@ def test_complete_unified_architecture():
         
         # 檢查是否包含統一工具
         if 'get_stock_fundamentals_unified' in fundamentals_tool_names:
-            print(f"    ✅ 包含統一基本面工具")
+            print(f"     包含統一基本面工具")
         else:
-            print(f"    ❌ 缺少統一基本面工具")
+            print(f"     缺少統一基本面工具")
             return False
         
         # 檢查是否還有舊工具
         old_tools = ['get_fundamentals_openai']
         for old_tool in old_tools:
             if old_tool in fundamentals_tool_names:
-                print(f"    ❌ 仍包含舊工具: {old_tool}")
+                print(f"     仍包含舊工具: {old_tool}")
                 return False
             else:
-                print(f"    ✅ 已移除舊工具: {old_tool}")
+                print(f"     已移除舊工具: {old_tool}")
         
         # 檢查市場分析工具
         market_tool_names = [tool.name for tool in market_tools]
@@ -63,23 +63,23 @@ def test_complete_unified_architecture():
         
         # 檢查是否包含統一工具
         if 'get_stock_market_data_unified' in market_tool_names:
-            print(f"    ✅ 包含統一市場數據工具")
+            print(f"     包含統一市場數據工具")
         else:
-            print(f"    ❌ 缺少統一市場數據工具")
+            print(f"     缺少統一市場數據工具")
             return False
         
-        print("✅ 完整統一工具架構測試通過")
+        print(" 完整統一工具架構測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 完整統一工具架構測試失敗: {e}")
+        print(f" 完整統一工具架構測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_llm_tool_calling_simulation():
     """模擬LLM工具調用測試"""
-    print("\n🔧 模擬LLM工具調用測試...")
+    print("\n 模擬LLM工具調用測試...")
     
     try:
         from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
@@ -101,14 +101,14 @@ def test_llm_tool_calling_simulation():
                 self.max_tokens = 2000
             
             def bind_tools(self, tools):
-                print(f"    🔧 LLM綁定工具: {[tool.name for tool in tools]}")
+                print(f"     LLM綁定工具: {[tool.name for tool in tools]}")
                 
                 # 驗證只綁定了統一工具
                 if len(tools) == 1 and tools[0].name == 'get_stock_fundamentals_unified':
-                    print(f"    ✅ 正確綁定統一基本面工具")
+                    print(f"     正確綁定統一基本面工具")
                     return self
                 else:
-                    print(f"    ❌ 綁定了錯誤的工具: {[tool.name for tool in tools]}")
+                    print(f"     綁定了錯誤的工具: {[tool.name for tool in tools]}")
                     raise ValueError("綁定了錯誤的工具")
             
             def invoke(self, messages):
@@ -147,26 +147,26 @@ def test_llm_tool_calling_simulation():
         # 調用分析師
         result = analyst(state)
         
-        print(f"  ✅ 基本面分析師調用完成")
+        print(f"   基本面分析師調用完成")
         print(f"  返回結果類型: {type(result)}")
         
         # 驗證結果
         if isinstance(result, dict) and 'messages' in result:
-            print(f"  ✅ 返回了正確的消息格式")
+            print(f"   返回了正確的消息格式")
             return True
         else:
-            print(f"  ❌ 返回格式錯誤: {result}")
+            print(f"   返回格式錯誤: {result}")
             return False
         
     except Exception as e:
-        print(f"❌ LLM工具調用模擬測試失敗: {e}")
+        print(f" LLM工具調用模擬測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_unified_tools_functionality():
     """測試統一工具功能"""
-    print("\n🔧 測試統一工具功能...")
+    print("\n 測試統一工具功能...")
     
     try:
         from tradingagents.agents.utils.agent_utils import Toolkit
@@ -195,25 +195,25 @@ def test_unified_tools_functionality():
                 })
                 
                 if expected_market in result and expected_currency in result:
-                    print(f"    ✅ 統一基本面工具正確處理{expected_market}")
+                    print(f"     統一基本面工具正確處理{expected_market}")
                 else:
-                    print(f"    ⚠️ 統一基本面工具處理結果可能有問題")
+                    print(f"     統一基本面工具處理結果可能有問題")
                     print(f"    結果前200字符: {result[:200]}...")
                     
             except Exception as e:
-                print(f"    ❌ 統一基本面工具調用失敗: {e}")
+                print(f"     統一基本面工具調用失敗: {e}")
                 return False
         
-        print("✅ 統一工具功能測試通過")
+        print(" 統一工具功能測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 統一工具功能測試失敗: {e}")
+        print(f" 統一工具功能測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🎉 最終統一工具架構測試")
+    print(" 最終統一工具架構測試")
     print("=" * 70)
     
     tests = [
@@ -230,32 +230,32 @@ def main():
             if test():
                 passed += 1
             else:
-                print(f"❌ 測試失敗: {test.__name__}")
+                print(f" 測試失敗: {test.__name__}")
         except Exception as e:
-            print(f"❌ 測試異常: {test.__name__} - {e}")
+            print(f" 測試異常: {test.__name__} - {e}")
     
     print("\n" + "=" * 70)
-    print(f"📊 最終測試結果: {passed}/{total} 通過")
+    print(f" 最終測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 🎉 🎉 統一工具架構完全成功！🎉 🎉 🎉")
-        print("\n🏆 架構成就:")
-        print("✅ 完全移除了舊工具註冊")
-        print("✅ LLM只能調用統一工具")
-        print("✅ 工具內部自動識別股票類型")
-        print("✅ 自動路由到正確數據源")
-        print("✅ 避免了工具調用混亂")
-        print("✅ 簡化了系統架構")
-        print("✅ 提高了可維護性")
-        print("✅ 統一了用戶體驗")
+        print("   統一工具架構完全成功！  ")
+        print("\n 架構成就:")
+        print(" 完全移除了舊工具註冊")
+        print(" LLM只能調用統一工具")
+        print(" 工具內部自動識別股票類型")
+        print(" 自動路由到正確數據源")
+        print(" 避免了工具調用混亂")
+        print(" 簡化了系統架構")
+        print(" 提高了可維護性")
+        print(" 統一了用戶體驗")
         
-        print("\n🚀 您的建議完美實現:")
-        print("💡 '工具還是用同一個工具，工具當中自己判斷後續的處理邏輯'")
-        print("💡 '舊工具就不要註冊了啊'")
+        print("\n 您的建議完美實現:")
+        print(" '工具還是用同一個工具，工具當中自己判斷後續的處理邏輯'")
+        print(" '舊工具就不要註冊了啊'")
         
         return True
     else:
-        print("⚠️ 部分測試失敗，需要進一步檢查")
+        print(" 部分測試失敗，需要進一步檢查")
         return False
 
 if __name__ == "__main__":

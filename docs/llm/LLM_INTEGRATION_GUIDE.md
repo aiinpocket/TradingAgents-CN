@@ -271,7 +271,7 @@ from langchain_core.tools import tool
 
 @tool
 def get_weather(city: str) -> str:
-    """獲取城市天气信息"""
+    """獲取城市天氣信息"""
     return f"{city}今天晴天，溫度25°C"
 
 def test_function_calling():
@@ -279,7 +279,7 @@ def test_function_calling():
     llm = ChatYourProvider(model="your-model-1")
     llm_with_tools = llm.bind_tools([get_weather])
   
-    response = llm_with_tools.invoke("北京天气如何？")
+    response = llm_with_tools.invoke("北京天氣如何？")
     print(f"工具調用測試: {response}")
 ```
 

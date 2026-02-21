@@ -128,20 +128,20 @@ python cli/main.py --llm-provider google --model gemini-2.0-flash --stock TSLA
 
 def show_release_info():
     """顯示發布信息"""
-    logger.info(f"🎉 TradingAgents-CN v0.1.2 已成功發布到GitHub！")
+    logger.info(f" TradingAgents-CN v0.1.2 已成功發布到GitHub！")
     logger.info(f"=")
     
-    logger.info(f"\n📋 發布內容:")
+    logger.info(f"\n 發布內容:")
     logger.info(f"  完整的Web管理界面")
     logger.info(f"  多LLM提供商支援（OpenAI / Google AI / Anthropic）")
     logger.info(f"  完整的測試體系")
     logger.info(f"  詳細的使用文件")
     
-    logger.info(f"\n🔗 GitHub鏈接:")
-    logger.info(f"  📦 Release: https://github.com/hsliuping/TradingAgents-CN/releases/tag/cn-v0.1.2")
-    logger.info(f"  📝 代碼: https://github.com/hsliuping/TradingAgents-CN")
+    logger.info(f"\n GitHub鏈接:")
+    logger.info(f"   Release: https://github.com/hsliuping/TradingAgents-CN/releases/tag/cn-v0.1.2")
+    logger.info(f"   代碼: https://github.com/hsliuping/TradingAgents-CN")
     
-    logger.info(f"\n🚀 快速開始:")
+    logger.info(f"\n 快速開始:")
     logger.info(f"  1. git clone https://github.com/hsliuping/TradingAgents-CN.git")
     logger.info(f"  2. cd TradingAgents-CN")
     logger.info(f"  3. pip install -r requirements.txt")
@@ -156,34 +156,34 @@ def show_release_info():
 
 def main():
     """主函數"""
-    logger.info(f"🚀 創建GitHub Release")
+    logger.info(f" 創建GitHub Release")
     logger.info(f"=")
     
     # 檢查是否在正確的分支
     success, stdout, stderr = run_command("git branch --show-current")
     if not success or stdout.strip() != "main":
-        logger.error(f"❌ 請確保在main分支上，當前分支: {stdout.strip()}")
+        logger.error(f" 請確保在main分支上，當前分支: {stdout.strip()}")
         return False
     
     # 檢查是否有未推送的提交
     success, stdout, stderr = run_command("git status --porcelain")
     if not success:
-        logger.error(f"❌ Git狀態檢查失敗: {stderr}")
+        logger.error(f" Git狀態檢查失敗: {stderr}")
         return False
     
     if stdout.strip():
-        logger.error(f"❌ 發現未提交的更改，請先提交所有更改")
+        logger.error(f" 發現未提交的更改，請先提交所有更改")
         return False
     
-    logger.info(f"✅ Git狀態檢查通過")
+    logger.info(f" Git狀態檢查通過")
     
     # 檢查標簽是否存在
     success, stdout, stderr = run_command("git tag -l cn-v0.1.2")
     if not success or "cn-v0.1.2" not in stdout:
-        logger.error(f"❌ 標簽 cn-v0.1.2 不存在")
+        logger.error(f" 標簽 cn-v0.1.2 不存在")
         return False
     
-    logger.info(f"✅ 版本標簽檢查通過")
+    logger.info(f" 版本標簽檢查通過")
     
     # 生成發布說明
     release_notes = create_release_notes()
@@ -192,10 +192,10 @@ def main():
     with open("RELEASE_NOTES_v0.1.2.md", "w", encoding="utf-8") as f:
         f.write(release_notes)
     
-    logger.info(f"✅ 發布說明已生成")
+    logger.info(f" 發布說明已生成")
     
     # 顯示GitHub Release創建指南
-    logger.info(f"\n📋 GitHub Release創建指南:")
+    logger.info(f"\n GitHub Release創建指南:")
     logger.info(f"=")
     logger.info(f"1. 訪問: https://github.com/hsliuping/TradingAgents-CN/releases/new")
     logger.info(f"2. 選擇標簽: cn-v0.1.2")

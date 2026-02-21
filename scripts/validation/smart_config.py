@@ -79,7 +79,7 @@ class SmartConfigManager:
     
     def _detect_services(self):
         """檢測所有服務"""
-        logger.debug(f"🔍 檢測系統服務...")
+        logger.debug(f" 檢測系統服務...")
         
         # 檢測MongoDB
         self.mongodb_available, mongodb_msg = self._detect_mongodb()
@@ -89,9 +89,9 @@ class SmartConfigManager:
         }
         
         if self.mongodb_available:
-            logger.info(f"✅ MongoDB: {mongodb_msg}")
+            logger.info(f" MongoDB: {mongodb_msg}")
         else:
-            logger.error(f"❌ MongoDB: {mongodb_msg}")
+            logger.error(f" MongoDB: {mongodb_msg}")
         
         # 檢測Redis
         self.redis_available, redis_msg = self._detect_redis()
@@ -101,13 +101,13 @@ class SmartConfigManager:
         }
         
         if self.redis_available:
-            logger.info(f"✅ Redis: {redis_msg}")
+            logger.info(f" Redis: {redis_msg}")
         else:
-            logger.error(f"❌ Redis: {redis_msg}")
+            logger.error(f" Redis: {redis_msg}")
     
     def _generate_config(self):
         """根據檢測結果生成配置"""
-        logger.info(f"\n⚙️ 生成智能配置...")
+        logger.info(f"\n 生成智能配置...")
         
         # 基礎配置
         self.config = {
@@ -144,21 +144,21 @@ class SmartConfigManager:
             self.config["cache"]["primary_backend"] = "redis"
             self.config["cache"]["secondary_backend"] = "mongodb"
             self.config["cache"]["tertiary_backend"] = "file"
-            logger.info(f"🚀 配置模式: Redis + MongoDB + 文件緩存")
+            logger.info(f" 配置模式: Redis + MongoDB + 文件緩存")
             
         elif self.redis_available:
             self.config["cache"]["primary_backend"] = "redis"
             self.config["cache"]["secondary_backend"] = "file"
-            logger.info(f"⚡ 配置模式: Redis + 文件緩存")
+            logger.info(f" 配置模式: Redis + 文件緩存")
             
         elif self.mongodb_available:
             self.config["cache"]["primary_backend"] = "mongodb"
             self.config["cache"]["secondary_backend"] = "file"
-            logger.info(f"💾 配置模式: MongoDB + 文件緩存")
+            logger.info(f" 配置模式: MongoDB + 文件緩存")
             
         else:
             self.config["cache"]["primary_backend"] = "file"
-            logger.info(f"📁 配置模式: 純文件緩存")
+            logger.info(f" 配置模式: 純文件緩存")
     
     def get_config(self) -> Dict[str, Any]:
         """獲取配置"""
@@ -169,9 +169,9 @@ class SmartConfigManager:
         try:
             with open(config_path, 'w', encoding='utf-8') as f:
                 json.dump(self.config, f, indent=2, ensure_ascii=False)
-            logger.info(f"✅ 配置已保存到: {config_path}")
+            logger.info(f" 配置已保存到: {config_path}")
         except Exception as e:
-            logger.error(f"❌ 配置保存失敗: {e}")
+            logger.error(f" 配置保存失敗: {e}")
     
     def load_config(self, config_path: str = "smart_config.json") -> bool:
         """從文件加載配置"""
@@ -179,10 +179,10 @@ class SmartConfigManager:
             if os.path.exists(config_path):
                 with open(config_path, 'r', encoding='utf-8') as f:
                     self.config = json.load(f)
-                logger.info(f"✅ 配置已從文件加載: {config_path}")
+                logger.info(f" 配置已從文件加載: {config_path}")
                 return True
         except Exception as e:
-            logger.error(f"❌ 配置加載失敗: {e}")
+            logger.error(f" 配置加載失敗: {e}")
         return False
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
@@ -196,35 +196,35 @@ class SmartConfigManager:
     
     def print_status(self):
         """打印系統狀態"""
-        logger.info(f"\n📊 系統狀態報告:")
+        logger.info(f"\n 系統狀態報告:")
         logger.info(f"=")
         
         # 服務狀態
-        logger.info(f"🔧 服務狀態:")
+        logger.info(f" 服務狀態:")
         for service, info in self.detection_results.items():
-            status = "✅ 可用" if info['available'] else "❌ 不可用"
+            status = " 可用" if info['available'] else " 不可用"
             logger.info(f"  {service.upper()}: {status} - {info['message']}")
         
         # 緩存配置
         cache_info = self.get_cache_backend_info()
-        logger.info(f"\n💾 緩存配置:")
+        logger.info(f"\n 緩存配置:")
         logger.info(f"  主要後端: {cache_info['primary_backend']}")
         logger.info(f"  降級支持: {'啟用' if cache_info['fallback_enabled'] else '禁用'}")
         
         # 運行模式
         if self.mongodb_available and self.redis_available:
-            mode = "🚀 高性能模式 (Redis + MongoDB + 文件)"
+            mode = " 高性能模式 (Redis + MongoDB + 文件)"
         elif self.redis_available:
-            mode = "⚡ 快速模式 (Redis + 文件)"
+            mode = " 快速模式 (Redis + 文件)"
         elif self.mongodb_available:
-            mode = "💾 持久化模式 (MongoDB + 文件)"
+            mode = " 持久化模式 (MongoDB + 文件)"
         else:
-            mode = "📁 基礎模式 (純文件緩存)"
+            mode = " 基礎模式 (純文件緩存)"
         
         logger.info(f"  運行模式: {mode}")
         
         # 性能預期
-        logger.info(f"\n📈 性能預期:")
+        logger.info(f"\n 性能預期:")
         if self.redis_available:
             logger.info(f"  緩存性能: 極快 (<0.001秒)")
         else:
@@ -262,7 +262,7 @@ def get_cache_backend() -> str:
 
 def main():
     """主函數 - 演示智能配置系統"""
-    logger.info(f"🔧 TradingAgents 智能配置系統")
+    logger.info(f" TradingAgents 智能配置系統")
     logger.info(f"=")
     
     # 創建配置管理器
@@ -292,7 +292,7 @@ export REDIS_ENABLED="{str(config['database']['redis']['enabled']).lower()}"
 # TTL設置
 export US_STOCK_TTL="{config['cache']['ttl_settings']['us_stock_data']}"
 
-echo "✅ 環境變量已設置"
+echo " 環境變量已設置"
 echo "緩存後端: $CACHE_BACKEND"
 echo "MongoDB: $MONGODB_ENABLED"
 echo "Redis: $REDIS_ENABLED"
@@ -301,7 +301,7 @@ echo "Redis: $REDIS_ENABLED"
     with open("set_env.sh", "w", encoding="utf-8") as f:
         f.write(env_script)
     
-    logger.info(f"\n✅ 環境配置腳本已生成: set_env.sh")
+    logger.info(f"\n 環境配置腳本已生成: set_env.sh")
     
     # 生成PowerShell版本
     ps_script = f"""# PowerShell環境變量配置腳本
@@ -319,7 +319,7 @@ $env:REDIS_ENABLED = "{str(config['database']['redis']['enabled']).lower()}"
 # TTL設置
 $env:US_STOCK_TTL = "{config['cache']['ttl_settings']['us_stock_data']}"
 
-Write-Host "✅ 環境變量已設置" -ForegroundColor Green
+Write-Host " 環境變量已設置" -ForegroundColor Green
 Write-Host "緩存後端: $env:CACHE_BACKEND" -ForegroundColor Cyan
 Write-Host "MongoDB: $env:MONGODB_ENABLED" -ForegroundColor Cyan
 Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
@@ -328,9 +328,9 @@ Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
     with open("set_env.ps1", "w", encoding="utf-8") as f:
         f.write(ps_script)
     
-    logger.info(f"✅ PowerShell配置腳本已生成: set_env.ps1")
+    logger.info(f" PowerShell配置腳本已生成: set_env.ps1")
     
-    logger.info(f"\n🎯 下一步:")
+    logger.info(f"\n 下一步:")
     logger.info(f"1. 運行: python test_with_smart_config.py")
     logger.info(f"2. 或者: .\set_env.ps1 (設置環境變量)")
     logger.info(f"3. 然後: python quick_test.py")

@@ -349,13 +349,13 @@ def render_detailed_records_table(records: List[UsageRecord]):
         for record in sorted(records, key=lambda x: x.timestamp, reverse=True)
     ])
     
-    # 分页顯示
+    # 分頁顯示
     page_size = 20
     total_records = len(records_df)
     total_pages = (total_records + page_size - 1) // page_size
     
     if total_pages > 1:
-        page = st.selectbox(f"頁面 (共{total_pages}页, {total_records}條記錄)", range(1, total_pages + 1))
+        page = st.selectbox(f"頁面 (共{total_pages}頁, {total_records}條記錄)", range(1, total_pages + 1))
         start_idx = (page - 1) * page_size
         end_idx = min(start_idx + page_size, total_records)
         display_df = records_df.iloc[start_idx:end_idx]

@@ -14,12 +14,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 def test_final_integration():
     """最終集成測試"""
     
-    print("🎯 統一新聞工具集成效果驗證")
+    print(" 統一新聞工具集成效果驗證")
     print("=" * 60)
     
     try:
         # 1. 測試統一新聞工具本身
-        print("📦 第一步：測試統一新聞工具...")
+        print(" 第一步：測試統一新聞工具...")
         from tradingagents.tools.unified_news_tool import create_unified_news_tool
         
         # 創建模擬工具包
@@ -57,33 +57,33 @@ def test_final_integration():
         ]
         
         for case in test_cases:
-            print(f"\n🔍 測試 {case['type']}: {case['code']} ({case['name']})")
+            print(f"\n 測試 {case['type']}: {case['code']} ({case['name']})")
             result = unified_tool({
                 "stock_code": case["code"],
                 "max_news": 10
             })
             
             if result and len(result) > 100:
-                print(f"  ✅ 成功獲取新聞 ({len(result)} 字符)")
+                print(f"   成功獲取新聞 ({len(result)} 字符)")
                 # 檢查是否包含預期內容
                 if case["code"] in result:
-                    print(f"  ✅ 包含股票代碼")
+                    print(f"   包含股票代碼")
                 if "新聞數據來源" in result:
-                    print(f"  ✅ 包含數據來源信息")
+                    print(f"   包含數據來源信息")
             else:
-                print(f"  ❌ 獲取失敗")
+                print(f"   獲取失敗")
         
-        print(f"\n✅ 統一新聞工具測試完成")
+        print(f"\n 統一新聞工具測試完成")
         
         # 2. 測試新聞分析師的工具加載
-        print(f"\n📰 第二步：測試新聞分析師工具加載...")
+        print(f"\n 第二步：測試新聞分析師工具加載...")
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         
         # 檢查新聞分析師是否正確導入了統一新聞工具
-        print(f"  ✅ 新聞分析師模塊導入成功")
+        print(f"   新聞分析師模塊導入成功")
         
         # 3. 驗證工具集成
-        print(f"\n🔧 第三步：驗證工具集成...")
+        print(f"\n 第三步：驗證工具集成...")
         
         # 檢查新聞分析師文件中的統一新聞工具導入
         with open("tradingagents/agents/analysts/news_analyst.py", "r", encoding="utf-8") as f:
@@ -99,30 +99,30 @@ def test_final_integration():
         
         for check_name, check_pattern in checks:
             if check_pattern in content:
-                print(f"  ✅ {check_name}: 已正確集成")
+                print(f"   {check_name}: 已正確集成")
             else:
-                print(f"  ❌ {check_name}: 未找到")
+                print(f"   {check_name}: 未找到")
         
         # 4. 總結
-        print(f"\n🎉 集成驗證總結")
+        print(f"\n 集成驗證總結")
         print("=" * 60)
-        print("✅ 統一新聞工具創建成功")
-        print("✅ 支持美股自動識別")
-        print("✅ 新聞分析師已集成統一工具")
-        print("✅ 系統提示詞已更新")
-        print("✅ 補救機制已優化")
+        print(" 統一新聞工具創建成功")
+        print(" 支持美股自動識別")
+        print(" 新聞分析師已集成統一工具")
+        print(" 系統提示詞已更新")
+        print(" 補救機制已優化")
         
-        print(f"\n🚀 主要改進效果：")
+        print(f"\n 主要改進效果：")
         print("1. 大模型只需調用一個工具 get_stock_news_unified")
         print("2. 自動識別股票類型並選擇最佳新聞源")
         print("3. 簡化了工具調用邏輯，提高成功率")
         print("4. 統一了新聞格式，便於分析")
         print("5. 減少了補救機制的複雜度")
         
-        print(f"\n✨ 集成測試完成！統一新聞工具已成功集成到新聞分析師中。")
+        print(f"\n 集成測試完成！統一新聞工具已成功集成到新聞分析師中。")
         
     except Exception as e:
-        print(f"❌ 測試過程中出現錯誤: {e}")
+        print(f" 測試過程中出現錯誤: {e}")
         import traceback
         traceback.print_exc()
 

@@ -11,7 +11,7 @@ sys.path.insert(0, project_root)
 
 def test_hk_validation():
     """測試港股驗證"""
-    print("🧪 測試港股驗證修複...")
+    print(" 測試港股驗證修複...")
     
     try:
         from web.utils.analysis_runner import validate_analysis_params
@@ -47,31 +47,31 @@ def test_hk_validation():
             validation_passed = is_valid
             
             if validation_passed == should_pass:
-                print(f"  ✅ {symbol} ({market_type}): {'通過' if validation_passed else '失敗'}")
+                print(f"   {symbol} ({market_type}): {'通過' if validation_passed else '失敗'}")
                 passed += 1
             else:
-                print(f"  ❌ {symbol} ({market_type}): 期望{'通過' if should_pass else '失敗'}, 實際{'通過' if validation_passed else '失敗'}")
+                print(f"   {symbol} ({market_type}): 期望{'通過' if should_pass else '失敗'}, 實際{'通過' if validation_passed else '失敗'}")
                 if errors:
                     print(f"      錯誤: {errors}")
         
         print(f"\n驗證測試結果: {passed}/{total} 通過")
         
         if passed == total:
-            print("🎉 所有驗證測試通過！")
+            print(" 所有驗證測試通過！")
             return True
         else:
-            print("⚠️ 部分驗證測試失敗")
+            print(" 部分驗證測試失敗")
             return False
         
     except Exception as e:
-        print(f"❌ 驗證測試失敗: {e}")
+        print(f" 驗證測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_specific_case():
     """測試具體的0700.HK案例"""
-    print("\n🧪 測試具體的0700.HK案例...")
+    print("\n 測試具體的0700.HK案例...")
     
     try:
         from web.utils.analysis_runner import validate_analysis_params
@@ -93,16 +93,16 @@ def test_specific_case():
             print(f"  錯誤信息: {errors}")
             return False
         else:
-            print("  ✅ 0700.HK驗證通過！")
+            print("   0700.HK驗證通過！")
             return True
         
     except Exception as e:
-        print(f"❌ 具體案例測試失敗: {e}")
+        print(f" 具體案例測試失敗: {e}")
         return False
 
 def test_regex_patterns():
     """測試正則表達式模式"""
-    print("\n🧪 測試正則表達式模式...")
+    print("\n 測試正則表達式模式...")
     
     try:
         import re
@@ -135,12 +135,12 @@ def test_regex_patterns():
         return True
         
     except Exception as e:
-        print(f"❌ 正則表達式測試失敗: {e}")
+        print(f" 正則表達式測試失敗: {e}")
         return False
 
 def main():
     """運行所有測試"""
-    print("🔧 港股驗證修複測試")
+    print(" 港股驗證修複測試")
     print("=" * 40)
     
     tests = [
@@ -157,16 +157,16 @@ def main():
             if test_func():
                 passed += 1
         except Exception as e:
-            print(f"❌ 測試 {test_func.__name__} 異常: {e}")
+            print(f" 測試 {test_func.__name__} 異常: {e}")
     
     print("\n" + "=" * 40)
-    print(f"🔧 修複測試完成: {passed}/{total} 通過")
+    print(f" 修複測試完成: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 港股驗證修複成功！")
+        print(" 港股驗證修複成功！")
         print("\n現在可以正常使用0700.HK進行分析了")
     else:
-        print("⚠️ 修複可能不完整，請檢查失敗的測試")
+        print(" 修複可能不完整，請檢查失敗的測試")
 
 if __name__ == "__main__":
     main()

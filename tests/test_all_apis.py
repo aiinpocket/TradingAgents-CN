@@ -18,7 +18,7 @@ load_dotenv(project_root / ".env", override=True)
 
 def check_all_api_keys():
     """檢查所有API密鑰配置"""
-    print("🔑 檢查API密鑰配置")
+    print(" 檢查API密鑰配置")
     print("=" * 50)
     
     api_keys = {
@@ -35,13 +35,13 @@ def check_all_api_keys():
     for key, name in api_keys.items():
         value = os.getenv(key)
         if value:
-            print(f"✅ {name}: 已配置 ({value[:10]}...)")
+            print(f" {name}: 已配置 ({value[:10]}...)")
             configured_apis.append(name)
         else:
-            print(f"❌ {name}: 未配置")
+            print(f" {name}: 未配置")
             missing_apis.append(name)
     
-    print(f"\n📊 配置狀態:")
+    print(f"\n 配置狀態:")
     print(f"  已配置: {len(configured_apis)}/{len(api_keys)}")
     print(f"  缺失: {len(missing_apis)}")
     
@@ -50,29 +50,29 @@ def check_all_api_keys():
 def test_google_api():
     """測試Google API"""
     try:
-        print("\n🧪 測試Google API")
+        print("\n 測試Google API")
         print("=" * 50)
         
         google_key = os.getenv('GOOGLE_API_KEY')
         if not google_key:
-            print("❌ Google API密鑰未配置")
+            print(" Google API密鑰未配置")
             return False
         
         # 這裡可以添加具體的Google API測試
         # 例如Google News API或Google Search API
-        print("✅ Google API密鑰已配置")
-        print("💡 提示: 需要根據具體使用的Google服務進行測試")
+        print(" Google API密鑰已配置")
+        print(" 提示: 需要根據具體使用的Google服務進行測試")
         
         return True
         
     except Exception as e:
-        print(f"❌ Google API測試失敗: {e}")
+        print(f" Google API測試失敗: {e}")
         return False
 
 def test_reddit_api():
     """測試Reddit API"""
     try:
-        print("\n🧪 測試Reddit API")
+        print("\n 測試Reddit API")
         print("=" * 50)
         
         client_id = os.getenv('REDDIT_CLIENT_ID')
@@ -80,10 +80,10 @@ def test_reddit_api():
         user_agent = os.getenv('REDDIT_USER_AGENT')
         
         if not all([client_id, client_secret, user_agent]):
-            print("❌ Reddit API配置不完整")
-            print(f"  CLIENT_ID: {'✅' if client_id else '❌'}")
-            print(f"  CLIENT_SECRET: {'✅' if client_secret else '❌'}")
-            print(f"  USER_AGENT: {'✅' if user_agent else '❌'}")
+            print(" Reddit API配置不完整")
+            print(f"  CLIENT_ID: {'' if client_id else ''}")
+            print(f"  CLIENT_SECRET: {'' if client_secret else ''}")
+            print(f"  USER_AGENT: {'' if user_agent else ''}")
             return False
         
         # 測試Reddit API連接
@@ -98,60 +98,60 @@ def test_reddit_api():
             
             # 測試獲取一個簡單的subreddit信息
             subreddit = reddit.subreddit('investing')
-            print(f"✅ Reddit API連接成功")
+            print(f" Reddit API連接成功")
             print(f"  測試subreddit: {subreddit.display_name}")
             print(f"  訂閱者數量: {subreddit.subscribers:,}")
             
             return True
             
         except ImportError:
-            print("⚠️ praw庫未安裝，無法測試Reddit API")
-            print("💡 運行: pip install praw")
+            print(" praw庫未安裝，無法測試Reddit API")
+            print(" 運行: pip install praw")
             return False
         except Exception as e:
-            print(f"❌ Reddit API連接失敗: {e}")
+            print(f" Reddit API連接失敗: {e}")
             return False
             
     except Exception as e:
-        print(f"❌ Reddit API測試失敗: {e}")
+        print(f" Reddit API測試失敗: {e}")
         return False
 
 def test_tradingagents_with_new_apis():
     """測試TradingAgents是否能使用新的API"""
     try:
-        print("\n🧪 測試TradingAgents集成")
+        print("\n 測試TradingAgents集成")
         print("=" * 50)
         
         # 檢查TradingAgents是否支持這些API
         from tradingagents.dataflows import interface
         
         # 檢查可用的數據流工具
-        print("📊 檢查可用的數據獲取工具:")
+        print(" 檢查可用的數據獲取工具:")
         
         # 檢查Google相關工具
         try:
             from tradingagents.dataflows.googlenews_utils import get_google_news
-            print("✅ Google News工具可用")
+            print(" Google News工具可用")
         except ImportError:
-            print("❌ Google News工具不可用")
+            print(" Google News工具不可用")
         
         # 檢查Reddit相關工具  
         try:
             from tradingagents.dataflows.reddit_utils import get_reddit_sentiment
-            print("✅ Reddit情緒分析工具可用")
+            print(" Reddit情緒分析工具可用")
         except ImportError:
-            print("❌ Reddit情緒分析工具不可用")
+            print(" Reddit情緒分析工具不可用")
         
         return True
         
     except Exception as e:
-        print(f"❌ TradingAgents集成測試失敗: {e}")
+        print(f" TradingAgents集成測試失敗: {e}")
         return False
 
 def test_social_media_analyst():
     """測試社交媒體分析師是否能使用Reddit數據"""
     try:
-        print("\n🧪 測試社交媒體分析師")
+        print("\n 測試社交媒體分析師")
         print("=" * 50)
         
         # 檢查社交媒體分析師
@@ -160,18 +160,18 @@ def test_social_media_analyst():
         # 創建模型實例
         
         # 這裡需要toolkit實例，暫時跳過實際測試
-        print("✅ 社交媒體分析師模塊可用")
-        print("💡 需要完整的toolkit實例才能進行實際測試")
+        print(" 社交媒體分析師模塊可用")
+        print(" 需要完整的toolkit實例才能進行實際測試")
         
         return True
         
     except Exception as e:
-        print(f"❌ 社交媒體分析師測試失敗: {e}")
+        print(f" 社交媒體分析師測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 全面API測試")
+    print(" 全面API測試")
     print("=" * 60)
     
     # 檢查API密鑰配置
@@ -191,22 +191,22 @@ def main():
     results['社交媒體分析師'] = test_social_media_analyst()
     
     # 總結結果
-    print(f"\n📊 測試結果總結:")
+    print(f"\n 測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失敗"
+        status = " 通過" if success else " 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
-        print("🎉 所有測試通過！")
+        print(" 所有測試通過！")
     else:
-        print("⚠️ 部分測試失敗，請檢查配置")
+        print(" 部分測試失敗，請檢查配置")
 
 if __name__ == "__main__":
     main()

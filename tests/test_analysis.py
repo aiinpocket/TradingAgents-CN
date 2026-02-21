@@ -21,10 +21,10 @@ def test_basic_imports():
     try:
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
-        print("✅ 基本導入成功")
+        print(" 基本導入成功")
         return True
     except Exception as e:
-        print(f"❌ 基本導入失敗: {e}")
+        print(f" 基本導入失敗: {e}")
         return False
 
 def test_environment_variables():
@@ -60,10 +60,10 @@ def test_graph_initialization():
         
         # 初始化圖
         graph = TradingAgentsGraph(["market"], config=config, debug=True)
-        print("✅ 圖初始化成功")
+        print(" 圖初始化成功")
         return True, graph
     except Exception as e:
-        print(f"❌ 圖初始化失敗: {e}")
+        print(f" 圖初始化失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False, None
@@ -75,21 +75,21 @@ def test_simple_analysis():
         return False
     
     try:
-        print("🚀 開始簡單分析測試...")
+        print(" 開始簡單分析測試...")
         # 執行簡單分析
         state, decision = graph.propagate("AAPL", "2025-06-27")
-        print("✅ 分析完成")
+        print(" 分析完成")
         print(f"決策: {decision}")
         return True
     except Exception as e:
-        print(f"❌ 分析失敗: {e}")
+        print(f" 分析失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 TradingAgents 功能測試")
+    print(" TradingAgents 功能測試")
     print("=" * 50)
     
     # 測試基本導入
@@ -100,7 +100,7 @@ def main():
     # 測試環境變量
     print("\n2. 測試環境變量...")
     if not test_environment_variables():
-        print("❌ 環境變量未正確配置")
+        print(" 環境變量未正確配置")
         return
     
     # 測試圖初始化
@@ -112,9 +112,9 @@ def main():
     # 測試簡單分析
     print("\n4. 測試簡單分析...")
     if test_simple_analysis():
-        print("\n🎉 所有測試通過！")
+        print("\n 所有測試通過！")
     else:
-        print("\n❌ 分析測試失敗")
+        print("\n 分析測試失敗")
 
 if __name__ == "__main__":
     main()

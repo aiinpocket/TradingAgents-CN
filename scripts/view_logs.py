@@ -27,10 +27,10 @@ def show_log_files():
     log_files = get_log_files()
     
     if not log_files:
-        print("📋 未找到日誌文件")
+        print(" 未找到日誌文件")
         return []
     
-    print(f"📋 找到 {len(log_files)} 個日誌文件:")
+    print(f" 找到 {len(log_files)} 個日誌文件:")
     print("-" * 60)
     
     for i, log_file in enumerate(log_files, 1):
@@ -46,16 +46,16 @@ def show_log_files():
         else:
             size_str = f"{size/(1024*1024):.1f} MB"
         
-        print(f"{i:2d}. 📄 {log_file.name}")
-        print(f"     📊 大小: {size_str}")
-        print(f"     🕒 修改時間: {mtime.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"{i:2d}.  {log_file.name}")
+        print(f"      大小: {size_str}")
+        print(f"      修改時間: {mtime.strftime('%Y-%m-%d %H:%M:%S')}")
         print()
     
     return log_files
 
 def view_log_file(log_file, lines=50):
     """查看日誌文件內容"""
-    print(f"📄 查看日誌文件: {log_file.name}")
+    print(f" 查看日誌文件: {log_file.name}")
     print("=" * 80)
     
     try:
@@ -63,25 +63,25 @@ def view_log_file(log_file, lines=50):
             content = f.readlines()
         
         if not content:
-            print("📋 日誌文件為空")
+            print(" 日誌文件為空")
             return
         
         total_lines = len(content)
-        print(f"📊 總行數: {total_lines:,}")
+        print(f" 總行數: {total_lines:,}")
         
         if lines > 0:
             if lines >= total_lines:
-                print(f"📋 顯示全部內容:")
+                print(f" 顯示全部內容:")
                 start_line = 0
             else:
-                print(f"📋 顯示最後 {lines} 行:")
+                print(f" 顯示最後 {lines} 行:")
                 start_line = total_lines - lines
             
             print("-" * 80)
             for i, line in enumerate(content[start_line:], start_line + 1):
                 print(f"{i:6d} | {line.rstrip()}")
         else:
-            print("📋 顯示全部內容:")
+            print(" 顯示全部內容:")
             print("-" * 80)
             for i, line in enumerate(content, 1):
                 print(f"{i:6d} | {line.rstrip()}")
@@ -89,12 +89,12 @@ def view_log_file(log_file, lines=50):
         print("-" * 80)
         
     except Exception as e:
-        print(f"❌ 讀取文件失敗: {e}")
+        print(f" 讀取文件失敗: {e}")
 
 def tail_log_file(log_file):
     """實時跟蹤日誌文件"""
-    print(f"📄 實時跟蹤日誌文件: {log_file.name}")
-    print("📋 按 Ctrl+C 停止跟蹤")
+    print(f" 實時跟蹤日誌文件: {log_file.name}")
+    print(" 按 Ctrl+C 停止跟蹤")
     print("=" * 80)
     
     try:
@@ -111,9 +111,9 @@ def tail_log_file(log_file):
                     time.sleep(0.1)
                     
     except KeyboardInterrupt:
-        print("\n⏹️ 停止跟蹤")
+        print("\n⏹ 停止跟蹤")
     except Exception as e:
-        print(f"❌ 跟蹤失敗: {e}")
+        print(f" 跟蹤失敗: {e}")
 
 def search_logs(keyword, log_files=None):
     """搜索日誌內容"""
@@ -121,10 +121,10 @@ def search_logs(keyword, log_files=None):
         log_files = get_log_files()
     
     if not log_files:
-        print("📋 未找到日誌文件")
+        print(" 未找到日誌文件")
         return
     
-    print(f"🔍 搜索關鍵詞: '{keyword}'")
+    print(f" 搜索關鍵詞: '{keyword}'")
     print("=" * 80)
     
     total_matches = 0
@@ -140,7 +140,7 @@ def search_logs(keyword, log_files=None):
                     matches.append((i, line.rstrip()))
             
             if matches:
-                print(f"📄 {log_file.name} ({len(matches)} 個匹配)")
+                print(f" {log_file.name} ({len(matches)} 個匹配)")
                 print("-" * 60)
                 
                 for line_num, line in matches[-10:]:  # 顯示最後10個匹配
@@ -153,29 +153,29 @@ def search_logs(keyword, log_files=None):
                 total_matches += len(matches)
                 
         except Exception as e:
-            print(f"❌ 搜索 {log_file.name} 失敗: {e}")
+            print(f" 搜索 {log_file.name} 失敗: {e}")
     
-    print(f"🎯 總共找到 {total_matches} 個匹配")
+    print(f" 總共找到 {total_matches} 個匹配")
 
 def main():
     """主函數"""
-    print("🚀 TradingAgents 日誌查看工具")
+    print(" TradingAgents 日誌查看工具")
     print("=" * 50)
     
     while True:
-        print("\n💡 選擇操作:")
-        print("1. 📋 顯示所有日誌文件")
-        print("2. 👀 查看日誌文件內容")
-        print("3. 📺 實時跟蹤日誌")
-        print("4. 🔍 搜索日誌內容")
-        print("5. 🐳 查看Docker日誌")
-        print("0. 🚪 退出")
+        print("\n 選擇操作:")
+        print("1.  顯示所有日誌文件")
+        print("2.  查看日誌文件內容")
+        print("3.  實時跟蹤日誌")
+        print("4.  搜索日誌內容")
+        print("5.  查看Docker日誌")
+        print("0.  退出")
         
         try:
             choice = input("\n請選擇 (0-5): ").strip()
             
             if choice == "0":
-                print("👋 再见！")
+                print(" 再见！")
                 break
             elif choice == "1":
                 show_log_files()
@@ -189,9 +189,9 @@ def main():
                             lines = int(lines) if lines else 50
                             view_log_file(log_files[file_num], lines)
                         else:
-                            print("❌ 無效選擇")
+                            print(" 無效選擇")
                     except ValueError:
-                        print("❌ 請輸入有效數字")
+                        print(" 請輸入有效數字")
             elif choice == "3":
                 log_files = show_log_files()
                 if log_files:
@@ -200,28 +200,28 @@ def main():
                         if 0 <= file_num < len(log_files):
                             tail_log_file(log_files[file_num])
                         else:
-                            print("❌ 無效選擇")
+                            print(" 無效選擇")
                     except ValueError:
-                        print("❌ 請輸入有效數字")
+                        print(" 請輸入有效數字")
             elif choice == "4":
                 keyword = input("輸入搜索關鍵詞: ").strip()
                 if keyword:
                     search_logs(keyword)
                 else:
-                    print("❌ 請輸入關鍵詞")
+                    print(" 請輸入關鍵詞")
             elif choice == "5":
-                print("🐳 查看Docker容器日誌...")
-                print("💡 運行以下命令查看Docker日誌:")
+                print(" 查看Docker容器日誌...")
+                print(" 運行以下命令查看Docker日誌:")
                 print("   docker-compose logs -f web")
                 print("   docker logs TradingAgents-web")
             else:
-                print("❌ 無效選擇，請重新輸入")
+                print(" 無效選擇，請重新輸入")
                 
         except KeyboardInterrupt:
-            print("\n👋 再见！")
+            print("\n 再见！")
             break
         except Exception as e:
-            print(f"❌ 發生錯誤: {e}")
+            print(f" 發生錯誤: {e}")
 
 if __name__ == "__main__":
     main()

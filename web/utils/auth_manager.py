@@ -8,9 +8,17 @@ import streamlit as st
 import hashlib
 import os
 import json
+import secrets
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 import time
+
+# 嘗試載入 bcrypt，若不可用則使用 PBKDF2 作為備用方案
+try:
+    import bcrypt
+    BCRYPT_AVAILABLE = True
+except ImportError:
+    BCRYPT_AVAILABLE = False
 
 # 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
@@ -150,8 +158,52 @@ class AuthManager:
         st.components.v1.html(js_code, height=0)
     
     def _hash_password(self, password: str) -> str:
-        """密碼哈希"""
-        return hashlib.sha256(password.encode()).hexdigest()
+        """使用安全演算法產生密碼雜湊。
+        優先使用 bcrypt，若不可用則使用 PBKDF2-SHA256 加隨機 salt。
+        回傳格式帶有前綴標記，用於區分不同演算法。"""
+        if BCRYPT_AVAILABLE:
+            hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            return "bcrypt:" + hashed.decode('utf-8')
+        else:
+            salt = secrets.token_hex(16)
+            dk = hashlib.pbkdf2_hmac(
+                'sha256',
+                password.encode('utf-8'),
+                salt.encode('utf-8'),
+                iterations=260000
+            )
+            return f"pbkdf2:{salt}:{dk.hex()}"
+
+    def _verify_password(self, password: str, stored_hash: str) -> bool:
+        """驗證密碼是否與儲存的雜湊匹配。
+        支援三種格式：bcrypt（前綴 bcrypt:）、PBKDF2（前綴 pbkdf2:）、
+        以及舊版 SHA256（無前綴，64 字元十六進位字串）。"""
+        if stored_hash.startswith("bcrypt:"):
+            if not BCRYPT_AVAILABLE:
+                logger.error("密碼使用 bcrypt 雜湊，但 bcrypt 模組不可用")
+                return False
+            hash_value = stored_hash[len("bcrypt:"):].encode('utf-8')
+            return bcrypt.checkpw(password.encode('utf-8'), hash_value)
+        elif stored_hash.startswith("pbkdf2:"):
+            parts = stored_hash.split(":", 2)
+            if len(parts) != 3:
+                logger.error("PBKDF2 雜湊格式異常")
+                return False
+            _, salt, expected_hex = parts
+            dk = hashlib.pbkdf2_hmac(
+                'sha256',
+                password.encode('utf-8'),
+                salt.encode('utf-8'),
+                iterations=260000
+            )
+            return dk.hex() == expected_hex
+        else:
+            # 向後兼容：舊版 SHA256 雜湊（64 字元十六進位字串）
+            return hashlib.sha256(password.encode()).hexdigest() == stored_hash
+
+    def _is_legacy_hash(self, stored_hash: str) -> bool:
+        """判斷儲存的雜湊是否為舊版 SHA256 格式，需要升級"""
+        return not stored_hash.startswith("bcrypt:") and not stored_hash.startswith("pbkdf2:")
     
     def _load_users(self) -> Dict:
         """加載用戶配置"""
@@ -164,32 +216,42 @@ class AuthManager:
     
     def authenticate(self, username: str, password: str) -> Tuple[bool, Optional[Dict]]:
         """
-        用戶認證
-        
+        用戶認證，支援多種雜湊格式並自動升級舊格式
+
         Args:
             username: 用戶名
             password: 密碼
-            
+
         Returns:
             (認證成功, 用戶信息)
         """
         users = self._load_users()
-        
+
         if username not in users:
             logger.warning(f"用戶不存在: {username}")
-            # 記錄登錄失敗
             if user_activity_logger:
                 user_activity_logger.log_login(username, False, "用戶不存在")
             return False, None
-        
+
         user_info = users[username]
-        password_hash = self._hash_password(password)
-        
-        if password_hash == user_info["password_hash"]:
+        stored_hash = user_info["password_hash"]
+
+        if self._verify_password(password, stored_hash):
             logger.info(f"用戶登錄成功: {username}")
-            # 記錄登錄成功
             if user_activity_logger:
                 user_activity_logger.log_login(username, True)
+
+            # 如果使用舊版 SHA256 雜湊，自動升級為新格式
+            if self._is_legacy_hash(stored_hash):
+                try:
+                    new_hash = self._hash_password(password)
+                    users[username]["password_hash"] = new_hash
+                    with open(self.users_file, 'w', encoding='utf-8') as f:
+                        json.dump(users, f, indent=2, ensure_ascii=False)
+                    logger.info(f"已自動將用戶 '{username}' 的密碼雜湊升級為安全格式")
+                except Exception as e:
+                    logger.warning(f"自動升級密碼雜湊失敗: {e}")
+
             return True, {
                 "username": username,
                 "role": user_info["role"],
@@ -197,7 +259,6 @@ class AuthManager:
             }
         else:
             logger.warning(f"密碼錯誤: {username}")
-            # 記錄登錄失敗
             if user_activity_logger:
                 user_activity_logger.log_login(username, False, "密碼錯誤")
             return False, None

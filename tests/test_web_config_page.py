@@ -12,48 +12,48 @@ sys.path.insert(0, str(project_root))
 
 def test_config_page_import():
     """測試配置頁面導入"""
-    print("🧪 測試配置管理頁面導入")
+    print(" 測試配置管理頁面導入")
     print("=" * 50)
     
     try:
         from web.pages.config_management import render_config_management
-        print("✅ 配置管理頁面導入成功")
+        print(" 配置管理頁面導入成功")
         return True
     except Exception as e:
-        print(f"❌ 配置管理頁面導入失敗: {e}")
+        print(f" 配置管理頁面導入失敗: {e}")
         import traceback
         print(f"錯誤詳情: {traceback.format_exc()}")
         return False
 
 def test_config_manager_import():
     """測試配置管理器導入"""
-    print("\n🧪 測試配置管理器導入")
+    print("\n 測試配置管理器導入")
     print("=" * 50)
     
     try:
         from tradingagents.config.config_manager import config_manager, token_tracker
-        print("✅ 配置管理器導入成功")
+        print(" 配置管理器導入成功")
         
         # 測試基本功能
         models = config_manager.load_models()
-        print(f"📋 加載了 {len(models)} 個模型配置")
+        print(f" 加載了 {len(models)} 個模型配置")
         
         pricing = config_manager.load_pricing()
-        print(f"💰 加載了 {len(pricing)} 個定價配置")
+        print(f" 加載了 {len(pricing)} 個定價配置")
         
         settings = config_manager.load_settings()
-        print(f"⚙️ 加載了 {len(settings)} 個系統設置")
+        print(f" 加載了 {len(settings)} 個系統設置")
         
         return True
     except Exception as e:
-        print(f"❌ 配置管理器導入失敗: {e}")
+        print(f" 配置管理器導入失敗: {e}")
         import traceback
         print(f"錯誤詳情: {traceback.format_exc()}")
         return False
 
 def test_streamlit_components():
     """測試Streamlit組件"""
-    print("\n🧪 測試Streamlit組件")
+    print("\n 測試Streamlit組件")
     print("=" * 50)
     
     try:
@@ -62,18 +62,18 @@ def test_streamlit_components():
         import plotly.express as px
         import plotly.graph_objects as go
         
-        print("✅ Streamlit導入成功")
-        print("✅ Pandas導入成功")
-        print("✅ Plotly導入成功")
+        print(" Streamlit導入成功")
+        print(" Pandas導入成功")
+        print(" Plotly導入成功")
         
         return True
     except Exception as e:
-        print(f"❌ Streamlit組件導入失敗: {e}")
+        print(f" Streamlit組件導入失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 Web配置管理頁面測試")
+    print(" Web配置管理頁面測試")
     print("=" * 60)
     
     tests = [
@@ -89,24 +89,24 @@ def main():
         try:
             if test_func():
                 passed += 1
-                print(f"✅ {test_name} 測試通過")
+                print(f" {test_name} 測試通過")
             else:
-                print(f"❌ {test_name} 測試失敗")
+                print(f" {test_name} 測試失敗")
         except Exception as e:
-            print(f"❌ {test_name} 測試異常: {e}")
+            print(f" {test_name} 測試異常: {e}")
     
-    print(f"\n📊 測試結果: {passed}/{total} 通過")
+    print(f"\n 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有測試通過！配置管理頁面可以正常使用")
-        print("\n💡 使用方法:")
+        print(" 所有測試通過！配置管理頁面可以正常使用")
+        print("\n 使用方法:")
         print("1. 啟動Web應用: python -m streamlit run web/app.py")
-        print("2. 在側邊欄選擇 '⚙️ 配置管理'")
+        print("2. 在側邊欄選擇 ' 配置管理'")
         print("3. 配置API密鑰、模型參數和費率設置")
         print("4. 查看使用統計和成本分析")
         return True
     else:
-        print("❌ 部分測試失敗，請檢查配置")
+        print(" 部分測試失敗，請檢查配置")
         return False
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ def load_activities(start_date: datetime = None, end_date: datetime = None) -> L
     activities = []
     
     if not activity_dir.exists():
-        print("❌ 活動記錄目錄不存在")
+        print(" 活動記錄目錄不存在")
         return activities
     
     # 確定日期範圍
@@ -52,7 +52,7 @@ def load_activities(start_date: datetime = None, end_date: datetime = None) -> L
                             if start_date <= activity_time <= end_date:
                                 activities.append(activity)
             except Exception as e:
-                print(f"❌ 讀取文件失敗 {activity_file}: {e}")
+                print(f" 讀取文件失敗 {activity_file}: {e}")
         
         current_date += timedelta(days=1)
     
@@ -60,7 +60,7 @@ def load_activities(start_date: datetime = None, end_date: datetime = None) -> L
 
 def list_activities(args):
     """列出用戶活動"""
-    print("📋 用戶活動記錄")
+    print(" 用戶活動記錄")
     print("=" * 80)
     
     # 解析日期參數
@@ -75,7 +75,7 @@ def list_activities(args):
     activities = load_activities(start_date, end_date)
     
     if not activities:
-        print("📭 未找到活動記錄")
+        print(" 未找到活動記錄")
         return
     
     # 應用過濾條件
@@ -89,33 +89,33 @@ def list_activities(args):
     if args.limit:
         activities = activities[:args.limit]
     
-    print(f"📊 找到 {len(activities)} 條記錄")
+    print(f" 找到 {len(activities)} 條記錄")
     print()
     
     # 顯示活動記錄
     for i, activity in enumerate(activities, 1):
         timestamp = datetime.fromtimestamp(activity['timestamp'])
-        success_icon = "✅" if activity.get('success', True) else "❌"
+        success_icon = "" if activity.get('success', True) else ""
         
         print(f"{i:3d}. {success_icon} {timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"     👤 用戶: {activity.get('username', 'unknown')} ({activity.get('user_role', 'unknown')})")
-        print(f"     🔧 操作: {activity.get('action_type', 'unknown')} - {activity.get('action_name', 'unknown')}")
+        print(f"      用戶: {activity.get('username', 'unknown')} ({activity.get('user_role', 'unknown')})")
+        print(f"      操作: {activity.get('action_type', 'unknown')} - {activity.get('action_name', 'unknown')}")
         
         if activity.get('details'):
             details_str = ", ".join([f"{k}={v}" for k, v in activity['details'].items()])
-            print(f"     📝 詳情: {details_str}")
+            print(f"      詳情: {details_str}")
         
         if activity.get('duration_ms'):
-            print(f"     ⏱️ 耗時: {activity['duration_ms']}ms")
+            print(f"     ⏱ 耗時: {activity['duration_ms']}ms")
         
         if not activity.get('success', True) and activity.get('error_message'):
-            print(f"     ❌ 錯誤: {activity['error_message']}")
+            print(f"      錯誤: {activity['error_message']}")
         
         print()
 
 def show_statistics(args):
     """顯示統計信息"""
-    print("📊 用戶活動統計")
+    print(" 用戶活動統計")
     print("=" * 80)
     
     # 解析日期參數
@@ -130,7 +130,7 @@ def show_statistics(args):
     activities = load_activities(start_date, end_date)
     
     if not activities:
-        print("📭 未找到活動記錄")
+        print(" 未找到活動記錄")
         return
     
     # 基本統計
@@ -139,10 +139,10 @@ def show_statistics(args):
     successful_activities = sum(1 for a in activities if a.get('success', True))
     success_rate = (successful_activities / total_activities * 100) if total_activities > 0 else 0
     
-    print(f"📈 總體統計:")
-    print(f"   📊 總活動數: {total_activities}")
-    print(f"   👥 活躍用戶: {unique_users}")
-    print(f"   ✅ 成功率: {success_rate:.1f}%")
+    print(f" 總體統計:")
+    print(f"    總活動數: {total_activities}")
+    print(f"    活躍用戶: {unique_users}")
+    print(f"    成功率: {success_rate:.1f}%")
     print()
     
     # 按活動類型統計
@@ -151,7 +151,7 @@ def show_statistics(args):
         action_type = activity.get('action_type', 'unknown')
         activity_types[action_type] = activity_types.get(action_type, 0) + 1
     
-    print(f"📋 按活動類型統計:")
+    print(f" 按活動類型統計:")
     for action_type, count in sorted(activity_types.items(), key=lambda x: x[1], reverse=True):
         percentage = (count / total_activities * 100) if total_activities > 0 else 0
         print(f"   {action_type:15s}: {count:4d} ({percentage:5.1f}%)")
@@ -163,7 +163,7 @@ def show_statistics(args):
         username = activity.get('username', 'unknown')
         user_activities[username] = user_activities.get(username, 0) + 1
     
-    print(f"👥 按用戶統計:")
+    print(f" 按用戶統計:")
     for username, count in sorted(user_activities.items(), key=lambda x: x[1], reverse=True):
         percentage = (count / total_activities * 100) if total_activities > 0 else 0
         print(f"   {username:15s}: {count:4d} ({percentage:5.1f}%)")
@@ -175,7 +175,7 @@ def show_statistics(args):
         date_str = datetime.fromtimestamp(activity['timestamp']).strftime('%Y-%m-%d')
         daily_activities[date_str] = daily_activities.get(date_str, 0) + 1
     
-    print(f"📅 按日期統計:")
+    print(f" 按日期統計:")
     for date_str in sorted(daily_activities.keys()):
         count = daily_activities[date_str]
         print(f"   {date_str}: {count:4d}")
@@ -188,7 +188,7 @@ def show_statistics(args):
         max_duration = max(durations)
         min_duration = min(durations)
         
-        print(f"⏱️ 耗時統計:")
+        print(f"⏱ 耗時統計:")
         print(f"   平均耗時: {avg_duration:.1f}ms")
         print(f"   最大耗時: {max_duration}ms")
         print(f"   最小耗時: {min_duration}ms")
@@ -196,7 +196,7 @@ def show_statistics(args):
 
 def export_activities(args):
     """導出活動記錄"""
-    print("📤 導出用戶活動記錄")
+    print(" 導出用戶活動記錄")
     print("=" * 80)
     
     # 解析日期參數
@@ -211,7 +211,7 @@ def export_activities(args):
     activities = load_activities(start_date, end_date)
     
     if not activities:
-        print("📭 未找到活動記錄")
+        print(" 未找到活動記錄")
         return
     
     # 應用過濾條件
@@ -252,31 +252,31 @@ def export_activities(args):
         df = pd.DataFrame(df_data)
         df.to_csv(output_file, index=False, encoding='utf-8-sig')
         
-        print(f"✅ 成功導出 {len(activities)} 條記錄到: {output_file}")
+        print(f" 成功導出 {len(activities)} 條記錄到: {output_file}")
         
     except Exception as e:
-        print(f"❌ 導出失敗: {e}")
+        print(f" 導出失敗: {e}")
 
 def cleanup_activities(args):
     """清理舊的活動記錄"""
-    print("🗑️ 清理舊的活動記錄")
+    print(" 清理舊的活動記錄")
     print("=" * 80)
     
     activity_dir = get_activity_dir()
     if not activity_dir.exists():
-        print("❌ 活動記錄目錄不存在")
+        print(" 活動記錄目錄不存在")
         return
     
     days_to_keep = args.days or 90
     cutoff_date = datetime.now() - timedelta(days=days_to_keep)
     deleted_count = 0
     
-    print(f"🗓️ 將刪除 {cutoff_date.strftime('%Y-%m-%d')} 之前的記錄")
+    print(f" 將刪除 {cutoff_date.strftime('%Y-%m-%d')} 之前的記錄")
     
     if not args.force:
-        confirm = input("⚠️ 確認刪除嗎? (y/N): ")
+        confirm = input(" 確認刪除嗎? (y/N): ")
         if confirm.lower() != 'y':
-            print("❌ 操作已取消")
+            print(" 操作已取消")
             return
     
     try:
@@ -289,16 +289,16 @@ def cleanup_activities(args):
                 if file_date < cutoff_date:
                     activity_file.unlink()
                     deleted_count += 1
-                    print(f"🗑️ 刪除: {activity_file.name}")
+                    print(f" 刪除: {activity_file.name}")
                     
             except ValueError:
                 # 文件名格式不正確，跳過
                 continue
                 
-        print(f"✅ 成功刪除 {deleted_count} 個文件")
+        print(f" 成功刪除 {deleted_count} 個文件")
         
     except Exception as e:
-        print(f"❌ 清理失敗: {e}")
+        print(f" 清理失敗: {e}")
 
 def main():
     """主函數"""
@@ -347,13 +347,13 @@ def main():
         elif args.command == 'cleanup':
             cleanup_activities(args)
         else:
-            print(f"❌ 未知命令: {args.command}")
+            print(f" 未知命令: {args.command}")
             parser.print_help()
             
     except KeyboardInterrupt:
-        print("\n⚠️ 操作被用戶中斷")
+        print("\n 操作被用戶中斷")
     except Exception as e:
-        print(f"❌ 執行失敗: {e}")
+        print(f" 執行失敗: {e}")
 
 if __name__ == "__main__":
     main()

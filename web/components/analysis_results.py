@@ -497,16 +497,16 @@ def render_results_table(results: List[Dict[str, Any]]):
 def render_results_cards(results: List[Dict[str, Any]]):
     """渲染卡片視圖"""
     
-    # 分页設置
-    page_size = st.selectbox("每页顯示", [5, 10, 20, 50], index=1)
+    # 分頁設置
+    page_size = st.selectbox("每頁顯示", [5, 10, 20, 50], index=1)
     total_pages = (len(results) + page_size - 1) // page_size
     
     if total_pages > 1:
-        page = st.number_input("页碼", min_value=1, max_value=total_pages, value=1) - 1
+        page = st.number_input("頁碼", min_value=1, max_value=total_pages, value=1) - 1
     else:
         page = 0
     
-    # 獲取當前页數據
+    # 獲取當前頁數據
     start_idx = page * page_size
     end_idx = min(start_idx + page_size, len(results))
     page_results = results[start_idx:end_idx]
@@ -580,9 +580,9 @@ def render_results_cards(results: List[Dict[str, Any]]):
 
             st.divider()
     
-    # 顯示分页信息
+    # 顯示分頁信息
     if total_pages > 1:
-        st.info(f"第 {page + 1} 页，共 {total_pages} 页，總計 {len(results)} 條記錄")
+        st.info(f"第 {page + 1} 頁，共 {total_pages} 頁，總計 {len(results)} 條記錄")
     
     # 註意：詳情現在以折叠方式顯示在每個結果下方
 
@@ -1135,7 +1135,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
         ('final_trade_decision', '最終交易決策')
     ]
     
-    # 創建對比標簽页
+    # 創建對比標籤頁
     available_fields = []
     for field_key, field_name in comparison_fields:
         if (field_key in result_a and result_a[field_key]) or (field_key in result_b and result_b[field_key]):
@@ -1255,7 +1255,7 @@ def render_detailed_analysis_content(selected_result):
         print(f"[彈窗調試] 可用報告數量: {len(reports)}")
         print(f"[彈窗調試] 報告類型: {list(reports.keys())}")
 
-        # 創建標簽页顯示不同的報告
+        # 創建標籤頁顯示不同的報告
         report_tabs = list(reports.keys())
 
         # 為報告名稱添加中文標題和圖標
@@ -1286,7 +1286,7 @@ def render_detailed_analysis_content(selected_result):
             st.markdown("---")
             st.markdown(reports[report_tabs[0]])
         else:
-            # 多個報告，使用標簽页
+            # 多個報告，使用標籤頁
             tabs = st.tabs(tab_names)
             
             for i, (tab, report_key) in enumerate(zip(tabs, report_tabs)):
@@ -1295,10 +1295,10 @@ def render_detailed_analysis_content(selected_result):
         
         return
     
-    # 添加自定義CSS樣式美化標簽页
+    # 添加自定義CSS樣式美化標籤頁
     st.markdown("""
     <style>
-    /* 標簽页容器樣式 */
+    /* 標籤頁容器樣式 */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: #f8f9fa;
@@ -1307,7 +1307,7 @@ def render_detailed_analysis_content(selected_result):
         margin-bottom: 20px;
     }
 
-    /* 單個標簽页樣式 */
+    /* 單個標籤頁樣式 */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         padding: 8px 16px;
@@ -1328,7 +1328,7 @@ def render_detailed_analysis_content(selected_result):
         box-shadow: 0 2px 8px rgba(33,150,243,0.2);
     }
 
-    /* 選中的標簽页樣式 */
+    /* 選中的標籤頁樣式 */
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
@@ -1337,7 +1337,7 @@ def render_detailed_analysis_content(selected_result):
         transform: translateY(-2px);
     }
 
-    /* 標簽页內容區域 */
+    /* 標籤頁內容區域 */
     .stTabs [data-baseweb="tab-panel"] {
         padding: 20px;
         background-color: #ffffff;
@@ -1346,14 +1346,14 @@ def render_detailed_analysis_content(selected_result):
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* 標簽页文字樣式 */
+    /* 標籤頁文字樣式 */
     .stTabs [data-baseweb="tab"] p {
         margin: 0;
         font-size: 14px;
         font-weight: 600;
     }
 
-    /* 選中標簽页的文字樣式 */
+    /* 選中標籤頁的文字樣式 */
     .stTabs [aria-selected="true"] p {
         color: white !important;
         text-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -1463,12 +1463,12 @@ def render_detailed_analysis_content(selected_result):
                         analysis_data[key] = value
         
         if analysis_data:
-            # 創建動態標簽页顯示所有分析數據
+            # 創建動態標籤頁顯示所有分析數據
             tab_names = []
             tab_data = []
             
             for key, value in analysis_data.items():
-                # 格式化標簽页名稱
+                # 格式化標籤頁名稱
                 tab_name = key.replace('_', '').title()
                 if 'report'in key.lower():
                     tab_name = f"{tab_name}"
@@ -1484,7 +1484,7 @@ def render_detailed_analysis_content(selected_result):
                 tab_names.append(tab_name)
                 tab_data.append((key, value))
             
-            # 創建標簽页
+            # 創建標籤頁
             tabs = st.tabs(tab_names)
             
             for i, (tab, (key, value)) in enumerate(zip(tabs, tab_data)):
@@ -1526,7 +1526,7 @@ def render_detailed_analysis_content(selected_result):
                 st.json(selected_result)
         return
 
-    # 只為有數據的模塊創建標簽页
+    # 只為有數據的模塊創建標籤頁
     tabs = st.tabs([module['title'] for module in available_modules])
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
@@ -1727,7 +1727,7 @@ def show_expanded_detail(result):
                             available_reports.append((field_key, field_name, full_data[field_key]))
 
                     if available_reports:
-                        # 創建標簽页顯示分析內容
+                        # 創建標籤頁顯示分析內容
                         tab_names = [name for _, name, _ in available_reports]
                         tabs = st.tabs(tab_names)
 
@@ -1779,7 +1779,7 @@ def show_expanded_detail(result):
             'investment_debate_state': '投資討論狀態'
         }
 
-        # 創建標簽页顯示不同的報告
+        # 創建標籤頁顯示不同的報告
         report_tabs = list(reports.keys())
         tab_names = []
         for report_key in report_tabs:
@@ -1795,7 +1795,7 @@ def show_expanded_detail(result):
                 st.markdown("---")
             st.markdown(report_content)
         else:
-            # 多個報告，使用標簽页
+            # 多個報告，使用標籤頁
             tabs = st.tabs(tab_names)
 
             for i, (tab, report_key) in enumerate(zip(tabs, report_tabs)):

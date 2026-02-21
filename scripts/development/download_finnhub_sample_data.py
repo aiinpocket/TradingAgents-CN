@@ -121,7 +121,7 @@ def create_sample_news_data(ticker, data_dir, days=7):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f"✅ 創建示例新聞數據: {file_path}")
+    logger.info(f" 創建示例新聞數據: {file_path}")
     logger.info(f"   包含 {len(data)} 天的數據，共 {sum(len(news) for news in data.values())} 條新聞")
     
     return file_path
@@ -182,7 +182,7 @@ def create_sample_insider_data(ticker, data_dir, data_type):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f"✅ 創建示例{data_type}數據: {file_path}")
+    logger.info(f" 創建示例{data_type}數據: {file_path}")
     return file_path
 
 def main():
@@ -197,7 +197,7 @@ def main():
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        logger.error(f"❌ 數據目錄未配置")
+        logger.error(f" 數據目錄未配置")
         return
     
     logger.info(f"數據目錄: {data_dir}")
@@ -237,14 +237,14 @@ def main():
         )
         
         if result and "無法獲取" not in result:
-            logger.info(f"✅ 新聞數據獲取成功！")
+            logger.info(f" 新聞數據獲取成功！")
             logger.info(f"示例內容: {result[:200]}...")
         else:
-            logger.error(f"⚠️ 新聞數據獲取失敗，請檢查配置")
+            logger.error(f" 新聞數據獲取失敗，請檢查配置")
             logger.info(f"返回結果: {result}")
     
     except Exception as e:
-        logger.error(f"❌ 測試失敗: {e}")
+        logger.error(f" 測試失敗: {e}")
 
 if __name__ == "__main__":
     main()

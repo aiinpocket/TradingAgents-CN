@@ -34,7 +34,7 @@ class VersionManager:
         """設置版本號"""
         with open(self.version_file, 'w') as f:
             f.write(version)
-        logger.info(f"✅ 版本號已更新為: {version}")
+        logger.info(f" 版本號已更新為: {version}")
     
     def bump_version(self, bump_type):
         """遞增版本號"""
@@ -79,20 +79,20 @@ class VersionManager:
             # 創建標簽
             subprocess.run(['git', 'tag', '-a', f'v{version}', '-m', message], 
                          check=True, cwd=self.project_root)
-            logger.info(f"✅ Git標簽 v{version} 已創建")
+            logger.info(f" Git標簽 v{version} 已創建")
             
             # 推送標簽
             subprocess.run(['git', 'push', 'origin', f'v{version}'], 
                          check=True, cwd=self.project_root)
-            logger.info(f"✅ Git標簽 v{version} 已推送到遠程倉庫")
+            logger.info(f" Git標簽 v{version} 已推送到遠程倉庫")
             
         except subprocess.CalledProcessError as e:
-            logger.error(f"❌ 創建Git標簽失敗: {e}")
+            logger.error(f" 創建Git標簽失敗: {e}")
     
     def update_changelog(self, version, changes=None):
         """更新CHANGELOG文件"""
         if not self.changelog_file.exists():
-            logger.error(f"❌ CHANGELOG.md 文件不存在")
+            logger.error(f" CHANGELOG.md 文件不存在")
             return
         
         # 讀取現有內容
@@ -122,27 +122,27 @@ class VersionManager:
         with open(self.changelog_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(lines))
         
-        logger.info(f"✅ CHANGELOG.md 已更新，添加版本 {version}")
+        logger.info(f" CHANGELOG.md 已更新，添加版本 {version}")
     
     def release(self, bump_type, message=None, changes=None):
         """執行完整的發布流程"""
-        logger.info(f"🚀 開始發布流程...")
+        logger.info(f" 開始發布流程...")
         
         # 檢查Git狀態
         try:
             result = subprocess.run(['git', 'status', '--porcelain'], 
                                   capture_output=True, text=True, cwd=self.project_root)
             if result.stdout.strip():
-                logger.error(f"❌ 工作目錄不乾淨，請先提交所有更改")
+                logger.error(f" 工作目錄不乾淨，請先提交所有更改")
                 return False
         except subprocess.CalledProcessError:
-            logger.error(f"❌ 無法檢查Git狀態")
+            logger.error(f" 無法檢查Git狀態")
             return False
         
         # 遞增版本號
         old_version = self.get_current_version()
         new_version = self.bump_version(bump_type)
-        logger.info(f"📈 版本號從 {old_version} 更新到 {new_version}")
+        logger.info(f" 版本號從 {old_version} 更新到 {new_version}")
         
         # 更新CHANGELOG
         self.update_changelog(new_version, changes)
@@ -154,21 +154,21 @@ class VersionManager:
             commit_message = message or f"chore: release version {new_version}"
             subprocess.run(['git', 'commit', '-m', commit_message], 
                          check=True, cwd=self.project_root)
-            logger.info(f"✅ 版本更改已提交")
+            logger.info(f" 版本更改已提交")
         except subprocess.CalledProcessError as e:
-            logger.error(f"❌ 提交失敗: {e}")
+            logger.error(f" 提交失敗: {e}")
             return False
         
         # 創建Git標簽
         self.create_git_tag(new_version, message)
         
-        logger.info(f"🎉 版本 {new_version} 發布完成！")
+        logger.info(f" 版本 {new_version} 發布完成！")
         return True
     
     def show_info(self):
         """顯示版本信息"""
         current_version = self.get_current_version()
-        logger.info(f"📊 TradingAgents 版本信息")
+        logger.info(f" TradingAgents 版本信息")
         logger.info(f"當前版本: {current_version}")
         logger.info(f"版本文件: {self.version_file}")
         logger.info(f"更新日誌: {self.changelog_file}")

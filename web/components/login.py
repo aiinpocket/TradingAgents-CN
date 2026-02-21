@@ -42,41 +42,45 @@ except ImportError:
                 auth_manager = imported_auth_manager
             except ImportError:
                 # 如果都失敗了，創建一個簡單的認證管理器
+                import logging as _logging
+                _fallback_logger = _logging.getLogger('auth.fallback')
+
                 class SimpleAuthManager:
-                    """後備認證管理器，僅在主認證模組載入失敗時使用"""
-                    # 預設帳號的密碼雜湊值（SHA256）
-                    _default_credentials = {
-                        "admin": {
-                            "hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-                            "role": "admin"
-                        },
-                        "user": {
-                            "hash": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
-                            "role": "user"
-                        }
-                    }
+                    """後備認證管理器，僅在主認證模組載入失敗時使用。
+                    此管理器不包含任何預設憑證，認證始終失敗，
+                    請確保主認證模組正確安裝後再使用系統。"""
 
                     def __init__(self):
                         self.authenticated = False
                         self.current_user = None
+                        _fallback_logger.warning(
+                            "正在使用後備認證管理器，所有登入嘗試將被拒絕。"
+                            "請檢查主認證模組是否正確安裝。"
+                        )
 
                     def is_authenticated(self):
                         return st.session_state.get('authenticated', False)
 
                     def authenticate(self, username, password):
-                        import hashlib
-                        cred = self._default_credentials.get(username)
-                        if cred and hashlib.sha256(password.encode()).hexdigest() == cred["hash"]:
-                            return True, {"username": username, "role": cred["role"]}
+                        """後備認證方法，始終拒絕登入並記錄警告"""
+                        _fallback_logger.warning(
+                            f"後備認證管理器拒絕了用戶 '{username}' 的登入嘗試，"
+                            "主認證模組未載入，無法進行身份驗證。"
+                        )
                         return False, None
                     
+                    def login(self, username, password):
+                        """後備登入方法，始終返回 False"""
+                        success, _ = self.authenticate(username, password)
+                        return success
+
                     def logout(self):
                         st.session_state.authenticated = False
                         st.session_state.user_info = None
-                    
+
                     def get_current_user(self):
                         return st.session_state.get('user_info')
-                    
+
                     def require_permission(self, permission):
                         return self.is_authenticated()
                 
@@ -258,7 +262,7 @@ def render_login_form():
                 password = st.text_input(
                     "密碼",
                     type="password",
-                    placeholder="請輸入您的密碼（首次使用：admin123）",
+                    placeholder="請輸入您的密碼",
                     key="password_input",
                     label_visibility="collapsed"
                 )

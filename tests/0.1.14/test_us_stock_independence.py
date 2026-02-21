@@ -16,7 +16,7 @@ try:
     from tradingagents.agents.utils.agent_utils import Toolkit
     from tradingagents.default_config import DEFAULT_CONFIG
 except ImportError:
-    print("❌ 無法導入Toolkit，請檢查項目結構")
+    print(" 無法導入Toolkit，請檢查項目結構")
     sys.exit(1)
 
 def test_us_stock_data_independence():
@@ -25,7 +25,7 @@ def test_us_stock_data_independence():
     print("=" * 60)
     
     # 測試場景1: OpenAI禁用，實時數據啟用
-    print("\n📋 場景1: OpenAI禁用 + 實時數據啟用")
+    print("\n 場景1: OpenAI禁用 + 實時數據啟用")
     print("-" * 40)
     
     # 設置環境變量
@@ -46,26 +46,26 @@ def test_us_stock_data_independence():
         
         for tool_name in us_tools:
             if hasattr(toolkit, tool_name):
-                print(f"   ✅ {tool_name} 可用")
+                print(f"    {tool_name} 可用")
             else:
-                print(f"   ❌ {tool_name} 不可用")
+                print(f"    {tool_name} 不可用")
                 
         # 測試實際調用
         try:
             # 測試獲取蘋果股票數據
             result = toolkit.get_us_stock_data_cached("AAPL", "1d", "1mo")
             if result and "error" not in str(result).lower():
-                print("   ✅ 美股數據獲取成功")
+                print("    美股數據獲取成功")
             else:
-                print("   ⚠️ 美股數據獲取返回錯誤或空結果")
+                print("    美股數據獲取返回錯誤或空結果")
         except Exception as e:
-            print(f"   ⚠️ 美股數據獲取異常: {e}")
+            print(f"    美股數據獲取異常: {e}")
             
     except Exception as e:
-        print(f"   ❌ Toolkit創建失敗: {e}")
+        print(f"    Toolkit創建失敗: {e}")
     
     # 測試場景2: OpenAI啟用，實時數據禁用
-    print("\n📋 場景2: OpenAI啟用 + 實時數據禁用")
+    print("\n 場景2: OpenAI啟用 + 實時數據禁用")
     print("-" * 40)
     
     # 設置環境變量
@@ -80,18 +80,18 @@ def test_us_stock_data_independence():
         # 檢查美股數據工具
         for tool_name in us_tools:
             if hasattr(toolkit, tool_name):
-                print(f"   ✅ {tool_name} 可用")
+                print(f"    {tool_name} 可用")
             else:
-                print(f"   ❌ {tool_name} 不可用")
+                print(f"    {tool_name} 不可用")
                 
     except Exception as e:
-        print(f"   ❌ Toolkit創建失敗: {e}")
+        print(f"    Toolkit創建失敗: {e}")
     
-    print("\n💡 結論:")
+    print("\n 結論:")
     print("   美股數據獲取現在基於 REALTIME_DATA_ENABLED 配置")
     print("   不再依賴 OPENAI_ENABLED 配置")
     print("   實現了真正的功能獨立性！")
 
 if __name__ == "__main__":
     test_us_stock_data_independence()
-    print("\n🎉 測試完成！")
+    print("\n 測試完成！")

@@ -23,11 +23,11 @@ def check_dependencies():
     try:
         import selenium
         from selenium import webdriver
-        logger.info("✅ Selenium已安裝")
+        logger.info(" Selenium已安裝")
         return True
     except ImportError:
-        logger.error("❌ 缺少Selenium依賴")
-        logger.info("💡 安裝命令: pip install selenium")
+        logger.error(" 缺少Selenium依賴")
+        logger.info(" 安裝命令: pip install selenium")
         return False
 
 def check_web_service():
@@ -36,24 +36,24 @@ def check_web_service():
         import requests
         response = requests.get("http://localhost:8501", timeout=5)
         if response.status_code == 200:
-            logger.info("✅ Web服務正在運行")
+            logger.info(" Web服務正在運行")
             return True
         else:
-            logger.warning(f"⚠️ Web服務響應異常: {response.status_code}")
+            logger.warning(f" Web服務響應異常: {response.status_code}")
             return False
     except Exception as e:
-        logger.error(f"❌ 無法連接到Web服務: {e}")
+        logger.error(f" 無法連接到Web服務: {e}")
         return False
 
 def start_web_service():
     """啟動Web服務"""
-    logger.info("🚀 正在啟動Web服務...")
+    logger.info(" 正在啟動Web服務...")
     
     # 檢查是否有Docker環境
     try:
         result = subprocess.run(["docker", "ps"], capture_output=True, text=True)
         if result.returncode == 0:
-            logger.info("🐳 檢測到Docker環境，嘗試啟動Docker服務...")
+            logger.info(" 檢測到Docker環境，嘗試啟動Docker服務...")
             subprocess.run(["docker-compose", "up", "-d"], cwd=project_root)
             time.sleep(10)  # 等待服務啟動
             return check_web_service()
@@ -61,7 +61,7 @@ def start_web_service():
         pass
     
     # 嘗試本地啟動
-    logger.info("💻 嘗試本地啟動Web服務...")
+    logger.info(" 嘗試本地啟動Web服務...")
     try:
         # 啟動Web服務（後台運行）
         subprocess.Popen([
@@ -75,11 +75,11 @@ def start_web_service():
                 return True
             logger.info(f"⏳ 等待服務啟動... ({i+1}/30)")
         
-        logger.error("❌ Web服務啟動超時")
+        logger.error(" Web服務啟動超時")
         return False
         
     except Exception as e:
-        logger.error(f"❌ 啟動Web服務失敗: {e}")
+        logger.error(f" 啟動Web服務失敗: {e}")
         return False
 
 def capture_screenshots():
@@ -88,7 +88,7 @@ def capture_screenshots():
         return False
     
     if not check_web_service():
-        logger.info("🔄 Web服務未運行，嘗試啟動...")
+        logger.info(" Web服務未運行，嘗試啟動...")
         if not start_web_service():
             return False
     
@@ -111,7 +111,7 @@ def capture_screenshots():
         
         try:
             # 訪問Web界面
-            logger.info("🌐 正在訪問Web界面...")
+            logger.info(" 正在訪問Web界面...")
             driver.get("http://localhost:8501")
             
             # 等待頁面加載
@@ -127,7 +127,7 @@ def capture_screenshots():
             screenshots_dir.mkdir(exist_ok=True)
             
             # 截圖1: 主界面
-            logger.info("📸 捕獲主界面截圖...")
+            logger.info(" 捕獲主界面截圖...")
             driver.save_screenshot(str(screenshots_dir / "web-interface-main.png"))
             
             # 模擬輸入股票代碼
@@ -137,10 +137,10 @@ def capture_screenshots():
                 stock_input.send_keys("AAPL")
                 time.sleep(2)
             except:
-                logger.warning("⚠️ 無法找到股票輸入框")
+                logger.warning(" 無法找到股票輸入框")
             
             # 截圖2: 配置界面
-            logger.info("📸 捕獲配置界面截圖...")
+            logger.info(" 捕獲配置界面截圖...")
             driver.save_screenshot(str(screenshots_dir / "web-interface-config.png"))
             
             # 嘗試點擊分析按鈕（如果存在）
@@ -150,38 +150,38 @@ def capture_screenshots():
                 time.sleep(3)
                 
                 # 截圖3: 進度界面
-                logger.info("📸 捕獲進度界面截圖...")
+                logger.info(" 捕獲進度界面截圖...")
                 driver.save_screenshot(str(screenshots_dir / "web-interface-progress.png"))
                 
             except:
-                logger.warning("⚠️ 無法找到分析按鈕或觸發分析")
+                logger.warning(" 無法找到分析按鈕或觸發分析")
             
             # 截圖4: 側邊欄
-            logger.info("📸 捕獲側邊欄截圖...")
+            logger.info(" 捕獲側邊欄截圖...")
             driver.save_screenshot(str(screenshots_dir / "web-interface-sidebar.png"))
             
-            logger.info("✅ 截圖捕獲完成")
+            logger.info(" 截圖捕獲完成")
             return True
             
         finally:
             driver.quit()
             
     except Exception as e:
-        logger.error(f"❌ 截圖捕獲失敗: {e}")
+        logger.error(f" 截圖捕獲失敗: {e}")
         return False
 
 def create_screenshot_guide():
     """創建截圖指南"""
-    guide_content = f"""# 📸 Web界面截圖捕獲指南
+    guide_content = f"""#  Web界面截圖捕獲指南
 
-## 🎯 自動截圖
+##  自動截圖
 
 運行自動截圖腳本:
 ```bash
 python scripts/capture_web_screenshots.py
 ```
 
-## 📋 手動截圖步驟
+##  手動截圖步驟
 
 ### 1. 啟動Web服務
 ```bash
@@ -198,34 +198,34 @@ docker-compose up -d
 ### 3. 捕獲截圖
 按照以下場景進行截圖:
 
-#### 🏠 主界面 (web-interface-main.png)
+####  主界面 (web-interface-main.png)
 - 顯示完整的分析配置表單
 - 輸入示例股票代碼: AAPL 或 000001
 - 選擇標準分析深度 (3級)
 
-#### 📊 分析進度 (web-interface-progress.png)  
+####  分析進度 (web-interface-progress.png)  
 - 開始分析後的進度顯示
 - 顯示進度條和預計時間
 - 顯示已完成的分析步驟
 
-#### 📈 分析結果 (web-interface-results.png)
+####  分析結果 (web-interface-results.png)
 - 完整的分析報告展示
 - 投資建議和風險評估
 - 導出按鈕區域
 
-#### ⚙️ 模型配置 (web-interface-models.png)
+####  模型配置 (web-interface-models.png)
 - 側邊欄的模型配置界面
 - LLM提供商選擇
 - 快速選擇按鈕
 
-## 📐 截圖規範
+##  截圖規範
 
 - **分辨率**: 1920x1080 或更高
 - **格式**: PNG格式
 - **質量**: 高清，文字清晰
 - **內容**: 完整功能區域，真實數據
 
-## 🔧 故障排除
+##  故障排除
 
 ### Chrome驅動問題
 ```bash
@@ -248,11 +248,11 @@ pip install selenium
     with open(guide_path, 'w', encoding='utf-8') as f:
         f.write(guide_content)
     
-    logger.info(f"📝 截圖指南已創建: {guide_path}")
+    logger.info(f" 截圖指南已創建: {guide_path}")
 
 def main():
     """主函數"""
-    logger.info("🚀 TradingAgents-CN Web界面截圖捕獲工具")
+    logger.info(" TradingAgents-CN Web界面截圖捕獲工具")
     logger.info("=" * 50)
     
     # 創建截圖指南
@@ -263,15 +263,15 @@ def main():
         choice = input("\n是否要自動捕獲Web界面截圖? (y/n): ").lower().strip()
         if choice in ['y', 'yes', '是']:
             if capture_screenshots():
-                logger.info("🎉 截圖捕獲成功完成!")
-                logger.info("📁 截圖保存位置: docs/images/")
+                logger.info(" 截圖捕獲成功完成!")
+                logger.info(" 截圖保存位置: docs/images/")
             else:
-                logger.error("❌ 截圖捕獲失敗")
-                logger.info("💡 請參考手動截圖指南: docs/images/screenshot-guide.md")
+                logger.error(" 截圖捕獲失敗")
+                logger.info(" 請參考手動截圖指南: docs/images/screenshot-guide.md")
         else:
-            logger.info("📖 請參考手動截圖指南: docs/images/screenshot-guide.md")
+            logger.info(" 請參考手動截圖指南: docs/images/screenshot-guide.md")
     except KeyboardInterrupt:
-        logger.info("\n👋 用戶取消操作")
+        logger.info("\n 用戶取消操作")
 
 if __name__ == "__main__":
     main()

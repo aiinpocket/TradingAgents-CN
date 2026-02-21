@@ -22,7 +22,7 @@ def test_selections_dictionary_keys():
     測試selections字典中的鍵名是否正確
     Test if the keys in selections dictionary are correct
     """
-    print("🔍 測試selections字典鍵名...")
+    print(" 測試selections字典鍵名...")
     
     try:
         from cli.main import get_user_selections
@@ -69,17 +69,17 @@ def test_selections_dictionary_keys():
             
             for key in required_keys:
                 assert key in selections, f"缺少必要的鍵: {key}"
-                print(f"✅ 鍵 '{key}' 存在")
+                print(f" 鍵 '{key}' 存在")
             
             # 確保不存在錯誤的鍵名
             assert 'stock_symbol' not in selections, "不應該存在 'stock_symbol' 鍵"
-            print("✅ 確認不存在錯誤的 'stock_symbol' 鍵")
+            print(" 確認不存在錯誤的 'stock_symbol' 鍵")
             
-            print("✅ selections字典鍵名測試通過")
+            print(" selections字典鍵名測試通過")
             return True
             
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 def test_process_signal_call():
@@ -87,7 +87,7 @@ def test_process_signal_call():
     測試process_signal調用是否使用正確的鍵名
     Test if process_signal call uses correct key name
     """
-    print("\n🔍 測試process_signal調用...")
+    print("\n 測試process_signal調用...")
     
     try:
         # 讀取main.py文件內容
@@ -97,23 +97,23 @@ def test_process_signal_call():
         
         # 檢查是否使用了正確的鍵名
         if "selections['ticker']" in content:
-            print("✅ 找到正確的鍵名 selections['ticker']")
+            print(" 找到正確的鍵名 selections['ticker']")
         else:
-            print("❌ 未找到 selections['ticker']")
+            print(" 未找到 selections['ticker']")
             return False
         
         # 確保不再使用錯誤的鍵名
         if "selections['stock_symbol']" in content:
-            print("❌ 仍然存在錯誤的鍵名 selections['stock_symbol']")
+            print(" 仍然存在錯誤的鍵名 selections['stock_symbol']")
             return False
         else:
-            print("✅ 確認不存在錯誤的鍵名 selections['stock_symbol']")
+            print(" 確認不存在錯誤的鍵名 selections['stock_symbol']")
         
-        print("✅ process_signal調用測試通過")
+        print(" process_signal調用測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 def test_code_consistency():
@@ -121,7 +121,7 @@ def test_code_consistency():
     測試代碼一致性 - 確保所有地方都使用相同的鍵名
     Test code consistency - ensure all places use the same key names
     """
-    print("\n🔍 測試代碼一致性...")
+    print("\n 測試代碼一致性...")
     
     try:
         main_file = project_root / 'cli' / 'main.py'
@@ -134,12 +134,12 @@ def test_code_consistency():
         
         total_ticker_usage = ticker_count + ticker_double_quote_count
         
-        print(f"📊 'ticker'鍵使用次數: {total_ticker_usage}")
+        print(f" 'ticker'鍵使用次數: {total_ticker_usage}")
         
         if total_ticker_usage >= 2:  # 至少應該有2處使用（初始化和process_signal）
-            print("✅ ticker鍵使用次數合理")
+            print(" ticker鍵使用次數合理")
         else:
-            print("⚠️  ticker鍵使用次數可能不足")
+            print("  ticker鍵使用次數可能不足")
         
         # 檢查是否還有其他可能的鍵名不一致問題
         potential_issues = [
@@ -150,15 +150,15 @@ def test_code_consistency():
         
         for issue in potential_issues:
             if issue in content:
-                print(f"⚠️  發現潛在問題: {issue}")
+                print(f"  發現潛在問題: {issue}")
             else:
-                print(f"✅ 未發現問題: {issue}")
+                print(f" 未發現問題: {issue}")
         
-        print("✅ 代碼一致性測試通過")
+        print(" 代碼一致性測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 def main():
@@ -166,7 +166,7 @@ def main():
     運行所有測試
     Run all tests
     """
-    print("🚀 開始CLI修複驗證測試...")
+    print(" 開始CLI修複驗證測試...")
     print("=" * 50)
     
     tests = [
@@ -183,13 +183,13 @@ def main():
             passed += 1
     
     print("\n" + "=" * 50)
-    print(f"📊 測試結果: {passed}/{total} 通過")
+    print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有測試通過！KeyError: 'stock_symbol' 問題已修複")
+        print(" 所有測試通過！KeyError: 'stock_symbol' 問題已修複")
         return True
     else:
-        print("❌ 部分測試失敗，需要進一步檢查")
+        print(" 部分測試失敗，需要進一步檢查")
         return False
 
 if __name__ == "__main__":

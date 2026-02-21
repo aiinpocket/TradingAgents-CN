@@ -18,7 +18,7 @@ load_dotenv(project_root / ".env", override=True)
 def test_gemini_25_pro_basic():
     """測試Gemini 2.5 Pro基礎功能"""
     try:
-        print("🧪 測試Gemini 2.5 Pro基礎功能")
+        print(" 測試Gemini 2.5 Pro基礎功能")
         print("=" * 60)
         
         from langchain_google_genai import ChatGoogleGenerativeAI
@@ -26,13 +26,13 @@ def test_gemini_25_pro_basic():
         # 檢查API密鑰
         google_api_key = os.getenv('GOOGLE_API_KEY')
         if not google_api_key:
-            print("❌ Google API密鑰未配置")
+            print(" Google API密鑰未配置")
             return False
         
-        print(f"✅ Google API密鑰已配置: {google_api_key[:20]}...")
+        print(f" Google API密鑰已配置: {google_api_key[:20]}...")
         
         # 創建Gemini 2.5 Pro實例
-        print("🚀 創建Gemini 2.5 Pro實例...")
+        print(" 創建Gemini 2.5 Pro實例...")
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-pro",
             temperature=0.1,
@@ -40,10 +40,10 @@ def test_gemini_25_pro_basic():
             google_api_key=google_api_key
         )
         
-        print("✅ Gemini 2.5 Pro實例創建成功")
+        print(" Gemini 2.5 Pro實例創建成功")
         
         # 測試中文股票分析
-        print("📊 測試中文股票分析...")
+        print(" 測試中文股票分析...")
         response = llm.invoke("""
         請用中文分析蘋果公司(AAPL)的投資價值。請從以下幾個方面進行分析：
         
@@ -58,16 +58,16 @@ def test_gemini_25_pro_basic():
         """)
         
         if response and response.content:
-            print("✅ 中文股票分析成功")
+            print(" 中文股票分析成功")
             print(f"   響應長度: {len(response.content)} 字符")
             print(f"   響應預覽: {response.content[:300]}...")
             return True
         else:
-            print("❌ 中文股票分析失敗")
+            print(" 中文股票分析失敗")
             return False
             
     except Exception as e:
-        print(f"❌ Gemini 2.5 Pro基礎測試失敗: {e}")
+        print(f" Gemini 2.5 Pro基礎測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -75,7 +75,7 @@ def test_gemini_25_pro_basic():
 def test_gemini_25_pro_tradingagents():
     """測試Gemini 2.5 Pro在TradingAgents中的使用"""
     try:
-        print("\n🧪 測試Gemini 2.5 Pro在TradingAgents中的使用")
+        print("\n 測試Gemini 2.5 Pro在TradingAgents中的使用")
         print("=" * 60)
         
         from tradingagents.graph.trading_graph import TradingAgentsGraph
@@ -101,25 +101,25 @@ def test_gemini_25_pro_tradingagents():
         os.makedirs(config["results_dir"], exist_ok=True)
         os.makedirs(config["data_cache_dir"], exist_ok=True)
         
-        print("✅ 配置創建成功")
+        print(" 配置創建成功")
         print(f"   模型: gemini-2.5-pro")
         print(f"   內存功能: {config['memory_enabled']}")
         
         # 創建TradingAgentsGraph實例
-        print("🚀 初始化TradingAgents圖...")
+        print(" 初始化TradingAgents圖...")
         graph = TradingAgentsGraph(["market"], config=config, debug=False)
         
-        print("✅ TradingAgents圖初始化成功")
+        print(" TradingAgents圖初始化成功")
         
         # 測試分析
-        print("📊 開始Gemini 2.5 Pro股票分析...")
+        print(" 開始Gemini 2.5 Pro股票分析...")
         print("   這可能需要幾分鐘時間...")
         
         try:
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print("✅ Gemini 2.5 Pro驅動的股票分析成功！")
+                print(" Gemini 2.5 Pro驅動的股票分析成功！")
                 print(f"   最終決策: {decision}")
                 
                 # 檢查各種報告
@@ -134,17 +134,17 @@ def test_gemini_25_pro_tradingagents():
                 
                 return True
             else:
-                print("❌ 分析完成但結果為空")
+                print(" 分析完成但結果為空")
                 return False
                 
         except Exception as e:
-            print(f"❌ 股票分析失敗: {e}")
+            print(f" 股票分析失敗: {e}")
             import traceback
             print(traceback.format_exc())
             return False
             
     except Exception as e:
-        print(f"❌ TradingAgents測試失敗: {e}")
+        print(f" TradingAgents測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -152,7 +152,7 @@ def test_gemini_25_pro_tradingagents():
 def test_gemini_25_pro_complex_reasoning():
     """測試Gemini 2.5 Pro的複雜推理能力"""
     try:
-        print("\n🧪 測試Gemini 2.5 Pro複雜推理能力")
+        print("\n 測試Gemini 2.5 Pro複雜推理能力")
         print("=" * 60)
         
         from langchain_google_genai import ChatGoogleGenerativeAI
@@ -192,32 +192,32 @@ def test_gemini_25_pro_complex_reasoning():
         請用中文提供詳細的邏輯推理過程。
         """
         
-        print("🧠 開始複雜推理測試...")
+        print(" 開始複雜推理測試...")
         response = llm.invoke(complex_prompt)
         
         if response and response.content and len(response.content) > 800:
-            print("✅ 複雜推理測試成功")
+            print(" 複雜推理測試成功")
             print(f"   響應長度: {len(response.content)} 字符")
             print(f"   響應預覽: {response.content[:400]}...")
             return True
         else:
-            print("❌ 複雜推理測試失敗：響應過短或無內容")
+            print(" 複雜推理測試失敗：響應過短或無內容")
             return False
             
     except Exception as e:
-        print(f"❌ 複雜推理測試失敗: {e}")
+        print(f" 複雜推理測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 Gemini 2.5 Pro完整測試")
+    print(" Gemini 2.5 Pro完整測試")
     print("=" * 70)
     
     # 檢查環境變量
     google_api_key = os.getenv('GOOGLE_API_KEY')
     if not google_api_key:
-        print("❌ Google API密鑰未配置")
-        print("💡 請在.env文件中設置 GOOGLE_API_KEY")
+        print(" Google API密鑰未配置")
+        print(" 請在.env文件中設置 GOOGLE_API_KEY")
         return
     
     # 運行測試
@@ -236,37 +236,37 @@ def main():
     results['TradingAgents集成'] = test_gemini_25_pro_tradingagents()
     
     # 總結結果
-    print(f"\n📊 Gemini 2.5 Pro測試結果總結:")
+    print(f"\n Gemini 2.5 Pro測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失敗"
+        status = " 通過" if success else " 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
-        print("🎉 Gemini 2.5 Pro完全可用！")
-        print("\n💡 Gemini 2.5 Pro優勢:")
-        print("   🧠 更強的推理能力")
-        print("   📊 更好的複雜分析")
-        print("   🌍 優秀的多語言支持")
-        print("   💰 更準確的金融分析")
-        print("   🔍 更深入的洞察力")
-        print("\n🚀 使用建議:")
+        print(" Gemini 2.5 Pro完全可用！")
+        print("\n Gemini 2.5 Pro優勢:")
+        print("    更強的推理能力")
+        print("    更好的複雜分析")
+        print("    優秀的多語言支持")
+        print("    更準確的金融分析")
+        print("    更深入的洞察力")
+        print("\n 使用建議:")
         print("   1. 在Web界面中選擇'Google'作為LLM提供商")
         print("   2. 使用模型名稱: gemini-2.5-pro")
         print("   3. 適合複雜的投資分析任務")
         print("   4. 可以處理多因素綜合分析")
     elif successful_tests >= 2:
-        print("⚠️ Gemini 2.5 Pro大部分功能可用")
-        print("💡 可以用於基礎分析，部分高級功能可能需要調整")
+        print(" Gemini 2.5 Pro大部分功能可用")
+        print(" 可以用於基礎分析，部分高級功能可能需要調整")
     else:
-        print("❌ Gemini 2.5 Pro不可用")
-        print("💡 請檢查API密鑰權限和網絡連接")
+        print(" Gemini 2.5 Pro不可用")
+        print(" 請檢查API密鑰權限和網絡連接")
 
 if __name__ == "__main__":
     main()

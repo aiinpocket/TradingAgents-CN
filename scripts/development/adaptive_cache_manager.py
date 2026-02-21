@@ -56,7 +56,7 @@ class AdaptiveCacheManager:
                 self.fallback_enabled = self.config["cache"]["fallback_enabled"]
                 self.ttl_settings = self.config["cache"]["ttl_settings"]
                 
-                self.logger.info("✅ 智能配置加載成功")
+                self.logger.info(" 智能配置加載成功")
                 return
             except Exception as e:
                 self.logger.warning(f"智能配置加載失敗: {e}")
@@ -97,7 +97,7 @@ class AdaptiveCacheManager:
                 # 測試連接
                 self.mongodb_client.server_info()
                 self.mongodb_db = self.mongodb_client.tradingagents
-                self.logger.info("✅ MongoDB後端初始化成功")
+                self.logger.info(" MongoDB後端初始化成功")
             except Exception as e:
                 self.logger.warning(f"MongoDB初始化失敗: {e}")
                 self.mongodb_enabled = False
@@ -114,7 +114,7 @@ class AdaptiveCacheManager:
                 )
                 # 測試連接
                 self.redis_client.ping()
-                self.logger.info("✅ Redis後端初始化成功")
+                self.logger.info(" Redis後端初始化成功")
             except Exception as e:
                 self.logger.warning(f"Redis初始化失敗: {e}")
                 self.redis_enabled = False
@@ -348,7 +348,7 @@ def get_cache() -> AdaptiveCacheManager:
 
 def main():
     """測試自適應緩存管理器"""
-    logger.info(f"🔧 測試自適應緩存管理器")
+    logger.info(f" 測試自適應緩存管理器")
     logger.info(f"=")
     
     # 創建緩存管理器
@@ -356,12 +356,12 @@ def main():
     
     # 顯示狀態
     stats = cache.get_cache_stats()
-    logger.info(f"\n📊 緩存狀態:")
+    logger.info(f"\n 緩存狀態:")
     for key, value in stats.items():
         logger.info(f"  {key}: {value}")
     
     # 測試緩存功能
-    logger.info(f"\n💾 測試緩存功能...")
+    logger.info(f"\n 測試緩存功能...")
     
     test_data = "測試股票數據 - AAPL"
     cache_key = cache.save_stock_data(
@@ -371,14 +371,14 @@ def main():
         end_date="2024-12-31",
         data_source="test"
     )
-    logger.info(f"✅ 數據保存: {cache_key}")
+    logger.info(f" 數據保存: {cache_key}")
     
     # 加載數據
     loaded_data = cache.load_stock_data(cache_key)
     if loaded_data == test_data:
-        logger.info(f"✅ 數據加載成功")
+        logger.info(f" 數據加載成功")
     else:
-        logger.error(f"❌ 數據加載失敗")
+        logger.error(f" 數據加載失敗")
     
     # 查找緩存
     found_key = cache.find_cached_stock_data(
@@ -389,11 +389,11 @@ def main():
     )
     
     if found_key:
-        logger.info(f"✅ 緩存查找成功: {found_key}")
+        logger.info(f" 緩存查找成功: {found_key}")
     else:
-        logger.error(f"❌ 緩存查找失敗")
+        logger.error(f" 緩存查找失敗")
     
-    logger.info(f"\n🎉 自適應緩存管理器測試完成!")
+    logger.info(f"\n 自適應緩存管理器測試完成!")
 
 
 if __name__ == "__main__":

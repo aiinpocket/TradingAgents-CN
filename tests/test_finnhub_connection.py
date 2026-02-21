@@ -9,15 +9,15 @@ sys.path.append('..')
 
 def test_finnhub_api():
     """測試FINNHUB API連接"""
-    print("🔍 測試FINNHUB API連接...")
+    print(" 測試FINNHUB API連接...")
     
     # 檢查API密鑰
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     if not finnhub_key:
-        print("❌ 請設置 FINNHUB_API_KEY 環境變量")
+        print(" 請設置 FINNHUB_API_KEY 環境變量")
         return False
     
-    print(f"✅ FINNHUB API密鑰已配置: {finnhub_key[:10]}...")
+    print(f" FINNHUB API密鑰已配置: {finnhub_key[:10]}...")
     
     try:
         from tradingagents.agents.utils.agent_utils import Toolkit
@@ -32,14 +32,14 @@ def test_finnhub_api():
         toolkit.update_config(config)
         
         # 測試FINNHUB新聞API
-        print(f"\n📰 測試FINNHUB新聞API...")
+        print(f"\n 測試FINNHUB新聞API...")
         try:
             news_result = toolkit.get_finnhub_news.invoke({
                 'ticker': 'AAPL',
                 'start_date': '2025-06-25',
                 'end_date': '2025-06-29'
             })
-            print(f"✅ FINNHUB新聞API調用成功")
+            print(f" FINNHUB新聞API調用成功")
             print(f"新聞數據長度: {len(news_result) if news_result else 0}")
             if news_result and len(news_result) > 100:
                 print(f"新聞內容前200字符:")
@@ -47,17 +47,17 @@ def test_finnhub_api():
             else:
                 print(f"新聞內容: {news_result}")
         except Exception as e:
-            print(f"❌ FINNHUB新聞API調用失敗: {e}")
+            print(f" FINNHUB新聞API調用失敗: {e}")
         
         # 測試Yahoo Finance數據API
-        print(f"\n📊 測試Yahoo Finance數據API...")
+        print(f"\n 測試Yahoo Finance數據API...")
         try:
             stock_result = toolkit.get_YFin_data_online.invoke({
                 'symbol': 'AAPL',
                 'start_date': '2025-06-25',
                 'end_date': '2025-06-29'
             })
-            print(f"✅ Yahoo Finance API調用成功")
+            print(f" Yahoo Finance API調用成功")
             print(f"股票數據長度: {len(stock_result) if stock_result else 0}")
             if stock_result and len(stock_result) > 100:
                 print(f"股票數據前200字符:")
@@ -65,16 +65,16 @@ def test_finnhub_api():
             else:
                 print(f"股票數據: {stock_result}")
         except Exception as e:
-            print(f"❌ Yahoo Finance API調用失敗: {e}")
+            print(f" Yahoo Finance API調用失敗: {e}")
         
         # 測試OpenAI基本面API
-        print(f"\n💼 測試OpenAI基本面API...")
+        print(f"\n 測試OpenAI基本面API...")
         try:
             fundamentals_result = toolkit.get_fundamentals_openai.invoke({
                 'ticker': 'AAPL',
                 'curr_date': '2025-06-29'
             })
-            print(f"✅ OpenAI基本面API調用成功")
+            print(f" OpenAI基本面API調用成功")
             print(f"基本面數據長度: {len(fundamentals_result) if fundamentals_result else 0}")
             if fundamentals_result and len(fundamentals_result) > 100:
                 print(f"基本面數據前200字符:")
@@ -82,12 +82,12 @@ def test_finnhub_api():
             else:
                 print(f"基本面數據: {fundamentals_result}")
         except Exception as e:
-            print(f"❌ OpenAI基本面API調用失敗: {e}")
+            print(f" OpenAI基本面API調用失敗: {e}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False

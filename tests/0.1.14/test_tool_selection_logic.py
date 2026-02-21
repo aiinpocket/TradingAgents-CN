@@ -14,7 +14,7 @@ sys.path.insert(0, str(project_root))
 
 def test_tool_selection_scenarios():
     """測試不同配置場景下的工具選擇"""
-    print("🧪 測試工具選擇邏輯")
+    print(" 測試工具選擇邏輯")
     print("=" * 70)
     
     scenarios = [
@@ -73,7 +73,7 @@ def test_tool_selection_scenarios():
     ]
     
     for scenario in scenarios:
-        print(f"\n📋 {scenario['name']}")
+        print(f"\n {scenario['name']}")
         print("-" * 50)
         
         try:
@@ -119,17 +119,17 @@ def test_tool_selection_scenarios():
             print(f"   結果:")
             for tool_type, tool_name in results.items():
                 expected_tool = expected[tool_type]
-                status = "✅" if tool_name == expected_tool else "❌"
+                status = "" if tool_name == expected_tool else ""
                 print(f"     {tool_type}: {tool_name} {status}")
                 if tool_name != expected_tool:
                     print(f"       期望: {expected_tool}")
             
         except Exception as e:
-            print(f"   ❌ 測試失敗: {e}")
+            print(f"    測試失敗: {e}")
 
 def test_trading_graph_integration():
     """測試TradingGraph集成"""
-    print(f"\n🔗 測試TradingGraph集成")
+    print(f"\n 測試TradingGraph集成")
     print("=" * 70)
     
     try:
@@ -159,7 +159,7 @@ def test_trading_graph_integration():
         ]
         
         for test_config in test_configs:
-            print(f"\n📊 測試配置: {test_config['name']}")
+            print(f"\n 測試配置: {test_config['name']}")
             print("-" * 40)
             
             try:
@@ -188,13 +188,13 @@ def test_trading_graph_integration():
                 print(f"   主要新聞工具: {news_tool_names[0] if news_tool_names else 'N/A'}")
                 print(f"   主要社交工具: {social_tool_names[0] if social_tool_names else 'N/A'}")
                 
-                print("   ✅ TradingGraph創建成功")
+                print("    TradingGraph創建成功")
                 
             except Exception as e:
-                print(f"   ❌ TradingGraph創建失敗: {e}")
+                print(f"    TradingGraph創建失敗: {e}")
                 
     except ImportError as e:
-        print(f"   ⚠️ 無法導入TradingGraph: {e}")
+        print(f"    無法導入TradingGraph: {e}")
 
 def test_us_stock_data_independence():
     """測試美股數據獲取的獨立性"""
@@ -210,7 +210,7 @@ def test_us_stock_data_independence():
     ]
     
     for i, openai_config in enumerate(openai_scenarios, 1):
-        print(f"\n📋 OpenAI場景 {i}: {openai_config}")
+        print(f"\n OpenAI場景 {i}: {openai_config}")
         print("-" * 40)
         
         # 臨時設置環境變量
@@ -243,7 +243,7 @@ def test_us_stock_data_independence():
                 expected_mode = "實時數據" if realtime_enabled else "離線數據"
                 
                 print(f"     REALTIME_DATA_ENABLED={data_config['REALTIME_DATA_ENABLED']} "
-                      f"-> {expected_mode} ✅")
+                      f"-> {expected_mode} ")
                 
         finally:
             # 恢複原始環境變量
@@ -253,11 +253,11 @@ def test_us_stock_data_independence():
                 else:
                     os.environ[key] = value
     
-    print("\n💡 結論: 美股數據獲取現在完全獨立於OpenAI配置！")
+    print("\n 結論: 美股數據獲取現在完全獨立於OpenAI配置！")
 
 def main():
     """主測試函數"""
-    print("🚀 工具選擇邏輯測試")
+    print(" 工具選擇邏輯測試")
     print("=" * 70)
     
     # 運行測試
@@ -265,8 +265,8 @@ def main():
     test_trading_graph_integration()
     test_us_stock_data_independence()
     
-    print(f"\n🎉 測試完成！")
-    print("💡 現在美股數據獲取基於專門的配置字段，不再依賴OpenAI配置")
+    print(f"\n 測試完成！")
+    print(" 現在美股數據獲取基於專門的配置字段，不再依賴OpenAI配置")
 
 if __name__ == "__main__":
     main()

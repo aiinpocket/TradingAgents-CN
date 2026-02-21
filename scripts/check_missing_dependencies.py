@@ -87,7 +87,7 @@ def extract_imports_from_file(file_path: Path) -> Set[str]:
             imports.add(match.group(1))
             
     except Exception as e:
-        print(f"⚠️  讀取文件失敗 {file_path}: {e}")
+        print(f"  讀取文件失敗 {file_path}: {e}")
     
     return imports
 
@@ -131,7 +131,7 @@ def get_declared_dependencies() -> Set[str]:
                     dependencies.add(match.group(1).lower())
     
     except Exception as e:
-        print(f"❌ 讀取 pyproject.toml 失敗: {e}")
+        print(f" 讀取 pyproject.toml 失敗: {e}")
     
     return dependencies
 
@@ -149,11 +149,11 @@ def normalize_package_name(import_name: str) -> str:
 def main():
     """主函數"""
     print("=" * 80)
-    print("🔍 檢查 pyproject.toml 中缺失的依賴包")
+    print(" 檢查 pyproject.toml 中缺失的依賴包")
     print("=" * 80)
     
     # 掃描代碼中的導入
-    print("\n📂 掃描代碼目錄...")
+    print("\n 掃描代碼目錄...")
     directories_to_scan = [
         project_root / 'tradingagents',
         project_root / 'web',
@@ -173,15 +173,15 @@ def main():
         if imp not in STDLIB_MODULES and imp not in INTERNAL_MODULES
     }
     
-    print(f"\n✅ 發現 {len(third_party_imports)} 個第三方包導入")
+    print(f"\n 發現 {len(third_party_imports)} 個第三方包導入")
     
     # 獲取已聲明的依賴
-    print("\n📋 讀取 pyproject.toml 中的依賴...")
+    print("\n 讀取 pyproject.toml 中的依賴...")
     declared_deps = get_declared_dependencies()
-    print(f"✅ pyproject.toml 中聲明了 {len(declared_deps)} 個依賴")
+    print(f" pyproject.toml 中聲明了 {len(declared_deps)} 個依賴")
     
     # 查找缺失的依賴
-    print("\n🔎 檢查缺失的依賴...")
+    print("\n 檢查缺失的依賴...")
     missing_deps = set()
     
     for import_name in sorted(third_party_imports):
@@ -195,23 +195,23 @@ def main():
     
     # 輸出結果
     if missing_deps:
-        print(f"\n❌ 發現 {len(missing_deps)} 個可能缺失的依賴:")
+        print(f"\n 發現 {len(missing_deps)} 個可能缺失的依賴:")
         print("-" * 80)
         for import_name, package_name in sorted(missing_deps):
             print(f"  • {import_name:25s} → 建議添加: {package_name}")
         
-        print("\n💡 建議在 pyproject.toml 的 dependencies 中添加:")
+        print("\n 建議在 pyproject.toml 的 dependencies 中添加:")
         print("-" * 80)
         for import_name, package_name in sorted(missing_deps):
             print(f'    "{package_name}",')
     else:
-        print("\n✅ 所有第三方包都已在 pyproject.toml 中聲明！")
+        print("\n 所有第三方包都已在 pyproject.toml 中聲明！")
     
     # 顯示所有發現的第三方導入
-    print("\n📦 所有第三方包導入列表:")
+    print("\n 所有第三方包導入列表:")
     print("-" * 80)
     for imp in sorted(third_party_imports):
-        status = "✅" if normalize_package_name(imp) in declared_deps or imp.lower() in declared_deps else "❌"
+        status = "" if normalize_package_name(imp) in declared_deps or imp.lower() in declared_deps else ""
         print(f"  {status} {imp}")
     
     print("\n" + "=" * 80)

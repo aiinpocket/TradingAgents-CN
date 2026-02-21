@@ -12,16 +12,16 @@ def test_data_structure():
     try:
         from web.components.analysis_results import load_analysis_results
         
-        print("🔍 測試分析結果數據結構...")
+        print(" 測試分析結果數據結構...")
         
         # 加載分析結果
         results = load_analysis_results(limit=5)
         
-        print(f"📊 找到 {len(results)} 個分析結果")
+        print(f" 找到 {len(results)} 個分析結果")
         
         if results:
             result = results[0]
-            print(f"\n📋 第一個結果的數據結構:")
+            print(f"\n 第一個結果的數據結構:")
             print(f"   analysis_id: {result.get('analysis_id', 'missing')}")
             print(f"   source: {result.get('source', 'missing')}")
             print(f"   stock_symbol: {result.get('stock_symbol', 'missing')}")
@@ -38,13 +38,13 @@ def test_data_structure():
                     print(f"   {first_report_key} 內容預覽:")
                     print(f"   {first_report_content[:200]}...")
             else:
-                print("   ❌ reports字段不存在")
+                print("    reports字段不存在")
                 print(f"   可用字段: {list(result.keys())}")
         
         return results
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return None

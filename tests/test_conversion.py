@@ -18,7 +18,7 @@ def test_markdown_content():
 **生成時間**: 2025-01-12 16:20:00  
 **分析狀態**: 正式分析
 
-## 🎯 投資決策摘要
+##  投資決策摘要
 
 | 指標 | 數值 |
 |------|------|
@@ -30,14 +30,14 @@ def test_markdown_content():
 ### 分析推理
 基於技術分析和基本面分析，該股票顯示出強勁的上漲趨勢。市場情緒積極，建議買入。
 
-## 📋 分析配置信息
+##  分析配置信息
 
 - **LLM提供商**: openai
 - **LLM模型**: gpt-4o-mini  
 - **分析師**: market, fundamentals
 - **研究深度**: 標準分析
 
-## 📊 市場技術分析
+##  市場技術分析
 
 ### 技術指標分析
 - **趨勢方向**: 上漲
@@ -48,7 +48,7 @@ def test_markdown_content():
 ### 成交量分析
 近期成交量放大，顯示市場關注度提升。
 
-## 📈 基本面分析
+##  基本面分析
 
 ### 財務狀況
 - **營收增長**: 15.2%
@@ -58,13 +58,13 @@ def test_markdown_content():
 ### 行業地位
 公司在行業中處於領先地位，具有較強的競爭優勢。
 
-## ⚠️ 風險提示
+##  風險提示
 
 1. **市場風險**: 整體市場波動可能影響股價
 2. **行業風險**: 行業政策變化風險
 3. **公司風險**: 經營管理風險
 
-## 📝 免責聲明
+##  免責聲明
 
 本報告僅供參考，不構成投資建議。投資有風險，入市需謹慎。
 
@@ -81,20 +81,20 @@ def save_test_content():
     with open('test_content.md', 'w', encoding='utf-8') as f:
         f.write(content)
     
-    print(f"✅ 測試內容已保存到 test_content.md")
-    print(f"📊 內容長度: {len(content)} 字符")
+    print(f" 測試內容已保存到 test_content.md")
+    print(f" 內容長度: {len(content)} 字符")
     return content
 
 def test_word_conversion(md_content):
     """測試Word轉換"""
-    print("\n🔄 測試Word轉換...")
+    print("\n 測試Word轉換...")
     
     try:
         # 創建臨時文件
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as tmp_file:
             output_file = tmp_file.name
         
-        print(f"📁 臨時文件: {output_file}")
+        print(f" 臨時文件: {output_file}")
         
         # 測試不同的轉換參數
         test_cases = [
@@ -116,8 +116,8 @@ def test_word_conversion(md_content):
         ]
         
         for i, test_case in enumerate(test_cases, 1):
-            print(f"\n📝 測試 {i}: {test_case['name']}")
-            print(f"🔧 參數: format={test_case['format']}, extra_args={test_case['extra_args']}")
+            print(f"\n 測試 {i}: {test_case['name']}")
+            print(f" 參數: format={test_case['format']}, extra_args={test_case['extra_args']}")
             
             try:
                 pypandoc.convert_text(
@@ -131,18 +131,18 @@ def test_word_conversion(md_content):
                 # 檢查文件
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
-                    print(f"✅ 轉換成功! 文件大小: {file_size} 字節")
+                    print(f" 轉換成功! 文件大小: {file_size} 字節")
                     
                     # 保存成功的文件
                     success_file = f"test_output_{i}.docx"
                     os.rename(output_file, success_file)
-                    print(f"💾 文件已保存為: {success_file}")
+                    print(f" 文件已保存為: {success_file}")
                     return True
                 else:
-                    print(f"❌ 轉換失敗: 文件未生成或為空")
+                    print(f" 轉換失敗: 文件未生成或為空")
                     
             except Exception as e:
-                print(f"❌ 轉換失敗: {e}")
+                print(f" 轉換失敗: {e}")
                 
             # 清理臨時文件
             if os.path.exists(output_file):
@@ -151,19 +151,19 @@ def test_word_conversion(md_content):
         return False
         
     except Exception as e:
-        print(f"❌ Word轉換測試失敗: {e}")
+        print(f" Word轉換測試失敗: {e}")
         return False
 
 def test_pdf_conversion(md_content):
     """測試PDF轉換"""
-    print("\n🔄 測試PDF轉換...")
+    print("\n 測試PDF轉換...")
     
     try:
         # 創建臨時文件
         with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
             output_file = tmp_file.name
         
-        print(f"📁 臨時文件: {output_file}")
+        print(f" 臨時文件: {output_file}")
         
         # 測試不同的PDF引擎
         test_engines = [
@@ -173,15 +173,15 @@ def test_pdf_conversion(md_content):
         ]
         
         for i, (engine, description) in enumerate(test_engines, 1):
-            print(f"\n📊 測試 {i}: {description}")
+            print(f"\n 測試 {i}: {description}")
             
             try:
                 extra_args = []
                 if engine:
                     extra_args.append(f'--pdf-engine={engine}')
-                    print(f"🔧 使用引擎: {engine}")
+                    print(f" 使用引擎: {engine}")
                 else:
-                    print(f"🔧 使用默認引擎")
+                    print(f" 使用默認引擎")
                 
                 pypandoc.convert_text(
                     md_content,
@@ -194,18 +194,18 @@ def test_pdf_conversion(md_content):
                 # 檢查文件
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
-                    print(f"✅ 轉換成功! 文件大小: {file_size} 字節")
+                    print(f" 轉換成功! 文件大小: {file_size} 字節")
                     
                     # 保存成功的文件
                     success_file = f"test_output_{i}.pdf"
                     os.rename(output_file, success_file)
-                    print(f"💾 文件已保存為: {success_file}")
+                    print(f" 文件已保存為: {success_file}")
                     return True
                 else:
-                    print(f"❌ 轉換失敗: 文件未生成或為空")
+                    print(f" 轉換失敗: 文件未生成或為空")
                     
             except Exception as e:
-                print(f"❌ 轉換失敗: {e}")
+                print(f" 轉換失敗: {e}")
                 
             # 清理臨時文件
             if os.path.exists(output_file):
@@ -214,15 +214,15 @@ def test_pdf_conversion(md_content):
         return False
         
     except Exception as e:
-        print(f"❌ PDF轉換測試失敗: {e}")
+        print(f" PDF轉換測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 獨立文件轉換測試 (Volume映射版本)")
+    print(" 獨立文件轉換測試 (Volume映射版本)")
     print("=" * 50)
-    print(f"📁 當前工作目錄: {os.getcwd()}")
-    print(f"🐳 Docker環境檢測: {os.path.exists('/.dockerenv')}")
+    print(f" 當前工作目錄: {os.getcwd()}")
+    print(f" Docker環境檢測: {os.path.exists('/.dockerenv')}")
     
     # 保存測試內容
     md_content = save_test_content()
@@ -235,17 +235,17 @@ def main():
     
     # 總結
     print("\n" + "=" * 50)
-    print("📊 測試結果總結")
+    print(" 測試結果總結")
     print("=" * 50)
-    print(f"Word轉換: {'✅ 成功' if word_success else '❌ 失敗'}")
-    print(f"PDF轉換:  {'✅ 成功' if pdf_success else '❌ 失敗'}")
+    print(f"Word轉換: {' 成功' if word_success else ' 失敗'}")
+    print(f"PDF轉換:  {' 成功' if pdf_success else ' 失敗'}")
     
     if word_success or pdf_success:
-        print("\n🎉 至少有一種格式轉換成功!")
-        print("💡 可以將成功的參數應用到主程序中")
+        print("\n 至少有一種格式轉換成功!")
+        print(" 可以將成功的參數應用到主程序中")
     else:
-        print("\n⚠️ 所有轉換都失敗了")
-        print("💡 需要檢查pandoc安裝和配置")
+        print("\n 所有轉換都失敗了")
+        print(" 需要檢查pandoc安裝和配置")
 
 if __name__ == "__main__":
     main()

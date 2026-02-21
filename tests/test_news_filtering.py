@@ -20,7 +20,7 @@ def test_basic_news_filter():
         
         # 創建過濾器
         filter = create_news_filter('600036')
-        print(f"✅ 成功創建招商銀行(600036)新聞過濾器")
+        print(f" 成功創建招商銀行(600036)新聞過濾器")
         
         # 模擬新聞數據
         test_news = pd.DataFrame([
@@ -46,24 +46,24 @@ def test_basic_news_filter():
             }
         ])
         
-        print(f"📊 測試新聞數量: {len(test_news)}條")
+        print(f" 測試新聞數量: {len(test_news)}條")
         
         # 執行過濾
         start_time = time.time()
         filtered_news = filter.filter_news(test_news, min_score=30)
         filter_time = time.time() - start_time
         
-        print(f"⏱️ 過濾耗時: {filter_time:.3f}秒")
-        print(f"📈 過濾結果: {len(test_news)}條 -> {len(filtered_news)}條")
+        print(f"⏱ 過濾耗時: {filter_time:.3f}秒")
+        print(f" 過濾結果: {len(test_news)}條 -> {len(filtered_news)}條")
         
         if not filtered_news.empty:
-            print("\n🎯 過濾後的新聞:")
+            print("\n 過濾後的新聞:")
             for idx, (_, row) in enumerate(filtered_news.iterrows(), 1):
                 print(f"{idx}. {row['新聞標題']} (評分: {row['relevance_score']:.1f})")
         
         # 獲取過濾統計
         stats = filter.get_filter_statistics(test_news, filtered_news)
-        print(f"\n📊 過濾統計:")
+        print(f"\n 過濾統計:")
         print(f"  - 過濾率: {stats['filter_rate']:.1f}%")
         print(f"  - 平均評分: {stats['avg_score']:.1f}")
         print(f"  - 最高評分: {stats['max_score']:.1f}")
@@ -71,7 +71,7 @@ def test_basic_news_filter():
         return True
         
     except Exception as e:
-        print(f"❌ 基礎過濾器測試失敗: {e}")
+        print(f" 基礎過濾器測試失敗: {e}")
         return False
 
 def test_enhanced_news_filter():
@@ -87,7 +87,7 @@ def test_enhanced_news_filter():
             use_semantic=False,  # 暫時不使用語義模型
             use_local_model=False  # 暫時不使用本地模型
         )
-        print(f"✅ 成功創建增強新聞過濾器")
+        print(f" 成功創建增強新聞過濾器")
         
         # 使用相同的測試數據
         test_news = pd.DataFrame([
@@ -109,18 +109,18 @@ def test_enhanced_news_filter():
             }
         ])
         
-        print(f"📊 測試新聞數量: {len(test_news)}條")
+        print(f" 測試新聞數量: {len(test_news)}條")
         
         # 執行增強過濾
         start_time = time.time()
         enhanced_filtered = enhanced_filter.filter_news_enhanced(test_news, min_score=40)
         filter_time = time.time() - start_time
         
-        print(f"⏱️ 增強過濾耗時: {filter_time:.3f}秒")
-        print(f"📈 增強過濾結果: {len(test_news)}條 -> {len(enhanced_filtered)}條")
+        print(f"⏱ 增強過濾耗時: {filter_time:.3f}秒")
+        print(f" 增強過濾結果: {len(test_news)}條 -> {len(enhanced_filtered)}條")
         
         if not enhanced_filtered.empty:
-            print("\n🎯 增強過濾後的新聞:")
+            print("\n 增強過濾後的新聞:")
             for idx, (_, row) in enumerate(enhanced_filtered.iterrows(), 1):
                 print(f"{idx}. {row['新聞標題']}")
                 print(f"   綜合評分: {row['final_score']:.1f} (規則:{row['rule_score']:.1f}, 語義:{row['semantic_score']:.1f}, 分類:{row['classification_score']:.1f})")
@@ -128,7 +128,7 @@ def test_enhanced_news_filter():
         return True
         
     except Exception as e:
-        print(f"❌ 增強過濾器測試失敗: {e}")
+        print(f" 增強過濾器測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -140,7 +140,7 @@ def test_real_news_filtering():
     try:
         from tradingagents.utils.news_filter import create_news_filter
         
-        print("📡 正在獲取招商銀行真實新聞數據...")
+        print(" 正在獲取招商銀行真實新聞數據...")
         
         # 獲取真實新聞數據
         start_time = time.time()
@@ -148,13 +148,13 @@ def test_real_news_filtering():
         fetch_time = time.time() - start_time
         
         if real_news.empty:
-            print("❌ 未獲取到真實新聞數據")
+            print(" 未獲取到真實新聞數據")
             return False
         
-        print(f"✅ 成功獲取真實新聞: {len(real_news)}條，耗時: {fetch_time:.2f}秒")
+        print(f" 成功獲取真實新聞: {len(real_news)}條，耗時: {fetch_time:.2f}秒")
         
         # 顯示前3條新聞標題
-        print("\n📰 原始新聞標題示例:")
+        print("\n 原始新聞標題示例:")
         for idx, (_, row) in enumerate(real_news.head(3).iterrows(), 1):
             title = row.get('新聞標題', '無標題')
             print(f"{idx}. {title}")
@@ -166,7 +166,7 @@ def test_real_news_filtering():
         filtered_real_news = filter.filter_news(real_news, min_score=30)
         filter_time = time.time() - start_time
         
-        print(f"\n🔍 過濾結果:")
+        print(f"\n 過濾結果:")
         print(f"  - 原始新聞: {len(real_news)}條")
         print(f"  - 過濾後新聞: {len(filtered_real_news)}條")
         print(f"  - 過濾率: {(len(real_news) - len(filtered_real_news)) / len(real_news) * 100:.1f}%")
@@ -178,7 +178,7 @@ def test_real_news_filtering():
             print(f"  - 平均評分: {avg_score:.1f}")
             print(f"  - 最高評分: {max_score:.1f}")
             
-            print("\n🎯 過濾後高品質新聞標題:")
+            print("\n 過濾後高品質新聞標題:")
             for idx, (_, row) in enumerate(filtered_real_news.head(5).iterrows(), 1):
                 title = row.get('新聞標題', '無標題')
                 score = row.get('relevance_score', 0)
@@ -187,7 +187,7 @@ def test_real_news_filtering():
         return True
         
     except Exception as e:
-        print(f"❌ 真實新聞過濾測試失敗: {e}")
+        print(f" 真實新聞過濾測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -199,13 +199,13 @@ def test_news_filter_integration():
     try:
         from tradingagents.utils.news_filter_integration import apply_news_filtering_patches
         
-        print("🔧 正在應用新聞過濾補丁...")
+        print(" 正在應用新聞過濾補丁...")
         enhanced_function = apply_news_filtering_patches()
         
-        print("✅ 新聞過濾補丁應用成功")
+        print(" 新聞過濾補丁應用成功")
         
         # 測試增強版函數
-        print("🧪 測試增強版實時新聞函數...")
+        print(" 測試增強版實時新聞函數...")
         
         test_result = enhanced_function(
             ticker="600036",
@@ -214,24 +214,24 @@ def test_news_filter_integration():
             min_score=30
         )
         
-        print(f"📊 增強版函數返回結果長度: {len(test_result)} 字符")
+        print(f" 增強版函數返回結果長度: {len(test_result)} 字符")
         
         if "過濾新聞報告" in test_result:
-            print("✅ 檢測到過濾功能已生效")
+            print(" 檢測到過濾功能已生效")
         else:
-            print("ℹ️ 使用了原始新聞報告")
+            print("ℹ 使用了原始新聞報告")
         
         return True
         
     except Exception as e:
-        print(f"❌ 新聞過濾集成測試失敗: {e}")
+        print(f" 新聞過濾集成測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def main():
     """主測試函數"""
-    print("🚀 開始新聞過濾功能測試")
+    print(" 開始新聞過濾功能測試")
     print("=" * 50)
     
     test_results = []
@@ -250,21 +250,21 @@ def main():
     
     # 輸出測試總結
     print("\n" + "=" * 50)
-    print("📋 測試結果總結:")
+    print(" 測試結果總結:")
     
     passed = 0
     for test_name, result in test_results:
-        status = "✅ 通過" if result else "❌ 失敗"
+        status = " 通過" if result else " 失敗"
         print(f"  - {test_name}: {status}")
         if result:
             passed += 1
     
-    print(f"\n🎯 總體結果: {passed}/{len(test_results)} 項測試通過")
+    print(f"\n 總體結果: {passed}/{len(test_results)} 項測試通過")
     
     if passed == len(test_results):
-        print("🎉 所有測試通過！新聞過濾功能工作正常")
+        print(" 所有測試通過！新聞過濾功能工作正常")
     else:
-        print("⚠️ 部分測試失敗，請檢查相關功能")
+        print(" 部分測試失敗，請檢查相關功能")
 
 if __name__ == "__main__":
     main()

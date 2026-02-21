@@ -13,12 +13,12 @@ sys.path.insert(0, str(project_root))
 
 def test_web_components():
     """測試Web組件的投資建議顯示"""
-    print("🧪 測試Web組件投資建議顯示")
+    print(" 測試Web組件投資建議顯示")
     print("=" * 50)
     
     try:
         # 測試results_display組件
-        print("📊 測試results_display組件...")
+        print(" 測試results_display組件...")
         
         # 模擬不同的投資建議輸入
         test_cases = [
@@ -49,20 +49,20 @@ def test_web_components():
             print(f"   輸入: {action} -> 輸出: {chinese_action}")
             
             if chinese_action in ['買入', '賣出', '持有']:
-                print(f"   ✅ 正確轉換為中文")
+                print(f"    正確轉換為中文")
             else:
-                print(f"   ❌ 轉換失敗")
+                print(f"    轉換失敗")
                 return False
         
         return True
         
     except Exception as e:
-        print(f"❌ Web組件測試失敗: {e}")
+        print(f" Web組件測試失敗: {e}")
         return False
 
 def test_analysis_runner():
     """測試analysis_runner的投資建議處理"""
-    print("\n🔍 測試analysis_runner投資建議處理")
+    print("\n 測試analysis_runner投資建議處理")
     print("-" * 50)
     
     try:
@@ -118,20 +118,20 @@ def test_analysis_runner():
             print(f"輸出決策: {result_action}")
             
             if result_action in ['買入', '賣出', '持有']:
-                print(f"✅ 正確轉換為中文")
+                print(f" 正確轉換為中文")
             else:
-                print(f"❌ 轉換失敗: {result_action}")
+                print(f" 轉換失敗: {result_action}")
                 return False
         
         return True
         
     except Exception as e:
-        print(f"❌ analysis_runner測試失敗: {e}")
+        print(f" analysis_runner測試失敗: {e}")
         return False
 
 def test_demo_data():
     """測試演示數據的中文化"""
-    print("\n🎯 測試演示數據中文化")
+    print("\n 測試演示數據中文化")
     print("-" * 30)
     
     try:
@@ -158,19 +158,19 @@ def test_demo_data():
         print(demo_report[:200] + "...")
         
         if action in ['買入', '賣出', '持有']:
-            print("✅ 演示數據使用中文")
+            print(" 演示數據使用中文")
             return True
         else:
-            print(f"❌ 演示數據仍使用英文: {action}")
+            print(f" 演示數據仍使用英文: {action}")
             return False
         
     except Exception as e:
-        print(f"❌ 演示數據測試失敗: {e}")
+        print(f" 演示數據測試失敗: {e}")
         return False
 
 def main():
     """主函數"""
-    print("🔧 投資建議中文化修複測試")
+    print(" 投資建議中文化修複測試")
     print("=" * 60)
     
     success1 = test_web_components()
@@ -179,14 +179,14 @@ def main():
     
     print("\n" + "=" * 60)
     if success1 and success2 and success3:
-        print("🎉 投資建議中文化修複測試全部通過！")
-        print("\n✅ 修複效果:")
+        print(" 投資建議中文化修複測試全部通過！")
+        print("\n 修複效果:")
         print("   - Web界面投資建議顯示中文")
         print("   - 分析結果處理使用中文")
         print("   - 演示數據生成中文內容")
         print("\n現在所有投資建議都應該顯示為中文：買入/賣出/持有")
     else:
-        print("❌ 投資建議中文化修複測試失敗")
+        print(" 投資建議中文化修複測試失敗")
         print("   需要進一步檢查和修複")
     
     return success1 and success2 and success3

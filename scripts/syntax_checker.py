@@ -59,18 +59,18 @@ def main():
     主函數 - 執行語法檢查
     Main function - Execute syntax checking
     """
-    logger.error(f"🔍 開始檢查項目中的Python文件語法錯誤...")
-    logger.debug(f"🔍 Starting syntax check for Python files in the project...\n")
+    logger.error(f" 開始檢查項目中的Python文件語法錯誤...")
+    logger.debug(f" Starting syntax check for Python files in the project...\n")
     
     # 獲取當前目錄
     current_dir = os.getcwd()
-    logger.info(f"📁 檢查目錄: {current_dir}")
-    logger.info(f"📁 Checking directory: {current_dir}\n")
+    logger.info(f" 檢查目錄: {current_dir}")
+    logger.info(f" Checking directory: {current_dir}\n")
     
     # 查找所有Python文件
     python_files = find_python_files(current_dir)
-    logger.info(f"📊 找到 {len(python_files)} 個Python文件")
-    logger.info(f"📊 Found {len(python_files)} Python files\n")
+    logger.info(f" 找到 {len(python_files)} 個Python文件")
+    logger.info(f" Found {len(python_files)} Python files\n")
     
     # 檢查語法錯誤
     error_files = []
@@ -83,36 +83,36 @@ def main():
         has_error, error_msg = check_syntax(file_path)
         
         if has_error:
-            logger.error(f"❌ 語法錯誤")
+            logger.error(f" 語法錯誤")
             error_files.append((relative_path, error_msg))
         else:
-            logger.info(f"✅ 語法正確")
+            logger.info(f" 語法正確")
             success_count += 1
     
     # 輸出結果摘要
     logger.info(f"\n")
-    logger.info(f"📋 檢查結果摘要 | Check Results Summary")
+    logger.info(f" 檢查結果摘要 | Check Results Summary")
     logger.info(f"=")
-    logger.info(f"✅ 語法正確的文件: {success_count}")
-    logger.info(f"✅ Files with correct syntax: {success_count}")
-    logger.error(f"❌ 有語法錯誤的文件: {len(error_files)}")
-    logger.error(f"❌ Files with syntax errors: {len(error_files)}")
+    logger.info(f" 語法正確的文件: {success_count}")
+    logger.info(f" Files with correct syntax: {success_count}")
+    logger.error(f" 有語法錯誤的文件: {len(error_files)}")
+    logger.error(f" Files with syntax errors: {len(error_files)}")
     
     if error_files:
-        logger.error(f"\n🚨 語法錯誤詳情 | Syntax Error Details:")
+        logger.error(f"\n 語法錯誤詳情 | Syntax Error Details:")
         logger.info(f"-")
         for file_path, error_msg in error_files:
-            logger.info(f"\n📄 文件: {file_path}")
-            logger.info(f"📄 File: {file_path}")
-            logger.error(f"🔴 錯誤: {error_msg}")
-            logger.error(f"🔴 Error: {error_msg}")
+            logger.info(f"\n 文件: {file_path}")
+            logger.info(f" File: {file_path}")
+            logger.error(f" 錯誤: {error_msg}")
+            logger.error(f" Error: {error_msg}")
         
-        logger.error(f"\n💡 建議: 請修復上述語法錯誤後重新運行檢查")
-        logger.info(f"💡 Suggestion: Please fix the above syntax errors and run the check again")
+        logger.error(f"\n 建議: 請修復上述語法錯誤後重新運行檢查")
+        logger.info(f" Suggestion: Please fix the above syntax errors and run the check again")
         sys.exit(1)
     else:
-        logger.info(f"\n🎉 恭喜！所有Python文件語法檢查通過！")
-        logger.info(f"🎉 Congratulations! All Python files passed syntax check!")
+        logger.info(f"\n 恭喜！所有Python文件語法檢查通過！")
+        logger.info(f" Congratulations! All Python files passed syntax check!")
         sys.exit(0)
 
 

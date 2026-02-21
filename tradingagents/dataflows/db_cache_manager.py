@@ -55,8 +55,8 @@ class DatabaseCacheManager:
         # 從配置文件獲取正確的端口
         mongodb_port = os.getenv("MONGODB_PORT", "27018")
         redis_port = os.getenv("REDIS_PORT", "6380")
-        mongodb_password = os.getenv("MONGODB_PASSWORD", "tradingagents123")
-        redis_password = os.getenv("REDIS_PASSWORD", "tradingagents123")
+        mongodb_password = os.getenv("MONGODB_PASSWORD", "")
+        redis_password = os.getenv("REDIS_PASSWORD", "")
 
         self.mongodb_url = mongodb_url or os.getenv("MONGODB_URL", f"mongodb://admin:{mongodb_password}@localhost:{mongodb_port}")
         self.redis_url = redis_url or os.getenv("REDIS_URL", f"redis://:{redis_password}@localhost:{redis_port}")

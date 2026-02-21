@@ -15,7 +15,7 @@ def quick_redis_test(host=None, port=None, password=None):
     port = port or int(os.getenv('REDIS_PORT', 6379))
     password = password or os.getenv('REDIS_PASSWORD')
     
-    print(f"🔍 測試Redis連接: {host}:{port}")
+    print(f" 測試Redis連接: {host}:{port}")
     
     try:
         # 創建Redis連接
@@ -31,10 +31,10 @@ def quick_redis_test(host=None, port=None, password=None):
         # 測試連接
         r.ping()
         connect_time = (time.time() - start_time) * 1000
-        print(f"✅ 連接成功! 連接時間: {connect_time:.2f} ms")
+        print(f" 連接成功! 連接時間: {connect_time:.2f} ms")
         
         # 測試基本操作延遲
-        print("\n📊 基本操作延遲測試:")
+        print("\n 基本操作延遲測試:")
         
         # SET操作測試
         start_time = time.time()
@@ -64,7 +64,7 @@ def quick_redis_test(host=None, port=None, password=None):
         print(f"  PING最小/最大: {min_ping:.2f} / {max_ping:.2f} ms")
         
         # 簡單吞吐量測試
-        print("\n🚀 簡單吞吐量測試 (100次操作):")
+        print("\n 簡單吞吐量測試 (100次操作):")
         
         start_time = time.time()
         for i in range(100):
@@ -87,7 +87,7 @@ def quick_redis_test(host=None, port=None, password=None):
             r.delete(f"throughput_test_{i}")
         
         # 連接信息
-        print(f"\n📋 Redis服務器信息:")
+        print(f"\n Redis服務器信息:")
         info = r.info()
         print(f"  Redis版本: {info.get('redis_version', 'N/A')}")
         print(f"  運行模式: {info.get('redis_mode', 'N/A')}")
@@ -97,13 +97,13 @@ def quick_redis_test(host=None, port=None, password=None):
         return True
         
     except redis.ConnectionError as e:
-        print(f"❌ Redis連接失敗: {e}")
+        print(f" Redis連接失敗: {e}")
         return False
     except redis.TimeoutError as e:
-        print(f"❌ Redis連接超時: {e}")
+        print(f" Redis連接超時: {e}")
         return False
     except Exception as e:
-        print(f"❌ 測試過程中出錯: {e}")
+        print(f" 測試過程中出錯: {e}")
         return False
 
 def main():
@@ -126,9 +126,9 @@ def main():
     success = quick_redis_test(host, port, password)
     
     if success:
-        print("\n✅ Redis連接測試完成!")
+        print("\n Redis連接測試完成!")
     else:
-        print("\n❌ Redis連接測試失敗!")
+        print("\n Redis連接測試失敗!")
         sys.exit(1)
 
 if __name__ == "__main__":

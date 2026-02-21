@@ -21,38 +21,38 @@ def create_mock_analysis_results():
         'state': {
             'market_report': """# TEST123 股票技術分析報告
 
-## 📈 價格趨勢分析
+##  價格趨勢分析
 當前股價呈現上漲趨勢，技術指標向好。
 
-## 📊 技術指標
+##  技術指標
 - RSI: 65.2 (偏強)
 - MACD: 金叉向上
 - 成交量: 放量上漲
 
-## 🎯 操作建議
+##  操作建議
 建議在回調時買入，目標價位上漲15%。
 """,
             'fundamentals_report': """# TEST123 基本面分析報告
 
-## 💰 財務狀況
+##  財務狀況
 公司財務狀況良好，盈利能力強。
 
-## 📊 關鍵指標
+##  關鍵指標
 - ROE: 18.5%
 - PE: 15.2倍
 - 淨利潤增長: 15.2%
 
-## 💡 投資價值
+##  投資價值
 估值合理，具有投資價值。
 """,
             'final_trade_decision': """# TEST123 最終交易決策
 
-## 🎯 投資建議
+##  投資建議
 **行動**: 買入
 **置信度**: 85%
 **目標價格**: 上漲15-20%
 
-## 💡 決策依據
+##  決策依據
 基於技術面和基本面綜合分析，建議買入。
 """
         },
@@ -67,7 +67,7 @@ def create_mock_analysis_results():
 
 def test_save_analysis_result():
     """測試保存分析結果"""
-    print("🧪 測試分析結果保存功能")
+    print(" 測試分析結果保存功能")
     print("=" * 40)
     
     try:
@@ -81,14 +81,14 @@ def test_save_analysis_result():
         research_depth = 3
         result_data = create_mock_analysis_results()
         
-        print(f"📝 測試數據:")
+        print(f" 測試數據:")
         print(f"   分析ID: {analysis_id}")
         print(f"   股票代碼: {stock_symbol}")
         print(f"   分析師: {analysts}")
         print(f"   研究深度: {research_depth}")
         
         # 執行保存
-        print(f"\n💾 開始保存分析結果...")
+        print(f"\n 開始保存分析結果...")
         success = save_analysis_result(
             analysis_id=analysis_id,
             stock_symbol=stock_symbol,
@@ -99,10 +99,10 @@ def test_save_analysis_result():
         )
         
         if success:
-            print("✅ 分析結果保存成功！")
+            print(" 分析結果保存成功！")
             
             # 檢查文件是否創建
-            print(f"\n📁 檢查保存的文件:")
+            print(f"\n 檢查保存的文件:")
             
             # 檢查JSON文件
             from web.components.analysis_results import get_analysis_results_dir
@@ -110,9 +110,9 @@ def test_save_analysis_result():
             json_file = results_dir / f"analysis_{analysis_id}.json"
             
             if json_file.exists():
-                print(f"✅ JSON文件已創建: {json_file}")
+                print(f" JSON文件已創建: {json_file}")
             else:
-                print(f"❌ JSON文件未找到: {json_file}")
+                print(f" JSON文件未找到: {json_file}")
             
             # 檢查詳細報告目錄
             import os
@@ -130,69 +130,69 @@ def test_save_analysis_result():
             analysis_date = datetime.now().strftime('%Y-%m-%d')
             reports_dir = detailed_results_dir / stock_symbol / analysis_date / "reports"
             
-            print(f"📂 詳細報告目錄: {reports_dir}")
+            print(f" 詳細報告目錄: {reports_dir}")
             
             if reports_dir.exists():
-                print("✅ 詳細報告目錄已創建")
+                print(" 詳細報告目錄已創建")
                 
                 # 列出報告文件
                 report_files = list(reports_dir.glob("*.md"))
                 if report_files:
-                    print(f"📄 報告文件 ({len(report_files)} 個):")
+                    print(f" 報告文件 ({len(report_files)} 個):")
                     for file in report_files:
                         print(f"   - {file.name}")
                 else:
-                    print("⚠️ 報告目錄存在但無文件")
+                    print(" 報告目錄存在但無文件")
             else:
-                print(f"❌ 詳細報告目錄未創建: {reports_dir}")
+                print(f" 詳細報告目錄未創建: {reports_dir}")
             
         else:
-            print("❌ 分析結果保存失敗")
+            print(" 分析結果保存失敗")
         
         return success
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_mongodb_save():
     """測試MongoDB保存"""
-    print(f"\n🗄️ 測試MongoDB保存...")
+    print(f"\n 測試MongoDB保存...")
     
     try:
         from web.utils.mongodb_report_manager import mongodb_report_manager
         
         if not mongodb_report_manager.connected:
-            print("❌ MongoDB未連接")
+            print(" MongoDB未連接")
             return False
         
         # 獲取當前記錄數
         before_count = len(mongodb_report_manager.get_analysis_reports(limit=1000))
-        print(f"📊 保存前MongoDB記錄數: {before_count}")
+        print(f" 保存前MongoDB記錄數: {before_count}")
         
         # 執行測試保存
         test_save_analysis_result()
         
         # 獲取保存後記錄數
         after_count = len(mongodb_report_manager.get_analysis_reports(limit=1000))
-        print(f"📊 保存後MongoDB記錄數: {after_count}")
+        print(f" 保存後MongoDB記錄數: {after_count}")
         
         if after_count > before_count:
-            print("✅ MongoDB記錄增加，保存成功")
+            print(" MongoDB記錄增加，保存成功")
             return True
         else:
-            print("⚠️ MongoDB記錄數未增加")
+            print(" MongoDB記錄數未增加")
             return False
             
     except Exception as e:
-        print(f"❌ MongoDB測試失敗: {e}")
+        print(f" MongoDB測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 分析結果保存功能測試")
+    print(" 分析結果保存功能測試")
     print("=" * 50)
     
     # 測試基本保存功能
@@ -201,9 +201,9 @@ def main():
     # 測試MongoDB保存
     mongodb_success = test_mongodb_save()
     
-    print(f"\n🎉 測試完成")
-    print(f"📄 文件保存: {'✅ 成功' if save_success else '❌ 失敗'}")
-    print(f"🗄️ MongoDB保存: {'✅ 成功' if mongodb_success else '❌ 失敗'}")
+    print(f"\n 測試完成")
+    print(f" 文件保存: {' 成功' if save_success else ' 失敗'}")
+    print(f" MongoDB保存: {' 成功' if mongodb_success else ' 失敗'}")
 
 if __name__ == "__main__":
     main()

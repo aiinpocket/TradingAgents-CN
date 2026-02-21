@@ -90,9 +90,9 @@ def test_toolkit_attributes():
     
     # 檢查是否有get_realtime_stock_news
     if 'get_realtime_stock_news' in toolkit_attrs:
-        logger.info("✓ get_realtime_stock_news 在Toolkit中存在")
+        logger.info(" get_realtime_stock_news 在Toolkit中存在")
     else:
-        logger.warning("✗ get_realtime_stock_news 不在Toolkit中")
+        logger.warning(" get_realtime_stock_news 不在Toolkit中")
     
     # 檢查Toolkit類型
     logger.info(f"Toolkit類型: {type(Toolkit)}")
@@ -162,26 +162,26 @@ def main():
     # 結果匯總
     logger.info("=" * 60)
     logger.info("========== 測試結果匯總 ==========")
-    logger.info(f"直接函數調用: {'✓ 成功' if direct_success else '✗ 失敗'}")
-    logger.info(f"Toolkit調用: {'✓ 成功' if toolkit_success else '✗ 失敗'}")
-    logger.info(f"模擬LLM調用: {'✓ 成功' if llm_success else '✗ 失敗'}")
+    logger.info(f"直接函數調用: {' 成功' if direct_success else ' 失敗'}")
+    logger.info(f"Toolkit調用: {' 成功' if toolkit_success else ' 失敗'}")
+    logger.info(f"模擬LLM調用: {' 成功' if llm_success else ' 失敗'}")
     
     # 分析問題
     if direct_success and not toolkit_success:
-        logger.warning("🔍 問題分析: Toolkit工具綁定存在問題")
+        logger.warning(" 問題分析: Toolkit工具綁定存在問題")
     elif direct_success and not llm_success:
-        logger.warning("🔍 問題分析: LLM工具調用機制存在問題")
+        logger.warning(" 問題分析: LLM工具調用機制存在問題")
     elif not direct_success:
-        logger.warning("🔍 問題分析: 函數本身存在問題")
+        logger.warning(" 問題分析: 函數本身存在問題")
     else:
-        logger.info("🔍 問題分析: 所有調用方式都成功")
+        logger.info(" 問題分析: 所有調用方式都成功")
     
     # 比較結果
     if direct_success and toolkit_success:
         if direct_result == toolkit_result:
-            logger.info("✓ 直接調用和Toolkit調用結果一致")
+            logger.info(" 直接調用和Toolkit調用結果一致")
         else:
-            logger.warning("⚠ 直接調用和Toolkit調用結果不一致")
+            logger.warning(" 直接調用和Toolkit調用結果不一致")
             logger.info(f"直接調用結果長度: {len(direct_result)}")
             logger.info(f"Toolkit調用結果長度: {len(toolkit_result)}")
 

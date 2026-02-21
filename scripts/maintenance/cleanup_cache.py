@@ -19,7 +19,7 @@ sys.path.insert(0, str(project_root))
 
 def cleanup_file_cache(max_age_days: int = 7):
     """清理文件緩存"""
-    logger.info(f"🧹 清理 {max_age_days} 天前的文件緩存...")
+    logger.info(f" 清理 {max_age_days} 天前的文件緩存...")
     
     cache_dirs = [
         project_root / "cache",
@@ -34,7 +34,7 @@ def cleanup_file_cache(max_age_days: int = 7):
         if not cache_dir.exists():
             continue
             
-        logger.info(f"📁 檢查緩存目錄: {cache_dir}")
+        logger.info(f" 檢查緩存目錄: {cache_dir}")
         
         for cache_file in cache_dir.rglob("*"):
             if cache_file.is_file():
@@ -43,16 +43,16 @@ def cleanup_file_cache(max_age_days: int = 7):
                     if file_time < cutoff_time:
                         cache_file.unlink()
                         total_cleaned += 1
-                        logger.info(f"  ✅ 刪除: {cache_file.name}")
+                        logger.info(f"   刪除: {cache_file.name}")
                 except Exception as e:
-                    logger.error(f"  ❌ 刪除失敗: {cache_file.name} - {e}")
+                    logger.error(f"   刪除失敗: {cache_file.name} - {e}")
     
-    logger.info(f"✅ 文件緩存清理完成，刪除了 {total_cleaned} 個文件")
+    logger.info(f" 文件緩存清理完成，刪除了 {total_cleaned} 個文件")
     return total_cleaned
 
 def cleanup_database_cache(max_age_days: int = 7):
     """清理數據庫緩存"""
-    logger.info(f"🗄️ 清理 {max_age_days} 天前的數據庫緩存...")
+    logger.info(f" 清理 {max_age_days} 天前的數據庫緩存...")
     
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
@@ -61,19 +61,19 @@ def cleanup_database_cache(max_age_days: int = 7):
         
         if hasattr(cache, 'clear_old_cache'):
             cleared_count = cache.clear_old_cache(max_age_days)
-            logger.info(f"✅ 數據庫緩存清理完成，刪除了 {cleared_count} 條記錄")
+            logger.info(f" 數據庫緩存清理完成，刪除了 {cleared_count} 條記錄")
             return cleared_count
         else:
-            logger.info(f"ℹ️ 當前緩存系統不支持自動清理")
+            logger.info(f"ℹ 當前緩存系統不支持自動清理")
             return 0
             
     except Exception as e:
-        logger.error(f"❌ 數據庫緩存清理失敗: {e}")
+        logger.error(f" 數據庫緩存清理失敗: {e}")
         return 0
 
 def cleanup_python_cache():
     """清理Python緩存文件"""
-    logger.info(f"🐍 清理Python緩存文件...")
+    logger.info(f" 清理Python緩存文件...")
     
     cache_patterns = ["__pycache__", "*.pyc", "*.pyo"]
     total_cleaned = 0
@@ -86,33 +86,33 @@ def cleanup_python_cache():
                     import shutil
                     shutil.rmtree(cache_dir)
                     total_cleaned += 1
-                    logger.info(f"  ✅ 刪除目錄: {cache_dir.relative_to(project_root)}")
+                    logger.info(f"   刪除目錄: {cache_dir.relative_to(project_root)}")
                 except Exception as e:
-                    logger.error(f"  ❌ 刪除失敗: {cache_dir.relative_to(project_root)} - {e}")
+                    logger.error(f"   刪除失敗: {cache_dir.relative_to(project_root)} - {e}")
         else:
             cache_files = list(project_root.rglob(pattern))
             for cache_file in cache_files:
                 try:
                     cache_file.unlink()
                     total_cleaned += 1
-                    logger.info(f"  ✅ 刪除文件: {cache_file.relative_to(project_root)}")
+                    logger.info(f"   刪除文件: {cache_file.relative_to(project_root)}")
                 except Exception as e:
-                    logger.error(f"  ❌ 刪除失敗: {cache_file.relative_to(project_root)} - {e}")
+                    logger.error(f"   刪除失敗: {cache_file.relative_to(project_root)} - {e}")
     
-    logger.info(f"✅ Python緩存清理完成，刪除了 {total_cleaned} 個項目")
+    logger.info(f" Python緩存清理完成，刪除了 {total_cleaned} 個項目")
     return total_cleaned
 
 def get_cache_statistics():
     """獲取緩存統計信息"""
-    logger.info(f"📊 獲取緩存統計信息...")
+    logger.info(f" 獲取緩存統計信息...")
     
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
         
-        logger.info(f"🎯 緩存模式: {cache.get_performance_mode()}")
-        logger.info(f"🗄️ 數據庫可用: {'是' if cache.is_database_available() else '否'}")
+        logger.info(f" 緩存模式: {cache.get_performance_mode()}")
+        logger.info(f" 數據庫可用: {'是' if cache.is_database_available() else '否'}")
         
         # 統計文件緩存
         cache_dirs = [
@@ -131,14 +131,14 @@ def get_cache_statistics():
                         total_files += 1
                         total_size += cache_file.stat().st_size
         
-        logger.info(f"📁 文件緩存: {total_files} 個文件，{total_size / 1024 / 1024:.2f} MB")
+        logger.info(f" 文件緩存: {total_files} 個文件，{total_size / 1024 / 1024:.2f} MB")
         
     except Exception as e:
-        logger.error(f"❌ 獲取緩存統計失敗: {e}")
+        logger.error(f" 獲取緩存統計失敗: {e}")
 
 def main():
     """主函數"""
-    logger.info(f"🧹 TradingAgents 緩存清理工具")
+    logger.info(f" TradingAgents 緩存清理工具")
     logger.info(f"=")
     
     import argparse
@@ -167,8 +167,8 @@ def main():
         total_cleaned += cleanup_python_cache()
     
     logger.info(f"\n")
-    logger.info(f"🎉 緩存清理完成！總共清理了 {total_cleaned} 個項目")
-    logger.info(f"\n💡 使用提示:")
+    logger.info(f" 緩存清理完成！總共清理了 {total_cleaned} 個項目")
+    logger.info(f"\n 使用提示:")
     logger.info(f"  --stats     查看緩存統計")
     logger.info(f"  --days 3    清理3天前的緩存")
     logger.info(f"  --type file 只清理文件緩存")

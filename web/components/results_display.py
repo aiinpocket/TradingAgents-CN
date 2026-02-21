@@ -278,10 +278,10 @@ def render_detailed_analysis(state):
 
     st.subheader("詳細分析報告")
 
-    # 添加自定義CSS樣式美化標簽页
+    # 添加自定義CSS樣式美化標籤頁
     st.markdown("""
     <style>
-    /* 標簽页容器樣式 */
+    /* 標籤頁容器樣式 */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: #f8f9fa;
@@ -290,7 +290,7 @@ def render_detailed_analysis(state):
         margin-bottom: 20px;
     }
 
-    /* 單個標簽页樣式 */
+    /* 單個標籤頁樣式 */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         padding: 8px 16px;
@@ -311,7 +311,7 @@ def render_detailed_analysis(state):
         box-shadow: 0 2px 8px rgba(33,150,243,0.2);
     }
 
-    /* 選中的標簽页樣式 */
+    /* 選中的標籤頁樣式 */
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
@@ -320,7 +320,7 @@ def render_detailed_analysis(state):
         transform: translateY(-2px);
     }
 
-    /* 標簽页內容區域 */
+    /* 標籤頁內容區域 */
     .stTabs [data-baseweb="tab-panel"] {
         padding: 20px;
         background-color: #ffffff;
@@ -329,14 +329,14 @@ def render_detailed_analysis(state):
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* 標簽页文字樣式 */
+    /* 標籤頁文字樣式 */
     .stTabs [data-baseweb="tab"] p {
         margin: 0;
         font-size: 14px;
         font-weight: 600;
     }
 
-    /* 選中標簽页的文字樣式 */
+    /* 選中標籤頁的文字樣式 */
     .stTabs [aria-selected="true"] p {
         color: white !important;
         text-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -443,7 +443,7 @@ def render_detailed_analysis(state):
         render_analysis_placeholder()
         return
 
-    # 只為有數據的模塊創建標簽页 - 移除重複圖標
+    # 只為有數據的模塊創建標籤頁 - 移除重複圖標
     tabs = st.tabs([module['title'] for module in available_modules])
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):

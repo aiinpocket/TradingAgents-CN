@@ -13,7 +13,7 @@ sys.path.insert(0, project_root)
 
 def test_duplicate_prevention():
     """測試重複提示防止機制"""
-    print("🔧 測試重複提示防止機制")
+    print(" 測試重複提示防止機制")
     print("=" * 60)
     
     try:
@@ -24,7 +24,7 @@ def test_duplicate_prevention():
         # 模擬重複的分析師完成事件
         completed_analysts = set()
         
-        print("📊 模擬重複的市場分析完成事件:")
+        print(" 模擬重複的市場分析完成事件:")
         print("-" * 40)
         
         # 模擬多次市場分析完成
@@ -33,13 +33,13 @@ def test_duplicate_prevention():
             
             # 檢查是否已經完成過
             if "market_report" not in completed_analysts:
-                ui.show_success("📈 市場分析完成")
+                ui.show_success(" 市場分析完成")
                 completed_analysts.add("market_report")
-                print("   ✅ 顯示完成提示")
+                print("    顯示完成提示")
             else:
-                print("   🔇 跳過重複提示（已完成）")
+                print("    跳過重複提示（已完成）")
         
-        print(f"\n📊 模擬重複的基本面分析完成事件:")
+        print(f"\n 模擬重複的基本面分析完成事件:")
         print("-" * 40)
         
         # 模擬多次基本面分析完成
@@ -47,26 +47,26 @@ def test_duplicate_prevention():
             print(f"第{i+1}次 fundamentals_report 事件:")
             
             if "fundamentals_report" not in completed_analysts:
-                ui.show_success("📊 基本面分析完成")
+                ui.show_success(" 基本面分析完成")
                 completed_analysts.add("fundamentals_report")
-                print("   ✅ 顯示完成提示")
+                print("    顯示完成提示")
             else:
-                print("   🔇 跳過重複提示（已完成）")
+                print("    跳過重複提示（已完成）")
         
-        print(f"\n✅ 重複提示防止機制測試完成")
-        print(f"📋 結果: 每個分析師只顯示一次完成提示")
+        print(f"\n 重複提示防止機制測試完成")
+        print(f" 結果: 每個分析師只顯示一次完成提示")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_stream_chunk_simulation():
     """模擬流式處理中的chunk重複"""
-    print("\n🌊 模擬流式處理chunk重複場景")
+    print("\n 模擬流式處理chunk重複場景")
     print("=" * 60)
     
     try:
@@ -84,7 +84,7 @@ def test_stream_chunk_simulation():
             {"market_report": "市場分析完整報告...", "fundamentals_report": "基本面分析完整報告..."},
         ]
         
-        print("📊 處理模擬的流式chunk:")
+        print(" 處理模擬的流式chunk:")
         print("-" * 40)
         
         for i, chunk in enumerate(mock_chunks):
@@ -93,33 +93,33 @@ def test_stream_chunk_simulation():
             # 處理市場分析報告
             if "market_report" in chunk and chunk["market_report"]:
                 if "market_report" not in completed_analysts:
-                    ui.show_success("📈 市場分析完成")
+                    ui.show_success(" 市場分析完成")
                     completed_analysts.add("market_report")
-                    print("   ✅ 首次顯示市場分析完成")
+                    print("    首次顯示市場分析完成")
                 else:
-                    print("   🔇 跳過重複的市場分析完成提示")
+                    print("    跳過重複的市場分析完成提示")
             
             # 處理基本面分析報告
             if "fundamentals_report" in chunk and chunk["fundamentals_report"]:
                 if "fundamentals_report" not in completed_analysts:
-                    ui.show_success("📊 基本面分析完成")
+                    ui.show_success(" 基本面分析完成")
                     completed_analysts.add("fundamentals_report")
-                    print("   ✅ 首次顯示基本面分析完成")
+                    print("    首次顯示基本面分析完成")
                 else:
-                    print("   🔇 跳過重複的基本面分析完成提示")
+                    print("    跳過重複的基本面分析完成提示")
         
-        print(f"\n✅ 流式處理重複防止測試完成")
-        print(f"📋 結果: 即使多個chunk包含相同報告，也只顯示一次完成提示")
+        print(f"\n 流式處理重複防止測試完成")
+        print(f" 結果: 即使多個chunk包含相同報告，也只顯示一次完成提示")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 def test_analyst_completion_order():
     """測試分析師完成順序"""
-    print("\n📈 測試分析師完成順序")
+    print("\n 測試分析師完成順序")
     print("=" * 60)
     
     try:
@@ -130,13 +130,13 @@ def test_analyst_completion_order():
         
         # 模擬分析師按順序完成
         analysts = [
-            ("market_report", "📈 市場分析完成"),
-            ("fundamentals_report", "📊 基本面分析完成"),
-            ("technical_report", "🔍 技術分析完成"),
-            ("sentiment_report", "💭 情感分析完成")
+            ("market_report", " 市場分析完成"),
+            ("fundamentals_report", " 基本面分析完成"),
+            ("technical_report", " 技術分析完成"),
+            ("sentiment_report", " 情感分析完成")
         ]
         
-        print("📊 模擬分析師按順序完成:")
+        print(" 模擬分析師按順序完成:")
         print("-" * 40)
         
         for analyst_key, message in analysts:
@@ -145,11 +145,11 @@ def test_analyst_completion_order():
             if analyst_key not in completed_analysts:
                 ui.show_success(message)
                 completed_analysts.add(analyst_key)
-                print("   ✅ 顯示完成提示")
+                print("    顯示完成提示")
             else:
-                print("   🔇 已完成，跳過")
+                print("    已完成，跳過")
         
-        print(f"\n📊 模擬重複完成事件:")
+        print(f"\n 模擬重複完成事件:")
         print("-" * 40)
         
         # 模擬某些分析師重複完成
@@ -159,22 +159,22 @@ def test_analyst_completion_order():
             if analyst_key not in completed_analysts:
                 ui.show_success(message)
                 completed_analysts.add(analyst_key)
-                print("   ✅ 顯示完成提示")
+                print("    顯示完成提示")
             else:
-                print("   🔇 已完成，跳過重複提示")
+                print("    已完成，跳過重複提示")
         
-        print(f"\n✅ 分析師完成順序測試完成")
-        print(f"📋 已完成的分析師: {completed_analysts}")
+        print(f"\n 分析師完成順序測試完成")
+        print(f" 已完成的分析師: {completed_analysts}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 def test_real_scenario_simulation():
     """模擬真實場景"""
-    print("\n🎭 模擬真實分析場景")
+    print("\n 模擬真實分析場景")
     print("=" * 60)
     
     try:
@@ -183,7 +183,7 @@ def test_real_scenario_simulation():
         ui = CLIUserInterface()
         completed_analysts = set()
         
-        print("🚀 模擬600036股票分析過程:")
+        print(" 模擬600036股票分析過程:")
         print("-" * 40)
         
         # 模擬真實的分析流程
@@ -191,7 +191,7 @@ def test_real_scenario_simulation():
         ui.show_progress("啟動分析師團隊...")
         
         # 模擬市場分析師的多次輸出（這是導致重複的原因）
-        print("\n📈 市場分析師工作過程:")
+        print("\n 市場分析師工作過程:")
         market_outputs = [
             "獲取市場數據...",
             "分析價格趨勢...", 
@@ -205,13 +205,13 @@ def test_real_scenario_simulation():
             # 每個步驟都可能觸發report更新
             if i == len(market_outputs) - 1:  # 最後一步才算真正完成
                 if "market_report" not in completed_analysts:
-                    ui.show_success("📈 市場分析完成")
+                    ui.show_success(" 市場分析完成")
                     completed_analysts.add("market_report")
                 else:
-                    print("   🔇 跳過重複提示")
+                    print("    跳過重複提示")
         
         # 模擬基本面分析師
-        print("\n📊 基本面分析師工作過程:")
+        print("\n 基本面分析師工作過程:")
         fundamentals_outputs = [
             "獲取財務數據...",
             "分析財務指標...",
@@ -223,23 +223,23 @@ def test_real_scenario_simulation():
             
             if i == len(fundamentals_outputs) - 1:
                 if "fundamentals_report" not in completed_analysts:
-                    ui.show_success("📊 基本面分析完成")
+                    ui.show_success(" 基本面分析完成")
                     completed_analysts.add("fundamentals_report")
                 else:
-                    print("   🔇 跳過重複提示")
+                    print("    跳過重複提示")
         
-        print(f"\n✅ 真實場景模擬完成")
-        print(f"📋 結果: 每個分析師只顯示一次完成提示，避免了重複")
+        print(f"\n 真實場景模擬完成")
+        print(f" 結果: 每個分析師只顯示一次完成提示，避免了重複")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🚀 開始測試重複進度提示修複效果")
+    print(" 開始測試重複進度提示修複效果")
     print("=" * 80)
     
     results = []
@@ -258,7 +258,7 @@ def main():
     
     # 總結結果
     print("\n" + "=" * 80)
-    print("📋 測試結果總結")
+    print(" 測試結果總結")
     print("=" * 80)
     
     passed = sum(results)
@@ -272,30 +272,30 @@ def main():
     ]
     
     for i, (name, result) in enumerate(zip(test_names, results)):
-        status = "✅ 通過" if result else "❌ 失敗"
+        status = " 通過" if result else " 失敗"
         print(f"{i+1}. {name}: {status}")
     
-    print(f"\n📊 總體結果: {passed}/{total} 測試通過")
+    print(f"\n 總體結果: {passed}/{total} 測試通過")
     
     if passed == total:
-        print("🎉 所有測試通過！重複進度提示問題已修複")
-        print("\n📋 修複效果:")
-        print("1. ✅ 每個分析師只顯示一次完成提示")
-        print("2. ✅ 流式處理中的重複chunk被正確處理")
-        print("3. ✅ 分析師完成狀態正確跟蹤")
-        print("4. ✅ 用戶界面清爽，沒有重複信息")
+        print(" 所有測試通過！重複進度提示問題已修複")
+        print("\n 修複效果:")
+        print("1.  每個分析師只顯示一次完成提示")
+        print("2.  流式處理中的重複chunk被正確處理")
+        print("3.  分析師完成狀態正確跟蹤")
+        print("4.  用戶界面清爽，沒有重複信息")
         
-        print("\n🔧 技術實現:")
+        print("\n 技術實現:")
         print("- 使用completed_analysts集合跟蹤已完成的分析師")
         print("- 在顯示完成提示前檢查是否已經完成")
         print("- 避免LangGraph流式輸出導致的重複觸發")
         
-        print("\n🎯 用戶體驗改善:")
+        print("\n 用戶體驗改善:")
         print("- 清晰的進度指示，不會有重複干擾")
         print("- 每個分析師完成時只有一次明確提示")
         print("- 整體分析流程更加專業和可信")
     else:
-        print("⚠️ 部分測試失敗，需要進一步優化")
+        print(" 部分測試失敗，需要進一步優化")
     
     return passed == total
 

@@ -27,7 +27,7 @@ class DocumentationChecker:
         
     def check_all(self) -> Dict[str, List[str]]:
         """執行所有檢查"""
-        print("🔍 開始文件一致性檢查...")
+        print(" 開始文件一致性檢查...")
         
         results = {
             "version_consistency": self.check_version_consistency(),
@@ -41,13 +41,13 @@ class DocumentationChecker:
     
     def check_version_consistency(self) -> List[str]:
         """檢查版本一致性"""
-        print("📋 檢查版本一致性...")
+        print(" 檢查版本一致性...")
         issues = []
         
         # 讀取項目版本
         version_file = self.project_root / "VERSION"
         if not version_file.exists():
-            issues.append("❌ VERSION 文件不存在")
+            issues.append(" VERSION 文件不存在")
             return issues
             
         project_version = version_file.read_text().strip()
@@ -71,28 +71,28 @@ class DocumentationChecker:
                         if version_match:
                             doc_version = version_match.group(1).strip()
                             if doc_version != project_version:
-                                issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 版本不一致 (文件: {doc_version}, 項目: {project_version})")
+                                issues.append(f" {doc_file.relative_to(self.project_root)}: 版本不一致 (文件: {doc_version}, 項目: {project_version})")
                         else:
-                            issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 缺少版本信息")
+                            issues.append(f" {doc_file.relative_to(self.project_root)}: 缺少版本信息")
                 else:
                     # 核心文件應該有版本頭部
                     if any(keyword in str(doc_file) for keyword in ["agents", "architecture", "development"]):
-                        issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 缺少版本頭部")
+                        issues.append(f" {doc_file.relative_to(self.project_root)}: 缺少版本頭部")
                         
             except Exception as e:
-                issues.append(f"❌ 讀取文件失敗 {doc_file}: {e}")
+                issues.append(f" 讀取文件失敗 {doc_file}: {e}")
         
         return issues
     
     def check_agent_architecture(self) -> List[str]:
         """檢查智能體架構描述的一致性"""
-        print("🤖 檢查智能體架構一致性...")
+        print(" 檢查智能體架構一致性...")
         issues = []
         
         # 檢查實際的智能體實現
         agents_code_dir = self.code_dir / "agents"
         if not agents_code_dir.exists():
-            issues.append("❌ 智能體代碼目錄不存在")
+            issues.append(" 智能體代碼目錄不存在")
             return issues
         
         # 獲取實際的智能體列表
@@ -116,21 +116,21 @@ class DocumentationChecker:
                     
                     # 檢查是否提到了BaseAnalyst類（應該已經移除）
                     if "class BaseAnalyst" in content:
-                        issues.append(f"⚠️ {doc_file.name}: 仍然提到BaseAnalyst類，應該更新為函數式架構")
+                        issues.append(f" {doc_file.name}: 仍然提到BaseAnalyst類，應該更新為函數式架構")
                     
                     # 檢查是否提到了create_*_analyst函數
                     if "create_" in content and "analyst" in content:
                         if "def create_" not in content:
-                            issues.append(f"⚠️ {doc_file.name}: 提到create函數但沒有正確的函數簽名")
+                            issues.append(f" {doc_file.name}: 提到create函數但沒有正確的函數簽名")
                     
                 except Exception as e:
-                    issues.append(f"❌ 讀取智能體文件失敗 {doc_file}: {e}")
+                    issues.append(f" 讀取智能體文件失敗 {doc_file}: {e}")
         
         return issues
     
     def check_code_examples(self) -> List[str]:
         """檢查文件中的代碼示例"""
-        print("💻 檢查代碼示例...")
+        print(" 檢查代碼示例...")
         issues = []
         
         doc_files = list(self.docs_dir.rglob("*.md"))
@@ -147,45 +147,45 @@ class DocumentationChecker:
                         # 簡單的語法檢查
                         ast.parse(code_block)
                     except SyntaxError as e:
-                        issues.append(f"❌ {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 語法錯誤 - {e}")
+                        issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 語法錯誤 - {e}")
                     
                     # 檢查是否使用了已廢棄的類
                     if "BaseAnalyst" in code_block:
-                        issues.append(f"⚠️ {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 使用了已廢棄的BaseAnalyst類")
+                        issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 使用了已廢棄的BaseAnalyst類")
                     
                     # 檢查導入語句的正確性
                     import_lines = [line.strip() for line in code_block.split('\n') if line.strip().startswith('from tradingagents')]
                     for import_line in import_lines:
                         # 簡單檢查模塊路徑是否存在
                         if 'from tradingagents.agents.analysts.base_analyst' in import_line:
-                            issues.append(f"⚠️ {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 導入不存在的base_analyst模塊")
+                            issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 導入不存在的base_analyst模塊")
                 
             except Exception as e:
-                issues.append(f"❌ 檢查代碼示例失敗 {doc_file}: {e}")
+                issues.append(f" 檢查代碼示例失敗 {doc_file}: {e}")
         
         return issues
     
     def check_api_references(self) -> List[str]:
         """檢查API參考文件"""
-        print("📚 檢查API參考...")
+        print(" 檢查API參考...")
         issues = []
         
         # 檢查是否有API參考文件
         api_ref_dir = self.docs_dir / "reference"
         if not api_ref_dir.exists():
-            issues.append("⚠️ 缺少API參考文件目錄")
+            issues.append(" 缺少API參考文件目錄")
             return issues
         
         # 檢查智能體API文件
         agents_ref = api_ref_dir / "agents"
         if not agents_ref.exists():
-            issues.append("⚠️ 缺少智能體API參考文件")
+            issues.append(" 缺少智能體API參考文件")
         
         return issues
     
     def check_file_existence(self) -> List[str]:
         """檢查文件中引用的檔案是否存在"""
-        print("📁 檢查文件引用...")
+        print(" 檢查文件引用...")
         issues = []
         
         doc_files = list(self.docs_dir.rglob("*.md"))
@@ -202,10 +202,10 @@ class DocumentationChecker:
                     # 解析相對路徑
                     ref_path = doc_file.parent / ref
                     if not ref_path.exists():
-                        issues.append(f"❌ {doc_file.relative_to(self.project_root)}: 引用的文件不存在 - {ref}")
+                        issues.append(f" {doc_file.relative_to(self.project_root)}: 引用的文件不存在 - {ref}")
                 
             except Exception as e:
-                issues.append(f"❌ 檢查文件引用失敗 {doc_file}: {e}")
+                issues.append(f" 檢查文件引用失敗 {doc_file}: {e}")
         
         return issues
     
@@ -221,7 +221,7 @@ class DocumentationChecker:
             report.append(f"## {category.replace('_', ' ').title()}\n")
             
             if not issues:
-                report.append("✅ 無問題發現\n")
+                report.append(" 無問題發現\n")
             else:
                 for issue in issues:
                     report.append(f"- {issue}")
@@ -241,13 +241,13 @@ def main():
     report_file = checker.project_root / "docs" / "CONSISTENCY_CHECK_REPORT.md"
     report_file.write_text(report, encoding='utf-8')
     
-    print(f"\n📊 檢查完成！報告已保存到: {report_file}")
+    print(f"\n 檢查完成！報告已保存到: {report_file}")
     print(f"總問題數: {sum(len(issues) for issues in results.values())}")
     
     # 如果有嚴重問題，返回非零退出碼
-    critical_issues = sum(1 for issues in results.values() for issue in issues if issue.startswith("❌"))
+    critical_issues = sum(1 for issues in results.values() for issue in issues if issue.startswith(""))
     if critical_issues > 0:
-        print(f"⚠️ 發現 {critical_issues} 個嚴重問題，建議立即修復")
+        print(f" 發現 {critical_issues} 個嚴重問題，建議立即修復")
         return 1
     
     return 0

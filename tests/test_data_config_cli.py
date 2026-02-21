@@ -43,7 +43,7 @@ def test_data_dir_configuration():
         
         # 驗證目錄是否創建
         if os.path.exists(custom_data_dir):
-            print("✅ 自定義數據目錄創建成功 | Custom data directory created successfully")
+            print(" 自定義數據目錄創建成功 | Custom data directory created successfully")
             
             # 檢查子目錄結構
             expected_subdirs = [
@@ -56,11 +56,11 @@ def test_data_dir_configuration():
             for subdir in expected_subdirs:
                 subdir_path = os.path.join(custom_data_dir, subdir)
                 if os.path.exists(subdir_path):
-                    print(f"  ✅ 子目錄存在 | Subdirectory exists: {subdir}")
+                    print(f"   子目錄存在 | Subdirectory exists: {subdir}")
                 else:
-                    print(f"  ❌ 子目錄缺失 | Subdirectory missing: {subdir}")
+                    print(f"   子目錄缺失 | Subdirectory missing: {subdir}")
         else:
-            print("❌ 自定義數據目錄創建失敗 | Custom data directory creation failed")
+            print(" 自定義數據目錄創建失敗 | Custom data directory creation failed")
     
     # 3. 測試環境變量配置
     print("\n3. 測試環境變量配置 | Testing Environment Variable Configuration")
@@ -77,9 +77,9 @@ def test_data_dir_configuration():
         print(f"環境變量數據目錄 | Environment variable data directory: {env_current_data_dir}")
         
         if env_current_data_dir == env_data_dir:
-            print("✅ 環境變量配置生效 | Environment variable configuration effective")
+            print(" 環境變量配置生效 | Environment variable configuration effective")
         else:
-            print("❌ 環境變量配置未生效 | Environment variable configuration not effective")
+            print(" 環境變量配置未生效 | Environment variable configuration not effective")
         
         # 清理環境變量
         del os.environ["TRADINGAGENTS_DATA_DIR"]
@@ -95,7 +95,7 @@ def test_data_dir_configuration():
     # 5. 測試目錄自動創建功能
     print("\n5. 測試目錄自動創建功能 | Testing Auto Directory Creation")
     config_manager.ensure_directories_exist()
-    print("✅ 目錄自動創建功能測試完成 | Auto directory creation test completed")
+    print(" 目錄自動創建功能測試完成 | Auto directory creation test completed")
     
     print("\n=== 數據目錄配置測試完成 | Data Directory Configuration Test Completed ===")
 
@@ -139,17 +139,17 @@ def main():
         # 顯示CLI命令測試指南
         test_cli_commands()
         
-        print("\n🎉 所有測試完成！| All tests completed!")
-        print("\n📝 總結 | Summary:")
-        print("✅ 數據目錄配置功能已實現 | Data directory configuration feature implemented")
-        print("✅ 支持自定義路徑設置 | Custom path setting supported")
-        print("✅ 支持環境變量配置 | Environment variable configuration supported")
-        print("✅ 集成配置管理器 | Configuration manager integrated")
-        print("✅ CLI命令界面完整 | CLI command interface complete")
-        print("✅ 自動目錄創建功能 | Auto directory creation feature")
+        print("\n 所有測試完成！| All tests completed!")
+        print("\n 總結 | Summary:")
+        print(" 數據目錄配置功能已實現 | Data directory configuration feature implemented")
+        print(" 支持自定義路徑設置 | Custom path setting supported")
+        print(" 支持環境變量配置 | Environment variable configuration supported")
+        print(" 集成配置管理器 | Configuration manager integrated")
+        print(" CLI命令界面完整 | CLI command interface complete")
+        print(" 自動目錄創建功能 | Auto directory creation feature")
         
     except Exception as e:
-        print(f"\n❌ 測試過程中出現錯誤 | Error during testing: {e}")
+        print(f"\n 測試過程中出現錯誤 | Error during testing: {e}")
         import traceback
         traceback.print_exc()
         return 1

@@ -32,24 +32,24 @@ def test_progress_callback():
         "初始化分析引擎...",
         "開始分析 AAPL 股票，這可能需要幾分鐘時間...",
         "分析完成，正在整理結果...",
-        "✅ 分析成功完成！"
+        " 分析成功完成！"
     ]
     
-    print("🧪 測試進度回調功能")
+    print(" 測試進度回調功能")
     print("=" * 50)
     
     for i, step in enumerate(steps):
         mock_progress_callback(step, i, len(steps))
         time.sleep(0.5)  # 模擬處理時間
     
-    print("✅ 進度回調測試完成！")
+    print(" 進度回調測試完成！")
 
 def test_progress_tracker():
     """測試進度跟蹤器"""
     try:
         from web.utils.progress_tracker import AnalysisProgressTracker
         
-        print("🧪 測試進度跟蹤器")
+        print(" 測試進度跟蹤器")
         print("=" * 50)
         
         def mock_callback(message, current_step, total_steps, progress, elapsed_time):
@@ -71,23 +71,23 @@ def test_progress_tracker():
             "獲取股票數據...",
             "進行技術分析...",
             "分析完成，正在整理結果...",
-            "✅ 分析成功完成！"
+            " 分析成功完成！"
         ]
         
         for step in steps:
             tracker.update(step)
             time.sleep(0.3)
         
-        print("✅ 進度跟蹤器測試完成！")
+        print(" 進度跟蹤器測試完成！")
         return True
         
     except Exception as e:
-        print(f"❌ 進度跟蹤器測試失敗: {e}")
+        print(f" 進度跟蹤器測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 進度顯示功能測試")
+    print(" 進度顯示功能測試")
     print("=" * 60)
     
     # 測試基本進度回調
@@ -97,7 +97,7 @@ def main():
     # 測試進度跟蹤器
     test_progress_tracker()
     
-    print("\n🎉 所有測試完成！")
+    print("\n 所有測試完成！")
 
 if __name__ == "__main__":
     main()

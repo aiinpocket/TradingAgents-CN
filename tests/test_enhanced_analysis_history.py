@@ -18,11 +18,11 @@ def test_load_analysis_results():
     try:
         from web.components.analysis_results import load_analysis_results
         
-        print("🔍 測試加載分析結果...")
+        print(" 測試加載分析結果...")
         
         # 測試基本加載
         results = load_analysis_results(limit=10)
-        print(f"✅ 成功加載 {len(results)} 個分析結果")
+        print(f" 成功加載 {len(results)} 個分析結果")
         
         if results:
             # 檢查結果結構
@@ -31,14 +31,14 @@ def test_load_analysis_results():
             
             for field in required_fields:
                 if field in first_result:
-                    print(f"✅ 字段 '{field}' 存在")
+                    print(f" 字段 '{field}' 存在")
                 else:
-                    print(f"❌ 字段 '{field}' 缺失")
+                    print(f" 字段 '{field}' 缺失")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 
@@ -50,13 +50,13 @@ def test_comparison_functions():
             get_report_content
         )
         
-        print("🔍 測試對比功能...")
+        print(" 測試對比功能...")
         
         # 測試文本相似度計算
         text1 = "這是一個測試文本"
         text2 = "這是另一個測試文本"
         similarity = calculate_text_similarity(text1, text2)
-        print(f"✅ 文本相似度計算: {similarity:.2f}")
+        print(f" 文本相似度計算: {similarity:.2f}")
         
         # 測試報告內容獲取
         mock_result = {
@@ -67,12 +67,12 @@ def test_comparison_functions():
         }
         
         content = get_report_content(mock_result, 'final_trade_decision')
-        print(f"✅ 報告內容獲取: {content}")
+        print(f" 報告內容獲取: {content}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 
@@ -85,7 +85,7 @@ def test_chart_functions():
             render_time_distribution_charts
         )
         
-        print("🔍 測試圖表功能...")
+        print(" 測試圖表功能...")
         
         # 創建模擬數據
         mock_data = []
@@ -104,22 +104,22 @@ def test_chart_functions():
             })
         
         df = pd.DataFrame(mock_data)
-        print(f"✅ 創建模擬數據: {len(df)} 條記錄")
+        print(f" 創建模擬數據: {len(df)} 條記錄")
         
         # 注意：這裡只是測試函數是否可以導入，實際渲染需要Streamlit環境
-        print("✅ 圖表函數導入成功")
+        print(" 圖表函數導入成功")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失敗: {e}")
+        print(f" 測試失敗: {e}")
         return False
 
 
 def create_test_data():
     """創建測試數據"""
     try:
-        print("🔍 創建測試數據...")
+        print(" 創建測試數據...")
         
         # 確保測試數據目錄存在
         test_data_dir = project_root / "data" / "analysis_results" / "detailed" / "TEST001"
@@ -138,17 +138,17 @@ def create_test_data():
             with open(report_file, 'w', encoding='utf-8') as f:
                 f.write(content)
         
-        print(f"✅ 測試數據創建成功: {test_date_dir}")
+        print(f" 測試數據創建成功: {test_date_dir}")
         return True
         
     except Exception as e:
-        print(f"❌ 創建測試數據失敗: {e}")
+        print(f" 創建測試數據失敗: {e}")
         return False
 
 
 def main():
     """主測試函數"""
-    print("🚀 開始測試增強的分析歷史功能")
+    print(" 開始測試增強的分析歷史功能")
     print("=" * 50)
     
     tests = [
@@ -162,21 +162,21 @@ def main():
     total = len(tests)
     
     for test_name, test_func in tests:
-        print(f"\n📋 測試: {test_name}")
+        print(f"\n 測試: {test_name}")
         if test_func():
             passed += 1
-            print(f"✅ {test_name} 通過")
+            print(f" {test_name} 通過")
         else:
-            print(f"❌ {test_name} 失敗")
+            print(f" {test_name} 失敗")
     
     print("\n" + "=" * 50)
-    print(f"📊 測試結果: {passed}/{total} 通過")
+    print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有測試通過！")
+        print(" 所有測試通過！")
         return True
     else:
-        print("⚠️ 部分測試失敗，請檢查代碼")
+        print(" 部分測試失敗，請檢查代碼")
         return False
 
 

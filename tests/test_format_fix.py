@@ -15,7 +15,7 @@ def test_format_analysis_results():
     
     from web.utils.analysis_runner import format_analysis_results
     
-    print("🧪 測試分析結果格式化")
+    print(" 測試分析結果格式化")
     print("=" * 50)
     
     # 測試案例1: decision 是字符串
@@ -37,11 +37,11 @@ def test_format_analysis_results():
     
     try:
         formatted1 = format_analysis_results(results1)
-        print("✅ 字符串decision格式化成功")
+        print(" 字符串decision格式化成功")
         print(f"  決策: {formatted1['decision']['action']}")
         print(f"  推理: {formatted1['decision']['reasoning']}")
     except Exception as e:
-        print(f"❌ 字符串decision格式化失敗: {e}")
+        print(f" 字符串decision格式化失敗: {e}")
     
     print()
     
@@ -70,12 +70,12 @@ def test_format_analysis_results():
     
     try:
         formatted2 = format_analysis_results(results2)
-        print("✅ 字典decision格式化成功")
+        print(" 字典decision格式化成功")
         print(f"  決策: {formatted2['decision']['action']}")
         print(f"  置信度: {formatted2['decision']['confidence']}")
         print(f"  推理: {formatted2['decision']['reasoning']}")
     except Exception as e:
-        print(f"❌ 字典decision格式化失敗: {e}")
+        print(f" 字典decision格式化失敗: {e}")
     
     print()
     
@@ -98,11 +98,11 @@ def test_format_analysis_results():
     
     try:
         formatted3 = format_analysis_results(results3)
-        print("✅ 其他類型decision格式化成功")
+        print(" 其他類型decision格式化成功")
         print(f"  決策: {formatted3['decision']['action']}")
         print(f"  推理: {formatted3['decision']['reasoning']}")
     except Exception as e:
-        print(f"❌ 其他類型decision格式化失敗: {e}")
+        print(f" 其他類型decision格式化失敗: {e}")
     
     print()
     
@@ -116,20 +116,20 @@ def test_format_analysis_results():
     
     try:
         formatted4 = format_analysis_results(results4)
-        print("✅ 失敗結果格式化成功")
+        print(" 失敗結果格式化成功")
         print(f"  成功: {formatted4['success']}")
         print(f"  錯誤: {formatted4['error']}")
     except Exception as e:
-        print(f"❌ 失敗結果格式化失敗: {e}")
+        print(f" 失敗結果格式化失敗: {e}")
 
 def main():
     """主測試函數"""
-    print("🧪 格式化修複測試")
+    print(" 格式化修複測試")
     print("=" * 60)
     
     test_format_analysis_results()
     
-    print("\n🎉 測試完成！")
+    print("\n 測試完成！")
 
 if __name__ == "__main__":
     main()

@@ -244,7 +244,7 @@ def render_operation_logs():
                 continue
         st.metric("近1小時", len(recent_logs))
     
-    # 標簽页
+    # 標籤頁
     tab1, tab2, tab3 = st.tabs(["統計圖表", "日誌列表", "導出數據"])
     
     with tab1:
@@ -344,16 +344,16 @@ def render_logs_list(logs: List[Dict[str, Any]]):
     
     st.subheader("操作日誌列表")
     
-    # 分页設置
-    page_size = st.selectbox("每页顯示", [10, 25, 50, 100], index=1)
+    # 分頁設置
+    page_size = st.selectbox("每頁顯示", [10, 25, 50, 100], index=1)
     total_pages = (len(logs) + page_size - 1) // page_size
     
     if total_pages > 1:
-        page = st.number_input("页碼", min_value=1, max_value=total_pages, value=1) - 1
+        page = st.number_input("頁碼", min_value=1, max_value=total_pages, value=1) - 1
     else:
         page = 0
     
-    # 獲取當前页數據
+    # 獲取當前頁數據
     start_idx = page * page_size
     end_idx = min(start_idx + page_size, len(logs))
     page_logs = logs[start_idx:end_idx]
@@ -395,11 +395,11 @@ def render_logs_list(logs: List[Dict[str, Any]]):
         df = pd.DataFrame(df_data)
         st.dataframe(df, use_container_width=True)
         
-        # 顯示分页信息
+        # 顯示分頁信息
         if total_pages > 1:
-            st.info(f"第 {page + 1} 页，共 {total_pages} 页，總計 {len(logs)} 條記錄")
+            st.info(f"第 {page + 1} 頁，共 {total_pages} 頁，總計 {len(logs)} 條記錄")
     else:
-        st.info("當前页沒有數據")
+        st.info("當前頁沒有數據")
 
 def render_logs_export(logs: List[Dict[str, Any]]):
     """渲染日誌導出功能"""

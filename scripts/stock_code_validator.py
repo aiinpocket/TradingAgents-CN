@@ -28,7 +28,7 @@ def validate_stock_code(original_code: str, processed_content: str) -> str:
     if original_code in error_mappings:
         for wrong_code in error_mappings[original_code]:
             if wrong_code in processed_content:
-                logger.error(f"🔍 [股票代碼驗證] 發現錯誤代碼 {wrong_code}，修正為 {original_code}")
+                logger.error(f" [股票代碼驗證] 發現錯誤代碼 {wrong_code}，修正為 {original_code}")
                 processed_content = processed_content.replace(wrong_code, original_code)
     
     return processed_content

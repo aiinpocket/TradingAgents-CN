@@ -19,7 +19,7 @@ def create_scripts_structure():
     project_path = Path("C:/code/TradingAgentsCN")
     scripts_path = project_path / "scripts"
     
-    logger.info(f"📁 整理TradingAgentsCN項目的scripts目錄")
+    logger.info(f" 整理TradingAgentsCN項目的scripts目錄")
     logger.info(f"=")
     
     # 定義目錄結構和腳本分類
@@ -85,11 +85,11 @@ def create_scripts_structure():
     }
     
     # 創建子目錄
-    logger.info(f"📁 創建子目錄...")
+    logger.info(f" 創建子目錄...")
     for category, info in script_categories.items():
         category_path = scripts_path / category
         category_path.mkdir(exist_ok=True)
-        logger.info(f"✅ 創建目錄: scripts/{category} - {info['description']}")
+        logger.info(f" 創建目錄: scripts/{category} - {info['description']}")
         
         # 創建README文件
         readme_path = category_path / "README.md"
@@ -125,10 +125,10 @@ python scripts/{category}/script_name.py
         
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(readme_content)
-        logger.info(f"📝 創建README: scripts/{category}/README.md")
+        logger.info(f" 創建README: scripts/{category}/README.md")
     
     # 移動現有腳本到對應目錄
-    logger.info(f"\n📦 移動現有腳本...")
+    logger.info(f"\n 移動現有腳本...")
     
     for category, info in script_categories.items():
         category_path = scripts_path / category
@@ -140,14 +140,14 @@ python scripts/{category}/script_name.py
             if source_path.exists():
                 try:
                     shutil.move(str(source_path), str(target_path))
-                    logger.info(f"✅ 移動: {script_name} -> scripts/{category}/")
+                    logger.info(f" 移動: {script_name} -> scripts/{category}/")
                 except Exception as e:
-                    logger.error(f"⚠️ 移動失敗 {script_name}: {e}")
+                    logger.error(f" 移動失敗 {script_name}: {e}")
             else:
-                logger.info(f"ℹ️ 腳本不存在: {script_name}")
+                logger.info(f"ℹ 腳本不存在: {script_name}")
     
     # 創建主README
-    logger.info(f"\n📝 創建主README...")
+    logger.info(f"\n 創建主README...")
     main_readme_path = scripts_path / "README.md"
     main_readme_content = """# Scripts Directory
 
@@ -155,41 +155,41 @@ python scripts/{category}/script_name.py
 
 ## 目錄結構
 
-### 📦 setup/ - 安裝和配置腳本
+###  setup/ - 安裝和配置腳本
 - 環境設置
 - 依賴安裝  
 - API配置
 - 數據庫設置
 
-### 🔍 validation/ - 驗證腳本
+###  validation/ - 驗證腳本
 - Git配置驗證
 - 依賴檢查
 - 配置驗證
 - API連接測試
 
-### 🔧 maintenance/ - 維護腳本
+###  maintenance/ - 維護腳本
 - 緩存清理
 - 數據備份
 - 依賴更新
 - 上游同步
 
-### 🛠️ development/ - 開發輔助腳本
+###  development/ - 開發輔助腳本
 - 代碼分析
 - 性能基準測試
 - 文件生成
 - 貢獻準備
 
-### 🚀 deployment/ - 部署腳本
+###  deployment/ - 部署腳本
 - Web應用部署
 - 發布打包
 - GitHub發布
 
-### 🐳 docker/ - Docker腳本
+###  docker/ - Docker腳本
 - Docker服務管理
 - 容器啟動停止
 - 數據庫初始化
 
-### 📋 git/ - Git工具腳本
+###  git/ - Git工具腳本
 - 上游同步
 - 分支管理
 - 貢獻工作流
@@ -223,10 +223,10 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
     
     with open(main_readme_path, 'w', encoding='utf-8') as f:
         f.write(main_readme_content)
-    logger.info(f"📝 創建主README: scripts/README.md")
+    logger.info(f" 創建主README: scripts/README.md")
     
     # 顯示剩餘的未分類腳本
-    logger.info(f"\n📊 檢查未分類的腳本...")
+    logger.info(f"\n 檢查未分類的腳本...")
     remaining_scripts = []
     for item in scripts_path.iterdir():
         if item.is_file() and item.suffix in ['.py', '.sh', '.bat', '.js']:
@@ -234,14 +234,14 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
                 remaining_scripts.append(item.name)
     
     if remaining_scripts:
-        logger.warning(f"⚠️ 未分類的腳本:")
+        logger.warning(f" 未分類的腳本:")
         for script in remaining_scripts:
             logger.info(f"  - {script}")
         logger.info(f"建議手動將這些腳本移動到合適的分類目錄中")
     else:
-        logger.info(f"✅ 所有腳本都已分類")
+        logger.info(f" 所有腳本都已分類")
     
-    logger.info(f"\n🎉 Scripts目錄整理完成！")
+    logger.info(f"\n Scripts目錄整理完成！")
     
     return True
 
@@ -251,11 +251,11 @@ def main():
         success = create_scripts_structure()
         
         if success:
-            logger.info(f"\n🎯 整理結果:")
-            logger.info(f"✅ 創建了分類子目錄")
-            logger.info(f"✅ 移動了現有腳本")
-            logger.info(f"✅ 生成了README文件")
-            logger.info(f"\n💡 建議:")
+            logger.info(f"\n 整理結果:")
+            logger.info(f" 創建了分類子目錄")
+            logger.info(f" 移動了現有腳本")
+            logger.info(f" 生成了README文件")
+            logger.info(f"\n 建議:")
             logger.info(f"1. 驗證腳本放在 scripts/validation/")
             logger.info(f"2. 測試代碼放在 tests/")
             logger.info(f"3. 新腳本按功能放在對應分類目錄")
@@ -263,7 +263,7 @@ def main():
         return success
         
     except Exception as e:
-        logger.error(f"❌ 整理失敗: {e}")
+        logger.error(f" 整理失敗: {e}")
         return False
 
 if __name__ == "__main__":

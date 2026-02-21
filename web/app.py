@@ -290,7 +290,7 @@ st.markdown("""
         border-radius: 10px;
     }
     
-    /* 標簽页樣式 */
+    /* 標籤頁樣式 */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
     }
