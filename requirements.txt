@@ -17,7 +17,7 @@
 
 # ==================== 核心框架 ====================
 langchain>=0.3.0
-langchain-core>=0.3.0
+langchain-core>=0.3.81
 langchain-openai>=0.3.23
 langchain-anthropic>=0.3.15
 langchain-experimental>=0.3.4
