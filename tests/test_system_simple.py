@@ -161,7 +161,7 @@ def main():
             print("\n 下一步:")
             print("1. 如需高性能，可以安裝並啟動MongoDB/Redis")
             print("2. 執行完整的股票分析測試")
-            print("3. 使用Web界面進行交互式分析")
+            print("3. 使用Web介面進行交互式分析")
         
         return success
         

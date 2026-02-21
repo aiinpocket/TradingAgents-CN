@@ -181,7 +181,7 @@ def main():
     if success1 and success2 and success3:
         print(" 投資建議中文化修複測試全部通過！")
         print("\n 修複效果:")
-        print("   - Web界面投資建議顯示中文")
+        print("   - Web介面投資建議顯示中文")
         print("   - 分析結果處理使用中文")
         print("   - 演示資料生成中文內容")
         print("\n現在所有投資建議都應該顯示為中文：買入/賣出/持有")

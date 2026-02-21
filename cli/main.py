@@ -53,7 +53,7 @@ logger = get_logger("cli")
 # CLI專用日誌配置：禁用主控台輸出，只保留檔案日誌
 def setup_cli_logging():
     """
-    CLI模式下的日誌配置：移除主控台輸出，保持界面清爽
+    CLI模式下的日誌配置：移除主控台輸出，保持介面清爽
     Configure logging for CLI mode: remove console output to keep interface clean
     """
     import logging
@@ -78,16 +78,16 @@ def setup_cli_logging():
                 tradingagents_logger.removeHandler(handler)
 
     # 記錄CLI啟動日誌（只寫入檔案）
-    logger.debug("CLI模式啟動，主控台日誌已禁用，保持界面清爽")
+    logger.debug("CLI模式啟動，主控台日誌已禁用，保持介面清爽")
 
 # 設定CLI日誌配置
 setup_cli_logging()
 
 console = Console()
 
-# CLI用戶界面管理器
+# CLI用戶介面管理器
 class CLIUserInterface:
-    """CLI用戶界面管理器：處理用戶顯示和進度提示"""
+    """CLI用戶介面管理器：處理用戶顯示和進度提示"""
 
     def __init__(self):
         self.console = Console()
@@ -283,7 +283,7 @@ message_buffer = MessageBuffer()
 
 def create_layout():
     """
-    建立CLI界面的布局結構
+    建立CLI介面的布局結構
     Create the layout structure for CLI interface
     """
     layout = Layout()
@@ -303,7 +303,7 @@ def create_layout():
 
 def update_display(layout, spinner_text=None):
     """
-    更新CLI界面顯示內容
+    更新CLI介面顯示內容
     Update CLI interface display content
     
     Args:

@@ -78,7 +78,7 @@ def render_model_config():
         
         # 編輯模型參數（API密鑰不可修改）
         st.markdown("**編輯模型參數**")
-        st.info(" **安全提示**: API密鑰只能透過 `.env` 檔案配置，無法在Web界面修改")
+        st.info(" **安全提示**: API密鑰只能透過 `.env` 檔案配置，無法在Web介面修改")
 
         # 選擇要編輯的模型
         model_options = [f"{m.provider} - {m.model_name}" for m in models]
@@ -497,7 +497,7 @@ def render_env_status():
             st.success(" .env 檔案已存在")
         else:
             st.error(" .env 檔案不存在")
-            st.info("請複制 .env.example 為 .env 並配置API密鑰")
+            st.info("請複製 .env.example 為 .env 並配置API密鑰")
 
     with col2:
         # 統計已配置的API密鑰數量
@@ -529,7 +529,7 @@ def render_env_status():
     st.info("""
      **配置優先級說明:**
     - API密鑰優先從 `.env` 檔案讀取
-    - Web界面配置作為補充和管理工具
+    - Web介面配置作為補充和管理工具
     - 修改 `.env` 檔案後需重啟應用生效
     - 推薦使用 `.env` 檔案管理敏感資訊
     """)

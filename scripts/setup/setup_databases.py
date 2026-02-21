@@ -61,7 +61,7 @@ def setup_mongodb_windows():
     2. 安裝MongoDB:
        - 選擇 "Complete" 安裝
        - 勾選 "Install MongoDB as a Service"
-       - 勾選 "Install MongoDB Compass" (可選的圖形界面)
+       - 勾選 "Install MongoDB Compass" (可選的圖形介面)
     
     3. 啟動MongoDB服務:
        - 打開服務管理器 (services.msc)

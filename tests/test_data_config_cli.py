@@ -145,7 +145,7 @@ def main():
         print(" 支援自定義路徑設定 | Custom path setting supported")
         print(" 支援環境變數配置 | Environment variable configuration supported")
         print(" 集成配置管理器 | Configuration manager integrated")
-        print(" CLI命令界面完整 | CLI command interface complete")
+        print(" CLI命令介面完整 | CLI command interface complete")
         print(" 自動目錄建立功能 | Auto directory creation feature")
         
     except Exception as e:

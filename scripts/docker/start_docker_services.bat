@@ -58,7 +58,7 @@ REM 等待服務啟動
 echo Waiting for services to start...
 timeout /t 5 /nobreak >nul
 
-REM 啟動Redis Commander (可選的Redis管理界面)
+REM 啟動Redis Commander (可選的Redis管理介面)
 echo Starting Redis Commander...
 docker run -d ^
     --name tradingagents-redis-commander ^

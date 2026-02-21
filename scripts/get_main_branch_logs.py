@@ -159,12 +159,12 @@ def get_docker_logs(container_name):
         return None
 
 def copy_log_files(container_name, log_files):
-    """複制容器內的日誌檔案"""
+    """複製容器內的日誌檔案"""
     if not log_files:
         print("\n 未找到容器內的日誌檔案")
         return []
     
-    print(f"\n 複制容器內的日誌檔案...")
+    print(f"\n 複製容器內的日誌檔案...")
     print("-" * 50)
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -174,11 +174,11 @@ def copy_log_files(container_name, log_files):
         filename = os.path.basename(log_file)
         local_file = f"{filename}_{timestamp}"
         
-        print(f" 複制: {log_file} -> {local_file}")
+        print(f" 複製: {log_file} -> {local_file}")
         
         success, output, error = run_command(f"docker cp {container_name}:{log_file} {local_file}")
         if success:
-            print(f"    複制成功")
+            print(f"    複製成功")
             
             # 檢查本地檔案
             if os.path.exists(local_file):
@@ -200,7 +200,7 @@ def copy_log_files(container_name, log_files):
                 
                 copied_files.append(local_file)
         else:
-            print(f"    複制失敗: {error}")
+            print(f"    複製失敗: {error}")
     
     return copied_files
 
@@ -290,7 +290,7 @@ def main():
     # 5. 取得Docker標準日誌
     docker_log_file = get_docker_logs(container_name)
     
-    # 6. 複制容器內日誌檔案
+    # 6. 複製容器內日誌檔案
     copied_files = copy_log_files(container_name, log_files)
     
     # 7. 取得最近活動
@@ -303,13 +303,13 @@ def main():
     
     print(f" 容器名稱: {container_name}")
     print(f" 找到容器內日誌檔案: {len(log_files)} 個")
-    print(f" 成功複制檔案: {len(copied_files)} 個")
+    print(f" 成功複製檔案: {len(copied_files)} 個")
     
     if docker_log_file:
         print(f" Docker標準日誌: {docker_log_file}")
     
     if copied_files:
-        print(f" 複制的日誌檔案:")
+        print(f" 複製的日誌檔案:")
         for file in copied_files:
             print(f"   - {file}")
     

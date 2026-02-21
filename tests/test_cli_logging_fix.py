@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 測試CLI日誌修複效果
-驗證用戶界面是否清爽，日誌是否只寫入檔案
+驗證用戶介面是否清爽，日誌是否只寫入檔案
 """
 
 import os
@@ -71,11 +71,11 @@ def test_console_output():
         console = Console()
         
         print(" 測試Rich Console輸出:")
-        console.print("[bold cyan]這是一條用戶界面消息[/bold cyan]")
+        console.print("[bold cyan]這是一條用戶介面消息[/bold cyan]")
         console.print("[green] 這應該正常顯示，沒有時間戳[/green]")
         console.print("[yellow] 這是用戶友好的提示資訊[/yellow]")
         
-        print(" Console輸出正常，界面清爽")
+        print(" Console輸出正常，介面清爽")
         
         return True
         
@@ -127,8 +127,8 @@ def test_log_file_writing():
         return False
 
 def test_cli_interface_preview():
-    """預覽CLI界面效果"""
-    print("\n 預覽CLI界面效果")
+    """預覽CLI介面效果"""
+    print("\n 預覽CLI介面效果")
     print("=" * 60)
     
     try:
@@ -137,8 +137,8 @@ def test_cli_interface_preview():
         
         console = Console()
         
-        # 模擬修複後的CLI界面
-        print(" 模擬修複後的CLI界面:")
+        # 模擬修複後的CLI介面
+        print(" 模擬修複後的CLI介面:")
         print("-" * 40)
         
         # 標題
@@ -155,7 +155,7 @@ def test_cli_interface_preview():
         console.print("   示例 | Examples: SPY, AAPL, TSLA, NVDA, MSFT")
         
         print("\n" + "-" * 40)
-        print(" 界面清爽，沒有時間戳和技術日誌資訊")
+        print(" 介面清爽，沒有時間戳和技術日誌資訊")
         
         return True
         
@@ -179,7 +179,7 @@ def main():
     # 測試3: 日誌檔案寫入
     results.append(test_log_file_writing())
     
-    # 測試4: CLI界面預覽
+    # 測試4: CLI介面預覽
     results.append(test_cli_interface_preview())
     
     # 總結結果
@@ -194,7 +194,7 @@ def main():
         "CLI日誌設定",
         "Console輸出測試",
         "日誌檔案寫入",
-        "CLI界面預覽"
+        "CLI介面預覽"
     ]
     
     for i, (name, result) in enumerate(zip(test_names, results)):
@@ -207,12 +207,12 @@ def main():
         print(" 所有測試通過！CLI日誌修複成功")
         print("\n 修複效果:")
         print("1.  主控台不再顯示技術日誌資訊")
-        print("2.  用戶界面清爽美觀")
+        print("2.  用戶介面清爽美觀")
         print("3.  系統日誌正常寫入檔案")
         print("4.  用戶提示使用Rich Console顯示")
         
         print("\n 用戶體驗改善:")
-        print("- 界面簡潔，沒有時間戳干擾")
+        print("- 介面簡潔，沒有時間戳干擾")
         print("- 彩色輸出更加美觀")
         print("- 技術資訊和用戶資訊分離")
         print("- 除錯資訊仍然記錄在日誌檔案中")

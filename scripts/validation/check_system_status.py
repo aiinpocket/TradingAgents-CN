@@ -70,7 +70,7 @@ def check_system_status():
     else:
         logger.error(f" 環境配置檔不存在: {env_file}")
         if env_example_file.exists():
-            logger.info(f" 請複制 {env_example_file} 為 {env_file} 並配置API密鑰")
+            logger.info(f" 請複製 {env_example_file} 為 {env_file} 並配置API密鑰")
     
     # 檢查資料庫管理器
     logger.info(f"\n 檢查資料庫管理器...")

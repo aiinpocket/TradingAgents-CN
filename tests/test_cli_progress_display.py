@@ -13,8 +13,8 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 def test_cli_ui_manager():
-    """測試CLI用戶界面管理器"""
-    print(" 測試CLI用戶界面管理器")
+    """測試CLI用戶介面管理器"""
+    print(" 測試CLI用戶介面管理器")
     print("=" * 60)
     
     try:
@@ -49,7 +49,7 @@ def test_cli_ui_manager():
         # 測試資料資訊
         ui.show_data_info("股票資訊", "AAPL", "Apple Inc.")
         
-        print("\n CLI用戶界面管理器測試完成")
+        print("\n CLI用戶介面管理器測試完成")
         return True
         
     except Exception as e:
@@ -148,11 +148,11 @@ def test_progress_vs_logging():
         
         ui = CLIUserInterface()
         
-        print(" 測試用戶界面 vs 系統日誌:")
+        print(" 測試用戶介面 vs 系統日誌:")
         print("-" * 40)
         
-        # 用戶界面消息（清爽顯示）
-        print("\n 用戶界面消息:")
+        # 用戶介面消息（清爽顯示）
+        print("\n 用戶介面消息:")
         ui.show_progress("正在取得資料...")
         ui.show_success("資料取得完成")
         ui.show_warning("網路延遲較高")
@@ -206,7 +206,7 @@ def test_user_experience():
         
         print("\n 用戶體驗測試完成")
         print(" 改進效果:")
-        print("   - 界面清爽，沒有技術日誌干擾")
+        print("   - 介面清爽，沒有技術日誌干擾")
         print("   - 進度清晰，用戶不會感到等待焦慮")
         print("   - 反饋及時，用戶體驗流暢")
         print("   - 資訊分層，重要內容突出")
@@ -224,7 +224,7 @@ def main():
     
     results = []
     
-    # 測試1: CLI用戶界面管理器
+    # 測試1: CLI用戶介面管理器
     results.append(test_cli_ui_manager())
     
     # 測試2: 分析流程模擬
@@ -245,7 +245,7 @@ def main():
     total = len(results)
     
     test_names = [
-        "CLI用戶界面管理器",
+        "CLI用戶介面管理器",
         "分析流程進度顯示",
         "進度顯示與日誌分離",
         "用戶體驗測試"
@@ -261,16 +261,16 @@ def main():
         print(" 所有測試通過！CLI進度顯示效果優秀")
         print("\n 改進成果:")
         print("1.  清晰的步驟指示和進度反饋")
-        print("2.  用戶界面和系統日誌完全分離")
+        print("2.  用戶介面和系統日誌完全分離")
         print("3.  重要過程資訊及時顯示給用戶")
-        print("4.  界面保持清爽美觀")
+        print("4.  介面保持清爽美觀")
         print("5.  用戶不再需要等待很久才知道結果")
         
         print("\n 用戶體驗提升:")
         print("- 知道系統在做什麼（進度顯示）")
         print("- 知道當前在哪個階段（步驟標題）")
         print("- 知道操作是否成功（成功/錯誤提示）")
-        print("- 界面簡潔不雜亂（日誌分離）")
+        print("- 介面簡潔不雜亂（日誌分離）")
     else:
         print(" 部分測試失敗，需要進一步優化")
     

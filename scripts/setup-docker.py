@@ -33,13 +33,13 @@ def setup_docker_env():
             logger.error(f" 取消配置")
             return False
     
-    # 複制模板檔案
+    # 複製模板檔案
     if not env_example.exists():
         logger.error(f" 找不到.env.example檔案")
         return False
     
     shutil.copy(env_example, env_file)
-    logger.info(f" 已複制配置模板")
+    logger.info(f" 已複製配置模板")
     
     # 讀取配置檔
     with open(env_file, 'r', encoding='utf-8') as f:

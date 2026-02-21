@@ -33,15 +33,15 @@ def run_command(command, cwd=None):
 def create_release_notes():
     """建立發布說明"""
     release_notes = """
-## Web管理界面與多LLM提供商支援
+## Web管理介面與多LLM提供商支援
 
-TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理界面和多LLM提供商支援！
+TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理介面和多LLM提供商支援！
 
 ### 主要新功能
 
-#### Streamlit Web管理界面
+#### Streamlit Web管理介面
 - 完整的Web股票分析平台
-- 直觀的使用者界面和即時進度顯示
+- 直觀的使用者介面和即時進度顯示
 - 支援多種LLM提供商選擇（OpenAI / Anthropic）
 - 視覺化的分析結果展示
 - 回應式設計，支援行動裝置存取
@@ -49,8 +49,8 @@ TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理界�
 #### 多LLM提供商支援
 - OpenAI（GPT-4、GPT-4o-mini）
 - Anthropic（Claude 4 系列）
-- Web界面支援LLM提供商無縫切換
-- 統一的配置管理界面
+- Web介面支援LLM提供商無縫切換
+- 統一的配置管理介面
 
 ### 改進優化
 
@@ -77,9 +77,9 @@ cp .env.example .env
 # ANTHROPIC_API_KEY=your_anthropic_key  # Anthropic（可選）
 ```
 
-#### 3. 啟動Web界面
+#### 3. 啟動Web介面
 ```bash
-# 啟動Web管理界面
+# 啟動Web管理介面
 python -m streamlit run web/app.py
 
 # 或使用啟動指令碼
@@ -98,7 +98,7 @@ python cli/main.py --llm-provider anthropic --model claude-sonnet-4 --stock TSLA
 ### 檔案和支援
 
 - [完整檔案](./docs/)
-- [Web界面指南](./web/README.md)
+- [Web介面指南](./web/README.md)
 - [測試指南](./tests/README.md)
 - [範例程式碼](./examples/)
 
@@ -129,7 +129,7 @@ def show_release_info():
     logger.info(f"=")
     
     logger.info(f"\n 發布內容:")
-    logger.info(f"  完整的Web管理界面")
+    logger.info(f"  完整的Web管理介面")
     logger.info(f"  多LLM提供商支援（OpenAI / Anthropic）")
     logger.info(f"  完整的測試體系")
     logger.info(f"  詳細的使用檔案")
@@ -145,7 +145,7 @@ def show_release_info():
     logger.info(f"  4. python -m streamlit run web/app.py")
     
     logger.info(f"\n主要特性:")
-    logger.info(f"  Web界面股票分析")
+    logger.info(f"  Web介面股票分析")
     logger.info(f"  多LLM提供商支援（OpenAI / Anthropic）")
     logger.info(f"  即時分析進度顯示")
     logger.info(f"  多分析師協作決策")
@@ -196,8 +196,8 @@ def main():
     logger.info(f"=")
     logger.info(f"1. 訪問: https://github.com/aiinpocket/TradingAgents-CN/releases/new")
     logger.info(f"2. 選擇標籤: cn-v0.1.2")
-    logger.info(f"3. 發布標題: TradingAgents-CN v0.1.2 - Web管理界面")
-    logger.info(f"4. 複制 RELEASE_NOTES_v0.1.2.md 的內容到描述框")
+    logger.info(f"3. 發布標題: TradingAgents-CN v0.1.2 - Web管理介面")
+    logger.info(f"4. 複製 RELEASE_NOTES_v0.1.2.md 的內容到描述框")
     logger.info(f"5. 勾選 'Set as the latest release'")
     logger.info(f"6. 點擊 'Publish release'")
     

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-快速集成測試 - 驗證複制的檔案是否正常工作
+快速集成測試 - 驗證複製的檔案是否正常工作
 """
 
 import os
@@ -12,7 +12,7 @@ print(" TradingAgents 集成測試")
 print("=" * 40)
 
 # 測試1：檢查檔案是否存在
-print("\n 檢查複制的檔案...")
+print("\n 檢查複製的檔案...")
 files_to_check = [
     'tradingagents/dataflows/cache_manager.py',
     'tradingagents/dataflows/optimized_us_data.py',
@@ -184,7 +184,7 @@ print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # 生成測試報告
 print("\n 測試總結:")
-print("1. 檔案複制: 檢查檔案是否正確複制")
+print("1. 檔案複製: 檢查檔案是否正確複製")
 print("2. 語法檢查: 驗證Python語法正確性")
 print("3. 模組匯入: 測試模組是否可以正常匯入")
 print("4. 功能測試: 驗證快取基本功能")

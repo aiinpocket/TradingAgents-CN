@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Web界面截圖捕獲指令碼
-用於自動化捕獲TradingAgents-CN Web界面的截圖
+Web介面截圖捕獲指令碼
+用於自動化捕獲TradingAgents-CN Web介面的截圖
 """
 
 import os
@@ -83,7 +83,7 @@ def start_web_service():
         return False
 
 def capture_screenshots():
-    """捕獲Web界面截圖"""
+    """捕獲Web介面截圖"""
     if not check_dependencies():
         return False
     
@@ -110,8 +110,8 @@ def capture_screenshots():
         driver = webdriver.Chrome(options=chrome_options)
         
         try:
-            # 訪問Web界面
-            logger.info(" 正在訪問Web界面...")
+            # 訪問Web介面
+            logger.info(" 正在訪問Web介面...")
             driver.get("http://localhost:8501")
             
             # 等待頁面載入
@@ -126,8 +126,8 @@ def capture_screenshots():
             screenshots_dir = project_root / "docs" / "images"
             screenshots_dir.mkdir(exist_ok=True)
             
-            # 截圖1: 主界面
-            logger.info(" 捕獲主界面截圖...")
+            # 截圖1: 主介面
+            logger.info(" 捕獲主介面截圖...")
             driver.save_screenshot(str(screenshots_dir / "web-interface-main.png"))
             
             # 模擬輸入股票代碼
@@ -139,8 +139,8 @@ def capture_screenshots():
             except Exception:
                 logger.warning(" 無法找到股票輸入框")
             
-            # 截圖2: 配置界面
-            logger.info(" 捕獲配置界面截圖...")
+            # 截圖2: 配置介面
+            logger.info(" 捕獲配置介面截圖...")
             driver.save_screenshot(str(screenshots_dir / "web-interface-config.png"))
             
             # 嘗試點擊分析按鈕（如果存在）
@@ -149,8 +149,8 @@ def capture_screenshots():
                 analyze_button.click()
                 time.sleep(3)
                 
-                # 截圖3: 進度界面
-                logger.info(" 捕獲進度界面截圖...")
+                # 截圖3: 進度介面
+                logger.info(" 捕獲進度介面截圖...")
                 driver.save_screenshot(str(screenshots_dir / "web-interface-progress.png"))
                 
             except Exception:
@@ -172,7 +172,7 @@ def capture_screenshots():
 
 def create_screenshot_guide():
     """建立截圖指南"""
-    guide_content = f"""#  Web界面截圖捕獲指南
+    guide_content = f"""#  Web介面截圖捕獲指南
 
 ##  自動截圖
 
@@ -192,13 +192,13 @@ python start_web.py
 docker-compose up -d
 ```
 
-### 2. 訪問界面
+### 2. 訪問介面
 打開瀏覽器訪問: http://localhost:8501
 
 ### 3. 捕獲截圖
 按照以下場景進行截圖:
 
-####  主界面 (web-interface-main.png)
+####  主介面 (web-interface-main.png)
 - 顯示完整的分析配置表單
 - 輸入示例股票代碼: AAPL 或 MSFT
 - 選擇標準分析深度 (3級)
@@ -214,7 +214,7 @@ docker-compose up -d
 - 匯出按鈕區域
 
 ####  模型配置 (web-interface-models.png)
-- 側邊欄的模型配置界面
+- 側邊欄的模型配置介面
 - LLM提供商選擇
 - 快速選擇按鈕
 
@@ -252,7 +252,7 @@ pip install selenium
 
 def main():
     """主函式"""
-    logger.info(" TradingAgents-CN Web界面截圖捕獲工具")
+    logger.info(" TradingAgents-CN Web介面截圖捕獲工具")
     logger.info("=" * 50)
     
     # 建立截圖指南
@@ -260,7 +260,7 @@ def main():
     
     # 詢問用戶是否要自動捕獲截圖
     try:
-        choice = input("\n是否要自動捕獲Web界面截圖? (y/n): ").lower().strip()
+        choice = input("\n是否要自動捕獲Web介面截圖? (y/n): ").lower().strip()
         if choice in ['y', 'yes', '是']:
             if capture_screenshots():
                 logger.info(" 截圖捕獲成功完成!")

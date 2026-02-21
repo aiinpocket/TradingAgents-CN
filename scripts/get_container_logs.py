@@ -126,17 +126,17 @@ def preview_log_file(container_name, log_file, lines=20):
     print("=" * 80)
 
 def copy_log_file(container_name, log_file, local_path=None):
-    """複制日誌檔案到本地"""
+    """複製日誌檔案到本地"""
     if not local_path:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = os.path.basename(log_file)
         local_path = f"{filename}_{timestamp}"
     
-    print(f"\n 複制日誌檔案到本地: {local_path}")
+    print(f"\n 複製日誌檔案到本地: {local_path}")
     
     success, output, error = run_command(f"docker cp {container_name}:{log_file} {local_path}")
     if success:
-        print(f" 日誌檔案已複制到: {local_path}")
+        print(f" 日誌檔案已複製到: {local_path}")
         
         # 檢查本地檔案大小
         if os.path.exists(local_path):
@@ -155,7 +155,7 @@ def copy_log_file(container_name, log_file, local_path=None):
         
         return local_path
     else:
-        print(f" 複制失敗: {error}")
+        print(f" 複製失敗: {error}")
         return None
 
 def get_docker_logs(container_name):
@@ -240,7 +240,7 @@ def main():
         get_log_file_info(container_name, selected_log)
         preview_log_file(container_name, selected_log)
         
-        copy_choice = input("\n是否複制此日誌檔案到本地? (y/N): ").strip().lower()
+        copy_choice = input("\n是否複製此日誌檔案到本地? (y/N): ").strip().lower()
         if copy_choice in ['y', 'yes']:
             local_file = copy_log_file(container_name, selected_log)
             if local_file:
@@ -248,7 +248,7 @@ def main():
                 print(f" 本地檔案: {local_file}")
     else:
         # 多個檔案處理
-        print(f"\n 複制所有 {len(selected_logs)} 個日誌檔案...")
+        print(f"\n 複製所有 {len(selected_logs)} 個日誌檔案...")
         copied_files = []
         for log_file in selected_logs:
             local_file = copy_log_file(container_name, log_file)
@@ -256,7 +256,7 @@ def main():
                 copied_files.append(local_file)
         
         if copied_files:
-            print(f"\n 成功複制 {len(copied_files)} 個日誌檔案:")
+            print(f"\n 成功複製 {len(copied_files)} 個日誌檔案:")
             for file in copied_files:
                 print(f"    {file}")
     

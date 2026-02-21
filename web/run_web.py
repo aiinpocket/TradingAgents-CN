@@ -149,7 +149,7 @@ def check_api_keys():
         logger.info("- OPENAI_API_KEY (OpenAI GPT 模型)")
         logger.info("- ANTHROPIC_API_KEY (Anthropic Claude 模型)")
         logger.info("\n配置方法:")
-        logger.info("1. 複制 .env.example 為 .env")
+        logger.info("1. 複製 .env.example 為 .env")
         logger.info("2. 編輯 .env 檔案，填入真實API密鑰")
         return False
 
@@ -176,7 +176,7 @@ def main():
     # 檢查API密鑰
     logger.info("檢查API密鑰...")
     if not check_api_keys():
-        logger.info("\n 提示: 您仍可以啟動Web應用查看界面，但無法進行實際分析")
+        logger.info("\n 提示: 您仍可以啟動Web應用查看介面，但無法進行實際分析")
         response = input("是否繼續啟動? (y/n): ").lower().strip()
         if response != 'y':
             return

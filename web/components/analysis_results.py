@@ -164,7 +164,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
     if not mongodb_loaded:
         logger.debug("[備用資料來源] 從檔案系統載入分析結果")
 
-        # 首先嘗試從Web界面的保存位置讀取
+        # 首先嘗試從Web介面的保存位置讀取
         web_results_dir = get_analysis_results_dir()
         for result_file in web_results_dir.glob("*.json"):
             if result_file.name in ['favorites.json', 'tags.json']:
@@ -325,7 +325,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
     return filtered_results[:limit]
 
 def render_analysis_results():
-    """渲染分析結果管理界面"""
+    """渲染分析結果管理介面"""
     
     st.title("分析結果歷史記錄")
     

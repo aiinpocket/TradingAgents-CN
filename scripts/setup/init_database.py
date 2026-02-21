@@ -275,7 +275,7 @@ def main():
         logger.info(f"\n 下一步:")
         logger.info(f"1. 啟動Web應用: python start_web.py")
         logger.info(f"2. 訪問快取管理: http://localhost:8501 -> 快取管理")
-        logger.info(f"3. 訪問Redis管理界面: http://localhost:8081")
+        logger.info(f"3. 訪問Redis管理介面: http://localhost:8081")
         return True
     else:
         logger.error(f"\n 部分初始化失敗，請檢查錯誤訊息")

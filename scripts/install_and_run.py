@@ -46,8 +46,8 @@ def install_project():
         return False
 
 def install_web_dependencies():
-    """安裝Web界面依賴"""
-    print("\n 安裝Web界面依賴...")
+    """安裝Web介面依賴"""
+    print("\n 安裝Web介面依賴...")
     
     web_deps = [
         "streamlit>=1.28.0",
