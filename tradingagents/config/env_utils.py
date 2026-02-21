@@ -5,7 +5,10 @@
 """
 
 import os
+import logging
 from typing import Any, Union, Optional
+
+logger = logging.getLogger(__name__)
 
 
 def parse_bool_env(env_var: str, default: bool = False) -> bool:
@@ -60,7 +63,7 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
         return False
     else:
         # 如果無法識別，記錄警告並返回默認值
-        print(f"無法解析環境變量 {env_var}='{value}'，使用默認值 {default}")
+        logger.warning(f"無法解析環境變量 {env_var}='{value}'，使用默認值 {default}")
         return default
 
 
@@ -83,7 +86,7 @@ def parse_int_env(env_var: str, default: int = 0) -> int:
     try:
         return int(value.strip())
     except (ValueError, AttributeError):
-        print(f"無法解析環境變量 {env_var}='{value}' 為整數，使用默認值 {default}")
+        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為整數，使用默認值 {default}")
         return default
 
 
@@ -106,7 +109,7 @@ def parse_float_env(env_var: str, default: float = 0.0) -> float:
     try:
         return float(value.strip())
     except (ValueError, AttributeError):
-        print(f"無法解析環境變量 {env_var}='{value}' 為浮點數，使用默認值 {default}")
+        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為浮點數，使用默認值 {default}")
         return default
 
 
@@ -155,7 +158,7 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
         # 過濾空字符串
         return [item for item in items if item]
     except AttributeError:
-        print(f"無法解析環境變量 {env_var}='{value}' 為列表，使用默認值 {default}")
+        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為列表，使用默認值 {default}")
         return default
 
 

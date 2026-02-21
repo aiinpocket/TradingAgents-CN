@@ -27,7 +27,6 @@ from rich.table import Table
 from rich.text import Text
 
 # 項目內部導入
-from cli.models import AnalystType
 from cli.utils import (
     select_analysts,
     select_deep_thinking_agent,
@@ -1634,7 +1633,7 @@ def version():
     logger.info(f"[green]Purpose:[/green] [cyan]Open-source multi-agent stock analysis platform[/cyan]")
     logger.info(f"[green]Features:[/green]")
     logger.info(f"  Multi-agent collaborative analysis")
-    logger.info(f"  Multi-LLM provider support (OpenAI, Google, Anthropic, etc.)")
+    logger.info(f"  Multi-LLM provider support (OpenAI, Anthropic)")
     logger.info(f"  Real-time US stock data analysis")
     logger.info(f"  AI-powered investment insights")
     logger.debug(f"  - 風險評估 | Risk assessment")

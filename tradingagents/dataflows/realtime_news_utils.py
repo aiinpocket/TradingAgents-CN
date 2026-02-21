@@ -99,19 +99,6 @@ class RealtimeNewsAggregator:
         else:
             logger.info(f"[新聞聚合器] NewsAPI 密鑰未配置，跳過此新聞源")
         
-        # 4. 中文財經新聞源
-        logger.info(f"[新聞聚合器] 嘗試獲取 {ticker} 的中文財經新聞")
-        chinese_start = datetime.now()
-        chinese_news = self._get_chinese_finance_news(ticker, hours_back)
-        chinese_time = (datetime.now() - chinese_start).total_seconds()
-        
-        if chinese_news:
-            logger.info(f"[新聞聚合器] 成功獲取 {len(chinese_news)} 條中文財經新聞，耗時: {chinese_time:.2f}秒")
-        else:
-            logger.info(f"[新聞聚合器] 未獲取到中文財經新聞，耗時: {chinese_time:.2f}秒")
-            
-        all_news.extend(chinese_news)
-        
         # 去重和排序
         logger.info(f"[新聞聚合器] 開始對 {len(all_news)} 條新聞進行去重和排序")
         dedup_start = datetime.now()
@@ -294,130 +281,6 @@ class RealtimeNewsAggregator:
             
         except Exception as e:
             logger.error(f"NewsAPI新聞獲取失敗: {e}")
-            return []
-    
-    def _get_chinese_finance_news(self, ticker: str, hours_back: int) -> List[NewsItem]:
-        """獲取財經新聞（已移除中國數據源依賴）"""
-        logger.info(f"[財經新聞] 開始獲取 {ticker} 的財經新聞，回溯時間: {hours_back}小時")
-        start_time = datetime.now()
-
-        try:
-            news_items = []
-
-            # 財聯社RSS (如果可用)
-            logger.info(f"[中文財經新聞] 開始獲取財聯社RSS新聞")
-            rss_start_time = datetime.now()
-            rss_sources = [
-                "https://www.cls.cn/api/sw?app=CailianpressWeb&os=web&sv=7.7.5",
-                # 可以添加更多RSS源
-            ]
-            
-            rss_success_count = 0
-            rss_error_count = 0
-            total_rss_items = 0
-            
-            for rss_url in rss_sources:
-                try:
-                    logger.info(f"[中文財經新聞] 嘗試解析RSS源: {rss_url}")
-                    rss_item_start = datetime.now()
-                    items = self._parse_rss_feed(rss_url, ticker, hours_back)
-                    rss_item_time = (datetime.now() - rss_item_start).total_seconds()
-                    
-                    if items:
-                        logger.info(f"[中文財經新聞] 成功從RSS源獲取 {len(items)} 條新聞，耗時: {rss_item_time:.2f}秒")
-                        news_items.extend(items)
-                        total_rss_items += len(items)
-                        rss_success_count += 1
-                    else:
-                        logger.info(f"[中文財經新聞] RSS源未返回相關新聞，耗時: {rss_item_time:.2f}秒")
-                except Exception as rss_e:
-                    logger.error(f"[中文財經新聞] 解析RSS源失敗: {rss_e}")
-                    rss_error_count += 1
-                    continue
-            
-            # 記錄RSS獲取總結
-            rss_total_time = (datetime.now() - rss_start_time).total_seconds()
-            logger.info(f"[中文財經新聞] RSS新聞獲取完成，成功源: {rss_success_count}個，失敗源: {rss_error_count}個，獲取新聞: {total_rss_items}條，總耗時: {rss_total_time:.2f}秒")
-            
-            # 記錄中文財經新聞獲取總結
-            total_time = (datetime.now() - start_time).total_seconds()
-            logger.info(f"[中文財經新聞] {ticker} 的中文財經新聞獲取完成，總共獲取 {len(news_items)} 條新聞，總耗時: {total_time:.2f}秒")
-            
-            return news_items
-            
-        except Exception as e:
-            logger.error(f"[中文財經新聞] 中文財經新聞獲取失敗: {e}")
-            return []
-    
-    def _parse_rss_feed(self, rss_url: str, ticker: str, hours_back: int) -> List[NewsItem]:
-        """解析RSS源"""
-        logger.info(f"[RSS解析] 開始解析RSS源: {rss_url}，股票: {ticker}，回溯時間: {hours_back}小時")
-        start_time = datetime.now()
-        
-        try:
-            # 實際實現需要使用feedparser庫
-            # 這裡是簡化實現，實際項目中應該替換為真實的RSS解析邏輯
-            import feedparser
-            
-            logger.info(f"[RSS解析] 嘗試獲取RSS源內容")
-            feed = feedparser.parse(rss_url)
-            
-            if not feed or not feed.entries:
-                logger.warning(f"[RSS解析] RSS源未返回有效內容")
-                return []
-            
-            logger.info(f"[RSS解析] 成功獲取RSS源，包含 {len(feed.entries)} 條條目")
-            news_items = []
-            processed_count = 0
-            skipped_count = 0
-            
-            for entry in feed.entries:
-                try:
-                    # 解析時間
-                    if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                        publish_time = datetime.fromtimestamp(time.mktime(entry.published_parsed))
-                    else:
-                        logger.warning(f"[RSS解析] 條目缺少發布時間，使用當前時間")
-                        publish_time = datetime.now()
-                    
-                    # 檢查時效性
-                    if publish_time < datetime.now() - timedelta(hours=hours_back):
-                        skipped_count += 1
-                        continue
-                    
-                    title = entry.title if hasattr(entry, 'title') else ''
-                    content = entry.description if hasattr(entry, 'description') else ''
-                    
-                    # 檢查相關性
-                    if ticker.lower() not in title.lower() and ticker.lower() not in content.lower():
-                        skipped_count += 1
-                        continue
-                    
-                    # 評估緊急程度
-                    urgency = self._assess_news_urgency(title, content)
-                    
-                    news_items.append(NewsItem(
-                        title=title,
-                        content=content,
-                        source='財聯社',
-                        publish_time=publish_time,
-                        url=entry.link if hasattr(entry, 'link') else '',
-                        urgency=urgency,
-                        relevance_score=self._calculate_relevance(title, ticker)
-                    ))
-                    processed_count += 1
-                except Exception as e:
-                    logger.error(f"[RSS解析] 處理RSS條目失敗: {e}")
-                    continue
-            
-            total_time = (datetime.now() - start_time).total_seconds()
-            logger.info(f"[RSS解析] RSS源解析完成，成功: {processed_count}條，跳過: {skipped_count}條，耗時: {total_time:.2f}秒")
-            return news_items
-        except ImportError:
-            logger.error(f"[RSS解析] feedparser庫未安裝，無法解析RSS源")
-            return []
-        except Exception as e:
-            logger.error(f"[RSS解析] 解析RSS源失敗: {e}")
             return []
     
     def _assess_news_urgency(self, title: str, content: str) -> str:
@@ -717,8 +580,8 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
 備用建議:
 1. 檢查網絡連接和API密鑰配置
 2. 使用基礎新聞分析作為備選
-3. 關註官方財經媒體的最新報道
+3. 關注官方財經媒體的最新報道
 4. 考慮使用專業金融終端獲取實時新聞
 
-註: 實時新聞獲取依賴外部API服務的可用性。
+注: 實時新聞獲取依賴外部 API 服務的可用性。
 """

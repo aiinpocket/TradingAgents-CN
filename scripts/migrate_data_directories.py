@@ -63,7 +63,6 @@ class DataDirectoryMigrator:
             ('web/data/sessions', 'data/sessions/web_sessions'),
             
             # 日誌數據遷移
-            ('web/data/operation_logs', 'data/logs/operations'),
             ('web/data/user_activities', 'data/logs/user_activities'),
             
             # 報告數據遷移（如果存在）

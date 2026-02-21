@@ -502,7 +502,7 @@ def get_stockstats_indicator(
             online=online,
         )
     except Exception as e:
-        print(
+        logger.error(
             f"Error getting stockstats indicator data for indicator {indicator} on {curr_date}: {e}"
         )
         return ""
