@@ -94,6 +94,3 @@ def load_model_selection():
     """載入模型選擇"""
     return persistence.load_config()
 
-def clear_model_selection():
-    """清除模型選擇"""
-    persistence.clear_config()

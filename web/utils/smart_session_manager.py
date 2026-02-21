@@ -188,6 +188,3 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
     except Exception as e:
         st.warning(f"設定持久化分析ID失敗: {e}")
 
-def get_session_debug_info() -> Dict[str, Any]:
-    """取得會話管理器除錯資訊"""
-    return smart_session_manager.get_debug_info()

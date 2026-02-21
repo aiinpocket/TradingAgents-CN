@@ -136,27 +136,6 @@ def test_docker_pdf_generation() -> bool:
         logger.error(f"Docker PDF測試失敗: {e}")
         return False
 
-def get_docker_pdf_extra_args():
-    """取得Docker環境下PDF生成的額外參數"""
-    base_args = [
-        '--toc',
-        '--number-sections',
-        '-V', 'geometry:margin=2cm',
-        '-V', 'documentclass=article'
-    ]
-
-    if is_docker_environment():
-        # Docker環境下的特殊配置 - 使用正確的pandoc參數格式
-        docker_args = []
-        wkhtmltopdf_args = get_docker_wkhtmltopdf_args()
-
-        # 將wkhtmltopdf參數正確傳遞給pandoc
-        for arg in wkhtmltopdf_args:
-            docker_args.extend(['--pdf-engine-opt=' + arg])
-
-        return base_args + docker_args
-
-    return base_args
 
 def check_docker_pdf_dependencies():
     """檢查Docker環境下PDF生成的依賴"""

@@ -111,17 +111,9 @@ def is_analysis_thread_alive(analysis_id: str) -> bool:
     """檢查分析執行緒是否存活"""
     return thread_tracker.is_thread_alive(analysis_id)
 
-def get_analysis_thread_info(analysis_id: str) -> Optional[Dict]:
-    """取得分析執行緒資訊"""
-    return thread_tracker.get_thread_info(analysis_id)
-
 def cleanup_dead_analysis_threads():
     """清理所有死亡的分析執行緒"""
     thread_tracker.cleanup_dead_threads()
-
-def get_all_analysis_threads() -> Dict[str, Dict]:
-    """取得所有分析執行緒資訊"""
-    return thread_tracker.get_all_thread_info()
 
 def check_analysis_status(analysis_id: str) -> str:
     """
