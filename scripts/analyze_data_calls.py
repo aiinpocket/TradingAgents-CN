@@ -337,7 +337,7 @@ class DataCallAnalyzer:
 ## 建議
 """
         
-        # 添加建議
+        # 新增建議
         if data_analysis['performance']['avg_duration'] > 3.0:
             report += "-  平均資料取得時間較長，建議優化快取策略\n"
         

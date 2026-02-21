@@ -203,7 +203,7 @@ def create_fundamentals_analyst(llm, toolkit):
 
         logger.debug("呼叫LLM鏈...")
 
-        # 添加詳細的股票代碼追蹤日誌
+        # 新增詳細的股票代碼追蹤日誌
         logger.info(f"[股票代碼追蹤] LLM呼叫前，ticker參數: '{ticker}'")
         logger.info(f"[股票代碼追蹤] 傳遞給LLM的訊息數量: {len(state['messages'])}")
 

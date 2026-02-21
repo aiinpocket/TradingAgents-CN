@@ -33,7 +33,7 @@ class ColoredFormatter(logging.Formatter):
     }
     
     def format(self, record):
-        # 添加顏色
+        # 新增顏色
         if hasattr(record, 'levelname') and record.levelname in self.COLORS:
             record.levelname = f"{self.COLORS[record.levelname]}{record.levelname}{self.COLORS['RESET']}"
         
@@ -54,7 +54,7 @@ class StructuredFormatter(logging.Formatter):
             'line': record.lineno
         }
         
-        # 添加額外字段
+        # 新增額外字段
         if hasattr(record, 'session_id'):
             log_entry['session_id'] = record.session_id
         if hasattr(record, 'analysis_type'):
@@ -195,7 +195,7 @@ class TradingAgentsLogger:
         # 清除現有處理器
         root_logger.handlers.clear()
         
-        # 添加處理器
+        # 新增處理器
         self._add_console_handler(root_logger)
         
         if not self.config['docker']['enabled'] or not self.config['docker']['stdout_only']:
@@ -207,7 +207,7 @@ class TradingAgentsLogger:
         self._configure_specific_loggers()
     
     def _add_console_handler(self, logger: logging.Logger):
-        """添加主控台處理器"""
+        """新增主控台處理器"""
         if not self.config['handlers']['console']['enabled']:
             return
             
@@ -225,7 +225,7 @@ class TradingAgentsLogger:
         logger.addHandler(console_handler)
     
     def _add_file_handler(self, logger: logging.Logger):
-        """添加檔案處理器"""
+        """新增檔案處理器"""
         if not self.config['handlers']['file']['enabled']:
             return
             
@@ -251,7 +251,7 @@ class TradingAgentsLogger:
         logger.addHandler(file_handler)
     
     def _add_structured_handler(self, logger: logging.Logger):
-        """添加結構化日誌處理器"""
+        """新增結構化日誌處理器"""
         try:
             log_dir = Path(self.config['handlers']['structured']['directory'])
             log_file = log_dir / 'tradingagents_structured.log'

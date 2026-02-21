@@ -8,7 +8,7 @@ import os
 import sys
 from datetime import datetime
 
-# 添加項目根目錄到路徑
+# 新增項目根目錄到路徑
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_final_integration():

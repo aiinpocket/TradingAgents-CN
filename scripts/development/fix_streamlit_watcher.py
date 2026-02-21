@@ -110,11 +110,11 @@ def set_environment_variables():
     if env_file.exists():
         content = env_file.read_text(encoding='utf-8')
         if 'PYTHONDONTWRITEBYTECODE' not in content:
-            logger.info(f"   建議在.env 檔案中添加: PYTHONDONTWRITEBYTECODE=1")
+            logger.info(f"   建議在.env 檔案中新增: PYTHONDONTWRITEBYTECODE=1")
         else:
             logger.info(f"   .env 檔案已包含PYTHONDONTWRITEBYTECODE設定")
     else:
-        logger.info(f"   建議建立.env 檔案並添加: PYTHONDONTWRITEBYTECODE=1")
+        logger.info(f"   建議建立.env 檔案並新增: PYTHONDONTWRITEBYTECODE=1")
 
 def main():
     """主函式"""

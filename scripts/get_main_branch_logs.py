@@ -317,7 +317,7 @@ def main():
     if not log_files:
         print("   - 應用可能將日誌輸出到stdout，已通過Docker日誌捕獲")
         print("   - 檢查應用的日誌配置，確保寫入到檔案")
-        print("   - 考慮在docker-compose.yml中添加日誌目錄掛載")
+        print("   - 考慮在docker-compose.yml中新增日誌目錄掛載")
     
     print("   - 將取得到的日誌檔案發送給開發者進行問題診斷")
     

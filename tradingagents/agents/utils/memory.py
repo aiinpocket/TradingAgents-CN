@@ -381,7 +381,7 @@ class FinancialSituationMemory:
             'provider': self.llm_provider
         }
         
-        # 添加最後一次文本處理資訊
+        # 新增最後一次文本處理資訊
         if hasattr(self, '_last_text_info'):
             info['last_text_processing'] = self._last_text_info
             

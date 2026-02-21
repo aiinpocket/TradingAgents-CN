@@ -195,7 +195,7 @@ class AsyncProgressTracker:
             {"name": "啟動引擎", "description": "初始化AI分析引擎，準備開始分析", "weight": 0.05},
         ]
 
-        # 為每個分析師添加專門的步驟
+        # 為每個分析師新增專門的步驟
         analyst_base_weight = 0.6 / len(self.analysts)  # 60%的時間用於分析師工作
         for analyst in self.analysts:
             analyst_info = self._get_analyst_step_info(analyst)
@@ -205,7 +205,7 @@ class AsyncProgressTracker:
                 "weight": analyst_base_weight
             })
 
-        # 根據研究深度添加後續步驟
+        # 根據研究深度新增後續步驟
         if self.research_depth >= 2:
             # 標準和深度分析包含研究員辯論
             steps.extend([

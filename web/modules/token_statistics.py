@@ -278,7 +278,7 @@ def render_cost_trends(records: List[UsageRecord]):
         subplot_titles=["每日成本和Token使用趨勢"]
     )
     
-    # 添加成本趨勢線
+    # 新增成本趨勢線
     fig.add_trace(
         go.Scatter(
             x=daily_stats['date'],
@@ -290,7 +290,7 @@ def render_cost_trends(records: List[UsageRecord]):
         secondary_y=False,
     )
     
-    # 添加Token使用趨勢線
+    # 新增Token使用趨勢線
     fig.add_trace(
         go.Scatter(
             x=daily_stats['date'],

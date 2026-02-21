@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 批量更新檔案指令碼
-為所有核心檔案添加版本資訊頭部，修復常見問題
+為所有核心檔案新增版本資訊頭部，修復常見問題
 """
 
 import os
@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import List, Dict
 from datetime import datetime
 
-# 添加項目根目錄到路徑
+# 新增項目根目錄到路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -31,7 +31,7 @@ class DocumentationUpdater:
         
         self.current_date = datetime.now().strftime('%Y-%m-%d')
         
-        # 需要添加版本頭部的核心檔案
+        # 需要新增版本頭部的核心檔案
         self.core_docs = [
             "agents/managers.md",
             "agents/researchers.md", 
@@ -56,8 +56,8 @@ status: {status}
 """
     
     def add_version_headers(self) -> List[str]:
-        """為核心檔案添加版本頭部"""
-        print(" 為核心檔案添加版本頭部...")
+        """為核心檔案新增版本頭部"""
+        print(" 為核心檔案新增版本頭部...")
         updated_files = []
         
         for doc_path in self.core_docs:
@@ -74,7 +74,7 @@ status: {status}
                     print(f"    已有版本頭部: {doc_path}")
                     continue
                 
-                # 添加版本頭部
+                # 新增版本頭部
                 new_content = self.create_version_header() + content
                 full_path.write_text(new_content, encoding='utf-8')
                 updated_files.append(doc_path)
@@ -108,7 +108,7 @@ status: {status}
                 
                 # 3. 修復BaseAnalyst引用（在程式碼區塊外的說明中）
                 if "BaseAnalyst" in content and "已廢棄" not in content:
-                    # 在提到BaseAnalyst的地方添加廢棄說明
+                    # 在提到BaseAnalyst的地方新增廢棄說明
                     content = re.sub(
                         r'BaseAnalyst',
                         'BaseAnalyst (已廢棄，現使用函式式架構)',
@@ -120,7 +120,7 @@ status: {status}
                 python_blocks = re.findall(r'```python\n(.*?)\n```', content, re.DOTALL)
                 for block in python_blocks:
                     if block.strip().endswith(':') and not block.strip().endswith('"""'):
-                        # 不完整的函式定義，添加pass
+                        # 不完整的函式定義，新增pass
                         fixed_block = block + '\n    pass'
                         content = content.replace(f'```python\n{block}\n```', f'```python\n{fixed_block}\n```')
                 
@@ -154,12 +154,12 @@ status: {status}
                 content
             )
             
-            # 在檔案末尾添加更新記錄
+            # 在檔案末尾新增更新記錄
             update_record = f"""
 ## 最新更新記錄
 
 ### {self.current_date} 批量更新
--  為 {len(updated_files)} 個核心檔案添加了版本頭部
+-  為 {len(updated_files)} 個核心檔案新增了版本頭部
 -  修復了 {len(fixed_files)} 個檔案的程式碼區塊問題
 -  更新了檔案狀態追蹤
 
@@ -186,13 +186,13 @@ status: {status}
 
 ## 更新摘要
 
--  添加版本頭部: {len(updated_files)} 個檔案
+-  新增版本頭部: {len(updated_files)} 個檔案
 -  修復程式碼區塊問題: {len(fixed_files)} 個檔案
 -  更新狀態追蹤: 1 個檔案
 
 ## 詳細更新列表
 
-### 添加版本頭部的檔案
+### 新增版本頭部的檔案
 {chr(10).join(f'-  {file}' for file in updated_files) if updated_files else '- 無'}
 
 ### 修復程式碼區塊的檔案  
@@ -200,7 +200,7 @@ status: {status}
 
 ## 下一步建議
 
-1. **繼續更新其他檔案**: 還有更多檔案需要添加版本頭部
+1. **繼續更新其他檔案**: 還有更多檔案需要新增版本頭部
 2. **驗證程式碼示例**: 檢查修復後的程式碼區塊是否正確
 3. **更新API參考**: 建立或更新API參考檔案
 4. **建立定期檢查**: 設定定期的檔案一致性檢查
@@ -223,7 +223,7 @@ def main():
     
     updater = DocumentationUpdater()
     
-    # 1. 添加版本頭部
+    # 1. 新增版本頭部
     updated_files = updater.add_version_headers()
     
     # 2. 修復程式碼區塊問題
@@ -238,7 +238,7 @@ def main():
     report_file.write_text(report, encoding='utf-8')
     
     print(f"\n 批量更新完成！")
-    print(f"    添加版本頭部: {len(updated_files)} 個檔案")
+    print(f"    新增版本頭部: {len(updated_files)} 個檔案")
     print(f"    修復程式碼區塊: {len(fixed_files)} 個檔案")
     print(f"    報告已保存到: {report_file}")
     

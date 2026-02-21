@@ -196,9 +196,9 @@ def main():
         print(f"\n 發現 {len(missing_deps)} 個可能缺失的依賴:")
         print("-" * 80)
         for import_name, package_name in sorted(missing_deps):
-            print(f"  • {import_name:25s} → 建議添加: {package_name}")
+            print(f"  • {import_name:25s} → 建議新增: {package_name}")
         
-        print("\n 建議在 pyproject.toml 的 dependencies 中添加:")
+        print("\n 建議在 pyproject.toml 的 dependencies 中新增:")
         print("-" * 80)
         for import_name, package_name in sorted(missing_deps):
             print(f'    "{package_name}",')

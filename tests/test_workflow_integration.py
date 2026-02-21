@@ -108,7 +108,7 @@ def test_news_analyst_integration():
             workflow_checks = [
                 ("新聞分析師匯入", "from tradingagents.agents.analysts.news_analyst import create_news_analyst"),
                 ("新聞分析師節點建立", 'analyst_nodes["news"] = create_news_analyst'),
-                ("工作流程節點添加", "workflow.add_node")
+                ("工作流程節點新增", "workflow.add_node")
             ]
             
             for check_name, check_pattern in workflow_checks:

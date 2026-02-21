@@ -113,7 +113,7 @@ class ReportExporter:
         # 確保內容不以可能被誤認為YAML的字元開頭
         content = content.strip()
 
-        # 如果第一行看起來像YAML分隔符，添加空行
+        # 如果第一行看起來像YAML分隔符，新增空行
         lines = content.split('\n')
         if lines and (lines[0].startswith('---') or lines[0].startswith('...')):
             content = '\n'+ content
@@ -195,7 +195,7 @@ class ReportExporter:
 
 """
         
-        # 添加各個分析模組的內容 - 與CLI端保持一致的完整結構
+        # 新增各個分析模組的內容 - 與CLI端保持一致的完整結構
         analysis_modules = [
             ('market_report', '市場技術分析', '技術指標、價格趨勢、支撐阻力位分析'),
             ('fundamentals_report', '基本面分析', '財務資料、估值水平、盈利能力分析'),
@@ -222,10 +222,10 @@ class ReportExporter:
             else:
                 md_content += "暫無資料\n\n"
 
-        # 添加團隊決策報告部分 - 與CLI端保持一致
+        # 新增團隊決策報告部分 - 與CLI端保持一致
         md_content = self._add_team_decision_reports(md_content, state)
 
-        # 添加風險提示
+        # 新增風險提示
         md_content += f"""
 ---
 
@@ -245,7 +245,7 @@ class ReportExporter:
         return md_content
 
     def _add_team_decision_reports(self, md_content: str, state: Dict[str, Any]) -> str:
-        """添加團隊決策報告部分，與CLI端保持一致"""
+        """新增團隊決策報告部分，與CLI端保持一致"""
 
         # II. 研究團隊決策報告
         if 'investment_debate_state'in state and state['investment_debate_state']:
@@ -401,7 +401,7 @@ class ReportExporter:
                 # 使用禁用YAML解析的參數（與Word匯出一致）
                 extra_args = ['--from=markdown-yaml_metadata_block']
 
-                # 如果指定了引擎，添加引擎參數
+                # 如果指定了引擎，新增引擎參數
                 if engine:
                     extra_args.append(f'--pdf-engine={engine}')
                     logger.info(f"使用PDF引擎: {engine}")
@@ -634,7 +634,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 'title': f'{stock_symbol} 最終投資決策',
                 'state_key': 'final_trade_decision'
             },
-            # 添加團隊決策報告模組
+            # 新增團隊決策報告模組
             'investment_debate_state': {
                 'filename': 'research_team_decision.md',
                 'title': f'{stock_symbol} 研究團隊決策報告',
@@ -654,7 +654,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             if content:
                 # 生成模組報告內容
                 if isinstance(content, str):
-                    # 檢查內容是否已經包含標題，避免重複添加
+                    # 檢查內容是否已經包含標題，避免重複新增
                     if content.strip().startswith('#'):
                         report_content = content
                     else:

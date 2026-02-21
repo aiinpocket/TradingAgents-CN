@@ -129,22 +129,22 @@ def render_model_config():
     else:
         st.warning("沒有找到模型配置")
 
-    # 添加新模型的說明
-    st.markdown("**添加新模型**")
+    # 新增新模型的說明
+    st.markdown("**新增新模型**")
     st.info("""
-     **如何添加新模型：**
+     **如何新增新模型：**
 
     為了安全起見，新模型的配置（包括API密鑰）只能透過 `.env` 檔案設定。
 
     **步驟：**
     1. 開啟專案根目錄的 `.env` 檔案
-    2. 添加相應的API密鑰環境變數：
+    2. 新增相應的API密鑰環境變數：
        - OpenAI: `OPENAI_API_KEY=your_key`
        - Anthropic: `ANTHROPIC_API_KEY=your_key`
     3. 重新啟動應用程式
     4. 系統會自動檢測並載入新配置的模型
 
-    **注意**: Web 介面不支援直接添加新模型，這是為了保護您的 API 密鑰安全。
+    **注意**: Web 介面不支援直接新增新模型，這是為了保護您的 API 密鑰安全。
     """)
 
 
@@ -216,8 +216,8 @@ def render_pricing_config():
                 st.success("定價已保存！")
                 st.rerun()
     
-    # 添加新定價
-    st.markdown("**添加新定價**")
+    # 新增新定價
+    st.markdown("**新增新定價**")
     
     col1, col2 = st.columns(2)
     
@@ -230,7 +230,7 @@ def render_pricing_config():
         new_input_price = st.number_input("輸入價格 (每1K token)", min_value=0.0, step=0.001, format="%.6f", key="new_pricing_input")
         new_output_price = st.number_input("輸出價格 (每1K token)", min_value=0.0, step=0.001, format="%.6f", key="new_pricing_output")
     
-    if st.button("添加定價", key="add_new_pricing"):
+    if st.button("新增定價", key="add_new_pricing"):
         if new_provider and new_model_name:
             new_pricing = PricingConfig(
                 provider=new_provider,
@@ -242,7 +242,7 @@ def render_pricing_config():
             
             pricing_configs.append(new_pricing)
             config_manager.save_pricing(pricing_configs)
-            st.success("新定價已添加！")
+            st.success("新定價已新增！")
             st.rerun()
         else:
             st.error("請填寫供應商和模型名稱")

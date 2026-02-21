@@ -164,7 +164,7 @@ class UnifiedDataDirectoryManager:
             'data_root': str(self.get_path('data_root', create=False)),
         }
         
-        # 添加環境變數狀態
+        # 新增環境變數狀態
         for key, env_key in self._env_mapping.items():
             env_value = os.getenv(env_key)
             summary[f'env_{key}'] = env_value if env_value else '未設定'
@@ -252,7 +252,7 @@ def get_data_path(key: str, create: bool = True) -> Path:
     return get_data_manager().get_path(key, create=create)
 
 def main():
-    """命令行工具主函式"""
+    """命令列工具主函式"""
     import argparse
     
     parser = argparse.ArgumentParser(description='統一資料目錄配置管理器')

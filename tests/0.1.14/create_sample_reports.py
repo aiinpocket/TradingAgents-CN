@@ -8,7 +8,7 @@ import sys
 import os
 from datetime import datetime
 
-# 添加項目路徑
+# 新增項目路徑
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def create_sample_report(stock_symbol: str, stock_name: str):

@@ -143,7 +143,7 @@ def main():
         print(" 所有測試通過！條件邏輯修複成功")
         print("\n 修複內容:")
         print(" 修複了 tool_calls 屬性檢查")
-        print(" 添加了 hasattr 安全檢查")
+        print(" 新增了 hasattr 安全檢查")
         print(" 避免了 ToolMessage 屬性錯誤")
         print(" 所有條件邏輯函式都已修複")
         return True

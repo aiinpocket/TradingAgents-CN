@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-# 添加項目根目錄到路徑
+# 新增項目根目錄到路徑
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -57,7 +57,7 @@ def get_session_logger(session_id: str, module_name: str = 'session') -> 'loggin
     """
     logger_name = f"{module_name}.{session_id[:8]}"  # 使用前8位會話ID
     
-    # 添加會話ID到所有日誌記錄
+    # 新增會話ID到所有日誌記錄
     class SessionAdapter:
         def __init__(self, logger, session_id):
             self.logger = logger

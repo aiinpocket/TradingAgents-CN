@@ -64,7 +64,7 @@ class MongoDBReportManager:
                 "connectTimeoutMS": 5000
             }
 
-            # 如果有使用者名和密碼，添加認證資訊
+            # 如果有使用者名和密碼，新增認證資訊
             if mongodb_username and mongodb_password:
                 connect_kwargs.update({
                     "username": mongodb_username,
@@ -323,7 +323,7 @@ class MongoDBReportManager:
             fixed_count = 0
             for doc in inconsistent_docs:
                 try:
-                    # 為缺少reports字段的檔案添加空的reports字段
+                    # 為缺少reports字段的檔案新增空的reports字段
                     update_data = {
                         "$set": {
                             "reports": {},
@@ -362,7 +362,7 @@ class MongoDBReportManager:
                 logger.error("報告資料缺少analysis_id字段")
                 return False
 
-            # 添加保存時間戳
+            # 新增保存時間戳
             report_data['saved_at'] = datetime.now()
 
             # 使用upsert操作，如果存在則更新，不存在則插入

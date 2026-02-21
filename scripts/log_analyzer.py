@@ -328,7 +328,7 @@ class LogAnalyzer:
 ## 建議
 """
 
-        # 添加建議
+        # 新增建議
         if len(performance['slow_operations']) > 10:
             report += "-  檢測到較多慢操作，建議優化性能\n"
 

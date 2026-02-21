@@ -8,7 +8,7 @@ import os
 import sys
 import time
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 

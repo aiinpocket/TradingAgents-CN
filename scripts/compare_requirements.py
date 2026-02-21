@@ -104,7 +104,7 @@ def main():
             for package in sorted(missing_in_req):
                 version = pyproject_packages[package]
                 print(f"  • {package}{version}")
-            print("\n 建議在 requirements.txt 中添加這些包")
+            print("\n 建議在 requirements.txt 中新增這些包")
         
         if missing_in_pyproject:
             print(f"\n 在 requirements.txt 中但不在 pyproject.toml 中 ({len(missing_in_pyproject)} 個):")
@@ -112,7 +112,7 @@ def main():
             for package in sorted(missing_in_pyproject):
                 version = req_packages[package]
                 print(f"  • {package}{version}")
-            print("\n 建議在 pyproject.toml 中添加這些包")
+            print("\n 建議在 pyproject.toml 中新增這些包")
         
         if version_mismatch:
             print(f"\n  版本不一致 ({len(version_mismatch)} 個):")

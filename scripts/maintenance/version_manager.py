@@ -45,7 +45,7 @@ class VersionManager:
             prefix = 'cn-'
             version_part = current[3:]  # 去掉cn-前缀
         else:
-            prefix = 'cn-'  # 預設添加cn-前缀
+            prefix = 'cn-'  # 預設新增cn-前缀
             version_part = current
 
         try:
@@ -122,7 +122,7 @@ class VersionManager:
         with open(self.changelog_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(lines))
         
-        logger.info(f" CHANGELOG.md 已更新，添加版本 {version}")
+        logger.info(f" CHANGELOG.md 已更新，新增版本 {version}")
     
     def release(self, bump_type, message=None, changes=None):
         """執行完整的發布流程"""

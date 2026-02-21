@@ -13,7 +13,7 @@ import os
 import sys
 from pathlib import Path
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -173,7 +173,7 @@ def main():
     
     print("\n=== 測試總結 ===")
     print("1. 資料目錄路徑已修複為跨平台相容")
-    print("2. 添加了詳細的錯誤處理和除錯資訊")
+    print("2. 新增了詳細的錯誤處理和除錯資訊")
     print("3. 當資料檔案不存在時會提供清晰的錯誤提示")
     print("4. 建議下載或配置正確的Finnhub資料")
     

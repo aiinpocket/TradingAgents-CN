@@ -114,7 +114,7 @@ class FileSessionManager:
                 "fingerprint": fingerprint
             }
 
-            # 添加表單配置
+            # 新增表單配置
             if form_config:
                 session_data["form_config"] = form_config
             

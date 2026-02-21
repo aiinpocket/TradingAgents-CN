@@ -110,7 +110,7 @@ class MongoDBStorage:
             # 轉換為字典格式
             record_dict = asdict(record)
             
-            # 添加MongoDB特有的字段
+            # 新增MongoDB特有的字段
             record_dict['_created_at'] = datetime.now()
             
             # 插入記錄

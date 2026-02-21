@@ -177,7 +177,7 @@ if [ ! -f ".gitignore" ]; then
     touch ".gitignore"
 fi
 
-# 添加條目到 .gitignore（如果不存在）
+# 新增條目到 .gitignore（如果不存在）
 for entry in "${GITIGNORE_ENTRIES[@]}"; do
     if [ -n "$entry" ] && ! grep -Fxq "$entry" .gitignore; then
         echo "$entry" >> .gitignore

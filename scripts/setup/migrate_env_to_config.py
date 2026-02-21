@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -82,11 +82,11 @@ def migrate_system_settings(env_config):
         updated = True
         logger.info(f" 更新日誌等級: {env_config['log_level']}")
     
-    # 添加其他配置
+    # 新增其他配置
     if env_config['finnhub_api_key']:
         settings['finnhub_api_key'] = env_config['finnhub_api_key']
         updated = True
-        logger.info(f" 添加 FinnHub API密鑰")
+        logger.info(f" 新增 FinnHub API密鑰")
     
     if updated:
         config_manager.save_settings(settings)

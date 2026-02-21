@@ -8,7 +8,7 @@ import sys
 import os
 from datetime import datetime
 
-# 添加項目路徑
+# 新增項目路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from tradingagents.agents.utils.agent_utils import Toolkit

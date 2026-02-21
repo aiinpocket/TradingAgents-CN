@@ -196,7 +196,7 @@ class DataDirectoryMigrator:
             with open(env_file, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # 添加新的環境變數配置
+            # 新增新的環境變數配置
             new_config = """
 # ===== 資料目錄配置 (重新組織後) =====
 # 統一資料根目錄
@@ -213,7 +213,7 @@ TRADINGAGENTS_TEMP_DIR=${TRADINGAGENTS_DATA_DIR}/temp
 TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
 """
             
-            # 如果還沒有這些配置，則添加
+            # 如果還沒有這些配置，則新增
             if 'TRADINGAGENTS_DATA_DIR' not in content:
                 content += new_config
                 

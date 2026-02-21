@@ -349,7 +349,7 @@ class ConfigManager:
     
     def add_usage_record(self, provider: str, model_name: str, input_tokens: int,
                         output_tokens: int, session_id: str, analysis_type: str = "stock_analysis"):
-        """添加使用記錄"""
+        """新增使用記錄"""
         # 計算成本
         cost = self.calculate_cost(provider, model_name, input_tokens, output_tokens)
         
@@ -440,7 +440,7 @@ class ConfigManager:
             "cache_dir": os.getenv("TRADINGAGENTS_CACHE_DIR", ""),  # 快取目錄環境變數
         }
 
-        # 添加OpenAI相關配置
+        # 新增OpenAI相關配置
         openai_enabled_env = os.getenv("OPENAI_ENABLED", "").lower()
         if openai_enabled_env in ["true", "false"]:
             env_settings["openai_enabled"] = openai_enabled_env == "true"
@@ -644,7 +644,7 @@ class TokenTracker:
         if not cost_tracking_enabled:
             return None
 
-        # 添加使用記錄
+        # 新增使用記錄
         record = self.config_manager.add_usage_record(
             provider=provider,
             model_name=model_name,

@@ -37,11 +37,11 @@
 
 - [ ] **註冊和集成**
   - [ ] 在 `OPENAI_COMPATIBLE_PROVIDERS` 字典中註冊了提供商
-  - [ ] 在 `__init__.py` 中添加了適配器導出
-  - [ ] 在前端 `sidebar.py` 中添加了提供商選項
+  - [ ] 在 `__init__.py` 中新增了適配器導出
+  - [ ] 在前端 `sidebar.py` 中新增了提供商選項
 
 - [ ] **環境變數配置**
-  - [ ] 在 `.env.example` 中添加了 API Key 示例
+  - [ ] 在 `.env.example` 中新增了 API Key 示例
   - [ ] 環境變數命名遵循 `{PROVIDER}_API_KEY` 格式
   - [ ] 提供了正確的 `base_url` 配置
 

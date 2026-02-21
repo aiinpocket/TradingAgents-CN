@@ -13,14 +13,14 @@ from dotenv import load_dotenv
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('web')
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 # 確保環境變數正確載入
 load_dotenv(project_root / ".env", override=True)
 
-# 添加配置管理器
+# 新增配置管理器
 try:
     from tradingagents.config.config_manager import token_tracker
     TOKEN_TRACKING_ENABLED = True
@@ -345,7 +345,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 提取風險評估資料
         risk_assessment = extract_risk_assessment(state)
 
-        # 將風險評估添加到狀態中
+        # 將風險評估新增到狀態中
         if risk_assessment:
             state['risk_assessment'] = risk_assessment
 
@@ -577,7 +577,7 @@ def format_analysis_results(results):
         'news_report',
         'risk_assessment',
         'investment_plan',
-        # 添加缺失的團隊決策資料，確保與CLI端一致
+        # 新增缺失的團隊決策資料，確保與CLI端一致
         'investment_debate_state',  # 研究團隊辯論（多頭/空頭研究員）
         'trader_investment_plan',   # 交易團隊計劃
         'risk_debate_state',        # 風險管理團隊決策

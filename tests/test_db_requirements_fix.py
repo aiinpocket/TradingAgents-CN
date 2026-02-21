@@ -10,7 +10,7 @@ import subprocess
 import tempfile
 import shutil
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
@@ -248,7 +248,7 @@ def main():
         print("\n 修複內容:")
         print(" 移除pickle5依賴，解決Python 3.10+相容性問題")
         print(" 優化版本要求，提高環境相容性")
-        print(" 添加相容性檢查工具")
+        print(" 新增相容性檢查工具")
         print(" 完善安裝指南和故障排除檔案")
         
         print("\n 使用者體驗改進:")

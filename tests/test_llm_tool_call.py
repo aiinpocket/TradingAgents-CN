@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 from typing import Dict, Any
 
-# 添加項目根目錄到路徑
+# 新增項目根目錄到路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from tradingagents.dataflows.realtime_news_utils import get_realtime_stock_news

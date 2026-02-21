@@ -98,7 +98,7 @@ def setup_progress_log_integration():
         _progress_handler = ProgressLogHandler()
         _progress_handler.setLevel(logging.INFO)
         
-        # 添加到tools日誌器（模組完成訊息來自這裡）
+        # 新增到tools日誌器（模組完成訊息來自這裡）
         tools_logger = logging.getLogger('tools')
         tools_logger.addHandler(_progress_handler)
         

@@ -99,7 +99,7 @@ def save_tags(tags):
         return False
 
 def add_tag_to_analysis(analysis_id, tag):
-    """為分析結果添加標籤"""
+    """為分析結果新增標籤"""
     tags = load_tags()
     if analysis_id not in tags:
         tags[analysis_id] = []
@@ -174,7 +174,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                 with open(result_file, 'r', encoding='utf-8') as f:
                     result = json.load(f)
 
-                    # 添加標籤資訊
+                    # 新增標籤資訊
                     result['tags'] = tags_data.get(result.get('analysis_id', ''), [])
                     result['is_favorite'] = result.get('analysis_id', '') in favorites
                     result['source'] = 'file_system'# 標記資料來源
@@ -715,7 +715,7 @@ def render_detailed_analysis_content(selected_result):
         # 建立標籤頁顯示不同的報告
         report_tabs = list(reports.keys())
 
-        # 為報告名稱添加中文標題和圖標
+        # 為報告名稱新增中文標題和圖標
         report_display_names = {
             'final_trade_decision': '最終交易決策',
             'fundamentals_report': '基本面分析',
@@ -733,7 +733,7 @@ def render_detailed_analysis_content(selected_result):
         for report_key in report_tabs:
             display_name = report_display_names.get(report_key, f"{report_key.replace('_', '').title()}")
             tab_names.append(display_name)
-            logger.debug(f"[彈窗除錯] 添加標籤: {display_name}")
+            logger.debug(f"[彈窗除錯] 新增標籤: {display_name}")
 
         logger.debug(f"[彈窗除錯] 總標籤數: {len(tab_names)}")
         
@@ -827,7 +827,7 @@ def render_detailed_analysis_content(selected_result):
                 if has_content:
                     available_modules.append(module)
             else:
-                # 對於字串或其他類型，直接添加
+                # 對於字串或其他類型，直接新增
                 available_modules.append(module)
 
     if not available_modules:
@@ -1144,7 +1144,7 @@ def show_expanded_detail(result):
         # 取得報告資料
         reports = result['reports']
 
-        # 為報告名稱添加中文標題和圖標
+        # 為報告名稱新增中文標題和圖標
         report_display_names = {
             'final_trade_decision': '最終交易決策',
             'fundamentals_report': '基本面分析',
@@ -1178,9 +1178,9 @@ def show_expanded_detail(result):
             tab_names.append(display_name)
 
         if len(tab_names) == 1:
-            # 只有一個報告，直接顯示內容（不添加額外標題，避免重複）
+            # 只有一個報告，直接顯示內容（不新增額外標題，避免重複）
             report_content = reports[report_tabs[0]]
-            # 如果報告內容已經包含標題，直接顯示；否則添加標題
+            # 如果報告內容已經包含標題，直接顯示；否則新增標題
             if not report_content.strip().startswith('#'):
                 st.markdown(f"### {tab_names[0]}")
                 st.markdown("---")

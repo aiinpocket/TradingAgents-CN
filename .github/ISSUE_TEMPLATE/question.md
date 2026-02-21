@@ -87,7 +87,7 @@ FINNHUB_API_KEY=已配置
 
 ##  截圖 / Screenshots
 
-如果有助於說明問題，請添加截圖。
+如果有助於說明問題，請新增截圖。
 If helpful, please add screenshots.
 
 ##  相關連結 / Related Links

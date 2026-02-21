@@ -72,7 +72,7 @@ pip install -r requirements.txt
 # 複製環境變數模板
 cp .env.example .env
 
-# 編輯 .env 檔案，添加您的API密鑰
+# 編輯 .env 檔案，新增您的API密鑰
 # OPENAI_API_KEY=your_openai_key        # OpenAI（推薦）
 # ANTHROPIC_API_KEY=your_anthropic_key  # Anthropic（可選）
 ```

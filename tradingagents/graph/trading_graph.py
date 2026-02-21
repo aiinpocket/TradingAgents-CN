@@ -187,7 +187,7 @@ class TradingAgentsGraph:
     def propagate(self, company_name, trade_date):
         """Run the trading agents graph for a company on a specific date."""
 
-        # 添加詳細的接收日誌
+        # 新增詳細的接收日誌
         logger.debug("===== TradingAgentsGraph.propagate 接收參數 =====")
         logger.debug(f"接收到的company_name: '{company_name}' (類型: {type(company_name)})")
         logger.debug(f"接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")

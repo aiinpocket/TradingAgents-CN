@@ -31,7 +31,7 @@ def make_request(url, headers):
     """Make a request with retry logic for rate limiting and connection issues"""
     # Random delay before each request to avoid detection
     time.sleep(random.uniform(2, 6))
-    # 添加超時參數，設定連接超時和讀取超時
+    # 新增超時參數，設定連接超時和讀取超時
     response = requests.get(url, headers=headers, timeout=(10, 30))  # 連接超時10秒，讀取超時30秒
     return response
 

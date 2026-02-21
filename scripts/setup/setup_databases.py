@@ -68,7 +68,7 @@ def setup_mongodb_windows():
        - 找到 "MongoDB" 服務並啟動
        
     4. 驗證安裝:
-       - 開啟命令行，執行: mongosh
+       - 開啟命令列，執行: mongosh
        - 如果連接成功，說明安裝正確
     
     預設連接地址: mongodb://localhost:27017
@@ -86,11 +86,11 @@ def setup_redis_windows():
     2. 解壓到目錄 (如 C:\\Redis)
     
     3. 啟動Redis 伺服器:
-       - 開啟命令行，進入Redis目錄
+       - 開啟命令列，進入Redis目錄
        - 執行: redis-server.exe
        
     4. 測試Redis連接:
-       - 新開命令行視窗
+       - 新開命令列視窗
        - 執行: redis-cli.exe
        - 輸入: ping
        - 應該返回: PONG

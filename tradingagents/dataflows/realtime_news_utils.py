@@ -373,7 +373,7 @@ class RealtimeNewsAggregator:
                 duplicate_count += 1
                 continue
                 
-            # 添加到結果集
+            # 新增到結果集
             seen_titles.add(title_key)
             unique_news.append(item)
         
@@ -431,7 +431,7 @@ class RealtimeNewsAggregator:
                 report += f"**來源**: {news.source} | **時間**: {news.publish_time.strftime('%H:%M')}\n"
                 report += f"{news.content}\n\n"
         
-        # 添加時效性說明
+        # 新增時效性說明
         latest_news = max(news_items, key=lambda x: x.publish_time)
         time_diff = datetime.now() - latest_news.publish_time
         

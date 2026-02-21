@@ -8,7 +8,7 @@ import os
 import sys
 import time
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
@@ -312,7 +312,7 @@ def main():
         print("\n 實施建議:")
         print("- 可以根據選擇的分析師數量動態調整時間預估")
         print("- 在長時間步驟中提供更多中間進度反饋")
-        print("- 考慮添加進度百分比顯示")
+        print("- 考慮新增進度百分比顯示")
         print("- 提供取消或暫停分析的選項")
     else:
         print(" 部分測試失敗，需要進一步優化")

@@ -7,7 +7,7 @@ import sys
 import os
 from pathlib import Path
 
-# 添加項目路徑
+# 新增項目路徑
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def cleanup_test_files():

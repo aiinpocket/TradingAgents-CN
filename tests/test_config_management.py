@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 from datetime import datetime
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -30,7 +30,7 @@ def test_config_manager():
         models = config_manager.load_models()
         assert len(models) > 0, "應該有預設模型配置"
         
-        # 添加新模型
+        # 新增新模型
         new_model = ModelConfig(
             provider="test_provider",
             model_name="test_model",
@@ -57,7 +57,7 @@ def test_config_manager():
         pricing_configs = config_manager.load_pricing()
         assert len(pricing_configs) > 0, "應該有預設定價配置"
         
-        # 添加新定價
+        # 新增新定價
         new_pricing = PricingConfig(
             provider="test_provider",
             model_name="test_model",
@@ -192,7 +192,7 @@ def test_usage_statistics():
     with tempfile.TemporaryDirectory() as temp_dir:
         config_manager = ConfigManager(temp_dir)
         
-        # 添加多條使用記錄
+        # 新增多條使用記錄
         test_records = [
             ("openai", "gpt-3.5-turbo", 1500, 750, "session3", "news_analysis"),
             ("anthropic", "claude-haiku-4-5", 1200, 600, "session4", "social_analysis"),

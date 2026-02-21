@@ -192,7 +192,7 @@ class IntegratedCacheManager:
             # 取得自適應快取統計
             adaptive_stats = self.adaptive_cache.get_cache_stats()
             
-            # 添加傳統快取統計
+            # 新增傳統快取統計
             legacy_stats = self.legacy_cache.get_cache_stats()
             
             return {

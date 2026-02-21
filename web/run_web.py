@@ -12,7 +12,7 @@ from pathlib import Path
 
 import psutil
 
-# 添加項目根目錄到Python路徑
+# 新增項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -203,7 +203,7 @@ def main():
         "--server.runOnSave", "false"
     ]
     
-    # 如果配置目錄存在，添加配置路徑
+    # 如果配置目錄存在，新增配置路徑
     if config_dir.exists():
         logger.info(f"使用配置目錄: {config_dir}")
         # Streamlit會自動查找.streamlit/config.toml 檔案
@@ -251,7 +251,7 @@ def main():
         logger.error(f"\n 啟動失敗: {e}")
 
 if __name__ == "__main__":
-    # 檢查命令行參數
+    # 檢查命令列參數
     if len(sys.argv) > 1:
         if sys.argv[1] == "--no-clean":
             os.environ['SKIP_CACHE_CLEAN'] = 'true'

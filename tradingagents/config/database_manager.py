@@ -94,7 +94,7 @@ class DatabaseManager:
                 "connectTimeoutMS": self.mongodb_config["timeout"]
             }
 
-            # 如果有使用者名和密碼，添加認證
+            # 如果有使用者名和密碼，新增認證
             if self.mongodb_config["username"] and self.mongodb_config["password"]:
                 connect_kwargs.update({
                     "username": self.mongodb_config["username"],
@@ -133,7 +133,7 @@ class DatabaseManager:
                 "socket_connect_timeout": self.redis_config["timeout"]
             }
 
-            # 如果有密碼，添加密碼
+            # 如果有密碼，新增密碼
             if self.redis_config["password"]:
                 connect_kwargs["password"] = self.redis_config["password"]
 
@@ -200,7 +200,7 @@ class DatabaseManager:
                     "serverSelectionTimeoutMS": self.mongodb_config["timeout"]
                 }
 
-                # 如果有使用者名和密碼，添加認證
+                # 如果有使用者名和密碼，新增認證
                 if self.mongodb_config["username"] and self.mongodb_config["password"]:
                     connect_kwargs.update({
                         "username": self.mongodb_config["username"],
@@ -227,7 +227,7 @@ class DatabaseManager:
                     "socket_timeout": self.redis_config["timeout"]
                 }
 
-                # 如果有密碼，添加密碼
+                # 如果有密碼，新增密碼
                 if self.redis_config["password"]:
                     connect_kwargs["password"] = self.redis_config["password"]
 
