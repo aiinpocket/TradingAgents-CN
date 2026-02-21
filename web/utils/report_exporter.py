@@ -1154,7 +1154,7 @@ def render_export_buttons(results: Dict[str, Any]):
                         ```
 
                         **方案3: 使用替代格式**
-                        - Markdown格式 - 轻量級，兼容性好
+                        - Markdown格式 - 輕量級，相容性好
                         - Word格式 - 適合進一步編輯
                         """)
 

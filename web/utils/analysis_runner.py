@@ -253,47 +253,13 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             config["memory_enabled"] = True
             config["online_tools"] = True
 
-        # 根據LLM提供商設置不同的配置
-        if llm_provider == "google":
-            # Google AI不需要backend_url，使用默認的OpenAI格式
-            config["backend_url"] = "https://api.openai.com/v1"
-            
-            # 根據研究深度優化Google模型選擇
-            if research_depth == 1:  # 快速分析 - 使用最快模型
-                config["quick_think_llm"] = "gemini-2.5-flash-lite-preview-06-17"  # 1.45s
-                config["deep_think_llm"] = "gemini-2.0-flash"  # 1.87s
-            elif research_depth == 2:  # 基礎分析 - 使用快速模型
-                config["quick_think_llm"] = "gemini-2.0-flash"  # 1.87s
-                config["deep_think_llm"] = "gemini-1.5-pro"  # 2.25s
-            elif research_depth == 3:  # 標準分析 - 平衡性能
-                config["quick_think_llm"] = "gemini-1.5-pro"  # 2.25s
-                config["deep_think_llm"] = "gemini-2.5-flash"  # 2.73s
-            elif research_depth == 4:  # 深度分析 - 使用強大模型
-                config["quick_think_llm"] = "gemini-2.5-flash"  # 2.73s
-                config["deep_think_llm"] = "gemini-2.5-pro"  # 16.68s
-            else:  # 全面分析 - 使用最強模型
-                config["quick_think_llm"] = "gemini-2.5-pro"  # 16.68s
-                config["deep_think_llm"] = "gemini-2.5-pro"  # 16.68s
-            
-            logger.info(f" [Google AI] 快速模型: {config['quick_think_llm']}")
-            logger.info(f" [Google AI] 深度模型: {config['deep_think_llm']}")
-        elif llm_provider == "openai":
-            # OpenAI官方API
+        # 根據 LLM 提供商設定 API 端點
+        if llm_provider == "openai":
             config["backend_url"] = "https://api.openai.com/v1"
             logger.info(f" [OpenAI] 使用模型: {llm_model}")
-            logger.info(f" [OpenAI] API端點: https://api.openai.com/v1")
-        elif llm_provider == "openrouter":
-            # OpenRouter使用OpenAI兼容API
-            config["backend_url"] = "https://openrouter.ai/api/v1"
-            logger.info(f" [OpenRouter] 使用模型: {llm_model}")
-            logger.info(f" [OpenRouter] API端點: https://openrouter.ai/api/v1")
-        elif llm_provider == "custom_openai":
-            # 自定義OpenAI端點
-            custom_base_url = st.session_state.get("custom_openai_base_url", "https://api.openai.com/v1")
-            config["backend_url"] = custom_base_url
-            config["custom_openai_base_url"] = custom_base_url
-            logger.info(f" [自定義OpenAI] 使用模型: {llm_model}")
-            logger.info(f" [自定義OpenAI] API端點: {custom_base_url}")
+        elif llm_provider == "anthropic":
+            config["backend_url"] = "https://api.anthropic.com/"
+            logger.info(f" [Anthropic] 使用模型: {llm_model}")
 
         # 修複路徑問題 - 優先使用環境變量配置
         # 數據目錄：優先使用環境變量，否則使用默認路徑

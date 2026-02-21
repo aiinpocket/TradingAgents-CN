@@ -80,11 +80,7 @@ class SmartAnalysisProgressTracker:
         # 模型速度影響（基於實際測試）
         model_multiplier = {
             'openai': 0.8,
-            'google': 1.3,
             'anthropic': 1.0,
-            'openrouter': 1.1,
-            'ollama': 1.5,
-            'custom_openai': 1.0
         }.get(self.llm_provider, 1.0)
 
         # 研究深度額外影響（工具調用複雜度）

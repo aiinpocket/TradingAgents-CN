@@ -8,8 +8,6 @@ from typing import Dict, Any, Tuple, List, Optional
 
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-from langchain_google_genai import ChatGoogleGenerativeAI
-from tradingagents.llm_adapters import ChatGoogleOpenAI
 
 from langgraph.prebuilt import ToolNode
 
@@ -62,86 +60,16 @@ class TradingAgentsGraph:
             exist_ok=True,
         )
 
-        # Initialize LLMs
-        if self.config["llm_provider"].lower() == "openai":
+        # 初始化 LLM（僅支援 OpenAI 和 Anthropic）
+        provider = self.config["llm_provider"].lower()
+        if provider == "openai":
             self.deep_thinking_llm = ChatOpenAI(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
             self.quick_thinking_llm = ChatOpenAI(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
-        elif self.config["llm_provider"] == "openrouter":
-            # OpenRouter支持：優先使用OPENROUTER_API_KEY，否則使用OPENAI_API_KEY
-            openrouter_api_key = os.getenv('OPENROUTER_API_KEY') or os.getenv('OPENAI_API_KEY')
-            if not openrouter_api_key:
-                raise ValueError("使用OpenRouter需要設置OPENROUTER_API_KEY或OPENAI_API_KEY環境變量")
-
-            logger.info(f"[OpenRouter] 使用API密鑰: {openrouter_api_key[:20]}...")
-
-            self.deep_thinking_llm = ChatOpenAI(
-                model=self.config["deep_think_llm"],
-                base_url=self.config["backend_url"],
-                api_key=openrouter_api_key
-            )
-            self.quick_thinking_llm = ChatOpenAI(
-                model=self.config["quick_think_llm"],
-                base_url=self.config["backend_url"],
-                api_key=openrouter_api_key
-            )
-        elif self.config["llm_provider"] == "ollama":
-            self.deep_thinking_llm = ChatOpenAI(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
-            self.quick_thinking_llm = ChatOpenAI(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
-        elif self.config["llm_provider"].lower() == "anthropic":
+        elif provider == "anthropic":
             self.deep_thinking_llm = ChatAnthropic(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
             self.quick_thinking_llm = ChatAnthropic(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
-        elif self.config["llm_provider"].lower() == "google":
-            # 使用 Google OpenAI 兼容適配器，解決工具調用格式不匹配問題
-            logger.info(f"使用Google AI OpenAI 兼容適配器 (解決工具調用問題)")
-            google_api_key = os.getenv('GOOGLE_API_KEY')
-            if not google_api_key:
-                raise ValueError("使用Google AI需要設置GOOGLE_API_KEY環境變量")
-            
-            self.deep_thinking_llm = ChatGoogleOpenAI(
-                model=self.config["deep_think_llm"],
-                google_api_key=google_api_key,
-                temperature=0.1,
-                max_tokens=2000
-            )
-            self.quick_thinking_llm = ChatGoogleOpenAI(
-                model=self.config["quick_think_llm"],
-                google_api_key=google_api_key,
-                temperature=0.1,
-                max_tokens=2000
-            )
-            
-            logger.info(f"[Google AI] 已啟用優化的工具調用和內容格式處理")
-        elif self.config["llm_provider"].lower() == "custom_openai":
-            # 自定義OpenAI端點配置
-            from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm
-            
-            custom_api_key = os.getenv('CUSTOM_OPENAI_API_KEY')
-            if not custom_api_key:
-                raise ValueError("使用自定義OpenAI端點需要設置CUSTOM_OPENAI_API_KEY環境變量")
-            
-            custom_base_url = self.config.get("custom_openai_base_url", "https://api.openai.com/v1")
-            
-            logger.info(f"[自定義OpenAI] 使用端點: {custom_base_url}")
-            
-            # 使用OpenAI兼容適配器創建LLM實例
-            self.deep_thinking_llm = create_openai_compatible_llm(
-                provider="custom_openai",
-                model=self.config["deep_think_llm"],
-                base_url=custom_base_url,
-                temperature=0.1,
-                max_tokens=2000
-            )
-            self.quick_thinking_llm = create_openai_compatible_llm(
-                provider="custom_openai",
-                model=self.config["quick_think_llm"],
-                base_url=custom_base_url,
-                temperature=0.1,
-                max_tokens=2000
-            )
-            
-            logger.info(f"[自定義OpenAI] 已配置自定義端點: {custom_base_url}")
         else:
-            raise ValueError(f"Unsupported LLM provider: {self.config['llm_provider']}")
+            raise ValueError(f"不支援的 LLM 提供商: {self.config['llm_provider']}。僅支援 openai 和 anthropic。")
         
         self.toolkit = Toolkit(config=self.config)
 

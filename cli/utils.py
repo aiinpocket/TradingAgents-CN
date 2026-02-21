@@ -148,36 +148,6 @@ def select_shallow_thinking_agent(provider) -> str:
             ("Claude Sonnet 3.7 - Exceptional hybrid reasoning and agentic capabilities", "claude-3-7-sonnet-latest"),
             ("Claude Sonnet 4 - High performance and excellent reasoning", "claude-sonnet-4-0"),
         ],
-        "google": [
-            ("Gemini 2.5 Pro - 最新旗艦模型", "gemini-2.5-pro"),
-            ("Gemini 2.5 Flash - 最新快速模型", "gemini-2.5-flash"),
-            ("Gemini 2.5 Flash Lite - 輕量快速", "gemini-2.5-flash-lite"),
-            ("Gemini 2.5 Pro-002 - 優化版本", "gemini-2.5-pro-002"),
-            ("Gemini 2.5 Flash-002 - 優化快速版", "gemini-2.5-flash-002"),
-            ("Gemini 2.5 Flash - Adaptive thinking, cost efficiency", "gemini-2.5-flash-preview-05-20"),
-            ("Gemini 2.5 Pro Preview - 預覽版本", "gemini-2.5-pro-preview-06-05"),
-            ("Gemini 2.0 Flash Lite - 輕量版本", "gemini-2.0-flash-lite"),
-            ("Gemini 2.0 Flash - 推薦使用", "gemini-2.0-flash"),
-            ("Gemini 1.5 Pro - 強大性能", "gemini-1.5-pro"),
-            ("Gemini 1.5 Flash - 快速響應", "gemini-1.5-flash"),
-        ],
-        "openrouter": [
-            ("Meta: Llama 4 Scout", "meta-llama/llama-4-scout:free"),
-            ("Meta: Llama 3.3 8B Instruct - A lightweight and ultra-fast variant of Llama 3.3 70B", "meta-llama/llama-3.3-8b-instruct:free"),
-            ("google/gemini-2.0-flash-exp:free - Gemini Flash 2.0 offers a significantly faster time to first token", "google/gemini-2.0-flash-exp:free"),
-        ],
-        "ollama": [
-            ("llama3.1 local", "llama3.1"),
-            ("llama3.2 local", "llama3.2"),
-        ],
-        "custom_openai": [
-            ("GPT-4o-mini - Fast and efficient for quick tasks", "gpt-4o-mini"),
-            ("GPT-4o - Standard model with solid capabilities", "gpt-4o"),
-            ("GPT-3.5-turbo - Cost-effective option", "gpt-3.5-turbo"),
-            ("Claude-3-haiku - Fast Anthropic model", "claude-3-haiku-20240307"),
-            ("Llama-3.1-8B - Open source model", "meta-llama/llama-3.1-8b-instruct"),
-            ("Custom model - Enter model name manually", "custom"),
-        ]
     }
 
     # 取得選項列表
@@ -230,40 +200,8 @@ def select_deep_thinking_agent(provider) -> str:
             ("Claude Sonnet 3.5 - Highly capable standard model", "claude-3-5-sonnet-latest"),
             ("Claude Sonnet 3.7 - Exceptional hybrid reasoning and agentic capabilities", "claude-3-7-sonnet-latest"),
             ("Claude Sonnet 4 - High performance and excellent reasoning", "claude-sonnet-4-0"),
-            ("Claude Opus 4 - Most powerful Anthropic model", "	claude-opus-4-0"),
+            ("Claude Opus 4 - Most powerful Anthropic model", "claude-opus-4-0"),
         ],
-        "google": [
-            ("Gemini 2.5 Pro - 最新旗艦模型", "gemini-2.5-pro"),
-            ("Gemini 2.5 Flash - 最新快速模型", "gemini-2.5-flash"),
-            ("Gemini 2.5 Flash Lite - 輕量快速", "gemini-2.5-flash-lite"),
-            ("Gemini 2.5 Pro-002 - 優化版本", "gemini-2.5-pro-002"),
-            ("Gemini 2.5 Flash-002 - 優化快速版", "gemini-2.5-flash-002"),
-            ("Gemini 2.5 Flash - Adaptive thinking, cost efficiency", "gemini-2.5-flash-preview-05-20"),
-            ("Gemini 2.5 Pro Preview - 預覽版本", "gemini-2.5-pro-preview-06-05"),
-            ("Gemini 2.0 Flash Lite - 輕量版本", "gemini-2.0-flash-lite"),
-            ("Gemini 2.0 Flash - 推薦使用", "gemini-2.0-flash"),
-            ("Gemini 1.5 Pro - 強大性能", "gemini-1.5-pro"),
-            ("Gemini 1.5 Flash - 快速響應", "gemini-1.5-flash"),
-        ],
-        "openrouter": [
-            ("Meta Llama 4 Scout - Latest Meta model", "meta-llama/llama-4-scout:free"),
-            ("Meta Llama 3.3 70B - Strong open source model", "meta-llama/llama-3.3-70b-instruct:free"),
-            ("Google Gemini 2.0 Flash - Fast multimodal", "google/gemini-2.0-flash-exp:free"),
-        ],
-        "ollama": [
-            ("llama3.1 local", "llama3.1"),
-            ("llama3.2 local", "llama3.2"),
-        ],
-        "custom_openai": [
-            ("GPT-4o - Standard model with solid capabilities", "gpt-4o"),
-            ("GPT-4o-mini - Fast and efficient for quick tasks", "gpt-4o-mini"),
-            ("o1-preview - Advanced reasoning model", "o1-preview"),
-            ("o1-mini - Compact reasoning model", "o1-mini"),
-            ("Claude-3-sonnet - Balanced Anthropic model", "claude-3-sonnet-20240229"),
-            ("Claude-3-opus - Most capable Anthropic model", "claude-3-opus-20240229"),
-            ("Llama-3.1-70B - Large open source model", "meta-llama/llama-3.1-70b-instruct"),
-            ("Custom model - Enter model name manually", "custom"),
-        ]
     }
 
     # 取得選項列表
@@ -298,16 +236,12 @@ def select_llm_provider() -> tuple[str, str]:
     """Select the LLM provider using interactive selection."""
     # 定義 LLM 提供商選項及其對應端點
     BASE_URLS = [
-        ("Google AI", "https://generativelanguage.googleapis.com/v1"),
         ("OpenAI", "https://api.openai.com/v1"),
         ("Anthropic", "https://api.anthropic.com/"),
-        ("OpenRouter", "https://openrouter.ai/api/v1"),
-        ("Custom OpenAI Endpoint", "custom"),
-        ("Ollama (Local)", "http://localhost:11434/v1"),
     ]
-    
+
     choice = questionary.select(
-        "選擇您的LLM提供商 | Select your LLM Provider:",
+        "選擇您的 LLM 提供商 | Select your LLM Provider:",
         choices=[
             questionary.Choice(display, value=(display, value))
             for display, value in BASE_URLS
@@ -322,31 +256,12 @@ def select_llm_provider() -> tuple[str, str]:
             ]
         ),
     ).ask()
-    
+
     if choice is None:
-        logger.info(f"\n[red]未選擇LLM提供商，退出程序... | No LLM provider selected. Exiting...[/red]")
+        logger.info(f"\n[red]未選擇 LLM 提供商，退出程式... | No LLM provider selected. Exiting...[/red]")
         exit(1)
-    
+
     display_name, url = choice
-    
-    # 如果選擇了自定義OpenAI端點，詢問用戶輸入URL
-    if url == "custom":
-        custom_url = questionary.text(
-            "請輸入自定義OpenAI端點URL | Please enter custom OpenAI endpoint URL:",
-            default="https://api.openai.com/v1",
-            instruction="例如: https://api.openai.com/v1 或 http://localhost:8000/v1"
-        ).ask()
-        
-        if custom_url is None:
-            logger.info(f"\n[red]未輸入自定義URL，退出程序... | No custom URL entered. Exiting...[/red]")
-            exit(1)
-            
-        url = custom_url
-        logger.info(f"您選擇了 | You selected: {display_name}\tURL: {url}")
-        
-        # 設置環境變量以便後續使用
-        os.environ['CUSTOM_OPENAI_BASE_URL'] = url
-    else:
-        logger.info(f"您選擇了 | You selected: {display_name}\tURL: {url}")
+    logger.info(f"您選擇了 | You selected: {display_name}\tURL: {url}")
 
     return display_name, url

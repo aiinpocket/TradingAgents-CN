@@ -97,7 +97,6 @@ class ConfigManager:
         """從環境變量獲取API密鑰"""
         env_key_map = {
             "openai": "OPENAI_API_KEY",
-            "google": "GOOGLE_API_KEY",
             "anthropic": "ANTHROPIC_API_KEY"
         }
 

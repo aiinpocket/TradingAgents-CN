@@ -1004,21 +1004,14 @@ def run_analysis():
     config["quick_think_llm"] = selections["shallow_thinker"]
     config["deep_think_llm"] = selections["deep_thinker"]
     config["backend_url"] = selections["backend_url"]
-    # 處理 LLM 提供商名稱，確保正確識別
+    # 處理 LLM 提供商名稱（僅支援 OpenAI 和 Anthropic）
     selected_llm_provider_name = selections["llm_provider"].lower()
-    if "openai" in selected_llm_provider_name and "custom" not in selected_llm_provider_name:
+    if "openai" in selected_llm_provider_name:
         config["llm_provider"] = "openai"
-    elif "custom" in selected_llm_provider_name:
-        config["llm_provider"] = "custom_openai"
-        custom_url = os.getenv('CUSTOM_OPENAI_BASE_URL', selections["backend_url"])
-        config["custom_openai_base_url"] = custom_url
-        config["backend_url"] = custom_url
     elif "anthropic" in selected_llm_provider_name:
         config["llm_provider"] = "anthropic"
-    elif "google" in selected_llm_provider_name:
-        config["llm_provider"] = "google"
     else:
-        config["llm_provider"] = selected_llm_provider_name
+        config["llm_provider"] = "openai"
 
     # Initialize the graph
     ui.show_progress("正在初始化分析系統...")

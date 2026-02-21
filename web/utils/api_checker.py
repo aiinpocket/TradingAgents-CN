@@ -1,19 +1,16 @@
 """
-API密鑰檢查工具
+API 密鑰檢查工具
 """
 
 import os
 
 def check_api_keys():
-    """檢查所有必要的API密鑰是否已配置"""
+    """檢查所有必要的 API 密鑰是否已配置"""
 
-    # 檢查各個API密鑰
+    # 檢查各個 API 密鑰
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
-    google_key = os.getenv("GOOGLE_API_KEY")
-    openrouter_key = os.getenv("OPENROUTER_API_KEY")
-
 
     # 構建詳細狀態
     details = {
@@ -21,38 +18,26 @@ def check_api_keys():
             "configured": bool(finnhub_key),
             "display": f"{finnhub_key[:12]}..." if finnhub_key else "未配置",
             "required": True,
-            "description": "金融數據API密鑰"
+            "description": "金融資料 API 密鑰"
         },
         "OPENAI_API_KEY": {
             "configured": bool(openai_key),
             "display": f"{openai_key[:12]}..." if openai_key else "未配置",
             "required": False,
-            "description": "OpenAI API密鑰"
+            "description": "OpenAI API 密鑰"
         },
         "ANTHROPIC_API_KEY": {
             "configured": bool(anthropic_key),
             "display": f"{anthropic_key[:12]}..." if anthropic_key else "未配置",
             "required": False,
-            "description": "Anthropic API密鑰"
-        },
-        "GOOGLE_API_KEY": {
-            "configured": bool(google_key),
-            "display": f"{google_key[:12]}..." if google_key else "未配置",
-            "required": False,
-            "description": "Google AI API密鑰"
-        },
-        "OPENROUTER_API_KEY": {
-            "configured": bool(openrouter_key),
-            "display": f"{openrouter_key[:12]}..." if openrouter_key else "未配置",
-            "required": False,
-            "description": "OpenRouter API密鑰"
+            "description": "Anthropic API 密鑰"
         },
     }
-    
-    # 檢查必需的API密鑰
+
+    # 檢查必需的 API 密鑰
     required_keys = [key for key, info in details.items() if info["required"]]
     missing_required = [key for key in required_keys if not details[key]["configured"]]
-    
+
     return {
         "all_configured": len(missing_required) == 0,
         "required_configured": len(missing_required) == 0,
@@ -67,50 +52,40 @@ def check_api_keys():
     }
 
 def get_api_key_status_message():
-    """獲取API密鑰狀態訊息"""
-    
+    """取得 API 密鑰狀態訊息"""
+
     status = check_api_keys()
-    
+
     if status["all_configured"]:
-        return "所有必需的API密鑰已配置完成"
+        return "所有必需的 API 密鑰已配置完成"
     elif status["required_configured"]:
-        return "必需的API密鑰已配置，可選API密鑰未配置"
+        return "必需的 API 密鑰已配置，可選 API 密鑰未配置"
     else:
         missing = ", ".join(status["missing_required"])
-        return f"缺少必需的API密鑰: {missing}"
+        return f"缺少必需的 API 密鑰: {missing}"
 
 def validate_api_key_format(key_type, api_key):
-    """驗證API密鑰格式"""
+    """驗證 API 密鑰格式"""
 
     if not api_key:
-        return False, "API密鑰不能為空"
+        return False, "API 密鑰不能為空"
 
-    # 基本長度檢查
     if len(api_key) < 10:
-        return False, "API密鑰長度過短"
+        return False, "API 密鑰長度過短"
 
     # 特定格式檢查
     if key_type == "OPENAI_API_KEY":
         if not api_key.startswith("sk-"):
-            return False, "OpenAI API密鑰應以'sk-'開頭"
-    elif key_type == "OPENROUTER_API_KEY":
-        if not api_key.startswith("sk-or-"):
-            return False, "OpenRouter API密鑰應以'sk-or-'開頭"
+            return False, "OpenAI API 密鑰應以 'sk-' 開頭"
 
-    return True, "API密鑰格式正確"
+    return True, "API 密鑰格式正確"
 
 def test_api_connection(key_type, api_key):
-    """測試API連接（簡單驗證）"""
-    
-    # 這裡可以添加實際的API連接測試
-    # 為了簡化，現在只做格式驗證
-    
+    """測試 API 連線（簡單驗證）"""
+
     is_valid, message = validate_api_key_format(key_type, api_key)
-    
+
     if not is_valid:
         return False, message
-    
-    # 可以在這裡添加實際的API調用測試
-    # 例如：調用一個簡單的API端點驗證密鑰有效性
-    
-    return True, "API密鑰驗證通過"
+
+    return True, "API 密鑰驗證通過"

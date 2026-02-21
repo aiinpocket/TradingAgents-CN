@@ -30,10 +30,10 @@ def test_full_fundamentals_flow():
         # 導入必要的模塊
         from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
         from tradingagents.agents.utils.agent_utils import Toolkit
-        from tradingagents.llm_adapters import get_llm
+        from langchain_openai import ChatOpenAI
 
-        # 獲取LLM實例
-        llm = get_llm()
+        # 取得 LLM 實例
+        llm = ChatOpenAI(model="gpt-4o-mini")
         print(f" LLM初始化完成: {type(llm).__name__}")
 
         # 創建工具包

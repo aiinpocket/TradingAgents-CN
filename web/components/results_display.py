@@ -84,11 +84,7 @@ def render_analysis_info(results):
             llm_provider = results.get('llm_provider', 'openai')
             provider_name = {
                 'openai': 'OpenAI',
-                'google': 'Google AI',
                 'anthropic': 'Anthropic',
-                'openrouter': 'OpenRouter',
-                'ollama': 'Ollama',
-                'custom_openai': 'Custom OpenAI'
             }.get(llm_provider, llm_provider)
 
             st.metric(
@@ -105,10 +101,6 @@ def render_analysis_info(results):
                 'gpt-4o-mini': 'GPT-4o Mini',
                 'o1-mini': 'o1 Mini',
                 'o1': 'o1',
-                'gemini-2.0-flash': 'Gemini 2.0 Flash',
-                'gemini-2.5-pro': 'Gemini 2.5 Pro',
-                'gemini-1.5-pro': 'Gemini 1.5 Pro',
-                'gemini-1.5-flash': 'Gemini 1.5 Flash',
                 'claude-sonnet-4-6': 'Claude Sonnet 4.6',
                 'claude-haiku-4-5': 'Claude Haiku 4.5',
             }.get(llm_model, llm_model)
