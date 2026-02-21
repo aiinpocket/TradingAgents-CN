@@ -264,14 +264,14 @@ def get_persistent_analysis_id() -> Optional[str]:
         if session_data:
             analysis_id = session_data.get('analysis_id')
             if analysis_id:
-                # 恢複到session state
+                # 恢復到session state
                 st.session_state.current_analysis_id = analysis_id
                 st.session_state.analysis_running = (session_data.get('status') == 'running')
                 st.session_state.last_stock_symbol = session_data.get('stock_symbol', '')
                 st.session_state.last_market_type = session_data.get('market_type', '')
                 return analysis_id
         
-        # 3. 最後從Redis/檔案恢複最新分析
+        # 3. 最後從Redis/檔案恢復最新分析
         from .async_progress_tracker import get_latest_analysis_id
         latest_id = get_latest_analysis_id()
         if latest_id:

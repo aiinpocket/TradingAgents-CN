@@ -106,7 +106,7 @@ def _render_view_report_button(analysis_id: str, progress_data: dict):
                         st.session_state.analysis_results = formatted_results
                         st.session_state.analysis_running = False
             except Exception as e:
-                st.error(f"恢複分析結果失敗: {e}")
+                st.error(f"恢復分析結果失敗: {e}")
 
         st.session_state.show_analysis_results = True
         st.session_state.current_analysis_id = analysis_id

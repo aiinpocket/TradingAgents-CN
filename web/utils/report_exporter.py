@@ -127,7 +127,7 @@ class ReportExporter:
         content = content.replace('---', '—') # 替換三個連字符
         content = content.replace('...', '…') # 替換三個點
 
-        # 恢複表格分隔符
+        # 恢復表格分隔符
         content = content.replace('|TABLESEP|TABLESEP|', '|------|------|')
         content = content.replace('|TABLESEP|', '|------|')
 

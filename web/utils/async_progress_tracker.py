@@ -718,11 +718,11 @@ def get_latest_analysis_id() -> Optional[str]:
                         continue
 
                 if latest_id:
-                    logger.info(f"[恢複分析] 找到最新分析ID: {latest_id}")
+                    logger.info(f"[恢復分析] 找到最新分析ID: {latest_id}")
                     return latest_id
 
             except Exception as e:
-                logger.debug(f"[恢複分析] Redis查找失敗: {e}")
+                logger.debug(f"[恢復分析] Redis查找失敗: {e}")
 
         # 如果Redis失敗或未啟用，嘗試從檔案查找
         data_dir = Path("data")
@@ -735,10 +735,10 @@ def get_latest_analysis_id() -> Optional[str]:
                 filename = latest_file.name
                 if filename.startswith("progress_") and filename.endswith(".json"):
                     analysis_id = filename[9:-5]  # 去掉前綴和後綴
-                    logger.debug(f"[恢複分析] 從檔案找到最新分析ID: {analysis_id}")
+                    logger.debug(f"[恢復分析] 從檔案找到最新分析ID: {analysis_id}")
                     return analysis_id
 
         return None
     except Exception as e:
-        logger.error(f"[恢複分析] 取得最新分析ID失敗: {e}")
+        logger.error(f"[恢復分析] 取得最新分析ID失敗: {e}")
         return None

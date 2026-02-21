@@ -265,7 +265,7 @@ def initialize_session_state():
     if 'form_config' not in st.session_state:
         st.session_state.form_config = None
 
-    # 嘗試從最新完成的分析中恢複結果
+    # 嘗試從最新完成的分析中恢復結果
     if not st.session_state.analysis_results:
         try:
             latest_id = get_latest_analysis_id()
@@ -275,7 +275,7 @@ def initialize_session_state():
                     progress_data.get('status') == 'completed' and
                     'raw_results' in progress_data):
 
-                    # 恢複分析結果
+                    # 恢復分析結果
                     raw_results = progress_data['raw_results']
                     formatted_results = format_analysis_results(raw_results)
 
@@ -285,17 +285,17 @@ def initialize_session_state():
                         # 檢查分析狀態
                         analysis_status = progress_data.get('status', 'completed')
                         st.session_state.analysis_running = (analysis_status == 'running')
-                        # 恢複股票資訊
+                        # 恢復股票資訊
                         if 'stock_symbol' in raw_results:
                             st.session_state.last_stock_symbol = raw_results.get('stock_symbol', '')
                         if 'market_type' in raw_results:
                             st.session_state.last_market_type = raw_results.get('market_type', '')
-                        logger.info(f"[結果恢複] 從分析 {latest_id} 恢複結果，狀態: {analysis_status}")
+                        logger.info(f"[結果恢復] 從分析 {latest_id} 恢復結果，狀態: {analysis_status}")
 
         except Exception as e:
-            logger.warning(f"[結果恢複] 恢複失敗: {e}")
+            logger.warning(f"[結果恢復] 恢復失敗: {e}")
 
-    # 使用cookie管理器恢複分析ID（優先級：session state > cookie > Redis/檔案）
+    # 使用cookie管理器恢復分析ID（優先級：session state > cookie > Redis/檔案）
     try:
         persistent_analysis_id = get_persistent_analysis_id()
         if persistent_analysis_id:
@@ -318,12 +318,12 @@ def initialize_session_state():
                 st.session_state.analysis_running = False
                 st.session_state.current_analysis_id = None
     except Exception as e:
-        # 如果恢複失敗，保持預設值
-        logger.warning(f"[狀態恢複] 恢複分析狀態失敗: {e}")
+        # 如果恢復失敗，保持預設值
+        logger.warning(f"[狀態恢復] 恢復分析狀態失敗: {e}")
         st.session_state.analysis_running = False
         st.session_state.current_analysis_id = None
 
-    # 恢複表單配置
+    # 恢復表單配置
     try:
         from utils.smart_session_manager import smart_session_manager
         session_data = smart_session_manager.load_analysis_state()
@@ -332,9 +332,9 @@ def initialize_session_state():
             st.session_state.form_config = session_data['form_config']
             # 只在沒有分析執行時記錄日誌，避免重複
             if not st.session_state.get('analysis_running', False):
-                logger.info("[配置恢複] 表單配置已恢複")
+                logger.info("[配置恢復] 表單配置已恢復")
     except Exception as e:
-        logger.warning(f"[配置恢複] 表單配置恢複失敗: {e}")
+        logger.warning(f"[配置恢復] 表單配置恢復失敗: {e}")
 
 
 

@@ -124,7 +124,7 @@ def test_openai_fallback_with_cache():
             print(f" 返回內容: {result1[:500]}...")
             success = False
         
-        # 恢複原始配置
+        # 恢復原始配置
         if original_backend_url:
             os.environ['BACKEND_URL'] = original_backend_url
         if original_quick_think_llm:
