@@ -31,7 +31,16 @@ def render_results(results):
     # 分析失敗時顯示錯誤
     if not success and error:
         st.error(f"**分析失敗**: {error}")
-        st.info("**解決方案**: 請檢查 API 密鑰配置，確保網絡連接正常，然後重新運行分析。")
+        # 根據錯誤類型提供對應的解決方案
+        error_str = str(error).lower()
+        if 'no module named' in error_str or 'import' in error_str:
+            st.info("**解決方案**: 缺少必要的 Python 套件，請執行 `pip install -r requirements.txt` 安裝所有依賴。")
+        elif 'api' in error_str or 'key' in error_str or 'auth' in error_str or '401' in error_str:
+            st.info("**解決方案**: 請檢查 `.env` 檔案中的 API 密鑰配置是否正確。")
+        elif 'timeout' in error_str or 'connection' in error_str or 'network' in error_str:
+            st.info("**解決方案**: 網路連線逾時，請確認網路連線正常後重試。")
+        else:
+            st.info("**解決方案**: 請檢查日誌以獲取詳細錯誤資訊，並確認環境配置正確後重新執行分析。")
         return
 
     # 投資決策摘要
