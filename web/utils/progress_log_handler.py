@@ -1,6 +1,6 @@
 """
 進度日誌處理器
-將日誌系統中的模組完成訊息轉發給進度跟蹤器
+將日誌系統中的模組完成訊息轉發給進度追蹤器
 """
 
 
@@ -13,27 +13,27 @@ _internal_logger = logging.getLogger('progress_integration')
 
 class ProgressLogHandler(logging.Handler):
     """
-    自定義日誌處理器，將模組開始/完成訊息轉發給進度跟蹤器
+    自定義日誌處理器，將模組開始/完成訊息轉發給進度追蹤器
     """
     
-    # 類別層級的跟蹤器註冊表
+    # 類別層級的追蹤器登記表
     _trackers: Dict[str, 'AsyncProgressTracker'] = {}
     _lock = threading.Lock()
     
     @classmethod
     def register_tracker(cls, analysis_id: str, tracker):
-        """註冊進度跟蹤器"""
+        """註冊進度追蹤器"""
         try:
             with cls._lock:
                 cls._trackers[analysis_id] = tracker
             # 在鎖外面打印，避免死鎖
-            _internal_logger.debug(f"[進度集成] 註冊跟蹤器: {analysis_id}")
+            _internal_logger.debug(f"[進度集成] 註冊追蹤器: {analysis_id}")
         except Exception as e:
-            _internal_logger.debug(f"[進度集成] 註冊跟蹤器失敗: {e}")
+            _internal_logger.debug(f"[進度集成] 註冊追蹤器失敗: {e}")
 
     @classmethod
     def unregister_tracker(cls, analysis_id: str):
-        """註銷進度跟蹤器"""
+        """註銷進度追蹤器"""
         try:
             removed = False
             with cls._lock:
@@ -42,9 +42,9 @@ class ProgressLogHandler(logging.Handler):
                     removed = True
             # 在鎖外面打印，避免死鎖
             if removed:
-                _internal_logger.debug(f"[進度集成] 註銷跟蹤器: {analysis_id}")
+                _internal_logger.debug(f"[進度集成] 註銷追蹤器: {analysis_id}")
         except Exception as e:
-            _internal_logger.debug(f"[進度集成] 註銷跟蹤器失敗: {e}")
+            _internal_logger.debug(f"[進度集成] 註銷追蹤器失敗: {e}")
     
     def emit(self, record):
         """處理日誌記錄"""
@@ -56,19 +56,19 @@ class ProgressLogHandler(logging.Handler):
                 # 嘗試從訊息中提取股票代碼來匹配分析
                 stock_symbol = self._extract_stock_symbol(message)
                 
-                # 查找匹配的跟蹤器（減少鎖持有時間）
+                # 查找匹配的追蹤器（減少鎖持有時間）
                 trackers_copy = {}
                 with self._lock:
                     trackers_copy = self._trackers.copy()
 
-                # 在鎖外面處理跟蹤器更新
+                # 在鎖外面處理追蹤器更新
                 for analysis_id, tracker in trackers_copy.items():
-                    # 簡單匹配：如果跟蹤器存在且狀態為running，就更新
+                    # 簡單匹配：如果追蹤器存在且狀態為running，就更新
                     if hasattr(tracker, 'progress_data') and tracker.progress_data.get('status') == 'running':
                         try:
                             tracker.update_progress(message)
                             _internal_logger.debug(f"[進度集成] 轉發訊息到 {analysis_id}: {message[:50]}...")
-                            break  # 只更新第一個匹配的跟蹤器
+                            break  # 只更新第一個匹配的追蹤器
                         except Exception as e:
                             _internal_logger.debug(f"[進度集成] 更新失敗: {e}")
                         
@@ -107,10 +107,10 @@ def setup_progress_log_integration():
     return _progress_handler
 
 def register_analysis_tracker(analysis_id: str, tracker):
-    """註冊分析跟蹤器"""
+    """註冊分析追蹤器"""
     handler = setup_progress_log_integration()
     ProgressLogHandler.register_tracker(analysis_id, tracker)
 
 def unregister_analysis_tracker(analysis_id: str):
-    """註銷分析跟蹤器"""
+    """註銷分析追蹤器"""
     ProgressLogHandler.unregister_tracker(analysis_id)

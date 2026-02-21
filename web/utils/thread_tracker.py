@@ -1,6 +1,6 @@
 """
-分析執行緒跟蹤器
-用於跟蹤和檢測分析執行緒的存活狀態
+分析執行緒追蹤器
+用於追蹤和檢測分析執行緒的存活狀態
 """
 
 import threading
@@ -10,7 +10,7 @@ from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('web')
 
 class ThreadTracker:
-    """執行緒跟蹤器"""
+    """執行緒追蹤器"""
     
     def __init__(self):
         self._threads: Dict[str, threading.Thread] = {}
@@ -20,14 +20,14 @@ class ThreadTracker:
         """註冊分析執行緒"""
         with self._lock:
             self._threads[analysis_id] = thread
-            logger.info(f"[執行緒跟蹤] 註冊分析執行緒: {analysis_id}")
+            logger.info(f"[執行緒追蹤] 註冊分析執行緒: {analysis_id}")
     
     def unregister_thread(self, analysis_id: str):
         """註銷分析執行緒"""
         with self._lock:
             if analysis_id in self._threads:
                 del self._threads[analysis_id]
-                logger.info(f"[執行緒跟蹤] 註銷分析執行緒: {analysis_id}")
+                logger.info(f"[執行緒追蹤] 註銷分析執行緒: {analysis_id}")
     
     def is_thread_alive(self, analysis_id: str) -> bool:
         """檢查分析執行緒是否存活"""
@@ -40,7 +40,7 @@ class ThreadTracker:
             if not is_alive:
                 # 執行緒已死亡，自動清理
                 del self._threads[analysis_id]
-                logger.info(f"[執行緒跟蹤] 執行緒已死亡，自動清理: {analysis_id}")
+                logger.info(f"[執行緒追蹤] 執行緒已死亡，自動清理: {analysis_id}")
             
             return is_alive
     
@@ -59,7 +59,7 @@ class ThreadTracker:
             # 清理死亡執行緒
             for analysis_id in dead_threads:
                 del self._threads[analysis_id]
-                logger.info(f"[執行緒跟蹤] 清理死亡執行緒: {analysis_id}")
+                logger.info(f"[執行緒追蹤] 清理死亡執行緒: {analysis_id}")
             
             return alive_threads
     
@@ -96,7 +96,7 @@ class ThreadTracker:
                 }
             return info
 
-# 全局執行緒跟蹤器實例
+# 全局執行緒追蹤器實例
 thread_tracker = ThreadTracker()
 
 def register_analysis_thread(analysis_id: str, thread: threading.Thread):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-非同步進度跟蹤器
+非同步進度追蹤器
 支援Redis和檔案兩種儲存方式，前端定時輪詢取得進度
 """
 
@@ -68,7 +68,7 @@ def safe_serialize(obj):
             return str(obj)  # 轉換為字串
 
 class AsyncProgressTracker:
-    """非同步進度跟蹤器"""
+    """非同步進度追蹤器"""
     
     def __init__(self, analysis_id: str, analysts: List[str], research_depth: int, llm_provider: str):
         self.analysis_id = analysis_id
@@ -123,9 +123,9 @@ class AsyncProgressTracker:
             def register_with_timeout():
                 try:
                     register_analysis_tracker(self.analysis_id, self)
-                    logger.debug(f"[進度集成] 跟蹤器註冊成功: {self.analysis_id}")
+                    logger.debug(f"[進度集成] 追蹤器註冊成功: {self.analysis_id}")
                 except Exception as e:
-                    logger.debug(f"[進度集成] 跟蹤器註冊失敗: {e}")
+                    logger.debug(f"[進度集成] 追蹤器註冊失敗: {e}")
 
             # 在單獨執行緒中註冊，避免阻塞主執行緒
             register_thread = threading.Thread(target=register_with_timeout, daemon=True)
@@ -133,12 +133,12 @@ class AsyncProgressTracker:
             register_thread.join(timeout=2.0)  # 2秒超時
 
             if register_thread.is_alive():
-                logger.debug(f"[進度集成] 跟蹤器註冊超時，繼續執行: {self.analysis_id}")
+                logger.debug(f"[進度集成] 追蹤器註冊超時，繼續執行: {self.analysis_id}")
 
         except ImportError:
             logger.debug("[非同步進度] 日誌集成不可用")
         except Exception as e:
-            logger.debug(f"[進度集成] 跟蹤器註冊異常: {e}")
+            logger.debug(f"[進度集成] 追蹤器註冊異常: {e}")
     
     def _init_redis(self) -> bool:
         """初始化Redis連接"""

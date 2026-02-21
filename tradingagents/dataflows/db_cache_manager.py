@@ -44,12 +44,12 @@ class DatabaseCacheManager:
         初始化資料庫快取管理器
 
         Args:
-            mongodb_url: MongoDB連接URL，預設使用配置檔端口
-            redis_url: Redis連接URL，預設使用配置檔端口
+            mongodb_url: MongoDB連接URL，預設使用配置檔連接埠
+            redis_url: Redis連接URL，預設使用配置檔連接埠
             mongodb_db: MongoDB資料庫名
             redis_db: Redis資料庫編號
         """
-        # 從配置檔取得正確的端口
+        # 從配置檔取得正確的連接埠
         mongodb_port = os.getenv("MONGODB_PORT", "27018")
         redis_port = os.getenv("REDIS_PORT", "6380")
         mongodb_password = os.getenv("MONGODB_PASSWORD", "")

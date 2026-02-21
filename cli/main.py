@@ -1175,7 +1175,7 @@ def run_analysis():
             "final_report": "信號處理器"
         }
 
-        # 跟蹤已完成的分析師，避免重複提示
+        # 追蹤已完成的分析師，避免重複提示
         completed_analysts = set()
 
         for chunk in graph.graph.stream(init_agent_state, **args):

@@ -20,21 +20,21 @@ sys.path.insert(0, str(project_root))
 
 def test_redis_commander_port_consistency():
     """
-    測試 Redis Commander 端口配置的一致性
+    測試 Redis Commander 連接埠配置的一致性
     Test Redis Commander port configuration consistency
     """
-    print(" 測試 Redis Commander 端口配置一致性...")
+    print(" 測試 Redis Commander 連接埠配置一致性...")
     
     # 檢查 .env.example 檔案
     env_example_path = project_root / ".env.example"
     if env_example_path.exists():
         with open(env_example_path, 'r', encoding='utf-8') as f:
             env_content = f.read()
-            # 應該包含 8082 端口
+            # 應該包含 8082 連接埠
             if "localhost:8082" in env_content and "Redis Commander" in env_content:
-                print(" .env.example 中 Redis Commander 端口配置正確 (8082)")
+                print(" .env.example 中 Redis Commander 連接埠配置正確 (8082)")
             else:
-                print(" .env.example 中 Redis Commander 端口配置不正確")
+                print(" .env.example 中 Redis Commander 連接埠配置不正確")
                 return False
     
     # 檢查 database_setup.md 檔案
@@ -42,11 +42,11 @@ def test_redis_commander_port_consistency():
     if db_setup_path.exists():
         with open(db_setup_path, 'r', encoding='utf-8') as f:
             db_content = f.read()
-            # 應該包含 8082 端口
+            # 應該包含 8082 連接埠
             if "8082" in db_content and "Redis Commander" in db_content:
-                print(" database_setup.md 中 Redis Commander 端口配置正確 (8082)")
+                print(" database_setup.md 中 Redis Commander 連接埠配置正確 (8082)")
             else:
-                print(" database_setup.md 中 Redis Commander 端口配置不正確")
+                print(" database_setup.md 中 Redis Commander 連接埠配置不正確")
                 return False
     
     return True

@@ -62,10 +62,10 @@ def main():
         logger.error(f" .gitignore 檔案不存在")
         return False
     
-    # 檢查Git跟蹤狀態
-    logger.debug(f"\n 檢查Git跟蹤狀態...")
+    # 檢查Git追蹤狀態
+    logger.debug(f"\n 檢查Git追蹤狀態...")
     
-    # 檢查是否有contribution檔案被跟蹤
+    # 檢查是否有contribution檔案被追蹤
     success, output, error = run_git_command(
         "git ls-files docs/contribution/", 
         cwd=str(project_path)
@@ -74,19 +74,19 @@ def main():
     if success:
         if output:
             tracked_files = output.split('\n')
-            logger.warning(f" 仍有 {len(tracked_files)} 個檔案被Git跟蹤:")
+            logger.warning(f" 仍有 {len(tracked_files)} 個檔案被Git追蹤:")
             for file in tracked_files[:5]:  # 只顯示前5個
                 logger.info(f"  - {file}")
             if len(tracked_files) > 5:
                 logger.info(f"  ... 還有 {len(tracked_files) - 5} 個檔案")
             
-            logger.info(f"\n 需要從Git跟蹤中移除這些檔案:")
+            logger.info(f"\n 需要從Git追蹤中移除這些檔案:")
             logger.info(f"git rm -r --cached docs/contribution/")
             return False
         else:
-            logger.info(f" 沒有contribution檔案被Git跟蹤")
+            logger.info(f" 沒有contribution檔案被Git追蹤")
     else:
-        logger.warning(f" 無法檢查Git跟蹤狀態: {error}")
+        logger.warning(f" 無法檢查Git追蹤狀態: {error}")
     
     # 測試.gitignore是否生效
     logger.info(f"\n 測試.gitignore是否生效...")

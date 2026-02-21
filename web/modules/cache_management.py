@@ -32,8 +32,8 @@ def main():
     with st.sidebar:
         st.header("快取操作")
         
-        # 刷新按鈕
-        if st.button("刷新統計", type="primary"):
+        # 重新整理按鈕
+        if st.button("重新整理統計", type="primary"):
             st.rerun()
         
         st.markdown("---")

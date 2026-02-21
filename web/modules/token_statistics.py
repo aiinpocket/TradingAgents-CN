@@ -41,8 +41,8 @@ def render_token_statistics():
         }
         days = days_map[time_range]
         
-        # 刷新按鈕
-        if st.button("刷新資料", use_container_width=True):
+        # 重新整理按鈕
+        if st.button("重新整理資料", use_container_width=True):
             st.rerun()
         
         # 匯出資料按鈕
@@ -61,7 +61,7 @@ def render_token_statistics():
             
             1. **進行股票分析**: 使用主頁面的股票分析功能
             2. **確保API配置**: 檢查 LLM API 密鑰是否已在 .env 檔案中正確配置
-            3. **啟用成本跟蹤**: 在配置管理中啟用Token成本跟蹤
+            3. **啟用成本追蹤**: 在配置管理中啟用Token成本追蹤
             
             系統會自動記錄所有LLM呼叫的Token使用情況。
             """)

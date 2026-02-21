@@ -184,7 +184,7 @@ pip install pymongo redis
 #### Windows:
 1. 下載MongoDB Community Server
 2. 安裝並啟動服務
-3. 預設端口：27017
+3. 預設連接埠：27017
 
 #### 使用Docker:
 ```bash
@@ -195,7 +195,7 @@ docker run -d -p 27017:27017 --name mongodb mongo:4.4
 #### Windows:
 1. 下載Redis for Windows
 2. 啟動redis-server
-3. 預設端口：6379
+3. 預設連接埠：6379
 
 #### 使用Docker:
 ```bash

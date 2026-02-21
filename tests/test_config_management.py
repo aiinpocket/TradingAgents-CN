@@ -110,16 +110,16 @@ def test_config_manager():
         print(" 系統設定測試通過")
 
 def test_token_tracker():
-    """測試Token跟蹤器"""
-    print("\n 測試Token跟蹤器")
+    """測試Token追蹤器"""
+    print("\n 測試Token追蹤器")
     print("=" * 50)
     
     with tempfile.TemporaryDirectory() as temp_dir:
         config_manager = ConfigManager(temp_dir)
         token_tracker = TokenTracker(config_manager)
         
-        # 測試使用跟蹤
-        print(" 測試使用跟蹤...")
+        # 測試使用追蹤
+        print(" 測試使用追蹤...")
         record = token_tracker.track_usage(
             model_name="gpt-4o-mini",
             input_tokens=2000,
@@ -133,7 +133,7 @@ def test_token_tracker():
         assert record.output_tokens == 1000, "輸出token數應該匹配"
         assert record.cost > 0, "成本應該大於0"
         
-        print(" 使用跟蹤測試通過")
+        print(" 使用追蹤測試通過")
         
         # 測試成本估算
         print(" 測試成本估算...")
@@ -238,7 +238,7 @@ def main():
         print("\n 所有測試通過！")
         print("=" * 60)
         print(" 配置管理功能正常")
-        print(" Token跟蹤功能正常")
+        print(" Token追蹤功能正常")
         print(" 成本計算準確")
         print(" 使用統計正確")
         

@@ -300,7 +300,7 @@ def main():
     """主函式"""
     parser = argparse.ArgumentParser(description="Redis性能測試工具")
     parser.add_argument("--host", default="localhost", help="Redis主機地址")
-    parser.add_argument("--port", type=int, default=6379, help="Redis端口")
+    parser.add_argument("--port", type=int, default=6379, help="Redis連接埠")
     parser.add_argument("--password", help="Redis密碼")
     parser.add_argument("--db", type=int, default=0, help="Redis資料庫編號")
     parser.add_argument("--test", choices=['latency', 'throughput', 'concurrent', 'memory', 'all'], 

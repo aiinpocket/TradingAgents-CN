@@ -626,18 +626,18 @@ class ConfigManager:
 
 
 class TokenTracker:
-    """Token使用跟蹤器"""
+    """Token使用追蹤器"""
 
     def __init__(self, config_manager: ConfigManager):
         self.config_manager = config_manager
 
     def track_usage(self, provider: str, model_name: str, input_tokens: int,
                    output_tokens: int, session_id: str = None, analysis_type: str = "stock_analysis"):
-        """跟蹤Token使用"""
+        """追蹤Token使用"""
         if session_id is None:
             session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
-        # 檢查是否啟用成本跟蹤
+        # 檢查是否啟用成本追蹤
         settings = self.config_manager.load_settings()
         cost_tracking_enabled = settings.get("enable_cost_tracking", True)
 

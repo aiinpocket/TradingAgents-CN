@@ -92,9 +92,9 @@ def view_log_file(log_file, lines=50):
         print(f" 讀取檔案失敗: {e}")
 
 def tail_log_file(log_file):
-    """實時跟蹤日誌檔案"""
-    print(f" 實時跟蹤日誌檔案: {log_file.name}")
-    print(" 按 Ctrl+C 停止跟蹤")
+    """實時追蹤日誌檔案"""
+    print(f" 實時追蹤日誌檔案: {log_file.name}")
+    print(" 按 Ctrl+C 停止追蹤")
     print("=" * 80)
     
     try:
@@ -111,9 +111,9 @@ def tail_log_file(log_file):
                     time.sleep(0.1)
                     
     except KeyboardInterrupt:
-        print("\n[STOP]停止跟蹤")
+        print("\n[STOP]停止追蹤")
     except Exception as e:
-        print(f" 跟蹤失敗: {e}")
+        print(f" 追蹤失敗: {e}")
 
 def search_logs(keyword, log_files=None):
     """搜索日誌內容"""
@@ -166,7 +166,7 @@ def main():
         print("\n 選擇操作:")
         print("1.  顯示所有日誌檔案")
         print("2.  查看日誌檔案內容")
-        print("3.  實時跟蹤日誌")
+        print("3.  實時追蹤日誌")
         print("4.  搜索日誌內容")
         print("5.  查看Docker日誌")
         print("0.  退出")

@@ -24,10 +24,10 @@ load_dotenv(project_root / ".env", override=True)
 try:
     from tradingagents.config.config_manager import token_tracker
     TOKEN_TRACKING_ENABLED = True
-    logger.info("Token跟蹤功能已啟用")
+    logger.info("Token追蹤功能已啟用")
 except ImportError:
     TOKEN_TRACKING_ENABLED = False
-    logger.warning("Token跟蹤功能未啟用")
+    logger.warning("Token追蹤功能未啟用")
 
 def translate_analyst_labels(text):
     """將分析師的英文標籤轉換為中文"""
@@ -112,7 +112,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             progress_callback(message, step, total_steps)
         logger.info(f"[進度] {message}")
 
-    # 生成會話ID用於Token跟蹤和日誌關聯
+    # 生成會話ID用於Token追蹤和日誌關聯
     session_id = f"analysis_{uuid.uuid4().hex[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     # 1. 資料預取得和驗證階段
@@ -385,7 +385,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 記錄分析完成的詳細日誌
         analysis_duration = time.time() - analysis_start_time
 
-        # 計算總成本（如果有Token跟蹤）
+        # 計算總成本（如果有Token追蹤）
         total_cost = 0.0
         if TOKEN_TRACKING_ENABLED:
             try:

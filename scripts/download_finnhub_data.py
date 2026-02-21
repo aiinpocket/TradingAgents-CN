@@ -109,7 +109,7 @@ class FinnhubDataDownloader:
         Args:
             symbols: 股票代碼列表
             days: 下載多少天的資料
-            force_refresh: 是否強制刷新
+            force_refresh: 是否強制重新整理
         """
         logger.info(f" 開始下載新聞資料，股票: {symbols}, 天數: {days}")
         
@@ -195,7 +195,7 @@ class FinnhubDataDownloader:
         
         Args:
             symbols: 股票代碼列表
-            force_refresh: 是否強制刷新
+            force_refresh: 是否強制重新整理
         """
         logger.info(f" 開始下載內部人情緒資料，股票: {symbols}")
         
@@ -234,7 +234,7 @@ class FinnhubDataDownloader:
         
         Args:
             symbols: 股票代碼列表
-            force_refresh: 是否強制刷新
+            force_refresh: 是否強制重新整理
         """
         logger.info(f" 開始下載內部人交易資料，股票: {symbols}")
         
@@ -288,7 +288,7 @@ def main():
     
     parser.add_argument('--force-refresh',
                        action='store_true',
-                       help='強制刷新已存在的資料')
+                       help='強制重新整理已存在的資料')
     
     parser.add_argument('--all',
                        action='store_true',
@@ -323,7 +323,7 @@ def main():
         logger.info(f" 開始下載Finnhub資料")
         logger.info(f" 股票代碼: {symbols}")
         logger.info(f" 資料類型: {data_types}")
-        logger.info(f" 強制刷新: {args.force_refresh}")
+        logger.info(f" 強制重新整理: {args.force_refresh}")
         
         # 下載資料
         for data_type in data_types:

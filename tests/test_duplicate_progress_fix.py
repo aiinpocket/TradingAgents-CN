@@ -282,11 +282,11 @@ def main():
         print("\n 修複效果:")
         print("1.  每個分析師只顯示一次完成提示")
         print("2.  流式處理中的重複chunk被正確處理")
-        print("3.  分析師完成狀態正確跟蹤")
+        print("3.  分析師完成狀態正確追蹤")
         print("4.  使用者介面清爽，沒有重複資訊")
         
         print("\n 技術實現:")
-        print("- 使用completed_analysts集合跟蹤已完成的分析師")
+        print("- 使用completed_analysts集合追蹤已完成的分析師")
         print("- 在顯示完成提示前檢查是否已經完成")
         print("- 避免LangGraph流式輸出導致的重複觸發")
         

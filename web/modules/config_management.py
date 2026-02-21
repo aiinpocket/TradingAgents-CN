@@ -386,7 +386,7 @@ def render_system_settings():
         )
 
         enable_cost_tracking = st.checkbox(
-            "啟用成本跟蹤",
+            "啟用成本追蹤",
             value=settings.get("enable_cost_tracking", True),
             key="settings_enable_cost_tracking"
         )

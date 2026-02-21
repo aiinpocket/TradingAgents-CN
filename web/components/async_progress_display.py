@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 非同步進度顯示元件
-從 Redis 或檔案取得進度狀態，使用非阻塞式自動刷新
+從 Redis 或檔案取得進度狀態，使用非阻塞式自動重新整理
 """
 
 import streamlit as st
@@ -12,7 +12,7 @@ from web.utils.async_progress_tracker import format_time
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('async_display')
 
-# 自動刷新間隔（秒）
+# 自動重新整理間隔（秒）
 AUTO_REFRESH_INTERVAL = 3
 
 
@@ -74,7 +74,7 @@ def display_unified_progress(analysis_id: str, show_refresh_controls: bool = Tru
     else:
         st.info(f"{status_label} **當前狀態**: {last_message}")
 
-    # 刷新控件
+    # 重新整理控件
     if show_refresh_controls and status in ('running', 'initializing'):
         _render_refresh_controls(analysis_id, status, show_refresh_controls)
 
@@ -114,21 +114,21 @@ def _render_view_report_button(analysis_id: str, progress_data: dict):
 
 
 def _render_refresh_controls(analysis_id: str, status: str, show_controls: bool):
-    """渲染刷新控件（非阻塞式自動刷新）"""
+    """渲染重新整理控件（非阻塞式自動重新整理）"""
     if not show_controls:
         return
 
     col1, col2 = st.columns([1, 1])
     with col1:
-        if st.button("刷新進度", key=f"refresh_unified_{analysis_id}"):
+        if st.button("重新整理進度", key=f"refresh_unified_{analysis_id}"):
             st.rerun()
     with col2:
         auto_refresh_key = f"auto_refresh_unified_{analysis_id}"
         default_value = st.session_state.get(auto_refresh_key, True)
-        auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
+        auto_refresh = st.checkbox("自動重新整理", value=default_value, key=auto_refresh_key)
 
         if auto_refresh and status == 'running':
-            # 使用非阻塞方式：記錄上次刷新時間，只在間隔到達時 rerun
+            # 使用非阻塞方式：記錄上次重新整理時間，只在間隔到達時 rerun
             last_refresh_key = f"_last_refresh_ts_{analysis_id}"
             last_refresh = st.session_state.get(last_refresh_key, 0)
             now = time.time()

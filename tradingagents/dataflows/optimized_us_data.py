@@ -50,14 +50,14 @@ class OptimizedUSDataProvider:
             symbol: 股票代碼
             start_date: 開始日期 (YYYY-MM-DD)
             end_date: 結束日期 (YYYY-MM-DD)
-            force_refresh: 是否強制刷新快取
+            force_refresh: 是否強制重新整理快取
         
         Returns:
             格式化的股票資料字串
         """
         logger.info(f"取得美股資料: {symbol} ({start_date} 到 {end_date})")
         
-        # 檢查快取（除非強制刷新）
+        # 檢查快取（除非強制重新整理）
         if not force_refresh:
             # 優先查找FINNHUB快取
             cache_key = self.cache.find_cached_stock_data(
@@ -325,7 +325,7 @@ def get_us_stock_data_cached(symbol: str, start_date: str, end_date: str,
         symbol: 股票代碼
         start_date: 開始日期 (YYYY-MM-DD)
         end_date: 結束日期 (YYYY-MM-DD)
-        force_refresh: 是否強制刷新快取
+        force_refresh: 是否強制重新整理快取
     
     Returns:
         格式化的股票資料字串
