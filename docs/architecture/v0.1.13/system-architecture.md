@@ -174,7 +174,7 @@ tradingagents = "main:main"
 ### 2. LLM (LLM Integration Layer)
 
 #### LLM
-****: `tradingagents/llm_adapters/`
+****: `tradingagents/graph/trading_graph.py`
 
 ```python
 from langchain_openai import ChatOpenAI

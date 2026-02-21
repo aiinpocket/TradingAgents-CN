@@ -56,7 +56,6 @@ class InstallationTester:
         core_modules = [
             'tradingagents',
             'tradingagents.config',
-            'tradingagents.llm_adapters',
             'tradingagents.agents',
             'tradingagents.dataflows'
         ]

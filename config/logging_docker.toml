@@ -45,7 +45,7 @@ level = "WARNING"
 [logging.loggers.dataflows]
 level = "INFO"
 
-[logging.loggers.llm_adapters]
+[logging.loggers.llm]
 level = "INFO"
 
 [logging.loggers.streamlit]
@@ -71,7 +71,7 @@ disable_file_logging = false  # 啟用檔案日誌
 
 [logging.development]
 enabled = false
-debug_modules = ["tradingagents.graph", "tradingagents.llm_adapters"]
+debug_modules = ["tradingagents.graph", "tradingagents.agents"]
 save_debug_files = true
 
 [logging.production]

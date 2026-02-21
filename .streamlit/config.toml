@@ -1,31 +1,28 @@
 [server]
 # 伺服器配置
 port = 8501
-address = "0.0.0.0"  # Docker 環境需要監聽所有介面
-headless = true      # Docker 環境無頭模式
+address = "0.0.0.0"
+headless = true
 enableCORS = false
-enableXsrfProtection = false
+enableXsrfProtection = true
 
-# 檔案監控配置 - 解決 Windows 下的檔案鎖定問題
+# 檔案監控配置
 fileWatcherType = "none"
 runOnSave = false
 
 [browser]
-# 瀏覽器配置
 gatherUsageStats = false
 
 [logger]
-# 日誌配置
 level = "info"
 
 [global]
-# 全域配置
 developmentMode = false
 
 [theme]
-# 主題配置
+# 主題配置 - 與 app.py 全域樣式一致
 base = "light"
-primaryColor = "#1f77b4"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f2f6"
-textColor = "#262730"
+primaryColor = "#0F766E"
+backgroundColor = "#F9FAFB"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1F2937"

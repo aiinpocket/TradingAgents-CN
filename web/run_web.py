@@ -4,9 +4,12 @@ TradingAgents-CN Web應用啟動腳本
 """
 
 import os
+import signal
 import sys
 import subprocess
 from pathlib import Path
+
+import psutil
 
 # 添加項目根目錄到Python路徑
 project_root = Path(__file__).parent.parent
@@ -102,7 +105,7 @@ def clean_cache_files(force_clean=False):
 
     if not force_clean:
         # 可選清理：只清理項目代碼的緩存，不清理虛擬環境
-        project_cache_dirs = [d for d in cache_dirs if 'env'not in str(d)]
+        project_cache_dirs = [d for d in cache_dirs if 'env' not in str(d)]
         if project_cache_dirs:
             logger.info("清理項目緩存文件...")
             for cache_dir in project_cache_dirs:
@@ -159,11 +162,6 @@ def check_api_keys():
     logger.info("API密鑰配置完成")
     return True
 
-# 在文件頂部添加導入
-import signal
-import psutil
-
-# 修改 main() 函數中的啟動部分
 def main():
     """主函數"""
     
@@ -204,8 +202,8 @@ def main():
         "--server.port", "8501",
         "--server.address", "localhost",
         "--browser.gatherUsageStats", "false",
-        "--server.fileWatcherType", "auto",
-        "--server.runOnSave", "true"
+        "--server.fileWatcherType", "none",
+        "--server.runOnSave", "false"
     ]
     
     # 如果配置目錄存在，添加配置路徑
@@ -256,13 +254,9 @@ def main():
         logger.error(f"\n 啟動失敗: {e}")
 
 if __name__ == "__main__":
-    import sys
-
     # 檢查命令行參數
     if len(sys.argv) > 1:
         if sys.argv[1] == "--no-clean":
-            # 設置環境變量跳過清理
-            import os
             os.environ['SKIP_CACHE_CLEAN'] = 'true'
             logger.info("啟動模式: 跳過緩存清理")
         elif sys.argv[1] == "--force-clean":

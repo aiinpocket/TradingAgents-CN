@@ -49,8 +49,8 @@ level = "INFO"
 [logging.loggers.dataflows]
 level = "INFO"
 
-# LLM適配器日誌
-[logging.loggers.llm_adapters]
+# LLM 模組日誌
+[logging.loggers.llm]
 level = "INFO"
 
 # 第三方套件日誌（通常設定為WARNING減少雜訊）
@@ -78,7 +78,7 @@ disable_file_logging = true  # Docker環境禁用檔案日誌
 # 開發環境配置
 [logging.development]
 enabled = false  # 開發模式
-debug_modules = ["tradingagents.graph", "tradingagents.llm_adapters"]  # 開發時詳細日誌的模組
+debug_modules = ["tradingagents.graph", "tradingagents.agents"]  # 開發時詳細日誌的模組
 save_debug_files = true  # 儲存調試檔案
 
 # 生產環境配置

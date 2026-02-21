@@ -140,8 +140,8 @@ def setup_dataflow_logging():
 
 
 def setup_llm_logging():
-    """設置LLM適配器專用日誌"""
-    return get_logger('llm_adapters')
+    """設置LLM相關模組專用日誌"""
+    return get_logger('llm')
 
 
 if __name__ == "__main__":
