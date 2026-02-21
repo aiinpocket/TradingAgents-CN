@@ -243,9 +243,23 @@ section[data-testid="stSidebar"] h3 {
 
 /* 資料框 */
 .dataframe {
-    border-radius: 4px;
+    border-radius: 6px;
     border: 1px solid var(--border-color);
     font-size: 0.8125rem;
+}
+
+/* Streamlit 內建表格 */
+[data-testid="stDataFrame"] {
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Metric 標籤 */
+[data-testid="stMetricLabel"] {
+    font-size: 0.75rem;
+    color: var(--text-secondary) !important;
+    text-transform: none;
 }
 
 /* Metric 數值 */
@@ -266,6 +280,8 @@ section[data-testid="stSidebar"] h3 {
 
 /* 隱藏側邊欄收合按鈕 */
 button[kind="header"],
+button[kind="headerNoPadding"],
+[data-testid="stBaseButton-headerNoPadding"],
 button[data-testid="collapsedControl"],
 [data-testid="collapsedControl"] {
     display: none !important;
