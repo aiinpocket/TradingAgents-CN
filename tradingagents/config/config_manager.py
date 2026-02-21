@@ -78,7 +78,7 @@ class ConfigManager:
         # 載入.env 檔案（保持向後相容）
         self._load_env_file()
 
-        # 初始化MongoDB存儲（如果可用）
+        # 初始化MongoDB儲存（如果可用）
         self.mongodb_storage = None
         self._init_mongodb_storage()
 
@@ -145,11 +145,11 @@ class ConfigManager:
         return True
     
     def _init_mongodb_storage(self):
-        """初始化MongoDB存儲"""
+        """初始化MongoDB儲存"""
         if not MONGODB_AVAILABLE:
             return
 
-        # 檢查是否啟用MongoDB存儲
+        # 檢查是否啟用MongoDB儲存
         use_mongodb = os.getenv("USE_MONGODB_STORAGE", "false").lower() == "true"
         if not use_mongodb:
             return
@@ -164,10 +164,10 @@ class ConfigManager:
             )
             
             if self.mongodb_storage.is_connected():
-                logger.info("MongoDB存儲已啟用")
+                logger.info("MongoDB儲存已啟用")
             else:
                 self.mongodb_storage = None
-                logger.warning("MongoDB連接失敗，將使用JSON 檔案存儲")
+                logger.warning("MongoDB連接失敗，將使用JSON 檔案儲存")
 
         except Exception as e:
             logger.error(f"MongoDB初始化失敗: {e}", exc_info=True)
@@ -367,15 +367,15 @@ class ConfigManager:
             analysis_type=analysis_type
         )
         
-        # 優先使用MongoDB存儲
+        # 優先使用MongoDB儲存
         if self.mongodb_storage and self.mongodb_storage.is_connected():
             success = self.mongodb_storage.save_usage_record(record)
             if success:
                 return record
             else:
-                logger.error("MongoDB保存失敗，回退到JSON 檔案存儲")
+                logger.error("MongoDB保存失敗，回退到JSON 檔案儲存")
 
-        # 回退到JSON 檔案存儲
+        # 回退到JSON 檔案儲存
         records = self.load_usage_records()
         records.append(record)
         

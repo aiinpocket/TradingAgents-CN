@@ -3,6 +3,7 @@
 適用於沒有Redis或Redis連接失敗的情況
 """
 
+import re
 import streamlit as st
 import json
 import time
@@ -60,8 +61,18 @@ class FileSessionManager:
             return fingerprint
     
     def _get_session_file_path(self, fingerprint: str) -> Path:
-        """取得會話檔案路徑"""
-        return self.data_dir / f"{fingerprint}.json"
+        """取得會話檔案路徑（含路徑遍歷防護）"""
+        # 驗證 fingerprint 只包含安全字元
+        if not re.match(r'^[a-zA-Z0-9_-]+$', fingerprint):
+            raise ValueError("無效的會話指紋格式")
+
+        file_path = self.data_dir / f"{fingerprint}.json"
+
+        # 確保最終路徑在預期目錄內，防止路徑遍歷
+        if not file_path.resolve().is_relative_to(self.data_dir.resolve()):
+            raise ValueError("會話檔案路徑驗證失敗")
+
+        return file_path
     
     def _cleanup_old_sessions(self):
         """清理過期的會話檔案"""

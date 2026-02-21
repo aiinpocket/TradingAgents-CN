@@ -1,6 +1,6 @@
 # Config 目錄
 
-此目錄用於存儲TradingAgents的配置檔案和使用統計資料。
+此目錄用於儲存TradingAgents的配置檔案和使用統計資料。
 
 ## 檔案說明
 

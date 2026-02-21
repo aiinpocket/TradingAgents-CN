@@ -1,17 +1,17 @@
 #!/bin/bash
-# TradingAgents 目錄初始化腳本
-# 創建Docker容器需要的本地目錄結構
+# TradingAgents 目錄初始化指令碼
+# 建立 Docker 容器需要的本地目錄結構
 
-echo "🚀 TradingAgents 目錄初始化"
+echo "TradingAgents 目錄初始化"
 echo "=========================="
 
-# 獲取腳本所在目錄的父目錄（項目根目錄）
+# 取得指令碼所在目錄的父目錄（專案根目錄）
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-echo "📁 項目根目錄: $PROJECT_ROOT"
+echo "專案根目錄: $PROJECT_ROOT"
 
-# 創建必要的目錄
+# 建立必要的目錄
 DIRECTORIES=(
     "logs"
     "data"
@@ -23,40 +23,40 @@ DIRECTORIES=(
 )
 
 echo ""
-echo "📂 創建目錄結構..."
+echo "建立目錄結構..."
 
 for dir in "${DIRECTORIES[@]}"; do
     if [ ! -d "$dir" ]; then
         mkdir -p "$dir"
-        echo "✅ 創建目錄: $dir"
+        echo "[OK] 建立目錄: $dir"
     else
-        echo "📁 目錄已存在: $dir"
+        echo "[SKIP] 目錄已存在: $dir"
     fi
 done
 
-# 設置目錄權限
+# 設定目錄權限
 echo ""
-echo "🔧 設置目錄權限..."
+echo "設定目錄權限..."
 
 # 確保日誌目錄可寫
 chmod 755 logs
-echo "✅ 設置 logs 目錄權限: 755"
+echo "[OK] 設定 logs 目錄權限: 755"
 
-# 確保數據目錄可寫
+# 確保資料目錄可寫
 chmod 755 data
 chmod 755 data/cache
 chmod 755 data/exports
 chmod 755 data/temp
-echo "✅ 設置 data 目錄權限: 755"
+echo "[OK] 設定 data 目錄權限: 755"
 
 # 確保配置目錄可寫
 chmod 755 config
 chmod 755 config/runtime
-echo "✅ 設置 config 目錄權限: 755"
+echo "[OK] 設定 config 目錄權限: 755"
 
-# 創建 .gitkeep 文件保持目錄結構
+# 建立 .gitkeep 檔案保持目錄結構
 echo ""
-echo "📝 創建 .gitkeep 文件..."
+echo "建立 .gitkeep 檔案..."
 
 GITKEEP_DIRS=(
     "logs"
@@ -69,18 +69,18 @@ GITKEEP_DIRS=(
 for dir in "${GITKEEP_DIRS[@]}"; do
     if [ ! -f "$dir/.gitkeep" ]; then
         touch "$dir/.gitkeep"
-        echo "✅ 創建: $dir/.gitkeep"
+        echo "[OK] 建立: $dir/.gitkeep"
     fi
 done
 
-# 創建日誌配置文件
+# 建立日誌配置檔案
 echo ""
-echo "📋 創建日誌配置文件..."
+echo "建立日誌配置檔案..."
 
 LOG_CONFIG_FILE="config/logging.toml"
 if [ ! -f "$LOG_CONFIG_FILE" ]; then
     cat > "$LOG_CONFIG_FILE" << 'EOF'
-# TradingAgents 日誌配置文件
+# TradingAgents 日誌配置檔案
 [logging]
 version = 1
 disable_existing_loggers = false
@@ -141,31 +141,31 @@ propagate = false
 level = "INFO"
 handlers = ["console", "file"]
 EOF
-    echo "✅ 創建日誌配置: $LOG_CONFIG_FILE"
+    echo "[OK] 建立日誌配置: $LOG_CONFIG_FILE"
 else
-    echo "📁 日誌配置已存在: $LOG_CONFIG_FILE"
+    echo "[SKIP] 日誌配置已存在: $LOG_CONFIG_FILE"
 fi
 
-# 創建 .gitignore 文件
+# 建立 .gitignore 檔案
 echo ""
-echo "📝 更新 .gitignore 文件..."
+echo "更新 .gitignore 檔案..."
 
 GITIGNORE_ENTRIES=(
-    "# 日誌文件"
+    "# 日誌檔案"
     "logs/*.log"
     "logs/*.log.*"
     ""
-    "# 數據緩存"
+    "# 資料快取"
     "data/cache/*"
     "data/temp/*"
     "!data/cache/.gitkeep"
     "!data/temp/.gitkeep"
     ""
-    "# 運行時配置"
+    "# 執行時配置"
     "config/runtime/*"
     "!config/runtime/.gitkeep"
     ""
-    "# 導出文件"
+    "# 匯出檔案"
     "data/exports/*.pdf"
     "data/exports/*.docx"
     "data/exports/*.xlsx"
@@ -184,54 +184,54 @@ for entry in "${GITIGNORE_ENTRIES[@]}"; do
     fi
 done
 
-echo "✅ 更新 .gitignore 文件"
+echo "[OK] 更新 .gitignore 檔案"
 
-# 創建 README 文件
+# 建立 README 檔案
 echo ""
-echo "📚 創建目錄說明文件..."
+echo "建立目錄說明檔案..."
 
 README_FILE="logs/README.md"
 if [ ! -f "$README_FILE" ]; then
     cat > "$README_FILE" << 'EOF'
 # TradingAgents 日誌目錄
 
-此目錄用於存儲 TradingAgents 應用的日誌文件。
+此目錄用於儲存 TradingAgents 應用的日誌檔案。
 
-## 日誌文件說明
+## 日誌檔案說明
 
-- `tradingagents.log` - 主應用日誌文件
-- `tradingagents_error.log` - 錯誤日誌文件
-- `tradingagents.log.1`, `tradingagents.log.2` 等 - 輪轉的歷史日誌文件
+- `tradingagents.log` - 主應用日誌檔案
+- `tradingagents_error.log` - 錯誤日誌檔案
+- `tradingagents.log.1`, `tradingagents.log.2` 等 - 輪轉的歷史日誌檔案
 
 ## 日誌級別
 
-- **DEBUG** - 詳細的調試信息
-- **INFO** - 一般信息
-- **WARNING** - 警告信息
-- **ERROR** - 錯誤信息
+- **DEBUG** - 詳細的除錯資訊
+- **INFO** - 一般資訊
+- **WARNING** - 警告資訊
+- **ERROR** - 錯誤資訊
 - **CRITICAL** - 嚴重錯誤
 
 ## 日誌輪轉
 
-- 主日誌文件最大 100MB，保留 5 個歷史文件
-- 錯誤日誌文件最大 50MB，保留 3 個歷史文件
+- 主日誌檔案最大 100MB，保留 5 個歷史檔案
+- 錯誤日誌檔案最大 50MB，保留 3 個歷史檔案
 
-## 獲取日誌
+## 取得日誌
 
 如果遇到問題需要發送日誌給開發者，請發送：
-1. `tradingagents.log` - 主日誌文件
-2. `tradingagents_error.log` - 錯誤日誌文件（如果存在）
+1. `tradingagents.log` - 主日誌檔案
+2. `tradingagents_error.log` - 錯誤日誌檔案（如果存在）
 
 ## Docker 環境
 
 在 Docker 環境中，此目錄映射到容器內的 `/app/logs` 目錄。
 EOF
-    echo "✅ 創建日誌說明: $README_FILE"
+    echo "[OK] 建立日誌說明: $README_FILE"
 fi
 
 # 顯示目錄結構
 echo ""
-echo "📋 目錄結構預覽:"
+echo "目錄結構預覽:"
 echo "=================="
 
 if command -v tree >/dev/null 2>&1; then
@@ -241,17 +241,17 @@ else
 fi
 
 echo ""
-echo "🎉 目錄初始化完成！"
+echo "目錄初始化完成！"
 echo ""
-echo "💡 接下來的步驟:"
-echo "1. 運行 Docker Compose: docker-compose up -d"
-echo "2. 檢查日誌文件: ls -la logs/"
-echo "3. 實時查看日誌: tail -f logs/tradingagents.log"
+echo "接下來的步驟:"
+echo "1. 執行 Docker Compose: docker-compose up -d"
+echo "2. 檢查日誌檔案: ls -la logs/"
+echo "3. 即時查看日誌: tail -f logs/tradingagents.log"
 echo ""
-echo "📁 重要目錄說明:"
-echo "   logs/     - 應用日誌文件"
-echo "   data/     - 數據緩存和導出文件"
-echo "   config/   - 運行時配置文件"
+echo "重要目錄說明:"
+echo "   logs/     - 應用日誌檔案"
+echo "   data/     - 資料快取和匯出檔案"
+echo "   config/   - 執行時配置檔案"
 echo ""
-echo "🔧 如果遇到權限問題，請運行:"
+echo "如果遇到權限問題，請執行:"
 echo "   sudo chown -R \$USER:\$USER logs data config"

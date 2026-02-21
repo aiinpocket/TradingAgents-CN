@@ -3,7 +3,6 @@
 """
 
 import streamlit as st
-import plotly.graph_objects as go
 from datetime import datetime
 
 from utils.report_exporter import render_export_buttons
@@ -369,60 +368,3 @@ def render_risk_warning():
     st.caption(f"分析生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
-def create_price_chart(price_data):
-    """建立價格走勢圖"""
-
-    if not price_data:
-        return None
-
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(
-        x=price_data['date'],
-        y=price_data['price'],
-        mode='lines',
-        name='股價',
-        line=dict(color='#1864AB', width=2)
-    ))
-
-    fig.update_layout(
-        title="股價走勢圖",
-        xaxis_title="日期",
-        yaxis_title="價格 ($)",
-        hovermode='x unified',
-        showlegend=True
-    )
-
-    return fig
-
-
-def create_sentiment_gauge(sentiment_score):
-    """建立情緒指標儀表盤"""
-
-    if sentiment_score is None:
-        return None
-
-    fig = go.Figure(go.Indicator(
-        mode="gauge+number+delta",
-        value=sentiment_score,
-        domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "市場情緒指數"},
-        delta={'reference': 50},
-        gauge={
-            'axis': {'range': [None, 100]},
-            'bar': {'color': "#1864AB"},
-            'steps': [
-                {'range': [0, 25], 'color': "#F1F5F9"},
-                {'range': [25, 50], 'color': "#E2E8F0"},
-                {'range': [50, 75], 'color': "#BAE6FD"},
-                {'range': [75, 100], 'color': "#7DD3FC"}
-            ],
-            'threshold': {
-                'line': {'color': "#DC2626", 'width': 4},
-                'thickness': 0.75,
-                'value': 90
-            }
-        }
-    ))
-
-    return fig

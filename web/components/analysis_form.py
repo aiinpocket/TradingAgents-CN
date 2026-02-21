@@ -124,9 +124,10 @@ def render_analysis_form():
             )
 
             custom_prompt = st.text_area(
-                "自定義分析要求",
+                "自訂分析要求",
                 placeholder="輸入特定的分析要求或關注點...",
-                help="輸入特定的分析要求，系統會重點關注"
+                help="輸入特定的分析要求（最多 500 字），系統會重點關注",
+                max_chars=500
             )
 
         # 顯示輸入提示（僅在未輸入時）
@@ -183,22 +184,7 @@ def render_analysis_form():
             'custom_prompt': custom_prompt
         }
 
-        # 保存表單配置到快取和持久化儲存（複用已建構的 current_config）
-        st.session_state.form_config = current_config
-
-        try:
-            from utils.smart_session_manager import smart_session_manager
-            current_analysis_id = st.session_state.get('current_analysis_id', 'form_config_only')
-            smart_session_manager.save_analysis_state(
-                analysis_id=current_analysis_id,
-                status='running' if st.session_state.get('analysis_running', False) else 'idle',
-                stock_symbol=stock_symbol,
-                market_type=market_type,
-                form_config=current_config
-            )
-        except Exception as e:
-            logger.warning(f"配置持久化保存失敗: {e}")
-
+        # 表單配置已在上方自動保存邏輯中處理，此處不重複儲存
         return form_data
     elif submitted and not stock_symbol:
         st.error("請輸入股票代碼後再提交")

@@ -45,7 +45,7 @@ def ensure_logs_directory():
     if not readme_file.exists():
         readme_content = """# TradingAgents 日誌目錄
 
-此目錄用於存儲 TradingAgents 應用的日誌檔案。
+此目錄用於儲存 TradingAgents 應用的日誌檔案。
 
 ## 日誌檔案說明
 
