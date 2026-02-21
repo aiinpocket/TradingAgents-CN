@@ -17,7 +17,7 @@ def _calc_start_date(trade_date: str, days_back: int = 90) -> str:
     try:
         dt = datetime.strptime(trade_date, "%Y-%m-%d")
         return (dt - timedelta(days=days_back)).strftime("%Y-%m-%d")
-    except Exception:
+    except (ValueError, TypeError):
         return (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
 
 

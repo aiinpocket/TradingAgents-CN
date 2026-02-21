@@ -18,9 +18,8 @@ LLMToken
 
 - **
 - **
-- **Google AI**: Geminitoken
-- **OpenAI**: 
-- **Anthropic**: 
+- **OpenAI**:
+- **Anthropic**:
 
 ## 
 

@@ -57,7 +57,7 @@ def create_fundamentals_analyst(llm, toolkit):
         try:
             dt = datetime.strptime(current_date, "%Y-%m-%d")
             start_date = (dt - timedelta(days=90)).strftime("%Y-%m-%d")
-        except Exception:
+        except (ValueError, TypeError):
             start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
 
         logger.debug(f"輸入參數: ticker={ticker}, date={current_date}")

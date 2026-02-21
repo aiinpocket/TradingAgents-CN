@@ -441,9 +441,8 @@ else:
 
 #### 1 LLM
 LLM
-- **GPT**: 
-- **Claude**: 
-- **Google Gemini**: 
+- **GPT**:
+- **Claude**:
 
 #### 2 
 LLM""
