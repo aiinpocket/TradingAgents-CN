@@ -121,7 +121,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     try:
         from tradingagents.utils.stock_validator import prepare_stock_data
 
-        # 預獲取股票數據（默認30天歷史數據）
+        # 預獲取股票數據（預設30天歷史數據）
         preparation_result = prepare_stock_data(
             stock_code=stock_symbol,
             market_type=market_type,
@@ -233,7 +233,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             config["max_risk_discuss_rounds"] = 1
             config["memory_enabled"] = True
             config["online_tools"] = True
-        elif research_depth == 3:  # 3級 - 標準分析 (默認)
+        elif research_depth == 3:  # 3級 - 標準分析 (預設)
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 2
             config["memory_enabled"] = True
@@ -258,7 +258,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             logger.info(f" [Anthropic] 使用模型: {llm_model}")
 
         # 修複路徑問題 - 優先使用環境變量配置
-        # 數據目錄：優先使用環境變量，否則使用默認路徑
+        # 數據目錄：優先使用環境變量，否則使用預設路徑
         if not config.get("data_dir") or config["data_dir"] == "./data":
             env_data_dir = os.getenv("TRADINGAGENTS_DATA_DIR")
             if env_data_dir:
@@ -270,7 +270,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             else:
                 config["data_dir"] = str(project_root / "data")
 
-        # 結果目錄：優先使用環境變量，否則使用默認路徑
+        # 結果目錄：優先使用環境變量，否則使用預設路徑
         if not config.get("results_dir") or config["results_dir"] == "./results":
             env_results_dir = os.getenv("TRADINGAGENTS_RESULTS_DIR")
             if env_results_dir:
@@ -282,7 +282,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             else:
                 config["results_dir"] = str(project_root / "results")
 
-        # 緩存目錄：優先使用環境變量，否則使用默認路徑
+        # 緩存目錄：優先使用環境變量，否則使用預設路徑
         if not config.get("data_cache_dir"):
             env_cache_dir = os.getenv("TRADINGAGENTS_CACHE_DIR")
             if env_cache_dir:
@@ -513,8 +513,8 @@ def format_analysis_results(results):
 
         formatted_decision = {
             'action': action,
-            'confidence': 0.7,  # 默認置信度
-            'risk_score': 0.3,  # 默認風險分數
+            'confidence': 0.7,  # 預設置信度
+            'risk_score': 0.3,  # 預設風險分數
             'target_price': None,  # 字符串格式沒有目標價格
             'reasoning': f'基於多維度分析，建議{decision.strip().upper()}'
         }

@@ -56,7 +56,7 @@ class StockDataPreparer:
 
     def __init__(self, default_period_days: int = 30):
         self.timeout_seconds = 15  # 數據獲取超時時間
-        self.default_period_days = default_period_days  # 默認歷史數據時長（天）
+        self.default_period_days = default_period_days  # 預設歷史數據時長（天）
     
     def prepare_stock_data(self, stock_code: str, market_type: str = "auto",
                           period_days: int = None, analysis_date: str = None) -> StockDataPreparationResult:
@@ -66,8 +66,8 @@ class StockDataPreparer:
         Args:
             stock_code: 股票代碼（美股，1-5位字母）
             market_type: 市場類型 ("美股" 或 "auto")
-            period_days: 歷史數據時長（天），默認使用類初始化時的值
-            analysis_date: 分析日期，默認為今天
+            period_days: 歷史數據時長（天），預設使用類初始化時的值
+            analysis_date: 分析日期，預設為今天
 
         Returns:
             StockDataPreparationResult: 數據準備結果
@@ -279,8 +279,8 @@ def prepare_stock_data(stock_code: str, market_type: str = "auto",
     Args:
         stock_code: 股票代碼（美股，1-5位字母）
         market_type: 市場類型 ("美股" 或 "auto")
-        period_days: 歷史數據時長（天），默認30天
-        analysis_date: 分析日期，默認為今天
+        period_days: 歷史數據時長（天），預設30天
+        analysis_date: 分析日期，預設為今天
 
     Returns:
         StockDataPreparationResult: 數據準備結果
@@ -297,8 +297,8 @@ def is_stock_data_ready(stock_code: str, market_type: str = "auto",
     Args:
         stock_code: 股票代碼（美股，1-5位字母）
         market_type: 市場類型 ("美股" 或 "auto")
-        period_days: 歷史數據時長（天），默認30天
-        analysis_date: 分析日期，默認為今天
+        period_days: 歷史數據時長（天），預設30天
+        analysis_date: 分析日期，預設為今天
 
     Returns:
         bool: 數據是否準備就緒
@@ -315,8 +315,8 @@ def get_stock_preparation_message(stock_code: str, market_type: str = "auto",
     Args:
         stock_code: 股票代碼（美股，1-5位字母）
         market_type: 市場類型 ("美股" 或 "auto")
-        period_days: 歷史數據時長（天），默認30天
-        analysis_date: 分析日期，默認為今天
+        period_days: 歷史數據時長（天），預設30天
+        analysis_date: 分析日期，預設為今天
 
     Returns:
         str: 數據準備訊息

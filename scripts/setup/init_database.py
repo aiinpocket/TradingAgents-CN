@@ -100,7 +100,7 @@ def init_mongodb():
                         "anthropic": "claude-sonnet-4"
                     }
                 },
-                "description": "默認LLM模型配置",
+                "description": "預設LLM模型配置",
                 "created_at": datetime.utcnow(),
                 "updated_at": datetime.utcnow()
             }

@@ -1124,7 +1124,7 @@ def run_analysis():
             # 確定市場類型（僅支援美股）
             market_type = "美股"
 
-            # 預獲取股票數據（默認30天歷史數據）
+            # 預獲取股票數據（預設30天歷史數據）
             preparation_result = prepare_stock_data(
                 stock_code=selections["ticker"],
                 market_type=market_type,
@@ -1658,7 +1658,7 @@ def version():
 def data_config(
     show: bool = typer.Option(False, "--show", "-s", help="顯示當前配置 | Show current configuration"),
     set_dir: Optional[str] = typer.Option(None, "--set", "-d", help="設置數據目錄 | Set data directory"),
-    reset: bool = typer.Option(False, "--reset", "-r", help="重置為默認配置 | Reset to default configuration")
+    reset: bool = typer.Option(False, "--reset", "-r", help="重置為預設配置 | Reset to default configuration")
 ):
     """
     配置數據目錄路徑
@@ -1670,10 +1670,10 @@ def data_config(
     logger.info(f"\n[bold blue]數據目錄配置 | Data Directory Configuration[/bold blue]")
     
     if reset:
-        # 重置為默認配置
+        # 重置為預設配置
         default_data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
         set_data_dir(default_data_dir)
-        logger.info(f"[green]已重置數據目錄為默認路徑: {default_data_dir}[/green]")
+        logger.info(f"[green]已重置數據目錄為預設路徑: {default_data_dir}[/green]")
         return
     
     if set_dir:
@@ -1695,7 +1695,7 @@ def data_config(
             logger.error(f"[red]設置數據目錄失敗: {e}[/red]")
         return
     
-    # 顯示當前配置（默認行為或使用--show）
+    # 顯示當前配置（預設行為或使用--show）
     settings = config_manager.load_settings()
     current_data_dir = get_data_dir()
     
@@ -1740,7 +1740,7 @@ def data_config(
     # 使用說明
     logger.info(f"\n[yellow]使用說明 | Usage:[/yellow]")
     logger.info(f"- 設置數據目錄: tradingagents data-config --set /path/to/data")
-    logger.info(f"- 重置為默認: tradingagents data-config --reset")
+    logger.info(f"- 重置為預設: tradingagents data-config --reset")
     logger.info(f"- 查看當前配置: tradingagents data-config --show")
     logger.info(f"- 環境變量優先級最高 | Environment variables have highest priority")
 
@@ -1870,7 +1870,7 @@ def help_chinese():
 
 
 def main():
-    """主函數 - 默認進入分析模式"""
+    """主函數 - 預設進入分析模式"""
 
     # 如果沒有參數，直接進入分析模式
     if len(sys.argv) == 1:

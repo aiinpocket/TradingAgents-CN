@@ -110,9 +110,9 @@ class FinancialSituationMemory:
         self.config = config
         self.llm_provider = config.get("llm_provider", "openai").lower()
 
-        # 配置向量緩存的長度限制（向量緩存默認啟用長度檢查）
-        self.max_embedding_length = int(os.getenv('MAX_EMBEDDING_CONTENT_LENGTH', '50000'))  # 默認50K字符
-        self.enable_embedding_length_check = os.getenv('ENABLE_EMBEDDING_LENGTH_CHECK', 'true').lower() == 'true'  # 向量緩存默認啟用
+        # 配置向量緩存的長度限制（向量緩存預設啟用長度檢查）
+        self.max_embedding_length = int(os.getenv('MAX_EMBEDDING_CONTENT_LENGTH', '50000'))  # 預設50K字符
+        self.enable_embedding_length_check = os.getenv('ENABLE_EMBEDDING_LENGTH_CHECK', 'true').lower() == 'true'  # 向量緩存預設啟用
         
         # 根據LLM提供商選擇嵌入模型和客戶端
         # 統一使用 OpenAI embedding

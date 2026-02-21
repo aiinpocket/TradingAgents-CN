@@ -140,7 +140,7 @@ def normalize_package_name(import_name: str) -> str:
     if import_name in PACKAGE_NAME_MAPPING:
         return PACKAGE_NAME_MAPPING[import_name]
     
-    # 默認轉小寫並替換下劃線為連字符
+    # 預設轉小寫並替換下劃線為連字符
     return import_name.lower().replace('_', '-')
 
 

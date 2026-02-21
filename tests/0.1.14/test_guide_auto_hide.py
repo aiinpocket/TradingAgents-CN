@@ -115,7 +115,7 @@ def test_guide_auto_hide_logic():
     print(f"    用戶手動設置後應該尊重用戶選擇: {show_guide_preference}")
     
     print("\n 測試總結:")
-    print("   1.  初始狀態默認顯示使用指南")
+    print("   1.  初始狀態預設顯示使用指南")
     print("   2.  開始分析時自動隐藏使用指南")
     print("   3.  有分析結果時保持隐藏狀態")
     print("   4.  用戶手動設置後尊重用戶選擇")
@@ -164,7 +164,7 @@ def test_ui_behavior():
         print(f"\n 場景{i}: {scenario['name']}")
         print("-" * 40)
         
-        # 計算默認值
+        # 計算預設值
         default_show_guide = not (scenario['analysis_running'] or scenario['analysis_results'] is not None)
         
         # 計算實際顯示值
@@ -179,7 +179,7 @@ def test_ui_behavior():
         print(f"   分析運行中: {scenario['analysis_running']}")
         print(f"   有分析結果: {bool(scenario['analysis_results'])}")
         print(f"   用戶設置偏好: {scenario['user_set_preference']}")
-        print(f"   默認顯示指南: {default_show_guide}")
+        print(f"   預設顯示指南: {default_show_guide}")
         print(f"   實際顯示指南: {actual_show_guide}")
         print(f"   預期顯示指南: {scenario['expected_show_guide']}")
         

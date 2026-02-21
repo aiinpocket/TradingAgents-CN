@@ -144,9 +144,9 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="清理TradingAgents緩存")
-    parser.add_argument("--days", type=int, default=7, help="清理多少天前的緩存 (默認: 7)")
+    parser.add_argument("--days", type=int, default=7, help="清理多少天前的緩存 (預設: 7)")
     parser.add_argument("--type", choices=["all", "file", "database", "python"], 
-                       default="all", help="清理類型 (默認: all)")
+                       default="all", help="清理類型 (預設: all)")
     parser.add_argument("--stats", action="store_true", help="只顯示統計信息，不清理")
     
     args = parser.parse_args()

@@ -63,13 +63,13 @@ class ModelPersistence:
             logger.debug(f"[Persistence] 從Session State加載配置: {config}")
             return config
         
-        # 返回默認配置
+        # 返回預設配置
         default_config = {
             'provider': 'openai',
             'category': 'openai',
             'model': ''
         }
-        logger.debug(f"[Persistence] 使用默認配置: {default_config}")
+        logger.debug(f"[Persistence] 使用預設配置: {default_config}")
         return default_config
     
     def clear_config(self):

@@ -51,7 +51,7 @@ class RealtimeNewsAggregator:
         Args:
             ticker: 股票代碼
             hours_back: 回溯小時數
-            max_news: 最大新聞數量，默認10條
+            max_news: 最大新聞數量，預設10條
         """
         logger.info(f"[新聞聚合器] 開始獲取 {ticker} 的實時新聞，回溯時間: {hours_back}小時")
         start_time = datetime.now()
@@ -346,8 +346,8 @@ class RealtimeNewsAggregator:
             logger.debug(f"[相關性計算] 股票代碼數字部分 {pure_code} 出現在標題中，相關性評分: 0.9，標題: {title[:50]}...")
             return 0.9
         
-        logger.debug(f"[相關性計算] 未檢測到明確相關性，使用默認評分: 0.3，標題: {title[:50]}...")
-        return 0.3  # 默認相關性
+        logger.debug(f"[相關性計算] 未檢測到明確相關性，使用預設評分: 0.3，標題: {title[:50]}...")
+        return 0.3  # 預設相關性
     
     def _deduplicate_news(self, news_items: List[NewsItem]) -> List[NewsItem]:
         """去重新聞"""

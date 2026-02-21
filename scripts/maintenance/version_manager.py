@@ -45,13 +45,13 @@ class VersionManager:
             prefix = 'cn-'
             version_part = current[3:]  # 去掉cn-前缀
         else:
-            prefix = 'cn-'  # 默認添加cn-前缀
+            prefix = 'cn-'  # 預設添加cn-前缀
             version_part = current
 
         try:
             major, minor, patch = map(int, version_part.split('.'))
         except ValueError:
-            # 如果解析失敗，使用默認值
+            # 如果解析失敗，使用預設值
             major, minor, patch = 0, 1, 0
 
         if bump_type == 'major':

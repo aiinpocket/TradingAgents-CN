@@ -71,7 +71,7 @@ def setup_mongodb_windows():
        - 打開命令行，運行: mongosh
        - 如果連接成功，說明安裝正確
     
-    默認連接地址: mongodb://localhost:27017
+    預設連接地址: mongodb://localhost:27017
     """)
 
 def setup_redis_windows():
@@ -98,7 +98,7 @@ def setup_redis_windows():
     或者使用Docker:
     docker run -d -p 6379:6379 --name redis redis:latest
     
-    默認連接地址: redis://localhost:6379
+    預設連接地址: redis://localhost:6379
     """)
 
 def setup_mongodb_linux():

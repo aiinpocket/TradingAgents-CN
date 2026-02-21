@@ -316,7 +316,7 @@ def initialize_session_state():
                 st.session_state.analysis_running = False
                 st.session_state.current_analysis_id = None
     except Exception as e:
-        # 如果恢複失敗，保持默認值
+        # 如果恢複失敗，保持預設值
         logger.warning(f"[狀態恢複] 恢複分析狀態失敗: {e}")
         st.session_state.analysis_running = False
         st.session_state.current_analysis_id = None

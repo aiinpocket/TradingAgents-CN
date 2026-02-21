@@ -184,7 +184,7 @@ pip install pymongo redis
 #### Windows:
 1. 下載MongoDB Community Server
 2. 安裝並啟動服務
-3. 默認端口：27017
+3. 預設端口：27017
 
 #### 使用Docker:
 ```bash
@@ -195,7 +195,7 @@ docker run -d -p 27017:27017 --name mongodb mongo:4.4
 #### Windows:
 1. 下載Redis for Windows
 2. 啟動redis-server
-3. 默認端口：6379
+3. 預設端口：6379
 
 #### 使用Docker:
 ```bash
@@ -204,7 +204,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 
 ## 配置說明
 
-### 文件緩存模式（默認）
+### 文件緩存模式（預設）
 - 緩存存儲在本地文件系統
 - 性能良好，適合單機使用
 - 無需額外服務

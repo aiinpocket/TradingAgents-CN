@@ -36,7 +36,7 @@ class SignalProcessor:
                 'target_price': None,
                 'confidence': 0.5,
                 'risk_score': 0.5,
-                'reasoning': '輸入信號無效，默認持有建議'
+                'reasoning': '輸入信號無效，預設持有建議'
             }
 
         # 清理和驗證信號內容
@@ -48,7 +48,7 @@ class SignalProcessor:
                 'target_price': None,
                 'confidence': 0.5,
                 'risk_score': 0.5,
-                'reasoning': '信號內容為空，默認持有建議'
+                'reasoning': '信號內容為空，預設持有建議'
             }
 
         # 取得股票市場資訊（僅支援美股）
@@ -87,7 +87,7 @@ class SignalProcessor:
 - 股票代碼 {stock_symbol or '未知'} 是{market_info['market_name']}，使用{currency}計價
 - 目標價格必須與股票的交易貨幣一致（{currency_symbol}）
 
-如果某些信息在報告中沒有明確提及，請使用合理的默認值。""",
+如果某些信息在報告中沒有明確提及，請使用合理的預設值。""",
             ),
             ("human", full_signal),
         ]
@@ -279,7 +279,7 @@ class SignalProcessor:
         import re
 
         # 提取動作
-        action = '持有'  # 默認
+        action = '持有'  # 預設
         if re.search(r'買入|BUY', text, re.IGNORECASE):
             action = '買入'
         elif re.search(r'賣出|SELL', text, re.IGNORECASE):
@@ -320,11 +320,11 @@ class SignalProcessor:
         }
 
     def _get_default_decision(self) -> dict:
-        """返回默認的投資決策"""
+        """返回預設的投資決策"""
         return {
             'action': '持有',
             'target_price': None,
             'confidence': 0.5,
             'risk_score': 0.5,
-            'reasoning': '輸入數據無效，默認持有建議'
+            'reasoning': '輸入數據無效，預設持有建議'
         }

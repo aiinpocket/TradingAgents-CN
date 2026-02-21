@@ -25,11 +25,11 @@ def test_data_dir_configuration():
     """
     print("\n=== 測試數據目錄配置功能 | Testing Data Directory Configuration ===")
     
-    # 1. 測試默認配置
-    print("\n1. 測試默認配置 | Testing Default Configuration")
+    # 1. 測試預設配置
+    print("\n1. 測試預設配置 | Testing Default Configuration")
     initialize_config()
     default_data_dir = get_data_dir()
-    print(f"默認數據目錄 | Default data directory: {default_data_dir}")
+    print(f"預設數據目錄 | Default data directory: {default_data_dir}")
     
     # 2. 測試設置自定義數據目錄
     print("\n2. 測試設置自定義數據目錄 | Testing Custom Data Directory")
@@ -115,7 +115,7 @@ def test_cli_commands():
     print("2. 設置自定義數據目錄 | Set custom data directory:")
     print("   python -m cli.main data-config --set C:\\custom\\trading\\data")
     print()
-    print("3. 重置為默認配置 | Reset to default configuration:")
+    print("3. 重置為預設配置 | Reset to default configuration:")
     print("   python -m cli.main data-config --reset")
     print()
     print("4. 查看所有可用命令 | View all available commands:")

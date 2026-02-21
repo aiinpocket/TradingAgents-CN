@@ -86,10 +86,10 @@ def create_risk_manager(llm, memory):
                 logger.info("[Risk Manager] 等待2秒後重試...")
                 time.sleep(2)
         
-        # 如果所有重試都失敗，生成默認決策
+        # 如果所有重試都失敗，生成預設決策
         if not response_content:
-            logger.error("[Risk Manager] 所有LLM調用嘗試失敗，使用默認決策")
-            response_content = f"""**默認建議：持有**
+            logger.error("[Risk Manager] 所有LLM調用嘗試失敗，使用預設決策")
+            response_content = f"""**預設建議：持有**
 
 由於技術原因無法生成詳細分析，基於當前市場狀況和風險控制原則，建議對{company_name}採取持有策略。
 
@@ -103,7 +103,7 @@ def create_risk_manager(llm, memory):
 - 設置合理的止損和止盈位
 - 等待更好的入場或出場時機
 
-注意：此為系統默認建議，建議結合人工分析做出最終決策。"""
+注意：此為系統預設建議，建議結合人工分析做出最終決策。"""
 
         new_risk_debate_state = {
             "judge_decision": response_content,

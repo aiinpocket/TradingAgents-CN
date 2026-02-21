@@ -151,7 +151,7 @@ def main():
             print("\n .env配置測試完成!")
             print("\n 系統特性:")
             print(" 使用項目現有的.env配置")
-            print(" 默認不依賴數據庫，可以純文件緩存運行")
+            print(" 預設不依賴數據庫，可以純文件緩存運行")
             print(" 自動檢測和使用可用的數據庫")
             print(" 支持完整的MongoDB和Redis配置")
             print(" 智能降級，確保系統穩定性")

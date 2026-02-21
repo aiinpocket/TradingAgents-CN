@@ -4,6 +4,7 @@ TradingAgents-CN Web應用啟動腳本
 """
 
 import os
+import shutil
 import signal
 import sys
 import subprocess
@@ -37,7 +38,7 @@ def check_dependencies():
     if missing_packages:
         logger.error(f"缺少必要的依賴包: {', '.join(missing_packages)}")
         logger.info("請運行以下命令安裝:")
-        logger.info(f"pip install {''.join(missing_packages)}")
+        logger.info(f"pip install {' '.join(missing_packages)}")
         return False
 
     logger.info("依賴包檢查通過")
@@ -48,7 +49,7 @@ def clean_cache_files(force_clean=False):
     清理Python緩存文件，避免Streamlit文件監控錯誤
 
     Args:
-        force_clean: 是否強制清理，默認False（可選清理）
+        force_clean: 是否強制清理，預設False（可選清理）
     """
 
     # 檢查環境變量是否禁用清理
@@ -110,7 +111,6 @@ def clean_cache_files(force_clean=False):
             logger.info("清理項目緩存文件...")
             for cache_dir in project_cache_dirs:
                 try:
-                    import shutil
                     shutil.rmtree(cache_dir)
                     logger.info(f"已清理: {cache_dir.relative_to(project_root)}")
                 except Exception as e:
@@ -211,7 +211,7 @@ def main():
         logger.info(f"使用配置目錄: {config_dir}")
         # Streamlit會自動查找.streamlit/config.toml文件
     
-    logger.info(f"執行命令: {''.join(cmd)}")
+    logger.info(f"執行命令: {' '.join(cmd)}")
     logger.info("\n Web應用啟動中...")
     logger.info("瀏覽器將自動打開 http://localhost:8501")
     logger.info("按 Ctrl+C 停止應用")
@@ -267,7 +267,7 @@ if __name__ == "__main__":
             logger.info("TradingAgents-CN Web應用啟動器")
             logger.info("=")
             logger.info("用法:")
-            logger.info("python run_web.py # 默認啟動（清理項目緩存）")
+            logger.info("python run_web.py # 預設啟動（清理項目緩存）")
             logger.info("python run_web.py --no-clean # 跳過緩存清理")
             logger.info("python run_web.py --force-clean # 強制清理所有緩存")
             logger.info("python run_web.py --help # 顯示幫助")

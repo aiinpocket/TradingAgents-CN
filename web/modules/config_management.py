@@ -379,7 +379,7 @@ def render_system_settings():
             default_provider_value = "openai"
 
         default_provider = st.selectbox(
-            "默認供應商",
+            "預設供應商",
             providers,
             index=providers.index(default_provider_value),
             key="settings_default_provider"
@@ -402,7 +402,7 @@ def render_system_settings():
     
     with col2:
         default_model = st.text_input(
-            "默認模型",
+            "預設模型",
             value=settings.get("default_model", "gpt-4o-mini"),
             key="settings_default_model"
         )
@@ -467,7 +467,7 @@ def render_system_settings():
                 st.warning("再次點擊確認清空")
     
     with col3:
-        if st.button("重置配置", help="重置所有配置到默認值", key="reset_all_config"):
+        if st.button("重置配置", help="重置所有配置到預設值", key="reset_all_config"):
             if st.session_state.get("confirm_reset", False):
                 # 刪除配置文件，重新初始化
                 import shutil

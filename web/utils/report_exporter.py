@@ -441,7 +441,7 @@ class ReportExporter:
         pdf_engines = [
             ('wkhtmltopdf', 'HTML轉PDF引擎，推薦安裝'),
             ('weasyprint', '現代HTML轉PDF引擎'),
-            (None, '使用pandoc默認引擎') # 不指定引擎，讓pandoc自己選擇
+            (None, '使用pandoc預設引擎') # 不指定引擎，讓pandoc自己選擇
         ]
 
         last_error = None
@@ -461,7 +461,7 @@ class ReportExporter:
                     extra_args.append(f'--pdf-engine={engine}')
                     logger.info(f"使用PDF引擎: {engine}")
                 else:
-                    logger.info("使用默認PDF引擎")
+                    logger.info("使用預設PDF引擎")
 
                 logger.info(f"PDF參數: {extra_args}")
 
@@ -486,14 +486,14 @@ class ReportExporter:
                     # 清理臨時文件
                     os.unlink(output_file)
 
-                    logger.info(f"PDF生成成功，使用引擎: {engine or '默認'}")
+                    logger.info(f"PDF生成成功，使用引擎: {engine or '預設'}")
                     return pdf_content
                 else:
                     raise Exception("PDF文件生成失敗或為空")
 
             except Exception as e:
                 last_error = str(e)
-                logger.error(f"PDF引擎 {engine or '默認'} 失敗: {e}")
+                logger.error(f"PDF引擎 {engine or '預設'} 失敗: {e}")
 
                 # 清理可能存在的臨時文件
                 try:
@@ -851,7 +851,7 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
             else:
                 results_dir = Path(results_dir_env)
         else:
-            # 默認使用項目根目錄下的results
+            # 預設使用項目根目錄下的results
             results_dir = project_root / "results"
 
         # 創建股票專用目錄

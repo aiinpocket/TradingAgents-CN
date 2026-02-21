@@ -270,7 +270,7 @@ def main():
     # 創建功能分支
     create_parser = subparsers.add_parser('create', help='創建功能分支')
     create_parser.add_argument('name', help='分支名稱')
-    create_parser.add_argument('--base', default='main', help='基礎分支 (默認: main)')
+    create_parser.add_argument('--base', default='main', help='基礎分支 (預設: main)')
     
     args = parser.parse_args()
     

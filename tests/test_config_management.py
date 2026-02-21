@@ -28,7 +28,7 @@ def test_config_manager():
         # 測試模型配置
         print(" 測試模型配置...")
         models = config_manager.load_models()
-        assert len(models) > 0, "應該有默認模型配置"
+        assert len(models) > 0, "應該有預設模型配置"
         
         # 添加新模型
         new_model = ModelConfig(
@@ -55,7 +55,7 @@ def test_config_manager():
         # 測試定價配置
         print(" 測試定價配置...")
         pricing_configs = config_manager.load_pricing()
-        assert len(pricing_configs) > 0, "應該有默認定價配置"
+        assert len(pricing_configs) > 0, "應該有預設定價配置"
         
         # 添加新定價
         new_pricing = PricingConfig(
@@ -99,7 +99,7 @@ def test_config_manager():
         # 測試設置
         print(" 測試系統設置...")
         settings = config_manager.load_settings()
-        assert "default_provider" in settings, "應該有默認設置"
+        assert "default_provider" in settings, "應該有預設設置"
         
         settings["test_setting"] = "test_value"
         config_manager.save_settings(settings)

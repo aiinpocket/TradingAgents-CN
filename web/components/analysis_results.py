@@ -245,7 +245,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                         # 嘗試從元數據文件中讀取真實的研究深度和分析師信息
                         research_depth = 1
-                        analysts = ['market', 'fundamentals', 'trader'] # 默認值
+                        analysts = ['market', 'fundamentals', 'trader'] # 預設值
 
                         metadata_file = date_dir / "analysis_metadata.json"
                         if metadata_file.exists():

@@ -185,7 +185,7 @@ def main():
                     try:
                         file_num = int(input(f"\n選擇文件 (1-{len(log_files)}): ")) - 1
                         if 0 <= file_num < len(log_files):
-                            lines = input("顯示行數 (默認50，0=全部): ").strip()
+                            lines = input("顯示行數 (預設50，0=全部): ").strip()
                             lines = int(lines) if lines else 50
                             view_log_file(log_files[file_num], lines)
                         else:

@@ -46,8 +46,8 @@ class DatabaseCacheManager:
         初始化數據庫緩存管理器
 
         Args:
-            mongodb_url: MongoDB連接URL，默認使用配置文件端口
-            redis_url: Redis連接URL，默認使用配置文件端口
+            mongodb_url: MongoDB連接URL，預設使用配置文件端口
+            redis_url: Redis連接URL，預設使用配置文件端口
             mongodb_db: MongoDB數據庫名
             redis_db: Redis數據庫編號
         """

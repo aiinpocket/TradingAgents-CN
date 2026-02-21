@@ -113,7 +113,7 @@ class SmartConfigManager:
         self.config = {
             "cache": {
                 "enabled": True,
-                "primary_backend": "file",  # 默認使用文件緩存
+                "primary_backend": "file",  # 預設使用文件緩存
                 "fallback_enabled": True,
                 "ttl_settings": {
                     "us_stock_data": 7200,      # 2小時

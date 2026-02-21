@@ -61,7 +61,7 @@ class AdaptiveCacheManager:
             except Exception as e:
                 self.logger.warning(f"智能配置加載失敗: {e}")
         
-        # 默認配置（純文件緩存）
+        # 預設配置（純文件緩存）
         self.config = {
             "cache": {
                 "primary_backend": "file",
@@ -79,7 +79,7 @@ class AdaptiveCacheManager:
         self.fallback_enabled = True
         self.ttl_settings = self.config["cache"]["ttl_settings"]
         
-        self.logger.info("使用默認配置（純文件緩存）")
+        self.logger.info("使用預設配置（純文件緩存）")
     
     def _init_backends(self):
         """初始化緩存後端"""

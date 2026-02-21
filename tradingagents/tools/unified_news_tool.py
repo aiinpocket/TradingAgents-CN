@@ -173,7 +173,7 @@ def create_unified_news_tool(toolkit):
 
         Args:
             stock_code (str): 美股股票代碼 (如 AAPL、TSLA、NVDA)
-            max_news (int): 最大新聞數量，默認100
+            max_news (int): 最大新聞數量，預設100
             model_info (str): 當前使用的模型信息，用於特殊處理
 
         Returns:

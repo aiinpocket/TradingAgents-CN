@@ -21,7 +21,7 @@ class UnifiedDataDirectoryManager:
         初始化數據目錄管理器
         
         Args:
-            project_root: 項目根目錄，默認為當前文件的上級目錄
+            project_root: 項目根目錄，預設為當前文件的上級目錄
         """
         if project_root is None:
             # 假設此文件在 scripts/ 目錄下
@@ -29,7 +29,7 @@ class UnifiedDataDirectoryManager:
         else:
             self.project_root = Path(project_root)
         
-        # 默認數據目錄配置
+        # 預設數據目錄配置
         self._default_config = {
             'data_root': 'data',
             'cache': 'data/cache',
@@ -94,7 +94,7 @@ class UnifiedDataDirectoryManager:
         if env_key and os.getenv(env_key):
             path_str = os.getenv(env_key)
         else:
-            # 使用默認配置
+            # 使用預設配置
             path_str = self._default_config.get(key)
             if not path_str:
                 raise ValueError(f"未知的目錄鍵: {key}")

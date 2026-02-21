@@ -71,7 +71,7 @@ def test_tool_parameters():
     try:
         params = {"ticker": ticker}  # 缺少 curr_date
         result = toolkit.get_realtime_stock_news.invoke(params)
-        print(f"    意外成功（可能有默認值處理）")
+        print(f"    意外成功（可能有預設值處理）")
     except Exception as e:
         print(f"    正確失敗: {e}")
     
@@ -79,7 +79,7 @@ def test_tool_parameters():
     try:
         params = {"ticker": ticker}  # 缺少 query 和 curr_date
         result = toolkit.get_google_news.invoke(params)
-        print(f"    意外成功（可能有默認值處理）")
+        print(f"    意外成功（可能有預設值處理）")
     except Exception as e:
         print(f"    正確失敗: {e}")
     

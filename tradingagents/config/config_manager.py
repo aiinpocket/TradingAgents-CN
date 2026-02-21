@@ -174,8 +174,8 @@ class ConfigManager:
             self.mongodb_storage = None
 
     def _init_default_configs(self):
-        """初始化默認配置"""
-        # 默認模型配置
+        """初始化預設配置"""
+        # 預設模型配置
         if not self.models_file.exists():
             default_models = [
                 ModelConfig(
@@ -205,7 +205,7 @@ class ConfigManager:
             ]
             self.save_models(default_models)
         
-        # 默認定價配置
+        # 預設定價配置
         if not self.pricing_file.exists():
             default_pricing = [
                 # OpenAI定價 (美元，每千token) - 2025年最新價格
@@ -243,9 +243,9 @@ class ConfigManager:
             ]
             self.save_pricing(default_pricing)
         
-        # 默認設置
+        # 預設設置
         if not self.settings_file.exists():
-            # 導入默認數據目錄配置
+            # 導入預設數據目錄配置
             import os
             default_data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
             
@@ -414,7 +414,7 @@ class ConfigManager:
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
                     settings = json.load(f)
             else:
-                # 如果設置文件不存在，創建默認設置
+                # 如果設置文件不存在，創建預設設置
                 settings = {
                     "default_provider": "openai",
                     "default_model": "gpt-4o-mini",
@@ -564,7 +564,7 @@ class ConfigManager:
         settings = self.load_settings()
         data_dir = settings.get("data_dir")
         if not data_dir:
-            # 如果沒有配置，使用默認路徑
+            # 如果沒有配置，使用預設路徑
             data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
         return data_dir
 

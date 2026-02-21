@@ -25,7 +25,7 @@ class StockDataCache:
         初始化緩存管理器
 
         Args:
-            cache_dir: 緩存目錄路徑，默認為 tradingagents/dataflows/data_cache
+            cache_dir: 緩存目錄路徑，預設為 tradingagents/dataflows/data_cache
         """
         if cache_dir is None:
             # 獲取當前文件所在目錄
@@ -65,11 +65,11 @@ class StockDataCache:
             }
         }
 
-        # 內容長度限制配置（文件緩存默認不限制）
+        # 內容長度限制配置（文件緩存預設不限制）
         self.content_length_config = {
             'max_content_length': int(os.getenv('MAX_CACHE_CONTENT_LENGTH', '50000')),  # 50K字符
             'long_text_providers': ['openai', 'anthropic'],  # 支援長文本的提供商
-            'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 文件緩存默認不限制
+            'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 文件緩存預設不限制
         }
 
         logger.info(f"緩存管理器初始化完成，緩存目錄: {self.cache_dir}")

@@ -339,7 +339,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
                         symbol = str(kwargs[key])
                         break
 
-            # 如果還是沒找到，使用默認值
+            # 如果還是沒找到，使用預設值
             if not symbol:
                 symbol = 'unknown'
 

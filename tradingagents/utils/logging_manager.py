@@ -78,7 +78,7 @@ class TradingAgentsLogger:
         self._setup_logging()
     
     def _load_default_config(self) -> Dict[str, Any]:
-        """加載默認日誌配置"""
+        """加載預設日誌配置"""
         # 嘗試從配置文件加載
         config = self._load_config_file()
         if config:
@@ -109,7 +109,7 @@ class TradingAgentsLogger:
                     'directory': log_dir
                 },
                 'structured': {
-                    'enabled': False,  # 默認關閉，可通過環境變量啟用
+                    'enabled': False,  # 預設關閉，可通過環境變量啟用
                     'level': 'INFO',
                     'directory': log_dir
                 }

@@ -26,7 +26,7 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     
     Args:
         env_var: 環境變量名
-        default: 默認值
+        default: 預設值
         
     Returns:
         bool: 解析後的布爾值
@@ -62,8 +62,8 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     elif value_lower in false_values:
         return False
     else:
-        # 如果無法識別，記錄警告並返回默認值
-        logger.warning(f"無法解析環境變量 {env_var}='{value}'，使用默認值 {default}")
+        # 如果無法識別，記錄警告並返回預設值
+        logger.warning(f"無法解析環境變量 {env_var}='{value}'，使用預設值 {default}")
         return default
 
 
@@ -73,7 +73,7 @@ def parse_int_env(env_var: str, default: int = 0) -> int:
     
     Args:
         env_var: 環境變量名
-        default: 默認值
+        default: 預設值
         
     Returns:
         int: 解析後的整數值
@@ -86,7 +86,7 @@ def parse_int_env(env_var: str, default: int = 0) -> int:
     try:
         return int(value.strip())
     except (ValueError, AttributeError):
-        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為整數，使用默認值 {default}")
+        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為整數，使用預設值 {default}")
         return default
 
 
@@ -96,7 +96,7 @@ def parse_float_env(env_var: str, default: float = 0.0) -> float:
     
     Args:
         env_var: 環境變量名
-        default: 默認值
+        default: 預設值
         
     Returns:
         float: 解析後的浮點數值
@@ -109,7 +109,7 @@ def parse_float_env(env_var: str, default: float = 0.0) -> float:
     try:
         return float(value.strip())
     except (ValueError, AttributeError):
-        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為浮點數，使用默認值 {default}")
+        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為浮點數，使用預設值 {default}")
         return default
 
 
@@ -119,7 +119,7 @@ def parse_str_env(env_var: str, default: str = "") -> str:
     
     Args:
         env_var: 環境變量名
-        default: 默認值
+        default: 預設值
         
     Returns:
         str: 解析後的字符串值
@@ -139,7 +139,7 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
     Args:
         env_var: 環境變量名
         separator: 分隔符
-        default: 默認值
+        default: 預設值
         
     Returns:
         list: 解析後的列表
@@ -158,7 +158,7 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
         # 過濾空字符串
         return [item for item in items if item]
     except AttributeError:
-        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為列表，使用默認值 {default}")
+        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為列表，使用預設值 {default}")
         return default
 
 
