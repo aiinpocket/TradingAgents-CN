@@ -58,13 +58,13 @@ class DatabaseCacheManager:
         # 優先使用完整 URL，其次組合環境變數（不在程式碼中嵌入預設密碼）
         # 使用關鍵字參數避免密碼出現在 URL 字串中
         self.mongodb_url = mongodb_url or os.getenv("MONGODB_URL")
-        self.mongodb_host = "localhost"
+        self.mongodb_host = os.getenv("MONGODB_HOST", "localhost")
         self.mongodb_port_num = int(mongodb_port)
         self.mongodb_username = os.getenv("MONGODB_USERNAME", "admin") if mongodb_password else None
         self.mongodb_password = mongodb_password or None
 
         self.redis_url = redis_url or os.getenv("REDIS_URL")
-        self.redis_host = "localhost"
+        self.redis_host = os.getenv("REDIS_HOST", "localhost")
         self.redis_port_num = int(redis_port)
         self.redis_password = redis_password or None
         self.mongodb_db_name = mongodb_db
