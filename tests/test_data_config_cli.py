@@ -141,7 +141,7 @@ def main():
         
         print("\n 所有測試完成！| All tests completed!")
         print("\n 總結 | Summary:")
-        print(" 資料目錄配置功能已實現 | Data directory configuration feature implemented")
+        print(" 資料目錄配置功能已實作 | Data directory configuration feature implemented")
         print(" 支援自定義路徑設定 | Custom path setting supported")
         print(" 支援環境變數配置 | Environment variable configuration supported")
         print(" 集成配置管理器 | Configuration manager integrated")

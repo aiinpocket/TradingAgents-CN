@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 檔案一致性檢查指令碼
-檢查檔案與程式碼的一致性，確保檔案內容準確反映實際實現
+檢查檔案與程式碼的一致性，確保檔案內容準確反映實際實作
 """
 
 import os
@@ -66,7 +66,7 @@ class DocumentationChecker:
                     if yaml_end > 0:
                         yaml_content = content[3:yaml_end]
                         
-                        # 檢查版本字段
+                        # 檢查版本欄位
                         version_match = re.search(r'version:\s*(.+)', yaml_content)
                         if version_match:
                             doc_version = version_match.group(1).strip()
@@ -89,7 +89,7 @@ class DocumentationChecker:
         print(" 檢查智慧體架構一致性...")
         issues = []
         
-        # 檢查實際的智慧體實現
+        # 檢查實際的智慧體實作
         agents_code_dir = self.code_dir / "agents"
         if not agents_code_dir.exists():
             issues.append(" 智慧體程式碼目錄不存在")

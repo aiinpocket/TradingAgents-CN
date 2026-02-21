@@ -834,7 +834,7 @@ def render_detailed_analysis_content(selected_result):
         # 如果沒有預定義模組的資料，顯示所有可用的分析資料
         st.info("顯示完整分析報告資料")
         
-        # 排除一些基礎字段，只顯示分析相關的資料
+        # 排除一些基礎欄位，只顯示分析相關的資料
         excluded_keys = {'analysis_id', 'timestamp', 'stock_symbol', 'analysts', 
                         'research_depth', 'status', 'summary', 'performance', 
                         'is_favorite', 'tags', 'full_data'}
@@ -845,7 +845,7 @@ def render_detailed_analysis_content(selected_result):
             if key not in excluded_keys and value:
                 analysis_data[key] = value
         
-        # 如果有full_data字段，優先使用它
+        # 如果有full_data欄位，優先使用它
         if 'full_data'in selected_result and selected_result['full_data']:
             full_data = selected_result['full_data']
             if isinstance(full_data, dict):
@@ -1059,7 +1059,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                     logger.debug(f"[MongoDB保存] 讀取報告檔案異常: {e}")
                     reports = {}
 
-                # 使用標準保存方法，確保字段結構一致
+                # 使用標準保存方法，確保欄位結構一致
                 success = mongodb_manager.save_analysis_report(
                     stock_symbol=result_entry.get('stock_symbol', ''),
                     analysis_results=analysis_results,
@@ -1092,7 +1092,7 @@ def show_expanded_detail(result):
 
         # 檢查是否有報告資料
         if 'reports'not in result or not result['reports']:
-            # 如果沒有reports字段，檢查是否有其他分析資料
+            # 如果沒有reports欄位，檢查是否有其他分析資料
             if result.get('summary'):
                 st.subheader("分析摘要")
                 st.markdown(result['summary'])

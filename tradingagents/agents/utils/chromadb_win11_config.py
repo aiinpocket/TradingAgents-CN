@@ -29,7 +29,7 @@ def get_win11_chromadb_client():
         allow_reset=True,
         anonymized_telemetry=False,  # 禁用遙測避免posthog錯誤
         is_persistent=False,
-        # Windows 11 可以使用預設實現，性能更好
+        # Windows 11 可以使用預設實作，性能更好
         chroma_db_impl="duckdb+parquet",
         chroma_api_impl="chromadb.api.segment.SegmentAPI"
         # 移除persist_directory=None，讓它使用預設值

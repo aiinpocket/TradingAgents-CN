@@ -74,7 +74,7 @@ class FinnhubDataDownloader:
     
     def _make_request(self, endpoint: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """
-        發送API請求
+        傳送API請求
         
         Args:
             endpoint: API端點

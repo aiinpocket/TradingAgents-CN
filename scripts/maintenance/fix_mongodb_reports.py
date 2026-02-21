@@ -4,9 +4,9 @@
 
 這個指令碼用於修復MongoDB中保存的分析報告資料結構不一致的問題。
 主要解決以下問題：
-1. 缺少reports字段的檔案
-2. reports字段為空或None的檔案
-3. 字段結構不標準的檔案
+1. 缺少reports欄位的檔案
+2. reports欄位為空或None的檔案
+3. 欄位結構不標準的檔案
 
 使用方法：
 python scripts/maintenance/fix_mongodb_reports.py
@@ -68,8 +68,8 @@ def main():
                 empty_reports_count += 1
         
         print(f" 不一致報告數量: {inconsistent_count}")
-        print(f"   - 缺少reports字段: {missing_reports_count}")
-        print(f"   - reports字段為空: {empty_reports_count}")
+        print(f"   - 缺少reports欄位: {missing_reports_count}")
+        print(f"   - reports欄位為空: {empty_reports_count}")
         
         if inconsistent_count == 0:
             print(" 所有報告資料結構一致，無需修復")
@@ -145,19 +145,19 @@ def show_report_details():
             print(f"   狀態: {report.get('status', 'N/A')}")
             print(f"   來源: {report.get('source', 'N/A')}")
             
-            # 檢查reports字段
+            # 檢查reports欄位
             reports_field = report.get('reports')
             if reports_field is None:
-                print(f"   Reports字段:  缺失")
+                print(f"   Reports欄位:  缺失")
             elif isinstance(reports_field, dict):
                 if reports_field:
-                    print(f"   Reports字段:  存在 ({len(reports_field)} 個報告)")
+                    print(f"   Reports欄位:  存在 ({len(reports_field)} 個報告)")
                     for report_type in reports_field.keys():
                         print(f"     - {report_type}")
                 else:
-                    print(f"   Reports字段:  空字典")
+                    print(f"   Reports欄位:  空字典")
             else:
-                print(f"   Reports字段:  類型錯誤 ({type(reports_field)})")
+                print(f"   Reports欄位:  類型錯誤 ({type(reports_field)})")
             
             print("-" * 60)
             

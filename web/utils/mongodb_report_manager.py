@@ -102,7 +102,7 @@ class MongoDBReportManager:
                 ("timestamp", -1)
             ])
             
-            # 建立單字段索引
+            # 建立單欄位索引
             self.collection.create_index("analysis_id")
             self.collection.create_index("status")
             
@@ -185,7 +185,7 @@ class MongoDBReportManager:
             
             results = []
             for doc in cursor:
-                # 處理timestamp字段，相容不同的資料類型
+                # 處理timestamp欄位，相容不同的資料類型
                 timestamp_value = doc.get("timestamp")
                 if hasattr(timestamp_value, 'timestamp'):
                     # datetime物件
@@ -302,7 +302,7 @@ class MongoDBReportManager:
             return False
 
         try:
-            # 查找缺少reports字段或reports字段為空的檔案
+            # 查找缺少reports欄位或reports欄位為空的檔案
             query = {
                 "$or": [
                     {"reports": {"$exists": False}},
@@ -323,7 +323,7 @@ class MongoDBReportManager:
             fixed_count = 0
             for doc in inconsistent_docs:
                 try:
-                    # 為缺少reports字段的檔案新增空的reports字段
+                    # 為缺少reports欄位的檔案新增空的reports欄位
                     update_data = {
                         "$set": {
                             "reports": {},
@@ -357,9 +357,9 @@ class MongoDBReportManager:
             return False
 
         try:
-            # 確保有必要的字段
+            # 確保有必要的欄位
             if 'analysis_id' not in report_data:
-                logger.error("報告資料缺少analysis_id字段")
+                logger.error("報告資料缺少analysis_id欄位")
                 return False
 
             # 新增保存時間戳

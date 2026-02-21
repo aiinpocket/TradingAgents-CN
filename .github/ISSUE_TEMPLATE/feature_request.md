@@ -31,10 +31,10 @@ Describe the solution you'd like.
 example_code_here()
 ```
 
-## 實現建議 / Implementation Suggestions
+## 實作建議 / Implementation Suggestions
 
 **技術方案 / Technical Approach:**
-如果您有技術實現的想法，請分享。
+如果您有技術實作的想法，請分享。
 
 **相關元件 / Related Components:**
 - [ ] 資料取得 / Data Acquisition
@@ -52,7 +52,7 @@ example_code_here()
 描述您考慮過的其他替代解決方案。
 
 **現有工具 / Existing tools:**
-是否有其他工具或專案已經實現了類似功能？
+是否有其他工具或專案已經實作了類似功能？
 
 ## 優先級 / Priority
 
@@ -110,7 +110,7 @@ Add any other context, screenshots, or examples about the feature request here.
 - [ ] 搜尋了現有的 issues，確認這不是重複請求
 - [ ] 清晰地描述了功能需求
 - [ ] 提供了使用場景和範例
-- [ ] 考慮了實現的可行性
+- [ ] 考慮了實作的可行性
 - [ ] 評估了功能的優先級
 
 ---

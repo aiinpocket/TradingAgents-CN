@@ -90,7 +90,7 @@ def test_us_stock_data_independence():
     print("\n 結論:")
     print("   美股資料取得現在基於 REALTIME_DATA_ENABLED 配置")
     print("   不再依賴 OPENAI_ENABLED 配置")
-    print("   實現了真正的功能獨立性！")
+    print("   實作了真正的功能獨立性！")
 
 if __name__ == "__main__":
     test_us_stock_data_independence()

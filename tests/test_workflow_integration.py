@@ -147,7 +147,7 @@ def test_news_analyst_integration():
         print(f"\n 集成狀態總結:")
         print(f"   統一新聞工具: 已建立並集成到新聞分析師")
         print(f"   新聞分析師: 已使用統一工具替代原有多個工具")
-        print(f"   工具綁定: 已實現LLM工具綁定機制")
+        print(f"   工具綁定: 已實作LLM工具綁定機制")
         print(f"   系統提示詞: 已更新為強制呼叫統一工具")
         print(f"   工作流程: 已集成到整體交易智慧體流程")
         

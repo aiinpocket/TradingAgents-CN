@@ -31,9 +31,9 @@ def test_load_analysis_results():
             
             for field in required_fields:
                 if field in first_result:
-                    print(f" 字段 '{field}' 存在")
+                    print(f" 欄位 '{field}' 存在")
                 else:
-                    print(f" 字段 '{field}' 缺失")
+                    print(f" 欄位 '{field}' 缺失")
         
         return True
         

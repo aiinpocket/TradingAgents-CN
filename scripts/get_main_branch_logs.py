@@ -319,10 +319,10 @@ def main():
         print("   - 檢查應用的日誌配置，確保寫入到檔案")
         print("   - 考慮在docker-compose.yml中新增日誌目錄掛載")
     
-    print("   - 將取得到的日誌檔案發送給開發者進行問題診斷")
+    print("   - 將取得到的日誌檔案傳送給開發者進行問題診斷")
     
     if docker_log_file:
-        print(f"\n 主要發送檔案: {docker_log_file}")
+        print(f"\n 主要傳送檔案: {docker_log_file}")
     
     return True
 

@@ -77,7 +77,7 @@ class SignalProcessor:
 }}
 
 請確保：
-1. action字段必須是"買入"、"持有"或"賣出"之一（絕對不允許使用英文buy/hold/sell）
+1. action欄位必須是"買入"、"持有"或"賣出"之一（絕對不允許使用英文buy/hold/sell）
 2. target_price必須是具體的數字,target_price應該是合理的{currency}價格數字（使用{currency_symbol}符號）
 3. confidence和risk_score應該在0-1之間
 4. reasoning應該是簡潔的中文摘要

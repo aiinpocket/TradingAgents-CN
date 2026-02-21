@@ -25,7 +25,7 @@ assignees: ''
 ##  具體場景 / Specific Scenario
 
 **使用場景 / Use Case:**
-描述您想要實現的具體場景或目標。
+描述您想要實作的具體場景或目標。
 
 **當前狀態 / Current Status:**
 描述您目前的進展和遇到的困難。

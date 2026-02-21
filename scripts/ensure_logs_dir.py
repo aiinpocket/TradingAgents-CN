@@ -60,7 +60,7 @@ def ensure_logs_directory():
 
 ## 取得日誌
 
-如果遇到問題需要發送日誌給開發者，請發送：
+如果遇到問題需要傳送日誌給開發者，請傳送：
 1. `tradingagents.log` - 主日誌檔案
 2. `tradingagents_error.log` - 錯誤日誌檔案（如果存在）
 

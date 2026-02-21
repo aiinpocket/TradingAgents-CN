@@ -99,7 +99,7 @@ def test_cli_smart_suggestions():
             
             # 檢查是否包含智慧建議相關程式碼
             if "get_close_matches" in content and "您是否想要使用以下命令之一" in content:
-                print(" CLI 智慧建議功能已實現")
+                print(" CLI 智慧建議功能已實作")
                 return True
             else:
                 print(" CLI 智慧建議功能未找到")

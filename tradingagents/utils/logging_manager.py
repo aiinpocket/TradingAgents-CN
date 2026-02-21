@@ -14,7 +14,7 @@ from typing import Dict, Any, Optional
 import json
 import toml
 
-# 註意：這裡不能匯入自己，會造成循環匯入
+# 註意：這裡不能匯入自己，會造成迴圈匯入
 # 在日誌系統初始化前，使用標準庫自舉日誌器，避免未定義引用
 _bootstrap_logger = logging.getLogger("tradingagents.logging_manager")
 
@@ -54,7 +54,7 @@ class StructuredFormatter(logging.Formatter):
             'line': record.lineno
         }
         
-        # 新增額外字段
+        # 新增額外欄位
         if hasattr(record, 'session_id'):
             log_entry['session_id'] = record.session_id
         if hasattr(record, 'analysis_type'):

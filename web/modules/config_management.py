@@ -452,7 +452,7 @@ def render_system_settings():
     
     with col1:
         if st.button("匯出配置", help="匯出所有配置到JSON 檔案", key="export_config"):
-            # 這裡可以實現配置匯出功能
+            # 這裡可以實作配置匯出功能
             st.info("配置匯出功能開發中...")
     
     with col2:

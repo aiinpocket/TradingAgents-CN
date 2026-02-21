@@ -25,7 +25,7 @@ def test_data_structure():
             print(f"   analysis_id: {result.get('analysis_id', 'missing')}")
             print(f"   source: {result.get('source', 'missing')}")
             print(f"   stock_symbol: {result.get('stock_symbol', 'missing')}")
-            print(f"   reports字段存在: {'reports' in result}")
+            print(f"   reports欄位存在: {'reports' in result}")
             
             if 'reports' in result:
                 reports = result['reports']
@@ -38,8 +38,8 @@ def test_data_structure():
                     print(f"   {first_report_key} 內容預覽:")
                     print(f"   {first_report_content[:200]}...")
             else:
-                print("    reports字段不存在")
-                print(f"   可用字段: {list(result.keys())}")
+                print("    reports欄位不存在")
+                print(f"   可用欄位: {list(result.keys())}")
         
         return results
         
