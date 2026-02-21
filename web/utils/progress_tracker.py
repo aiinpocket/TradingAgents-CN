@@ -31,7 +31,7 @@ class SmartAnalysisProgressTracker:
         """根據分析師數量動態生成分析步驟"""
         steps = [
             {"name": "數據驗證", "description": "驗證股票代碼並預獲取數據", "weight": 0.05},
-            {"name": "環境準备", "description": "檢查API密鑰和環境配置", "weight": 0.02},
+            {"name": "環境準備", "description": "檢查API密鑰和環境配置", "weight": 0.02},
             {"name": "成本預估", "description": "預估分析成本", "weight": 0.01},
             {"name": "參數配置", "description": "配置分析參數和模型", "weight": 0.02},
             {"name": "引擎初始化", "description": "初始化AI分析引擎", "weight": 0.05},
@@ -58,36 +58,39 @@ class SmartAnalysisProgressTracker:
             'market': '市場分析師',
             'fundamentals': '基本面分析師',
             'technical': '技術分析師',
-            'sentiment': '情绪分析師',
+            'sentiment': '情緒分析師',
             'risk': '風險分析師'
         }
         return name_map.get(analyst, analyst)
 
     def _estimate_total_duration(self) -> float:
-        """根據分析師數量、研究深度、模型類型預估总時長（秒）"""
-        # 基础時間（秒）- 環境準备、配置等
+        """根據分析師數量、研究深度、模型類型預估總時長（秒）"""
+        # 基礎時間（秒）- 環境準備、配置等
         base_time = 60
 
-        # 每個分析師的實际耗時（基於真實測試數據）
+        # 每個分析師的實際耗時（基於真實測試數據）
         analyst_base_time = {
             1: 120,  # 快速分析：每個分析師約2分鐘
-            2: 180,  # 基础分析：每個分析師約3分鐘
+            2: 180,  # 基礎分析：每個分析師約3分鐘
             3: 240   # 標準分析：每個分析師約4分鐘
         }.get(self.research_depth, 180)
 
         analyst_time = len(self.analysts) * analyst_base_time
 
-        # 模型速度影響（基於實际測試）
+        # 模型速度影響（基於實際測試）
         model_multiplier = {
-            'dashscope': 1.0,  # 阿里百炼速度適中
-            'deepseek': 0.7,   # DeepSeek較快
-            'google': 1.3      # Google較慢
+            'openai': 0.8,
+            'google': 1.3,
+            'anthropic': 1.0,
+            'openrouter': 1.1,
+            'ollama': 1.5,
+            'custom_openai': 1.0
         }.get(self.llm_provider, 1.0)
 
         # 研究深度額外影響（工具調用複雜度）
         depth_multiplier = {
             1: 0.8,  # 快速分析，較少工具調用
-            2: 1.0,  # 基础分析，標準工具調用
+            2: 1.0,  # 基礎分析，標準工具調用
             3: 1.3   # 標準分析，更多工具調用和推理
         }.get(self.research_depth, 1.0)
 
@@ -106,7 +109,7 @@ class SmartAnalysisProgressTracker:
             'elapsed': elapsed_time
         })
 
-        # 根據消息內容自動判斷當前步驟
+        # 根據訊息內容自動判斷當前步驟
         if step is None:
             step = self._detect_step_from_message(message)
 
@@ -124,7 +127,7 @@ class SmartAnalysisProgressTracker:
             else:
                 logger.debug(f"📊 [進度更新] 忽略倒退步驟：檢測到步驟{step + 1}，當前步驟{self.current_step + 1}")
 
-        # 如果是完成消息，確保進度為100%
+        # 如果是完成訊息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "✅ 分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
             logger.info(f"📊 [進度更新] 分析完成，設置為最終步驟 {self.current_step + 1}/{len(self.analysis_steps)}")
@@ -150,11 +153,11 @@ class SmartAnalysisProgressTracker:
         return min(completed_weight / total_weight, 1.0)
 
     def _estimate_remaining_time(self, progress: float, elapsed_time: float) -> float:
-        """智能預估剩余時間"""
+        """智能預估剩餘時間"""
         if progress <= 0:
             return self.estimated_duration
 
-        # 如果進度超過20%，使用實际進度來預估
+        # 如果進度超過20%，使用實際進度來預估
         if progress > 0.2:
             estimated_total = elapsed_time / progress
             return max(estimated_total - elapsed_time, 0)
@@ -163,16 +166,16 @@ class SmartAnalysisProgressTracker:
             return max(self.estimated_duration - elapsed_time, 0)
     
     def _detect_step_from_message(self, message: str) -> Optional[int]:
-        """根據消息內容智能檢測當前步驟"""
+        """根據訊息內容智能檢測當前步驟"""
         message_lower = message.lower()
 
-        # 開始分析階段 - 只匹配最初的開始消息
+        # 開始分析階段 - 只匹配最初的開始訊息
         if "🚀 開始股票分析" in message:
             return 0
         # 數據驗證階段
-        elif "驗證" in message or "預獲取" in message or "數據準备" in message:
+        elif "驗證" in message or "預獲取" in message or "數據準備" in message:
             return 0
-        # 環境準备階段
+        # 環境準備階段
         elif "環境" in message or "api" in message_lower or "密鑰" in message:
             return 1
         # 成本預估階段
@@ -185,18 +188,18 @@ class SmartAnalysisProgressTracker:
         elif "初始化" in message or "引擎" in message:
             return 4
         # 分析師工作階段 - 根據分析師名稱和工具調用匹配
-        elif any(analyst_name in message for analyst_name in ["市場分析師", "基本面分析師", "技術分析師", "情绪分析師", "風險分析師"]):
+        elif any(analyst_name in message for analyst_name in ["市場分析師", "基本面分析師", "技術分析師", "情緒分析師", "風險分析師"]):
             # 找到對應的分析師步驟
             for i, step in enumerate(self.analysis_steps):
                 if "分析師" in step["name"]:
-                    # 檢查消息中是否包含對應的分析師類型
+                    # 檢查訊息中是否包含對應的分析師類型
                     if "市場" in message and "市場" in step["name"]:
                         return i
                     elif "基本面" in message and "基本面" in step["name"]:
                         return i
                     elif "技術" in message and "技術" in step["name"]:
                         return i
-                    elif "情绪" in message and "情绪" in step["name"]:
+                    elif "情緒" in message and "情緒" in step["name"]:
                         return i
                     elif "風險" in message and "風險" in step["name"]:
                         return i
@@ -220,9 +223,9 @@ class SmartAnalysisProgressTracker:
                 for i, step in enumerate(self.analysis_steps):
                     if "技術" in step["name"]:
                         return i
-            elif "sentiment_analyst" in message or "sentiment" in message or "情绪" in message:
+            elif "sentiment_analyst" in message or "sentiment" in message or "情緒" in message:
                 for i, step in enumerate(self.analysis_steps):
-                    if "情绪" in step["name"]:
+                    if "情緒" in step["name"]:
                         return i
             elif "risk_analyst" in message or "risk" in message or "風險" in message:
                 for i, step in enumerate(self.analysis_steps):
@@ -256,7 +259,7 @@ class SmartAnalysisProgressTracker:
         return time.time() - self.start_time
 
     def get_estimated_total_time(self) -> float:
-        """獲取預估总時間"""
+        """獲取預估總時間"""
         return self.estimated_duration
 
     def format_time(self, seconds: float) -> str:
@@ -305,7 +308,7 @@ class SmartStreamlitProgressDisplay:
         # 更新時間信息
         time_text = f"**已用時間:** {self._format_time(elapsed_time)}"
         if remaining_time > 0:
-            time_text += f" | **預計剩余:** {self._format_time(remaining_time)}"
+            time_text += f" | **預計剩餘:** {self._format_time(remaining_time)}"
 
         self.time_info.markdown(time_text)
     
@@ -329,9 +332,9 @@ def create_smart_progress_callback(display: SmartStreamlitProgressDisplay, analy
     tracker = SmartAnalysisProgressTracker(analysts, research_depth, llm_provider)
 
     def callback(message: str, step: Optional[int] = None, total_steps: Optional[int] = None):
-        # 如果明確指定了步驟和总步驟，使用旧的固定模式（兼容性）
+        # 如果明確指定了步驟和總步驟，使用舊的固定模式（兼容性）
         if step is not None and total_steps is not None and total_steps == 10:
-            # 兼容旧的10步模式，但使用智能時間預估
+            # 兼容舊的10步模式，使用智能時間預估
             progress = step / max(total_steps - 1, 1) if total_steps > 1 else 1.0
             progress = min(progress, 1.0)
             elapsed_time = tracker.get_elapsed_time()
@@ -350,12 +353,12 @@ def create_smart_progress_callback(display: SmartStreamlitProgressDisplay, analy
     return callback
 
 # 向後兼容的函數
-def create_progress_callback(display, analysts=None, research_depth=2, llm_provider="dashscope") -> Callable:
+def create_progress_callback(display, analysts=None, research_depth=2, llm_provider="openai") -> Callable:
     """創建進度回調函數（向後兼容）"""
     if hasattr(display, '__class__') and 'Smart' in display.__class__.__name__:
         return create_smart_progress_callback(display, analysts or ['market', 'fundamentals'], research_depth, llm_provider)
     else:
-        # 旧版本兼容
+        # 舊版本兼容
         tracker = SmartAnalysisProgressTracker(analysts or ['market', 'fundamentals'], research_depth, llm_provider)
 
         def callback(message: str, step: Optional[int] = None, total_steps: Optional[int] = None):

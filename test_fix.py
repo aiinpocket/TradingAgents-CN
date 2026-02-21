@@ -4,17 +4,17 @@
 from web.utils.analysis_runner import run_stock_analysis
 
 def test_analysis_fix():
-    """測試基本面分析師修複是否有效"""
+    """測試基本面分析師修復是否有效"""
     try:
         # 運行股票分析
         result = run_stock_analysis(
-            stock_symbol='000001',
+            stock_symbol='AAPL',
             analysis_date=1,
             analysts=['market', 'fundamentals'],
             research_depth=1,
-            llm_provider='dashscope',
-            llm_model='qwen-plus',
-            market_type='A股'
+            llm_provider='openai',
+            llm_model='gpt-4o-mini',
+            market_type='US'
         )
         
         print(f"Analysis completed: {'success' if result['success'] else 'failed'}")
@@ -27,7 +27,7 @@ def test_analysis_fix():
             print(f"Market report length: {len(market_report)}")
             print(f"Fundamentals report length: {len(fundamentals_report)}")
             
-            # 檢查報告是否有實际內容
+            # 檢查報告是否有實際內容
             if len(market_report) > 0:
                 print("✅ Market report has content")
             else:

@@ -24,7 +24,7 @@ if not exist "%MANAGER_SCRIPT%" (
     exit /b 1
 )
 
-REM 如果没有參數，顯示幫助
+REM 如果沒有參數，顯示幫助
 if "%~1"=="" (
     echo.
     echo 使用方法:
@@ -48,9 +48,9 @@ if "%~1"=="" (
 REM 執行Python腳本
 python "%MANAGER_SCRIPT%" %*
 
-REM 如果有錯誤，暂停顯示
+REM 如果有錯誤，暫停顯示
 if errorlevel 1 (
     echo.
-    echo 按任意键繼续...
+    echo 按任意鍵繼續...
     pause >nul
 )

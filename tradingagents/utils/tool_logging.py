@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-工具調用日誌裝饰器
+工具調用日誌裝飾器
 為所有工具調用添加統一的日誌記錄
 """
 
@@ -21,7 +21,7 @@ tool_logger = get_logger("tools")
 
 def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_result: bool = False):
     """
-    工具調用日誌裝饰器
+    工具調用日誌裝飾器
     
     Args:
         tool_name: 工具名稱，如果不提供則使用函數名
@@ -37,14 +37,14 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
             # 記錄開始時間
             start_time = time.time()
             
-            # 準备參數信息
+            # 準備參數信息
             args_info = {}
             if log_args:
                 # 記錄位置參數
                 if args:
                     args_info['args'] = [str(arg)[:100] + '...' if len(str(arg)) > 100 else str(arg) for arg in args]
                 
-                # 記錄關键字參數
+                # 記錄關鍵字參數
                 if kwargs:
                     args_info['kwargs'] = {
                         k: str(v)[:100] + '...' if len(str(v)) > 100 else str(v) 
@@ -69,7 +69,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                 # 計算執行時間
                 duration = time.time() - start_time
                 
-                # 準备結果信息
+                # 準備結果信息
                 result_info = None
                 if log_result and result is not None:
                     result_str = str(result)
@@ -93,9 +93,9 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                 # 計算執行時間
                 duration = time.time() - start_time
                 
-                # 記錄工具調用失败
+                # 記錄工具調用失敗
                 tool_logger.error(
-                    f"❌ [工具調用] {name} - 失败 (耗時: {duration:.2f}s): {str(e)}",
+                    f"❌ [工具調用] {name} - 失敗 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'tool_name': name,
                         'event_type': 'tool_call_error',
@@ -115,10 +115,10 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
 
 def log_data_source_call(source_name: str):
     """
-    數據源調用專用日誌裝饰器
+    數據源調用專用日誌裝飾器
     
     Args:
-        source_name: 數據源名稱（如：tushare、akshare、yfinance等）
+        source_name: 數據源名稱（如：yfinance、finnhub、googlenews 等）
     """
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
@@ -160,7 +160,7 @@ def log_data_source_call(source_name: str):
                     )
                 else:
                     tool_logger.warning(
-                        f"⚠️ [數據源] {source_name} - {symbol} 數據獲取失败 (耗時: {duration:.2f}s)",
+                        f"⚠️ [數據源] {source_name} - {symbol} 數據獲取失敗 (耗時: {duration:.2f}s)",
                         extra={
                             'data_source': source_name,
                             'symbol': symbol,
@@ -196,10 +196,10 @@ def log_data_source_call(source_name: str):
 
 def log_llm_call(provider: str, model: str):
     """
-    LLM調用專用日誌裝饰器
+    LLM調用專用日誌裝飾器
     
     Args:
-        provider: LLM提供商（如：openai、deepseek、tongyi等）
+        provider: LLM 提供商（如：openai、google、anthropic 等）
         model: 模型名稱
     """
     def decorator(func: Callable) -> Callable:
@@ -239,7 +239,7 @@ def log_llm_call(provider: str, model: str):
                 duration = time.time() - start_time
                 
                 tool_logger.error(
-                    f"❌ [LLM調用] {provider}/{model} - 失败 (耗時: {duration:.2f}s): {str(e)}",
+                    f"❌ [LLM調用] {provider}/{model} - 失敗 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'llm_provider': provider,
                         'llm_model': model,
@@ -302,7 +302,7 @@ def log_analysis_step(step_name: str, symbol: str, **extra_data):
 
 def log_analysis_module(module_name: str, session_id: str = None):
     """
-    分析模塊日誌裝饰器
+    分析模塊日誌裝飾器
     自動記錄模塊的開始和結束
 
     Args:
@@ -339,7 +339,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
                         symbol = str(kwargs[key])
                         break
 
-            # 如果還是没找到，使用默認值
+            # 如果還是沒找到，使用默認值
             if not symbol:
                 symbol = 'unknown'
 
@@ -395,7 +395,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
 
 def log_analyst_module(analyst_type: str):
     """
-    分析師模塊專用裝饰器
+    分析師模塊專用裝飾器
 
     Args:
         analyst_type: 分析師類型（如：market、fundamentals、technical、sentiment等）
@@ -405,7 +405,7 @@ def log_analyst_module(analyst_type: str):
 
 def log_graph_module(graph_type: str):
     """
-    圖處理模塊專用裝饰器
+    圖處理模塊專用裝飾器
 
     Args:
         graph_type: 圖處理類型（如：signal_processing、workflow等）
@@ -415,7 +415,7 @@ def log_graph_module(graph_type: str):
 
 def log_dataflow_module(dataflow_type: str):
     """
-    數據流模塊專用裝饰器
+    數據流模塊專用裝飾器
 
     Args:
         dataflow_type: 數據流類型（如：cache、interface、provider等）

@@ -64,7 +64,7 @@ def test_gemini_25_availability():
         return available_25_models
         
     except Exception as e:
-        print(f"❌ 檢查模型可用性失败: {e}")
+        print(f"❌ 檢查模型可用性失敗: {e}")
         return []
 
 def test_specific_gemini_25_model(model_name):
@@ -85,7 +85,7 @@ def test_specific_gemini_25_model(model_name):
         try:
             model = genai.GenerativeModel(model_name)
             response = model.generate_content(
-                "請用中文分析苹果公司(AAPL)的投資價值，包括技術創新、市場地位和財務狀况"
+                "請用中文分析蘋果公司(AAPL)的投資價值，包括技術創新、市場地位和財務狀況"
             )
             
             if response and response.text:
@@ -94,10 +94,10 @@ def test_specific_gemini_25_model(model_name):
                 print(f"   響應預覽: {response.text[:200]}...")
                 direct_success = True
             else:
-                print("❌ 直接API調用失败：無響應內容")
+                print("❌ 直接API調用失敗：無響應內容")
                 direct_success = False
         except Exception as e:
-            print(f"❌ 直接API調用失败: {e}")
+            print(f"❌ 直接API調用失敗: {e}")
             direct_success = False
         
         # 測試2: LangChain集成
@@ -111,7 +111,7 @@ def test_specific_gemini_25_model(model_name):
             )
             
             response = llm.invoke(
-                "請用中文分析當前人工智能行業的投資機會，重點關註大型科技公司的AI战略"
+                "請用中文分析當前人工智能行業的投資機會，重點關註大型科技公司的AI戰略"
             )
             
             if response and response.content:
@@ -120,10 +120,10 @@ def test_specific_gemini_25_model(model_name):
                 print(f"   響應預覽: {response.content[:200]}...")
                 langchain_success = True
             else:
-                print("❌ LangChain調用失败：無響應內容")
+                print("❌ LangChain調用失敗：無響應內容")
                 langchain_success = False
         except Exception as e:
-            print(f"❌ LangChain調用失败: {e}")
+            print(f"❌ LangChain調用失敗: {e}")
             langchain_success = False
         
         # 測試3: 複雜推理能力
@@ -134,19 +134,19 @@ def test_specific_gemini_25_model(model_name):
             
             假設場景：
             - 當前時間：2025年6月
-            - 美聯储刚刚降息0.25%
+            - 美聯儲剛剛降息0.25%
             - 中美貿易關系有所緩解
             - AI技術快速發展
-            - 通胀率降至2.5%
+            - 通脹率降至2.5%
             
-            請分析在這種宏觀環境下，苹果公司(AAPL)的投資價值，包括：
+            請分析在這種宏觀環境下，蘋果公司(AAPL)的投資價值，包括：
             1. 宏觀經濟因素的影響
-            2. 行業競爭態势
-            3. 公司特有優势
+            2. 行業競爭態勢
+            3. 公司特有優勢
             4. 風險因素
-            5. 投資建议和目標價位
+            5. 投資建議和目標價位
             
-            請提供詳細的逻辑推理過程。
+            請提供詳細的邏輯推理過程。
             """
             
             response = llm.invoke(complex_prompt)
@@ -157,16 +157,16 @@ def test_specific_gemini_25_model(model_name):
                 print(f"   響應預覽: {response.content[:300]}...")
                 complex_success = True
             else:
-                print("❌ 複雜推理測試失败：響應過短或無內容")
+                print("❌ 複雜推理測試失敗：響應過短或無內容")
                 complex_success = False
         except Exception as e:
-            print(f"❌ 複雜推理測試失败: {e}")
+            print(f"❌ 複雜推理測試失敗: {e}")
             complex_success = False
         
         return direct_success, langchain_success, complex_success
         
     except Exception as e:
-        print(f"❌ 模型測試失败: {e}")
+        print(f"❌ 模型測試失敗: {e}")
         return False, False, False
 
 def test_gemini_25_in_tradingagents(model_name):
@@ -215,8 +215,8 @@ def test_gemini_25_in_tradingagents(model_name):
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print(f"✅ {model_name}驱動的股票分析成功！")
-                print(f"   最终決策: {decision}")
+                print(f"✅ {model_name}驅動的股票分析成功！")
+                print(f"   最終決策: {decision}")
                 
                 # 檢查市場報告
                 if "market_report" in state and state["market_report"]:
@@ -230,11 +230,11 @@ def test_gemini_25_in_tradingagents(model_name):
                 return False
                 
         except Exception as e:
-            print(f"❌ 股票分析失败: {e}")
+            print(f"❌ 股票分析失敗: {e}")
             return False
             
     except Exception as e:
-        print(f"❌ TradingAgents測試失败: {e}")
+        print(f"❌ TradingAgents測試失敗: {e}")
         return False
 
 def main():
@@ -254,7 +254,7 @@ def main():
     available_models = test_gemini_25_availability()
     
     if not available_models:
-        print("\n❌ 没有找到可用的Gemini 2.5模型")
+        print("\n❌ 沒有找到可用的Gemini 2.5模型")
         return
     
     print(f"\n🎯 找到 {len(available_models)} 個可用的Gemini 2.5模型")
@@ -266,11 +266,11 @@ def main():
     for model_name in available_models:
         print(f"\n{'='*70}")
         
-        # 基础功能測試
+        # 基礎功能測試
         direct, langchain, complex = test_specific_gemini_25_model(model_name)
         score = sum([direct, langchain, complex])
         
-        print(f"\n📊 {model_name} 基础測試結果:")
+        print(f"\n📊 {model_name} 基礎測試結果:")
         print(f"   直接API: {'✅' if direct else '❌'}")
         print(f"   LangChain: {'✅' if langchain else '❌'}")
         print(f"   複雜推理: {'✅' if complex else '❌'}")
@@ -280,7 +280,7 @@ def main():
             best_score = score
             best_model = model_name
         
-        # 如果基础功能全部通過，測試TradingAgents集成
+        # 如果基礎功能全部通過，測試TradingAgents集成
         if score == 3:
             tradingagents_success = test_gemini_25_in_tradingagents(model_name)
             if tradingagents_success:
@@ -290,24 +290,24 @@ def main():
                 print(f"   TradingAgents: ❌")
                 total_score = score
             
-            print(f"   总得分: {total_score}/4")
+            print(f"   總得分: {total_score}/4")
     
-    # 最终推薦
-    print(f"\n📊 最终測試結果:")
+    # 最終推薦
+    print(f"\n📊 最終測試結果:")
     print("=" * 50)
     print(f"  最佳模型: {best_model}")
     print(f"  最高得分: {best_score}/3")
     
     if best_score >= 2:
         print(f"\n🎉 推薦使用: {best_model}")
-        print(f"\n💡 配置建议:")
+        print(f"\n💡 配置建議:")
         print(f"   1. 在Web界面中選擇'Google'作為LLM提供商")
         print(f"   2. 使用模型名稱: {best_model}")
-        print(f"   3. Gemini 2.5具有更强的推理和分析能力")
+        print(f"   3. Gemini 2.5具有更強的推理和分析能力")
         print(f"   4. 支持更複雜的金融分析任務")
     else:
         print(f"\n⚠️ 所有Gemini 2.5模型測試不理想")
-        print(f"   建议檢查API密鑰權限和網絡連接")
+        print(f"   建議檢查API密鑰權限和網絡連接")
 
 if __name__ == "__main__":
     main()

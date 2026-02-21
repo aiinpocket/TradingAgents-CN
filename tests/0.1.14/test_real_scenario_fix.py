@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-實际場景測試：驗證Google工具調用處理器修複效果
+實際場景測試：驗證Google工具調用處理器修複效果
 """
 
 import sys
@@ -102,7 +102,7 @@ def test_social_media_analyst_tools():
         }
         
     except Exception as e:
-        print(f"❌ 測試社交媒體分析師工具失败: {e}")
+        print(f"❌ 測試社交媒體分析師工具失敗: {e}")
         return None
 
 def test_google_tool_handler_improvements():
@@ -126,7 +126,7 @@ def test_google_tool_handler_improvements():
         {
             'function': {  # OpenAI格式
                 'name': 'get_chinese_social_sentiment',
-                'arguments': '{"keyword": "苹果股票"}'
+                'arguments': '{"keyword": "蘋果股票"}'
             }
         },
         {
@@ -150,12 +150,12 @@ def test_google_tool_handler_improvements():
             print(f"  ✅ 驗證通過")
             validated_call = tool_call
         else:
-            print(f"  ⚠️ 驗證失败，嘗試修複...")
+            print(f"  ⚠️ 驗證失敗，嘗試修複...")
             validated_call = GoogleToolCallHandler._fix_tool_call(tool_call, i, "測試分析師")
             if validated_call:
                 print(f"  🔧 修複成功: {validated_call}")
             else:
-                print(f"  ❌ 修複失败，跳過")
+                print(f"  ❌ 修複失敗，跳過")
                 continue
         
         # 檢查重複調用
@@ -187,7 +187,7 @@ def test_google_tool_handler_improvements():
 
 def main():
     """主測試函數"""
-    print("🚀 開始實际場景測試")
+    print("🚀 開始實際場景測試")
     
     try:
         # 測試配置狀態
@@ -200,10 +200,10 @@ def main():
         handler_improvements = test_google_tool_handler_improvements()
         
         print("\n" + "=" * 60)
-        print("🎉 實际場景測試完成")
+        print("🎉 實際場景測試完成")
         print("=" * 60)
         
-        print("\n📋 測試結果总結:")
+        print("\n📋 測試結果總結:")
         print(f"1. ✅ OpenAI API狀態: {'禁用' if not config_status['openai_enabled'] else '啟用'}")
         print(f"2. ✅ 在線工具狀態: {'禁用' if not config_status['online_tools'] else '啟用'}")
         
@@ -214,7 +214,7 @@ def main():
         
         if handler_improvements:
             improvement_pct = handler_improvements['improvement_ratio'] * 100
-            print(f"4. ✅ 工具調用優化: 减少了 {improvement_pct:.1f}% 的重複調用")
+            print(f"4. ✅ 工具調用優化: 減少了 {improvement_pct:.1f}% 的重複調用")
         
         print("\n🔧 修複效果驗證:")
         print("- ✅ 重複調用統一市場數據工具問題已修複")
@@ -225,7 +225,7 @@ def main():
         return True
         
     except Exception as e:
-        print(f"\n❌ 實际場景測試失败: {e}")
+        print(f"\n❌ 實際場景測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False

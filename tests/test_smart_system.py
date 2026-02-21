@@ -27,7 +27,7 @@ def test_smart_config():
         return True, config_manager
         
     except Exception as e:
-        print(f"❌ 智能配置測試失败: {e}")
+        print(f"❌ 智能配置測試失敗: {e}")
         return False, None
 
 def test_adaptive_cache():
@@ -65,7 +65,7 @@ def test_adaptive_cache():
         if loaded_data == test_data:
             print("✅ 數據加載成功，內容匹配")
         else:
-            print("❌ 數據加載失败或內容不匹配")
+            print("❌ 數據加載失敗或內容不匹配")
             return False
         
         # 測試查找
@@ -79,13 +79,13 @@ def test_adaptive_cache():
         if found_key:
             print(f"✅ 緩存查找成功: {found_key}")
         else:
-            print("❌ 緩存查找失败")
+            print("❌ 緩存查找失敗")
             return False
         
         return True, cache
         
     except Exception as e:
-        print(f"❌ 自適應緩存測試失败: {e}")
+        print(f"❌ 自適應緩存測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False, None
@@ -155,7 +155,7 @@ def test_performance():
             return False
             
     except Exception as e:
-        print(f"❌ 性能測試失败: {e}")
+        print(f"❌ 性能測試失敗: {e}")
         return False
 
 def test_fallback_mechanism():
@@ -189,7 +189,7 @@ def test_fallback_mechanism():
         return True
         
     except Exception as e:
-        print(f"❌ 降級機制測試失败: {e}")
+        print(f"❌ 降級機制測試失敗: {e}")
         return False
 
 def generate_test_report(results):
@@ -200,24 +200,24 @@ def generate_test_report(results):
     total_tests = len(results)
     passed_tests = sum(1 for result in results.values() if result)
     
-    print(f"总測試數: {total_tests}")
+    print(f"總測試數: {total_tests}")
     print(f"通過測試: {passed_tests}")
-    print(f"失败測試: {total_tests - passed_tests}")
+    print(f"失敗測試: {total_tests - passed_tests}")
     print(f"通過率: {(passed_tests/total_tests)*100:.1f}%")
     
     print("\n詳細結果:")
     for test_name, result in results.items():
-        status = "✅ 通過" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
-    # 生成建议
-    print("\n💡 建议:")
+    # 生成建議
+    print("\n💡 建議:")
     
     if all(results.values()):
         print("🎉 所有測試通過！系統可以正常運行")
-        print("✅ 可以開始準备上游贡献")
+        print("✅ 可以開始準備上游貢献")
     else:
-        print("⚠️ 部分測試失败，需要檢查以下問題:")
+        print("⚠️ 部分測試失敗，需要檢查以下問題:")
         
         if not results.get("智能配置", True):
             print("  - 檢查智能配置系統")
@@ -267,19 +267,19 @@ def main():
         config_manager.save_config("test_config.json")
         print(f"\n💾 測試配置已保存: test_config.json")
     
-    # 返回总體結果
+    # 返回總體結果
     return all(results.values())
 
 if __name__ == "__main__":
     success = main()
     
-    print(f"\n🎯 測試{'成功' if success else '失败'}!")
+    print(f"\n🎯 測試{'成功' if success else '失敗'}!")
     
     if success:
         print("\n下一步:")
         print("1. 清理中文內容")
-        print("2. 添加英文文档")
-        print("3. 準备上游贡献")
+        print("2. 添加英文文件")
+        print("3. 準備上游貢献")
     else:
         print("\n需要解決的問題:")
         print("1. 檢查依賴安裝")

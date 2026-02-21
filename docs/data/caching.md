@@ -2,7 +2,7 @@
 
 ## 概述
 
-TradingAgents 框架採用多層次的緩存策略來優化數據訪問性能，减少API調用成本，並提高系統響應速度。本文档詳細介紹了緩存架構、策略、實現和最佳實踐。
+TradingAgents 框架採用多層次的緩存策略來優化數據訪問性能，減少API調用成本，並提高系統響應速度。本文檔詳細介紹了緩存架構、策略、實現和最佳實踐。
 
 ## 緩存架構
 
@@ -114,7 +114,7 @@ class CacheManager:
         # 根據數據類型和大小決定緩存策略
         cache_strategy = self._determine_cache_strategy(data, data_type)
         
-        # L1: 內存緩存 (总是緩存小數據)
+        # L1: 內存緩存 (總是緩存小數據)
         if cache_strategy["memory"]:
             self.memory_cache.set(key, data, ttl)
         
@@ -276,7 +276,7 @@ class FileCache:
             return None
     
     def set(self, key: str, data: Any, ttl: int) -> None:
-        """将數據寫入文件緩存"""
+        """將數據寫入文件緩存"""
         
         cache_file = self._get_cache_file_path(key)
         
@@ -467,8 +467,8 @@ class RedisCache:
             print(f"Error deleting data from Redis: {e}")
     
     def clear_expired(self) -> None:
-        """清理過期的键（Redis自動處理TTL）"""
-        # Redis會自動清理過期键，這里可以添加額外的清理逻辑
+        """清理過期的鍵（Redis自動處理TTL）"""
+        # Redis會自動清理過期鍵，這里可以添加額外的清理邏輯
         pass
 ```
 
@@ -563,14 +563,14 @@ class CacheMonitor:
 
 ## 7. 緩存最佳實踐
 
-### 使用建议
+### 使用建議
 ```python
 class CacheBestPractices:
     """緩存最佳實踐指南"""
     
     @staticmethod
     def generate_cache_key(symbol: str, data_type: str, date: str = None, **kwargs) -> str:
-        """生成標準化的緩存键"""
+        """生成標準化的緩存鍵"""
         
         key_parts = [symbol.upper(), data_type]
         
@@ -611,4 +611,4 @@ class CacheBestPractices:
             return 0
 ```
 
-通過這套完整的緩存策略，TradingAgents 能夠顯著提高數據訪問性能，减少API調用成本，並提供更好的用戶體驗。
+通過這套完整的緩存策略，TradingAgents 能夠顯著提高數據訪問性能，減少API調用成本，並提供更好的用戶體驗。

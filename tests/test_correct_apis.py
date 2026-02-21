@@ -25,8 +25,8 @@ def test_google_news_tool():
         
         print("✅ get_google_news函數導入成功")
         
-        # 測試獲取苹果公司新聞
-        print("📰 獲取苹果公司新聞...")
+        # 測試獲取蘋果公司新聞
+        print("📰 獲取蘋果公司新聞...")
         try:
             news = get_google_news(
                 query="Apple AAPL stock",
@@ -41,14 +41,14 @@ def test_google_news_tool():
                 return True
             else:
                 print("⚠️ Google新聞獲取成功但內容為空")
-                return True  # 功能正常，只是没有內容
+                return True  # 功能正常，只是沒有內容
                 
         except Exception as e:
-            print(f"❌ Google新聞獲取失败: {e}")
+            print(f"❌ Google新聞獲取失敗: {e}")
             return False
             
     except ImportError as e:
-        print(f"❌ Google新聞工具導入失败: {e}")
+        print(f"❌ Google新聞工具導入失敗: {e}")
         return False
 
 def test_reddit_tools():
@@ -91,7 +91,7 @@ def test_reddit_tools():
                         print("⚠️ Reddit全球新聞獲取成功但內容為空")
                         
                 except Exception as e:
-                    print(f"❌ Reddit全球新聞獲取失败: {e}")
+                    print(f"❌ Reddit全球新聞獲取失敗: {e}")
                 
                 # 測試公司新聞
                 try:
@@ -110,7 +110,7 @@ def test_reddit_tools():
                         print("⚠️ Reddit公司新聞獲取成功但內容為空")
                         
                 except Exception as e:
-                    print(f"❌ Reddit公司新聞獲取失败: {e}")
+                    print(f"❌ Reddit公司新聞獲取失敗: {e}")
                     
                 return True
             else:
@@ -122,7 +122,7 @@ def test_reddit_tools():
             return False
             
     except ImportError as e:
-        print(f"❌ Reddit工具導入失败: {e}")
+        print(f"❌ Reddit工具導入失敗: {e}")
         return False
 
 def test_toolkit_integration():
@@ -146,7 +146,7 @@ def test_toolkit_integration():
         google_methods = [m for m in methods if 'google' in m.lower()]
         reddit_methods = [m for m in methods if 'reddit' in m.lower()]
         
-        print(f"📊 工具包方法总數: {len(methods)}")
+        print(f"📊 工具包方法總數: {len(methods)}")
         print(f"   Google相關方法: {google_methods}")
         print(f"   Reddit相關方法: {reddit_methods}")
         
@@ -169,7 +169,7 @@ def test_toolkit_integration():
         return True
         
     except Exception as e:
-        print(f"❌ 工具包集成測試失败: {e}")
+        print(f"❌ 工具包集成測試失敗: {e}")
         return False
 
 def main():
@@ -192,23 +192,23 @@ def main():
     results['Reddit工具'] = test_reddit_tools()
     results['工具包集成'] = test_toolkit_integration()
     
-    # 总結結果
-    print(f"\n📊 測試結果总結:")
+    # 總結結果
+    print(f"\n📊 測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
         print("🎉 所有測試通過！")
     else:
-        print("⚠️ 部分測試失败，請檢查配置")
+        print("⚠️ 部分測試失敗，請檢查配置")
 
 if __name__ == "__main__":
     main()

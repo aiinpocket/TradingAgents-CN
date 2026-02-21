@@ -2,7 +2,7 @@
 
 ## 🎯 概述
 
-本文档提供了TradingAgents-CN導出功能常见問題的詳細解決方案，包括Word、PDF、Markdown導出的各種故障排除方法。
+本文檔提供了TradingAgents-CN導出功能常見問題的詳細解決方案，包括Word、PDF、Markdown導出的各種故障排除方法。
 
 ## 📄 Word導出問題
 
@@ -19,13 +19,13 @@ did not find expected alphabetic or numeric character
 
 **原因分析**:
 
-- Markdown內容中的表格分隔符 `|------|------| ` 被pandoc誤認為YAML文档分隔符
-- 特殊字符導致YAML解析冲突
+- Markdown內容中的表格分隔符 `|------|------| ` 被pandoc誤認為YAML文檔分隔符
+- 特殊字符導致YAML解析衝突
 
 **解決方案**:
 
 ```python
-# 已在代碼中自動修複
+# 已在代碼中自動修復
 extra_args = ['--from=markdown-yaml_metadata_block']  # 禁用YAML解析
 ```
 
@@ -40,7 +40,7 @@ docker exec TradingAgents-web python test_conversion.py
 
 **錯誤現象**:
 
-- Word文档中中文顯示為方塊或乱碼
+- Word文檔中中文顯示為方塊或亂碼
 - 特殊符號（¥、%等）顯示異常
 
 **解決方案**:
@@ -71,7 +71,7 @@ docker exec TradingAgents-web python test_conversion.py
 - 生成的.docx文件無法用Word打開
 - 文件大小為0或異常小
 
-**診斷步骤**:
+**診斷步驟**:
 
 ```bash
 # 1. 檢查生成的文件
@@ -80,7 +80,7 @@ docker exec TradingAgents-web ls -la /app/test_*.docx
 # 2. 驗證pandoc安裝
 docker exec TradingAgents-web pandoc --version
 
-# 3. 測試基础轉換
+# 3. 測試基礎轉換
 docker exec TradingAgents-web python test_conversion.py
 ```
 
@@ -100,7 +100,7 @@ docker-compose up -d
 **錯誤信息**:
 
 ```
-PDF生成失败，最後錯誤: wkhtmltopdf not found
+PDF生成失敗，最後錯誤: wkhtmltopdf not found
 ```
 
 **解決方案**:
@@ -182,7 +182,7 @@ text = text.replace('>', '>')
 
 **錯誤現象**:
 
-- 下載的Markdown文件乱碼
+- 下載的Markdown文件亂碼
 - 中文字符顯示異常
 
 **解決方案**:
@@ -200,10 +200,10 @@ with open(file_path, 'w', encoding='utf-8') as f:
 1. **測試轉換功能**:
 
    ```bash
-   # 基础轉換測試
+   # 基礎轉換測試
    docker exec TradingAgents-web python test_conversion.py
 
-   # 實际數據轉換測試
+   # 實際數據轉換測試
    docker exec TradingAgents-web python test_real_conversion.py
 
    # 現有報告轉換測試
@@ -218,7 +218,7 @@ with open(file_path, 'w', encoding='utf-8') as f:
    # 查看日誌
    docker logs TradingAgents-web --tail 50
 
-   # 檢查磁盘空間
+   # 檢查磁碟空間
    docker exec TradingAgents-web df -h
    ```
 3. **驗證依賴**:
@@ -234,7 +234,7 @@ with open(file_path, 'w', encoding='utf-8') as f:
 
 ### 環境重置
 
-如果問題持续存在，可以嘗試完全重置環境：
+如果問題持續存在，可以嘗試完全重置環境：
 
 ```bash
 # 1. 停止所有服務
@@ -266,7 +266,7 @@ docker exec TradingAgents-web python test_conversion.py
            limits:
              memory: 2G  # 增加內存限制
    ```
-2. **磁盘空間**:
+2. **磁碟空間**:
 
    ```bash
    # 清理臨時文件
@@ -299,12 +299,12 @@ docker exec TradingAgents-web python test_conversion.py
    docker exec TradingAgents-web python test_conversion.py > test_result.log 2>&1
    ```
 
-### 常见解決方案总結
+### 常見解決方案總結
 
 
 | 問題類型     | 快速解決方案   | 詳細方案       |
 | ------------ | -------------- | -------------- |
-| YAML解析錯誤 | 重啟Web服務    | 檢查代碼修複   |
+| YAML解析錯誤 | 重啟Web服務    | 檢查代碼修復   |
 | PDF引擎缺失  | 使用Docker環境 | 手動安裝引擎   |
 | 中文顯示問題 | 使用Docker環境 | 安裝中文字體   |
 | 文件損坏     | 重新生成       | 重建Docker鏡像 |
@@ -324,7 +324,7 @@ docker exec TradingAgents-web python test_conversion.py
    ```bash
    docker stats TradingAgents-web
    ```
-3. **备份配置**:
+3. **備份配置**:
 
    ```bash
    cp .env .env.backup

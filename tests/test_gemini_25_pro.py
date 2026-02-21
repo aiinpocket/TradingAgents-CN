@@ -16,9 +16,9 @@ sys.path.insert(0, str(project_root))
 load_dotenv(project_root / ".env", override=True)
 
 def test_gemini_25_pro_basic():
-    """測試Gemini 2.5 Pro基础功能"""
+    """測試Gemini 2.5 Pro基礎功能"""
     try:
-        print("🧪 測試Gemini 2.5 Pro基础功能")
+        print("🧪 測試Gemini 2.5 Pro基礎功能")
         print("=" * 60)
         
         from langchain_google_genai import ChatGoogleGenerativeAI
@@ -45,14 +45,14 @@ def test_gemini_25_pro_basic():
         # 測試中文股票分析
         print("📊 測試中文股票分析...")
         response = llm.invoke("""
-        請用中文分析苹果公司(AAPL)的投資價值。請從以下几個方面進行分析：
+        請用中文分析蘋果公司(AAPL)的投資價值。請從以下幾個方面進行分析：
         
         1. 公司基本面分析
         2. 技術創新能力
         3. 市場競爭地位
-        4. 財務健康狀况
+        4. 財務健康狀況
         5. 投資風險評估
-        6. 投資建议
+        6. 投資建議
         
         請提供詳細的分析和推理過程。
         """)
@@ -63,11 +63,11 @@ def test_gemini_25_pro_basic():
             print(f"   響應預覽: {response.content[:300]}...")
             return True
         else:
-            print("❌ 中文股票分析失败")
+            print("❌ 中文股票分析失敗")
             return False
             
     except Exception as e:
-        print(f"❌ Gemini 2.5 Pro基础測試失败: {e}")
+        print(f"❌ Gemini 2.5 Pro基礎測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -113,14 +113,14 @@ def test_gemini_25_pro_tradingagents():
         
         # 測試分析
         print("📊 開始Gemini 2.5 Pro股票分析...")
-        print("   這可能需要几分鐘時間...")
+        print("   這可能需要幾分鐘時間...")
         
         try:
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print("✅ Gemini 2.5 Pro驱動的股票分析成功！")
-                print(f"   最终決策: {decision}")
+                print("✅ Gemini 2.5 Pro驅動的股票分析成功！")
+                print(f"   最終決策: {decision}")
                 
                 # 檢查各種報告
                 reports = ["market_report", "sentiment_report", "news_report", "fundamentals_report"]
@@ -138,13 +138,13 @@ def test_gemini_25_pro_tradingagents():
                 return False
                 
         except Exception as e:
-            print(f"❌ 股票分析失败: {e}")
+            print(f"❌ 股票分析失敗: {e}")
             import traceback
             print(traceback.format_exc())
             return False
             
     except Exception as e:
-        print(f"❌ TradingAgents測試失败: {e}")
+        print(f"❌ TradingAgents測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -171,25 +171,25 @@ def test_gemini_25_pro_complex_reasoning():
         
         場景設定：
         - 時間：2025年6月
-        - 美聯储政策：刚刚降息25個基點
-        - 通胀率：2.8%，呈下降趋势
-        - 中美關系：貿易緊张局势有所緩解
+        - 美聯儲政策：剛剛降息25個基點
+        - 通脹率：2.8%，呈下降趨勢
+        - 中美關系：貿易緊張局勢有所緩解
         - AI發展：ChatGPT和其他AI工具快速普及
-        - 地缘政治：俄乌冲突持续，中东局势緊张
+        - 地緣政治：俄烏衝突持續，中東局勢緊張
         
         請分析在這種複雜的宏觀環境下，以下三只股票的投資價值排序：
-        1. 苹果公司(AAPL) - 消費电子+AI
-        2. 英伟達(NVDA) - AI芯片領導者
-        3. 微软(MSFT) - 云計算+AI软件
+        1. 蘋果公司(AAPL) - 消費電子+AI
+        2. 英偉達(NVDA) - AI芯片領導者
+        3. 微軟(MSFT) - 雲計算+AI軟體
         
         要求：
-        1. 分析每只股票在當前環境下的優势和劣势
+        1. 分析每只股票在當前環境下的優勢和劣勢
         2. 考慮宏觀經濟因素對各股票的影響
         3. 評估AI發展對各公司的長期影響
         4. 提供投資優先級排序和理由
-        5. 給出具體的投資建议和風險提示
+        5. 給出具體的投資建議和風險提示
         
-        請用中文提供詳細的逻辑推理過程。
+        請用中文提供詳細的邏輯推理過程。
         """
         
         print("🧠 開始複雜推理測試...")
@@ -201,11 +201,11 @@ def test_gemini_25_pro_complex_reasoning():
             print(f"   響應預覽: {response.content[:400]}...")
             return True
         else:
-            print("❌ 複雜推理測試失败：響應過短或無內容")
+            print("❌ 複雜推理測試失敗：響應過短或無內容")
             return False
             
     except Exception as e:
-        print(f"❌ 複雜推理測試失败: {e}")
+        print(f"❌ 複雜推理測試失敗: {e}")
         return False
 
 def main():
@@ -223,9 +223,9 @@ def main():
     # 運行測試
     results = {}
     
-    print("第1步: 基础功能測試")
+    print("第1步: 基礎功能測試")
     print("-" * 30)
-    results['基础功能'] = test_gemini_25_pro_basic()
+    results['基礎功能'] = test_gemini_25_pro_basic()
     
     print("\n第2步: 複雜推理測試")
     print("-" * 30)
@@ -235,35 +235,35 @@ def main():
     print("-" * 30)
     results['TradingAgents集成'] = test_gemini_25_pro_tradingagents()
     
-    # 总結結果
-    print(f"\n📊 Gemini 2.5 Pro測試結果总結:")
+    # 總結結果
+    print(f"\n📊 Gemini 2.5 Pro測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
         print("🎉 Gemini 2.5 Pro完全可用！")
-        print("\n💡 Gemini 2.5 Pro優势:")
-        print("   🧠 更强的推理能力")
+        print("\n💡 Gemini 2.5 Pro優勢:")
+        print("   🧠 更強的推理能力")
         print("   📊 更好的複雜分析")
         print("   🌍 優秀的多語言支持")
         print("   💰 更準確的金融分析")
         print("   🔍 更深入的洞察力")
-        print("\n🚀 使用建议:")
+        print("\n🚀 使用建議:")
         print("   1. 在Web界面中選擇'Google'作為LLM提供商")
         print("   2. 使用模型名稱: gemini-2.5-pro")
         print("   3. 適合複雜的投資分析任務")
-        print("   4. 可以處理多因素综合分析")
+        print("   4. 可以處理多因素綜合分析")
     elif successful_tests >= 2:
         print("⚠️ Gemini 2.5 Pro大部分功能可用")
-        print("💡 可以用於基础分析，部分高級功能可能需要調整")
+        print("💡 可以用於基礎分析，部分高級功能可能需要調整")
     else:
         print("❌ Gemini 2.5 Pro不可用")
         print("💡 請檢查API密鑰權限和網絡連接")

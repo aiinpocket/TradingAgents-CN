@@ -49,7 +49,7 @@ class UserActivityLogger:
             "auth": "認證相關",
             "analysis": "股票分析",
             "config": "配置管理", 
-            "navigation": "页面導航",
+            "navigation": "頁面導航",
             "data_export": "數據導出",
             "user_management": "用戶管理",
             "system": "系統操作"
@@ -138,7 +138,7 @@ class UserActivityLogger:
             self._write_activity(activity)
             
         except Exception as e:
-            logger.error(f"❌ 記錄用戶活動失败: {e}")
+            logger.error(f"❌ 記錄用戶活動失敗: {e}")
     
     def _write_activity(self, activity: UserActivity) -> None:
         """寫入活動記錄到文件"""
@@ -155,7 +155,7 @@ class UserActivityLogger:
                     f.write(json.dumps(activity_dict, ensure_ascii=False) + '\n')
                 
             except Exception as e:
-                logger.error(f"❌ 寫入活動記錄失败: {e}")
+                logger.error(f"❌ 寫入活動記錄失敗: {e}")
     
     def log_login(self, username: str, success: bool, error_message: str = None) -> None:
         """記錄登錄活動"""
@@ -191,7 +191,7 @@ class UserActivityLogger:
         )
     
     def log_page_visit(self, page_name: str, page_params: Dict[str, Any] = None) -> None:
-        """記錄页面訪問"""
+        """記錄頁面訪問"""
         self.log_activity(
             action_type="navigation",
             action_name="page_visit",
@@ -286,7 +286,7 @@ class UserActivityLogger:
             return activities[:limit]
             
         except Exception as e:
-            logger.error(f"❌ 獲取用戶活動記錄失败: {e}")
+            logger.error(f"❌ 獲取用戶活動記錄失敗: {e}")
             return []
     
     def _read_activities_from_file(self, file_path: Path, username: str = None,
@@ -317,7 +317,7 @@ class UserActivityLogger:
                         activities.append(activity)
                         
         except Exception as e:
-            logger.error(f"❌ 讀取活動文件失败 {file_path}: {e}")
+            logger.error(f"❌ 讀取活動文件失敗 {file_path}: {e}")
         
         return activities
     
@@ -406,7 +406,7 @@ class UserActivityLogger:
                     continue
                     
         except Exception as e:
-            logger.error(f"❌ 清理旧活動記錄失败: {e}")
+            logger.error(f"❌ 清理旧活動記錄失敗: {e}")
         
         return deleted_count
 

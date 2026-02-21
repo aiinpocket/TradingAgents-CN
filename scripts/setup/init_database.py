@@ -97,11 +97,11 @@ def init_mongodb():
                 "config_type": "llm",
                 "config_name": "default_models",
                 "config_value": {
-                    "default_provider": "dashscope",
+                    "default_provider": "openai",
                     "models": {
-                        "dashscope": "qwen-plus-latest",
                         "openai": "gpt-4o-mini",
-                        "google": "gemini-pro"
+                        "google": "gemini-2.5-flash",
+                        "anthropic": "claude-sonnet-4"
                     }
                 },
                 "description": "默認LLM模型配置",
@@ -129,7 +129,7 @@ def init_mongodb():
         return True
         
     except Exception as e:
-        logger.error(f"❌ MongoDB初始化失败: {e}")
+        logger.error(f"❌ MongoDB初始化失敗: {e}")
         return False
 
 
@@ -191,10 +191,10 @@ def init_redis():
                 logger.info(f"✅ 緩存讀寫測試通過")
                 db_manager.cache_delete(test_key)  # 清理測試數據
             else:
-                logger.error(f"❌ 緩存讀取測試失败")
+                logger.error(f"❌ 緩存讀取測試失敗")
                 return False
         else:
-            logger.error(f"❌ 緩存寫入測試失败")
+            logger.error(f"❌ 緩存寫入測試失敗")
             return False
         
         # 顯示Redis統計
@@ -202,12 +202,12 @@ def init_redis():
         logger.info(f"\n📦 Redis統計:")
         logger.info(f"  - 已用內存: {info.get('used_memory_human', 'N/A')}")
         logger.info(f"  - 連接客戶端: {info.get('connected_clients', 0)}")
-        logger.info(f"  - 总命令數: {info.get('total_commands_processed', 0)}")
+        logger.info(f"  - 總命令數: {info.get('total_commands_processed', 0)}")
         
         return True
         
     except Exception as e:
-        logger.error(f"❌ Redis初始化失败: {e}")
+        logger.error(f"❌ Redis初始化失敗: {e}")
         return False
 
 
@@ -229,7 +229,7 @@ def test_database_connection():
                 logger.info(f"✅ MongoDB連接正常")
                 mongodb_ok = True
             except Exception as e:
-                logger.error(f"❌ MongoDB連接失败: {e}")
+                logger.error(f"❌ MongoDB連接失敗: {e}")
         else:
             logger.error(f"❌ MongoDB未連接")
         
@@ -241,14 +241,14 @@ def test_database_connection():
                 logger.info(f"✅ Redis連接正常")
                 redis_ok = True
             except Exception as e:
-                logger.error(f"❌ Redis連接失败: {e}")
+                logger.error(f"❌ Redis連接失敗: {e}")
         else:
             logger.error(f"❌ Redis未連接")
         
         return mongodb_ok and redis_ok
         
     except Exception as e:
-        logger.error(f"❌ 數據庫連接測試失败: {e}")
+        logger.error(f"❌ 數據庫連接測試失敗: {e}")
         return False
 
 
@@ -259,7 +259,7 @@ def main():
     
     # 測試連接
     if not test_database_connection():
-        logger.error(f"\n❌ 數據庫連接失败，請檢查:")
+        logger.error(f"\n❌ 數據庫連接失敗，請檢查:")
         logger.info(f"1. Docker服務是否啟動: docker ps")
         logger.info(f"2. 運行啟動腳本: scripts/start_docker_services.bat")
         logger.info(f"3. 檢查環境變量配置: .env文件")
@@ -274,8 +274,8 @@ def main():
     # 輸出結果
     logger.info(f"\n")
     logger.info(f"📋 初始化結果:")
-    logger.error(f"  MongoDB: {'✅ 成功' if mongodb_success else '❌ 失败'}")
-    logger.error(f"  Redis: {'✅ 成功' if redis_success else '❌ 失败'}")
+    logger.error(f"  MongoDB: {'✅ 成功' if mongodb_success else '❌ 失敗'}")
+    logger.error(f"  Redis: {'✅ 成功' if redis_success else '❌ 失敗'}")
     
     if mongodb_success and redis_success:
         logger.info(f"\n🎉 數據庫初始化完成！")
@@ -285,7 +285,7 @@ def main():
         logger.info(f"3. 訪問Redis管理界面: http://localhost:8081")
         return True
     else:
-        logger.error(f"\n⚠️ 部分初始化失败，請檢查錯誤信息")
+        logger.error(f"\n⚠️ 部分初始化失敗，請檢查錯誤信息")
         return False
 
 

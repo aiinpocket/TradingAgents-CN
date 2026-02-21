@@ -1,6 +1,6 @@
 """
 進度日誌處理器
-将日誌系統中的模塊完成消息轉發給進度跟蹤器
+將日誌系統中的模塊完成訊息轉發給進度跟蹤器
 """
 
 
@@ -10,7 +10,7 @@ from typing import Dict, Optional
 
 class ProgressLogHandler(logging.Handler):
     """
-    自定義日誌處理器，将模塊開始/完成消息轉發給進度跟蹤器
+    自定義日誌處理器，將模塊開始/完成訊息轉發給進度跟蹤器
     """
     
     # 類級別的跟蹤器註冊表
@@ -26,7 +26,7 @@ class ProgressLogHandler(logging.Handler):
             # 在鎖外面打印，避免死鎖
             print(f"📊 [進度集成] 註冊跟蹤器: {analysis_id}")
         except Exception as e:
-            print(f"❌ [進度集成] 註冊跟蹤器失败: {e}")
+            print(f"❌ [進度集成] 註冊跟蹤器失敗: {e}")
 
     @classmethod
     def unregister_tracker(cls, analysis_id: str):
@@ -41,19 +41,19 @@ class ProgressLogHandler(logging.Handler):
             if removed:
                 print(f"📊 [進度集成] 註銷跟蹤器: {analysis_id}")
         except Exception as e:
-            print(f"❌ [進度集成] 註銷跟蹤器失败: {e}")
+            print(f"❌ [進度集成] 註銷跟蹤器失敗: {e}")
     
     def emit(self, record):
         """處理日誌記錄"""
         try:
             message = record.getMessage()
             
-            # 只處理模塊開始和完成的消息
+            # 只處理模塊開始和完成的訊息
             if "[模塊開始]" in message or "[模塊完成]" in message:
-                # 嘗試從消息中提取股票代碼來匹配分析
+                # 嘗試從訊息中提取股票代碼來匹配分析
                 stock_symbol = self._extract_stock_symbol(message)
                 
-                # 查找匹配的跟蹤器（减少鎖持有時間）
+                # 查找匹配的跟蹤器（減少鎖持有時間）
                 trackers_copy = {}
                 with self._lock:
                     trackers_copy = self._trackers.copy()
@@ -64,17 +64,17 @@ class ProgressLogHandler(logging.Handler):
                     if hasattr(tracker, 'progress_data') and tracker.progress_data.get('status') == 'running':
                         try:
                             tracker.update_progress(message)
-                            print(f"📊 [進度集成] 轉發消息到 {analysis_id}: {message[:50]}...")
+                            print(f"📊 [進度集成] 轉發訊息到 {analysis_id}: {message[:50]}...")
                             break  # 只更新第一個匹配的跟蹤器
                         except Exception as e:
-                            print(f"❌ [進度集成] 更新失败: {e}")
+                            print(f"❌ [進度集成] 更新失敗: {e}")
                         
         except Exception as e:
-            # 不要让日誌處理器的錯誤影響主程序
+            # 不要讓日誌處理器的錯誤影響主程序
             print(f"❌ [進度集成] 日誌處理錯誤: {e}")
     
     def _extract_stock_symbol(self, message: str) -> Optional[str]:
-        """從消息中提取股票代碼"""
+        """從訊息中提取股票代碼"""
         import re
         
         # 嘗試匹配 "股票: XXXXX" 格式
@@ -95,7 +95,7 @@ def setup_progress_log_integration():
         _progress_handler = ProgressLogHandler()
         _progress_handler.setLevel(logging.INFO)
         
-        # 添加到tools日誌器（模塊完成消息來自這里）
+        # 添加到tools日誌器（模組完成訊息來自這裡）
         tools_logger = logging.getLogger('tools')
         tools_logger.addHandler(_progress_handler)
         

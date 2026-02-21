@@ -36,7 +36,7 @@ class ModelPersistence:
             })
             logger.debug(f"💾 [Persistence] 配置已保存: {config}")
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] URL參數保存失败: {e}")
+            logger.warning(f"⚠️ [Persistence] URL參數保存失敗: {e}")
     
     def load_config(self):
         """從session state或URL加載配置"""
@@ -45,14 +45,14 @@ class ModelPersistence:
             query_params = st.query_params
             if 'provider' in query_params:
                 config = {
-                    'provider': query_params.get('provider', 'dashscope'),
+                    'provider': query_params.get('provider', 'google'),
                     'category': query_params.get('category', 'openai'),
                     'model': query_params.get('model', '')
                 }
                 logger.debug(f"📥 [Persistence] 從URL加載配置: {config}")
                 return config
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] URL參數加載失败: {e}")
+            logger.warning(f"⚠️ [Persistence] URL參數加載失敗: {e}")
         
         # 然後嘗試從session state加載
         if self.storage_key in st.session_state:
@@ -62,7 +62,7 @@ class ModelPersistence:
         
         # 返回默認配置
         default_config = {
-            'provider': 'dashscope',
+            'provider': 'google',
             'category': 'openai',
             'model': ''
         }
@@ -78,7 +78,7 @@ class ModelPersistence:
             st.query_params.clear()
             logger.info("🗑️ [Persistence] 配置已清除")
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] 清除失败: {e}")
+            logger.warning(f"⚠️ [Persistence] 清除失敗: {e}")
 
 # 全局實例
 persistence = ModelPersistence()

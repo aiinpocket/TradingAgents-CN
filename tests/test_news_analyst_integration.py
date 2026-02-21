@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-測試新聞分析師与統一新聞工具的集成
+測試新聞分析師與統一新聞工具的集成
 """
 
 import os
@@ -12,7 +12,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_news_analyst_integration():
-    """測試新聞分析師与統一新聞工具的集成"""
+    """測試新聞分析師與統一新聞工具的集成"""
     
     print("🚀 開始測試新聞分析師集成...")
     
@@ -32,19 +32,19 @@ def test_news_analyst_integration():
                 stock_code = params.get("stock_code", "unknown")
                 return f"""
 【發布時間】2025-07-28 18:00:00
-【新聞標題】{stock_code}公司發布重要公告，業绩超預期增長
-【文章來源】东方財富網
+【新聞標題】{stock_code}公司發布重要公告，業績超預期增長
+【文章來源】東方財富網
 
 【新聞內容】
-1. 公司Q2季度營收同比增長25%，净利润增長30%
-2. 新產品線獲得重大突破，市場前景廣阔
-3. 管理層對下半年業绩表示乐觀
+1. 公司Q2季度營收同比增長25%，淨利潤增長30%
+2. 新產品線獲得重大突破，市場前景廣闊
+3. 管理層對下半年業績表示樂觀
 4. 分析師上調目標價至50元
 
 【市場影響】
-- 短期利好：業绩超預期，市場情绪積極
+- 短期利好：業績超預期，市場情緒積極
 - 中期利好：新產品線帶來增長動力
-- 長期利好：行業地位進一步巩固
+- 長期利好：行業地位進一步鞏固
 """
             
             def get_google_news(self, params):
@@ -53,7 +53,7 @@ def test_news_analyst_integration():
             
             def get_global_news_openai(self, params):
                 query = params.get("query", "unknown")
-                return f"OpenAI全球新聞 - {query}: 國际財經新聞內容"
+                return f"OpenAI全球新聞 - {query}: 國際財經新聞內容"
         
         toolkit = MockToolkit()
         print("✅ 創建模擬工具包成功")
@@ -74,24 +74,24 @@ def test_news_analyst_integration():
 # 股票新聞分析報告
 
 ## 📈 核心要點
-基於最新獲取的新聞數據，该股票展現出强劲的業绩增長態势：
+基於最新獲取的新聞數據，該股票展現出強劲的業績增長態勢：
 
-### 🎯 業绩亮點
+### 🎯 業績亮點
 - Q2營收同比增長25%，超出市場預期
-- 净利润增長30%，盈利能力顯著提升
+- 淨利潤增長30%，盈利能力顯著提升
 - 新產品線獲得重大突破
 
 ### 📊 市場影響分析
 **短期影響（1-3個月）**：
-- 預期股價上涨5-10%
-- 市場情绪轉向積極
+- 預期股價上漲5-10%
+- 市場情緒轉向積極
 
 **中期影響（3-12個月）**：
-- 新產品線贡献增量收入
+- 新產品線貢献增量收入
 - 估值有望修複至合理水平
 
-### 💰 投資建议
-- **評級**：买入
+### 💰 投資建議
+- **評級**：買入
 - **目標價**：50元
 - **風險等級**：中等
 
@@ -115,8 +115,8 @@ def test_news_analyst_integration():
         # 測試不同股票
         test_stocks = [
             ("000001", "平安銀行 - A股"),
-            ("00700", "腾讯控股 - 港股"),
-            ("AAPL", "苹果公司 - 美股")
+            ("00700", "騰讯控股 - 港股"),
+            ("AAPL", "蘋果公司 - 美股")
         ]
         
         for stock_code, description in test_stocks:
@@ -152,7 +152,7 @@ def test_news_analyst_integration():
                             print(f"📝 完整報告: {report}")
                         
                         # 檢查是否包含真實新聞特征
-                        news_indicators = ['發布時間', '新聞標題', '文章來源', '东方財富', '業绩', '營收']
+                        news_indicators = ['發布時間', '新聞標題', '文章來源', '東方財富', '業績', '營收']
                         has_real_news = any(indicator in report for indicator in news_indicators)
                         print(f"🔍 包含真實新聞特征: {'是' if has_real_news else '否'}")
                         

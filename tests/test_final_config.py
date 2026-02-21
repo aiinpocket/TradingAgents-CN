@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-測試最终的.env配置系統
+測試最終的.env配置系統
 驗證啟用開關是否正常工作
 """
 
 import os
 
 def test_final_config():
-    """測試最终配置"""
-    print("🔧 測試最终的.env配置系統")
+    """測試最終配置"""
+    print("🔧 測試最終的.env配置系統")
     print("=" * 40)
     
     # 1. 檢查.env文件
@@ -69,7 +69,7 @@ def test_final_config():
         print(f"  緩存後端: {status['cache_backend']}")
         
     except Exception as e:
-        print(f"❌ 數據庫管理器測試失败: {e}")
+        print(f"❌ 數據庫管理器測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -87,7 +87,7 @@ def test_final_config():
         print(f"  性能模式: {performance_mode}")
         
         # 測試基本功能
-        test_data = "測試數據 - 最终配置"
+        test_data = "測試數據 - 最終配置"
         cache_key = cache.save_stock_data(
             symbol="TEST_FINAL",
             data=test_data,
@@ -102,27 +102,27 @@ def test_final_config():
         if loaded_data == test_data:
             print("✅ 數據加載成功")
         else:
-            print("❌ 數據加載失败")
+            print("❌ 數據加載失敗")
             return False
         
     except Exception as e:
-        print(f"❌ 緩存系統測試失败: {e}")
+        print(f"❌ 緩存系統測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
     
-    # 6. 总結
-    print("\n📊 配置总結:")
+    # 6. 總結
+    print("\n📊 配置總結:")
     print("✅ 使用.env文件進行配置")
     print("✅ 通過MONGODB_ENABLED和REDIS_ENABLED控制啟用狀態")
-    print("✅ 默認情况下數據庫都是禁用的")
+    print("✅ 默認情況下數據庫都是禁用的")
     print("✅ 系統使用文件緩存，性能良好")
     print("✅ 可以通過修改.env文件啟用數據庫")
     
     print("\n💡 使用說明:")
     print("1. 默認配置：MONGODB_ENABLED=false, REDIS_ENABLED=false")
-    print("2. 啟用MongoDB：将MONGODB_ENABLED設置為true")
-    print("3. 啟用Redis：将REDIS_ENABLED設置為true")
+    print("2. 啟用MongoDB：將MONGODB_ENABLED設置為true")
+    print("3. 啟用Redis：將REDIS_ENABLED設置為true")
     print("4. 系統會自動檢測並使用啟用的數據庫")
     print("5. 如果數據庫不可用，自動降級到文件緩存")
     
@@ -134,7 +134,7 @@ def main():
         success = test_final_config()
         
         if success:
-            print("\n🎉 最终配置測試完成!")
+            print("\n🎉 最終配置測試完成!")
             print("\n🎯 系統特性:")
             print("✅ 簡化配置：只需要.env文件")
             print("✅ 明確控制：通過啟用開關控制數據庫")
@@ -145,7 +145,7 @@ def main():
         return success
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False

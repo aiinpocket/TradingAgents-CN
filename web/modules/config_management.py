@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-配置管理页面
+配置管理頁面
 """
 
 import streamlit as st
@@ -26,8 +26,8 @@ from tradingagents.config.config_manager import (
 
 
 def render_config_management():
-    """渲染配置管理页面"""
-    # 應用隱藏Deploy按钮的CSS樣式
+    """渲染配置管理頁面"""
+    # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
     st.title("⚙️ 配置管理")
@@ -35,7 +35,7 @@ def render_config_management():
     # 顯示.env配置狀態
     render_env_status()
 
-    # 侧邊栏選擇功能
+    # 側邊欄選擇功能
     st.sidebar.title("配置選項")
     page = st.sidebar.selectbox(
         "選擇功能",
@@ -53,7 +53,7 @@ def render_config_management():
 
 
 def render_model_config():
-    """渲染模型配置页面"""
+    """渲染模型配置頁面"""
     st.markdown("**🤖 模型配置**")
 
     # 加載現有配置
@@ -161,7 +161,7 @@ def render_model_config():
 
 
 def render_pricing_config():
-    """渲染定價配置页面"""
+    """渲染定價配置頁面"""
     st.markdown("**💰 定價設置**")
 
     # 加載現有定價
@@ -179,17 +179,17 @@ def render_pricing_config():
                 "模型名稱": pricing.model_name,
                 "輸入價格 (每1K token)": f"{pricing.input_price_per_1k} {pricing.currency}",
                 "輸出價格 (每1K token)": f"{pricing.output_price_per_1k} {pricing.currency}",
-                "貨币": pricing.currency
+                "貨幣": pricing.currency
             })
         
         df = pd.DataFrame(pricing_data)
         st.dataframe(df, use_container_width=True)
         
-        # 編辑定價
-        st.markdown("**編辑定價**")
+        # 編輯定價
+        st.markdown("**編輯定價**")
         
         pricing_options = [f"{p.provider} - {p.model_name}" for p in pricing_configs]
-        selected_pricing_idx = st.selectbox("選擇要編辑的定價", range(len(pricing_options)),
+        selected_pricing_idx = st.selectbox("選擇要編輯的定價", range(len(pricing_options)),
                                           format_func=lambda x: pricing_options[x],
                                           key="select_pricing_to_edit")
         
@@ -211,8 +211,8 @@ def render_pricing_config():
                                                  key=f"edit_output_price_{selected_pricing_idx}")
 
             with col3:
-                new_currency = st.selectbox("貨币", ["CNY", "USD", "EUR"],
-                                          index=["CNY", "USD", "EUR"].index(pricing.currency),
+                new_currency = st.selectbox("貨幣", ["USD", "EUR"],
+                                          index=["USD", "EUR"].index(pricing.currency) if pricing.currency in ["USD", "EUR"] else 0,
                                           key=f"edit_currency_{selected_pricing_idx}")
             
             if st.button("保存定價", type="primary", key=f"save_pricing_config_{selected_pricing_idx}"):
@@ -236,7 +236,7 @@ def render_pricing_config():
     with col1:
         new_provider = st.text_input("供應商", placeholder="例如: openai, google, anthropic", key="new_pricing_provider")
         new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4, gemini-2.5-pro", key="new_pricing_model")
-        new_currency = st.selectbox("貨币", ["CNY", "USD", "EUR"], key="new_pricing_currency")
+        new_currency = st.selectbox("貨幣", ["USD", "EUR"], key="new_pricing_currency")
 
     with col2:
         new_input_price = st.number_input("輸入價格 (每1K token)", min_value=0.0, step=0.001, format="%.6f", key="new_pricing_input")
@@ -261,33 +261,33 @@ def render_pricing_config():
 
 
 def render_usage_statistics():
-    """渲染使用統計页面"""
+    """渲染使用統計頁面"""
     st.markdown("**📊 使用統計**")
 
-    # 時間範围選擇
+    # 時間範圍選擇
     col1, col2 = st.columns(2)
     with col1:
-        days = st.selectbox("統計時間範围", [7, 30, 90, 365], index=1, key="stats_time_range")
+        days = st.selectbox("統計時間範圍", [7, 30, 90, 365], index=1, key="stats_time_range")
     with col2:
-        st.metric("統計周期", f"最近 {days} 天")
+        st.metric("統計週期", f"最近 {days} 天")
 
     # 獲取統計數據
     stats = config_manager.get_usage_statistics(days)
 
     if stats["total_requests"] == 0:
-        st.info("📝 暂無使用記錄")
+        st.info("📝 暫無使用記錄")
         return
 
-    # 总體統計
-    st.markdown("**📈 总體統計**")
+    # 總體統計
+    st.markdown("**📈 總體統計**")
     
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("总成本", f"¥{stats['total_cost']:.4f}")
+        st.metric("總成本", f"${stats['total_cost']:.4f}")
     
     with col2:
-        st.metric("总請求數", f"{stats['total_requests']:,}")
+        st.metric("總請求數", f"{stats['total_requests']:,}")
     
     with col3:
         st.metric("輸入Token", f"{stats['total_input_tokens']:,}")
@@ -303,17 +303,17 @@ def render_usage_statistics():
         for provider, data in stats["provider_stats"].items():
             provider_data.append({
                 "供應商": provider,
-                "成本": f"¥{data['cost']:.4f}",
+                "成本": f"${data['cost']:.4f}",
                 "請求數": data['requests'],
                 "輸入Token": f"{data['input_tokens']:,}",
                 "輸出Token": f"{data['output_tokens']:,}",
-                "平均成本/請求": f"¥{data['cost']/data['requests']:.6f}" if data['requests'] > 0 else "¥0"
+                "平均成本/請求": f"${data['cost']/data['requests']:.6f}" if data['requests'] > 0 else "$0"
             })
         
         df = pd.DataFrame(provider_data)
         st.dataframe(df, use_container_width=True)
         
-        # 成本分布饼圖
+        # 成本分布餅圖
         if len(provider_data) > 1:
             fig = px.pie(
                 values=[stats["provider_stats"][p]["cost"] for p in stats["provider_stats"]],
@@ -322,8 +322,8 @@ def render_usage_statistics():
             )
             st.plotly_chart(fig, use_container_width=True)
     
-    # 使用趋势
-    st.markdown("**📈 使用趋势**")
+    # 使用趨勢
+    st.markdown("**📈 使用趨勢**")
     
     records = config_manager.load_usage_records()
     if records:
@@ -344,13 +344,13 @@ def render_usage_statistics():
             costs = [daily_stats[date]["cost"] for date in dates]
             requests = [daily_stats[date]["requests"] for date in dates]
             
-            # 創建雙轴圖表
+            # 創建雙軸圖表
             fig = go.Figure()
             
             fig.add_trace(go.Scatter(
                 x=dates, y=costs,
                 mode='lines+markers',
-                name='每日成本 (¥)',
+                name='每日成本 ($)',
                 yaxis='y'
             ))
             
@@ -362,9 +362,9 @@ def render_usage_statistics():
             ))
             
             fig.update_layout(
-                title='使用趋势',
+                title='使用趨勢',
                 xaxis_title='日期',
-                yaxis=dict(title='成本 (¥)', side='left'),
+                yaxis=dict(title='成本 ($)', side='left'),
                 yaxis2=dict(title='請求數', side='right', overlaying='y'),
                 hovermode='x unified'
             )
@@ -373,7 +373,7 @@ def render_usage_statistics():
 
 
 def render_system_settings():
-    """渲染系統設置页面"""
+    """渲染系統設置頁面"""
     st.markdown("**🔧 系統設置**")
 
     # 加載當前設置
@@ -404,11 +404,11 @@ def render_system_settings():
         )
 
         currency_preference = st.selectbox(
-            "首選貨币",
-            ["CNY", "USD", "EUR"],
-            index=["CNY", "USD", "EUR"].index(
-                settings.get("currency_preference", "CNY")
-            ),
+            "首選貨幣",
+            ["USD", "EUR"],
+            index=["USD", "EUR"].index(
+                settings.get("currency_preference", "USD")
+            ) if settings.get("currency_preference", "USD") in ["USD", "EUR"] else 0,
             key="settings_currency_preference"
         )
     
@@ -420,7 +420,7 @@ def render_system_settings():
         )
 
         cost_alert_threshold = st.number_input(
-            "成本警告阈值",
+            "成本警告閾值",
             value=settings.get("cost_alert_threshold", 100.0),
             min_value=0.0,
             step=10.0,
@@ -464,7 +464,7 @@ def render_system_settings():
     
     with col1:
         if st.button("導出配置", help="導出所有配置到JSON文件", key="export_config"):
-            # 這里可以實現配置導出功能
+            # 這裡可以實現配置導出功能
             st.info("配置導出功能開發中...")
     
     with col2:
@@ -547,7 +547,7 @@ def render_env_status():
     - API密鑰優先從 `.env` 文件讀取
     - Web界面配置作為補充和管理工具
     - 修改 `.env` 文件後需重啟應用生效
-    - 推薦使用 `.env` 文件管理敏感信息
+    - 推薦使用 `.env` 文件管理敏感資訊
     """)
 
     st.divider()

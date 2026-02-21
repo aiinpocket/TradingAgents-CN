@@ -107,7 +107,7 @@ def main():
             logger.error(f"🔴 錯誤: {error_msg}")
             logger.error(f"🔴 Error: {error_msg}")
         
-        logger.error(f"\n💡 建议: 請修複上述語法錯誤後重新運行檢查")
+        logger.error(f"\n💡 建議: 請修復上述語法錯誤後重新運行檢查")
         logger.info(f"💡 Suggestion: Please fix the above syntax errors and run the check again")
         sys.exit(1)
     else:

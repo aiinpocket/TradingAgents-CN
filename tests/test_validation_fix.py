@@ -18,7 +18,7 @@ def test_hk_validation():
         
         # 測試用例
         test_cases = [
-            # (股票代碼, 市場類型, 應该通過驗證)
+            # (股票代碼, 市場類型, 應該通過驗證)
             ("0700.HK", "港股", True),
             ("9988.HK", "港股", True),
             ("3690.HK", "港股", True),
@@ -47,10 +47,10 @@ def test_hk_validation():
             validation_passed = is_valid
             
             if validation_passed == should_pass:
-                print(f"  ✅ {symbol} ({market_type}): {'通過' if validation_passed else '失败'}")
+                print(f"  ✅ {symbol} ({market_type}): {'通過' if validation_passed else '失敗'}")
                 passed += 1
             else:
-                print(f"  ❌ {symbol} ({market_type}): 期望{'通過' if should_pass else '失败'}, 實际{'通過' if validation_passed else '失败'}")
+                print(f"  ❌ {symbol} ({market_type}): 期望{'通過' if should_pass else '失敗'}, 實際{'通過' if validation_passed else '失敗'}")
                 if errors:
                     print(f"      錯誤: {errors}")
         
@@ -60,11 +60,11 @@ def test_hk_validation():
             print("🎉 所有驗證測試通過！")
             return True
         else:
-            print("⚠️ 部分驗證測試失败")
+            print("⚠️ 部分驗證測試失敗")
             return False
         
     except Exception as e:
-        print(f"❌ 驗證測試失败: {e}")
+        print(f"❌ 驗證測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -87,7 +87,7 @@ def test_specific_case():
 
         print(f"  股票代碼: 0700.HK")
         print(f"  市場類型: 港股")
-        print(f"  驗證結果: {'通過' if is_valid else '失败'}")
+        print(f"  驗證結果: {'通過' if is_valid else '失敗'}")
 
         if not is_valid:
             print(f"  錯誤信息: {errors}")
@@ -97,7 +97,7 @@ def test_specific_case():
             return True
         
     except Exception as e:
-        print(f"❌ 具體案例測試失败: {e}")
+        print(f"❌ 具體案例測試失敗: {e}")
         return False
 
 def test_regex_patterns():
@@ -130,12 +130,12 @@ def test_regex_patterns():
             
             matches = bool(hk_match or digit_match)
             
-            print(f"  {symbol}: HK格式={bool(hk_match)}, 數字格式={bool(digit_match)}, 总體匹配={matches}")
+            print(f"  {symbol}: HK格式={bool(hk_match)}, 數字格式={bool(digit_match)}, 總體匹配={matches}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 正則表達式測試失败: {e}")
+        print(f"❌ 正則表達式測試失敗: {e}")
         return False
 
 def main():
@@ -166,7 +166,7 @@ def main():
         print("🎉 港股驗證修複成功！")
         print("\n現在可以正常使用0700.HK進行分析了")
     else:
-        print("⚠️ 修複可能不完整，請檢查失败的測試")
+        print("⚠️ 修複可能不完整，請檢查失敗的測試")
 
 if __name__ == "__main__":
     main()

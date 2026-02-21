@@ -37,7 +37,7 @@ for file_path in files_to_check:
         except SyntaxError as e:
             print(f"❌ {file_path} 語法錯誤: {e}")
         except Exception as e:
-            print(f"⚠️ {file_path} 檢查失败: {e}")
+            print(f"⚠️ {file_path} 檢查失敗: {e}")
 
 # 測試3：嘗試導入模塊
 print("\n📦 測試模塊導入...")
@@ -60,7 +60,7 @@ try:
             print("⚠️ 緩存目錄不存在")
     
 except Exception as e:
-    print(f"❌ cache_manager 導入失败: {e}")
+    print(f"❌ cache_manager 導入失敗: {e}")
     traceback.print_exc()
 
 # 測試優化美股數據
@@ -73,7 +73,7 @@ try:
     print(f"✅ 數據提供器創建成功: {type(provider).__name__}")
     
 except Exception as e:
-    print(f"❌ optimized_us_data 導入失败: {e}")
+    print(f"❌ optimized_us_data 導入失敗: {e}")
     traceback.print_exc()
 
 # 測試配置模塊
@@ -86,7 +86,7 @@ try:
     print(f"✅ 配置獲取成功: {type(config).__name__}")
     
 except Exception as e:
-    print(f"❌ config 導入失败: {e}")
+    print(f"❌ config 導入失敗: {e}")
     traceback.print_exc()
 
 # 測試4：基本功能測試
@@ -112,7 +112,7 @@ try:
     else:
         print(f"❌ 數據不匹配")
         print(f"  期望: {test_data}")
-        print(f"  實际: {loaded_data}")
+        print(f"  實際: {loaded_data}")
     
     # 測試緩存查找
     found_key = cache.find_cached_stock_data(
@@ -125,10 +125,10 @@ try:
     if found_key:
         print(f"✅ 緩存查找成功: {found_key}")
     else:
-        print("❌ 緩存查找失败")
+        print("❌ 緩存查找失敗")
     
 except Exception as e:
-    print(f"❌ 緩存功能測試失败: {e}")
+    print(f"❌ 緩存功能測試失敗: {e}")
     traceback.print_exc()
 
 # 測試5：性能測試
@@ -163,7 +163,7 @@ try:
         print("⚠️ 緩存性能需要優化")
     
 except Exception as e:
-    print(f"❌ 性能測試失败: {e}")
+    print(f"❌ 性能測試失敗: {e}")
 
 # 測試6：緩存統計
 print("\n📊 緩存統計信息...")
@@ -176,14 +176,14 @@ try:
         print(f"  {key}: {value}")
     
 except Exception as e:
-    print(f"❌ 緩存統計失败: {e}")
+    print(f"❌ 緩存統計失敗: {e}")
 
 print("\n" + "=" * 40)
 print("🎉 集成測試完成!")
 print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # 生成測試報告
-print("\n📋 測試总結:")
+print("\n📋 測試總結:")
 print("1. 文件複制: 檢查文件是否正確複制")
 print("2. 語法檢查: 驗證Python語法正確性")
 print("3. 模塊導入: 測試模塊是否可以正常導入")
@@ -193,7 +193,7 @@ print("6. 統計信息: 獲取緩存使用統計")
 
 print("\n🎯 下一步:")
 print("1. 如果測試通過，可以開始清理中文內容")
-print("2. 添加英文文档和註釋")
+print("2. 添加英文文件和註釋")
 print("3. 創建完整的測試用例")
-print("4. 準备性能基準報告")
+print("4. 準備性能基準報告")
 print("5. 聯系上游項目維護者")

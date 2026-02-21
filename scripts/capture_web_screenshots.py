@@ -79,7 +79,7 @@ def start_web_service():
         return False
         
     except Exception as e:
-        logger.error(f"❌ 啟動Web服務失败: {e}")
+        logger.error(f"❌ 啟動Web服務失敗: {e}")
         return False
 
 def capture_screenshots():
@@ -101,7 +101,7 @@ def capture_screenshots():
         
         # 配置Chrome選項
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # 無头模式
+        chrome_options.add_argument("--headless")  # 無頭模式
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--window-size=1920,1080")
@@ -114,7 +114,7 @@ def capture_screenshots():
             logger.info("🌐 正在訪問Web界面...")
             driver.get("http://localhost:8501")
             
-            # 等待页面加載
+            # 等待頁面加載
             WebDriverWait(driver, 30).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
@@ -143,7 +143,7 @@ def capture_screenshots():
             logger.info("📸 捕獲配置界面截圖...")
             driver.save_screenshot(str(screenshots_dir / "web-interface-config.png"))
             
-            # 嘗試點擊分析按钮（如果存在）
+            # 嘗試點擊分析按鈕（如果存在）
             try:
                 analyze_button = driver.find_element(By.XPATH, "//button[contains(text(), '開始分析')]")
                 analyze_button.click()
@@ -154,10 +154,10 @@ def capture_screenshots():
                 driver.save_screenshot(str(screenshots_dir / "web-interface-progress.png"))
                 
             except:
-                logger.warning("⚠️ 無法找到分析按钮或觸發分析")
+                logger.warning("⚠️ 無法找到分析按鈕或觸發分析")
             
-            # 截圖4: 侧邊栏
-            logger.info("📸 捕獲侧邊栏截圖...")
+            # 截圖4: 側邊欄
+            logger.info("📸 捕獲側邊欄截圖...")
             driver.save_screenshot(str(screenshots_dir / "web-interface-sidebar.png"))
             
             logger.info("✅ 截圖捕獲完成")
@@ -167,7 +167,7 @@ def capture_screenshots():
             driver.quit()
             
     except Exception as e:
-        logger.error(f"❌ 截圖捕獲失败: {e}")
+        logger.error(f"❌ 截圖捕獲失敗: {e}")
         return False
 
 def create_screenshot_guide():
@@ -181,7 +181,7 @@ def create_screenshot_guide():
 python scripts/capture_web_screenshots.py
 ```
 
-## 📋 手動截圖步骤
+## 📋 手動截圖步驟
 
 ### 1. 啟動Web服務
 ```bash
@@ -193,7 +193,7 @@ docker-compose up -d
 ```
 
 ### 2. 訪問界面
-打開浏覽器訪問: http://localhost:8501
+打開瀏覽器訪問: http://localhost:8501
 
 ### 3. 捕獲截圖
 按照以下場景進行截圖:
@@ -206,28 +206,28 @@ docker-compose up -d
 #### 📊 分析進度 (web-interface-progress.png)  
 - 開始分析後的進度顯示
 - 顯示進度條和預計時間
-- 顯示已完成的分析步骤
+- 顯示已完成的分析步驟
 
 #### 📈 分析結果 (web-interface-results.png)
 - 完整的分析報告展示
-- 投資建议和風險評估
-- 導出按钮区域
+- 投資建議和風險評估
+- 導出按鈕區域
 
 #### ⚙️ 模型配置 (web-interface-models.png)
-- 侧邊栏的模型配置界面
+- 側邊欄的模型配置界面
 - LLM提供商選擇
-- 快速選擇按钮
+- 快速選擇按鈕
 
 ## 📐 截圖規範
 
 - **分辨率**: 1920x1080 或更高
 - **格式**: PNG格式
-- **质量**: 高清，文字清晰
-- **內容**: 完整功能区域，真實數據
+- **質量**: 高清，文字清晰
+- **內容**: 完整功能區域，真實數據
 
 ## 🔧 故障排除
 
-### Chrome驱動問題
+### Chrome驅動問題
 ```bash
 # 安裝ChromeDriver
 # Windows: choco install chromedriver
@@ -266,7 +266,7 @@ def main():
                 logger.info("🎉 截圖捕獲成功完成!")
                 logger.info("📁 截圖保存位置: docs/images/")
             else:
-                logger.error("❌ 截圖捕獲失败")
+                logger.error("❌ 截圖捕獲失敗")
                 logger.info("💡 請參考手動截圖指南: docs/images/screenshot-guide.md")
         else:
             logger.info("📖 請參考手動截圖指南: docs/images/screenshot-guide.md")

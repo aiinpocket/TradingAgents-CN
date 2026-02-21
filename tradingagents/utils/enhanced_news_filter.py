@@ -1,5 +1,5 @@
 """
-增强新聞過濾器 - 集成本地小模型和規則過濾
+增強新聞過濾器 - 集成本地小模型和規則過濾
 支持多種過濾策略：規則過濾、語義相似度、本地分類模型
 """
 
@@ -10,17 +10,17 @@ from typing import List, Dict, Tuple, Optional
 from datetime import datetime
 import numpy as np
 
-# 導入基础過濾器
+# 導入基礎過濾器
 from .news_filter import NewsRelevanceFilter, create_news_filter, get_company_name
 
 logger = logging.getLogger(__name__)
 
 class EnhancedNewsFilter(NewsRelevanceFilter):
-    """增强新聞過濾器，集成本地模型和多種過濾策略"""
+    """增強新聞過濾器，集成本地模型和多種過濾策略"""
     
     def __init__(self, stock_code: str, company_name: str, use_semantic: bool = True, use_local_model: bool = False):
         """
-        初始化增强過濾器
+        初始化增強過濾器
         
         Args:
             stock_code: 股票代碼
@@ -49,14 +49,14 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
     def _init_semantic_model(self):
         """初始化語義相似度模型"""
         try:
-            logger.info("[增强過濾器] 正在加載語義相似度模型...")
+            logger.info("[增強過濾器] 正在加載語義相似度模型...")
             
             # 嘗試使用sentence-transformers
             try:
                 from sentence_transformers import SentenceTransformer
                 
-                # 使用轻量級中文模型
-                model_name = "paraphrase-multilingual-MiniLM-L12-v2"  # 支持中文的轻量級模型
+                # 使用輕量級中文模型
+                model_name = "paraphrase-multilingual-MiniLM-L12-v2"  # 支持中文的輕量級模型
                 self.sentence_model = SentenceTransformer(model_name)
                 
                 # 預計算公司相關的embedding
@@ -65,45 +65,45 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
                     f"{self.company_name}股票",
                     f"{self.company_name}公司",
                     f"{self.stock_code}",
-                    f"{self.company_name}業绩",
+                    f"{self.company_name}業績",
                     f"{self.company_name}財報"
                 ]
                 
                 self.company_embedding = self.sentence_model.encode(company_texts)
-                logger.info(f"[增强過濾器] ✅ 語義模型加載成功: {model_name}")
+                logger.info(f"[增強過濾器] ✅ 語義模型加載成功: {model_name}")
                 
             except ImportError:
-                logger.warning("[增强過濾器] sentence-transformers未安裝，跳過語義過濾")
+                logger.warning("[增強過濾器] sentence-transformers未安裝，跳過語義過濾")
                 self.use_semantic = False
                 
         except Exception as e:
-            logger.error(f"[增强過濾器] 語義模型初始化失败: {e}")
+            logger.error(f"[增強過濾器] 語義模型初始化失敗: {e}")
             self.use_semantic = False
     
     def _init_classification_model(self):
         """初始化本地分類模型"""
         try:
-            logger.info("[增强過濾器] 正在加載本地分類模型...")
+            logger.info("[增強過濾器] 正在加載本地分類模型...")
             
             # 嘗試使用transformers庫的中文分類模型
             try:
                 from transformers import AutoTokenizer, AutoModelForSequenceClassification
                 import torch
                 
-                # 使用轻量級中文文本分類模型
+                # 使用輕量級中文文本分類模型
                 model_name = "uer/roberta-base-finetuned-chinanews-chinese"
                 
                 self.tokenizer = AutoTokenizer.from_pretrained(model_name)
                 self.classification_model = AutoModelForSequenceClassification.from_pretrained(model_name)
                 
-                logger.info(f"[增强過濾器] ✅ 分類模型加載成功: {model_name}")
+                logger.info(f"[增強過濾器] ✅ 分類模型加載成功: {model_name}")
                 
             except ImportError:
-                logger.warning("[增强過濾器] transformers未安裝，跳過本地模型分類")
+                logger.warning("[增強過濾器] transformers未安裝，跳過本地模型分類")
                 self.use_local_model = False
                 
         except Exception as e:
-            logger.error(f"[增强過濾器] 本地分類模型初始化失败: {e}")
+            logger.error(f"[增強過濾器] 本地分類模型初始化失敗: {e}")
             self.use_local_model = False
     
     def calculate_semantic_similarity(self, title: str, content: str) -> float:
@@ -127,7 +127,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
             # 計算文本embedding
             text_embedding = self.sentence_model.encode([text])
             
-            # 計算与公司相關文本的相似度
+            # 計算與公司相關文本的相似度
             similarities = []
             for company_emb in self.company_embedding:
                 similarity = np.dot(text_embedding[0], company_emb) / (
@@ -141,11 +141,11 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
             # 轉換為0-100評分
             semantic_score = max(0, min(100, max_similarity * 100))
             
-            logger.debug(f"[增强過濾器] 語義相似度評分: {semantic_score:.1f}")
+            logger.debug(f"[增強過濾器] 語義相似度評分: {semantic_score:.1f}")
             return semantic_score
             
         except Exception as e:
-            logger.error(f"[增强過濾器] 語義相似度計算失败: {e}")
+            logger.error(f"[增強過濾器] 語義相似度計算失敗: {e}")
             return 0
     
     def classify_news_relevance(self, title: str, content: str) -> float:
@@ -189,22 +189,22 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
                 probabilities = torch.softmax(logits, dim=-1)
                 
                 # 假設第一個類別是"相關"，第二個是"不相關"
-                # 這里需要根據具體模型調整
+                # 這裡需要根據具體模型調整
                 relevance_prob = probabilities[0][0].item()  # 相關性概率
                 
                 # 轉換為0-100評分
                 classification_score = relevance_prob * 100
                 
-                logger.debug(f"[增强過濾器] 分類模型評分: {classification_score:.1f}")
+                logger.debug(f"[增強過濾器] 分類模型評分: {classification_score:.1f}")
                 return classification_score
                 
         except Exception as e:
-            logger.error(f"[增强過濾器] 本地模型分類失败: {e}")
+            logger.error(f"[增強過濾器] 本地模型分類失敗: {e}")
             return 0
     
     def calculate_enhanced_relevance_score(self, title: str, content: str) -> Dict[str, float]:
         """
-        計算增强相關性評分（綜合多種方法）
+        計算增強相關性評分（綜合多種方法）
         
         Args:
             title: 新聞標題
@@ -215,7 +215,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
         """
         scores = {}
         
-        # 1. 基础規則評分
+        # 1. 基礎規則評分
         rule_score = super().calculate_relevance_score(title, content)
         scores['rule_score'] = rule_score
         
@@ -248,27 +248,27 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
         
         scores['final_score'] = final_score
         
-        logger.debug(f"[增强過濾器] 綜合評分 - 規則:{rule_score:.1f}, 語義:{scores['semantic_score']:.1f}, "
+        logger.debug(f"[增強過濾器] 綜合評分 - 規則:{rule_score:.1f}, 語義:{scores['semantic_score']:.1f}, "
                     f"分類:{scores['classification_score']:.1f}, 最終:{final_score:.1f}")
         
         return scores
     
     def filter_news_enhanced(self, news_df: pd.DataFrame, min_score: float = 40) -> pd.DataFrame:
         """
-        增强新聞過濾
+        增強新聞過濾
         
         Args:
             news_df: 原始新聞DataFrame
-            min_score: 最低綜合評分阈值
+            min_score: 最低綜合評分閾值
             
         Returns:
             pd.DataFrame: 過濾後的新聞DataFrame，包含詳細評分信息
         """
         if news_df.empty:
-            logger.warning("[增强過濾器] 輸入新聞DataFrame為空")
+            logger.warning("[增強過濾器] 輸入新聞DataFrame為空")
             return news_df
         
-        logger.info(f"[增强過濾器] 開始增强過濾，原始數量: {len(news_df)}條，最低評分阈值: {min_score}")
+        logger.info(f"[增強過濾器] 開始增強過濾，原始數量: {len(news_df)}條，最低評分閾值: {min_score}")
         
         filtered_news = []
         
@@ -276,7 +276,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
             title = row.get('新聞標題', row.get('標題', ''))
             content = row.get('新聞內容', row.get('內容', ''))
             
-            # 計算增强評分
+            # 計算增強評分
             scores = self.calculate_enhanced_relevance_score(title, content)
             
             if scores['final_score'] >= min_score:
@@ -284,26 +284,26 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
                 row_dict.update(scores)  # 添加所有評分信息
                 filtered_news.append(row_dict)
                 
-                logger.debug(f"[增强過濾器] 保留新聞 (綜合評分: {scores['final_score']:.1f}): {title[:50]}...")
+                logger.debug(f"[增強過濾器] 保留新聞 (綜合評分: {scores['final_score']:.1f}): {title[:50]}...")
             else:
-                logger.debug(f"[增强過濾器] 過濾新聞 (綜合評分: {scores['final_score']:.1f}): {title[:50]}...")
+                logger.debug(f"[增強過濾器] 過濾新聞 (綜合評分: {scores['final_score']:.1f}): {title[:50]}...")
         
         # 創建過濾後的DataFrame
         if filtered_news:
             filtered_df = pd.DataFrame(filtered_news)
             # 按綜合評分排序
             filtered_df = filtered_df.sort_values('final_score', ascending=False)
-            logger.info(f"[增强過濾器] 增强過濾完成，保留 {len(filtered_df)}條 新聞")
+            logger.info(f"[增強過濾器] 增強過濾完成，保留 {len(filtered_df)}條 新聞")
         else:
             filtered_df = pd.DataFrame()
-            logger.warning(f"[增强過濾器] 所有新聞都被過濾，無符合條件的新聞")
+            logger.warning(f"[增強過濾器] 所有新聞都被過濾，無符合條件的新聞")
             
         return filtered_df
 
 
 def create_enhanced_news_filter(ticker: str, use_semantic: bool = True, use_local_model: bool = False) -> EnhancedNewsFilter:
     """
-    創建增强新聞過濾器的便捷函數
+    創建增強新聞過濾器的便捷函數
     
     Args:
         ticker: 股票代碼
@@ -311,7 +311,7 @@ def create_enhanced_news_filter(ticker: str, use_semantic: bool = True, use_loca
         use_local_model: 是否使用本地分類模型
         
     Returns:
-        EnhancedNewsFilter: 配置好的增强過濾器實例
+        EnhancedNewsFilter: 配置好的增強過濾器實例
     """
     company_name = get_company_name(ticker)
     return EnhancedNewsFilter(ticker, company_name, use_semantic, use_local_model)
@@ -319,32 +319,32 @@ def create_enhanced_news_filter(ticker: str, use_semantic: bool = True, use_loca
 
 # 使用示例
 if __name__ == "__main__":
-    # 測試增强過濾器
+    # 測試增強過濾器
     import pandas as pd
     
     # 模擬新聞數據
     test_news = pd.DataFrame([
         {
-            '新聞標題': '招商銀行發布2024年第三季度業绩報告',
-            '新聞內容': '招商銀行今日發布第三季度財報，净利润同比增長8%，資產質量持续改善...'
+            '新聞標題': '招商銀行發布2024年第三季度業績報告',
+            '新聞內容': '招商銀行今日發布第三季度財報，淨利潤同比增長8%，資產質量持續改善...'
         },
         {
-            '新聞標題': '上證180ETF指數基金（530280）自帶杠铃策略',
-            '新聞內容': '數據顯示，上證180指數前十大權重股分別為贵州茅台、招商銀行600036...'
+            '新聞標題': '上證180ETF指數基金（530280）自帶槓鈴策略',
+            '新聞內容': '數據顯示，上證180指數前十大權重股分別為貴州茅台、招商銀行600036...'
         },
         {
-            '新聞標題': '銀行ETF指數(512730)多只成分股上涨',
-            '新聞內容': '銀行板塊今日表現强势，招商銀行、工商銀行等多只成分股上涨...'
+            '新聞標題': '銀行ETF指數(512730)多只成分股上漲',
+            '新聞內容': '銀行板塊今日表現強勢，招商銀行、工商銀行等多只成分股上漲...'
         },
         {
-            '新聞標題': '招商銀行与某科技公司簽署戰略合作協议',
-            '新聞內容': '招商銀行宣布与知名科技公司達成戰略合作，将在數字化轉型方面深度合作...'
+            '新聞標題': '招商銀行與某科技公司簽署戰略合作協議',
+            '新聞內容': '招商銀行宣布與知名科技公司達成戰略合作，將在數字化轉型方面深度合作...'
         }
     ])
     
-    print("=== 測試增强新聞過濾器 ===")
+    print("=== 測試增強新聞過濾器 ===")
     
-    # 創建增强過濾器（仅使用規則過濾，避免模型依賴）
+    # 創建增強過濾器（僅使用規則過濾，避免模型依賴）
     enhanced_filter = create_enhanced_news_filter('600036', use_semantic=False, use_local_model=False)
     
     # 過濾新聞

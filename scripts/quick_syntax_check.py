@@ -51,7 +51,7 @@ def main():
     current_dir = os.getcwd()
     python_files = find_python_files(current_dir)
     
-    logger.info(f"📊 总共找到 {len(python_files)} 個Python文件")
+    logger.info(f"📊 總共找到 {len(python_files)} 個Python文件")
     logger.error(f"🔍 正在檢查語法錯誤...\n")
     
     error_files = []

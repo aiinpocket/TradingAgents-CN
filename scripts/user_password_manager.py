@@ -37,7 +37,7 @@ def load_users() -> Dict:
         with open(users_file, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
-        print(f"❌ 加載用戶配置失败: {e}")
+        print(f"❌ 加載用戶配置失敗: {e}")
         return {}
 
 def save_users(users: Dict) -> bool:
@@ -54,7 +54,7 @@ def save_users(users: Dict) -> bool:
         print(f"✅ 用戶配置已保存到: {users_file}")
         return True
     except Exception as e:
-        print(f"❌ 保存用戶配置失败: {e}")
+        print(f"❌ 保存用戶配置失敗: {e}")
         return False
 
 def list_users():
@@ -62,7 +62,7 @@ def list_users():
     users = load_users()
     
     if not users:
-        print("📝 没有找到用戶")
+        print("📝 沒有找到用戶")
         return
     
     print("📋 用戶列表:")
@@ -245,7 +245,7 @@ def main():
                 print("❌ 操作已取消")
         
         elif args.command == 'reset':
-            confirm = input("確認重置為默認用戶配置? 這将刪除所有現有用戶! (y/N): ")
+            confirm = input("確認重置為默認用戶配置? 這將刪除所有現有用戶! (y/N): ")
             if confirm.lower() == 'y':
                 reset_to_default()
             else:

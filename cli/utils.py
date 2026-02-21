@@ -81,7 +81,7 @@ def select_analysts(ticker: str = None) -> List[AnalystType]:
             questionary.Choice(display, value=value) for display, value in available_analysts
         ],
         instruction="\n- 按空格鍵選擇/取消選擇分析師 | Press Space to select/unselect analysts\n- 按 'a' 鍵全選/取消全選 | Press 'a' to select/unselect all\n- 按回車鍵完成選擇 | Press Enter when done",
-        validate=lambda x: len(x) > 0 or "您必须至少選擇一個分析師 | You must select at least one analyst.",
+        validate=lambda x: len(x) > 0 or "您必須至少選擇一個分析師 | You must select at least one analyst.",
         style=questionary.Style(
             [
                 ("checkbox-selected", "fg:green"),
@@ -104,9 +104,9 @@ def select_research_depth() -> int:
 
     # Define research depth options with their corresponding values
     DEPTH_OPTIONS = [
-        ("浅層 - 快速研究，少量辩論和策略討論 | Shallow - Quick research, few debate rounds", 1),
-        ("中等 - 中等程度，適度的辩論和策略討論 | Medium - Moderate debate and strategy discussion", 3),
-        ("深度 - 全面研究，深入的辩論和策略討論 | Deep - Comprehensive research, in-depth debate", 5),
+        ("浅層 - 快速研究，少量辯論和策略討論 | Shallow - Quick research, few debate rounds", 1),
+        ("中等 - 中等程度，適度的辯論和策略討論 | Medium - Moderate debate and strategy discussion", 3),
+        ("深度 - 全面研究，深入的辯論和策略討論 | Deep - Comprehensive research, in-depth debate", 5),
     ]
 
     choice = questionary.select(
@@ -149,16 +149,16 @@ def select_shallow_thinking_agent(provider) -> str:
             ("Claude Sonnet 4 - High performance and excellent reasoning", "claude-sonnet-4-0"),
         ],
         "google": [
-            ("Gemini 2.5 Pro - 🚀 最新旗舰模型", "gemini-2.5-pro"),
+            ("Gemini 2.5 Pro - 🚀 最新旗艦模型", "gemini-2.5-pro"),
             ("Gemini 2.5 Flash - ⚡ 最新快速模型", "gemini-2.5-flash"),
             ("Gemini 2.5 Flash Lite - 💡 轻量快速", "gemini-2.5-flash-lite"),
             ("Gemini 2.5 Pro-002 - 🔧 優化版本", "gemini-2.5-pro-002"),
             ("Gemini 2.5 Flash-002 - ⚡ 優化快速版", "gemini-2.5-flash-002"),
             ("Gemini 2.5 Flash - Adaptive thinking, cost efficiency", "gemini-2.5-flash-preview-05-20"),
             ("Gemini 2.5 Pro Preview - 預覽版本", "gemini-2.5-pro-preview-06-05"),
-            ("Gemini 2.0 Flash Lite - 轻量版本", "gemini-2.0-flash-lite"),
+            ("Gemini 2.0 Flash Lite - 輕量版本", "gemini-2.0-flash-lite"),
             ("Gemini 2.0 Flash - 推薦使用", "gemini-2.0-flash"),
-            ("Gemini 1.5 Pro - 强大性能", "gemini-1.5-pro"),
+            ("Gemini 1.5 Pro - 強大性能", "gemini-1.5-pro"),
             ("Gemini 1.5 Flash - 快速響應", "gemini-1.5-flash"),
         ],
         "openrouter": [
@@ -170,34 +170,20 @@ def select_shallow_thinking_agent(provider) -> str:
             ("llama3.1 local", "llama3.1"),
             ("llama3.2 local", "llama3.2"),
         ],
-        "阿里百炼 (dashscope)": [
-            ("通義千問 Turbo - 快速響應，適合日常對話", "qwen-turbo"),
-            ("通義千問 Plus - 平衡性能和成本", "qwen-plus"),
-            ("通義千問 Max - 最强性能", "qwen-max"),
-        ],
-        "deepseek v3": [
-            ("DeepSeek Chat - 通用對話模型，適合股票投資分析", "deepseek-chat"),
-        ],
-        "🔧 自定義openai端點": [
+        "custom_openai": [
             ("GPT-4o-mini - Fast and efficient for quick tasks", "gpt-4o-mini"),
             ("GPT-4o - Standard model with solid capabilities", "gpt-4o"),
             ("GPT-3.5-turbo - Cost-effective option", "gpt-3.5-turbo"),
             ("Claude-3-haiku - Fast Anthropic model", "claude-3-haiku-20240307"),
             ("Llama-3.1-8B - Open source model", "meta-llama/llama-3.1-8b-instruct"),
-            ("Qwen2.5-7B - Chinese optimized model", "qwen/qwen-2.5-7b-instruct"),
-            ("自定義模型 - 手動輸入模型名稱", "custom"),
+            ("Custom model - Enter model name manually", "custom"),
         ]
     }
 
-    # 獲取選項列表
+    # 取得選項列表
     options = SHALLOW_AGENT_OPTIONS[provider.lower()]
 
-    # 為國產LLM設置默認選擇
     default_choice = None
-    if "阿里百炼" in provider:
-        default_choice = options[0][1]  # 通義千問 Turbo
-    elif "deepseek" in provider.lower():
-        default_choice = options[0][1]  # DeepSeek Chat (推薦選擇)
 
     choice = questionary.select(
         "選擇您的快速思考LLM引擎 | Select Your [Quick-Thinking LLM Engine]:",
@@ -247,36 +233,28 @@ def select_deep_thinking_agent(provider) -> str:
             ("Claude Opus 4 - Most powerful Anthropic model", "	claude-opus-4-0"),
         ],
         "google": [
-            ("Gemini 2.5 Pro - 🚀 最新旗舰模型", "gemini-2.5-pro"),
+            ("Gemini 2.5 Pro - 🚀 最新旗艦模型", "gemini-2.5-pro"),
             ("Gemini 2.5 Flash - ⚡ 最新快速模型", "gemini-2.5-flash"),
             ("Gemini 2.5 Flash Lite - 💡 轻量快速", "gemini-2.5-flash-lite"),
             ("Gemini 2.5 Pro-002 - 🔧 優化版本", "gemini-2.5-pro-002"),
             ("Gemini 2.5 Flash-002 - ⚡ 優化快速版", "gemini-2.5-flash-002"),
             ("Gemini 2.5 Flash - Adaptive thinking, cost efficiency", "gemini-2.5-flash-preview-05-20"),
             ("Gemini 2.5 Pro Preview - 預覽版本", "gemini-2.5-pro-preview-06-05"),
-            ("Gemini 2.0 Flash Lite - 轻量版本", "gemini-2.0-flash-lite"),
+            ("Gemini 2.0 Flash Lite - 輕量版本", "gemini-2.0-flash-lite"),
             ("Gemini 2.0 Flash - 推薦使用", "gemini-2.0-flash"),
-            ("Gemini 1.5 Pro - 强大性能", "gemini-1.5-pro"),
+            ("Gemini 1.5 Pro - 強大性能", "gemini-1.5-pro"),
             ("Gemini 1.5 Flash - 快速響應", "gemini-1.5-flash"),
         ],
         "openrouter": [
-            ("DeepSeek V3 - a 685B-parameter, mixture-of-experts model", "deepseek/deepseek-chat-v3-0324:free"),
-            ("Deepseek - latest iteration of the flagship chat model family from the DeepSeek team.", "deepseek/deepseek-chat-v3-0324:free"),
+            ("Meta Llama 4 Scout - Latest Meta model", "meta-llama/llama-4-scout:free"),
+            ("Meta Llama 3.3 70B - Strong open source model", "meta-llama/llama-3.3-70b-instruct:free"),
+            ("Google Gemini 2.0 Flash - Fast multimodal", "google/gemini-2.0-flash-exp:free"),
         ],
         "ollama": [
             ("llama3.1 local", "llama3.1"),
-            ("qwen3", "qwen3"),
+            ("llama3.2 local", "llama3.2"),
         ],
-        "阿里百炼 (dashscope)": [
-            ("通義千問 Turbo - 快速響應，適合日常對話", "qwen-turbo"),
-            ("通義千問 Plus - 平衡性能和成本", "qwen-plus"),
-            ("通義千問 Max - 最强性能", "qwen-max"),
-            ("通義千問 Max 長文本版 - 支持超長上下文", "qwen-max-longcontext"),
-        ],
-        "deepseek v3": [
-            ("DeepSeek Chat - 通用對話模型，適合股票投資分析", "deepseek-chat"),
-        ],
-        "🔧 自定義openai端點": [
+        "custom_openai": [
             ("GPT-4o - Standard model with solid capabilities", "gpt-4o"),
             ("GPT-4o-mini - Fast and efficient for quick tasks", "gpt-4o-mini"),
             ("o1-preview - Advanced reasoning model", "o1-preview"),
@@ -284,20 +262,14 @@ def select_deep_thinking_agent(provider) -> str:
             ("Claude-3-sonnet - Balanced Anthropic model", "claude-3-sonnet-20240229"),
             ("Claude-3-opus - Most capable Anthropic model", "claude-3-opus-20240229"),
             ("Llama-3.1-70B - Large open source model", "meta-llama/llama-3.1-70b-instruct"),
-            ("Qwen2.5-72B - Chinese optimized model", "qwen/qwen-2.5-72b-instruct"),
-            ("自定義模型 - 手動輸入模型名稱", "custom"),
+            ("Custom model - Enter model name manually", "custom"),
         ]
     }
-    
-    # 獲取選項列表
+
+    # 取得選項列表
     options = DEEP_AGENT_OPTIONS[provider.lower()]
 
-    # 為國產LLM設置默認選擇
     default_choice = None
-    if "阿里百炼" in provider:
-        default_choice = options[0][1]  # 通義千問 Turbo
-    elif "deepseek" in provider.lower():
-        default_choice = options[0][1]  # DeepSeek Chat
 
     choice = questionary.select(
         "選擇您的深度思考LLM引擎 | Select Your [Deep-Thinking LLM Engine]:",
@@ -324,17 +296,14 @@ def select_deep_thinking_agent(provider) -> str:
 
 def select_llm_provider() -> tuple[str, str]:
     """Select the LLM provider using interactive selection."""
-    # Define LLM provider options with their corresponding endpoints
-    # 國產LLM作為默認推薦選項放在前面
+    # 定義 LLM 提供商選項及其對應端點
     BASE_URLS = [
-        ("阿里百炼 (DashScope)", "https://dashscope.aliyuncs.com/api/v1"),
-        ("DeepSeek V3", "https://api.deepseek.com"),
+        ("Google AI", "https://generativelanguage.googleapis.com/v1"),
         ("OpenAI", "https://api.openai.com/v1"),
-        ("🔧 自定義OpenAI端點", "custom"),
         ("Anthropic", "https://api.anthropic.com/"),
-        ("Google", "https://generativelanguage.googleapis.com/v1"),
-        ("Openrouter", "https://openrouter.ai/api/v1"),
-        ("Ollama", "http://localhost:11434/v1"),
+        ("OpenRouter", "https://openrouter.ai/api/v1"),
+        ("Custom OpenAI Endpoint", "custom"),
+        ("Ollama (Local)", "http://localhost:11434/v1"),
     ]
     
     choice = questionary.select(
@@ -375,7 +344,7 @@ def select_llm_provider() -> tuple[str, str]:
         url = custom_url
         logger.info(f"您選擇了 | You selected: {display_name}\tURL: {url}")
         
-        # 設置環境變量以便後续使用
+        # 設置環境變量以便後續使用
         os.environ['CUSTOM_OPENAI_BASE_URL'] = url
     else:
         logger.info(f"您選擇了 | You selected: {display_name}\tURL: {url}")

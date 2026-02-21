@@ -2,7 +2,7 @@
 
 ## 📋 概述
 
-TradingAgents-CN採用本地構建Docker鏡像的方式，而不是提供預構建鏡像。本文档詳細說明了Docker鏡像的構建過程、優化方法和常见問題解決方案。
+TradingAgents-CN採用本地構建Docker鏡像的方式，而不是提供預構建鏡像。本文檔詳細說明了Docker鏡像的構建過程、優化方法和常見問題解決方案。
 
 ## 🎯 為什么需要本地構建？
 
@@ -16,15 +16,15 @@ TradingAgents-CN採用本地構建Docker鏡像的方式，而不是提供預構�
 2. **🔒 安全考慮**
    - 避免在公共鏡像中包含敏感信息
    - 用戶完全控制構建過程
-   - 减少供應鏈安全風險
+   - 減少供應鏈安全風險
 
-3. **📦 版本灵活性**
+3. **📦 版本靈活性**
    - 支持用戶自定義修改
    - 便於開發和調試
    - 適應快速迭代需求
 
 4. **⚡ 依賴優化**
-   - 根據實际需求安裝依賴
+   - 根據實際需求安裝依賴
    - 避免不必要的組件
    - 優化鏡像大小
 
@@ -33,7 +33,7 @@ TradingAgents-CN採用本地構建Docker鏡像的方式，而不是提供預構�
 ### Dockerfile結構
 
 ```dockerfile
-# 基础鏡像
+# 基礎鏡像
 FROM python:3.10-slim
 
 # 系統依賴安裝
@@ -59,12 +59,12 @@ CMD ["streamlit", "run", "web/app.py"]
 
 ### 構建階段分析
 
-#### 階段1: 基础鏡像下載
+#### 階段1: 基礎鏡像下載
 ```bash
 # 下載python:3.10-slim鏡像
 大小: ~200MB
 時間: 1-3分鐘 (取決於網絡)
-緩存: Docker會自動緩存，後续構建更快
+緩存: Docker會自動緩存，後續構建更快
 ```
 
 #### 階段2: 系統依賴安裝
@@ -73,7 +73,7 @@ CMD ["streamlit", "run", "web/app.py"]
 包含: pandoc, wkhtmltopdf, 中文字體
 大小: ~300MB
 時間: 2-4分鐘
-優化: 清理apt緩存减少鏡像大小
+優化: 清理apt緩存減少鏡像大小
 ```
 
 #### 階段3: Python依賴安裝
@@ -82,7 +82,7 @@ CMD ["streamlit", "run", "web/app.py"]
 來源: requirements.txt
 大小: ~500MB
 時間: 2-5分鐘
-優化: 使用--no-cache-dir减少鏡像大小
+優化: 使用--no-cache-dir減少鏡像大小
 ```
 
 #### 階段4: 應用代碼複制
@@ -99,10 +99,10 @@ CMD ["streamlit", "run", "web/app.py"]
 
 ```bash
 # 利用Docker層緩存
-# 将不經常變化的步骤放在前面
+# 將不經常變化的步驟放在前面
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-# 将經常變化的代碼放在後面
+# 將經常變化的代碼放在後面
 COPY . /app
 ```
 
@@ -168,13 +168,13 @@ coverage.xml
 
 ## 🚀 構建命令詳解
 
-### 基础構建
+### 基礎構建
 
 ```bash
 # 標準構建
 docker-compose build
 
-# 强制重新構建 (不使用緩存)
+# 強制重新構建 (不使用緩存)
 docker-compose build --no-cache
 
 # 構建並啟動
@@ -228,13 +228,13 @@ docker system df
 docker builder prune
 ```
 
-## 🚨 常见問題解決
+## 🚨 常見問題解決
 
-### 1. 構建失败
+### 1. 構建失敗
 
 #### 網絡問題
 ```bash
-# 症狀: 下載依賴失败
+# 症狀: 下載依賴失敗
 # 解決: 使用國內鏡像源
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
@@ -243,7 +243,7 @@ RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```bash
 # 症狀: 構建過程中內存耗尽
 # 解決: 增加Docker內存限制
-# Docker Desktop -> Settings -> Resources -> Memory (建议4GB+)
+# Docker Desktop -> Settings -> Resources -> Memory (建議4GB+)
 ```
 
 #### 權限問題
@@ -264,7 +264,7 @@ RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple 
 #### 緩存優化
 ```bash
 # 合理安排Dockerfile層顺序
-# 将不變的依賴放在前面，變化的代碼放在後面
+# 將不變的依賴放在前面，變化的代碼放在後面
 ```
 
 ### 3. 鏡像過大
@@ -277,9 +277,9 @@ RUN apt-get update && apt-get install -y package && rm -rf /var/lib/apt/lists/*
 
 #### 多階段構建
 ```bash
-# 使用多階段構建减少最终鏡像大小
+# 使用多階段構建減少最终鏡像大小
 FROM python:3.10-slim as builder
-# 構建步骤...
+# 構建步驟...
 FROM python:3.10-slim
 COPY --from=builder /app /app
 ```
@@ -306,7 +306,7 @@ docker-compose build --no-cache && docker-compose up -d  # 完全重新構建
 docker build -t tradingagents-cn:v0.1.7 .
 docker build -t tradingagents-cn:latest .
 
-# 推送到私有仓庫 (可選)
+# 推送到私有倉庫 (可選)
 docker tag tradingagents-cn:latest your-registry/tradingagents-cn:latest
 docker push your-registry/tradingagents-cn:latest
 ```
@@ -318,7 +318,7 @@ docker push your-registry/tradingagents-cn:latest
 RUN adduser --disabled-password --gecos '' appuser
 USER appuser
 
-# 扫描安全漏洞
+# 掃描安全漏洞
 docker scan tradingagents-cn:latest
 ```
 
@@ -339,7 +339,7 @@ docker scan tradingagents-cn:latest
 
 ### 3. 部署簡化
 
-- 🎯 一键部署腳本
+- 🎯 一鍵部署腳本
 - 📋 預配置模板
 - 🔧 自動化配置檢查
 
@@ -347,4 +347,4 @@ docker scan tradingagents-cn:latest
 
 *最後更新: 2025-07-13*  
 *版本: cn-0.1.7*  
-*贡献者: [@breeze303](https://github.com/breeze303)*
+*貢獻者: [@breeze303](https://github.com/breeze303)*

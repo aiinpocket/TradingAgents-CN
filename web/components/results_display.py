@@ -19,7 +19,7 @@ def render_results(results):
     """渲染分析結果"""
 
     if not results:
-        st.warning("暂無分析結果")
+        st.warning("暫無分析結果")
         return
 
     # 添加CSS確保結果內容不被右侧遮挡
@@ -53,9 +53,9 @@ def render_results(results):
     st.markdown("---")
     st.header(f"📊 {stock_symbol} 分析結果")
 
-    # 如果分析失败，顯示錯誤信息
+    # 如果分析失敗，顯示錯誤信息
     if not success and error:
-        st.error(f"❌ **分析失败**: {error}")
+        st.error(f"❌ **分析失敗**: {error}")
         st.info("💡 **解決方案**: 請檢查API密鑰配置，確保網絡連接正常，然後重新運行分析。")
         return
 
@@ -81,11 +81,14 @@ def render_analysis_info(results):
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            llm_provider = results.get('llm_provider', 'dashscope')
+            llm_provider = results.get('llm_provider', 'openai')
             provider_name = {
-                'dashscope': '阿里百炼',
+                'openai': 'OpenAI',
                 'google': 'Google AI',
-                'qianfan': '文心一言（千帆）'
+                'anthropic': 'Anthropic',
+                'openrouter': 'OpenRouter',
+                'ollama': 'Ollama',
+                'custom_openai': 'Custom OpenAI'
             }.get(llm_provider, llm_provider)
 
             st.metric(
@@ -122,12 +125,12 @@ def render_analysis_info(results):
             st.metric(
                 label="分析師數量",
                 value=f"{analysts_count}個",
-                help="參与分析的AI分析師數量"
+                help="參與分析的AI分析師數量"
             )
 
         # 顯示分析師列表
         if analysts:
-            st.write("**參与的分析師:**")
+            st.write("**參與的分析師:**")
             analyst_names = {
                 'market': '📈 市場技術分析師',
                 'fundamentals': '💰 基本面分析師',
@@ -152,7 +155,7 @@ def render_decision_summary(decision, stock_symbol=None):
                     border: 2px dashed #dee2e6; margin: 20px 0;">
             <h4 style="color: #6c757d; margin-bottom: 15px;">📊 等待投資決策</h4>
             <p style="color: #6c757d; font-size: 16px; margin-bottom: 20px;">
-                分析完成後，投資決策将在此處顯示
+                分析完成後，投資決策將在此處顯示
             </p>
             <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
                 <span style="background: white; padding: 8px 16px; border-radius: 20px;
@@ -181,13 +184,13 @@ def render_decision_summary(decision, stock_symbol=None):
     with col1:
         action = decision.get('action', 'N/A')
 
-        # 将英文投資建議轉換為中文
+        # 將英文投資建議轉換為中文
         action_translation = {
-            'BUY': '买入',
-            'SELL': '卖出',
+            'BUY': '買入',
+            'SELL': '賣出',
             'HOLD': '持有',
-            '买入': '买入',
-            '卖出': '卖出',
+            '買入': '買入',
+            '賣出': '賣出',
             '持有': '持有'
         }
 
@@ -198,8 +201,8 @@ def render_decision_summary(decision, stock_symbol=None):
             'BUY': 'normal',
             'SELL': 'inverse',
             'HOLD': 'off',
-            '买入': 'normal',
-            '卖出': 'inverse',
+            '買入': 'normal',
+            '賣出': 'inverse',
             '持有': 'off'
         }.get(action.upper(), 'normal')
 
@@ -247,7 +250,7 @@ def render_decision_summary(decision, stock_symbol=None):
         logger.debug(f"🔍 [DEBUG] target_price from decision: {target_price}, type: {type(target_price)}")
         logger.debug(f"🔍 [DEBUG] decision keys: {list(decision.keys()) if isinstance(decision, dict) else 'Not a dict'}")
 
-        # 根據股票代碼確定貨币符號
+        # 根據股票代碼確定貨幣符號
         def is_china_stock(ticker_code):
             import re
 
@@ -305,7 +308,7 @@ def render_detailed_analysis(state):
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    /* 標簽页悬停效果 */
+    /* 標籤頁懸停效果 */
     .stTabs [data-baseweb="tab"]:hover {
         background-color: #e3f2fd;
         border-color: #2196f3;
@@ -346,28 +349,28 @@ def render_detailed_analysis(state):
     </style>
     """, unsafe_allow_html=True)
 
-    # 調試信息：顯示實际的狀態键
+    # 調試信息：顯示實際的狀態鍵
     if st.checkbox("🔍 顯示調試信息", key="debug_state_keys"):
-        st.write("**實际狀態中的键：**")
+        st.write("**實際狀態中的鍵：**")
         st.write(list(state.keys()))
-        st.write("**各键的數據類型和內容預覽：**")
+        st.write("**各鍵的數據類型和內容預覽：**")
         for key, value in state.items():
             if isinstance(value, str):
                 preview = value[:100] + "..." if len(value) > 100 else value
                 st.write(f"- `{key}`: {type(value).__name__} ({len(value)} 字符) - {preview}")
             elif isinstance(value, dict):
-                st.write(f"- `{key}`: {type(value).__name__} - 包含键: {list(value.keys())}")
+                st.write(f"- `{key}`: {type(value).__name__} - 包含鍵: {list(value.keys())}")
             else:
                 st.write(f"- `{key}`: {type(value).__name__} - {str(value)[:100]}")
         st.markdown("---")
     
-    # 定義分析模塊 - 包含完整的团隊決策報告，与CLI端保持一致
+    # 定義分析模塊 - 包含完整的團隊決策報告，與CLI端保持一致
     analysis_modules = [
         {
             'key': 'market_report',
             'title': '📈 市場技術分析',
             'icon': '📈',
-            'description': '技術指標、價格趋势、支撑阻力位分析'
+            'description': '技術指標、價格趨勢、支撐阻力位分析'
         },
         {
             'key': 'fundamentals_report',
@@ -377,9 +380,9 @@ def render_detailed_analysis(state):
         },
         {
             'key': 'sentiment_report',
-            'title': '💭 市場情绪分析',
+            'title': '💭 市場情緒分析',
             'icon': '💭',
-            'description': '投資者情绪、社交媒體情绪指標'
+            'description': '投資者情緒、社交媒體情緒指標'
         },
         {
             'key': 'news_report',
@@ -391,30 +394,30 @@ def render_detailed_analysis(state):
             'key': 'risk_assessment',
             'title': '⚠️ 風險評估',
             'icon': '⚠️',
-            'description': '風險因素识別、風險等級評估'
+            'description': '風險因素識別、風險等級評估'
         },
         {
             'key': 'investment_plan',
             'title': '📋 投資建議',
             'icon': '📋',
-            'description': '具體投資策略、仓位管理建議'
+            'description': '具體投資策略、倉位管理建議'
         },
-        # 添加团隊決策報告模塊
+        # 添加團隊決策報告模塊
         {
             'key': 'investment_debate_state',
-            'title': '🔬 研究团隊決策',
+            'title': '🔬 研究團隊決策',
             'icon': '🔬',
-            'description': '多头/空头研究員辩論分析，研究經理綜合決策'
+            'description': '多頭/空頭研究員辯論分析，研究經理綜合決策'
         },
         {
             'key': 'trader_investment_plan',
-            'title': '💼 交易团隊計劃',
+            'title': '💼 交易團隊計劃',
             'icon': '💼',
             'description': '專業交易員制定的具體交易執行計劃'
         },
         {
             'key': 'risk_debate_state',
-            'title': '⚖️ 風險管理团隊',
+            'title': '⚖️ 風險管理團隊',
             'icon': '⚖️',
             'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'
         },
@@ -422,7 +425,7 @@ def render_detailed_analysis(state):
             'key': 'final_trade_decision',
             'title': '🎯 最終交易決策',
             'icon': '🎯',
-            'description': '綜合所有团隊分析後的最終投資決策'
+            'description': '綜合所有團隊分析後的最終投資決策'
         }
     ]
     
@@ -430,7 +433,7 @@ def render_detailed_analysis(state):
     available_modules = []
     for module in analysis_modules:
         if module['key'] in state and state[module['key']]:
-            # 檢查字典類型的數據是否有實际內容
+            # 檢查字典類型的數據是否有實際內容
             if isinstance(state[module['key']], dict):
                 # 對於字典，檢查是否有非空的值
                 has_content = any(v for v in state[module['key']].values() if v)
@@ -460,7 +463,7 @@ def render_detailed_analysis(state):
             if isinstance(content, str):
                 st.markdown(content)
             elif isinstance(content, dict):
-                # 特殊處理团隊決策報告的字典結構
+                # 特殊處理團隊決策報告的字典結構
                 if module['key'] == 'investment_debate_state':
                     render_investment_debate_content(content)
                 elif module['key'] == 'risk_debate_state':
@@ -474,14 +477,14 @@ def render_detailed_analysis(state):
                 st.write(content)
 
 def render_investment_debate_content(content):
-    """渲染研究团隊決策內容"""
+    """渲染研究團隊決策內容"""
     if content.get('bull_history'):
-        st.subheader("📈 多头研究員分析")
+        st.subheader("📈 多頭研究員分析")
         st.markdown(content['bull_history'])
         st.markdown("---")
 
     if content.get('bear_history'):
-        st.subheader("📉 空头研究員分析")
+        st.subheader("📉 空頭研究員分析")
         st.markdown(content['bear_history'])
         st.markdown("---")
 
@@ -490,7 +493,7 @@ def render_investment_debate_content(content):
         st.markdown(content['judge_decision'])
 
 def render_risk_debate_content(content):
-    """渲染風險管理团隊決策內容"""
+    """渲染風險管理團隊決策內容"""
     if content.get('risky_history'):
         st.subheader("🚀 激進分析師評估")
         st.markdown(content['risky_history'])
@@ -517,14 +520,14 @@ def render_analysis_placeholder():
     <div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 10px; border: 2px dashed #dee2e6;">
         <h3 style="color: #6c757d; margin-bottom: 20px;">📊 等待分析數據</h3>
         <p style="color: #6c757d; font-size: 16px; margin-bottom: 30px;">
-            請先配置API密鑰並運行股票分析，分析完成後詳細報告将在此處顯示
+            請先配置API密鑰並運行股票分析，分析完成後詳細報告將在此處顯示
         </p>
 
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
                 <div style="font-size: 24px; margin-bottom: 8px;">📈</div>
                 <div style="font-weight: bold; color: #495057;">技術分析</div>
-                <div style="font-size: 12px; color: #6c757d;">價格趋势、支撑阻力</div>
+                <div style="font-size: 12px; color: #6c757d;">價格趨勢、支撐阻力</div>
             </div>
 
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
@@ -536,7 +539,7 @@ def render_analysis_placeholder():
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
                 <div style="font-size: 24px; margin-bottom: 8px;">📰</div>
                 <div style="font-weight: bold; color: #495057;">新聞分析</div>
-                <div style="font-size: 12px; color: #6c757d;">市場情绪、事件影響</div>
+                <div style="font-size: 12px; color: #6c757d;">市場情緒、事件影響</div>
             </div>
 
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
@@ -548,7 +551,7 @@ def render_analysis_placeholder():
 
         <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px;">
             <p style="color: #1976d2; margin: 0; font-size: 14px;">
-                💡 <strong>提示</strong>: 配置API密鑰後，系統将生成包含多個智能體团隊分析的詳細投資報告
+                💡 <strong>提示</strong>: 配置API密鑰後，系統將生成包含多個智能體團隊分析的詳細投資報告
             </p>
         </div>
     </div>
@@ -574,7 +577,7 @@ def render_risk_warning():
     st.caption(f"分析生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 def create_price_chart(price_data):
-    """創建價格走势圖"""
+    """創建價格走勢圖"""
     
     if not price_data:
         return None
@@ -592,7 +595,7 @@ def create_price_chart(price_data):
     
     # 設置圖表樣式
     fig.update_layout(
-        title="股價走势圖",
+        title="股價走勢圖",
         xaxis_title="日期",
         yaxis_title="價格 ($)",
         hovermode='x unified',
@@ -602,7 +605,7 @@ def create_price_chart(price_data):
     return fig
 
 def create_sentiment_gauge(sentiment_score):
-    """創建情绪指標儀表盘"""
+    """創建情緒指標儀表盤"""
     
     if sentiment_score is None:
         return None
@@ -611,7 +614,7 @@ def create_sentiment_gauge(sentiment_score):
         mode = "gauge+number+delta",
         value = sentiment_score,
         domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': "市場情绪指數"},
+        title = {'text': "市場情緒指數"},
         delta = {'reference': 50},
         gauge = {
             'axis': {'range': [None, 100]},

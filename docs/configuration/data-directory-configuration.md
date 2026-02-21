@@ -6,7 +6,7 @@ This guide explains how to configure data directory paths in TradingAgents, reso
 
 ## 概述 | Overview
 
-TradingAgents支持灵活的數據目錄配置，允許用戶：
+TradingAgents支持靈活的數據目錄配置，允許用戶：
 - 自定義數據存储位置
 - 通過環境變量配置
 - 使用CLI命令管理
@@ -105,7 +105,7 @@ data/
 ├── cache/                          # 緩存目錄 | Cache directory
 ├── finnhub_data/                   # Finnhub數據目錄 | Finnhub data directory
 │   ├── news_data/                  # 新聞數據 | News data
-│   ├── insider_sentiment/          # 內部人情绪數據 | Insider sentiment data
+│   ├── insider_sentiment/          # 內部人情緒數據 | Insider sentiment data
 │   └── insider_transactions/       # 內部人交易數據 | Insider transaction data
 └── results/                        # 分析結果 | Analysis results
 ```
@@ -122,14 +122,14 @@ Configuration priority from high to low:
 
 ## 默認配置 | Default Configuration
 
-如果没有自定義配置，系統使用以下默認路徑：
+如果沒有自定義配置，系統使用以下默認路徑：
 
 If no custom configuration is provided, the system uses the following default paths:
 
 - **Windows**: `C:\Users\{username}\Documents\TradingAgents\data`
 - **Linux/macOS**: `~/Documents/TradingAgents/data`
 
-## 常见問題解決 | Troubleshooting
+## 常見問題解決 | Troubleshooting
 
 ### 問題1：路徑不存在錯誤 | Issue 1: Path Not Found Error
 
@@ -184,8 +184,8 @@ python examples/data_dir_config_demo.py
    - 避免相對路徑可能導致的問題
    - Avoid issues that relative paths might cause
 
-2. **定期备份數據** | Regular Data Backup
-   - 重要的分析結果應定期备份
+2. **定期備份數據** | Regular Data Backup
+   - 重要的分析結果應定期備份
    - Important analysis results should be backed up regularly
 
 3. **環境隔離** | Environment Isolation

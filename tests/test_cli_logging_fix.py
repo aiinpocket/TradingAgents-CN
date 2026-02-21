@@ -27,7 +27,7 @@ def test_cli_logging_setup():
         handlers_before = len(logger_manager.root_logger.handlers)
         console_handlers_before = sum(1 for h in logger_manager.root_logger.handlers 
                                     if hasattr(h, 'stream') and h.stream.name == '<stderr>')
-        print(f"   总處理器數量: {handlers_before}")
+        print(f"   總處理器數量: {handlers_before}")
         print(f"   控制台處理器數量: {console_handlers_before}")
         
         # 執行CLI日誌設置
@@ -37,7 +37,7 @@ def test_cli_logging_setup():
         handlers_after = len(logger_manager.root_logger.handlers)
         console_handlers_after = sum(1 for h in logger_manager.root_logger.handlers 
                                    if hasattr(h, 'stream') and h.stream.name == '<stderr>')
-        print(f"   总處理器數量: {handlers_after}")
+        print(f"   總處理器數量: {handlers_after}")
         print(f"   控制台處理器數量: {console_handlers_after}")
         
         # 驗證效果
@@ -49,13 +49,13 @@ def test_cli_logging_setup():
         # 測試日誌輸出
         print("\n🧪 測試日誌輸出:")
         print("   執行 logger.info('測試消息')...")
-        logger.info("這是一條測試日誌消息，應该只寫入文件，不在控制台顯示")
-        print("   ✅ 如果上面没有顯示時間戳和日誌信息，說明修複成功")
+        logger.info("這是一條測試日誌消息，應該只寫入文件，不在控制台顯示")
+        print("   ✅ 如果上面沒有顯示時間戳和日誌信息，說明修複成功")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -72,7 +72,7 @@ def test_console_output():
         
         print("📊 測試Rich Console輸出:")
         console.print("[bold cyan]這是一條用戶界面消息[/bold cyan]")
-        console.print("[green]✅ 這應该正常顯示，没有時間戳[/green]")
+        console.print("[green]✅ 這應該正常顯示，沒有時間戳[/green]")
         console.print("[yellow]💡 這是用戶友好的提示信息[/yellow]")
         
         print("✅ Console輸出正常，界面清爽")
@@ -80,7 +80,7 @@ def test_console_output():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 def test_log_file_writing():
@@ -93,7 +93,7 @@ def test_log_file_writing():
         import glob
         
         # 寫入測試日誌
-        test_message = "CLI日誌修複測試消息 - 這應该只出現在日誌文件中"
+        test_message = "CLI日誌修複測試消息 - 這應該只出現在日誌文件中"
         logger.info(test_message)
         
         # 查找日誌文件
@@ -116,14 +116,14 @@ def test_log_file_writing():
                         print("⚠️ 測試消息未在日誌文件中找到")
                         return False
             except Exception as e:
-                print(f"⚠️ 讀取日誌文件失败: {e}")
+                print(f"⚠️ 讀取日誌文件失敗: {e}")
                 return False
         else:
             print("⚠️ 未找到日誌文件")
             return False
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 def test_cli_interface_preview():
@@ -143,7 +143,7 @@ def test_cli_interface_preview():
         
         # 標題
         title_panel = Panel(
-            "[bold blue]步骤 1: 選擇市場 | Step 1: Select Market[/bold blue]\n"
+            "[bold blue]步驟 1: 選擇市場 | Step 1: Select Market[/bold blue]\n"
             "請選擇要分析的股票市場 | Please select the stock market to analyze",
             box_style="cyan"
         )
@@ -156,15 +156,15 @@ def test_cli_interface_preview():
         console.print("[cyan]2[/cyan]. 🌍 A股 | China A-Share")
         console.print("   示例 | Examples: 000001 (平安銀行), 600036 (招商銀行)")
         console.print("[cyan]3[/cyan]. 🌍 港股 | Hong Kong Stock")
-        console.print("   示例 | Examples: 0700.HK (腾讯), 09988.HK (阿里巴巴)")
+        console.print("   示例 | Examples: 0700.HK (騰訊), 09988.HK (阿里巴巴)")
         
         print("\n" + "-" * 40)
-        print("✅ 界面清爽，没有時間戳和技術日誌信息")
+        print("✅ 界面清爽，沒有時間戳和技術日誌信息")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 def main():
@@ -186,9 +186,9 @@ def main():
     # 測試4: CLI界面預覽
     results.append(test_cli_interface_preview())
     
-    # 总結結果
+    # 總結結果
     print("\n" + "=" * 80)
-    print("📋 測試結果总結")
+    print("📋 測試結果總結")
     print("=" * 80)
     
     passed = sum(results)
@@ -202,10 +202,10 @@ def main():
     ]
     
     for i, (name, result) in enumerate(zip(test_names, results)):
-        status = "✅ 通過" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失敗"
         print(f"{i+1}. {name}: {status}")
     
-    print(f"\n📊 总體結果: {passed}/{total} 測試通過")
+    print(f"\n📊 總體結果: {passed}/{total} 測試通過")
     
     if passed == total:
         print("🎉 所有測試通過！CLI日誌修複成功")
@@ -216,12 +216,12 @@ def main():
         print("4. ✅ 用戶提示使用Rich Console顯示")
         
         print("\n🎯 用戶體驗改善:")
-        print("- 界面簡潔，没有時間戳干扰")
+        print("- 界面簡潔，沒有時間戳干擾")
         print("- 彩色輸出更加美觀")
         print("- 技術信息和用戶信息分離")
         print("- 調試信息仍然記錄在日誌文件中")
     else:
-        print("⚠️ 部分測試失败，需要進一步優化")
+        print("⚠️ 部分測試失敗，需要進一步優化")
     
     return passed == total
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 TradingAgents-CN 安裝和啟動腳本
-解決模塊導入問題，提供一键安裝和啟動
+解決模塊導入問題，提供一鍵安裝和啟動
 """
 
 import os
@@ -41,7 +41,7 @@ def install_project():
         return True
         
     except subprocess.CalledProcessError as e:
-        print(f"❌ 項目安裝失败: {e}")
+        print(f"❌ 項目安裝失敗: {e}")
         print(f"錯誤輸出: {e.stderr}")
         return False
 
@@ -66,7 +66,7 @@ def install_web_dependencies():
         return True
         
     except subprocess.CalledProcessError as e:
-        print(f"❌ Web依賴安裝失败: {e}")
+        print(f"❌ Web依賴安裝失敗: {e}")
         return False
 
 def check_env_file():
@@ -84,9 +84,9 @@ def check_env_file():
                 import shutil
                 shutil.copy(env_example, env_file)
                 print("✅ .env文件已創建")
-                print("💡 請編辑.env文件，配置您的API密鑰")
+                print("💡 請編輯.env文件，配置您的API密鑰")
             except Exception as e:
-                print(f"❌ 創建.env文件失败: {e}")
+                print(f"❌ 創建.env文件失敗: {e}")
                 return False
         else:
             print("❌ 找不到.env_example文件")
@@ -118,7 +118,7 @@ def start_web_app():
     ]
     
     print("📱 Web應用啟動中...")
-    print("🌐 浏覽器将自動打開 http://localhost:8501")
+    print("🌐 瀏覽器將自動打開 http://localhost:8501")
     print("⏹️  按 Ctrl+C 停止應用")
     print("=" * 50)
     
@@ -128,7 +128,7 @@ def start_web_app():
     except KeyboardInterrupt:
         print("\n⏹️ Web應用已停止")
     except Exception as e:
-        print(f"\n❌ 啟動失败: {e}")
+        print(f"\n❌ 啟動失敗: {e}")
         return False
     
     return True

@@ -8,12 +8,12 @@ import streamlit as st
 
 def apply_hide_deploy_button_css():
     """
-    應用隱藏Deploy按钮和工具栏的CSS樣式
-    在所有页面中調用此函數以確保一致的UI體驗
+    應用隱藏Deploy按鈕和工具列的CSS樣式
+    在所有頁面中調用此函數以確保一致的UI體驗
     """
     st.markdown("""
     <style>
-        /* 隱藏Streamlit顶部工具栏和Deploy按钮 - 多種選擇器確保兼容性 */
+        /* 隱藏Streamlit頂部工具列和Deploy按鈕 - 多種選擇器確保兼容性 */
         .stAppToolbar {
             display: none !important;
         }
@@ -26,7 +26,7 @@ def apply_hide_deploy_button_css():
             display: none !important;
         }
         
-        /* 新版本Streamlit的Deploy按钮選擇器 */
+        /* 新版本Streamlit的Deploy按鈕選擇器 */
         [data-testid="stToolbar"] {
             display: none !important;
         }
@@ -39,7 +39,7 @@ def apply_hide_deploy_button_css():
             display: none !important;
         }
         
-        /* 隱藏整個顶部區域 */
+        /* 隱藏整個頂部區域 */
         .stApp > header {
             display: none !important;
         }
@@ -48,29 +48,29 @@ def apply_hide_deploy_button_css():
             display: none !important;
         }
         
-        /* 隱藏主菜單按钮 */
+        /* 隱藏主菜單按鈕 */
         #MainMenu {
             visibility: hidden !important;
             display: none !important;
         }
         
-        /* 隱藏页腳 */
+        /* 隱藏頁腳 */
         footer {
             visibility: hidden !important;
             display: none !important;
         }
         
-        /* 隱藏"Made with Streamlit"標识 */
+        /* 隱藏"Made with Streamlit"標識 */
         .viewerBadge_container__1QSob {
             display: none !important;
         }
         
-        /* 隱藏所有可能的工具栏元素 */
+        /* 隱藏所有可能的工具列元素 */
         div[data-testid="stToolbar"] {
             display: none !important;
         }
         
-        /* 隱藏右上角的所有按钮 */
+        /* 隱藏右上角的所有按鈕 */
         .stApp > div > div > div > div > section > div {
             padding-top: 0 !important;
         }
@@ -79,10 +79,10 @@ def apply_hide_deploy_button_css():
 
 def apply_common_styles():
     """
-    應用通用的页面樣式
-    包括隱藏Deploy按钮和其他美化樣式
+    應用通用的頁面樣式
+    包括隱藏Deploy按鈕和其他美化樣式
     """
-    # 隱藏Deploy按钮
+    # 隱藏Deploy按鈕
     apply_hide_deploy_button_css()
     
     # 其他通用樣式

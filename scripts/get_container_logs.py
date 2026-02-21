@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 獲取Docker容器內部日誌文件的腳本
-用於從運行中的TradingAgents容器獲取實际的日誌文件
+用於從運行中的TradingAgents容器獲取實際的日誌文件
 """
 
 import os
@@ -39,7 +39,7 @@ def find_container():
             print(f"✅ 找到容器: {output.strip()}")
             return output.strip()
     
-    # 如果没找到，列出所有容器让用戶選擇
+    # 如果沒找到，列出所有容器讓用戶選擇
     print("⚠️ 未找到預期的容器名稱，列出所有運行中的容器:")
     success, output, error = run_command("docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'")
     if success:
@@ -54,7 +54,7 @@ def explore_container_filesystem(container_name):
     """探索容器文件系統，查找日誌文件"""
     print(f"🔍 探索容器 {container_name} 的文件系統...")
     
-    # 檢查常见的日誌位置
+    # 檢查常見的日誌位置
     log_locations = [
         "/app",
         "/app/logs",
@@ -100,7 +100,7 @@ def get_log_file_info(container_name, log_file):
     success, output, error = run_command(f"docker exec {container_name} wc -l {log_file}")
     if success:
         lines = output.strip().split()[0]
-        print(f"   总行數: {lines}")
+        print(f"   總行數: {lines}")
     
     # 最後修改時間
     success, output, error = run_command(f"docker exec {container_name} stat -c '%y' {log_file}")
@@ -138,7 +138,7 @@ def copy_log_file(container_name, log_file, local_path=None):
             size = os.path.getsize(local_path)
             print(f"   文件大小: {size:,} 字節")
             
-            # 顯示文件的最後几行
+            # 顯示文件的最後幾行
             print(f"\n📋 文件內容預覽 (最後10行):")
             try:
                 with open(local_path, 'r', encoding='utf-8') as f:
@@ -150,7 +150,7 @@ def copy_log_file(container_name, log_file, local_path=None):
         
         return local_path
     else:
-        print(f"❌ 複制失败: {error}")
+        print(f"❌ 複制失敗: {error}")
         return None
 
 def get_docker_logs(container_name):
@@ -168,7 +168,7 @@ def get_docker_logs(container_name):
         print(f"   日誌行數: {len(output.split(chr(10)))}")
         return docker_log_file
     else:
-        print(f"❌ 獲取Docker日誌失败: {error}")
+        print(f"❌ 獲取Docker日誌失敗: {error}")
         return None
 
 def main():
@@ -204,7 +204,7 @@ def main():
     for i, log_file in enumerate(log_files, 1):
         print(f"   {i}. {log_file}")
     
-    # 5. 让用戶選擇要處理的日誌文件
+    # 5. 讓用戶選擇要處理的日誌文件
     if len(log_files) == 1:
         selected_log = log_files[0]
         print(f"\n🎯 自動選擇唯一的日誌文件: {selected_log}")
@@ -255,7 +255,7 @@ def main():
             for file in copied_files:
                 print(f"   📁 {file}")
     
-    print(f"\n📋 总結:")
+    print(f"\n📋 總結:")
     print(f"   容器名稱: {container_name}")
     print(f"   找到日誌文件: {len(log_files)} 個")
     if docker_log_file:

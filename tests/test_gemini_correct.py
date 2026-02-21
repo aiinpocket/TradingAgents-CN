@@ -19,7 +19,7 @@ load_dotenv(project_root / ".env", override=True)
 RECOMMENDED_MODELS = [
     "gemini-2.0-flash",      # 最新的2.0版本
     "gemini-1.5-flash",      # 穩定的1.5版本
-    "gemini-1.5-pro",        # 更强大的1.5版本
+    "gemini-1.5-pro",        # 更強大的1.5版本
     "gemini-2.5-flash",      # 2.5版本
 ]
 
@@ -40,7 +40,7 @@ def test_model(model_name):
         print("📝 測試直接API...")
         try:
             model = genai.GenerativeModel(model_name)
-            response = model.generate_content("請用中文簡單介紹一下苹果公司的主要業務")
+            response = model.generate_content("請用中文簡單介紹一下蘋果公司的主要業務")
             
             if response and response.text:
                 print("✅ 直接API調用成功")
@@ -48,10 +48,10 @@ def test_model(model_name):
                 print(f"   響應預覽: {response.text[:150]}...")
                 direct_success = True
             else:
-                print("❌ 直接API調用失败：無響應內容")
+                print("❌ 直接API調用失敗：無響應內容")
                 direct_success = False
         except Exception as e:
-            print(f"❌ 直接API調用失败: {e}")
+            print(f"❌ 直接API調用失敗: {e}")
             direct_success = False
         
         # 測試2: LangChain集成
@@ -64,7 +64,7 @@ def test_model(model_name):
                 google_api_key=google_api_key
             )
             
-            response = llm.invoke("請用中文分析苹果公司的投資價值，包括優势和風險")
+            response = llm.invoke("請用中文分析蘋果公司的投資價值，包括優勢和風險")
             
             if response and response.content:
                 print("✅ LangChain調用成功")
@@ -72,16 +72,16 @@ def test_model(model_name):
                 print(f"   響應預覽: {response.content[:150]}...")
                 langchain_success = True
             else:
-                print("❌ LangChain調用失败：無響應內容")
+                print("❌ LangChain調用失敗：無響應內容")
                 langchain_success = False
         except Exception as e:
-            print(f"❌ LangChain調用失败: {e}")
+            print(f"❌ LangChain調用失敗: {e}")
             langchain_success = False
         
         return direct_success, langchain_success
         
     except Exception as e:
-        print(f"❌ 模型測試失败: {e}")
+        print(f"❌ 模型測試失敗: {e}")
         return False, False
 
 def test_tradingagents_with_gemini(model_name):
@@ -126,7 +126,7 @@ def test_tradingagents_with_gemini(model_name):
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print("✅ Gemini驱動的股票分析成功")
+                print("✅ Gemini驅動的股票分析成功")
                 print(f"   決策結果: {decision}")
                 
                 # 檢查市場報告
@@ -141,11 +141,11 @@ def test_tradingagents_with_gemini(model_name):
                 return False
                 
         except Exception as e:
-            print(f"❌ 股票分析失败: {e}")
+            print(f"❌ 股票分析失敗: {e}")
             return False
             
     except Exception as e:
-        print(f"❌ TradingAgents集成測試失败: {e}")
+        print(f"❌ TradingAgents集成測試失敗: {e}")
         return False
 
 def main():
@@ -175,8 +175,8 @@ def main():
         score = int(direct_success) + int(langchain_success)
         
         print(f"\n📊 {model_name} 測試結果:")
-        print(f"   直接API: {'✅ 通過' if direct_success else '❌ 失败'}")
-        print(f"   LangChain: {'✅ 通過' if langchain_success else '❌ 失败'}")
+        print(f"   直接API: {'✅ 通過' if direct_success else '❌ 失敗'}")
+        print(f"   LangChain: {'✅ 通過' if langchain_success else '❌ 失敗'}")
         print(f"   得分: {score}/2")
         
         if score > best_score:
@@ -195,22 +195,22 @@ def main():
         
         tradingagents_success = test_tradingagents_with_gemini(best_model)
         
-        # 最终总結
-        print(f"\n📊 最终測試結果总結:")
+        # 最終總結
+        print(f"\n📊 最終測試結果總結:")
         print("=" * 50)
         print(f"  最佳模型: {best_model}")
-        print(f"  基础功能得分: {best_score}/2")
-        print(f"  TradingAgents集成: {'✅ 通過' if tradingagents_success else '❌ 失败'}")
+        print(f"  基礎功能得分: {best_score}/2")
+        print(f"  TradingAgents集成: {'✅ 通過' if tradingagents_success else '❌ 失敗'}")
         
         if best_score == 2 and tradingagents_success:
             print(f"\n🎉 Gemini模型 {best_model} 完全可用！")
-            print(f"\n💡 使用建议:")
+            print(f"\n💡 使用建議:")
             print(f"   1. 在Web界面配置中選擇Google作為LLM提供商")
             print(f"   2. 使用模型名稱: {best_model}")
             print(f"   3. 可以進行完整的股票分析")
             print(f"   4. 支持中文輸入和輸出")
         else:
-            print(f"\n⚠️ 模型部分可用，建议檢查網絡連接和API配額")
+            print(f"\n⚠️ 模型部分可用，建議檢查網絡連接和API配額")
     else:
         print(f"\n❌ 所有推薦模型都不可用，請檢查API密鑰和網絡連接")
 

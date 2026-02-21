@@ -51,7 +51,7 @@ class VersionManager:
         try:
             major, minor, patch = map(int, version_part.split('.'))
         except ValueError:
-            # 如果解析失败，使用默認值
+            # 如果解析失敗，使用默認值
             major, minor, patch = 0, 1, 0
 
         if bump_type == 'major':
@@ -84,10 +84,10 @@ class VersionManager:
             # 推送標簽
             subprocess.run(['git', 'push', 'origin', f'v{version}'], 
                          check=True, cwd=self.project_root)
-            logger.info(f"✅ Git標簽 v{version} 已推送到远程仓庫")
+            logger.info(f"✅ Git標簽 v{version} 已推送到遠程倉庫")
             
         except subprocess.CalledProcessError as e:
-            logger.error(f"❌ 創建Git標簽失败: {e}")
+            logger.error(f"❌ 創建Git標簽失敗: {e}")
     
     def update_changelog(self, version, changes=None):
         """更新CHANGELOG文件"""
@@ -99,7 +99,7 @@ class VersionManager:
         with open(self.changelog_file, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # 準备新版本條目
+        # 準備新版本條目
         today = datetime.now().strftime("%Y-%m-%d")
         new_entry = f"\n## [{version}] - {today}\n\n"
         
@@ -133,7 +133,7 @@ class VersionManager:
             result = subprocess.run(['git', 'status', '--porcelain'], 
                                   capture_output=True, text=True, cwd=self.project_root)
             if result.stdout.strip():
-                logger.error(f"❌ 工作目錄不干净，請先提交所有更改")
+                logger.error(f"❌ 工作目錄不乾淨，請先提交所有更改")
                 return False
         except subprocess.CalledProcessError:
             logger.error(f"❌ 無法檢查Git狀態")
@@ -156,7 +156,7 @@ class VersionManager:
                          check=True, cwd=self.project_root)
             logger.info(f"✅ 版本更改已提交")
         except subprocess.CalledProcessError as e:
-            logger.error(f"❌ 提交失败: {e}")
+            logger.error(f"❌ 提交失敗: {e}")
             return False
         
         # 創建Git標簽
@@ -202,12 +202,12 @@ def main():
     release_parser = subparsers.add_parser('release', help='執行發布流程')
     release_parser.add_argument('type', choices=['major', 'minor', 'patch'], 
                               help='版本遞增類型')
-    release_parser.add_argument('-m', '--message', help='發布消息')
+    release_parser.add_argument('-m', '--message', help='發布訊息')
     release_parser.add_argument('-c', '--changes', help='更改說明')
     
     # 創建標簽命令
     tag_parser = subparsers.add_parser('tag', help='為當前版本創建Git標簽')
-    tag_parser.add_argument('-m', '--message', help='標簽消息')
+    tag_parser.add_argument('-m', '--message', help='標簽訊息')
     
     args = parser.parse_args()
     

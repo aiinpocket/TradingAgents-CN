@@ -48,7 +48,7 @@ class BranchManager:
                 if branch:
                     branches['local'].append(branch)
         
-        # 远程分支
+        # 遠程分支
         success, stdout, _ = self.run_git_command(['branch', '-r'])
         if success:
             for line in stdout.split('\n'):
@@ -104,9 +104,9 @@ class BranchManager:
                         logger.info(f"   {line}")
                 lines = stdout.split('\n')
                 if len(lines) > 5:
-                    logger.info(f"   ... 还有 {len(lines) - 5} 個文件")
+                    logger.info(f"   ... 還有 {len(lines) - 5} 個文件")
             else:
-                logger.info(f"✅ 工作目錄干净")
+                logger.info(f"✅ 工作目錄乾淨")
         
         # 分支信息
         branches = self.get_all_branches()
@@ -115,11 +115,11 @@ class BranchManager:
             marker = "👉 " if branch == self.current_branch else "   "
             logger.info(f"{marker}{branch}")
         
-        logger.info(f"\n🌐 远程分支 ({len(branches['remote'])}個):")
+        logger.info(f"\n🌐 遠程分支 ({len(branches['remote'])}個):")
         for branch in branches['remote'][:10]:  # 只顯示前10個
             logger.info(f"   {branch}")
         if len(branches['remote']) > 10:
-            logger.info(f"   ... 还有 {len(branches['remote']) - 10} 個远程分支")
+            logger.info(f"   ... 還有 {len(branches['remote']) - 10} 個遠程分支")
         
         # 合並狀態
         merged = self.get_merged_branches()
@@ -141,21 +141,21 @@ class BranchManager:
         # 檢查當前狀態
         success, stdout, _ = self.run_git_command(['status', '--porcelain'])
         if success and stdout:
-            logger.error(f"❌ 工作目錄不干净，請先提交所有更改")
+            logger.error(f"❌ 工作目錄不乾淨，請先提交所有更改")
             return False
         
         # 切換到main分支
         logger.info(f"📍 切換到main分支...")
         success, _, stderr = self.run_git_command(['checkout', 'main'])
         if not success:
-            logger.error(f"❌ 切換到main分支失败: {stderr}")
+            logger.error(f"❌ 切換到main分支失敗: {stderr}")
             return False
         
         # 拉取最新代碼
         logger.info(f"📥 拉取最新代碼...")
         success, _, stderr = self.run_git_command(['pull', 'origin', 'main'])
         if not success:
-            logger.error(f"❌ 拉取代碼失败: {stderr}")
+            logger.error(f"❌ 拉取代碼失敗: {stderr}")
             return False
         
         # 合並當前功能分支（如果不是main）
@@ -163,21 +163,21 @@ class BranchManager:
             logger.info(f"🔀 合並分支 {self.current_branch}...")
             success, _, stderr = self.run_git_command(['merge', self.current_branch])
             if not success:
-                logger.error(f"❌ 合並失败: {stderr}")
+                logger.error(f"❌ 合並失敗: {stderr}")
                 return False
         
         # 創建標簽
         logger.info(f"🏷️ 創建版本標簽 {version}...")
         success, _, stderr = self.run_git_command(['tag', '-a', version, '-m', f'Release {version}'])
         if not success:
-            logger.error(f"❌ 創建標簽失败: {stderr}")
+            logger.error(f"❌ 創建標簽失敗: {stderr}")
             return False
         
-        # 推送到远程
-        logger.info(f"📤 推送到远程...")
+        # 推送到遠程
+        logger.info(f"📤 推送到遠程...")
         success, _, stderr = self.run_git_command(['push', 'origin', 'main', '--tags'])
         if not success:
-            logger.error(f"❌ 推送失败: {stderr}")
+            logger.error(f"❌ 推送失敗: {stderr}")
             return False
         
         logger.info(f"✅ 版本 {version} 發布成功！")
@@ -192,7 +192,7 @@ class BranchManager:
         feature_branches = [b for b in merged if b.startswith(('feature/', 'hotfix/'))]
         
         if not feature_branches:
-            logger.info(f"✅ 没有需要清理的功能分支")
+            logger.info(f"✅ 沒有需要清理的功能分支")
             return
         
         logger.info(f"📋 發現 {len(feature_branches)} 個已合並的功能分支:")
@@ -200,7 +200,7 @@ class BranchManager:
             logger.info(f"   {branch}")
         
         if dry_run:
-            logger.info(f"\n💡 這是預覽模式，使用 --no-dry-run 執行實际刪除")
+            logger.info(f"\n💡 這是預覽模式，使用 --no-dry-run 執行實際刪除")
             return
         
         # 確認刪除
@@ -216,10 +216,10 @@ class BranchManager:
             success, _, stderr = self.run_git_command(['branch', '-d', branch])
             if success:
                 deleted_count += 1
-                # 嘗試刪除远程分支
+                # 嘗試刪除遠程分支
                 self.run_git_command(['push', 'origin', '--delete', branch])
             else:
-                logger.error(f"   ❌ 刪除失败: {stderr}")
+                logger.error(f"   ❌ 刪除失敗: {stderr}")
         
         logger.info(f"✅ 成功刪除 {deleted_count} 個分支")
     
@@ -228,25 +228,25 @@ class BranchManager:
         logger.info(f"🌱 創建功能分支: {branch_name}")
         logger.info(f"=")
         
-        # 切換到基础分支
-        logger.info(f"📍 切換到基础分支: {base_branch}")
+        # 切換到基礎分支
+        logger.info(f"📍 切換到基礎分支: {base_branch}")
         success, _, stderr = self.run_git_command(['checkout', base_branch])
         if not success:
-            logger.error(f"❌ 切換失败: {stderr}")
+            logger.error(f"❌ 切換失敗: {stderr}")
             return False
         
         # 拉取最新代碼
         logger.info(f"📥 拉取最新代碼...")
         success, _, stderr = self.run_git_command(['pull', 'origin', base_branch])
         if not success:
-            logger.error(f"❌ 拉取失败: {stderr}")
+            logger.error(f"❌ 拉取失敗: {stderr}")
             return False
         
         # 創建新分支
         logger.info(f"🌱 創建新分支: {branch_name}")
         success, _, stderr = self.run_git_command(['checkout', '-b', branch_name])
         if not success:
-            logger.error(f"❌ 創建分支失败: {stderr}")
+            logger.error(f"❌ 創建分支失敗: {stderr}")
             return False
         
         logger.info(f"✅ 功能分支 {branch_name} 創建成功！")
@@ -265,12 +265,12 @@ def main():
     
     # 分支清理
     cleanup_parser = subparsers.add_parser('cleanup', help='清理已合並的分支')
-    cleanup_parser.add_argument('--no-dry-run', action='store_true', help='執行實际刪除')
+    cleanup_parser.add_argument('--no-dry-run', action='store_true', help='執行實際刪除')
     
     # 創建功能分支
     create_parser = subparsers.add_parser('create', help='創建功能分支')
     create_parser.add_argument('name', help='分支名稱')
-    create_parser.add_argument('--base', default='main', help='基础分支 (默認: main)')
+    create_parser.add_argument('--base', default='main', help='基礎分支 (默認: main)')
     
     args = parser.parse_args()
     

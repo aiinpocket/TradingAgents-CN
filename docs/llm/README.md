@@ -1,16 +1,16 @@
-# LLM 集成文档目錄
+# LLM 集成文檔目錄
 
-本目錄包含了 TradingAgents 項目中大語言模型（LLM）集成的完整文档，幫助開發者理解、測試和擴展LLM功能。
+本目錄包含了 TradingAgents 項目中大語言模型（LLM）集成的完整文檔，幫助開發者理解、測試和擴展LLM功能。
 
-## 📚 文档結構
+## 📚 文檔結構
 
 ### 🔧 集成指南
 - **[LLM_INTEGRATION_GUIDE.md](./LLM_INTEGRATION_GUIDE.md)** - 大模型接入完整指導手冊
   - 系統架構概覽
   - OpenAI兼容適配器開發
-  - 前端集成步骤
-  - 模型實际接入案例
-  - 常见問題与解決方案
+  - 前端集成步驟
+  - 模型實際接入案例
+  - 常見問題與解決方案
 
 ### 🧪 測試驗證
 - **[LLM_TESTING_VALIDATION_GUIDE.md](./LLM_TESTING_VALIDATION_GUIDE.md)** - LLM測試驗證指南
@@ -23,15 +23,15 @@
 ### 🎯 專項指南
 - **[_INTEGRATION_GUIDE.md](./_INTEGRATION_GUIDE.md)** - 模型專項接入指南
   - 模型特點和優势
-  - 詳細接入步骤
+  - 詳細接入步驟
   - 特殊問題解決方案
-  - 性能優化建议
-  - 常见問題FAQ
+  - 性能優化建議
+  - 常見問題FAQ
 
 ## 🚀 快速開始
 
 ### 新手入門
-如果您是第一次接入LLM，建议按以下顺序阅讀：
+如果您是第一次接入LLM，建議按以下顺序阅讀：
 
 1. **[LLM_INTEGRATION_GUIDE.md](./LLM_INTEGRATION_GUIDE.md)** - 了解整體架構和通用流程
 2. **[_INTEGRATION_GUIDE.md](./_INTEGRATION_GUIDE.md)** - 學习具體的接入案例
@@ -41,7 +41,7 @@
 如果您要添加新的LLM提供商：
 
 1. 📖 阅讀 **LLM_INTEGRATION_GUIDE.md** 了解開發規範
-2. 🔍 參考 **_INTEGRATION_GUIDE.md** 中的實际案例
+2. 🔍 參考 **_INTEGRATION_GUIDE.md** 中的實際案例
 3. 🧪 使用 **LLM_TESTING_VALIDATION_GUIDE.md** 進行全面測試
 4. 📝 提交PR時包含完整的測試報告
 
@@ -85,20 +85,20 @@ tradingagents/
 ## 🧪 測試策略
 
 ### 測試層級
-1. **單元測試**: 適配器基础功能
-2. **集成測試**: 与TradingGraph的集成
+1. **單元測試**: 適配器基礎功能
+2. **集成測試**: 與TradingGraph的集成
 3. **端到端測試**: 完整的股票分析流程
 4. **性能測試**: 響應時間和並發能力
 
 ### 測試覆蓋
-- ✅ 基础連接和認證
+- ✅ 基礎連接和認證
 - ✅ 消息格式轉換
 - ✅ 工具調用功能
 - ✅ 錯誤處理和重試
 - ✅ 中文編碼處理
 - ✅ 成本控制機制
 
-## 🚨 常见問題類型
+## 🚨 常見問題類型
 
 ### 認證問題
 - API密鑰格式錯誤
@@ -137,24 +137,24 @@ tradingagents/
 - 降級策略
 - 健康檢查
 
-## 🤝 贡献指南
+## 🤝 貢獻指南
 
 ### 添加新LLM提供商
 1. 創建適配器類繼承 `OpenAICompatibleBase`
-2. 實現特殊的認證和格式轉換逻辑
+2. 實現特殊的認證和格式轉換邏輯
 3. 更新前端模型選擇界面
 4. 編寫完整的測試用例
-5. 更新相關文档
+5. 更新相關文檔
 
-### 文档贡献
-1. 遵循現有文档格式和風格
-2. 包含實际的代碼示例
+### 文檔貢獻
+1. 遵循現有文檔格式和風格
+2. 包含實際的代碼示例
 3. 提供詳細的問題解決方案
 4. 添加必要的截圖和圖表
 
-### 測試贡献
+### 測試貢獻
 1. 覆蓋所有核心功能
-2. 包含邊界情况測試
+2. 包含邊界情況測試
 3. 提供性能基準測試
 4. 記錄測試環境和依賴
 
@@ -162,17 +162,17 @@ tradingagents/
 
 ### 技術支持
 - **GitHub Issues**: [提交技術問題](https://github.com/hsliuping/TradingAgents-CN/issues)
-- **Discussion**: [參与技術討論](https://github.com/hsliuping/TradingAgents-CN/discussions)
+- **Discussion**: [參與技術討論](https://github.com/hsliuping/TradingAgents-CN/discussions)
 - **QQ群**: 782124367
 
-### 文档反馈
-如果您發現文档中的問題或有改進建议：
+### 文檔反饋
+如果您發現文檔中的問題或有改進建議：
 1. 提交Issue描述問題
 2. 或直接提交PR修複
 3. 在Discussion中分享使用經驗
 
 ---
 
-**感谢您對TradingAgents LLM集成的關註和贡献！** 🎉
+**感謝您對TradingAgents LLM集成的關註和貢獻！** 🎉
 
-通過這些文档，我們希望能夠幫助更多開發者成功集成各種大語言模型，共同構建更强大的AI金融分析平台。
+通過這些文檔，我們希望能夠幫助更多開發者成功集成各種大語言模型，共同構建更強大的AI金融分析平台。

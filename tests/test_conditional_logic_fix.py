@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-測試條件逻辑修複
+測試條件邏輯修複
 驗證 tool_calls 屬性檢查是否正確
 """
 
 def test_conditional_logic_fix():
-    """測試條件逻辑修複"""
-    print("🔧 測試條件逻辑修複...")
+    """測試條件邏輯修複"""
+    print("🔧 測試條件邏輯修複...")
     
     try:
         from tradingagents.graph.conditional_logic import ConditionalLogic
         from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
         
-        # 創建條件逻辑實例
+        # 創建條件邏輯實例
         logic = ConditionalLogic()
         
         # 測試不同類型的消息
@@ -75,11 +75,11 @@ def test_conditional_logic_fix():
                 print(f"    ❌ 基本面分析異常: {e}")
                 return False
         
-        print("\n✅ 條件逻辑修複測試通過")
+        print("\n✅ 條件邏輯修複測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 條件逻辑修複測試失败: {e}")
+        print(f"❌ 條件邏輯修複測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -102,7 +102,7 @@ def test_cli_basic_functionality():
             # 模擬配置檢查命令
             sys.argv = ['main.py', 'config']
             
-            # 這里我們不實际運行main()，只是測試導入和基本結構
+            # 這裡我們不實際運行main()，只是測試導入和基本結構
             print("  ✅ CLI配置檢查功能可用")
             return True
             
@@ -110,13 +110,13 @@ def test_cli_basic_functionality():
             sys.argv = original_argv
         
     except Exception as e:
-        print(f"❌ CLI基本功能測試失败: {e}")
+        print(f"❌ CLI基本功能測試失敗: {e}")
         return False
 
 
 def main():
     """主測試函數"""
-    print("🔧 條件逻辑修複測試")
+    print("🔧 條件邏輯修複測試")
     print("=" * 50)
     
     tests = [
@@ -132,7 +132,7 @@ def main():
             if test():
                 passed += 1
             else:
-                print(f"❌ 測試失败: {test.__name__}")
+                print(f"❌ 測試失敗: {test.__name__}")
         except Exception as e:
             print(f"❌ 測試異常: {test.__name__} - {e}")
     
@@ -140,15 +140,15 @@ def main():
     print(f"📊 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有測試通過！條件逻辑修複成功")
+        print("🎉 所有測試通過！條件邏輯修複成功")
         print("\n📋 修複內容:")
         print("✅ 修複了 tool_calls 屬性檢查")
         print("✅ 添加了 hasattr 安全檢查")
         print("✅ 避免了 ToolMessage 屬性錯誤")
-        print("✅ 所有條件逻辑函數都已修複")
+        print("✅ 所有條件邏輯函數都已修複")
         return True
     else:
-        print("⚠️ 部分測試失败，需要進一步檢查")
+        print("⚠️ 部分測試失敗，需要進一步檢查")
         return False
 
 

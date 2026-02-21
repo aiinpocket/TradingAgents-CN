@@ -50,9 +50,9 @@ def test_us_stock_data_independence():
             else:
                 print(f"   ❌ {tool_name} 不可用")
                 
-        # 測試實际調用
+        # 測試實際調用
         try:
-            # 測試獲取苹果股票數據
+            # 測試獲取蘋果股票數據
             result = toolkit.get_us_stock_data_cached("AAPL", "1d", "1mo")
             if result and "error" not in str(result).lower():
                 print("   ✅ 美股數據獲取成功")
@@ -62,7 +62,7 @@ def test_us_stock_data_independence():
             print(f"   ⚠️ 美股數據獲取異常: {e}")
             
     except Exception as e:
-        print(f"   ❌ Toolkit創建失败: {e}")
+        print(f"   ❌ Toolkit創建失敗: {e}")
     
     # 測試場景2: OpenAI啟用，實時數據禁用
     print("\n📋 場景2: OpenAI啟用 + 實時數據禁用")
@@ -85,7 +85,7 @@ def test_us_stock_data_independence():
                 print(f"   ❌ {tool_name} 不可用")
                 
     except Exception as e:
-        print(f"   ❌ Toolkit創建失败: {e}")
+        print(f"   ❌ Toolkit創建失敗: {e}")
     
     print("\n💡 結論:")
     print("   美股數據獲取現在基於 REALTIME_DATA_ENABLED 配置")

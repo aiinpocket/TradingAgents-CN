@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試新的工具選擇逻辑
+測試新的工具選擇邏輯
 驗證美股數據獲取不再依賴OpenAI配置
 """
 
@@ -14,7 +14,7 @@ sys.path.insert(0, str(project_root))
 
 def test_tool_selection_scenarios():
     """測試不同配置場景下的工具選擇"""
-    print("🧪 測試工具選擇逻辑")
+    print("🧪 測試工具選擇邏輯")
     print("=" * 70)
     
     scenarios = [
@@ -77,7 +77,7 @@ def test_tool_selection_scenarios():
         print("-" * 50)
         
         try:
-            # 模擬工具選擇逻辑
+            # 模擬工具選擇邏輯
             config = scenario['config']
             online_tools_enabled = config.get("online_tools", False)
             online_news_enabled = config.get("online_news", True)
@@ -125,7 +125,7 @@ def test_tool_selection_scenarios():
                     print(f"       期望: {expected_tool}")
             
         except Exception as e:
-            print(f"   ❌ 測試失败: {e}")
+            print(f"   ❌ 測試失敗: {e}")
 
 def test_trading_graph_integration():
     """測試TradingGraph集成"""
@@ -191,7 +191,7 @@ def test_trading_graph_integration():
                 print("   ✅ TradingGraph創建成功")
                 
             except Exception as e:
-                print(f"   ❌ TradingGraph創建失败: {e}")
+                print(f"   ❌ TradingGraph創建失敗: {e}")
                 
     except ImportError as e:
         print(f"   ⚠️ 無法導入TradingGraph: {e}")
@@ -257,7 +257,7 @@ def test_us_stock_data_independence():
 
 def main():
     """主測試函數"""
-    print("🚀 工具選擇逻辑測試")
+    print("🚀 工具選擇邏輯測試")
     print("=" * 70)
     
     # 運行測試

@@ -1,5 +1,5 @@
 """
-基於Redis的會話管理器 - 最可靠的跨页面刷新狀態持久化方案
+基於Redis的會話管理器 - 最可靠的跨頁面刷新狀態持久化方案
 """
 
 import streamlit as st
@@ -50,14 +50,14 @@ class RedisSessionManager:
             return True
             
         except Exception as e:
-            # 只有在Redis啟用時才顯示連接失败警告
+            # 只有在Redis啟用時才顯示連接失敗警告
             redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower()
             if redis_enabled == 'true':
-                st.warning(f"⚠️ Redis連接失败，使用文件存储: {e}")
+                st.warning(f"⚠️ Redis連接失敗，使用文件儲存: {e}")
             return False
     
     def _get_session_key(self) -> str:
-        """生成會話键"""
+        """生成會話鍵"""
         try:
             # 嘗試獲取Streamlit的session信息
             if hasattr(st, 'session_state') and hasattr(st.session_state, '_get_session_id'):
@@ -72,7 +72,7 @@ class RedisSessionManager:
             user_agent = headers.get('User-Agent', 'unknown')
             x_forwarded_for = headers.get('X-Forwarded-For', 'unknown')
             
-            # 生成基於用戶信息的唯一標识
+            # 生成基於用戶信息的唯一標識
             unique_str = f"{user_agent}_{x_forwarded_for}_{int(time.time() / 3600)}"  # 按小時分組
             session_hash = hashlib.md5(unique_str.encode()).hexdigest()[:16]
             
@@ -123,7 +123,7 @@ class RedisSessionManager:
             return True
             
         except Exception as e:
-            st.warning(f"⚠️ 保存會話狀態失败: {e}")
+            st.warning(f"⚠️ 保存會話狀態失敗: {e}")
             return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
@@ -143,7 +143,7 @@ class RedisSessionManager:
             return None
             
         except Exception as e:
-            st.warning(f"⚠️ 加載會話狀態失败: {e}")
+            st.warning(f"⚠️ 加載會話狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -165,7 +165,7 @@ class RedisSessionManager:
                     del st.session_state[key]
             
         except Exception as e:
-            st.warning(f"⚠️ 清除會話狀態失败: {e}")
+            st.warning(f"⚠️ 清除會話狀態失敗: {e}")
     
     def _save_to_file(self, session_key: str, session_data: Dict[str, Any]):
         """保存到文件（fallback方案）"""
@@ -178,7 +178,7 @@ class RedisSessionManager:
                 json.dump(session_data, f, ensure_ascii=False, indent=2)
                 
         except Exception as e:
-            st.warning(f"⚠️ 文件保存失败: {e}")
+            st.warning(f"⚠️ 文件保存失敗: {e}")
     
     def _load_from_file(self, session_key: str) -> Optional[Dict[str, Any]]:
         """從文件加載（fallback方案）"""
@@ -199,7 +199,7 @@ class RedisSessionManager:
             return None
             
         except Exception as e:
-            st.warning(f"⚠️ 文件加載失败: {e}")
+            st.warning(f"⚠️ 文件加載失敗: {e}")
             return None
     
     def _delete_file(self, session_key: str):
@@ -210,7 +210,7 @@ class RedisSessionManager:
                 os.remove(filename)
                 
         except Exception as e:
-            st.warning(f"⚠️ 文件刪除失败: {e}")
+            st.warning(f"⚠️ 文件刪除失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取調試信息"""
@@ -281,7 +281,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 獲取持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 獲取持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running", 
@@ -298,4 +298,4 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         redis_session_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type)
         
     except Exception as e:
-        st.warning(f"⚠️ 設置持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 設置持久化分析ID失敗: {e}")

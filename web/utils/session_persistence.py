@@ -1,6 +1,6 @@
 """
 會話持久化管理器 - 不依賴Cookie的解決方案
-使用Redis/文件存储 + 浏覽器指纹來實現跨页面刷新的狀態持久化
+使用Redis/文件儲存 + 瀏覽器指紋來實現跨頁面刷新的狀態持久化
 """
 
 import streamlit as st
@@ -19,12 +19,12 @@ class SessionPersistenceManager:
         self.max_age_hours = 24  # 會話有效期24小時
         
     def _get_browser_fingerprint(self) -> str:
-        """生成浏覽器指纹（基於可用信息）"""
+        """生成瀏覽器指紋（基於可用信息）"""
         try:
             # 獲取Streamlit的session信息
             session_id = st.runtime.get_instance().get_client(st.session_state._get_session_id()).session.id
             
-            # 使用session_id作為指纹
+            # 使用session_id作為指紋
             fingerprint = hashlib.md5(session_id.encode()).hexdigest()[:12]
             return f"browser_{fingerprint}"
             
@@ -40,7 +40,7 @@ class SessionPersistenceManager:
     
     def save_analysis_state(self, analysis_id: str, status: str = "running", 
                            stock_symbol: str = "", market_type: str = ""):
-        """保存分析狀態到持久化存储"""
+        """保存分析狀態到持久化儲存"""
         try:
             fingerprint = self._get_browser_fingerprint()
             session_file = self._get_session_file_path(fingerprint)
@@ -71,11 +71,11 @@ class SessionPersistenceManager:
             return True
             
         except Exception as e:
-            st.warning(f"⚠️ 保存會話狀態失败: {e}")
+            st.warning(f"⚠️ 保存會話狀態失敗: {e}")
             return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
-        """從持久化存储加載分析狀態"""
+        """從持久化儲存加載分析狀態"""
         try:
             fingerprint = self._get_browser_fingerprint()
             session_file = self._get_session_file_path(fingerprint)
@@ -98,7 +98,7 @@ class SessionPersistenceManager:
             return session_data
             
         except Exception as e:
-            st.warning(f"⚠️ 加載會話狀態失败: {e}")
+            st.warning(f"⚠️ 加載會話狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -118,7 +118,7 @@ class SessionPersistenceManager:
                     del st.session_state[key]
             
         except Exception as e:
-            st.warning(f"⚠️ 清除會話狀態失败: {e}")
+            st.warning(f"⚠️ 清除會話狀態失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取調試信息"""
@@ -179,7 +179,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 獲取持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 獲取持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running", 
@@ -196,4 +196,4 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         session_persistence.save_analysis_state(analysis_id, status, stock_symbol, market_type)
         
     except Exception as e:
-        st.warning(f"⚠️ 設置持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 設置持久化分析ID失敗: {e}")

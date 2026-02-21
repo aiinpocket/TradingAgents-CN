@@ -2,7 +2,7 @@
 
 ## 📋 概述
 
-本手冊旨在幫助開發者為 TradingAgents-CN 項目添加新的大模型支持。通過遵循本指南，您可以快速集成新的大模型提供商，並提交高质量的 Pull Request。
+本手冊旨在幫助開發者為 TradingAgents-CN 項目添加新的大模型支持。通過遵循本指南，您可以快速集成新的大模型提供商，並提交高品質的 Pull Request。
 
 ## 🎯 適用場景
 
@@ -27,22 +27,22 @@ tradingagents/
 │   └── google_openai_adapter.py   # Google AI 適配器
 └── web/
     ├── components/sidebar.py  # 前端模型選擇界面
-    └── utils/analysis_runner.py  # 運行時配置与流程編排
+    └── utils/analysis_runner.py  # 運行時配置與流程編排
 ```
 
 ### 核心組件
 
 1. 適配器基類: <mcsymbol name="OpenAICompatibleBase" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="32" type="class"></mcsymbol> —— 為所有 OpenAI 兼容的 LLM 提供統一實現，是新增提供商最重要的擴展點 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile>
-2. 工厂方法: <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> —— 運行時根據提供商与模型創建對應的適配器實例（建议優先使用）
+2. 工廠方法: <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> —— 運行時根據提供商與模型創建對應的適配器實例（建議優先使用）
 3. 提供商註冊: 在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 中的 `OPENAI_COMPATIBLE_PROVIDERS` 字典 —— 統一管理 base_url、API Key 環境變量名、受支持模型等（單一信息源）
 4. 前端集成: <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> —— 模型選擇界面负责把用戶選擇的 llm_provider 和 llm_model 傳遞到後端
-5. 運行時入口: <mcfile name="trading_graph.py" path="tradingagents/graph/trading_graph.py"></mcfile> 中統一使用工厂方法創建 LLM；<mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile> 仅作為參數傳遞与流程編排，通常無需為新增提供商做修改
+5. 運行時入口: <mcfile name="trading_graph.py" path="tradingagents/graph/trading_graph.py"></mcfile> 中統一使用工廠方法創建 LLM；<mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile> 僅作為參數傳遞與流程編排，通常無需為新增提供商做修改
 
 ## 🚀 快速開始
 
-### 第一步：環境準备
+### 第一步：環境準備
 
-1. **Fork 並克隆仓庫**
+1. **Fork 並克隆倉庫**
 
    ```bash
    git clone https://github.com/your-username/TradingAgentsCN.git
@@ -73,10 +73,10 @@ tradingagents/
 **優势**：
 
 - 開發工作量最小
-- 複用現有的工具調用逻辑
+- 複用現有的工具調用邏輯
 - 統一的錯誤處理和日誌記錄
 
-> 备註：（）已通過 OpenAI 兼容方式集成，provider 名稱為 ``，只需配置 `_API_KEY`。相關細節见專項文档 _INTEGRATION_GUIDE.md；pricing.json 已包含 
+> 備註：（）已通過 OpenAI 兼容方式集成，provider 名稱為 ``，只需配置 `_API_KEY`。相關細節见專項文檔 _INTEGRATION_GUIDE.md；pricing.json 已包含 
 
 #### 方式二：原生 API 適配器
 
@@ -85,7 +85,7 @@ tradingagents/
 **需要更多工作**：
 
 - 需要自定義消息格式轉換
-- 需要實現工具調用逻辑
+- 需要實現工具調用邏輯
 - 需要處理特定的錯誤格式
 
 ## 📝 實現指南
@@ -172,7 +172,7 @@ format_mapping={
     "your_provider": "🚀 您的提供商",
 }
 
-# 添加模型選擇逻辑
+# 添加模型選擇邏輯
 elif llm_provider == "your_provider":
     your_provider_options = ["your-model-1", "your-model-2"]
   
@@ -186,7 +186,7 @@ elif llm_provider == "your_provider":
         index=current_index,
         format_func=lambda x: {
             "your-model-1": "Model 1 - 快速",
-            "your-model-2": "Model 2 - 强大",
+            "your-model-2": "Model 2 - 強大",
         }.get(x, x),
         help="選擇用於分析的模型",
         key="your_provider_model_select"
@@ -195,28 +195,28 @@ elif llm_provider == "your_provider":
 
 #### 5. 運行時配置
 
-在絕大多數情况下，新增一個 OpenAI 兼容提供商時，無需修改 <mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile>。原因：
+在絕大多數情況下，新增一個 OpenAI 兼容提供商時，無需修改 <mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile>。原因：
 
-- 侧邊栏 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 收集 `llm_provider` 与 `llm_model`
+- 側邊栏 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 收集 `llm_provider` 與 `llm_model`
 - 這些參數會被傳入 <mcfile name="trading_graph.py" path="tradingagents/graph/trading_graph.py"></mcfile>，由 <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> 基於 `OPENAI_COMPATIBLE_PROVIDERS` 自動實例化正確的適配器
-- 因此，真正的“運行時配置”主要體現在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 的註冊表和工厂方法，而非 analysis_runner 本身
+- 因此，真正的“運行時配置”主要體現在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 的註冊表和工廠方法，而非 analysis_runner 本身
 
 推薦做法：
 
 - 在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 中完善 `OPENAI_COMPATIBLE_PROVIDERS`（base_url、api_key 環境變量、模型清單等）
-- 在 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 中新增该 `llm_provider` 的下拉選項与模型列表
+- 在 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 中新增该 `llm_provider` 的下拉選項與模型列表
 - 保持 <mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile> 無需改動
 
 何時需要少量修改 analysis_runner：
 
 - 该提供商要求在分析階段動態切換不同模型（例如“快速/深度”分開）
 - 需要在任務執行流水線中註入特定的 header、代理或文件型鑒權
-- 需要為该提供商設置額外的日誌或成本估算逻辑
+- 需要為该提供商設置額外的日誌或成本估算邏輯
 
 即便如此，也請：
 
 - 不在 analysis_runner 硬編碼模型清單或 API 細節，統一放在 `OPENAI_COMPATIBLE_PROVIDERS`
-- 仍然使用 <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> 創建實例，避免重複初始化逻辑
+- 仍然使用 <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> 創建實例，避免重複初始化邏輯
 
 編辑 `web/utils/analysis_runner.py`，在模型配置部分添加：
 
@@ -238,7 +238,7 @@ YOUR_PROVIDER_API_KEY=your_api_key_here
 
 ## 🧪 測試指南
 
-### 1. 基础連接測試
+### 1. 基礎連接測試
 
 創建測試文件 `test_your_provider.py`：
 
@@ -247,7 +247,7 @@ import os
 from tradingagents.llm_adapters.your_provider_adapter import ChatYourProvider
 
 def test_basic_connection():
-    """測試基础連接"""
+    """測試基礎連接"""
     # 設置測試環境變量
     os.environ["YOUR_PROVIDER_API_KEY"] = "your_test_key"
   
@@ -257,7 +257,7 @@ def test_basic_connection():
         print(f"✅ 連接成功: {response.content}")
         return True
     except Exception as e:
-        print(f"❌ 連接失败: {e}")
+        print(f"❌ 連接失敗: {e}")
         return False
 
 if __name__ == "__main__":
@@ -294,7 +294,7 @@ streamlit run app.py
 
 驗證：
 
-- [ ]  在侧邊栏能正確選擇新提供商
+- [ ]  在側邊栏能正確選擇新提供商
 - [ ]  模型選擇下拉菜單工作正常
 - [ ]  API 密鑰檢查顯示正確狀態
 - [ ]  能成功進行股票分析
@@ -314,29 +314,29 @@ streamlit run app.py
 ### 環境配置
 
 - [ ]  添加了環境變量示例到 `.env.example`
-- [ ]  API 密鑰驗證逻辑正確
+- [ ]  API 密鑰驗證邏輯正確
 - [ ]  錯誤處理完善
 
 ### 測試驗證
 
-- [ ]  基础連接測試通過
+- [ ]  基礎連接測試通過
 - [ ]  工具調用測試通過（如果支持）
 - [ ]  Web 界面集成測試通過
 - [ ]  至少完成一次完整的股票分析
 
-### 文档更新
+### 文檔更新
 
-- [ ]  更新了相關 README 文档
+- [ ]  更新了相關 README 文檔
 - [ ]  添加了模型特性說明
 - [ ]  提供了使用示例
 
-## 💡 實际接入案例：模型
+## 💡 實際接入案例：模型
 
 ### 案例背景
 
-模型是一個典型的國產大模型接入案例，在實际接入過程中遇到了一些特殊問題，以下是完整的解決方案。
+模型是一個典型的國產大模型接入案例，在實際接入過程中遇到了一些特殊問題，以下是完整的解決方案。
 
-### 接入步骤詳解
+### 接入步驟詳解
 
 #### 1. 使用 OpenAI 兼容基座註冊提供商
 
@@ -462,9 +462,9 @@ elif llm_provider == "":
     logger.debug(f"💾 [Persistence] 模型已保存: {llm_model}")
 ```
 
-## 🚨 常见問題与解決方案
+## 🚨 常見問題與解決方案
 
-### 1. API 密鑰驗證失败
+### 1. API 密鑰驗證失敗
 
 **問題**: 環境變量設置正確但仍提示 API 密鑰錯誤
 
@@ -473,7 +473,7 @@ elif llm_provider == "":
 - 檢查 API 密鑰格式是否符合提供商要求
 - 確認環境變量名稱拼寫正確
 - 檢查 `.env` 文件是否在正確位置
-- **特殊情况**: 需要同時設置 `_API_KEY`
+- **特殊情況**: 需要同時設置 `_API_KEY`
 
 ### 2. 工具調用不工作
 
@@ -484,18 +484,18 @@ elif llm_provider == "":
 - 確認模型本身支持 Function Calling
 - 檢查 API 格式是否完全兼容 OpenAI 標準
 - 查看是否需要特殊的工具調用格式
-- **特殊情况**: 需要轉換工具定義格式，參考上述案例
+- **特殊情況**: 需要轉換工具定義格式，參考上述案例
 
 ### 3. 前端界面不顯示新模型
 
-**問題**: 侧邊栏看不到新添加的提供商
+**問題**: 側邊栏看不到新添加的提供商
 
 **解決方案**:
 
-- 清除浏覽器緩存
+- 清除瀏覽器緩存
 - 檢查 `sidebar.py` 中的選項列表
 - 確認 Streamlit 重新加載了代碼
-- **調試技巧**: 在浏覽器開發者工具中查看控制台錯誤
+- **調試技巧**: 在瀏覽器開發者工具中查看控制台錯誤
 
 ### 4. 請求超時或連接錯誤
 
@@ -506,11 +506,11 @@ elif llm_provider == "":
 - 調整 `timeout` 參數
 - 檢查網絡連接和 API 端點狀態
 - 考慮添加重試機制
-- **國產模型特殊情况**: 某些國產模型服務器在海外訪問較慢，建议增加超時時間
+- **國產模型特殊情況**: 某些國產模型服務器在海外訪問較慢，建議增加超時時間
 
 ### 5. 中文編碼問題
 
-**問題**: 中文輸入或輸出出現乱碼
+**問題**: 中文輸入或輸出出現亂碼
 
 **解決方案**:
 
@@ -567,17 +567,17 @@ Closes #{issue_number}
 - 添加了 {ProviderName} 的 OpenAI 兼容適配器
 - 更新了前端模型選擇界面
 - 完善了配置和環境變量
-- 包含了基础測試
+- 包含了基礎測試
 
-### 🧪 測試情况
-- [x] 基础連接測試通過
+### 🧪 測試情況
+- [x] 基礎連接測試通過
 - [x] 工具調用測試通過（如適用）
 - [x] Web 界面集成測試通過
 - [x] 完整的股票分析測試通過
 
 ### 📚 支持的模型
 - `model-1`: 快速模型，適合簡單任務
-- `model-2`: 强大模型，適合複雜分析
+- `model-2`: 強大模型，適合複雜分析
 
 ### 🔧 配置要求
 需要設置環境變量：`YOUR_PROVIDER_API_KEY`
@@ -588,7 +588,7 @@ Closes #{issue_number}
 ### ✅ 檢查清單
 - [x] 代碼遵循項目規範
 - [x] 添加了必要的測試
-- [x] 更新了相關文档
+- [x] 更新了相關文檔
 - [x] 通過了所有現有測試
 ```
 ## 🎯 最佳實踐
@@ -596,13 +596,13 @@ Closes #{issue_number}
 ### 1. 錯誤處理
 
 - 提供清晰的錯誤消息
-- 区分不同類型的錯誤（API 密鑰、網絡、模型等）
+- 區分不同類型的錯誤（API 密鑰、網絡、模型等）
 - 添加重試機制處理臨時故障
 
 ### 2. 日誌記錄
 
 - 使用統一的日誌格式
-- 記錄關键操作和錯誤
+- 記錄關鍵操作和錯誤
 - 避免記錄敏感信息（API 密鑰等）
 
 ### 3. 性能優化
@@ -622,19 +622,19 @@ Closes #{issue_number}
 如果在開發過程中遇到問題：
 
 1. **查看現有實現**: 參考 `
-2. **阅讀基類文档**: 查看 `openai_compatible_base.py` 的註釋
+2. **阅讀基類文檔**: 查看 `openai_compatible_base.py` 的註釋
 3. **提交 Issue**: 在 GitHub 上創建問題描述
-4. **加入討論**: 參与項目的 Discussion 板塊
+4. **加入討論**: 參與項目的 Discussion 板塊
 
-## 🔄 版本控制建议
+## 🔄 版本控制建議
 
 1. **分支命名**: `feature/add-{provider}-llm`
-2. **提交頻率**: 小步骤頻繁提交
+2. **提交頻率**: 小步驟頻繁提交
 3. **提交信息**: 使用清晰的描述性信息
-4. **代碼審查**: 提交前自我審查代碼质量
+4. **代碼審查**: 提交前自我審查代碼品質
 
 ---
 
-**感谢您為 TradingAgentsCN 項目贡献新的大模型支持！** 🎉
+**感謝您為 TradingAgentsCN 項目貢獻新的大模型支持！** 🎉
 
-通過遵循本指南，您的贡献将更容易被審查和合並，同時也為其他開發者提供了良好的參考示例。
+通過遵循本指南，您的貢獻將更容易被審查和合並，同時也為其他開發者提供了良好的參考示例。

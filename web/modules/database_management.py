@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-數據庫緩存管理页面
+數據庫緩存管理頁面
 MongoDB + Redis 緩存管理和監控
 """
 
@@ -33,7 +33,7 @@ def main():
         layout="wide"
     )
     
-    # 應用隱藏Deploy按钮的CSS樣式
+    # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
     st.title("🗄️ MongoDB + Redis 數據庫管理")
@@ -64,7 +64,7 @@ def main():
     # 獲取數據庫管理器實例
     db_manager = get_database_manager()
     
-    # 侧邊栏操作
+    # 側邊欄操作
     with st.sidebar:
         st.header("🛠️ 數據庫操作")
         
@@ -78,7 +78,7 @@ def main():
         
         st.markdown("---")
         
-        # 刷新按钮
+        # 刷新按鈕
         if st.button("🔄 刷新統計", type="primary"):
             st.rerun()
         
@@ -134,18 +134,18 @@ def main():
                             total_records += count
                             st.write(f"**{display_name}**: {count:,} 條記錄")
                         except Exception as e:
-                            st.write(f"**{display_name}**: 獲取失败 ({e})")
+                            st.write(f"**{display_name}**: 獲取失敗 ({e})")
                 
                 metric_col1, metric_col2 = st.columns(2)
                 with metric_col1:
-                    st.metric("总記錄數", f"{total_records:,}")
+                    st.metric("總記錄數", f"{total_records:,}")
                 with metric_col2:
                     st.metric("Redis緩存", stats.get('redis_keys', 0))
             else:
                 st.error("MongoDB 未連接")
                 
         except Exception as e:
-            st.error(f"獲取MongoDB統計失败: {e}")
+            st.error(f"獲取MongoDB統計失敗: {e}")
     
     with col2:
         st.subheader("⚡ Redis 統計")
@@ -156,7 +156,7 @@ def main():
             if db_manager.is_redis_available():
                 metric_col1, metric_col2 = st.columns(2)
                 with metric_col1:
-                    st.metric("緩存键數量", stats.get("redis_keys", 0))
+                    st.metric("緩存鍵數量", stats.get("redis_keys", 0))
                 with metric_col2:
                     st.metric("內存使用", stats.get("redis_memory", "N/A"))
                 
@@ -174,7 +174,7 @@ def main():
                 st.error("Redis 未連接")
                 
         except Exception as e:
-            st.error(f"獲取Redis統計失败: {e}")
+            st.error(f"獲取Redis統計失敗: {e}")
     
     st.markdown("---")
     
@@ -185,7 +185,7 @@ def main():
     
     with config_col1:
         st.markdown("**MongoDB 配置：**")
-        # 從數據庫管理器獲取實际配置
+        # 從數據庫管理器獲取實際配置
         mongodb_config = db_manager.mongodb_config
         mongodb_host = mongodb_config.get('host', 'localhost')
         mongodb_port = mongodb_config.get('port', 27017)
@@ -209,7 +209,7 @@ def main():
     
     with config_col2:
         st.markdown("**Redis 配置：**")
-        # 從數據庫管理器獲取實际配置
+        # 從數據庫管理器獲取實際配置
         redis_config = db_manager.redis_config
         redis_host = redis_config.get('host', 'localhost')
         redis_port = redis_config.get('port', 6379)
@@ -222,7 +222,7 @@ def main():
                 """)
         
         if db_manager.is_redis_available():
-            st.markdown("**緩存键格式：**")
+            st.markdown("**緩存鍵格式：**")
             st.code("""
     stock:SYMBOL:HASH     # 股票數據緩存
     analysis:SYMBOL:HASH  # 分析結果緩存  
@@ -232,7 +232,7 @@ def main():
     st.markdown("---")
     
     # 性能對比
-    st.subheader("🚀 性能優势")
+    st.subheader("🚀 性能優勢")
     
     perf_col1, perf_col2, perf_col3 = st.columns(3)
     
@@ -254,10 +254,10 @@ def main():
     
     with perf_col3:
         st.metric(
-            label="存储容量",
+            label="儲存容量",
             value="無限制",
             delta="vs API 配額限制",
-            help="本地存储不受API調用次數限制"
+            help="本地儲存不受API調用次數限制"
         )
     
     # 架構說明
@@ -268,24 +268,24 @@ def main():
     **三層緩存架構：**
     
     1. **Redis (L1緩存)** - 內存緩存，毫秒級訪問
-       - 存储最熱點的數據
+       - 儲存最熱點的數據
        - 自動過期管理
        - 高並發支持
     
-    2. **MongoDB (L2緩存)** - 持久化存储，秒級訪問  
-       - 存储所有歷史數據
+    2. **MongoDB (L2緩存)** - 持久化儲存，秒級訪問  
+       - 儲存所有歷史數據
        - 支持複雜查詢
        - 數據持久化保證
     
     3. **API (L3數據源)** - 外部數據源，分鐘級訪問
-       - Tushare數據接口 (中國A股)
-       - FINNHUB API (美股數據)
-       - Yahoo Finance API (補充數據)
+       - FinnHub API (美股數據)
+       - Yahoo Finance API (市場數據)
+       - Google News / Reddit (新聞與社群數據)
     
     **數據流向：** API → MongoDB → Redis → 應用程序
     """)
     
-    # 页腳信息
+    # 頁腳資訊
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666; font-size: 0.9em;'>

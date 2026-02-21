@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Token使用統計页面
+Token使用統計頁面
 
 展示Token使用情況、成本分析和統計圖表
 """
@@ -29,13 +29,13 @@ from utils.ui_utils import apply_hide_deploy_button_css
 from tradingagents.config.config_manager import config_manager, token_tracker, UsageRecord
 
 def render_token_statistics():
-    """渲染Token統計页面"""
-    # 應用隱藏Deploy按钮的CSS樣式
+    """渲染Token統計頁面"""
+    # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
-    st.markdown("**💰 Token使用統計与成本分析**")
+    st.markdown("**💰 Token使用統計與成本分析**")
     
-    # 侧邊栏控制
+    # 側邊欄控制
     with st.sidebar:
         st.subheader("📊 統計設置")
         
@@ -56,11 +56,11 @@ def render_token_statistics():
         }
         days = days_map[time_range]
         
-        # 刷新按钮
+        # 刷新按鈕
         if st.button("🔄 刷新數據", use_container_width=True):
             st.rerun()
         
-        # 導出數據按钮
+        # 導出數據按鈕
         if st.button("📥 導出統計數據", use_container_width=True):
             export_statistics_data(days)
     
@@ -70,12 +70,12 @@ def render_token_statistics():
         records = load_detailed_records(days)
         
         if not stats or stats.get('total_requests', 0) == 0:
-            st.info(f"📊 {time_range}內暂無Token使用記錄")
+            st.info(f"📊 {time_range}內暫無Token使用記錄")
             st.markdown("""
             ### 💡 如何開始記錄Token使用？
             
-            1. **進行股票分析**: 使用主页面的股票分析功能
-            2. **確保API配置**: 檢查DashScope API密鑰是否正確配置
+            1. **進行股票分析**: 使用主頁面的股票分析功能
+            2. **確保API配置**: 檢查 LLM API 密鑰是否已在 .env 檔案中正確配置
             3. **啟用成本跟蹤**: 在配置管理中啟用Token成本跟蹤
             
             系統會自動記錄所有LLM調用的Token使用情況。
@@ -92,7 +92,7 @@ def render_token_statistics():
         # 顯示供應商統計
         render_provider_statistics(stats)
         
-        # 顯示成本趋势
+        # 顯示成本趨勢
         if records:
             render_cost_trends(records)
         
@@ -100,8 +100,8 @@ def render_token_statistics():
         render_detailed_records_table(records)
         
     except Exception as e:
-        st.error(f"❌ 獲取統計數據失败: {str(e)}")
-        st.info("請檢查配置文件和數據存储是否正常")
+        st.error(f"❌ 獲取統計數據失敗: {str(e)}")
+        st.info("請檢查配置文件和數據儲存是否正常")
 
 def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     """渲染概覽指標"""
@@ -112,14 +112,14 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     
     with col1:
         st.metric(
-            label="💰 总成本",
+            label="💰 總成本",
             value=f"¥{stats['total_cost']:.4f}",
             delta=None
         )
     
     with col2:
         st.metric(
-            label="🔢 总調用次數",
+            label="🔢 總調用次數",
             value=f"{stats['total_requests']:,}",
             delta=None
         )
@@ -127,7 +127,7 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     with col3:
         total_tokens = stats['total_input_tokens'] + stats['total_output_tokens']
         st.metric(
-            label="📊 总Token數",
+            label="📊 總Token數",
             value=f"{total_tokens:,}",
             delta=None
         )
@@ -203,8 +203,8 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
                 y='cost',
                 color='provider',
                 hover_data=['model'],
-                title="成本与Token使用量關系",
-                labels={'total_tokens': 'Token总數', 'cost': '成本(¥)'}
+                title="成本與Token使用量關系",
+                labels={'total_tokens': 'Token總數', 'cost': '成本(¥)'}
             )
             st.plotly_chart(fig_scatter, use_container_width=True)
 
@@ -215,7 +215,7 @@ def render_provider_statistics(stats: Dict[str, Any]):
     provider_stats = stats.get('provider_stats', {})
     
     if not provider_stats:
-        st.info("暂無供應商統計數據")
+        st.info("暫無供應商統計數據")
         return
     
     # 創建供應商對比表
@@ -263,8 +263,8 @@ def render_provider_statistics(stats: Dict[str, Any]):
         st.plotly_chart(fig_requests, use_container_width=True)
 
 def render_cost_trends(records: List[UsageRecord]):
-    """渲染成本趋势圖"""
-    st.markdown("**📈 成本趋势分析**")
+    """渲染成本趨勢圖"""
+    st.markdown("**📈 成本趨勢分析**")
     
     # 按日期聚合數據
     df_records = pd.DataFrame([
@@ -278,7 +278,7 @@ def render_cost_trends(records: List[UsageRecord]):
     ])
     
     if df_records.empty:
-        st.info("暂無趋势數據")
+        st.info("暫無趨勢數據")
         return
     
     # 按日期聚合
@@ -290,10 +290,10 @@ def render_cost_trends(records: List[UsageRecord]):
     # 創建雙轴圖表
     fig = make_subplots(
         specs=[[{"secondary_y": True}]],
-        subplot_titles=["每日成本和Token使用趋势"]
+        subplot_titles=["每日成本和Token使用趨勢"]
     )
     
-    # 添加成本趋势線
+    # 添加成本趨勢線
     fig.add_trace(
         go.Scatter(
             x=daily_stats['date'],
@@ -305,7 +305,7 @@ def render_cost_trends(records: List[UsageRecord]):
         secondary_y=False,
     )
     
-    # 添加Token使用趋势線
+    # 添加Token使用趨勢線
     fig.add_trace(
         go.Scatter(
             x=daily_stats['date'],
@@ -330,7 +330,7 @@ def render_detailed_records_table(records: List[UsageRecord]):
     st.markdown("**📋 詳細使用記錄**")
     
     if not records:
-        st.info("暂無詳細記錄")
+        st.info("暫無詳細記錄")
         return
     
     # 創建記錄表格
@@ -341,7 +341,7 @@ def render_detailed_records_table(records: List[UsageRecord]):
             '模型': record.model_name,
             '輸入Token': record.input_tokens,
             '輸出Token': record.output_tokens,
-            '总Token': record.input_tokens + record.output_tokens,
+            '總Token': record.input_tokens + record.output_tokens,
             '成本(¥)': f"{record.cost:.4f}",
             '會話ID': record.session_id[:12] + '...' if len(record.session_id) > 12 else record.session_id,
             '分析類型': record.analysis_type
@@ -355,7 +355,7 @@ def render_detailed_records_table(records: List[UsageRecord]):
     total_pages = (total_records + page_size - 1) // page_size
     
     if total_pages > 1:
-        page = st.selectbox(f"页面 (共{total_pages}页, {total_records}條記錄)", range(1, total_pages + 1))
+        page = st.selectbox(f"頁面 (共{total_pages}页, {total_records}條記錄)", range(1, total_pages + 1))
         start_idx = (page - 1) * page_size
         end_idx = min(start_idx + page_size, total_records)
         display_df = records_df.iloc[start_idx:end_idx]
@@ -383,7 +383,7 @@ def load_detailed_records(days: int) -> List[UsageRecord]:
         
         return filtered_records
     except Exception as e:
-        st.error(f"加載記錄失败: {e}")
+        st.error(f"加載記錄失敗: {e}")
         return []
 
 def export_statistics_data(days: int):
@@ -422,10 +422,10 @@ def export_statistics_data(days: int):
             mime="application/json"
         )
         
-        st.success(f"✅ 統計數據已準备好下載: {filename}")
+        st.success(f"✅ 統計數據已準備好下載: {filename}")
         
     except Exception as e:
-        st.error(f"❌ 導出失败: {str(e)}")
+        st.error(f"❌ 導出失敗: {str(e)}")
 
 def main():
     """主函數"""

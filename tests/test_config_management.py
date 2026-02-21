@@ -16,7 +16,6 @@ sys.path.insert(0, str(project_root))
 
 from tradingagents.config.config_manager import ConfigManager, ModelConfig, PricingConfig, TokenTracker
 
-
 def test_config_manager():
     """測試配置管理器基本功能"""
     print("🧪 測試配置管理器")
@@ -29,7 +28,7 @@ def test_config_manager():
         # 測試模型配置
         print("📝 測試模型配置...")
         models = config_manager.load_models()
-        assert len(models) > 0, "應该有默認模型配置"
+        assert len(models) > 0, "應該有默認模型配置"
         
         # 添加新模型
         new_model = ModelConfig(
@@ -45,18 +44,18 @@ def test_config_manager():
         
         # 重新加載驗證
         reloaded_models = config_manager.load_models()
-        assert len(reloaded_models) == len(models), "模型數量應该匹配"
+        assert len(reloaded_models) == len(models), "模型數量應該匹配"
         
         test_model = next((m for m in reloaded_models if m.provider == "test_provider"), None)
-        assert test_model is not None, "應该找到測試模型"
-        assert test_model.api_key == "test_key_123", "API密鑰應该匹配"
+        assert test_model is not None, "應該找到測試模型"
+        assert test_model.api_key == "test_key_123", "API密鑰應該匹配"
         
         print("✅ 模型配置測試通過")
         
         # 測試定價配置
         print("📝 測試定價配置...")
         pricing_configs = config_manager.load_pricing()
-        assert len(pricing_configs) > 0, "應该有默認定價配置"
+        assert len(pricing_configs) > 0, "應該有默認定價配置"
         
         # 添加新定價
         new_pricing = PricingConfig(
@@ -88,28 +87,27 @@ def test_config_manager():
             analysis_type="test_analysis"
         )
         
-        assert record.cost == expected_cost, "使用記錄成本應该匹配"
+        assert record.cost == expected_cost, "使用記錄成本應該匹配"
         
         # 測試統計
         stats = config_manager.get_usage_statistics(30)
-        assert stats["total_requests"] >= 1, "應该有至少一條使用記錄"
-        assert stats["total_cost"] >= expected_cost, "总成本應该包含測試記錄"
+        assert stats["total_requests"] >= 1, "應該有至少一條使用記錄"
+        assert stats["total_cost"] >= expected_cost, "總成本應該包含測試記錄"
         
         print("✅ 使用記錄測試通過")
         
         # 測試設置
         print("📝 測試系統設置...")
         settings = config_manager.load_settings()
-        assert "default_provider" in settings, "應该有默認設置"
+        assert "default_provider" in settings, "應該有默認設置"
         
         settings["test_setting"] = "test_value"
         config_manager.save_settings(settings)
         
         reloaded_settings = config_manager.load_settings()
-        assert reloaded_settings["test_setting"] == "test_value", "設置應该被保存"
+        assert reloaded_settings["test_setting"] == "test_value", "設置應該被保存"
         
         print("✅ 系統設置測試通過")
-
 
 def test_token_tracker():
     """測試Token跟蹤器"""
@@ -123,7 +121,6 @@ def test_token_tracker():
         # 測試使用跟蹤
         print("📝 測試使用跟蹤...")
         record = token_tracker.track_usage(
-            provider="dashscope",
             model_name="qwen-turbo",
             input_tokens=2000,
             output_tokens=1000,
@@ -131,33 +128,31 @@ def test_token_tracker():
             analysis_type="stock_analysis"
         )
         
-        assert record is not None, "應该返回使用記錄"
-        assert record.input_tokens == 2000, "輸入token數應该匹配"
-        assert record.output_tokens == 1000, "輸出token數應该匹配"
-        assert record.cost > 0, "成本應该大於0"
+        assert record is not None, "應該返回使用記錄"
+        assert record.input_tokens == 2000, "輸入token數應該匹配"
+        assert record.output_tokens == 1000, "輸出token數應該匹配"
+        assert record.cost > 0, "成本應該大於0"
         
         print("✅ 使用跟蹤測試通過")
         
         # 測試成本估算
         print("📝 測試成本估算...")
         estimated_cost = token_tracker.estimate_cost(
-            provider="dashscope",
             model_name="qwen-turbo",
             estimated_input_tokens=1000,
             estimated_output_tokens=500
         )
         
-        assert estimated_cost > 0, "估算成本應该大於0"
+        assert estimated_cost > 0, "估算成本應該大於0"
         
         print("✅ 成本估算測試通過")
         
         # 測試會話成本
         print("📝 測試會話成本...")
         session_cost = token_tracker.get_session_cost("test_session_123")
-        assert session_cost == record.cost, "會話成本應该匹配記錄成本"
+        assert session_cost == record.cost, "會話成本應該匹配記錄成本"
         
         print("✅ 會話成本測試通過")
-
 
 def test_pricing_accuracy():
     """測試定價準確性"""
@@ -169,8 +164,6 @@ def test_pricing_accuracy():
         
         # 測試不同供應商的定價
         test_cases = [
-            ("dashscope", "qwen-turbo", 1000, 500),
-            ("dashscope", "qwen-plus", 2000, 1000),
             ("openai", "gpt-3.5-turbo", 1000, 500),
             ("google", "gemini-pro", 1000, 500),
         ]
@@ -179,7 +172,7 @@ def test_pricing_accuracy():
             cost = config_manager.calculate_cost(provider, model, input_tokens, output_tokens)
             print(f"📊 {provider} {model}: {input_tokens}+{output_tokens} tokens = ¥{cost:.6f}")
             
-            # 驗證成本計算逻辑
+            # 驗證成本計算邏輯
             pricing_configs = config_manager.load_pricing()
             pricing = next((p for p in pricing_configs if p.provider == provider and p.model_name == model), None)
             
@@ -187,10 +180,9 @@ def test_pricing_accuracy():
                 expected_cost = (input_tokens / 1000) * pricing.input_price_per_1k + (output_tokens / 1000) * pricing.output_price_per_1k
                 assert abs(cost - expected_cost) < 0.000001, f"成本計算錯誤: {cost} != {expected_cost}"
             else:
-                assert cost == 0.0, f"未知模型應该返回0成本，但得到 {cost}"
+                assert cost == 0.0, f"未知模型應該返回0成本，但得到 {cost}"
         
         print("✅ 定價準確性測試通過")
-
 
 def test_usage_statistics():
     """測試使用統計功能"""
@@ -202,8 +194,6 @@ def test_usage_statistics():
         
         # 添加多條使用記錄
         test_records = [
-            ("dashscope", "qwen-turbo", 1000, 500, "session1", "stock_analysis"),
-            ("dashscope", "qwen-plus", 2000, 1000, "session2", "stock_analysis"),
             ("openai", "gpt-3.5-turbo", 1500, 750, "session3", "news_analysis"),
             ("google", "gemini-pro", 1200, 600, "session4", "social_analysis"),
         ]
@@ -223,21 +213,16 @@ def test_usage_statistics():
         # 測試統計數據
         stats = config_manager.get_usage_statistics(30)
         
-        assert stats["total_requests"] == len(test_records), f"請求數應该是 {len(test_records)}"
-        print(f"📊 統計总成本: {stats['total_cost']:.6f}, 預期总成本: {total_expected_cost:.6f}")
-        assert abs(stats["total_cost"] - total_expected_cost) < 0.001, "总成本應该匹配"
+        assert stats["total_requests"] == len(test_records), f"請求數應該是 {len(test_records)}"
+        print(f"📊 統計總成本: {stats['total_cost']:.6f}, 預期總成本: {total_expected_cost:.6f}")
+        assert abs(stats["total_cost"] - total_expected_cost) < 0.001, "總成本應該匹配"
         
         # 測試按供應商統計
         provider_stats = stats["provider_stats"]
-        assert "dashscope" in provider_stats, "應该有dashscope統計"
-        assert "openai" in provider_stats, "應该有openai統計"
-        assert "google" in provider_stats, "應该有google統計"
-        
-        dashscope_stats = provider_stats["dashscope"]
-        assert dashscope_stats["requests"] == 2, "dashscope應该有2個請求"
+        assert "openai" in provider_stats, "應該有openai統計"
+        assert "google" in provider_stats, "應該有google統計"
         
         print("✅ 使用統計測試通過")
-
 
 def main():
     """主測試函數"""
@@ -260,11 +245,10 @@ def main():
         return True
         
     except Exception as e:
-        print(f"\n❌ 測試失败: {e}")
+        print(f"\n❌ 測試失敗: {e}")
         import traceback
         print(f"錯誤詳情: {traceback.format_exc()}")
         return False
-
 
 if __name__ == "__main__":
     success = main()

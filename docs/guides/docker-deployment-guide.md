@@ -2,19 +2,19 @@
 
 ## 📋 概述
 
-TradingAgents-CN v0.1.7 引入了完整的Docker容器化部署方案，让您可以通過一條命令啟動完整的股票分析環境。本指南将詳細介紹如何使用Docker部署和管理TradingAgents-CN。
+TradingAgents-CN v0.1.7 引入了完整的Docker容器化部署方案，讓您可以通過一條命令啟動完整的股票分析環境。本指南將詳細介紹如何使用Docker部署和管理TradingAgents-CN。
 
 ## 🎯 Docker部署優势
 
 ### 為什么選擇Docker？
 
-- ✅ **一键部署**: `docker-compose up -d` 啟動完整環境
+- ✅ **一鍵部署**: `docker-compose up -d` 啟動完整環境
 - ✅ **環境一致**: 開發、測試、生產環境完全一致
-- ✅ **依賴管理**: 自動處理所有依賴和版本冲突
+- ✅ **依賴管理**: 自動處理所有依賴和版本衝突
 - ✅ **服務集成**: Web應用、數據庫、緩存一體化
-- ✅ **易於維護**: 簡化更新、備份、恢複流程
+- ✅ **易於維護**: 簡化更新、備份、恢復流程
 
-### 与傳統部署對比
+### 與傳統部署對比
 
 | 特性 | 傳統部署 | Docker部署 |
 |------|---------|-----------|
@@ -102,20 +102,20 @@ cat VERSION
 
 1. **定制化需求**: 不同用戶可能需要不同的配置
 2. **安全考慮**: 避免在公共鏡像中包含敏感信息
-3. **版本灵活性**: 支援用戶自定義修改和擴展
-4. **依賴優化**: 根據實际需求安裝依賴
+3. **版本靈活性**: 支援用戶自定義修改和擴展
+4. **依賴優化**: 根據實際需求安裝依賴
 
 #### 構建過程說明
 
 ```bash
 # Docker構建過程包括：
-1. 下載基础鏡像 (python:3.10-slim) - 約200MB
+1. 下載基礎鏡像 (python:3.10-slim) - 約200MB
 2. 安裝系統依賴 (pandoc, wkhtmltopdf, 中文字體) - 約300MB
 3. 安裝Python依賴 (requirements.txt) - 約500MB
 4. 複制應用代碼 - 約50MB
 5. 配置運行環境
 
-# 总鏡像大小約1GB，首次構建需要5-10分鐘
+# 總鏡像大小約1GB，首次構建需要5-10分鐘
 ```
 
 ### 步驟2: 配置環境
@@ -146,7 +146,6 @@ GOOGLE_ENABLED=true
 
 ```bash
 # === 數據源配置 ===
-TUSHARE_TOKEN=your_tushare_token
 FINNHUB_API_KEY=your_finnhub_key
 
 # === 導出功能配置 ===
@@ -165,13 +164,13 @@ REDIS_URL=redis://redis:6379
 docker-compose up -d --build
 
 # 註意：首次運行會自動構建Docker鏡像，包含以下步驟：
-# - 下載基础鏡像 (python:3.10-slim)
+# - 下載基礎鏡像 (python:3.10-slim)
 # - 安裝系統依賴 (pandoc, wkhtmltopdf等)
 # - 安裝Python依賴
 # - 複制應用代碼
 # 整個過程需要5-10分鐘，請耐心等待
 
-# 後续啟動（鏡像已構建）：
+# 後續啟動（鏡像已構建）：
 # docker-compose up -d
 
 # 查看服務狀態
@@ -218,13 +217,13 @@ docker-compose ps
 ### 管理數據庫
 
 1. **訪問MongoDB管理**: http://localhost:8081
-2. **查看分析結果**: 浏覽tradingagents數據庫
+2. **查看分析結果**: 瀏覽tradingagents數據庫
 3. **管理數據**: 查看、編辑、刪除分析記錄
 
 ### 管理緩存
 
 1. **訪問Redis管理**: http://localhost:8082
-2. **查看緩存數據**: 浏覽緩存的股價和分析數據
+2. **查看緩存數據**: 瀏覽緩存的股價和分析數據
 3. **清理緩存**: 刪除過期或無用的緩存
 
 ## 🔧 日常管理
@@ -260,7 +259,7 @@ docker exec TradingAgents-redis redis-cli BGSAVE
 # 清理緩存
 docker exec TradingAgents-redis redis-cli FLUSHALL
 
-# 查看數據使用情况
+# 查看數據使用情況
 docker exec TradingAgents-mongodb mongo --eval "db.stats()"
 ```
 
@@ -282,11 +281,11 @@ docker-compose up -d
 
 ## 🚨 故障排除
 
-### 常见問題
+### 常見問題
 
-#### 1. 端口冲突
+#### 1. 端口衝突
 
-**問題**: 服務啟動失败，提示端口被占用
+**問題**: 服務啟動失敗，提示端口被占用
 
 **解決方案**:
 ```bash
@@ -301,7 +300,7 @@ ports:
 
 #### 2. 內存不足
 
-**問題**: 容器啟動失败或運行緩慢
+**問題**: 容器啟動失敗或運行緩慢
 
 **解決方案**:
 ```bash
@@ -313,7 +312,7 @@ docker stats
 # 建議分配至少4GB內存
 ```
 
-#### 3. 數據庫連接失败
+#### 3. 數據庫連接失敗
 
 **問題**: Web應用無法連接數據庫
 
@@ -331,7 +330,7 @@ docker-compose restart mongodb
 
 #### 4. API密鑰問題
 
-**問題**: LLM調用失败
+**問題**: LLM調用失敗
 
 **解決方案**:
 ```bash
@@ -425,7 +424,7 @@ REDIS_PASSWORD=secure_redis_password
 
 - 🐛 [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
 - 💬 [GitHub Discussions](https://github.com/hsliuping/TradingAgents-CN/discussions)
-- 📚 [Docker官方文档](https://docs.docker.com/)
+- 📚 [Docker官方文檔](https://docs.docker.com/)
 
 ---
 

@@ -60,7 +60,7 @@ def test_data_dir_configuration():
                 else:
                     print(f"  ❌ 子目錄缺失 | Subdirectory missing: {subdir}")
         else:
-            print("❌ 自定義數據目錄創建失败 | Custom data directory creation failed")
+            print("❌ 自定義數據目錄創建失敗 | Custom data directory creation failed")
     
     # 3. 測試環境變量配置
     print("\n3. 測試環境變量配置 | Testing Environment Variable Configuration")
@@ -140,7 +140,7 @@ def main():
         test_cli_commands()
         
         print("\n🎉 所有測試完成！| All tests completed!")
-        print("\n📝 总結 | Summary:")
+        print("\n📝 總結 | Summary:")
         print("✅ 數據目錄配置功能已實現 | Data directory configuration feature implemented")
         print("✅ 支持自定義路徑設置 | Custom path setting supported")
         print("✅ 支持環境變量配置 | Environment variable configuration supported")

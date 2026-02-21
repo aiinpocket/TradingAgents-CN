@@ -21,15 +21,15 @@ fi
 echo "📁 創建logs目錄..."
 mkdir -p logs
 chmod 755 logs 2>/dev/null || true
-echo "✅ logs目錄準备完成"
+echo "✅ logs目錄準備完成"
 
 # 檢查.env文件
 if [ ! -f ".env" ]; then
     echo "⚠️ .env文件不存在"
     if [ -f ".env.example" ]; then
-        echo "📋 複制.env.example到.env"
+        echo "📋 複製.env.example到.env"
         cp .env.example .env
-        echo "✅ 請編辑.env文件配置API密鑰"
+        echo "✅ 請編輯.env文件配置API密鑰"
     else
         echo "❌ .env.example文件也不存在"
         exit 1
@@ -65,7 +65,7 @@ if curl -s http://localhost:8501/_stcore/health >/dev/null 2>&1; then
     echo "✅ Web服務正常運行"
     echo "🌐 訪問地址: http://localhost:8501"
 else
-    echo "⚠️ Web服務可能还在啟動中..."
+    echo "⚠️ Web服務可能還在啟動中..."
     echo "💡 請稍等片刻後訪問: http://localhost:8501"
 fi
 

@@ -46,13 +46,13 @@ def test_google_tool_handler_improvements():
     # 測試場景2: 模擬空工具調用的AIMessage
     logger.info("測試場景2: 模擬空工具調用的AIMessage")
     try:
-        # 創建一個没有工具調用的AIMessage
+        # 創建一個沒有工具調用的AIMessage
         ai_message = AIMessage(content="我需要獲取股票數據來進行分析")
         
         state = {
-            "messages": [HumanMessage(content="請分析贵州茅台(600519)的市場情况")],
+            "messages": [HumanMessage(content="請分析貴州茅台(600519)的市場情況")],
             "trade_date": "2023-12-31",
-            "company_of_interest": "贵州茅台",
+            "company_of_interest": "貴州茅台",
             "ticker": "600519"
         }
         
@@ -86,9 +86,9 @@ def test_google_tool_handler_improvements():
         )
         
         state = {
-            "messages": [HumanMessage(content="請分析贵州茅台(600519)的市場情况")],
+            "messages": [HumanMessage(content="請分析貴州茅台(600519)的市場情況")],
             "trade_date": "2023-12-31",
-            "company_of_interest": "贵州茅台",
+            "company_of_interest": "貴州茅台",
             "ticker": "600519"
         }
         

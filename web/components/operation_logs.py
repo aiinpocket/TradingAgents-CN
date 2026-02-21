@@ -39,7 +39,7 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                 elif isinstance(logs, dict):
                     all_logs.append(logs)
         except Exception as e:
-            st.error(f"讀取日誌文件失败: {log_file.name} - {e}")
+            st.error(f"讀取日誌文件失敗: {log_file.name} - {e}")
     
     for log_file in logs_dir.glob("*.jsonl"):
         try:
@@ -49,7 +49,7 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                         log_entry = json.loads(line.strip())
                         all_logs.append(log_entry)
         except Exception as e:
-            st.error(f"讀取JSONL日誌文件失败: {log_file.name} - {e}")
+            st.error(f"讀取JSONL日誌文件失敗: {log_file.name} - {e}")
     
     # 2. 加載用戶活動日誌（user_activities目錄）
     user_activities_dir = get_user_activities_dir()
@@ -79,7 +79,7 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                             }
                             all_logs.append(converted_log)
             except Exception as e:
-                st.error(f"讀取用戶活動日誌文件失败: {log_file.name} - {e}")
+                st.error(f"讀取用戶活動日誌文件失敗: {log_file.name} - {e}")
     
     # 過濾日誌
     filtered_logs = []
@@ -94,7 +94,7 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                     try:
                         timestamp = float(timestamp)
                     except (ValueError, TypeError):
-                        # 如果轉換失败，嘗試解析ISO格式的日期時間
+                        # 如果轉換失敗，嘗試解析ISO格式的日期時間
                         try:
                             from datetime import datetime
                             dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
@@ -108,7 +108,7 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
                 if end_date and log_date > end_date:
                     continue
             except Exception as e:
-                # 如果時間戳處理失败，跳過時間過濾
+                # 如果時間戳處理失敗，跳過時間過濾
                 pass
         
         # 用戶名過濾
@@ -158,12 +158,12 @@ def render_operation_logs():
             st.info("💡 提示：操作日誌功能需要 'admin' 權限")
             return
     except Exception as e:
-        st.error(f"❌ 權限檢查失败: {e}")
+        st.error(f"❌ 權限檢查失敗: {e}")
         return
     
     st.title("📋 操作日誌管理")
     
-    # 侧邊栏過濾選項
+    # 側邊欄過濾選項
     with st.sidebar:
         st.header("🔍 過濾選項")
         
@@ -212,7 +212,7 @@ def render_operation_logs():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📊 总操作數", len(logs))
+        st.metric("📊 總操作數", len(logs))
     
     with col2:
         unique_users = len(set(log.get('username', 'unknown') for log in logs))
@@ -311,7 +311,7 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
             marker=dict(size=6)
         ))
         fig_line.update_layout(
-            title="每日操作趋势",
+            title="每日操作趨勢",
             xaxis_title="日期",
             yaxis_title="操作數量"
         )
@@ -388,7 +388,7 @@ def render_logs_list(logs: List[Dict[str, Any]]):
                 '角色': log.get('user_role', 'unknown'),
                 '操作類型': log.get('action_type', 'unknown'),
                 '操作描述': action_desc,
-                '狀態': '✅ 成功' if log.get('success', True) else '❌ 失败',
+                '狀態': '✅ 成功' if log.get('success', True) else '❌ 失敗',
                 '詳情': str(log.get('details', ''))[:50] + '...' if len(str(log.get('details', ''))) > 50 else str(log.get('details', ''))
             })
         
@@ -397,7 +397,7 @@ def render_logs_list(logs: List[Dict[str, Any]]):
         
         # 顯示分页信息
         if total_pages > 1:
-            st.info(f"第 {page + 1} 页，共 {total_pages} 页，总計 {len(logs)} 條記錄")
+            st.info(f"第 {page + 1} 页，共 {total_pages} 页，總計 {len(logs)} 條記錄")
     else:
         st.info("當前页沒有數據")
 
@@ -445,7 +445,7 @@ def render_logs_export(logs: List[Dict[str, Any]]):
                         '角色': log.get('user_role', 'unknown'),
                         '操作類型': log.get('action_type', 'unknown'),
                         '操作描述': action_desc,
-                        '狀態': '成功' if log.get('success', True) else '失败',
+                        '狀態': '成功' if log.get('success', True) else '失敗',
                         '詳情': str(log.get('details', ''))
                     })
                 
@@ -499,7 +499,7 @@ def render_logs_export(logs: List[Dict[str, Any]]):
                         '角色': log.get('user_role', 'unknown'),
                         '操作類型': log.get('action_type', 'unknown'),
                         '操作描述': action_desc,
-                        '狀態': '成功' if log.get('success', True) else '失败',
+                        '狀態': '成功' if log.get('success', True) else '失敗',
                         '詳情': str(log.get('details', ''))
                     })
                 
@@ -520,10 +520,10 @@ def render_logs_export(logs: List[Dict[str, Any]]):
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
             
-            st.success(f"✅ {export_format} 文件準备完成，請點擊下載按钮")
+            st.success(f"✅ {export_format} 文件準備完成，請點擊下載按鈕")
             
         except Exception as e:
-            st.error(f"❌ 導出失败: {e}")
+            st.error(f"❌ 導出失敗: {e}")
 
 def log_operation(username: str, action_type: str, action: str, details: Dict = None, success: bool = True):
     """記錄操作日誌"""
@@ -542,8 +542,8 @@ def log_operation(username: str, action_type: str, action: str, details: Dict = 
             'action': action,
             'details': details or {},
             'success': success,
-            'ip_address': None,  # 可以後续添加IP地址記錄
-            'user_agent': None   # 可以後续添加用戶代理記錄
+            'ip_address': None,  # 可以後續添加IP地址記錄
+            'user_agent': None   # 可以後續添加用戶代理記錄
         }
         
         # 讀取現有日誌
@@ -565,5 +565,5 @@ def log_operation(username: str, action_type: str, action: str, details: Dict = 
         return True
         
     except Exception as e:
-        print(f"記錄操作日誌失败: {e}")
+        print(f"記錄操作日誌失敗: {e}")
         return False

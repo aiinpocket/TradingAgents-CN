@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 系統初始化腳本
-初始化數據庫配置，確保系統可以在有或没有數據庫的情况下運行
+初始化數據庫配置，確保系統可以在有或沒有數據庫的情況下運行
 """
 
 import sys
@@ -47,7 +47,7 @@ def initialize_system():
                 existing_config = json.load(f)
             logger.info(f"✅ 現有配置加載成功")
         except Exception as e:
-            logger.error(f"⚠️ 現有配置讀取失败: {e}")
+            logger.error(f"⚠️ 現有配置讀取失敗: {e}")
             existing_config = None
     else:
         existing_config = None
@@ -69,7 +69,7 @@ def initialize_system():
     except ImportError:
         logger.error(f"❌ MongoDB: pymongo未安裝")
     except Exception as e:
-        logger.error(f"❌ MongoDB: 連接失败 - {e}")
+        logger.error(f"❌ MongoDB: 連接失敗 - {e}")
     
     # 檢測Redis
     redis_available = False
@@ -83,7 +83,7 @@ def initialize_system():
     except ImportError:
         logger.error(f"❌ Redis: redis未安裝")
     except Exception as e:
-        logger.error(f"❌ Redis: 連接失败 - {e}")
+        logger.error(f"❌ Redis: 連接失敗 - {e}")
     
     # 5. 生成配置
     logger.info(f"\n⚙️ 生成系統配置...")
@@ -159,7 +159,7 @@ def initialize_system():
             json.dump(config, f, indent=2, ensure_ascii=False)
         logger.info(f"✅ 配置已保存: {config_file}")
     except Exception as e:
-        logger.error(f"❌ 配置保存失败: {e}")
+        logger.error(f"❌ 配置保存失敗: {e}")
         return False
     
     # 7. 測試系統
@@ -191,11 +191,11 @@ def initialize_system():
         if test_data == "初始化測試數據":
             logger.info(f"✅ 緩存功能測試通過")
         else:
-            logger.error(f"❌ 緩存功能測試失败")
+            logger.error(f"❌ 緩存功能測試失敗")
             return False
         
     except Exception as e:
-        logger.error(f"❌ 系統測試失败: {e}")
+        logger.error(f"❌ 系統測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -221,7 +221,7 @@ def initialize_system():
 - 保證系統在任何環境下都能正常運行
 
 ### 性能優化
-- 智能緩存策略，减少API調用
+- 智能緩存策略，減少API調用
 - 支持多種數據類型的TTL管理
 - 自動清理過期緩存
 
@@ -246,7 +246,7 @@ data = cache.load_stock_data(cache_key)
 python scripts/validation/check_system_status.py
 ```
 
-## 性能提升建议
+## 性能提升建議
 
 """
 
@@ -286,9 +286,9 @@ python scripts/validation/check_system_status.py
             f.write(usage_guide)
         logger.info(f"✅ 使用指南已生成: {usage_file}")
     except Exception as e:
-        logger.error(f"⚠️ 使用指南生成失败: {e}")
+        logger.error(f"⚠️ 使用指南生成失敗: {e}")
     
-    # 9. 总結
+    # 9. 總結
     logger.info(f"\n")
     logger.info(f"🎉 系統初始化完成!")
     logger.info(f"\n📊 初始化結果:")
@@ -317,7 +317,7 @@ def main():
         success = initialize_system()
         return success
     except Exception as e:
-        logger.error(f"❌ 系統初始化失败: {e}")
+        logger.error(f"❌ 系統初始化失敗: {e}")
         import traceback
 
         traceback.print_exc()

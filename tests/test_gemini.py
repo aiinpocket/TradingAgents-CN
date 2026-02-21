@@ -67,7 +67,7 @@ def test_gemini_direct():
         
         # 測試生成內容
         print("📝 測試內容生成...")
-        response = model.generate_content("請用中文簡單介紹一下苹果公司(Apple Inc.)的業務")
+        response = model.generate_content("請用中文簡單介紹一下蘋果公司(Apple Inc.)的業務")
         
         if response and response.text:
             print("✅ Gemini API調用成功")
@@ -75,11 +75,11 @@ def test_gemini_direct():
             print(f"   響應預覽: {response.text[:200]}...")
             return True
         else:
-            print("❌ Gemini API調用失败：無響應內容")
+            print("❌ Gemini API調用失敗：無響應內容")
             return False
             
     except Exception as e:
-        print(f"❌ Gemini API測試失败: {e}")
+        print(f"❌ Gemini API測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -112,11 +112,11 @@ def test_gemini_langchain():
             print(f"   響應預覽: {response.content[:200]}...")
             return True
         else:
-            print("❌ LangChain Gemini調用失败：無響應內容")
+            print("❌ LangChain Gemini調用失敗：無響應內容")
             return False
             
     except Exception as e:
-        print(f"❌ LangChain Gemini測試失败: {e}")
+        print(f"❌ LangChain Gemini測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -165,7 +165,7 @@ def test_gemini_in_tradingagents():
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print("✅ Gemini驱動的股票分析成功")
+                print("✅ Gemini驅動的股票分析成功")
                 print(f"   決策結果: {decision}")
                 
                 # 檢查市場報告
@@ -180,11 +180,11 @@ def test_gemini_in_tradingagents():
                 return False
                 
         except Exception as e:
-            print(f"❌ 股票分析失败: {e}")
+            print(f"❌ 股票分析失敗: {e}")
             return False
             
     except Exception as e:
-        print(f"❌ TradingAgents Gemini集成測試失败: {e}")
+        print(f"❌ TradingAgents Gemini集成測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -196,7 +196,7 @@ def main():
     
     # 檢查設置
     if not check_gemini_setup():
-        print("\n❌ Gemini設置不完整，無法繼续測試")
+        print("\n❌ Gemini設置不完整，無法繼續測試")
         return
     
     # 運行測試
@@ -206,27 +206,27 @@ def main():
     results['LangChain集成'] = test_gemini_langchain()
     results['TradingAgents集成'] = test_gemini_in_tradingagents()
     
-    # 总結結果
-    print(f"\n📊 測試結果总結:")
+    # 總結結果
+    print(f"\n📊 測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
         print("🎉 Gemini模型完全可用！")
-        print("\n💡 使用建议:")
+        print("\n💡 使用建議:")
         print("   1. 可以在Web界面配置中選擇Google作為LLM提供商")
         print("   2. 可以選擇gemini-pro作為分析模型")
         print("   3. Gemini在多語言支持方面表現優秀")
     elif successful_tests > 0:
-        print("⚠️ Gemini部分功能可用，建议檢查失败的測試")
+        print("⚠️ Gemini部分功能可用，建議檢查失敗的測試")
     else:
         print("❌ Gemini模型不可用，請檢查API密鑰和網絡連接")
 

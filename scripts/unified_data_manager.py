@@ -83,7 +83,7 @@ class UnifiedDataDirectoryManager:
         獲取指定數據目錄的路徑
         
         Args:
-            key: 目錄键名
+            key: 目錄鍵名
             create: 是否自動創建目錄
             
         Returns:
@@ -97,7 +97,7 @@ class UnifiedDataDirectoryManager:
             # 使用默認配置
             path_str = self._default_config.get(key)
             if not path_str:
-                raise ValueError(f"未知的目錄键: {key}")
+                raise ValueError(f"未知的目錄鍵: {key}")
         
         # 處理路徑
         if os.path.isabs(path_str):
@@ -126,7 +126,7 @@ class UnifiedDataDirectoryManager:
             try:
                 paths[key] = self.get_path(key, create=create)
             except Exception as e:
-                logger.warning(f"獲取路徑失败 {key}: {e}")
+                logger.warning(f"獲取路徑失敗 {key}: {e}")
         
         return paths
     
@@ -149,7 +149,7 @@ class UnifiedDataDirectoryManager:
             return True
             
         except Exception as e:
-            logger.error(f"❌ 創建目錄結構失败: {e}")
+            logger.error(f"❌ 創建目錄結構失敗: {e}")
             return False
     
     def get_config_summary(self) -> Dict[str, str]:
@@ -243,7 +243,7 @@ def get_data_path(key: str, create: bool = True) -> Path:
     便捷函數：獲取數據目錄路徑
     
     Args:
-        key: 目錄键名
+        key: 目錄鍵名
         create: 是否自動創建目錄
         
     Returns:
@@ -292,7 +292,7 @@ def main():
     if args.show_structure:
         manager.print_structure()
     
-    # 如果没有指定任何操作，顯示幫助
+    # 如果沒有指定任何操作，顯示幫助
     if not any([args.create, args.validate, args.show_config, args.show_structure]):
         parser.print_help()
 

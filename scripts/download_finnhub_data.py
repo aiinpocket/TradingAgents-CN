@@ -3,7 +3,7 @@
 """
 Finnhub數據下載腳本
 
-這個腳本用於從Finnhub API下載新聞數據、內部人情绪數據和內部人交易數據。
+這個腳本用於從Finnhub API下載新聞數據、內部人情緒數據和內部人交易數據。
 支持批量下載和增量更新。
 
 使用方法:
@@ -32,7 +32,7 @@ try:
     from tradingagents.config.config_manager import config_manager
     logger = get_logger('finnhub_downloader')
 except ImportError as e:
-    print(f"❌ 導入模塊失败: {e}")
+    print(f"❌ 導入模塊失敗: {e}")
     print("請確保在項目根目錄運行此腳本")
     sys.exit(1)
 
@@ -45,7 +45,7 @@ class FinnhubDataDownloader:
         
         Args:
             api_key: Finnhub API密鑰
-            data_dir: 數據存储目錄
+            data_dir: 數據存儲目錄
         """
         # 獲取API密鑰
         self.api_key = api_key or os.getenv('FINNHUB_API_KEY')
@@ -99,7 +99,7 @@ class FinnhubDataDownloader:
             return response.json()
             
         except requests.exceptions.RequestException as e:
-            logger.error(f"❌ API請求失败: {e}")
+            logger.error(f"❌ API請求失敗: {e}")
             return {}
     
     def download_news_data(self, symbols: List[str], days: int = 7, force_refresh: bool = False):
@@ -109,7 +109,7 @@ class FinnhubDataDownloader:
         Args:
             symbols: 股票代碼列表
             days: 下載多少天的數據
-            force_refresh: 是否强制刷新
+            force_refresh: 是否強制刷新
         """
         logger.info(f"📰 開始下載新聞數據，股票: {symbols}, 天數: {days}")
         
@@ -117,7 +117,7 @@ class FinnhubDataDownloader:
         news_dir = Path(self.data_dir) / "finnhub_data" / "news_data"
         news_dir.mkdir(parents=True, exist_ok=True)
         
-        # 計算日期範围
+        # 計算日期範圍
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days)
         
@@ -136,7 +136,7 @@ class FinnhubDataDownloader:
                     else:
                         logger.warning(f"⚠️ {symbol} 數據文件存在但為空 (大小: {file_size} 字節)，重新下載")
                 except Exception as e:
-                    logger.warning(f"⚠️ 檢查 {symbol} 文件狀態失败: {e}，重新下載")
+                    logger.warning(f"⚠️ 檢查 {symbol} 文件狀態失敗: {e}，重新下載")
 
             logger.info(f"📥 開始下載 {symbol} 的新聞數據...")
             
@@ -176,7 +176,7 @@ class FinnhubDataDownloader:
                         file_size = file_path.stat().st_size
                         logger.info(f"✅ {symbol} 新聞數據已保存: {len(formatted_data)} 條, 文件大小: {file_size} 字節")
                     else:
-                        logger.error(f"❌ {symbol} 文件保存失败，文件不存在")
+                        logger.error(f"❌ {symbol} 文件保存失敗，文件不存在")
 
                 except Exception as e:
                     logger.error(f"❌ {symbol} 文件保存異常: {e}")
@@ -184,35 +184,35 @@ class FinnhubDataDownloader:
             elif news_data and isinstance(news_data, dict):
                 logger.warning(f"⚠️ {symbol} API返回字典而非列表: {news_data}")
             else:
-                logger.warning(f"⚠️ {symbol} 新聞數據下載失败或為空")
+                logger.warning(f"⚠️ {symbol} 新聞數據下載失敗或為空")
             
             # 避免API限制
             time.sleep(1)
     
     def download_insider_sentiment(self, symbols: List[str], force_refresh: bool = False):
         """
-        下載內部人情绪數據
+        下載內部人情緒數據
         
         Args:
             symbols: 股票代碼列表
-            force_refresh: 是否强制刷新
+            force_refresh: 是否強制刷新
         """
-        logger.info(f"💭 開始下載內部人情绪數據，股票: {symbols}")
+        logger.info(f"💭 開始下載內部人情緒數據，股票: {symbols}")
         
         # 創建目錄
         sentiment_dir = Path(self.data_dir) / "finnhub_data" / "insider_senti"
         sentiment_dir.mkdir(parents=True, exist_ok=True)
         
         for symbol in symbols:
-            logger.info(f"💭 下載 {symbol} 的內部人情绪數據...")
+            logger.info(f"💭 下載 {symbol} 的內部人情緒數據...")
             
             # 檢查文件是否存在
             file_path = sentiment_dir / f"{symbol}_data_formatted.json"
             if file_path.exists() and not force_refresh:
-                logger.info(f"📄 {symbol} 情绪數據文件已存在，跳過下載")
+                logger.info(f"📄 {symbol} 情緒數據文件已存在，跳過下載")
                 continue
             
-            # 下載情绪數據
+            # 下載情緒數據
             params = {'symbol': symbol}
             sentiment_data = self._make_request('stock/insider-sentiment', params)
             
@@ -221,9 +221,9 @@ class FinnhubDataDownloader:
                 with open(file_path, 'w', encoding='utf-8') as f:
                     json.dump(sentiment_data, f, ensure_ascii=False, indent=2)
                 
-                logger.info(f"✅ {symbol} 內部人情绪數據已保存")
+                logger.info(f"✅ {symbol} 內部人情緒數據已保存")
             else:
-                logger.warning(f"⚠️ {symbol} 內部人情绪數據下載失败")
+                logger.warning(f"⚠️ {symbol} 內部人情緒數據下載失敗")
             
             # 避免API限制
             time.sleep(1)
@@ -234,7 +234,7 @@ class FinnhubDataDownloader:
         
         Args:
             symbols: 股票代碼列表
-            force_refresh: 是否强制刷新
+            force_refresh: 是否強制刷新
         """
         logger.info(f"💰 開始下載內部人交易數據，股票: {symbols}")
         
@@ -262,7 +262,7 @@ class FinnhubDataDownloader:
                 
                 logger.info(f"✅ {symbol} 內部人交易數據已保存")
             else:
-                logger.warning(f"⚠️ {symbol} 內部人交易數據下載失败")
+                logger.warning(f"⚠️ {symbol} 內部人交易數據下載失敗")
             
             # 避免API限制
             time.sleep(1)
@@ -288,7 +288,7 @@ def main():
     
     parser.add_argument('--force-refresh',
                        action='store_true',
-                       help='强制刷新已存在的數據')
+                       help='強制刷新已存在的數據')
     
     parser.add_argument('--all',
                        action='store_true',
@@ -300,7 +300,7 @@ def main():
     
     parser.add_argument('--data-dir',
                        type=str,
-                       help='數據存储目錄')
+                       help='數據存儲目錄')
     
     args = parser.parse_args()
     
@@ -323,7 +323,7 @@ def main():
         logger.info(f"🚀 開始下載Finnhub數據")
         logger.info(f"📊 股票代碼: {symbols}")
         logger.info(f"📋 數據類型: {data_types}")
-        logger.info(f"🔄 强制刷新: {args.force_refresh}")
+        logger.info(f"🔄 強制刷新: {args.force_refresh}")
         
         # 下載數據
         for data_type in data_types:
@@ -337,7 +337,7 @@ def main():
         logger.info("🎉 數據下載完成！")
         
     except Exception as e:
-        logger.error(f"❌ 下載失败: {e}")
+        logger.error(f"❌ 下載失敗: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

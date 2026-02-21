@@ -19,12 +19,12 @@ redis_enabled = os.getenv("REDIS_ENABLED", "false")
 print(f"MONGODB_ENABLED: {mongodb_enabled}")
 print(f"REDIS_ENABLED: {redis_enabled}")
 
-# 使用强健的布爾值解析（兼容Python 3.13+）
+# 使用強健的布爾值解析（兼容Python 3.13+）
 try:
     from tradingagents.config.env_utils import parse_bool_env
     mongodb_bool = parse_bool_env("MONGODB_ENABLED", False)
     redis_bool = parse_bool_env("REDIS_ENABLED", False)
-    print("✅ 使用强健的布爾值解析")
+    print("✅ 使用強健的布爾值解析")
 except ImportError:
     # 回退到原始方法
     mongodb_bool = mongodb_enabled.lower() == "true"
@@ -35,9 +35,9 @@ print(f"MongoDB啟用: {mongodb_bool}")
 print(f"Redis啟用: {redis_bool}")
 
 if not mongodb_bool and not redis_bool:
-    print("✅ 默認配置：數據庫都未啟用，系統将使用文件緩存")
+    print("✅ 默認配置：數據庫都未啟用，系統將使用文件緩存")
 else:
-    print("⚠️ 有數據庫啟用，系統将嘗試連接數據庫")
+    print("⚠️ 有數據庫啟用，系統將嘗試連接數據庫")
 
 print("\n💡 配置說明:")
 print("- MONGODB_ENABLED=false (默認)")

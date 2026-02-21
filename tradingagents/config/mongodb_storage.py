@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MongoDB存储適配器
-用於将token使用記錄存储到MongoDB數據庫
+MongoDB儲存適配器
+用於將token使用記錄儲存到MongoDB數據庫
 """
 
 import os
@@ -24,7 +24,7 @@ except ImportError:
 
 
 class MongoDBStorage:
-    """MongoDB存储適配器"""
+    """MongoDB儲存適配器"""
     
     def __init__(self, connection_string: str = None, database_name: str = "tradingagents"):
         if not MONGODB_AVAILABLE:
@@ -71,11 +71,11 @@ class MongoDBStorage:
             logger.info(f"✅ MongoDB連接成功: {self.database_name}.{self.collection_name}")
             
         except (ConnectionFailure, ServerSelectionTimeoutError) as e:
-            logger.error(f"❌ MongoDB連接失败: {e}")
-            logger.info(f"将使用本地JSON文件存储")
+            logger.error(f"❌ MongoDB連接失敗: {e}")
+            logger.info(f"將使用本地JSON文件儲存")
             self._connected = False
         except Exception as e:
-            logger.error(f"❌ MongoDB初始化失败: {e}")
+            logger.error(f"❌ MongoDB初始化失敗: {e}")
             self._connected = False
     
     def _create_indexes(self):
@@ -95,7 +95,7 @@ class MongoDBStorage:
             self.collection.create_index("analysis_type")
             
         except Exception as e:
-            logger.error(f"創建MongoDB索引失败: {e}")
+            logger.error(f"創建MongoDB索引失敗: {e}")
     
     def is_connected(self) -> bool:
         """檢查是否連接到MongoDB"""
@@ -119,11 +119,11 @@ class MongoDBStorage:
             if result.inserted_id:
                 return True
             else:
-                logger.error(f"MongoDB插入失败：未返回插入ID")
+                logger.error(f"MongoDB插入失敗：未返回插入ID")
                 return False
                 
         except Exception as e:
-            logger.error(f"保存記錄到MongoDB失败: {e}")
+            logger.error(f"保存記錄到MongoDB失敗: {e}")
             return False
     
     def load_usage_records(self, limit: int = 10000, days: int = None) -> List[UsageRecord]:
@@ -153,13 +153,13 @@ class MongoDBStorage:
                     record = UsageRecord(**doc)
                     records.append(record)
                 except Exception as e:
-                    logger.error(f"解析記錄失败: {e}, 記錄: {doc}")
+                    logger.error(f"解析記錄失敗: {e}, 記錄: {doc}")
                     continue
             
             return records
             
         except Exception as e:
-            logger.error(f"從MongoDB加載記錄失败: {e}")
+            logger.error(f"從MongoDB加載記錄失敗: {e}")
             return []
     
     def get_usage_statistics(self, days: int = 30) -> Dict[str, Any]:
@@ -210,7 +210,7 @@ class MongoDBStorage:
                 }
                 
         except Exception as e:
-            logger.error(f"獲取MongoDB統計失败: {e}")
+            logger.error(f"獲取MongoDB統計失敗: {e}")
             return {}
     
     def get_provider_statistics(self, days: int = 30) -> Dict[str, Dict[str, Any]]:
@@ -255,11 +255,11 @@ class MongoDBStorage:
             return provider_stats
             
         except Exception as e:
-            logger.error(f"獲取供應商統計失败: {e}")
+            logger.error(f"獲取供應商統計失敗: {e}")
             return {}
     
     def cleanup_old_records(self, days: int = 90) -> int:
-        """清理旧記錄"""
+        """清理舊記錄"""
         if not self._connected:
             return 0
         
@@ -279,12 +279,12 @@ class MongoDBStorage:
             return deleted_count
             
         except Exception as e:
-            logger.error(f"清理旧記錄失败: {e}")
+            logger.error(f"清理舊記錄失敗: {e}")
             return 0
     
     def close(self):
-        """關闭MongoDB連接"""
+        """關閉MongoDB連接"""
         if self.client:
             self.client.close()
             self._connected = False
-            logger.info(f"MongoDB連接已關闭")
+            logger.info(f"MongoDB連接已關閉")

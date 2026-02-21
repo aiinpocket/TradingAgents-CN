@@ -1,119 +1,119 @@
 ---
-name: ✨ 功能請求 / Feature Request
-about: 建議一个新功能或改進 / Suggest a new feature or improvement
+name: 功能請求 / Feature Request
+about: 建議一個新功能或改進 / Suggest a new feature or improvement
 title: '[FEATURE] '
 labels: ['enhancement', 'needs-discussion']
 assignees: ''
 ---
 
-## ✨ 功能描述 / Feature Description
+## 功能描述 / Feature Description
 
 **簡要描述 / Brief description:**
-清晰简洁地描述您想要的功能。
+清晰簡潔地描述您想要的功能。
 
-**详细说明 / Detailed description:**
-详细描述这个功能应该如何工作。
+**詳細說明 / Detailed description:**
+詳細描述這個功能應該如何運作。
 
-## 🎯 使用场景 / Use Case
+## 使用場景 / Use Case
 
-**问题背景 / Problem:**
-这个功能請求是否与某个问题相关？请描述。
+**問題背景 / Problem:**
+這個功能請求是否與某個問題相關？請描述。
 Is your feature request related to a problem? Please describe.
 
-**解决方案 / Solution:**
-描述您希望看到的解决方案。
+**解決方案 / Solution:**
+描述您希望看到的解決方案。
 Describe the solution you'd like.
 
-**使用示例 / Usage Example:**
-提供一个具体的使用示例。
+**使用範例 / Usage Example:**
+提供一個具體的使用範例。
 ```python
-# 示例代码
+# 範例程式碼
 example_code_here()
 ```
 
-## 💡 实现建議 / Implementation Suggestions
+## 實現建議 / Implementation Suggestions
 
-**技术方案 / Technical Approach:**
-如果您有技术实现的想法，请分享。
+**技術方案 / Technical Approach:**
+如果您有技術實現的想法，請分享。
 
-**相关组件 / Related Components:**
-- [ ] 数据获取 / Data Acquisition
-- [ ] LLM集成 / LLM Integration  
+**相關元件 / Related Components:**
+- [ ] 資料取得 / Data Acquisition
+- [ ] LLM 整合 / LLM Integration
 - [ ] 分析引擎 / Analysis Engine
-- [ ] Web界面 / Web Interface
-- [ ] CLI工具 / CLI Tools
-- [ ] 数据库 / Database
+- [ ] Web 介面 / Web Interface
+- [ ] CLI 工具 / CLI Tools
+- [ ] 資料庫 / Database
 - [ ] 配置管理 / Configuration
 - [ ] 其他 / Other: ___________
 
-## 🔄 替代方案 / Alternatives
+## 替代方案 / Alternatives
 
-**其他解决方案 / Alternative solutions:**
-描述您考虑过的其他替代解决方案。
+**其他解決方案 / Alternative solutions:**
+描述您考慮過的其他替代解決方案。
 
-**现有工具 / Existing tools:**
-是否有其他工具或项目已经实现了类似功能？
+**現有工具 / Existing tools:**
+是否有其他工具或專案已經實現了類似功能？
 
-## 📊 优先级 / Priority
+## 優先級 / Priority
 
 **重要性 / Importance:**
-- [ ] 🔥 高优先级 / High Priority - 核心功能缺失
-- [ ] 🟡 中优先级 / Medium Priority - 重要改進
-- [ ] 🟢 低优先级 / Low Priority - 便利性功能
+- [ ] 高優先級 / High Priority - 核心功能缺失
+- [ ] 中優先級 / Medium Priority - 重要改進
+- [ ] 低優先級 / Low Priority - 便利性功能
 
-**紧急性 / Urgency:**
-- [ ] 🚨 紧急 / Urgent - 阻塞当前工作
-- [ ] ⏰ 尽快 / Soon - 影响用户体验
-- [ ] 📅 可以等待 / Can Wait - 未来版本
+**緊急性 / Urgency:**
+- [ ] 緊急 / Urgent - 阻塞目前工作
+- [ ] 盡快 / Soon - 影響使用者體驗
+- [ ] 可以等待 / Can Wait - 未來版本
 
-## 🎨 界面设计 / UI/UX Design
+## 介面設計 / UI/UX Design
 
-**界面要求 / UI Requirements:**
-如果涉及界面变更，请描述期望的用户体验。
+**介面要求 / UI Requirements:**
+如果涉及介面變更，請描述期望的使用者體驗。
 
-**交互流程 / User Flow:**
-描述用户如何与这个功能交互。
+**互動流程 / User Flow:**
+描述使用者如何與這個功能互動。
 
-## 📈 影响评估 / Impact Assessment
+## 影響評估 / Impact Assessment
 
-**受益用户 / Target Users:**
-- [ ] 新手用户 / Beginner Users
-- [ ] 高级用户 / Advanced Users
-- [ ] 开发者 / Developers
-- [ ] 所有用户 / All Users
+**受益使用者 / Target Users:**
+- [ ] 新手使用者 / Beginner Users
+- [ ] 進階使用者 / Advanced Users
+- [ ] 開發者 / Developers
+- [ ] 所有使用者 / All Users
 
-**预期收益 / Expected Benefits:**
-- 提升性能 / Performance improvement
-- 增强易用性 / Better usability
-- 扩展功能 / Extended functionality
+**預期效益 / Expected Benefits:**
+- 提升效能 / Performance improvement
+- 增強易用性 / Better usability
+- 擴展功能 / Extended functionality
 - 其他 / Other: ___________
 
-## 🔗 相关资源 / Related Resources
+## 相關資源 / Related Resources
 
-**参考链接 / References:**
-- 相关文档 / Documentation: 
-- 类似项目 / Similar projects:
-- 技术资料 / Technical resources:
+**參考連結 / References:**
+- 相關文件 / Documentation:
+- 類似專案 / Similar projects:
+- 技術資料 / Technical resources:
 
-**相关Issues / Related Issues:**
-- 关联的bug报告 / Related bug reports: #
-- 相关功能請求 / Related feature requests: #
+**相關 Issues / Related Issues:**
+- 關聯的 Bug 回報 / Related bug reports: #
+- 相關功能請求 / Related feature requests: #
 
-## 📝 额外信息 / Additional Context
+## 額外資訊 / Additional Context
 
-添加任何其他有关功能請求的上下文、截图或示例。
+新增任何其他有關功能請求的上下文、截圖或範例。
 Add any other context, screenshots, or examples about the feature request here.
 
-## ✅ 检查清单 / Checklist
+## 檢查清單 / Checklist
 
-请确认您已经：
-- [ ] 搜索了现有的issues，确认这不是重复请求
+請確認您已經：
+- [ ] 搜尋了現有的 issues，確認這不是重複請求
 - [ ] 清晰地描述了功能需求
-- [ ] 提供了使用场景和示例
-- [ ] 考虑了实现的可行性
-- [ ] 评估了功能的优先级
+- [ ] 提供了使用場景和範例
+- [ ] 考慮了實現的可行性
+- [ ] 評估了功能的優先級
 
 ---
 
-**感谢您的建議！我们会认真考虑这个功能請求。**
+**感謝您的建議！我們會認真考慮這個功能請求。**
 **Thank you for your suggestion! We will carefully consider this feature request.**

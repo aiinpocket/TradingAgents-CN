@@ -115,7 +115,7 @@ class DataCallAnalyzer:
             (r'📊.*\[數據獲取\].*symbol=(\w+).*start_date=([^,]+).*end_date=([^,]+)', 'data_fetch'),
             (r'🔧.*\[工具調用\].*(\w+)', 'tool_call'),
             (r'📊.*\[統一接口\].*獲取(\w+)股票數據', 'unified_call'),
-            (r'📊.*\[(Tushare|AKShare|BaoStock|TDX)\].*調用參數.*symbol=(\w+)', 'data_source_call')
+            (r'📊.*\[(YFinance|FinnHub)\].*調用參數.*symbol=(\w+)', 'data_source_call')
         ]
         
         for pattern, call_type in patterns:
@@ -191,7 +191,7 @@ class DataCallAnalyzer:
             if data_source:
                 analysis['by_data_source'][data_source] += 1
             
-            # 統計日期範围
+            # 統計日期範圍
             start_date = call.get('start_date')
             end_date = call.get('end_date')
             if start_date and end_date:
@@ -235,7 +235,7 @@ class DataCallAnalyzer:
             analysis['performance']['avg_duration'] = sum(durations) / len(durations)
         
         # 輸出分析結果
-        logger.info(f"📈 总調用次數: {analysis['total_calls']}")
+        logger.info(f"📈 總調用次數: {analysis['total_calls']}")
         
         if analysis['by_symbol']:
             logger.info(f"\n📊 按股票代碼統計 (前10):")
@@ -249,7 +249,7 @@ class DataCallAnalyzer:
         
         if durations:
             logger.info(f"\n⏱️  性能統計:")
-            logger.info(f"  - 总耗時: {analysis['performance']['total_duration']:.2f}s")
+            logger.info(f"  - 總耗時: {analysis['performance']['total_duration']:.2f}s")
             logger.info(f"  - 平均耗時: {analysis['performance']['avg_duration']:.2f}s")
             logger.info(f"  - 慢調用 (>5s): {len(analysis['performance']['slow_calls'])} 次")
             logger.info(f"  - 快調用 (<1s): {len(analysis['performance']['fast_calls'])} 次")
@@ -290,7 +290,7 @@ class DataCallAnalyzer:
                 analysis['success_rate'][f"{tool_name}_error"] += 1
         
         # 輸出結果
-        logger.info(f"🔧 总工具調用: {analysis['total_calls']}")
+        logger.info(f"🔧 總工具調用: {analysis['total_calls']}")
         
         if analysis['by_tool']:
             logger.info(f"\n📊 按工具統計:")
@@ -325,7 +325,7 @@ class DataCallAnalyzer:
 - 數據源調用: {len(self.data_source_calls)}
 
 ## 數據獲取性能
-- 总耗時: {data_analysis['performance']['total_duration']:.2f}s
+- 總耗時: {data_analysis['performance']['total_duration']:.2f}s
 - 平均耗時: {data_analysis['performance']['avg_duration']:.2f}s
 - 慢調用數量: {len(data_analysis['performance']['slow_calls'])}
 
@@ -334,18 +334,18 @@ class DataCallAnalyzer:
 - 警告調用: {data_analysis['success_rate']['warning']}
 - 錯誤調用: {data_analysis['success_rate']['error']}
 
-## 建议
+## 建議
 """
         
-        # 添加建议
+        # 添加建議
         if data_analysis['performance']['avg_duration'] > 3.0:
-            report += "- ⚠️ 平均數據獲取時間較長，建议優化緩存策略\n"
+            report += "- ⚠️ 平均數據獲取時間較長，建議優化緩存策略\n"
         
         if data_analysis['success_rate']['error'] > 0:
-            report += f"- ❌ 發現 {data_analysis['success_rate']['error']} 個數據獲取錯誤，建议檢查數據源配置\n"
+            report += f"- ❌ 發現 {data_analysis['success_rate']['error']} 個數據獲取錯誤，建議檢查數據源配置\n"
         
         if len(data_analysis['performance']['slow_calls']) > 5:
-            report += "- 🐌 慢調用較多，建议分析網絡連接和API限制\n"
+            report += "- 🐌 慢調用較多，建議分析網絡連接和API限制\n"
         
         return report
 
@@ -373,7 +373,7 @@ def main():
             print(report)
             
     except Exception as e:
-        logger.error(f"❌ 分析失败: {e}")
+        logger.error(f"❌ 分析失敗: {e}")
         sys.exit(1)
 
 

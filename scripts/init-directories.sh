@@ -127,12 +127,12 @@ level = "INFO"
 handlers = ["console", "file"]
 propagate = false
 
-[logging.loggers.akshare]
+[logging.loggers.yfinance]
 level = "WARNING"
 handlers = ["file"]
 propagate = false
 
-[logging.loggers.tushare]
+[logging.loggers.finnhub]
 level = "WARNING"
 handlers = ["file"]
 propagate = false
@@ -195,13 +195,13 @@ if [ ! -f "$README_FILE" ]; then
     cat > "$README_FILE" << 'EOF'
 # TradingAgents 日誌目錄
 
-此目錄用於存储 TradingAgents 應用的日誌文件。
+此目錄用於存儲 TradingAgents 應用的日誌文件。
 
 ## 日誌文件說明
 
 - `tradingagents.log` - 主應用日誌文件
 - `tradingagents_error.log` - 錯誤日誌文件
-- `tradingagents.log.1`, `tradingagents.log.2` 等 - 轮轉的歷史日誌文件
+- `tradingagents.log.1`, `tradingagents.log.2` 等 - 輪轉的歷史日誌文件
 
 ## 日誌級別
 
@@ -211,7 +211,7 @@ if [ ! -f "$README_FILE" ]; then
 - **ERROR** - 錯誤信息
 - **CRITICAL** - 嚴重錯誤
 
-## 日誌轮轉
+## 日誌輪轉
 
 - 主日誌文件最大 100MB，保留 5 個歷史文件
 - 錯誤日誌文件最大 50MB，保留 3 個歷史文件
@@ -243,7 +243,7 @@ fi
 echo ""
 echo "🎉 目錄初始化完成！"
 echo ""
-echo "💡 接下來的步骤:"
+echo "💡 接下來的步驟:"
 echo "1. 運行 Docker Compose: docker-compose up -d"
 echo "2. 檢查日誌文件: ls -la logs/"
 echo "3. 實時查看日誌: tail -f logs/tradingagents.log"

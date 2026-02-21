@@ -1,7 +1,7 @@
 """
 檢查 pyproject.toml 中缺失的依賴包
 
-扫描代碼中實际使用的第三方包，与 pyproject.toml 中聲明的依賴進行對比
+掃描代碼中實際使用的第三方包，與 pyproject.toml 中聲明的依賴進行對比
 """
 
 import os
@@ -87,13 +87,13 @@ def extract_imports_from_file(file_path: Path) -> Set[str]:
             imports.add(match.group(1))
             
     except Exception as e:
-        print(f"⚠️  讀取文件失败 {file_path}: {e}")
+        print(f"⚠️  讀取文件失敗 {file_path}: {e}")
     
     return imports
 
 
 def scan_directory(directory: Path) -> Set[str]:
-    """扫描目錄中所有 Python 文件的導入"""
+    """掃描目錄中所有 Python 文件的導入"""
     all_imports = set()
     
     for py_file in directory.rglob('*.py'):
@@ -131,7 +131,7 @@ def get_declared_dependencies() -> Set[str]:
                     dependencies.add(match.group(1).lower())
     
     except Exception as e:
-        print(f"❌ 讀取 pyproject.toml 失败: {e}")
+        print(f"❌ 讀取 pyproject.toml 失敗: {e}")
     
     return dependencies
 
@@ -152,8 +152,8 @@ def main():
     print("🔍 檢查 pyproject.toml 中缺失的依賴包")
     print("=" * 80)
     
-    # 扫描代碼中的導入
-    print("\n📂 扫描代碼目錄...")
+    # 掃描代碼中的導入
+    print("\n📂 掃描代碼目錄...")
     directories_to_scan = [
         project_root / 'tradingagents',
         project_root / 'web',
@@ -163,7 +163,7 @@ def main():
     all_imports = set()
     for directory in directories_to_scan:
         if directory.exists():
-            print(f"   扫描: {directory.relative_to(project_root)}")
+            print(f"   掃描: {directory.relative_to(project_root)}")
             imports = scan_directory(directory)
             all_imports.update(imports)
     
@@ -198,9 +198,9 @@ def main():
         print(f"\n❌ 發現 {len(missing_deps)} 個可能缺失的依賴:")
         print("-" * 80)
         for import_name, package_name in sorted(missing_deps):
-            print(f"  • {import_name:25s} → 建议添加: {package_name}")
+            print(f"  • {import_name:25s} → 建議添加: {package_name}")
         
-        print("\n💡 建议在 pyproject.toml 的 dependencies 中添加:")
+        print("\n💡 建議在 pyproject.toml 的 dependencies 中添加:")
         print("-" * 80)
         for import_name, package_name in sorted(missing_deps):
             print(f'    "{package_name}",')

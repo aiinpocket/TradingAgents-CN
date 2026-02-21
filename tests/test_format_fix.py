@@ -41,7 +41,7 @@ def test_format_analysis_results():
         print(f"  決策: {formatted1['decision']['action']}")
         print(f"  推理: {formatted1['decision']['reasoning']}")
     except Exception as e:
-        print(f"❌ 字符串decision格式化失败: {e}")
+        print(f"❌ 字符串decision格式化失敗: {e}")
     
     print()
     
@@ -62,7 +62,7 @@ def test_format_analysis_results():
             'confidence': 0.8,
             'risk_score': 0.4,
             'target_price': 180.0,
-            'reasoning': '基於技術分析，建议卖出'
+            'reasoning': '基於技術分析，建議賣出'
         },
         'success': True,
         'error': None
@@ -75,7 +75,7 @@ def test_format_analysis_results():
         print(f"  置信度: {formatted2['decision']['confidence']}")
         print(f"  推理: {formatted2['decision']['reasoning']}")
     except Exception as e:
-        print(f"❌ 字典decision格式化失败: {e}")
+        print(f"❌ 字典decision格式化失敗: {e}")
     
     print()
     
@@ -102,25 +102,25 @@ def test_format_analysis_results():
         print(f"  決策: {formatted3['decision']['action']}")
         print(f"  推理: {formatted3['decision']['reasoning']}")
     except Exception as e:
-        print(f"❌ 其他類型decision格式化失败: {e}")
+        print(f"❌ 其他類型decision格式化失敗: {e}")
     
     print()
     
-    # 測試案例4: 失败的結果
-    print("測試案例4: 失败的結果")
+    # 測試案例4: 失敗的結果
+    print("測試案例4: 失敗的結果")
     results4 = {
         'stock_symbol': 'AAPL',
         'success': False,
-        'error': '分析失败'
+        'error': '分析失敗'
     }
     
     try:
         formatted4 = format_analysis_results(results4)
-        print("✅ 失败結果格式化成功")
+        print("✅ 失敗結果格式化成功")
         print(f"  成功: {formatted4['success']}")
         print(f"  錯誤: {formatted4['error']}")
     except Exception as e:
-        print(f"❌ 失败結果格式化失败: {e}")
+        print(f"❌ 失敗結果格式化失敗: {e}")
 
 def main():
     """主測試函數"""

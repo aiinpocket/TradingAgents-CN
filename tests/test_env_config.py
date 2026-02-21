@@ -63,7 +63,7 @@ def test_env_config():
         print(f"  降級支持: {'✅ 啟用' if status['fallback_enabled'] else '❌ 禁用'}")
         
     except Exception as e:
-        print(f"❌ 數據庫管理器測試失败: {e}")
+        print(f"❌ 數據庫管理器測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -98,11 +98,11 @@ def test_env_config():
         if loaded_data == test_data:
             print("✅ 數據加載成功，內容匹配")
         else:
-            print("❌ 數據加載失败或內容不匹配")
+            print("❌ 數據加載失敗或內容不匹配")
             return False
         
     except Exception as e:
-        print(f"❌ 緩存系統測試失败: {e}")
+        print(f"❌ 緩存系統測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -125,8 +125,8 @@ def test_env_config():
         else:
             print(f"  {var}=未設置")
     
-    # 5. 总結
-    print("\n📊 測試总結:")
+    # 5. 總結
+    print("\n📊 測試總結:")
     print("✅ 系統已正確使用.env配置文件")
     print("✅ 數據庫管理器正常工作")
     print("✅ 緩存系統正常工作")
@@ -159,7 +159,7 @@ def main():
         return success
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False

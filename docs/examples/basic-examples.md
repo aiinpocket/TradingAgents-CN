@@ -2,7 +2,7 @@
 
 ## 概述
 
-本文档提供了 TradingAgents 框架的基本使用示例，幫助您快速上手並了解各種功能的使用方法。
+本文檔提供了 TradingAgents 框架的基本使用示例，幫助您快速上手並了解各種功能的使用方法。
 
 ## 示例 1: 基本股票分析
 
@@ -26,7 +26,7 @@ print(f"推理: {decision['reasoning']}")
 ```
 推薦動作: buy
 置信度: 0.75
-推理: 基於强劲的基本面數據和積極的技術指標，建议买入AAPL股票...
+推理: 基於强劲的基本面數據和積極的技術指標，建議买入AAPL股票...
 ```
 
 ## 示例 2: 自定義配置分析
@@ -89,7 +89,7 @@ def batch_analysis(symbols, date):
     
     # 配置
     config = DEFAULT_CONFIG.copy()
-    config["max_debate_rounds"] = 1  # 减少辩論轮次以提高速度
+    config["max_debate_rounds"] = 1  # 減少辩論轮次以提高速度
     config["online_tools"] = True
     
     ta = TradingAgentsGraph(debug=False, config=config)
@@ -116,13 +116,13 @@ def batch_analysis(symbols, date):
             print(f"✅ {symbol}: {result['action']} (置信度: {result['confidence']:.1%})")
             
         except Exception as e:
-            print(f"❌ {symbol}: 分析失败 - {e}")
+            print(f"❌ {symbol}: 分析失敗 - {e}")
             results.append({
                 "symbol": symbol,
                 "action": "error",
                 "confidence": 0.0,
                 "risk_score": 1.0,
-                "reasoning": f"分析失败: {e}"
+                "reasoning": f"分析失敗: {e}"
             })
     
     return pd.DataFrame(results)
@@ -136,9 +136,9 @@ results_df = batch_analysis(tech_stocks, analysis_date)
 print("\n=== 批量分析結果 ===")
 print(results_df[["symbol", "action", "confidence", "risk_score"]])
 
-# 筛選买入建议
+# 筛選买入建議
 buy_recommendations = results_df[results_df["action"] == "buy"]
-print(f"\n买入建议 ({len(buy_recommendations)} 只):")
+print(f"\n买入建議 ({len(buy_recommendations)} 只):")
 for _, row in buy_recommendations.iterrows():
     print(f"  {row['symbol']}: 置信度 {row['confidence']:.1%}")
 ```
@@ -190,7 +190,7 @@ def compare_llm_providers(symbol, date):
             print(f"✅ {provider_name}: {results[provider_name]['action']}")
             
         except Exception as e:
-            print(f"❌ {provider_name}: 失败 - {e}")
+            print(f"❌ {provider_name}: 失敗 - {e}")
             results[provider_name] = {"error": str(e)}
     
     return results
@@ -324,7 +324,7 @@ def real_time_monitor(symbols, check_interval=300):
                         print(f"  ⚠️  高置信度{action}信號!")
                 
                 except Exception as e:
-                    print(f"❌ {symbol}: 分析失败 - {e}")
+                    print(f"❌ {symbol}: 分析失敗 - {e}")
             
             print(f"下次檢查: {check_interval} 秒後\n")
             time.sleep(check_interval)
@@ -365,14 +365,14 @@ def robust_analysis(symbol: str, date: str, max_retries: int = 3) -> Optional[Tu
             return state, decision
             
         except Exception as e:
-            print(f"❌ 嘗試 {attempt + 1} 失败: {e}")
+            print(f"❌ 嘗試 {attempt + 1} 失敗: {e}")
             
             if attempt < max_retries - 1:
                 wait_time = 2 ** attempt  # 指數退避
                 print(f"等待 {wait_time} 秒後重試...")
                 time.sleep(wait_time)
             else:
-                print(f"所有嘗試都失败了")
+                print(f"所有嘗試都失敗了")
                 return None
 
 # 使用示例
@@ -382,7 +382,7 @@ if result:
     state, decision = result
     print(f"最终結果: {decision['action']}")
 else:
-    print("分析失败")
+    print("分析失敗")
 ```
 
 ## 示例 8: 結果保存和加載
@@ -405,7 +405,7 @@ def save_analysis_result(symbol, date, state, decision, format="json"):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{symbol}_{date}_{timestamp}"
     
-    # 準备數據
+    # 準備數據
     result_data = {
         "symbol": symbol,
         "date": date,

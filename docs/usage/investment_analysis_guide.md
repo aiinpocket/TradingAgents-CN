@@ -102,7 +102,7 @@ ANALYSIS_DATE = "2024-06-26"  # 修改分析日期
 
 ```python
 # 在配置中選擇不同的模型
-"deep_think_llm": "gpt-4",         # 最高質量，適合深度分析
+"deep_think_llm": "gpt-4",         # 最高品質，適合深度分析
 "quick_think_llm": "gemini-flash",  # 平衡性能，日常使用
 ```
 

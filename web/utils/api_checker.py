@@ -67,7 +67,7 @@ def check_api_keys():
     }
 
 def get_api_key_status_message():
-    """獲取API密鑰狀態消息"""
+    """獲取API密鑰狀態訊息"""
     
     status = check_api_keys()
     
@@ -92,17 +92,17 @@ def validate_api_key_format(key_type, api_key):
     # 特定格式檢查
     if key_type == "OPENAI_API_KEY":
         if not api_key.startswith("sk-"):
-            return False, "OpenAI API密鑰應以'sk-'開头"
+            return False, "OpenAI API密鑰應以'sk-'開頭"
     elif key_type == "OPENROUTER_API_KEY":
         if not api_key.startswith("sk-or-"):
-            return False, "OpenRouter API密鑰應以'sk-or-'開头"
+            return False, "OpenRouter API密鑰應以'sk-or-'開頭"
 
     return True, "API密鑰格式正確"
 
 def test_api_connection(key_type, api_key):
     """測試API連接（簡單驗證）"""
     
-    # 這里可以添加實际的API連接測試
+    # 這裡可以添加實際的API連接測試
     # 為了簡化，現在只做格式驗證
     
     is_valid, message = validate_api_key_format(key_type, api_key)
@@ -110,7 +110,7 @@ def test_api_connection(key_type, api_key):
     if not is_valid:
         return False, message
     
-    # 可以在這里添加實际的API調用測試
+    # 可以在這裡添加實際的API調用測試
     # 例如：調用一個簡單的API端點驗證密鑰有效性
     
     return True, "API密鑰驗證通過"

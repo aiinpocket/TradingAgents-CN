@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 股票數據緩存管理器
-支持本地緩存股票數據，减少API調用，提高響應速度
+支持本地緩存股票數據，減少API調用，提高響應速度
 """
 
 import os
@@ -19,7 +19,7 @@ logger = get_logger('agents')
 
 
 class StockDataCache:
-    """股票數據緩存管理器 - 支持美股和A股數據緩存優化"""
+    """股票數據緩存管理器 - 支持美股數據緩存優化"""
 
     def __init__(self, cache_dir: str = None):
         """
@@ -51,7 +51,7 @@ class StockDataCache:
                         self.china_fundamentals_dir, self.metadata_dir]:
             dir_path.mkdir(exist_ok=True)
 
-        # 緩存配置 - 针對不同市場設置不同的TTL
+        # 緩存配置 - 針對不同市場設置不同的TTL
         self.cache_config = {
             'us_stock_data': {
                 'ttl_hours': 2,  # 美股數據緩存2小時（考慮到API限制）
@@ -59,9 +59,9 @@ class StockDataCache:
                 'description': '美股歷史數據'
             },
             'china_stock_data': {
-                'ttl_hours': 1,  # A股數據緩存1小時（實時性要求高）
+                'ttl_hours': 2,  # 保留以相容舊資料，使用美股配置
                 'max_files': 1000,
-                'description': 'A股歷史數據'
+                'description': '美股歷史數據（相容）'
             },
             'us_news': {
                 'ttl_hours': 6,  # 美股新聞緩存6小時
@@ -69,9 +69,9 @@ class StockDataCache:
                 'description': '美股新聞數據'
             },
             'china_news': {
-                'ttl_hours': 4,  # A股新聞緩存4小時
+                'ttl_hours': 6,  # 保留以相容舊資料，使用美股配置
                 'max_files': 500,
-                'description': 'A股新聞數據'
+                'description': '美股新聞數據（相容）'
             },
             'us_fundamentals': {
                 'ttl_hours': 24,  # 美股基本面數據緩存24小時
@@ -79,44 +79,32 @@ class StockDataCache:
                 'description': '美股基本面數據'
             },
             'china_fundamentals': {
-                'ttl_hours': 12,  # A股基本面數據緩存12小時
+                'ttl_hours': 24,  # 保留以相容舊資料，使用美股配置
                 'max_files': 200,
-                'description': 'A股基本面數據'
+                'description': '美股基本面數據（相容）'
             }
         }
 
         # 內容長度限制配置（文件緩存默認不限制）
         self.content_length_config = {
             'max_content_length': int(os.getenv('MAX_CACHE_CONTENT_LENGTH', '50000')),  # 50K字符
-            'long_text_providers': ['dashscope', 'openai', 'google'],  # 支持長文本的提供商
+            'long_text_providers': ['openai', 'google', 'anthropic'],  # 支援長文本的提供商
             'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 文件緩存默認不限制
         }
 
         logger.info(f"📁 緩存管理器初始化完成，緩存目錄: {self.cache_dir}")
         logger.info(f"🗄️ 數據庫緩存管理器初始化完成")
-        logger.info(f"   美股數據: ✅ 已配置")
-        logger.info(f"   A股數據: ✅ 已配置")
+        logger.info(f"   美股數據: 已配置")
 
     def _determine_market_type(self, symbol: str) -> str:
-        """根據股票代碼確定市場類型"""
-        import re
-
-        # 判斷是否為中國A股（6位數字）
-        if re.match(r'^\d{6}$', str(symbol)):
-            return 'china'
-        else:
-            return 'us'
+        """根據股票代碼判斷市場類型（目前僅支援美股）"""
+        return 'us'
 
     def _check_provider_availability(self) -> List[str]:
-        """檢查可用的LLM提供商"""
+        """檢查可用的 LLM 提供商"""
         available_providers = []
-        
-        # 檢查DashScope
-        dashscope_key = os.getenv("DASHSCOPE_API_KEY")
-        if dashscope_key and dashscope_key.strip():
-            available_providers.append('dashscope')
-        
-        # 檢查OpenAI
+
+        # 檢查 OpenAI
         openai_key = os.getenv("OPENAI_API_KEY")
         if openai_key and openai_key.strip():
             # 簡單的格式檢查
@@ -144,7 +132,7 @@ class StockDataCache:
             data_type: 數據類型（用於日誌）
         
         Returns:
-            bool: 是否應该跳過緩存
+            bool: 是否應該跳過緩存
         """
         # 如果未啟用長度檢查，直接返回False
         if not self.content_length_config['enable_length_check']:
@@ -170,17 +158,17 @@ class StockDataCache:
             logger.info(f"💡 長文本提供商: {long_text_providers}")
             return True
         else:
-            logger.info(f"✅ 內容較長({content_length:,}字符)但有可用長文本提供商({available_long_providers})，繼续緩存")
+            logger.info(f"✅ 內容較長({content_length:,}字符)但有可用長文本提供商({available_long_providers})，繼續緩存")
             return False
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
-        """生成緩存键"""
+        """生成緩存鍵"""
         # 創建一個包含所有參數的字符串
         params_str = f"{data_type}_{symbol}"
         for key, value in sorted(kwargs.items()):
             params_str += f"_{key}_{value}"
         
-        # 使用MD5生成短的唯一標识
+        # 使用MD5生成短的唯一標識
         cache_key = hashlib.md5(params_str.encode()).hexdigest()[:12]
         return f"{symbol}_{data_type}_{cache_key}"
     
@@ -189,7 +177,7 @@ class StockDataCache:
         if symbol:
             market_type = self._determine_market_type(symbol)
         else:
-            # 從緩存键中嘗試提取市場類型
+            # 從緩存鍵中嘗試提取市場類型
             market_type = 'us' if not cache_key.startswith(('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')) else 'china'
 
         # 根據數據類型和市場類型選擇目錄
@@ -227,7 +215,7 @@ class StockDataCache:
             with open(metadata_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
-            logger.error(f"⚠️ 加載元數據失败: {e}")
+            logger.error(f"⚠️ 加載元數據失敗: {e}")
             return None
     
     def is_cache_valid(self, cache_key: str, max_age_hours: int = None, symbol: str = None, data_type: str = None) -> bool:
@@ -259,7 +247,7 @@ class StockDataCache:
             market_type = self._determine_market_type(metadata.get('symbol', ''))
             cache_type = f"{market_type}_{metadata.get('data_type', 'stock_data')}"
             desc = self.cache_config.get(cache_type, {}).get('description', '數據')
-            logger.info(f"✅ 緩存有效: {desc} - {metadata.get('symbol')} (剩余 {max_age_hours - age.total_seconds()/3600:.1f}h)")
+            logger.info(f"✅ 緩存有效: {desc} - {metadata.get('symbol')} (剩餘 {max_age_hours - age.total_seconds()/3600:.1f}h)")
 
         return is_valid
     
@@ -267,7 +255,7 @@ class StockDataCache:
                        start_date: str = None, end_date: str = None,
                        data_source: str = "unknown") -> str:
         """
-        保存股票數據到緩存 - 支持美股和A股分類存储
+        保存股票數據到緩存 - 支持美股分類儲存
 
         Args:
             symbol: 股票代碼
@@ -277,12 +265,12 @@ class StockDataCache:
             data_source: 數據源（如 "tdx", "yfinance", "finnhub"）
 
         Returns:
-            cache_key: 緩存键
+            cache_key: 緩存鍵
         """
         # 檢查內容長度是否需要跳過緩存
         content_to_check = str(data)
         if self.should_skip_cache_for_content(content_to_check, "股票數據"):
-            # 生成一個虛擬的緩存键，但不實际保存
+            # 生成一個虛擬的緩存鍵，但不實際保存
             market_type = self._determine_market_type(symbol)
             cache_key = self._generate_cache_key("stock_data", symbol,
                                                start_date=start_date,
@@ -348,7 +336,7 @@ class StockDataCache:
                 with open(cache_path, 'r', encoding='utf-8') as f:
                     return f.read()
         except Exception as e:
-            logger.error(f"⚠️ 加載緩存數據失败: {e}")
+            logger.error(f"⚠️ 加載緩存數據失敗: {e}")
             return None
     
     def find_cached_stock_data(self, symbol: str, start_date: str = None,
@@ -365,7 +353,7 @@ class StockDataCache:
             max_age_hours: 最大緩存時間（小時），None時使用智能配置
 
         Returns:
-            cache_key: 如果找到有效緩存則返回緩存键，否則返回None
+            cache_key: 如果找到有效緩存則返回緩存鍵，否則返回None
         """
         market_type = self._determine_market_type(symbol)
 
@@ -374,7 +362,7 @@ class StockDataCache:
             cache_type = f"{market_type}_stock_data"
             max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
 
-        # 生成查找键
+        # 生成查找鍵
         search_key = self._generate_cache_key("stock_data", symbol,
                                             start_date=start_date,
                                             end_date=end_date,
@@ -416,7 +404,7 @@ class StockDataCache:
         """保存新聞數據到緩存"""
         # 檢查內容長度是否需要跳過緩存
         if self.should_skip_cache_for_content(news_data, "新聞數據"):
-            # 生成一個虛擬的緩存键，但不實际保存
+            # 生成一個虛擬的緩存鍵，但不實際保存
             cache_key = self._generate_cache_key("news", symbol,
                                                start_date=start_date,
                                                end_date=end_date,
@@ -455,7 +443,7 @@ class StockDataCache:
         """保存基本面數據到緩存"""
         # 檢查內容長度是否需要跳過緩存
         if self.should_skip_cache_for_content(fundamentals_data, "基本面數據"):
-            # 生成一個虛擬的緩存键，但不實际保存
+            # 生成一個虛擬的緩存鍵，但不實際保存
             market_type = self._determine_market_type(symbol)
             cache_key = self._generate_cache_key("fundamentals", symbol,
                                                source=data_source,
@@ -505,7 +493,7 @@ class StockDataCache:
             with open(cache_path, 'r', encoding='utf-8') as f:
                 return f.read()
         except Exception as e:
-            logger.error(f"⚠️ 加載基本面緩存數據失败: {e}")
+            logger.error(f"⚠️ 加載基本面緩存數據失敗: {e}")
             return None
     
     def find_cached_fundamentals_data(self, symbol: str, data_source: str = None,
@@ -519,7 +507,7 @@ class StockDataCache:
             max_age_hours: 最大緩存時間（小時），None時使用智能配置
         
         Returns:
-            cache_key: 如果找到有效緩存則返回緩存键，否則返回None
+            cache_key: 如果找到有效緩存則返回緩存鍵，否則返回None
         """
         market_type = self._determine_market_type(symbol)
         
@@ -601,7 +589,7 @@ class StockDataCache:
                 elif data_type == 'fundamentals':
                     stats['fundamentals_count'] += 1
                 
-                # 檢查是否為跳過的緩存（沒有實际文件）
+                # 檢查是否為跳過的緩存（沒有實際文件）
                 data_file = Path(metadata.get('file_path', ''))
                 if not data_file.exists():
                     stats['skipped_count'] += 1

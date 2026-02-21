@@ -1,6 +1,6 @@
 """
 基於文件的會話管理器 - 不依賴Redis的可靠方案
-適用於沒有Redis或Redis連接失败的情況
+適用於沒有Redis或Redis連接失敗的情況
 """
 
 import streamlit as st
@@ -21,10 +21,10 @@ class FileSessionManager:
         self.max_age_hours = 24  # 會話有效期24小時
         
     def _get_browser_fingerprint(self) -> str:
-        """生成浏覽器指纹"""
+        """生成瀏覽器指紋"""
         try:
-            # 方法1：使用固定的session標识符
-            # 檢查是否已經有session標识符保存在session_state中
+            # 方法1：使用固定的session標識符
+            # 檢查是否已經有session標識符保存在session_state中
             if hasattr(st.session_state, 'file_session_fingerprint'):
                 return st.session_state.file_session_fingerprint
 
@@ -45,7 +45,7 @@ class FileSessionManager:
                 recent_files.sort(key=lambda x: x[1])  # 按文件年齡排序
                 newest_file = recent_files[0][0]
                 fingerprint = newest_file.stem
-                # 保存到session_state以便後续使用
+                # 保存到session_state以便後續使用
                 st.session_state.file_session_fingerprint = fingerprint
                 return fingerprint
 
@@ -81,7 +81,7 @@ class FileSessionManager:
                     continue
                     
         except Exception:
-            pass  # 清理失败不影響主要功能
+            pass  # 清理失敗不影響主要功能
     
     def save_analysis_state(self, analysis_id: str, status: str = "running",
                            stock_symbol: str = "", market_type: str = "",
@@ -122,7 +122,7 @@ class FileSessionManager:
             return True
             
         except Exception as e:
-            st.warning(f"⚠️ 保存會話狀態失败: {e}")
+            st.warning(f"⚠️ 保存會話狀態失敗: {e}")
             return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
@@ -149,7 +149,7 @@ class FileSessionManager:
             return session_data
             
         except Exception as e:
-            st.warning(f"⚠️ 加載會話狀態失败: {e}")
+            st.warning(f"⚠️ 加載會話狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -169,7 +169,7 @@ class FileSessionManager:
                     del st.session_state[key]
             
         except Exception as e:
-            st.warning(f"⚠️ 清除會話狀態失败: {e}")
+            st.warning(f"⚠️ 清除會話狀態失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取調試信息"""
@@ -245,7 +245,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 獲取持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 獲取持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running",
@@ -267,4 +267,4 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         file_session_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type, form_config)
         
     except Exception as e:
-        st.warning(f"⚠️ 設置持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 設置持久化分析ID失敗: {e}")

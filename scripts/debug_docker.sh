@@ -32,15 +32,15 @@ for port in "${ports[@]}"; do
         echo "端口 $port 被占用:"
         lsof -i :$port
     else
-        echo "端口 $port 空闲"
+        echo "端口 $port 空閒"
     fi
 done
 
-# 6. 檢查磁盘空間
-echo -e "\n6. 檢查磁盘空間:"
+# 6. 檢查磁碟空間
+echo -e "\n6. 檢查磁碟空間:"
 docker system df
 
 echo -e "\n=== 排查完成 ==="
-echo "如需查看詳細日誌，請運行:"
+echo "如需查看詳細日誌，請執行:"
 echo "docker-compose logs [服務名]"
 echo "例如: docker-compose logs web"

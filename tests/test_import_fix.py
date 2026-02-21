@@ -32,7 +32,7 @@ def test_fundamentals_analyst_import():
         return True
         
     except Exception as e:
-        print(f"❌ 基本面分析師導入失败: {e}")
+        print(f"❌ 基本面分析師導入失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -72,14 +72,14 @@ def test_stock_utils_functions():
             if (china_result != expect_china or 
                 hk_result != expect_hk or 
                 us_result != expect_us):
-                print(f"❌ {ticker} 识別結果不正確")
+                print(f"❌ {ticker} 識別結果不正確")
                 return False
         
         print("  ✅ 所有股票工具函數測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 股票工具函數測試失败: {e}")
+        print(f"❌ 股票工具函數測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -100,7 +100,7 @@ def test_web_analysis_runner():
             market_type="港股"
         )
         
-        print(f"  港股驗證結果: {'通過' if is_valid else '失败'}")
+        print(f"  港股驗證結果: {'通過' if is_valid else '失敗'}")
         if not is_valid:
             print(f"  錯誤信息: {errors}")
             return False
@@ -109,13 +109,13 @@ def test_web_analysis_runner():
         return True
         
     except Exception as e:
-        print(f"❌ Web分析運行器測試失败: {e}")
+        print(f"❌ Web分析運行器測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_complete_analysis_flow():
-    """測試完整分析流程（不實际運行）"""
+    """測試完整分析流程（不實際運行）"""
     print("\n🧪 測試完整分析流程導入...")
     
     try:
@@ -136,7 +136,7 @@ def test_complete_analysis_flow():
         return True
         
     except Exception as e:
-        print(f"❌ 完整分析流程導入測試失败: {e}")
+        print(f"❌ 完整分析流程導入測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -169,9 +169,9 @@ def main():
     if passed == total:
         print("🎉 所有導入測試通過！")
         print("\n現在可以正常進行港股分析了")
-        print("建议重新啟動Web應用並測試0700.HK分析")
+        print("建議重新啟動Web應用並測試0700.HK分析")
     else:
-        print("⚠️ 部分導入測試失败，請檢查失败的測試")
+        print("⚠️ 部分導入測試失敗，請檢查失敗的測試")
 
 if __name__ == "__main__":
     main()

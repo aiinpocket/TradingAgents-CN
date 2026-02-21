@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 """
-調試工具選擇問題 - 檢查LLM實际看到的工具列表
+調試工具選擇問題 - 檢查LLM實際看到的工具列表
 """
 
 import os
 import sys
 
 def test_llm_tool_binding():
-    """測試LLM工具绑定時的實际工具列表"""
-    print("🔧 測試LLM工具绑定...")
+    """測試LLM工具綁定時的實際工具列表"""
+    print("🔧 測試LLM工具綁定...")
     
     try:
         from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
-        from tradingagents.llm_adapters.dashscope_openai_adapter import ChatDashScopeOpenAI
         
         # 創建配置
         config = DEFAULT_CONFIG.copy()
@@ -48,11 +47,10 @@ def test_llm_tool_binding():
         return True
         
     except Exception as e:
-        print(f"❌ 工具绑定測試失败: {e}")
+        print(f"❌ 工具綁定測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
-
 
 def test_tool_descriptions():
     """測試工具描述內容"""
@@ -66,7 +64,7 @@ def test_tool_descriptions():
         config["online_tools"] = True
         toolkit = Toolkit(config)
         
-        # 檢查關键工具的描述
+        # 檢查關鍵工具的描述
         key_tools = [
             'get_hk_stock_data_unified',
             'get_fundamentals_openai',
@@ -90,16 +88,15 @@ def test_tool_descriptions():
         return True
         
     except Exception as e:
-        print(f"❌ 工具描述測試失败: {e}")
+        print(f"❌ 工具描述測試失敗: {e}")
         return False
 
-
 def test_fundamentals_analyst_tool_selection():
-    """測試基本面分析師的實际工具選擇"""
+    """測試基本面分析師的實際工具選擇"""
     print("\n🔧 測試基本面分析師工具選擇...")
     
     try:
-        # 模擬基本面分析師的工具選擇逻辑
+        # 模擬基本面分析師的工具選擇邏輯
         from tradingagents.utils.stock_utils import StockUtils
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
@@ -121,7 +118,7 @@ def test_fundamentals_analyst_tool_selection():
         print(f"  is_hk: {is_hk}")
         print(f"  is_us: {is_us}")
         
-        # 模擬工具選擇逻辑
+        # 模擬工具選擇邏輯
         if toolkit.config["online_tools"]:
             if is_china:
                 tools = [
@@ -136,7 +133,7 @@ def test_fundamentals_analyst_tool_selection():
                 tools = [toolkit.get_fundamentals_openai]
                 print(f"  選擇的工具（美股）: {[tool.name for tool in tools]}")
         
-        # 檢查是否有工具名稱冲突
+        # 檢查是否有工具名稱衝突
         tool_names = [tool.name for tool in tools]
         print(f"  工具名稱列表: {tool_names}")
         
@@ -147,11 +144,10 @@ def test_fundamentals_analyst_tool_selection():
         return True
         
     except Exception as e:
-        print(f"❌ 基本面分析師工具選擇測試失败: {e}")
+        print(f"❌ 基本面分析師工具選擇測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
-
 
 def main():
     """主測試函數"""
@@ -172,7 +168,7 @@ def main():
             if test():
                 passed += 1
             else:
-                print(f"❌ 測試失败: {test.__name__}")
+                print(f"❌ 測試失敗: {test.__name__}")
         except Exception as e:
             print(f"❌ 測試異常: {test.__name__} - {e}")
     
@@ -183,9 +179,8 @@ def main():
         print("🎉 所有測試通過！")
         return True
     else:
-        print("⚠️ 部分測試失败，需要進一步檢查")
+        print("⚠️ 部分測試失敗，需要進一步檢查")
         return False
-
 
 if __name__ == "__main__":
     success = main()

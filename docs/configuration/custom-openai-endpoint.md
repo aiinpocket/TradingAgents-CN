@@ -12,15 +12,15 @@ TradingAgents現在支持自定義OpenAI兼容端點，允許您使用任何支�
 ## 功能特性
 
 ✅ **完整集成**: 支持Web UI和CLI两種使用方式  
-✅ **灵活配置**: 可自定義API端點URL和API密鑰  
+✅ **靈活配置**: 可自定義API端點URL和API密鑰  
 ✅ **丰富模型**: 預置常用模型選項，支持自定義模型  
-✅ **快速配置**: 提供常用服務的快速配置按钮  
-✅ **統一接口**: 与其他LLM提供商使用相同的接口  
+✅ **快速配置**: 提供常用服務的快速配置按鈕  
+✅ **統一接口**: 與其他LLM提供商使用相同的接口  
 
 ## Web UI使用方法
 
 ### 1. 選擇提供商
-在侧邊栏的"LLM配置"部分，從下拉菜單中選擇"🔧 自定義OpenAI端點"。
+在側邊栏的"LLM配置"部分，從下拉菜單中選擇"🔧 自定義OpenAI端點"。
 
 ### 2. 配置端點
 - **API端點URL**: 輸入您的OpenAI兼容API端點
@@ -33,7 +33,7 @@ TradingAgents現在支持自定義OpenAI兼容端點，允許您使用任何支�
 從預置模型中選擇，或選擇"自定義模型"手動輸入模型名稱。
 
 ### 4. 快速配置
-使用快速配置按钮一键設置常用服務：
+使用快速配置按鈕一鍵設置常用服務：
 - **官方OpenAI**: 自動設置官方API端點
 - **中轉服務**: 設置常用的API代理服務
 - **本地部署**: 設置本地模型服務端點
@@ -131,17 +131,17 @@ CUSTOM_OPENAI_BASE_URL=https://api.openai.com/v1
 模型: Qwen/Qwen2.5-7B-Instruct（免費）
 ```
 
-硅基流動是一家專註於AI基础設施的服務商，提供：
+硅基流動是一家專註於AI基礎設施的服務商，提供：
 - 🆓 **免費模型**: Qwen2.5-7B等多個模型免費使用
-- 💰 **按量計費**: 灵活的定價方案
+- 💰 **按量計費**: 靈活的定價方案
 - 🔌 **OpenAI兼容**: 完全兼容OpenAI API格式
 - 🚀 **高性能**: 優化的推理性能和低延迟
 
 ## 故障排除
 
-### 常见問題
+### 常見問題
 
-**Q: 連接失败怎么办？**
+**Q: 連接失敗怎么办？**
 A: 檢查端點URL是否正確，確保網絡連接正常，驗證API密鑰是否有效。
 
 **Q: 模型不可用怎么办？**
@@ -161,13 +161,13 @@ A: 可以先進行一次簡單的股票分析測試，查看是否能正常返�
 
 ### 核心組件
 - `ChatCustomOpenAI`: 自定義OpenAI適配器類
-- `create_openai_compatible_llm`: 統一LLM創建工厂函數
+- `create_openai_compatible_llm`: 統一LLM創建工廠函數
 - `OPENAI_COMPATIBLE_PROVIDERS`: 提供商配置字典
 
 ### 集成點
 - **Web UI**: `web/components/sidebar.py`
 - **CLI**: `cli/utils.py` 和 `cli/main.py`
-- **核心逻辑**: `tradingagents/graph/trading_graph.py`
+- **核心邏輯**: `tradingagents/graph/trading_graph.py`
 - **分析運行器**: `web/utils/analysis_runner.py`
 
 ## 更新日誌
@@ -182,4 +182,4 @@ A: 可以先進行一次簡單的股票分析測試，查看是否能正常返�
 
 ---
 
-如有問題或建议，請提交Issue或聯系開發团隊。
+如有問題或建議，請提交Issue或聯系開發团隊。

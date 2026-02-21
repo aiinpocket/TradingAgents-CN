@@ -42,7 +42,7 @@ def install_pandoc_python():
         logger.error(f"❌ pypandoc未安裝，請先運行: pip install pypandoc")
         return False
     except Exception as e:
-        logger.error(f"❌ Pandoc下載失败: {e}")
+        logger.error(f"❌ Pandoc下載失敗: {e}")
         return False
 
 def install_pandoc_system():
@@ -75,7 +75,7 @@ def install_pandoc_windows():
                 logger.info(f"✅ Pandoc安裝成功！")
                 return True
             else:
-                logger.error(f"❌ Chocolatey安裝失败: {result.stderr}")
+                logger.error(f"❌ Chocolatey安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         logger.warning(f"⚠️ Chocolatey未安裝")
     
@@ -91,11 +91,11 @@ def install_pandoc_windows():
                 logger.info(f"✅ Pandoc安裝成功！")
                 return True
             else:
-                logger.error(f"❌ winget安裝失败: {result.stderr}")
+                logger.error(f"❌ winget安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         logger.warning(f"⚠️ winget未安裝")
     
-    logger.error(f"❌ 系統包管理器安裝失败")
+    logger.error(f"❌ 系統包管理器安裝失敗")
     return False
 
 def install_pandoc_macos():
@@ -114,11 +114,11 @@ def install_pandoc_macos():
                 logger.info(f"✅ Pandoc安裝成功！")
                 return True
             else:
-                logger.error(f"❌ Homebrew安裝失败: {result.stderr}")
+                logger.error(f"❌ Homebrew安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         logger.warning(f"⚠️ Homebrew未安裝")
     
-    logger.error(f"❌ 系統包管理器安裝失败")
+    logger.error(f"❌ 系統包管理器安裝失敗")
     return False
 
 def install_pandoc_linux():
@@ -139,7 +139,7 @@ def install_pandoc_linux():
                 logger.info(f"✅ Pandoc安裝成功！")
                 return True
             else:
-                logger.error(f"❌ apt安裝失败: {result.stderr}")
+                logger.error(f"❌ apt安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         pass
     
@@ -155,11 +155,11 @@ def install_pandoc_linux():
                 logger.info(f"✅ Pandoc安裝成功！")
                 return True
             else:
-                logger.error(f"❌ yum安裝失败: {result.stderr}")
+                logger.error(f"❌ yum安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         pass
     
-    logger.error(f"❌ 系統包管理器安裝失败")
+    logger.error(f"❌ 系統包管理器安裝失敗")
     return False
 
 def main():
@@ -186,12 +186,12 @@ def main():
         if check_pandoc():
             return True
     
-    # 安裝失败
-    logger.error(f"\n❌ 所有安裝方法都失败了")
+    # 安裝失敗
+    logger.error(f"\n❌ 所有安裝方法都失敗了")
     logger.info(f"\n📖 手動安裝指南:")
     logger.info(f"1. 訪問 https://github.com/jgm/pandoc/releases")
     logger.info(f"2. 下載適合您系統的安裝包")
-    logger.info(f"3. 按照官方文档安裝")
+    logger.info(f"3. 按照官方文件安裝")
     logger.info(f"4. 確保pandoc在系統PATH中")
     
     return False

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 智能配置系統 - 自動檢測和配置數據庫依賴
-確保系統在有或没有MongoDB/Redis的情况下都能正常運行
+確保系統在有或沒有MongoDB/Redis的情況下都能正常運行
 """
 
 import os
@@ -53,7 +53,7 @@ class SmartConfigManager:
         except ImportError:
             return False, "pymongo未安裝"
         except Exception as e:
-            return False, f"MongoDB連接失败: {str(e)}"
+            return False, f"MongoDB連接失敗: {str(e)}"
     
     def _detect_redis(self) -> Tuple[bool, str]:
         """檢測Redis是否可用"""
@@ -75,7 +75,7 @@ class SmartConfigManager:
         except ImportError:
             return False, "redis未安裝"
         except Exception as e:
-            return False, f"Redis連接失败: {str(e)}"
+            return False, f"Redis連接失敗: {str(e)}"
     
     def _detect_services(self):
         """檢測所有服務"""
@@ -109,7 +109,7 @@ class SmartConfigManager:
         """根據檢測結果生成配置"""
         logger.info(f"\n⚙️ 生成智能配置...")
         
-        # 基础配置
+        # 基礎配置
         self.config = {
             "cache": {
                 "enabled": True,
@@ -174,7 +174,7 @@ class SmartConfigManager:
                 json.dump(self.config, f, indent=2, ensure_ascii=False)
             logger.info(f"✅ 配置已保存到: {config_path}")
         except Exception as e:
-            logger.error(f"❌ 配置保存失败: {e}")
+            logger.error(f"❌ 配置保存失敗: {e}")
     
     def load_config(self, config_path: str = "smart_config.json") -> bool:
         """從文件加載配置"""
@@ -185,7 +185,7 @@ class SmartConfigManager:
                 logger.info(f"✅ 配置已從文件加載: {config_path}")
                 return True
         except Exception as e:
-            logger.error(f"❌ 配置加載失败: {e}")
+            logger.error(f"❌ 配置加載失敗: {e}")
         return False
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
@@ -222,7 +222,7 @@ class SmartConfigManager:
         elif self.mongodb_available:
             mode = "💾 持久化模式 (MongoDB + 文件)"
         else:
-            mode = "📁 基础模式 (純文件緩存)"
+            mode = "📁 基礎模式 (純文件緩存)"
         
         logger.info(f"  運行模式: {mode}")
         

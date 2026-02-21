@@ -2,7 +2,7 @@
 
 ## 📋 概述
 
-TradingAgents-CN v0.1.7 引入了專業級的報告導出功能，支持将股票分析結果導出為Word、PDF、Markdown三種格式。本指南将詳細介紹如何使用報告導出功能。
+TradingAgents-CN v0.1.7 引入了專業級的報告導出功能，支持將股票分析結果導出為Word、PDF、Markdown三種格式。本指南將詳細介紹如何使用報告導出功能。
 
 ## 🎯 導出功能特色
 
@@ -10,9 +10,9 @@ TradingAgents-CN v0.1.7 引入了專業級的報告導出功能，支持将股�
 
 | 格式 | 擴展名 | 適用場景 | 特點 |
 |------|--------|----------|------|
-| **📝 Markdown** | .md | 在線查看、版本控制、技術文档 | 轻量級、可編辑、Git友好 |
+| **📝 Markdown** | .md | 在線查看、版本控制、技術文檔 | 輕量級、可編辑、Git友好 |
 | **📄 Word** | .docx | 商業報告、編辑修改、团隊協作 | 專業格式、易編辑、兼容性好 |
-| **📊 PDF** | .pdf | 正式發布、打印存档、客戶交付 | 固定格式、專業外觀、跨平台 |
+| **📊 PDF** | .pdf | 正式發布、打印存檔、客戶交付 | 固定格式、專業外觀、跨平台 |
 
 ### 技術特性
 
@@ -34,7 +34,7 @@ docker-compose up -d
 
 #### 本地環境
 ```bash
-# 安裝Pandoc (文档轉換引擎)
+# 安裝Pandoc (文檔轉換引擎)
 # Windows: 下載安裝包 https://pandoc.org/installing.html
 # Linux: sudo apt install pandoc
 # macOS: brew install pandoc
@@ -60,7 +60,7 @@ EXPORT_OUTPUT_PATH=./exports
 
 ## 📊 使用指南
 
-### 基础導出流程
+### 基礎導出流程
 
 #### 1. 完成股票分析
 ```bash
@@ -77,14 +77,14 @@ http://localhost:8501
 
 #### 2. 導出報告
 ```bash
-# 在分析結果页面
-# 1. 滚動到页面底部
+# 在分析結果頁面
+# 1. 滚動到頁面底部
 # 2. 找到"報告導出"部分
 # 3. 選擇導出格式:
 #    - ☑️ Markdown
-#    - ☑️ Word文档
-#    - ☑️ PDF文档
-# 4. 點擊"導出報告"按钮
+#    - ☑️ Word文檔
+#    - ☑️ PDF文檔
+# 4. 點擊"導出報告"按鈕
 # 5. 等待生成完成
 # 6. 點擊下載鏈接
 ```
@@ -94,17 +94,17 @@ http://localhost:8501
 #### 📝 Markdown導出
 
 **特點**:
-- 轻量級文本格式
+- 輕量級文本格式
 - 支持版本控制
 - 易於在線查看和編辑
-- 適合技術文档和協作
+- 適合技術文檔和協作
 
 **使用場景**:
 ```bash
 # 適用於:
 ✅ 技術团隊內部分享
 ✅ 版本控制和歷史追蹤
-✅ 在線文档平台發布
+✅ 在線文檔平台發布
 ✅ 進一步編辑和加工
 ```
 
@@ -119,14 +119,14 @@ http://localhost:8501
 - **當前價格**: ¥12.45
 
 ## 📈 技術分析
-### 趋势分析
+### 趨勢分析
 當前股價處於上升通道中...
 ```
 
-#### 📄 Word文档導出
+#### 📄 Word文檔導出
 
 **特點**:
-- 專業商業文档格式
+- 專業商業文檔格式
 - 支持複雜排版和格式
 - 易於編辑和修改
 - 廣泛的兼容性
@@ -135,40 +135,40 @@ http://localhost:8501
 ```bash
 # 適用於:
 ✅ 正式商業報告
-✅ 客戶交付文档
+✅ 客戶交付文檔
 ✅ 团隊協作編辑
 ✅ 演示和汇報材料
 ```
 
 **格式特性**:
-- 📋 標準商業文档模板
+- 📋 標準商業文檔模板
 - 🎨 專業排版和字體
 - 📊 表格和圖表支持
 - 🔖 目錄和页碼
 - 📝 页眉页腳
 
-#### 📊 PDF文档導出
+#### 📊 PDF文檔導出
 
 **特點**:
 - 固定格式，跨平台一致
 - 專業外觀和排版
-- 適合打印和存档
+- 適合打印和存檔
 - 不易被修改
 
 **使用場景**:
 ```bash
 # 適用於:
 ✅ 正式發布和交付
-✅ 打印和存档
+✅ 打印和存檔
 ✅ 客戶演示
 ✅ 監管報告
 ```
 
-**质量特性**:
-- 🖨️ 高质量打印輸出
-- 📱 移動設备友好
+**品質特性**:
+- 🖨️ 高品質打印輸出
+- 📱 移動設備友好
 - 🔒 內容保護
-- 📏 標準页面尺寸 (A4)
+- 📏 標準頁面尺寸 (A4)
 
 ## ⚙️ 高級配置
 
@@ -186,7 +186,7 @@ EXPORT_FILENAME_FORMAT={symbol}_analysis_{timestamp}
 PANDOC_PATH=/usr/bin/pandoc
 WKHTMLTOPDF_PATH=/usr/bin/wkhtmltopdf
 
-# === 质量配置 ===
+# === 品質配置 ===
 EXPORT_INCLUDE_DEBUG=false
 EXPORT_WATERMARK=false
 EXPORT_COMPRESS_PDF=true
@@ -214,7 +214,7 @@ mkdir -p templates
 # templates/report_template.docx
 # - 設置標準樣式
 # - 定義页眉页腳
-# - 配置字體和颜色
+# - 配置字體和顏色
 
 # 3. 配置模板路徑
 WORD_TEMPLATE_PATH=./templates/report_template.docx
@@ -247,9 +247,9 @@ table {
 
 ## 🔧 故障排除
 
-### 常见問題
+### 常見問題
 
-#### 1. 導出按钮不顯示
+#### 1. 導出按鈕不顯示
 
 **原因**: 導出功能未啟用
 
@@ -264,9 +264,9 @@ docker-compose restart web
 streamlit run web/app.py
 ```
 
-#### 2. Word導出失败
+#### 2. Word導出失敗
 
-**原因**: Pandoc未安裝或YAML冲突
+**原因**: Pandoc未安裝或YAML衝突
 
 **解決方案**:
 ```bash
@@ -282,7 +282,7 @@ brew install pandoc      # macOS
 pandoc --version
 ```
 
-#### 3. PDF導出失败
+#### 3. PDF導出失敗
 
 **原因**: wkhtmltopdf未安裝或中文字體問題
 
@@ -300,13 +300,13 @@ brew install wkhtmltopdf      # macOS
 sudo apt install fonts-wqy-zenhei  # Linux
 ```
 
-#### 4. 文件下載失败
+#### 4. 文件下載失敗
 
-**原因**: 浏覽器阻止下載或文件權限問題
+**原因**: 瀏覽器阻止下載或文件權限問題
 
 **解決方案**:
 ```bash
-# 1. 檢查浏覽器下載設置
+# 1. 檢查瀏覽器下載設置
 # 2. 檢查文件權限
 chmod 755 exports/
 chmod 644 exports/*.pdf
@@ -385,11 +385,11 @@ AAPL_technical_20250713.docx
 find exports/ -name "*.pdf" -mtime +30 -delete
 find exports/ -name "*.docx" -mtime +30 -delete
 
-# 壓縮存档
+# 壓縮存檔
 tar -czf exports_archive_$(date +%Y%m).tar.gz exports/
 ```
 
-### 3. 质量控制
+### 3. 品質控制
 ```bash
 # 導出前檢查
 ✅ 分析結果完整性
@@ -412,10 +412,10 @@ tar -czf exports_archive_$(date +%Y%m).tar.gz exports/
 
 - 🐛 [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
 - 💬 [GitHub Discussions](https://github.com/hsliuping/TradingAgents-CN/discussions)
-- 📚 [Pandoc文档](https://pandoc.org/MANUAL.html)
+- 📚 [Pandoc文檔](https://pandoc.org/MANUAL.html)
 
 ---
 
 *最後更新: 2025-07-13*  
 *版本: cn-0.1.7*  
-*贡献者: [@baiyuxiong](https://github.com/baiyuxiong)*
+*貢獻者: [@baiyuxiong](https://github.com/baiyuxiong)*

@@ -17,7 +17,7 @@ try:
     from web.utils.mongodb_report_manager import mongodb_report_manager
     print(f"✅ MongoDB報告管理器導入成功")
 except ImportError as e:
-    print(f"❌ MongoDB報告管理器導入失败: {e}")
+    print(f"❌ MongoDB報告管理器導入失敗: {e}")
     sys.exit(1)
 
 def check_mongodb_connection():
@@ -39,10 +39,10 @@ def check_analysis_records():
     try:
         # 獲取所有記錄
         all_reports = mongodb_report_manager.get_all_reports(limit=50)
-        print(f"总記錄數: {len(all_reports)}")
+        print(f"總記錄數: {len(all_reports)}")
         
         if not all_reports:
-            print(f"⚠️ MongoDB中没有分析記錄")
+            print(f"⚠️ MongoDB中沒有分析記錄")
             return
         
         # 顯示最近的記錄
@@ -69,15 +69,15 @@ def check_analysis_records():
                     # 檢查內容是否為空或只是占位符
                     if content_length == 0:
                         print(f"      ⚠️ 內容為空")
-                    elif isinstance(content, str) and ("暂無詳細分析" in content or "演示數據" in content):
+                    elif isinstance(content, str) and ("暫無詳細分析" in content or "演示數據" in content):
                         print(f"      ⚠️ 內容為演示數據或占位符")
                     else:
                         print(f"      ✅ 內容正常")
             else:
-                print(f"  ⚠️ 没有報告內容")
+                print(f"  ⚠️ 沒有報告內容")
                 
     except Exception as e:
-        print(f"❌ 檢查分析記錄失败: {e}")
+        print(f"❌ 檢查分析記錄失敗: {e}")
         import traceback
         print(f"詳細錯誤: {traceback.format_exc()}")
 
@@ -110,10 +110,10 @@ def check_specific_stock(stock_symbol="000001"):
                         print(f"  長度: {len(content)} 字符")
                         print(f"  預覽: {preview}")
         else:
-            print(f"⚠️ 没有找到股票 {stock_symbol} 的記錄")
+            print(f"⚠️ 沒有找到股票 {stock_symbol} 的記錄")
             
     except Exception as e:
-        print(f"❌ 檢查特定股票記錄失败: {e}")
+        print(f"❌ 檢查特定股票記錄失敗: {e}")
 
 def main():
     print(f"🔍 MongoDB分析記錄檢查工具")

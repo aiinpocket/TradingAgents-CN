@@ -28,12 +28,12 @@ def get_win11_chromadb_client():
     # Windows 11 對 ChromaDB 支持更好，可以使用更現代的配置
     settings = Settings(
         allow_reset=True,
-        anonymized_telemetry=False,  # 禁用遥測避免posthog錯誤
+        anonymized_telemetry=False,  # 禁用遙測避免posthog錯誤
         is_persistent=False,
         # Windows 11 可以使用默認實現，性能更好
         chroma_db_impl="duckdb+parquet",
         chroma_api_impl="chromadb.api.segment.SegmentAPI"
-        # 移除persist_directory=None，让它使用默認值
+        # 移除persist_directory=None，讓它使用默認值
     )
     
     try:
@@ -43,7 +43,7 @@ def get_win11_chromadb_client():
         # 如果還有問題，使用最簡配置
         minimal_settings = Settings(
             allow_reset=True,
-            anonymized_telemetry=False,  # 關键：禁用遥測
+            anonymized_telemetry=False,  # 關鍵：禁用遙測
             is_persistent=False
         )
         return chromadb.Client(minimal_settings)

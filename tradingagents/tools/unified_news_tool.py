@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 統一新聞分析工具
-整合A股、港股、美股等不同市場的新聞獲取邏輯到一個工具函數中
-让大模型只需要調用一個工具就能獲取所有類型股票的新聞數據
+整合美股市場的新聞獲取邏輯到一個工具函數中
+讓大模型只需要調用一個工具就能獲取美股的新聞數據
 """
 
 import logging
@@ -31,7 +31,7 @@ class UnifiedNewsAnalyzer:
     def get_stock_news_unified(self, stock_code: str, max_news: int = 10, model_info: str = "") -> str:
         """
         統一新聞獲取接口
-        根據股票代碼自動识別股票類型並獲取相應新聞
+        根據股票代碼自動識別股票類型並獲取相應新聞
 
         Args:
             stock_code: 股票代碼
@@ -54,16 +54,8 @@ class UnifiedNewsAnalyzer:
         stock_type = self._identify_stock_type(stock_code)
         logger.info(f"[統一新聞工具] 股票類型: {stock_type}")
         
-        # 根據股票類型調用相應的獲取方法
-        if stock_type == "A股":
-            result = self._get_a_share_news(stock_code, max_news, model_info)
-        elif stock_type == "港股":
-            result = self._get_hk_share_news(stock_code, max_news, model_info)
-        elif stock_type == "美股":
-            result = self._get_us_share_news(stock_code, max_news, model_info)
-        else:
-            # 默認使用A股邏輯
-            result = self._get_a_share_news(stock_code, max_news, model_info)
+        # 統一使用美股新聞獲取方法
+        result = self._get_us_share_news(stock_code, max_news, model_info)
         
         logger.info(f"[統一新聞工具] 📊 新聞獲取完成，結果長度: {len(result)} 字符")
         logger.info(f"[統一新聞工具] 📋 返回結果預覽 (前1000字符): {result[:1000]}")
@@ -100,129 +92,8 @@ class UnifiedNewsAnalyzer:
         self.news_cache[cache_key] = (data, datetime.now())
     
     def _identify_stock_type(self, stock_code: str) -> str:
-        """识別股票類型"""
-        stock_code = stock_code.upper().strip()
-        
-        # A股判斷
-        if re.match(r'^(00|30|60|68)\d{4}$', stock_code):
-            return "A股"
-        elif re.match(r'^(SZ|SH)\d{6}$', stock_code):
-            return "A股"
-        
-        # 港股判斷
-        elif re.match(r'^\d{4,5}\.HK$', stock_code):
-            return "港股"
-        elif re.match(r'^\d{4,5}$', stock_code) and len(stock_code) <= 5:
-            return "港股"
-        
-        # 美股判斷
-        elif re.match(r'^[A-Z]{1,5}$', stock_code):
-            return "美股"
-        elif '.' in stock_code and not stock_code.endswith('.HK'):
-            return "美股"
-        
-        # 默認按A股處理
-        else:
-            return "A股"
-    
-    def _get_a_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
-        """獲取A股新聞"""
-        logger.info(f"[統一新聞工具] 獲取A股 {stock_code} 新聞")
-        
-        # 獲取當前日期
-        curr_date = datetime.now().strftime("%Y-%m-%d")
-        
-        # 優先級1: 东方財富實時新聞
-        try:
-            if hasattr(self.toolkit, 'get_realtime_stock_news'):
-                logger.info(f"[統一新聞工具] 嘗試东方財富實時新聞...")
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
-                result = self.toolkit.get_realtime_stock_news.invoke({"ticker": stock_code, "curr_date": curr_date})
-                
-                # 🔍 詳細記錄东方財富返回的內容
-                logger.info(f"[統一新聞工具] 📊 东方財富返回內容長度: {len(result) if result else 0} 字符")
-                logger.info(f"[統一新聞工具] 📋 东方財富返回內容預覽 (前500字符): {result[:500] if result else 'None'}")
-                
-                if result and len(result.strip()) > 100:
-                    logger.info(f"[統一新聞工具] ✅ 东方財富新聞獲取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "东方財富實時新聞", model_info)
-                else:
-                    logger.warning(f"[統一新聞工具] ⚠️ 东方財富新聞內容過短或為空")
-        except Exception as e:
-            logger.warning(f"[統一新聞工具] 东方財富新聞獲取失败: {e}")
-        
-        # 優先級2: Google新聞（中文搜索）
-        try:
-            if hasattr(self.toolkit, 'get_google_news'):
-                logger.info(f"[統一新聞工具] 嘗試Google新聞...")
-                query = f"{stock_code} 股票 新聞 財報 業绩"
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
-                result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
-                if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] ✅ Google新聞獲取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "Google新聞", model_info)
-        except Exception as e:
-            logger.warning(f"[統一新聞工具] Google新聞獲取失败: {e}")
-        
-        # 優先級3: OpenAI全球新聞
-        try:
-            if hasattr(self.toolkit, 'get_global_news_openai'):
-                logger.info(f"[統一新聞工具] 嘗試OpenAI全球新聞...")
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
-                result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
-                if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] ✅ OpenAI新聞獲取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "OpenAI全球新聞", model_info)
-        except Exception as e:
-            logger.warning(f"[統一新聞工具] OpenAI新聞獲取失败: {e}")
-        
-        return "❌ 無法獲取A股新聞數據，所有新聞源均不可用"
-    
-    def _get_hk_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
-        """獲取港股新聞"""
-        logger.info(f"[統一新聞工具] 獲取港股 {stock_code} 新聞")
-        
-        # 獲取當前日期
-        curr_date = datetime.now().strftime("%Y-%m-%d")
-        
-        # 優先級1: Google新聞（港股搜索）
-        try:
-            if hasattr(self.toolkit, 'get_google_news'):
-                logger.info(f"[統一新聞工具] 嘗試Google港股新聞...")
-                query = f"{stock_code} 港股 香港股票 新聞"
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
-                result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
-                if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] ✅ Google港股新聞獲取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "Google港股新聞", model_info)
-        except Exception as e:
-            logger.warning(f"[統一新聞工具] Google港股新聞獲取失败: {e}")
-        
-        # 優先級2: OpenAI全球新聞
-        try:
-            if hasattr(self.toolkit, 'get_global_news_openai'):
-                logger.info(f"[統一新聞工具] 嘗試OpenAI港股新聞...")
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
-                result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
-                if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] ✅ OpenAI港股新聞獲取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "OpenAI港股新聞", model_info)
-        except Exception as e:
-            logger.warning(f"[統一新聞工具] OpenAI港股新聞獲取失败: {e}")
-        
-        # 優先級3: 實時新聞（如果支持港股）
-        try:
-            if hasattr(self.toolkit, 'get_realtime_stock_news'):
-                logger.info(f"[統一新聞工具] 嘗試實時港股新聞...")
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
-                result = self.toolkit.get_realtime_stock_news.invoke({"ticker": stock_code, "curr_date": curr_date})
-                if result and len(result.strip()) > 100:
-                    logger.info(f"[統一新聞工具] ✅ 實時港股新聞獲取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "實時港股新聞", model_info)
-        except Exception as e:
-            logger.warning(f"[統一新聞工具] 實時港股新聞獲取失败: {e}")
-        
-        return "❌ 無法獲取港股新聞數據，所有新聞源均不可用"
+        """識別股票類型 - 統一視為美股"""
+        return "美股"
     
     def _get_us_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
         """獲取美股新聞"""
@@ -241,7 +112,7 @@ class UnifiedNewsAnalyzer:
                     logger.info(f"[統一新聞工具] ✅ OpenAI美股新聞獲取成功: {len(result)} 字符")
                     return self._format_news_result(result, "OpenAI美股新聞", model_info)
         except Exception as e:
-            logger.warning(f"[統一新聞工具] OpenAI美股新聞獲取失败: {e}")
+            logger.warning(f"[統一新聞工具] OpenAI美股新聞獲取失敗: {e}")
         
         # 優先級2: Google新聞（英文搜索）
         try:
@@ -254,7 +125,7 @@ class UnifiedNewsAnalyzer:
                     logger.info(f"[統一新聞工具] ✅ Google美股新聞獲取成功: {len(result)} 字符")
                     return self._format_news_result(result, "Google美股新聞", model_info)
         except Exception as e:
-            logger.warning(f"[統一新聞工具] Google美股新聞獲取失败: {e}")
+            logger.warning(f"[統一新聞工具] Google美股新聞獲取失敗: {e}")
         
         # 優先級3: FinnHub新聞（如果可用）
         try:
@@ -266,7 +137,7 @@ class UnifiedNewsAnalyzer:
                     logger.info(f"[統一新聞工具] ✅ FinnHub美股新聞獲取成功: {len(result)} 字符")
                     return self._format_news_result(result, "FinnHub美股新聞", model_info)
         except Exception as e:
-            logger.warning(f"[統一新聞工具] FinnHub美股新聞獲取失败: {e}")
+            logger.warning(f"[統一新聞工具] FinnHub美股新聞獲取失敗: {e}")
         
         return "❌ 無法獲取美股新聞數據，所有新聞源均不可用"
     
@@ -288,7 +159,7 @@ class UnifiedNewsAnalyzer:
             logger.info(f"[統一新聞工具] 🤖 檢測到Google模型，啟用特殊處理")
         
         # 對Google模型進行特殊的長度控制
-        if is_google_model and len(news_content) > 5000:  # 降低阈值到5000字符
+        if is_google_model and len(news_content) > 5000:  # 降低閾值到5000字符
             logger.warning(f"[統一新聞工具] 🔧 檢測到Google模型，新聞內容過長({len(news_content)}字符)，進行長度控制...")
             
             # 更嚴格的長度控制策略
@@ -297,15 +168,15 @@ class UnifiedNewsAnalyzer:
             char_count = 0
             target_length = 3000  # 目標長度設為3000字符
             
-            # 第一轮：優先保留包含關键詞的重要行
+            # 第一輪：優先保留包含關鍵詞的重要行
             for line in lines:
                 line = line.strip()
                 if not line:
                     continue
                     
-                # 檢查是否包含重要關键詞
-                important_keywords = ['股票', '公司', '財報', '業绩', '涨跌', '價格', '市值', '營收', '利润', 
-                                    '增長', '下跌', '上涨', '盈利', '亏損', '投資', '分析', '預期', '公告']
+                # 檢查是否包含重要關鍵詞
+                important_keywords = ['股票', '公司', '財報', '業績', '漲跌', '價格', '市值', '營收', '利潤',
+                                    '增長', '下跌', '上漲', '盈利', '虧損', '投資', '分析', '預期', '公告']
                 
                 is_important = any(keyword in line for keyword in important_keywords)
                 
@@ -335,7 +206,7 @@ class UnifiedNewsAnalyzer:
                 google_control_applied = True
                 logger.info(f"[統一新聞工具] ⚠️ Google模型強制截斷至{target_length}字符")
         
-        # 計算最終的格式化結果長度，確保总長度合理
+        # 計算最終的格式化結果長度，確保總長度合理
         base_format_length = 300  # 格式化模板的大概長度
         if is_google_model and (len(news_content) + base_format_length) > 4000:
             # 如果加上格式化後仍然過長，進一步壓縮新聞內容
@@ -370,12 +241,12 @@ def create_unified_news_tool(toolkit):
     def get_stock_news_unified(stock_code: str, max_news: int = 100, model_info: str = ""):
         """
         統一新聞獲取工具
-        
+
         Args:
-            stock_code (str): 股票代碼 (支持A股如000001、港股如0700.HK、美股如AAPL)
+            stock_code (str): 美股股票代碼 (如 AAPL、TSLA、NVDA)
             max_news (int): 最大新聞數量，默認100
             model_info (str): 當前使用的模型信息，用於特殊處理
-        
+
         Returns:
             str: 格式化的新聞內容
         """
@@ -387,14 +258,11 @@ def create_unified_news_tool(toolkit):
     # 設置工具屬性
     get_stock_news_unified.name = "get_stock_news_unified"
     get_stock_news_unified.description = """
-統一新聞獲取工具 - 根據股票代碼自動獲取相應市場的新聞
+統一新聞獲取工具 - 獲取美股市場的新聞
 
 功能:
-- 自動识別股票類型（A股/港股/美股）
-- 根據股票類型選擇最佳新聞源
-- A股: 優先东方財富 -> Google中文 -> OpenAI
-- 港股: 優先Google -> OpenAI -> 實時新聞
-- 美股: 優先OpenAI -> Google英文 -> FinnHub
+- 專注於美股新聞獲取
+- 優先OpenAI -> Google英文 -> FinnHub
 - 返回格式化的新聞內容
 - 支持Google模型的特殊長度控制
 """

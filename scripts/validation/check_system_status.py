@@ -51,11 +51,11 @@ def check_system_status():
 
             logger.info(f"\n📊 API密鑰配置狀態:")
             api_keys = {
-                'DASHSCOPE_API_KEY': '阿里百炼',
                 'FINNHUB_API_KEY': 'FinnHub',
-                'TUSHARE_TOKEN': 'Tushare',
+                'OPENAI_API_KEY': 'OpenAI',
                 'GOOGLE_API_KEY': 'Google AI',
-                'DEEPSEEK_API_KEY': 'DeepSeek'
+                'ANTHROPIC_API_KEY': 'Anthropic',
+                'OPENROUTER_API_KEY': 'OpenRouter'
             }
 
             for key, name in api_keys.items():
@@ -68,7 +68,7 @@ def check_system_status():
         except ImportError:
             logger.warning(f"⚠️ python-dotenv未安裝，無法解析.env文件")
         except Exception as e:
-            logger.error(f"❌ 環境配置解析失败: {e}")
+            logger.error(f"❌ 環境配置解析失敗: {e}")
     else:
         logger.error(f"❌ 環境配置文件不存在: {env_file}")
         if env_example_file.exists():
@@ -90,7 +90,7 @@ def check_system_status():
         logger.error(f"  降級支持: {'✅ 啟用' if status['fallback_enabled'] else '❌ 禁用'}")
         
     except Exception as e:
-        logger.error(f"❌ 數據庫管理器檢查失败: {e}")
+        logger.error(f"❌ 數據庫管理器檢查失敗: {e}")
         import traceback
         traceback.print_exc()
     
@@ -114,12 +114,12 @@ def check_system_status():
             adaptive_stats = stats['adaptive_cache']
             logger.info(f"  文件緩存數量: {adaptive_stats.get('file_cache_count', 0)}")
             if 'redis_keys' in adaptive_stats:
-                logger.info(f"  Redis键數量: {adaptive_stats['redis_keys']}")
+                logger.info(f"  Redis鍵數量: {adaptive_stats['redis_keys']}")
             if 'mongodb_cache_count' in adaptive_stats:
                 logger.info(f"  MongoDB緩存數量: {adaptive_stats['mongodb_cache_count']}")
         
     except Exception as e:
-        logger.error(f"❌ 緩存系統檢查失败: {e}")
+        logger.error(f"❌ 緩存系統檢查失敗: {e}")
         import traceback
         traceback.print_exc()
     
@@ -147,7 +147,7 @@ def check_system_status():
         if loaded_data == test_data:
             logger.info(f"✅ 數據加載成功，內容匹配")
         else:
-            logger.error(f"❌ 數據加載失败或內容不匹配")
+            logger.error(f"❌ 數據加載失敗或內容不匹配")
         
         # 測試數據查找
         found_key = cache.find_cached_stock_data(
@@ -160,10 +160,10 @@ def check_system_status():
         if found_key:
             logger.info(f"✅ 緩存查找成功: {found_key}")
         else:
-            logger.error(f"❌ 緩存查找失败")
+            logger.error(f"❌ 緩存查找失敗")
         
     except Exception as e:
-        logger.error(f"❌ 緩存功能測試失败: {e}")
+        logger.error(f"❌ 緩存功能測試失敗: {e}")
         import traceback
         traceback.print_exc()
     
@@ -207,10 +207,10 @@ def check_system_status():
             logger.info(f"🚀 相比API調用性能提升: {improvement:.1f}%")
         
     except Exception as e:
-        logger.error(f"❌ 性能測試失败: {e}")
+        logger.error(f"❌ 性能測試失敗: {e}")
     
-    # 系統建议
-    logger.info(f"\n💡 系統建议:")
+    # 系統建議
+    logger.info(f"\n💡 系統建議:")
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
         
@@ -220,7 +220,7 @@ def check_system_status():
             logger.info(f"✅ 數據庫可用，系統運行在最佳性能模式")
         else:
             logger.info(f"ℹ️ 數據庫不可用，系統使用文件緩存模式")
-            logger.info(f"💡 提升性能建议:")
+            logger.info(f"💡 提升性能建議:")
             logger.info(f"  1. 配置環境變量啟用數據庫:")
             logger.info(f"     MONGODB_ENABLED=true")
             logger.info(f"     REDIS_ENABLED=true")
@@ -234,7 +234,7 @@ def check_system_status():
         logger.info(f"🎯 當前性能模式: {performance_mode}")
         
     except Exception as e:
-        logger.warning(f"⚠️ 無法生成系統建议: {e}")
+        logger.warning(f"⚠️ 無法生成系統建議: {e}")
     
     logger.info(f"\n")
     logger.info(f"🎉 系統狀態檢查完成!")
@@ -245,7 +245,7 @@ def main():
         check_system_status()
         return True
     except Exception as e:
-        logger.error(f"❌ 系統檢查失败: {e}")
+        logger.error(f"❌ 系統檢查失敗: {e}")
         import traceback
 
         traceback.print_exc()

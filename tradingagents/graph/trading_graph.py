@@ -17,10 +17,7 @@ from tradingagents.agents import *
 from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.agents.utils.memory import FinancialSituationMemory
 
-# 導入統一日誌系統
-from tradingagents.utils.logging_init import get_logger
-
-# 導入日誌模塊
+# 導入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 from tradingagents.agents.utils.agent_states import (
@@ -110,9 +107,7 @@ class TradingAgentsGraph:
                 model=self.config["quick_think_llm"],
                 google_api_key=google_api_key,
                 temperature=0.1,
-                max_tokens=2000,
-                client_options=client_options,
-                transport="rest"
+                max_tokens=2000
             )
             
             logger.info(f"✅ [Google AI] 已啟用優化的工具調用和內容格式處理")
@@ -153,7 +148,7 @@ class TradingAgentsGraph:
         # Initialize memories (如果啟用)
         memory_enabled = self.config.get("memory_enabled", True)
         if memory_enabled:
-            # 使用單例ChromaDB管理器，避免並發創建冲突
+            # 使用單例ChromaDB管理器，避免並發創建衝突
             self.bull_memory = FinancialSituationMemory("bull_memory", self.config)
             self.bear_memory = FinancialSituationMemory("bear_memory", self.config)
             self.trader_memory = FinancialSituationMemory("trader_memory", self.config)

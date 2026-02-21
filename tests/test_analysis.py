@@ -24,18 +24,16 @@ def test_basic_imports():
         print("✅ 基本導入成功")
         return True
     except Exception as e:
-        print(f"❌ 基本導入失败: {e}")
+        print(f"❌ 基本導入失敗: {e}")
         return False
 
 def test_environment_variables():
     """測試環境變量"""
-    dashscope_key = os.getenv("DASHSCOPE_API_KEY")
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     
-    print(f"DASHSCOPE_API_KEY: {'已設置' if dashscope_key else '未設置'}")
     print(f"FINNHUB_API_KEY: {'已設置' if finnhub_key else '未設置'}")
     
-    return bool(dashscope_key and finnhub_key)
+    return bool(finnhub_key)
 
 def test_graph_initialization():
     """測試圖初始化"""
@@ -45,7 +43,6 @@ def test_graph_initialization():
         
         # 創建配置
         config = DEFAULT_CONFIG.copy()
-        config["llm_provider"] = "dashscope"
         config["deep_think_llm"] = "qwen-plus"
         config["quick_think_llm"] = "qwen-plus"
         config["memory_enabled"] = True
@@ -66,7 +63,7 @@ def test_graph_initialization():
         print("✅ 圖初始化成功")
         return True, graph
     except Exception as e:
-        print(f"❌ 圖初始化失败: {e}")
+        print(f"❌ 圖初始化失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False, None
@@ -85,7 +82,7 @@ def test_simple_analysis():
         print(f"決策: {decision}")
         return True
     except Exception as e:
-        print(f"❌ 分析失败: {e}")
+        print(f"❌ 分析失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -117,7 +114,7 @@ def main():
     if test_simple_analysis():
         print("\n🎉 所有測試通過！")
     else:
-        print("\n❌ 分析測試失败")
+        print("\n❌ 分析測試失敗")
 
 if __name__ == "__main__":
     main()

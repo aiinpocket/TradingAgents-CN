@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-文档一致性檢查腳本
-檢查文档与代碼的一致性，確保文档內容準確反映實际實現
+文件一致性檢查腳本
+檢查文件與代碼的一致性，確保文件內容準確反映實際實現
 """
 
 import os
@@ -17,7 +17,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 class DocumentationChecker:
-    """文档一致性檢查器"""
+    """文件一致性檢查器"""
     
     def __init__(self):
         self.project_root = project_root
@@ -27,7 +27,7 @@ class DocumentationChecker:
         
     def check_all(self) -> Dict[str, List[str]]:
         """執行所有檢查"""
-        print("🔍 開始文档一致性檢查...")
+        print("🔍 開始文件一致性檢查...")
         
         results = {
             "version_consistency": self.check_version_consistency(),
@@ -53,15 +53,15 @@ class DocumentationChecker:
         project_version = version_file.read_text().strip()
         print(f"   項目版本: {project_version}")
         
-        # 檢查文档中的版本信息
+        # 檢查文件中的版本信息
         doc_files = list(self.docs_dir.rglob("*.md"))
         for doc_file in doc_files:
             try:
                 content = doc_file.read_text(encoding='utf-8')
                 
-                # 檢查是否有版本头部
+                # 檢查是否有版本頭部
                 if content.startswith("---"):
-                    # 解析YAML头部
+                    # 解析YAML頭部
                     yaml_end = content.find("---", 3)
                     if yaml_end > 0:
                         yaml_content = content[3:yaml_end]
@@ -71,16 +71,16 @@ class DocumentationChecker:
                         if version_match:
                             doc_version = version_match.group(1).strip()
                             if doc_version != project_version:
-                                issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 版本不一致 (文档: {doc_version}, 項目: {project_version})")
+                                issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 版本不一致 (文件: {doc_version}, 項目: {project_version})")
                         else:
                             issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 缺少版本信息")
                 else:
-                    # 核心文档應该有版本头部
+                    # 核心文件應該有版本頭部
                     if any(keyword in str(doc_file) for keyword in ["agents", "architecture", "development"]):
-                        issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 缺少版本头部")
+                        issues.append(f"⚠️ {doc_file.relative_to(self.project_root)}: 缺少版本頭部")
                         
             except Exception as e:
-                issues.append(f"❌ 讀取文档失败 {doc_file}: {e}")
+                issues.append(f"❌ 讀取文件失敗 {doc_file}: {e}")
         
         return issues
     
@@ -89,13 +89,13 @@ class DocumentationChecker:
         print("🤖 檢查智能體架構一致性...")
         issues = []
         
-        # 檢查實际的智能體實現
+        # 檢查實際的智能體實現
         agents_code_dir = self.code_dir / "agents"
         if not agents_code_dir.exists():
             issues.append("❌ 智能體代碼目錄不存在")
             return issues
         
-        # 獲取實际的智能體列表
+        # 獲取實際的智能體列表
         actual_agents = {}
         for category in ["analysts", "researchers", "managers", "trader", "risk_mgmt"]:
             category_dir = agents_code_dir / category
@@ -107,29 +107,29 @@ class DocumentationChecker:
         
         print(f"   發現的智能體: {actual_agents}")
         
-        # 檢查文档中的智能體描述
+        # 檢查文件中的智能體描述
         agents_doc_dir = self.docs_dir / "agents"
         if agents_doc_dir.exists():
             for doc_file in agents_doc_dir.glob("*.md"):
                 try:
                     content = doc_file.read_text(encoding='utf-8')
                     
-                    # 檢查是否提到了BaseAnalyst類（應该已經移除）
+                    # 檢查是否提到了BaseAnalyst類（應該已經移除）
                     if "class BaseAnalyst" in content:
-                        issues.append(f"⚠️ {doc_file.name}: 仍然提到BaseAnalyst類，應该更新為函數式架構")
+                        issues.append(f"⚠️ {doc_file.name}: 仍然提到BaseAnalyst類，應該更新為函數式架構")
                     
                     # 檢查是否提到了create_*_analyst函數
                     if "create_" in content and "analyst" in content:
                         if "def create_" not in content:
-                            issues.append(f"⚠️ {doc_file.name}: 提到create函數但没有正確的函數簽名")
+                            issues.append(f"⚠️ {doc_file.name}: 提到create函數但沒有正確的函數簽名")
                     
                 except Exception as e:
-                    issues.append(f"❌ 讀取智能體文档失败 {doc_file}: {e}")
+                    issues.append(f"❌ 讀取智能體文件失敗 {doc_file}: {e}")
         
         return issues
     
     def check_code_examples(self) -> List[str]:
-        """檢查文档中的代碼示例"""
+        """檢查文件中的代碼示例"""
         print("💻 檢查代碼示例...")
         issues = []
         
@@ -149,9 +149,9 @@ class DocumentationChecker:
                     except SyntaxError as e:
                         issues.append(f"❌ {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 語法錯誤 - {e}")
                     
-                    # 檢查是否使用了已廢弃的類
+                    # 檢查是否使用了已廢棄的類
                     if "BaseAnalyst" in code_block:
-                        issues.append(f"⚠️ {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 使用了已廢弃的BaseAnalyst類")
+                        issues.append(f"⚠️ {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 使用了已廢棄的BaseAnalyst類")
                     
                     # 檢查導入語句的正確性
                     import_lines = [line.strip() for line in code_block.split('\n') if line.strip().startswith('from tradingagents')]
@@ -161,30 +161,30 @@ class DocumentationChecker:
                             issues.append(f"⚠️ {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 導入不存在的base_analyst模塊")
                 
             except Exception as e:
-                issues.append(f"❌ 檢查代碼示例失败 {doc_file}: {e}")
+                issues.append(f"❌ 檢查代碼示例失敗 {doc_file}: {e}")
         
         return issues
     
     def check_api_references(self) -> List[str]:
-        """檢查API參考文档"""
+        """檢查API參考文件"""
         print("📚 檢查API參考...")
         issues = []
         
-        # 檢查是否有API參考文档
+        # 檢查是否有API參考文件
         api_ref_dir = self.docs_dir / "reference"
         if not api_ref_dir.exists():
-            issues.append("⚠️ 缺少API參考文档目錄")
+            issues.append("⚠️ 缺少API參考文件目錄")
             return issues
         
-        # 檢查智能體API文档
+        # 檢查智能體API文件
         agents_ref = api_ref_dir / "agents"
         if not agents_ref.exists():
-            issues.append("⚠️ 缺少智能體API參考文档")
+            issues.append("⚠️ 缺少智能體API參考文件")
         
         return issues
     
     def check_file_existence(self) -> List[str]:
-        """檢查文档中引用的文件是否存在"""
+        """檢查文件中引用的檔案是否存在"""
         print("📁 檢查文件引用...")
         issues = []
         
@@ -205,17 +205,17 @@ class DocumentationChecker:
                         issues.append(f"❌ {doc_file.relative_to(self.project_root)}: 引用的文件不存在 - {ref}")
                 
             except Exception as e:
-                issues.append(f"❌ 檢查文件引用失败 {doc_file}: {e}")
+                issues.append(f"❌ 檢查文件引用失敗 {doc_file}: {e}")
         
         return issues
     
     def generate_report(self, results: Dict[str, List[str]]) -> str:
         """生成檢查報告"""
-        report = ["# 文档一致性檢查報告\n"]
+        report = ["# 文件一致性檢查報告\n"]
         report.append(f"**檢查時間**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         
         total_issues = sum(len(issues) for issues in results.values())
-        report.append(f"**总問題數**: {total_issues}\n")
+        report.append(f"**總問題數**: {total_issues}\n")
         
         for category, issues in results.items():
             report.append(f"## {category.replace('_', ' ').title()}\n")
@@ -242,12 +242,12 @@ def main():
     report_file.write_text(report, encoding='utf-8')
     
     print(f"\n📊 檢查完成！報告已保存到: {report_file}")
-    print(f"总問題數: {sum(len(issues) for issues in results.values())}")
+    print(f"總問題數: {sum(len(issues) for issues in results.values())}")
     
     # 如果有嚴重問題，返回非零退出碼
     critical_issues = sum(1 for issues in results.values() for issue in issues if issue.startswith("❌"))
     if critical_issues > 0:
-        print(f"⚠️ 發現 {critical_issues} 個嚴重問題，建议立即修複")
+        print(f"⚠️ 發現 {critical_issues} 個嚴重問題，建議立即修復")
         return 1
     
     return 0

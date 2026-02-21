@@ -86,7 +86,7 @@ def main():
         "docs/PROJECT_INFO.md",
         "docs/releases/CHANGELOG.md",
         "docs/overview/quick-start.md",
-        "docs/configuration/dashscope-config.md",
+        "docs/configuration/llm-config.md",
         "docs/data/data-sources.md",
     ]
     
@@ -112,8 +112,8 @@ def main():
                     logger.info(f"      上下文: ...{issue['context']}...")
                 total_issues += len(issues)
     
-    # 总結
-    logger.info(f"\n📊 檢查总結")
+    # 總結
+    logger.info(f"\n📊 檢查總結")
     logger.info(f"=")
     
     if total_issues == 0:
@@ -121,7 +121,7 @@ def main():
         logger.info(f"✅ 當前版本: {target_version}")
     else:
         logger.warning(f"⚠️ 發現 {total_issues} 個版本號不一致問題")
-        logger.info(f"請手動修複上述問題")
+        logger.info(f"請手動修復上述問題")
     
     # 版本號規範提醒
     logger.info(f"\n💡 版本號規範:")

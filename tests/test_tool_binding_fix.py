@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試統一新聞工具的LangChain绑定修複
+測試統一新聞工具的LangChain綁定修複
 """
 
 from tradingagents.agents.utils.agent_utils import Toolkit
@@ -8,8 +8,8 @@ from tradingagents.tools.unified_news_tool import create_unified_news_tool
 from langchain_core.utils.function_calling import convert_to_openai_tool
 
 def test_tool_binding():
-    """測試工具绑定是否修複"""
-    print("=== 測試統一新聞工具的LangChain绑定修複 ===")
+    """測試工具綁定是否修複"""
+    print("=== 測試統一新聞工具的LangChain綁定修複 ===")
     
     # 創建工具包
     toolkit = Toolkit()
@@ -35,10 +35,10 @@ def test_tool_binding():
         if set(params) == set(expected_params):
             print("✅ 參數匹配正確")
         else:
-            print(f"❌ 參數不匹配，期望: {expected_params}, 實际: {params}")
+            print(f"❌ 參數不匹配，期望: {expected_params}, 實際: {params}")
             
     except Exception as e:
-        print(f"❌ LangChain工具轉換失败: {e}")
+        print(f"❌ LangChain工具轉換失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -50,15 +50,15 @@ def test_tool_binding():
         print(f"✅ 工具調用成功，結果長度: {len(result)} 字符")
         print(f"結果預覽: {result[:200]}...")
     except Exception as e:
-        print(f"❌ 工具調用失败: {e}")
+        print(f"❌ 工具調用失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
     
     print("\n=== 測試完成 ===")
-    print("✅ 統一新聞工具的LangChain绑定問題已修複")
-    print("✅ 函數簽名与文档字符串現在匹配")
-    print("✅ 工具可以正常绑定到LLM")
+    print("✅ 統一新聞工具的LangChain綁定問題已修複")
+    print("✅ 函數簽名與文件字符串現在匹配")
+    print("✅ 工具可以正常綁定到LLM")
     
     return True
 

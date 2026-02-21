@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試Web配置管理页面
+測試Web配置管理頁面
 """
 
 import sys
@@ -11,16 +11,16 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_config_page_import():
-    """測試配置页面導入"""
-    print("🧪 測試配置管理页面導入")
+    """測試配置頁面導入"""
+    print("🧪 測試配置管理頁面導入")
     print("=" * 50)
     
     try:
         from web.pages.config_management import render_config_management
-        print("✅ 配置管理页面導入成功")
+        print("✅ 配置管理頁面導入成功")
         return True
     except Exception as e:
-        print(f"❌ 配置管理页面導入失败: {e}")
+        print(f"❌ 配置管理頁面導入失敗: {e}")
         import traceback
         print(f"錯誤詳情: {traceback.format_exc()}")
         return False
@@ -46,7 +46,7 @@ def test_config_manager_import():
         
         return True
     except Exception as e:
-        print(f"❌ 配置管理器導入失败: {e}")
+        print(f"❌ 配置管理器導入失敗: {e}")
         import traceback
         print(f"錯誤詳情: {traceback.format_exc()}")
         return False
@@ -68,18 +68,18 @@ def test_streamlit_components():
         
         return True
     except Exception as e:
-        print(f"❌ Streamlit組件導入失败: {e}")
+        print(f"❌ Streamlit組件導入失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 Web配置管理页面測試")
+    print("🧪 Web配置管理頁面測試")
     print("=" * 60)
     
     tests = [
         ("Streamlit組件", test_streamlit_components),
         ("配置管理器", test_config_manager_import),
-        ("配置页面", test_config_page_import),
+        ("配置頁面", test_config_page_import),
     ]
     
     passed = 0
@@ -91,22 +91,22 @@ def main():
                 passed += 1
                 print(f"✅ {test_name} 測試通過")
             else:
-                print(f"❌ {test_name} 測試失败")
+                print(f"❌ {test_name} 測試失敗")
         except Exception as e:
             print(f"❌ {test_name} 測試異常: {e}")
     
     print(f"\n📊 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有測試通過！配置管理页面可以正常使用")
+        print("🎉 所有測試通過！配置管理頁面可以正常使用")
         print("\n💡 使用方法:")
         print("1. 啟動Web應用: python -m streamlit run web/app.py")
-        print("2. 在侧邊栏選擇 '⚙️ 配置管理'")
+        print("2. 在側邊欄選擇 '⚙️ 配置管理'")
         print("3. 配置API密鑰、模型參數和費率設置")
         print("4. 查看使用統計和成本分析")
         return True
     else:
-        print("❌ 部分測試失败，請檢查配置")
+        print("❌ 部分測試失敗，請檢查配置")
         return False
 
 if __name__ == "__main__":

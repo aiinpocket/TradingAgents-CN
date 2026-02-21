@@ -14,14 +14,14 @@ logger = get_logger('agents')
 
 def get_stock_info(stock_code: str) -> Optional[Dict[str, Any]]:
     """
-    獲取單個股票的基础信息
+    獲取單個股票的基礎信息
     
     Args:
         stock_code: 股票代碼（如 '000001'）
     
     Returns:
         Dict: 股票信息，包含code, name, market, category等字段
-              如果獲取失败，返回包含error字段的字典
+              如果獲取失敗，返回包含error字段的字典
     
     Example:
         >>> info = get_stock_info('000001')
@@ -35,8 +35,8 @@ def get_all_stocks() -> List[Dict[str, Any]]:
     獲取所有股票列表
     
     Returns:
-        List[Dict]: 股票列表，每個元素包含股票基础信息
-                   如果獲取失败，返回包含error字段的字典
+        List[Dict]: 股票列表，每個元素包含股票基礎信息
+                   如果獲取失敗，返回包含error字段的字典
     
     Example:
         >>> stocks = get_all_stocks()
@@ -76,7 +76,7 @@ def search_stocks_by_name(name: str) -> List[Dict[str, Any]]:
     根據股票名稱搜索股票（需要MongoDB支持）
     
     Args:
-        name: 股票名稱關键詞
+        name: 股票名稱關鍵詞
     
     Returns:
         List[Dict]: 匹配的股票列表
@@ -86,7 +86,7 @@ def search_stocks_by_name(name: str) -> List[Dict[str, Any]]:
         >>> for stock in results:
         logger.info(f"{stock['code']}: {stock['name']}")
     """
-    # 這個功能需要MongoDB支持，暂時通過原有方式實現
+    # 這個功能需要MongoDB支持，暫時通過原有方式實現
     try:
         from ..examples.stock_query_examples import EnhancedStockQueryService
 
@@ -111,7 +111,7 @@ def check_data_sources() -> Dict[str, Any]:
     
     return {
         'mongodb_available': service.db_manager is not None and service.db_manager.mongodb_db is not None,
-        'unified_api_available': True,  # 統一接口总是可用
+        'unified_api_available': True,  # 統一接口總是可用
         'enhanced_fetcher_available': True,  # 這個通常都可用
         'fallback_mode': service.db_manager is None or service.db_manager.mongodb_db is None,
         'recommendation': (

@@ -26,11 +26,9 @@ def test_google_memory_fixed():
         
         # 檢查API密鑰
         google_key = os.getenv('GOOGLE_API_KEY')
-        dashscope_key = os.getenv('DASHSCOPE_API_KEY')
         
         print(f"🔑 API密鑰狀態:")
         print(f"   Google API: {'✅ 已配置' if google_key else '❌ 未配置'}")
-        print(f"   阿里百炼API: {'✅ 已配置' if dashscope_key else '❌ 未配置'}")
         
         if not google_key:
             print("❌ Google API密鑰未配置，無法測試")
@@ -50,7 +48,7 @@ def test_google_memory_fixed():
         
         # 測試嵌入功能
         print("\n📝 測試嵌入功能...")
-        test_text = "苹果公司股票在高通胀環境下的投資價值分析"
+        test_text = "蘋果公司股票在高通脹環境下的投資價值分析"
         
         try:
             embedding = memory.get_embedding(test_text)
@@ -58,36 +56,36 @@ def test_google_memory_fixed():
             print(f"   嵌入維度: {len(embedding)}")
             print(f"   嵌入預覽: {embedding[:5]}...")
             
-            # 測試記忆存储
-            print("\n💾 測試記忆存储...")
+            # 測試記憶存儲
+            print("\n💾 測試記憶存儲...")
             memory.add_situations([
-                ("高通胀環境，利率上升，科技股承壓", "建议關註現金流穩定的大型科技公司，如苹果、微软等"),
-                ("市場波動加剧，投資者情绪谨慎", "建议分散投資，關註防御性板塊")
+                ("高通脹環境，利率上升，科技股承壓", "建議關注現金流穩定的大型科技公司，如蘋果、微軟等"),
+                ("市場波動加劇，投資者情緒謹慎", "建議分散投資，關注防禦性板塊")
             ])
-            print("✅ 記忆存储成功")
+            print("✅ 記憶存儲成功")
             
-            # 測試記忆檢索
-            print("\n🔍 測試記忆檢索...")
-            similar_memories = memory.get_memories("通胀上升時期的科技股投資", n_matches=2)
-            print(f"✅ 記忆檢索成功")
-            print(f"   檢索到 {len(similar_memories)} 條相關記忆")
+            # 測試記憶檢索
+            print("\n🔍 測試記憶檢索...")
+            similar_memories = memory.get_memories("通脹上升時期的科技股投資", n_matches=2)
+            print(f"✅ 記憶檢索成功")
+            print(f"   檢索到 {len(similar_memories)} 條相關記憶")
 
             for i, mem in enumerate(similar_memories, 1):
                 situation = mem['matched_situation']
                 recommendation = mem['recommendation']
                 score = mem['similarity_score']
-                print(f"   記忆{i} (相似度: {score:.3f}):")
-                print(f"     情况: {situation}")
-                print(f"     建议: {recommendation}")
+                print(f"   記憶{i} (相似度: {score:.3f}):")
+                print(f"     情況: {situation}")
+                print(f"     建議: {recommendation}")
             
             return True
             
         except Exception as e:
-            print(f"❌ 嵌入功能測試失败: {e}")
+            print(f"❌ 嵌入功能測試失敗: {e}")
             return False
             
     except Exception as e:
-        print(f"❌ Google AI內存測試失败: {e}")
+        print(f"❌ Google AI內存測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -103,14 +101,10 @@ def test_google_tradingagents_with_memory():
         
         # 檢查API密鑰
         google_key = os.getenv('GOOGLE_API_KEY')
-        dashscope_key = os.getenv('DASHSCOPE_API_KEY')
         
         if not google_key:
             print("❌ Google API密鑰未配置")
             return False
-        
-        if not dashscope_key:
-            print("⚠️ 阿里百炼API密鑰未配置，內存功能可能不可用")
         
         # 創建配置
         config = DEFAULT_CONFIG.copy()
@@ -151,7 +145,7 @@ def test_google_tradingagents_with_memory():
             
             if state and decision:
                 print("✅ 帶內存的Gemini股票分析成功！")
-                print(f"   最终決策: {decision}")
+                print(f"   最終決策: {decision}")
                 
                 # 檢查市場報告
                 if "market_report" in state and state["market_report"]:
@@ -165,13 +159,13 @@ def test_google_tradingagents_with_memory():
                 return False
                 
         except Exception as e:
-            print(f"❌ 帶內存的股票分析失败: {e}")
+            print(f"❌ 帶內存的股票分析失敗: {e}")
             import traceback
             print(traceback.format_exc())
             return False
             
     except Exception as e:
-        print(f"❌ 帶內存的TradingAgents測試失败: {e}")
+        print(f"❌ 帶內存的TradingAgents測試失敗: {e}")
         return False
 
 def main():
@@ -185,33 +179,33 @@ def main():
     results['內存功能'] = test_google_memory_fixed()
     results['完整TradingAgents'] = test_google_tradingagents_with_memory()
     
-    # 总結結果
-    print(f"\n📊 測試結果总結:")
+    # 總結結果
+    print(f"\n📊 測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
         print("🎉 Google AI內存功能修複成功！")
         print("\n💡 現在可以使用的功能:")
         print("   ✅ Google Gemini作為主要LLM")
-        print("   ✅ 阿里百炼作為嵌入服務")
-        print("   ✅ 完整的內存和學习功能")
+        print("   ✅ 阿里百煉作為嵌入服務")
+        print("   ✅ 完整的內存和學習功能")
         print("   ✅ 中文分析和推理")
-        print("   ✅ 歷史經驗學习")
+        print("   ✅ 歷史經驗學習")
     elif successful_tests > 0:
         print("⚠️ 部分功能可用")
         if results['內存功能'] and not results['完整TradingAgents']:
             print("💡 內存功能正常，但完整流程有其他問題")
     else:
-        print("❌ 修複失败，請檢查API密鑰配置")
+        print("❌ 修複失敗，請檢查API密鑰配置")
 
 if __name__ == "__main__":
     main()

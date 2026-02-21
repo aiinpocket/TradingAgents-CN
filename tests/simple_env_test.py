@@ -68,7 +68,7 @@ def test_env_reading():
     except ImportError:
         print("❌ pymongo 未安裝")
     except Exception as e:
-        print(f"❌ MongoDB 連接失败: {e}")
+        print(f"❌ MongoDB 連接失敗: {e}")
     
     # 測試Redis
     redis_available = False
@@ -87,17 +87,17 @@ def test_env_reading():
     except ImportError:
         print("❌ redis 未安裝")
     except Exception as e:
-        print(f"❌ Redis 連接失败: {e}")
+        print(f"❌ Redis 連接失敗: {e}")
     
-    # 总結
-    print(f"\n📊 总結:")
+    # 總結
+    print(f"\n📊 總結:")
     print(f"MongoDB: {'✅ 可用' if mongodb_available else '❌ 不可用'}")
     print(f"Redis: {'✅ 可用' if redis_available else '❌ 不可用'}")
     
     if mongodb_available or redis_available:
-        print("🚀 數據庫可用，系統将使用高性能模式")
+        print("🚀 數據庫可用，系統將使用高性能模式")
     else:
-        print("📁 數據庫不可用，系統将使用文件緩存模式")
+        print("📁 數據庫不可用，系統將使用文件緩存模式")
         print("💡 這是正常的，系統可以正常工作")
     
     return True

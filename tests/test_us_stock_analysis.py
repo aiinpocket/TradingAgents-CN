@@ -62,7 +62,7 @@ def test_us_stock_market_analysis():
         return result
         
     except Exception as e:
-        print(f"❌ 美股市場分析失败: {e}")
+        print(f"❌ 美股市場分析失敗: {e}")
         import traceback
         traceback.print_exc()
         return None
@@ -123,7 +123,7 @@ def test_us_stock_fundamentals_analysis():
         return result
         
     except Exception as e:
-        print(f"❌ 美股基本面分析失败: {e}")
+        print(f"❌ 美股基本面分析失敗: {e}")
         import traceback
         traceback.print_exc()
         return None
@@ -133,9 +133,7 @@ if __name__ == "__main__":
     print("="*50)
     
     # 檢查API密鑰
-    api_key = os.getenv("DASHSCOPE_API_KEY")
     if not api_key:
-        print("❌ 請設置 DASHSCOPE_API_KEY 環境變量")
         sys.exit(1)
     
     print(f"✅ API密鑰已配置: {api_key[:10]}...")
@@ -147,6 +145,6 @@ if __name__ == "__main__":
     result2 = test_us_stock_fundamentals_analysis()
     
     print("\n" + "="*50)
-    print("🎯 測試总結:")
-    print(f"市場分析測試: {'✅ 成功' if result1 else '❌ 失败'}")
-    print(f"基本面分析測試: {'✅ 成功' if result2 else '❌ 失败'}")
+    print("🎯 測試總結:")
+    print(f"市場分析測試: {'✅ 成功' if result1 else '❌ 失敗'}")
+    print(f"基本面分析測試: {'✅ 成功' if result2 else '❌ 失敗'}")

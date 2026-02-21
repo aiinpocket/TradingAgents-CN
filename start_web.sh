@@ -16,5 +16,5 @@ fi
 # 啟動Streamlit應用
 python start_web.py
 
-echo "按任意键退出..."
+echo "按任意鍵退出..."
 read -n 1

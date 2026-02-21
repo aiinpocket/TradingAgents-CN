@@ -33,7 +33,7 @@ def run_command(command, description, timeout=300):
                 logger.info(f"輸出: {result.stdout.strip()}")
             return True
         else:
-            logger.error(f"❌ {description}失败")
+            logger.error(f"❌ {description}失敗")
             logger.error(f"錯誤: {result.stderr.strip()}")
             return False
             
@@ -132,7 +132,7 @@ def main():
         logger.info(f"\n{'='*20} {step_name} {'='*20}")
         
         if not step_func():
-            logger.error(f"\n❌ {step_name}失败，構建中止")
+            logger.error(f"\n❌ {step_name}失敗，構建中止")
             return False
     
     logger.info(f"\n")
@@ -142,7 +142,7 @@ def main():
     logger.info(f"\n📋 使用說明:")
     logger.info(f"1. 啟動完整服務:")
     logger.info(f"   docker-compose up -d")
-    logger.info(f"\n2. 仅啟動Web服務:")
+    logger.info(f"\n2. 僅啟動Web服務:")
     logger.info(f"   docker run -p 8501:8501 tradingagents-cn:latest")
     logger.info(f"\n3. 測試PDF功能:")
     logger.info(f"   docker run tradingagents-cn:latest python scripts/test_docker_pdf.py")

@@ -7,7 +7,7 @@ status: updated
 
 # TradingAgents-CN 使用指南
 
-> **版本說明**: 本文档基於 `cn-0.1.14-preview` 版本編寫  
+> **版本說明**: 本文檔基於 `cn-0.1.14-preview` 版本編寫  
 > **最後更新**: 2025-01-13  
 > **狀態**: ✅ 已更新 - 完整的使用指南集合
 
@@ -24,12 +24,12 @@ status: updated
 ### 🔧 技術指南
 - **[API開發指南](../development/api-development-guide.md)** - 二次開發和API使用
 - **[Docker部署指南](./docker-deployment-guide.md)** - 容器化部署方案
-- **[故障排除指南](../troubleshooting/)** - 常见問題解決方案
+- **[故障排除指南](../troubleshooting/)** - 常見問題解決方案
 
 ### 🎯 專項指南
 - **[成本控制指南](./cost-control-guide.md)** - API成本管理和優化
 - **[數據源配置指南](./data-source-guide.md)** - 數據源配置和使用
-- **[模型選擇指南](./model-selection-guide.md)** - LLM模型選擇建议
+- **[模型選擇指南](./model-selection-guide.md)** - LLM模型選擇建議
 
 ## 🎯 使用路徑推薦
 
@@ -53,17 +53,17 @@ status: updated
 ### ✅ 完整性
 - 從安裝到使用的完整流程
 - 涵蓋所有主要功能和特性
-- 包含實际操作示例
+- 包含實際操作示例
 
 ### 🎯 實用性
 - 基於真實使用場景
-- 提供具體的操作步骤
-- 包含常见問題解決方案
+- 提供具體的操作步驟
+- 包含常見問題解決方案
 
 ### 🔄 時效性
 - 基於最新版本編寫
 - 定期更新和維護
-- 与代碼變更同步
+- 與代碼變更同步
 
 ## 🚀 快速導航
 
@@ -85,8 +85,8 @@ status: updated
 
 #### 🆘 解決問題
 - **故障排除**: [故障排除指南](../troubleshooting/)
-- **常见問題**: [FAQ](../faq/)
-- **社区支持**: [GitHub Issues](https://github.com/your-repo/issues)
+- **常見問題**: [FAQ](../faq/)
+- **社群支持**: [GitHub Issues](https://github.com/your-repo/issues)
 
 ## 📖 閱讀建議
 
@@ -174,4 +174,4 @@ status: updated
 
 **開始你的TradingAgents-CN學习之旅！** 🚀
 
-選擇適合你的指南，開始探索AI驱動的股票分析世界。
+選擇適合你的指南，開始探索AI驅動的股票分析世界。

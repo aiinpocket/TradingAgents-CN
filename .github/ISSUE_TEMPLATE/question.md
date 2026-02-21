@@ -79,9 +79,9 @@ Error messages here
 **配置檔案 / Configuration:**
 如果相關，請分享您的配置（請隱藏敏感資訊如API密鑰）。
 ```bash
-# 示例配置（請隱藏敏感資訊）
-TRADINGAGENTS_CHINA_DATA_SOURCE=tushare
-TRADINGAGENTS_US_DATA_SOURCE=finnhub
+# 範例配置（請隱藏敏感資訊）
+LLM_PROVIDER=openai
+FINNHUB_API_KEY=已配置
 # ... 其他配置
 ```
 
@@ -117,8 +117,8 @@ If helpful, please add screenshots.
 **常見問題 / FAQ:**
 - 📖 [項目文檔](../docs/)
 - 🐳 [Docker部署指南](../docs/DOCKER_GUIDE.md)
-- 🚀 [快速開始指南](../README.md#🚀-启动应用)
-- ⚙️ [配置說明](../README.md#配置api密钥)
+- [快速開始指南](../README.md#啟動應用)
+- [配置說明](../README.md#配置api密鑰)
 
 **社區支持 / Community Support:**
 - 💬 [GitHub Discussions](https://github.com/hsliuping/TradingAgents-CN/discussions)

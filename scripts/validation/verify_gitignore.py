@@ -77,13 +77,13 @@ def main():
             for file in tracked_files[:5]:  # 只顯示前5個
                 logger.info(f"  - {file}")
             if len(tracked_files) > 5:
-                logger.info(f"  ... 还有 {len(tracked_files) - 5} 個文件")
+                logger.info(f"  ... 還有 {len(tracked_files) - 5} 個文件")
             
             logger.info(f"\n🔧 需要從Git跟蹤中移除這些文件:")
             logger.info(f"git rm -r --cached docs/contribution/")
             return False
         else:
-            logger.info(f"✅ 没有contribution文件被Git跟蹤")
+            logger.info(f"✅ 沒有contribution文件被Git跟蹤")
     else:
         logger.warning(f"⚠️ 無法檢查Git跟蹤狀態: {error}")
     
@@ -112,7 +112,7 @@ def main():
         test_file.unlink()
         
     except Exception as e:
-        logger.error(f"⚠️ 測試失败: {e}")
+        logger.error(f"⚠️ 測試失敗: {e}")
     
     # 檢查當前Git狀態
     logger.info(f"\n📊 檢查當前Git狀態...")
@@ -134,20 +134,20 @@ def main():
                 logger.warning(f"⚠️ 發現contribution相關的更改:")
                 for change in contribution_changes:
                     logger.info(f"  {change}")
-                logger.info(f"\n建议操作:")
+                logger.info(f"\n建議操作:")
                 logger.info(f"1. git add .gitignore")
                 logger.info(f"2. git commit -m 'chore: exclude docs/contribution from version control'")
             else:
-                logger.info(f"✅ 没有contribution相關的未提交更改")
+                logger.info(f"✅ 沒有contribution相關的未提交更改")
         else:
-            logger.info(f"✅ 工作目錄干净")
+            logger.info(f"✅ 工作目錄乾淨")
     else:
         logger.warning(f"⚠️ 無法檢查Git狀態: {error}")
     
-    logger.info(f"\n🎯 总結:")
+    logger.info(f"\n🎯 總結:")
     logger.info(f"✅ docs/contribution 目錄已成功配置為不被Git管理")
     logger.info(f"📁 本地文件保留，但不會被版本控制")
-    logger.info(f"🔒 新增的contribution文件将自動被忽略")
+    logger.info(f"🔒 新增的contribution文件將自動被忽略")
     
     return True
 

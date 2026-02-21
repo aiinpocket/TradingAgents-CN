@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-将 .env 文件中的配置迁移到新的JSON配置系統
+將 .env 文件中的配置遷移到新的JSON配置系統
 """
 
 import os
@@ -27,7 +27,6 @@ def load_env_config():
     
     load_dotenv(env_file)
     return {
-        'dashscope_api_key': os.getenv('DASHSCOPE_API_KEY', ''),
         'openai_api_key': os.getenv('OPENAI_API_KEY', ''),
         'google_api_key': os.getenv('GOOGLE_API_KEY', ''),
         'anthropic_api_key': os.getenv('ANTHROPIC_API_KEY', ''),
@@ -40,8 +39,8 @@ def load_env_config():
     }
 
 def migrate_model_configs(env_config):
-    """迁移模型配置"""
-    logger.info(f"🔄 迁移模型配置...")
+    """遷移模型配置"""
+    logger.info(f"🔄 遷移模型配置...")
     
     # 加載現有配置
     models = config_manager.load_models()
@@ -49,14 +48,7 @@ def migrate_model_configs(env_config):
     # 更新API密鑰
     updated = False
     for model in models:
-        if model.provider == "dashscope" and env_config['dashscope_api_key']:
-            if model.api_key != env_config['dashscope_api_key']:
-                model.api_key = env_config['dashscope_api_key']
-                model.enabled = True  # 有API密鑰的模型自動啟用
-                updated = True
-                logger.info(f"✅ 更新 {model.provider} - {model.model_name} API密鑰")
-        
-        elif model.provider == "openai" and env_config['openai_api_key']:
+        if model.provider == "openai" and env_config['openai_api_key']:
             if model.api_key != env_config['openai_api_key']:
                 model.api_key = env_config['openai_api_key']
                 model.enabled = True
@@ -84,8 +76,8 @@ def migrate_model_configs(env_config):
         logger.info(f"ℹ️ 模型配置無需更新")
 
 def migrate_system_settings(env_config):
-    """迁移系統設置"""
-    logger.info(f"\n🔄 迁移系統設置...")
+    """遷移系統設置"""
+    logger.info(f"\n🔄 遷移系統設置...")
     
     settings = config_manager.load_settings()
     
@@ -130,7 +122,7 @@ def migrate_system_settings(env_config):
 
 def main():
     """主函數"""
-    logger.info(f"🔄 .env 配置迁移工具")
+    logger.info(f"🔄 .env 配置遷移工具")
     logger.info(f"=")
     
     # 加載 .env 配置
@@ -141,32 +133,32 @@ def main():
     logger.info(f"📋 檢測到的 .env 配置:")
     for key, value in env_config.items():
         if 'api_key' in key or 'secret' in key:
-            # 隐藏敏感信息
+            # 隱藏敏感信息
             display_value = f"***{value[-4:]}" if value else "未設置"
         else:
             display_value = value if value else "未設置"
         logger.info(f"  {key}: {display_value}")
     
-    logger.info(f"\n🎯 開始迁移配置...")
+    logger.info(f"\n🎯 開始遷移配置...")
     
     try:
-        # 迁移模型配置
+        # 遷移模型配置
         migrate_model_configs(env_config)
         
-        # 迁移系統設置
+        # 遷移系統設置
         migrate_system_settings(env_config)
         
-        logger.info(f"\n🎉 配置迁移完成！")
+        logger.info(f"\n🎉 配置遷移完成！")
         logger.info(f"\n💡 下一步:")
         logger.info(f"1. 啟動Web界面: python -m streamlit run web/app.py")
-        logger.info(f"2. 訪問 '⚙️ 配置管理' 页面查看迁移結果")
+        logger.info(f"2. 訪問 '⚙️ 配置管理' 頁面查看遷移結果")
         logger.info(f"3. 根據需要調整模型參數和定價配置")
-        logger.info(f"4. 可以繼续使用 .env 文件，也可以完全使用Web配置")
+        logger.info(f"4. 可以繼續使用 .env 文件，也可以完全使用Web配置")
         
         return True
         
     except Exception as e:
-        logger.error(f"❌ 迁移失败: {e}")
+        logger.error(f"❌ 遷移失敗: {e}")
         import traceback
 
         logger.error(f"錯誤詳情: {traceback.format_exc()}")

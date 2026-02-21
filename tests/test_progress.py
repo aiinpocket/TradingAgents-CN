@@ -19,7 +19,7 @@ def test_progress_callback():
         print(f"[進度] {message}")
         if step is not None and total_steps is not None:
             percentage = (step / total_steps) * 100
-            print(f"  步骤: {step}/{total_steps} ({percentage:.1f}%)")
+            print(f"  步驟: {step}/{total_steps} ({percentage:.1f}%)")
         print()
     
     # 模擬分析過程
@@ -30,7 +30,7 @@ def test_progress_callback():
         "配置分析參數...",
         "創建必要的目錄...",
         "初始化分析引擎...",
-        "開始分析 AAPL 股票，這可能需要几分鐘時間...",
+        "開始分析 AAPL 股票，這可能需要幾分鐘時間...",
         "分析完成，正在整理結果...",
         "✅ 分析成功完成！"
     ]
@@ -54,14 +54,14 @@ def test_progress_tracker():
         
         def mock_callback(message, current_step, total_steps, progress, elapsed_time):
             print(f"[跟蹤器] {message}")
-            print(f"  步骤: {current_step + 1}/{total_steps}")
+            print(f"  步驟: {current_step + 1}/{total_steps}")
             print(f"  進度: {progress:.1%}")
             print(f"  用時: {elapsed_time:.1f}秒")
             print()
         
         tracker = AnalysisProgressTracker(callback=mock_callback)
         
-        # 模擬分析步骤
+        # 模擬分析步驟
         steps = [
             "開始股票分析...",
             "檢查環境變量配置...",
@@ -82,7 +82,7 @@ def test_progress_tracker():
         return True
         
     except Exception as e:
-        print(f"❌ 進度跟蹤器測試失败: {e}")
+        print(f"❌ 進度跟蹤器測試失敗: {e}")
         return False
 
 def main():

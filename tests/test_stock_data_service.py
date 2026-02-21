@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 股票數據服務測試程序
-測試MongoDB -> Tushare數據接口的完整降級機制
+測試股票數據服務的完整降級機制
 """
 
 import sys
@@ -30,7 +30,7 @@ class TestStockDataService(unittest.TestCase):
     """股票數據服務測試類"""
     
     def setUp(self):
-        """測試前準备"""
+        """測試前準備"""
         if not SERVICES_AVAILABLE:
             self.skipTest("股票數據服務不可用")
         
@@ -50,8 +50,8 @@ class TestStockDataService(unittest.TestCase):
         print("  ✅ 服務初始化測試通過")
     
     def test_get_stock_basic_info_single(self):
-        """測試獲取單個股票基础信息"""
-        print("\n🧪 測試獲取單個股票基础信息...")
+        """測試獲取單個股票基礎信息"""
+        print("\n🧪 測試獲取單個股票基礎信息...")
         
         test_codes = ['000001', '600000', '300001']
         
@@ -60,12 +60,12 @@ class TestStockDataService(unittest.TestCase):
             
             result = self.service.get_stock_basic_info(code)
             
-            # 結果不應该為None
+            # 結果不應該為None
             self.assertIsNotNone(result)
             
             if isinstance(result, dict):
                 if 'error' in result:
-                    print(f"    ⚠️ 獲取失败: {result['error']}")
+                    print(f"    ⚠️ 獲取失敗: {result['error']}")
                 else:
                     print(f"    ✅ 獲取成功: {result.get('name', 'N/A')}")
                     # 檢查必要字段
@@ -76,12 +76,12 @@ class TestStockDataService(unittest.TestCase):
         print("  ✅ 單個股票信息測試完成")
     
     def test_get_stock_basic_info_all(self):
-        """測試獲取所有股票基础信息"""
-        print("\n🧪 測試獲取所有股票基础信息...")
+        """測試獲取所有股票基礎信息"""
+        print("\n🧪 測試獲取所有股票基礎信息...")
         
         result = self.service.get_stock_basic_info()
         
-        # 結果不應该為None
+        # 結果不應該為None
         self.assertIsNotNone(result)
         
         if isinstance(result, list) and len(result) > 0:
@@ -94,7 +94,7 @@ class TestStockDataService(unittest.TestCase):
                 self.assertIn('name', first_stock)
                 print(f"  📊 示例股票: {first_stock.get('code')} - {first_stock.get('name')}")
         elif isinstance(result, dict) and 'error' in result:
-            print(f"  ⚠️ 獲取失败: {result['error']}")
+            print(f"  ⚠️ 獲取失敗: {result['error']}")
         else:
             print(f"  ⚠️ 未獲取到數據")
         
@@ -106,7 +106,7 @@ class TestStockDataService(unittest.TestCase):
         
         test_cases = [
             ('000001', '深圳', '深市主板'),
-            ('600000', '上海', '沪市主板'),
+            ('600000', '上海', '滬市主板'),
             ('300001', '深圳', '創業板'),
             ('688001', '上海', '科創板')
         ]
@@ -145,7 +145,7 @@ class TestStockAPI(unittest.TestCase):
     """股票API測試類"""
     
     def setUp(self):
-        """測試前準备"""
+        """測試前準備"""
         if not SERVICES_AVAILABLE:
             self.skipTest("股票API不可用")
     
@@ -190,10 +190,10 @@ class TestStockAPI(unittest.TestCase):
         """測試股票搜索API"""
         print("\n🧪 測試股票搜索API...")
         
-        keywords = ['平安', '銀行', '000001', 'xyz123']  # 包含一個不存在的關键詞
+        keywords = ['平安', '銀行', '000001', 'xyz123']  # 包含一個不存在的關鍵詞
         
         for keyword in keywords:
-            print(f"  🔍 搜索關键詞: '{keyword}'")
+            print(f"  🔍 搜索關鍵詞: '{keyword}'")
             
             results = search_stocks(keyword)
             
@@ -219,11 +219,11 @@ class TestStockAPI(unittest.TestCase):
         self.assertIsInstance(summary, dict)
         
         if 'error' in summary:
-            print(f"  ⚠️ 獲取失败: {summary['error']}")
+            print(f"  ⚠️ 獲取失敗: {summary['error']}")
         else:
             print(f"  ✅ 獲取成功:")
-            print(f"    📊 总股票數: {summary.get('total_count', 0):,}")
-            print(f"    🏢 沪市股票: {summary.get('shanghai_count', 0):,}")
+            print(f"    📊 總股票數: {summary.get('total_count', 0):,}")
+            print(f"    🏢 滬市股票: {summary.get('shanghai_count', 0):,}")
             print(f"    🏢 深市股票: {summary.get('shenzhen_count', 0):,}")
             print(f"    🔗 數據源: {summary.get('data_source', 'unknown')}")
             
@@ -250,7 +250,7 @@ class TestStockAPI(unittest.TestCase):
         
         # 檢查結果是否包含預期內容
         if "❌" in result:
-            print(f"    ⚠️ 獲取失败（預期情况）")
+            print(f"    ⚠️ 獲取失敗（預期情況）")
         else:
             print(f"    ✅ 獲取成功（數據長度: {len(result)} 字符）")
         
@@ -260,7 +260,7 @@ class TestFallbackMechanism(unittest.TestCase):
     """降級機制測試類"""
     
     def setUp(self):
-        """測試前準备"""
+        """測試前準備"""
         if not SERVICES_AVAILABLE:
             self.skipTest("降級機制測試不可用")
     
@@ -272,17 +272,16 @@ class TestFallbackMechanism(unittest.TestCase):
         # 創建一個新的服務實例（模擬MongoDB不可用）
         service = StockDataService()
         
-        # 數據庫管理器應该為None
+        # 數據庫管理器應該為None
         self.assertIsNone(service.db_manager)
         
-        # 嘗試獲取股票信息（應该降級到Tushare數據接口）
         result = service.get_stock_basic_info('000001')
         
         self.assertIsNotNone(result)
         
         if isinstance(result, dict):
             if 'error' in result:
-                print(f"    ⚠️ 降級失败: {result['error']}")
+                print(f"    ⚠️ 降級失敗: {result['error']}")
             else:
                 print(f"    ✅ 降級成功: {result.get('name')}")
                 self.assertEqual(result.get('source'), 'unified_api')
@@ -306,17 +305,17 @@ class TestFallbackMechanism(unittest.TestCase):
             self.assertIsNotNone(result)
             
             if isinstance(result, dict):
-                # 應该包含錯誤信息或降級數據
+                # 應該包含錯誤信息或降級數據
                 if 'error' in result:
-                    print(f"    ✅ 正確识別無效代碼")
+                    print(f"    ✅ 正確識別無效代碼")
                 else:
                     print(f"    ⚠️ 返回了數據: {result.get('name')}")
         
         print("  ✅ 無效代碼降級測試完成")
 
 def run_comprehensive_test():
-    """運行综合測試"""
-    print("🚀 股票數據服務综合測試")
+    """運行綜合測試"""
+    print("🚀 股票數據服務綜合測試")
     print("=" * 60)
     
     if not SERVICES_AVAILABLE:
@@ -339,12 +338,12 @@ def run_comprehensive_test():
     print("\n" + "=" * 60)
     print("📊 測試結果摘要:")
     print(f"  ✅ 成功: {result.testsRun - len(result.failures) - len(result.errors)}")
-    print(f"  ❌ 失败: {len(result.failures)}")
+    print(f"  ❌ 失敗: {len(result.failures)}")
     print(f"  💥 錯誤: {len(result.errors)}")
     print(f"  ⏭️ 跳過: {len(result.skipped)}")
     
     if result.failures:
-        print("\n❌ 失败的測試:")
+        print("\n❌ 失敗的測試:")
         for test, traceback in result.failures:
             print(f"  - {test}: {traceback.split('AssertionError:')[-1].strip()}")
     
@@ -353,11 +352,11 @@ def run_comprehensive_test():
         for test, traceback in result.errors:
             print(f"  - {test}: {traceback.split('Exception:')[-1].strip()}")
     
-    # 总體評估
+    # 總體評估
     if result.wasSuccessful():
         print("\n🎉 所有測試通過！股票數據服務工作正常")
     else:
-        print("\n⚠️ 部分測試失败，請檢查相關配置")
+        print("\n⚠️ 部分測試失敗，請檢查相關配置")
     
     return result.wasSuccessful()
 
@@ -401,13 +400,13 @@ def run_manual_test():
         if 'error' in summary:
             print(f"   錯誤: {summary['error']}")
         else:
-            print(f"   总股票數: {summary.get('total_count', 0):,}")
+            print(f"   總股票數: {summary.get('total_count', 0):,}")
             print(f"   數據源: {summary.get('data_source')}")
         
         print("\n✅ 手動測試完成")
         
     except Exception as e:
-        print(f"\n❌ 手動測試失败: {e}")
+        print(f"\n❌ 手動測試失敗: {e}")
         import traceback
         traceback.print_exc()
 
@@ -416,7 +415,7 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='股票數據服務測試程序')
     parser.add_argument('--manual', action='store_true', help='運行手動測試模式')
-    parser.add_argument('--comprehensive', action='store_true', help='運行综合測試')
+    parser.add_argument('--comprehensive', action='store_true', help='運行綜合測試')
     
     args = parser.parse_args()
     
@@ -425,7 +424,7 @@ if __name__ == '__main__':
     elif args.comprehensive:
         run_comprehensive_test()
     else:
-        # 默認運行综合測試
-        print("💡 提示: 使用 --manual 運行手動測試，--comprehensive 運行综合測試")
-        print("默認運行综合測試...\n")
+        # 默認運行綜合測試
+        print("💡 提示: 使用 --manual 運行手動測試，--comprehensive 運行綜合測試")
+        print("默認運行綜合測試...\n")
         run_comprehensive_test()

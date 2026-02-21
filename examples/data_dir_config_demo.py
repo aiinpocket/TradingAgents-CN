@@ -86,7 +86,7 @@ def demo_set_custom_data_dir():
     if current_dir == custom_data_dir:
         logger.info(f"✅ 數據目錄設置成功")
     else:
-        logger.error(f"❌ 數據目錄設置失败")
+        logger.error(f"❌ 數據目錄設置失敗")
     
     # 顯示創建的目錄結構
     logger.info(f"\n[bold blue]📂 創建的目錄結構[/bold blue]")
@@ -115,7 +115,7 @@ def demo_config_integration():
     if config.get('data_dir') == manager_data_dir:
         logger.info(f"✅ 配置一致性驗證通過")
     else:
-        logger.error(f"❌ 配置一致性驗證失败")
+        logger.error(f"❌ 配置一致性驗證失敗")
 
 def demo_environment_variable_override():
     """演示環境變量覆蓋"""

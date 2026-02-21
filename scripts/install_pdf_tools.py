@@ -59,7 +59,7 @@ def install_wkhtmltopdf_windows():
                 logger.info(f"✅ wkhtmltopdf安裝成功！")
                 return True
             else:
-                logger.error(f"❌ Chocolatey安裝失败: {result.stderr}")
+                logger.error(f"❌ Chocolatey安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         logger.warning(f"⚠️ Chocolatey未安裝")
     
@@ -75,11 +75,11 @@ def install_wkhtmltopdf_windows():
                 logger.info(f"✅ wkhtmltopdf安裝成功！")
                 return True
             else:
-                logger.error(f"❌ winget安裝失败: {result.stderr}")
+                logger.error(f"❌ winget安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         logger.warning(f"⚠️ winget未安裝")
     
-    logger.error(f"❌ 自動安裝失败，請手動下載安裝")
+    logger.error(f"❌ 自動安裝失敗，請手動下載安裝")
     logger.info(f"📥 下載地址: https://wkhtmltopdf.org/downloads.html")
     return False
 
@@ -96,11 +96,11 @@ def install_wkhtmltopdf_macos():
                 logger.info(f"✅ wkhtmltopdf安裝成功！")
                 return True
             else:
-                logger.error(f"❌ Homebrew安裝失败: {result.stderr}")
+                logger.error(f"❌ Homebrew安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         logger.warning(f"⚠️ Homebrew未安裝")
     
-    logger.error(f"❌ 自動安裝失败，請手動安裝Homebrew或下載wkhtmltopdf")
+    logger.error(f"❌ 自動安裝失敗，請手動安裝Homebrew或下載wkhtmltopdf")
     return False
 
 def install_wkhtmltopdf_linux():
@@ -119,7 +119,7 @@ def install_wkhtmltopdf_linux():
                 logger.info(f"✅ wkhtmltopdf安裝成功！")
                 return True
             else:
-                logger.error(f"❌ apt安裝失败: {result.stderr}")
+                logger.error(f"❌ apt安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         pass
     
@@ -135,11 +135,11 @@ def install_wkhtmltopdf_linux():
                 logger.info(f"✅ wkhtmltopdf安裝成功！")
                 return True
             else:
-                logger.error(f"❌ yum安裝失败: {result.stderr}")
+                logger.error(f"❌ yum安裝失敗: {result.stderr}")
     except (subprocess.TimeoutExpired, FileNotFoundError):
         pass
     
-    logger.error(f"❌ 自動安裝失败，請手動安裝")
+    logger.error(f"❌ 自動安裝失敗，請手動安裝")
     return False
 
 def test_pdf_generation():
@@ -156,7 +156,7 @@ def test_pdf_generation():
 - **測試目的**: 驗證PDF生成功能
 
 ## 測試內容
-這是一個測試文档，用於驗證PDF生成是否正常工作。
+這是一個測試文件，用於驗證PDF生成是否正常工作。
 
 ### 中文支持測試
 - 中文字符顯示測試
@@ -198,11 +198,11 @@ def test_pdf_generation():
             os.unlink(output_file)
             return True
         else:
-            logger.error(f"❌ PDF文件生成失败")
+            logger.error(f"❌ PDF文件生成失敗")
             return False
             
     except Exception as e:
-        logger.error(f"❌ PDF生成測試失败: {e}")
+        logger.error(f"❌ PDF生成測試失敗: {e}")
         return False
 
 def main():
@@ -220,7 +220,7 @@ def main():
             logger.info(f"🎉 PDF功能完全正常！")
             return True
         else:
-            logger.error(f"⚠️ wkhtmltopdf已安裝但PDF生成失败，可能需要重新安裝")
+            logger.error(f"⚠️ wkhtmltopdf已安裝但PDF生成失敗，可能需要重新安裝")
     
     # 安裝wkhtmltopdf
     logger.info(f"\n🔄 開始安裝wkhtmltopdf...")

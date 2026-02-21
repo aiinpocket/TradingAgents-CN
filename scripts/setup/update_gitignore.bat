@@ -34,7 +34,7 @@ if %errorlevel%==0 (
     if %errorlevel%==0 (
         echo ✅ .trae目錄已從Git中移除
     ) else (
-        echo ❌ 移除.trae目錄失败
+        echo ❌ 移除.trae目錄失敗
     )
 ) else (
     echo ✅ .trae目錄未被Git跟蹤
@@ -49,7 +49,7 @@ if %errorlevel%==0 (
     if %errorlevel%==0 (
         echo ✅ .augment目錄已從Git中移除
     ) else (
-        echo ❌ 移除.augment目錄失败
+        echo ❌ 移除.augment目錄失敗
     )
 ) else (
     echo ✅ .augment目錄未被Git跟蹤
@@ -63,17 +63,17 @@ if %errorlevel%==0 (
     echo 📋 相關變更:
     git status --porcelain | findstr -E "\.(trae|augment)"
 ) else (
-    echo ✅ 没有AI工具目錄相關的變更
+    echo ✅ 沒有AI工具目錄相關的變更
 )
 
 echo.
 echo 💡 說明:
 echo 1. .trae/ 和 .augment/ 目錄已添加到.gitignore
 echo 2. 這些目錄包含AI工具的配置和緩存文件
-echo 3. 不應该提交到Git仓庫中
+echo 3. 不應該提交到Git倉庫中
 echo 4. 每個開發者可以有自己的AI工具配置
 echo.
-echo 🎯 下次提交時，這些目錄将被忽略
+echo 🎯 下次提交時，這些目錄將被忽略
 echo.
 
 pause

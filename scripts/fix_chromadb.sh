@@ -1,8 +1,8 @@
 #!/bin/bash
-# ChromaDB 問題診斷和修複腳本 (Linux/Mac版本)
+# ChromaDB 問題診斷和修復腳本 (Linux/Mac版本)
 # 用於解決 "Configuration error: An instance of Chroma already exists for ephemeral with different settings" 錯誤
 
-echo "=== ChromaDB 問題診斷和修複工具 ==="
+echo "=== ChromaDB 問題診斷和修復工具 ==="
 echo "適用環境: Linux/Mac Bash"
 echo ""
 
@@ -13,10 +13,10 @@ if [ ! -z "$python_pids" ]; then
     echo "發現Python進程:"
     ps aux | grep python | grep -v grep
     echo ""
-    read -p "是否终止所有Python進程? (y/N): " choice
+    read -p "是否終止所有Python進程? (y/N): " choice
     if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
         pkill -f python
-        echo "✅ 已终止所有Python進程"
+        echo "✅ 已終止所有Python進程"
         sleep 2
     fi
 else
@@ -86,7 +86,7 @@ if [ ! -z "$chroma_version" ]; then
     if [[ "$chroma_version" == 1.0.* ]]; then
         echo "✅ ChromaDB版本兼容"
     else
-        echo "⚠️ 建议使用ChromaDB 1.0.x版本"
+        echo "⚠️ 建議使用ChromaDB 1.0.x版本"
         read -p "是否升級ChromaDB? (y/N): " upgrade
         if [[ "$upgrade" == "y" || "$upgrade" == "Y" ]]; then
             echo "升級ChromaDB..."
@@ -97,7 +97,7 @@ else
     echo "❌ 無法檢測ChromaDB版本"
 fi
 
-# 5. 檢查環境變量冲突
+# 5. 檢查環境變量衝突
 echo ""
 echo "5. 檢查環境變量..."
 chroma_env_vars=(
@@ -121,9 +121,9 @@ if [ ${#found_env_vars[@]} -gt 0 ]; then
     for var in "${found_env_vars[@]}"; do
         echo "  $var"
     done
-    echo "⚠️ 這些環境變量可能導致配置冲突"
+    echo "⚠️ 這些環境變量可能導致配置衝突"
 else
-    echo "✅ 未發現ChromaDB環境變量冲突"
+    echo "✅ 未發現ChromaDB環境變量衝突"
 fi
 
 # 6. 測試ChromaDB初始化
@@ -157,15 +157,15 @@ try:
     print("✅ ChromaDB測試完成")
     
 except Exception as e:
-    print(f"❌ ChromaDB測試失败: {e}")
+    print(f"❌ ChromaDB測試失敗: {e}")
     sys.exit(1)
 '
 
 python -c "$test_script" 2>&1
 
-# 7. 提供解決方案建议
+# 7. 提供解決方案建議
 echo ""
-echo "=== 解決方案建议 ==="
+echo "=== 解決方案建議 ==="
 echo "如果問題仍然存在，請嘗試以下方案:"
 echo ""
 echo "方案1: 重啟系統"
@@ -185,4 +185,4 @@ echo "  - 確保使用Python 3.8-3.11"
 echo "  - 避免使用Python 3.12+"
 echo ""
 
-echo "🔧 修複完成！請重新運行應用程序。"
+echo "🔧 修復完成！請重新運行應用程序。"

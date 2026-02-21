@@ -3,7 +3,7 @@
 # 功能：自動判斷是否需要重新構建Docker鏡像
 # 使用：chmod +x scripts/smart_start.sh && ./scripts/smart_start.sh
 # 
-# 判斷逻辑：
+# 判斷邏輯：
 # 1. 檢查是否存在tradingagents-cn鏡像
 # 2. 如果鏡像不存在 -> 執行構建啟動
 # 3. 如果鏡像存在但代碼有變化 -> 執行構建啟動  

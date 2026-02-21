@@ -43,7 +43,7 @@ def test_get_stock_codes():
             sh_count = len(stock_data[stock_data['sse'] == 'sh'])
             print(f"深圳市場股票: {sz_count} 只")
             print(f"上海市場股票: {sh_count} 只")
-            print(f"总計股票數量: {len(stock_data)} 只")
+            print(f"總計股票數量: {len(stock_data)} 只")
             
             # 保存到文件
             output_file = "stock_codes_list.csv"

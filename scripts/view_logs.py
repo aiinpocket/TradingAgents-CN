@@ -67,7 +67,7 @@ def view_log_file(log_file, lines=50):
             return
         
         total_lines = len(content)
-        print(f"📊 总行數: {total_lines:,}")
+        print(f"📊 總行數: {total_lines:,}")
         
         if lines > 0:
             if lines >= total_lines:
@@ -89,7 +89,7 @@ def view_log_file(log_file, lines=50):
         print("-" * 80)
         
     except Exception as e:
-        print(f"❌ 讀取文件失败: {e}")
+        print(f"❌ 讀取文件失敗: {e}")
 
 def tail_log_file(log_file):
     """實時跟蹤日誌文件"""
@@ -113,7 +113,7 @@ def tail_log_file(log_file):
     except KeyboardInterrupt:
         print("\n⏹️ 停止跟蹤")
     except Exception as e:
-        print(f"❌ 跟蹤失败: {e}")
+        print(f"❌ 跟蹤失敗: {e}")
 
 def search_logs(keyword, log_files=None):
     """搜索日誌內容"""
@@ -124,7 +124,7 @@ def search_logs(keyword, log_files=None):
         print("📋 未找到日誌文件")
         return
     
-    print(f"🔍 搜索關键詞: '{keyword}'")
+    print(f"🔍 搜索關鍵詞: '{keyword}'")
     print("=" * 80)
     
     total_matches = 0
@@ -147,15 +147,15 @@ def search_logs(keyword, log_files=None):
                     print(f"{line_num:6d} | {line}")
                 
                 if len(matches) > 10:
-                    print(f"     ... 还有 {len(matches) - 10} 個匹配")
+                    print(f"     ... 還有 {len(matches) - 10} 個匹配")
                 
                 print()
                 total_matches += len(matches)
                 
         except Exception as e:
-            print(f"❌ 搜索 {log_file.name} 失败: {e}")
+            print(f"❌ 搜索 {log_file.name} 失敗: {e}")
     
-    print(f"🎯 总共找到 {total_matches} 個匹配")
+    print(f"🎯 總共找到 {total_matches} 個匹配")
 
 def main():
     """主函數"""
@@ -204,11 +204,11 @@ def main():
                     except ValueError:
                         print("❌ 請輸入有效數字")
             elif choice == "4":
-                keyword = input("輸入搜索關键詞: ").strip()
+                keyword = input("輸入搜索關鍵詞: ").strip()
                 if keyword:
                     search_logs(keyword)
                 else:
-                    print("❌ 請輸入關键詞")
+                    print("❌ 請輸入關鍵詞")
             elif choice == "5":
                 print("🐳 查看Docker容器日誌...")
                 print("💡 運行以下命令查看Docker日誌:")

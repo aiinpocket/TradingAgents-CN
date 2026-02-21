@@ -26,17 +26,17 @@ class BranchManager:
             'enhancement': {
                 'prefix': 'enhancement/',
                 'base': 'develop', 
-                'description': '中文增强分支'
+                'description': '中文增強分支'
             },
             'hotfix': {
                 'prefix': 'hotfix/',
                 'base': 'main',
-                'description': '緊急修複分支'
+                'description': '緊急修復分支'
             },
             'release': {
                 'prefix': 'release/',
                 'base': 'develop',
-                'description': '發布準备分支'
+                'description': '發布準備分支'
             }
         }
     
@@ -46,7 +46,7 @@ class BranchManager:
             result = subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
             return result.stdout.strip()
         except subprocess.CalledProcessError as e:
-            logger.error(f"❌ Git命令執行失败: {e}")
+            logger.error(f"❌ Git命令執行失敗: {e}")
             logger.error(f"錯誤輸出: {e.stderr}")
             return None
     
@@ -59,7 +59,7 @@ class BranchManager:
         if status:
             logger.warning(f"⚠️  檢測到未提交的更改:")
             print(status)
-            response = input("是否繼续？(y/N): ")
+            response = input("是否繼續？(y/N): ")
             return response.lower() == 'y'
         
         return True
@@ -74,7 +74,7 @@ class BranchManager:
         return bool(result)
     
     def remote_branch_exists(self, branch_name):
-        """檢查远程分支是否存在"""
+        """檢查遠程分支是否存在"""
         result = self.run_git_command(f'git branch -r --list origin/{branch_name}')
         return bool(result)
     
@@ -101,23 +101,23 @@ class BranchManager:
             logger.error(f"❌ 分支 {full_branch_name} 已存在")
             return False
         
-        # 確保基础分支是最新的
-        logger.info(f"🔄 更新基础分支 {base_branch}...")
+        # 確保基礎分支是最新的
+        logger.info(f"🔄 更新基礎分支 {base_branch}...")
         if not self.run_git_command(f'git checkout {base_branch}'):
             return False
         
         if not self.run_git_command(f'git pull origin {base_branch}'):
-            logger.error(f"⚠️  拉取基础分支失败，繼续使用本地版本")
+            logger.error(f"⚠️  拉取基礎分支失敗，繼續使用本地版本")
         
         # 創建新分支
         logger.info(f"✨ 創建分支 {full_branch_name}...")
         if not self.run_git_command(f'git checkout -b {full_branch_name}'):
             return False
         
-        # 推送到远程
-        logger.info(f"📤 推送分支到远程...")
+        # 推送到遠程
+        logger.info(f"📤 推送分支到遠程...")
         if not self.run_git_command(f'git push -u origin {full_branch_name}'):
-            logger.error(f"⚠️  推送到远程失败，分支仅在本地創建")
+            logger.error(f"⚠️  推送到遠程失敗，分支僅在本地創建")
         
         # 創建分支信息文件
         self.create_branch_info(full_branch_name, branch_type, description)
@@ -156,7 +156,7 @@ class BranchManager:
         remote_branches = self.run_git_command('git branch -r --format="%(refname:short)"')
         
         if not local_branches:
-            logger.error(f"❌ 獲取分支列表失败")
+            logger.error(f"❌ 獲取分支列表失敗")
             return
         
         current_branch = self.get_current_branch()
@@ -185,9 +185,9 @@ class BranchManager:
         
         # 檢查分支是否存在
         if not self.branch_exists(branch_name):
-            # 檢查是否是远程分支
+            # 檢查是否是遠程分支
             if self.remote_branch_exists(branch_name):
-                logger.info(f"📥 檢出远程分支: {branch_name}")
+                logger.info(f"📥 檢出遠程分支: {branch_name}")
                 if not self.run_git_command(f'git checkout -b {branch_name} origin/{branch_name}'):
                     return False
             else:
@@ -219,7 +219,7 @@ class BranchManager:
         
         if not merged and not force:
             logger.warning(f"⚠️  分支尚未合並到develop")
-            response = input("確定要刪除吗？(y/N): ")
+            response = input("確定要刪除嗎？(y/N): ")
             if response.lower() != 'y':
                 return False
         
@@ -228,9 +228,9 @@ class BranchManager:
         if not self.run_git_command(f'git branch {delete_flag} {branch_name}'):
             return False
         
-        # 刪除远程分支
+        # 刪除遠程分支
         if self.remote_branch_exists(branch_name):
-            response = input("是否同時刪除远程分支？(Y/n): ")
+            response = input("是否同時刪除遠程分支？(Y/n): ")
             if response.lower() != 'n':
                 self.run_git_command(f'git push origin --delete {branch_name}')
         
@@ -244,7 +244,7 @@ class BranchManager:
         # 獲取已合並到develop的分支
         merged_branches = self.run_git_command('git branch --merged develop')
         if not merged_branches:
-            logger.error(f"❌ 獲取已合並分支失败")
+            logger.error(f"❌ 獲取已合並分支失敗")
             return
         
         branches_to_delete = []
@@ -254,7 +254,7 @@ class BranchManager:
                 branches_to_delete.append(branch)
         
         if not branches_to_delete:
-            logger.info(f"✅ 没有需要清理的分支")
+            logger.info(f"✅ 沒有需要清理的分支")
             return
         
         logger.info(f"📋 以下分支已合並到develop:")
@@ -291,7 +291,7 @@ def main():
     # 刪除分支
     delete_parser = subparsers.add_parser('delete', help='刪除分支')
     delete_parser.add_argument('name', help='分支名稱')
-    delete_parser.add_argument('-f', '--force', action='store_true', help='强制刪除')
+    delete_parser.add_argument('-f', '--force', action='store_true', help='強制刪除')
     
     # 清理分支
     subparsers.add_parser('cleanup', help='清理已合並的分支')

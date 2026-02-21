@@ -14,8 +14,8 @@ from typing import Dict, Any, Optional, Union
 import json
 import toml
 
-# 註意：這里不能導入自己，會造成循環導入
-# 在日誌系統初始化前，使用標準庫自举日誌器，避免未定義引用
+# 註意：這裡不能導入自己，會造成循環導入
+# 在日誌系統初始化前，使用標準庫自舉日誌器，避免未定義引用
 _bootstrap_logger = logging.getLogger("tradingagents.logging_manager")
 
 
@@ -25,9 +25,9 @@ class ColoredFormatter(logging.Formatter):
     # ANSI顏色代碼
     COLORS = {
         'DEBUG': '\033[36m',    # 青色
-        'INFO': '\033[32m',     # 绿色
-        'WARNING': '\033[33m',  # 黄色
-        'ERROR': '\033[31m',    # 红色
+        'INFO': '\033[32m',     # 綠色
+        'WARNING': '\033[33m',  # 黃色
+        'ERROR': '\033[31m',    # 紅色
         'CRITICAL': '\033[35m', # 紫色
         'RESET': '\033[0m'      # 重置
     }
@@ -109,7 +109,7 @@ class TradingAgentsLogger:
                     'directory': log_dir
                 },
                 'structured': {
-                    'enabled': False,  # 默認關闭，可通過環境變量啟用
+                    'enabled': False,  # 默認關閉，可通過環境變量啟用
                     'level': 'INFO',
                     'directory': log_dir
                 }
@@ -152,7 +152,7 @@ class TradingAgentsLogger:
         return None
 
     def _convert_toml_config(self, toml_config: Dict[str, Any]) -> Dict[str, Any]:
-        """将TOML配置轉換為內部配置格式"""
+        """將TOML配置轉換為內部配置格式"""
         logging_config = toml_config.get('logging', {})
 
         # 檢查Docker環境
@@ -231,7 +231,7 @@ class TradingAgentsLogger:
         log_dir = Path(self.config['handlers']['file']['directory'])
         log_file = log_dir / 'tradingagents.log'
         
-        # 使用RotatingFileHandler進行日誌轮轉
+        # 使用RotatingFileHandler進行日誌輪轉
         max_size = self._parse_size(self.config['handlers']['file']['max_size'])
         backup_count = self.config['handlers']['file']['backup_count']
         
@@ -345,7 +345,7 @@ class TradingAgentsLogger:
                            session_id: str, duration: float, success: bool = True,
                            result_length: int = 0, **extra_data):
         """記錄模塊完成分析"""
-        status = "✅ 成功" if success else "❌ 失败"
+        status = "✅ 成功" if success else "❌ 失敗"
         logger.info(
             f"📊 [模塊完成] {module_name} - {status} - 股票: {stock_symbol}, 耗時: {duration:.2f}s",
             extra={

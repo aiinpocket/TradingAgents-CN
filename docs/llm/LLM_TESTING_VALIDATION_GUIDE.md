@@ -1,4 +1,4 @@
-# LLM 適配器測試指南与驗證清單
+# LLM 適配器測試指南與驗證清單
 
 ## 📋 概述
 
@@ -6,7 +6,7 @@
 
 ## 🧪 測試類型
 
-### 1. 基础連接測試
+### 1. 基礎連接測試
 驗證適配器能夠成功連接到 LLM 提供商的 API。
 
 ### 2. 工具調用測試
@@ -18,7 +18,7 @@
 ### 4. 端到端分析測試
 驗證完整的股票分析流程能夠使用新的 LLM 正常運行。
 
-## 🔧 測試環境準备
+## 🔧 測試環境準備
 
 ### 第一步：設置 API 密鑰
 
@@ -55,7 +55,7 @@ pip install pytest pytest-asyncio
 
 ## 📝 測試腳本模板
 
-### 基础連接測試
+### 基礎連接測試
 
 創建 `tests/test_your_provider_adapter.py`：
 
@@ -78,14 +78,14 @@ def test__api_key_config():
         return False
     
     if not api_key.startswith("bce-v3/"):
-        print("⚠️ API密鑰格式可能不正確，建议使用 bce-v3/ 開头的格式")
+        print("⚠️ API密鑰格式可能不正確，建議使用 bce-v3/ 開头的格式")
         return False
     
     print(f"✅ API密鑰配置正確 (格式: {api_key[:10]}...)")
     return True
 
 def test__basic_chat():
-    """測試基础對話（OpenAI 兼容模式）"""
+    """測試基礎對話（OpenAI 兼容模式）"""
     try:
         llm = create_openai_compatible_llm(
             provider="",
@@ -101,7 +101,7 @@ def test__basic_chat():
         print(f"✅ 對話成功: {response.content[:100]}...")
         return True
     except Exception as e:
-        print(f"❌ 對話失败: {e}")
+        print(f"❌ 對話失敗: {e}")
         return False
 
 def test__function_calling():
@@ -142,7 +142,7 @@ def test__function_calling():
             return False
             
     except Exception as e:
-        print(f"❌ 工具調用失败: {e}")
+        print(f"❌ 工具調用失敗: {e}")
         return False
 
 def test__chinese_analysis():
@@ -156,14 +156,14 @@ def test__chinese_analysis():
         
         test_prompt = """請簡要分析苹果公司（AAPL）的投資價值，包括：
         1. 公司基本面
-        2. 技術面趋势
-        3. 投資建议
+        2. 技術面趨勢
+        3. 投資建議
         
         請用中文回答，字數控制在200字以內。"""
         
         response = llm.invoke([HumanMessage(content=test_prompt)])
         
-        # 檢查響應是否包含中文和關键分析要素
+        # 檢查響應是否包含中文和關鍵分析要素
         content = response.content
         if (any('\u4e00' <= char <= '\u9fff' for char in content) and 
             ("苹果" in content or "AAPL" in content) and
@@ -173,11 +173,11 @@ def test__chinese_analysis():
             return True
         else:
             print("⚠️ 中文分析響應可能有問題")
-            print(f"📄 實际響應: {content}")
+            print(f"📄 實際響應: {content}")
             return False
             
     except Exception as e:
-        print(f"❌ 中文分析測試失败: {e}")
+        print(f"❌ 中文分析測試失敗: {e}")
         return False
 
 def test__model_variants():
@@ -199,17 +199,17 @@ def test__model_variants():
             
             print(f"✅ 模型 {model} 連接成功: {response.content[:50]}...")
         except Exception as e:
-            print(f"❌ 模型 {model} 測試失败: {e}")
+            print(f"❌ 模型 {model} 測試失敗: {e}")
 
 if __name__ == "__main__":
     print("=== 模型專項測試（OpenAI 兼容模式）===")
     print()
     
-    # 基础配置測試
+    # 基礎配置測試
     test__api_key_config()
     print()
     
-    # 基础對話測試
+    # 基礎對話測試
     test__basic_chat()
     print()
     
@@ -230,7 +230,7 @@ if __name__ == "__main__":
 #!/usr/bin/env python3
 """
 {Provider} 適配器測試腳本
-測試基础連接、工具調用和集成功能
+測試基礎連接、工具調用和集成功能
 """
 
 import os
@@ -271,12 +271,12 @@ def test_adapter_import():
         print("✅ 適配器導入成功")
         return True
     except ImportError as e:
-        print(f"❌ 適配器導入失败: {e}")
-        pytest.fail(f"適配器導入失败: {e}")
+        print(f"❌ 適配器導入失敗: {e}")
+        pytest.fail(f"適配器導入失敗: {e}")
 
 def test_basic_connection():
-    """測試基础連接"""
-    print("\n🔗 測試基础連接")
+    """測試基礎連接"""
+    print("\n🔗 測試基礎連接")
     print("=" * 50)
     
     try:
@@ -299,8 +299,8 @@ def test_basic_connection():
         return True
         
     except Exception as e:
-        print(f"❌ 連接失败: {e}")
-        pytest.fail(f"基础連接測試失败: {e}")
+        print(f"❌ 連接失敗: {e}")
+        pytest.fail(f"基礎連接測試失敗: {e}")
 
 def test_function_calling():
     """測試工具調用功能"""
@@ -348,18 +348,18 @@ def test_function_calling():
             return False
             
     except Exception as e:
-        print(f"❌ 工具調用失败: {e}")
-        pytest.fail(f"工具調用測試失败: {e}")
+        print(f"❌ 工具調用失敗: {e}")
+        pytest.fail(f"工具調用測試失敗: {e}")
 
 def test_factory_function():
-    """測試工厂函數"""
-    print("\n🏭 測試工厂函數")
+    """測試工廠函數"""
+    print("\n🏭 測試工廠函數")
     print("=" * 50)
     
     try:
         from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm
         
-        # 使用工厂函數創建實例
+        # 使用工廠函數創建實例
         llm = create_openai_compatible_llm(
             provider="your_provider",
             model="your-default-model",
@@ -369,20 +369,20 @@ def test_factory_function():
         
         # 測試簡單調用
         response = llm.invoke([
-            HumanMessage(content="測試工厂函數")
+            HumanMessage(content="測試工廠函數")
         ])
         
-        print(f"✅ 工厂函數測試成功")
+        print(f"✅ 工廠函數測試成功")
         print(f"📄 回複內容: {response.content[:100]}...")
         return True
         
     except Exception as e:
-        print(f"❌ 工厂函數測試失败: {e}")
-        pytest.fail(f"工厂函數測試失败: {e}")
+        print(f"❌ 工廠函數測試失敗: {e}")
+        pytest.fail(f"工廠函數測試失敗: {e}")
 
 def test_trading_graph_integration():
-    """測試与 TradingGraph 的集成"""
-    print("\n🔧 測試与 TradingGraph 的集成")
+    """測試與 TradingGraph 的集成"""
+    print("\n🔧 測試與 TradingGraph 的集成")
     print("=" * 50)
     
     try:
@@ -408,8 +408,8 @@ def test_trading_graph_integration():
         return True
         
     except Exception as e:
-        print(f"❌ TradingGraph 集成測試失败: {e}")
-        pytest.fail(f"TradingGraph 集成測試失败: {e}")
+        print(f"❌ TradingGraph 集成測試失敗: {e}")
+        pytest.fail(f"TradingGraph 集成測試失敗: {e}")
 
 def run_all_tests():
     """運行所有測試"""
@@ -433,7 +433,7 @@ def run_all_tests():
             test()
             passed += 1
         except (AssertionError, Exception) as e:
-            print(f"❌ 測試失败: {test.__name__}")
+            print(f"❌ 測試失敗: {test.__name__}")
             print(f"   錯誤信息: {e}")
             failed += 1
         print()
@@ -441,13 +441,13 @@ def run_all_tests():
     print("📊 測試結果摘要")
     print("=" * 60)
     print(f"✅ 通過: {passed}")
-    print(f"❌ 失败: {failed}")
+    print(f"❌ 失敗: {failed}")
     print(f"📈 成功率: {passed/(passed+failed)*100:.1f}%")
     
     if failed == 0:
         print("\n🎉 所有測試通過！適配器可以正常使用")
     else:
-        print(f"\n⚠️ 有 {failed} 個測試失败，請檢查配置")
+        print(f"\n⚠️ 有 {failed} 個測試失敗，請檢查配置")
 
 if __name__ == "__main__":
     run_all_tests()
@@ -455,7 +455,7 @@ if __name__ == "__main__":
 
 ## 🌐 Web 界面測試
 
-### 手動測試步骤
+### 手動測試步驟
 
 1. **啟動 Web 應用**
    ```bash
@@ -463,7 +463,7 @@ if __name__ == "__main__":
    ```
 
 2. **檢查模型選擇器**
-   - 在左侧邊栏找到"LLM提供商"下拉菜單
+   - 在左側邊欄找到"LLM提供商"下拉菜單
    - 確認您的提供商出現在選項中
    - 選擇您的提供商
 
@@ -473,7 +473,7 @@ if __name__ == "__main__":
 
 4. **進行簡單分析**
    - 輸入股票代碼（如 AAPL）
-   - 選擇一個分析師（建议選擇"基本面分析師"）
+   - 選擇一個分析師（建議選擇"基本面分析師"）
    - 點擊"開始分析"
    - 觀察分析是否正常進行
 
@@ -492,7 +492,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_sidebar_integration():
-    """測試侧邊栏集成"""
+    """測試側邊欄集成"""
     print("\n🔧 測試 Web 界面集成")
     print("=" * 50)
     
@@ -502,21 +502,21 @@ def test_sidebar_integration():
             mock_state.llm_provider = "your_provider"
             mock_state.llm_model = "your-default-model"
             
-            # 導入侧邊栏組件
+            # 導入側邊欄組件
             from web.components.sidebar import create_sidebar
             
             # 模擬 Streamlit 組件
             with patch('streamlit.selectbox') as mock_selectbox:
                 mock_selectbox.return_value = "your_provider"
                 
-                # 測試侧邊栏創建
+                # 測試側邊欄創建
                 config = create_sidebar()
                 
-                print("✅ 侧邊栏集成測試通過")
+                print("✅ 側邊欄集成測試通過")
                 return True
                 
     except Exception as e:
-        print(f"❌ Web 界面集成測試失败: {e}")
+        print(f"❌ Web 界面集成測試失敗: {e}")
         return False
 
 if __name__ == "__main__":
@@ -527,15 +527,15 @@ if __name__ == "__main__":
 
 ### ✅ 開發階段驗證
 
-- [ ] **代碼质量**
+- [ ] **代碼品質**
   - [ ] 適配器類繼承自 `OpenAICompatibleBase`
   - [ ] 正確設置 `provider_name`、`api_key_env_var`、`base_url`
   - [ ] 模型配置添加到 `OPENAI_COMPATIBLE_PROVIDERS`
   - [ ] 適配器導出添加到 `__init__.py`
 
-- [ ] **基础功能**
+- [ ] **基礎功能**
   - [ ] API 密鑰環境變量正確配置
-  - [ ] 基础連接測試通過
+  - [ ] 基礎連接測試通過
   - [ ] 簡單文本生成正常工作
   - [ ] 錯誤處理機制有效
 
@@ -554,7 +554,7 @@ if __name__ == "__main__":
   - [ ] 會話狀態正確保存
 
 - [ ] **後端集成**
-  - [ ] 工厂函數正確創建實例
+  - [ ] 工廠函數正確創建實例
   - [ ] TradingGraph 正確使用適配器
   - [ ] 配置參數正確傳遞
   - [ ] 錯誤處理正確集成
@@ -585,7 +585,7 @@ if __name__ == "__main__":
   - [ ] 配置錯誤清晰提示
   - [ ] 重試機制正常工作
 
-### ✅ 性能与穩定性驗證
+### ✅ 性能與穩定性驗證
 
 - [ ] **性能指標**
   - [ ] 響應時間合理（< 30秒）
@@ -594,12 +594,12 @@ if __name__ == "__main__":
   - [ ] 無內存泄漏
 
 - [ ] **穩定性測試**
-  - [ ] 連续運行 30 分鐘無錯誤
+  - [ ] 連續運行 30 分鐘無錯誤
   - [ ] 處理 50+ 請求無問題
-  - [ ] 網絡中斷後能恢複
+  - [ ] 網絡中斷後能恢復
   - [ ] 並發請求處理正確
 
-## 🐛 常见測試問題与解決方案
+## 🐛 常見測試問題與解決方案
 
 ### 問題 1: API 密鑰錯誤
 
@@ -617,7 +617,7 @@ source .env
 python -c "import os; print(f'API Key: {os.getenv(\"YOUR_PROVIDER_API_KEY\")[:10]}...')"
 ```
 
-### 問題 2: 工具調用失败
+### 問題 2: 工具調用失敗
 
 **症狀**: `ToolCallError` 或工具未被調用
 
@@ -631,7 +631,7 @@ models = provider_config["models"]
 print(f"模型支持 function calling: {models}")
 ```
 
-### 問題 3: 前端集成失败
+### 問題 3: 前端集成失敗
 
 **症狀**: 提供商不出現在下拉菜單中
 
@@ -655,19 +655,19 @@ pip install -e .
 python -c "from tradingagents.llm_adapters import ChatYourProvider; print('導入成功')"
 ```
 
-### 問題 5: 模型認證失败
+### 問題 5: 模型認證失敗
 
 **症狀**: `AuthenticationError` 或 `invalid_client`
 
 **解決方案**:
 ```bash
-# 檢查API密鑰配置（仅需一個密鑰）
+# 檢查API密鑰配置（僅需一個密鑰）
 echo $_API_KEY
 
 # 驗證密鑰格式（應该以 bce-v3/ 開头）
 python -c "import os; print(f'API Key格式: {os.getenv("_API_KEY", "未設置")[:10]}...')"
 
-# 建议：使用 OpenAI 兼容路徑進行連通性驗證（無需 AK/SK 獲取 Token）
+# 建議：使用 OpenAI 兼容路徑進行連通性驗證（無需 AK/SK 獲取 Token）
 python - << 'PY'
 from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm
 llm = create_openai_compatible_llm(provider="", model="ernie-3.5-8k")
@@ -675,9 +675,9 @@ print(llm.invoke("ping").content)
 PY
 ```
 
-### 問題 6: 模型中文乱碼
+### 問題 6: 模型中文亂碼
 
-**症狀**: 返回內容包含乱碼或編碼錯誤
+**症狀**: 返回內容包含亂碼或編碼錯誤
 
 **解決方案**:
 ```python
@@ -687,7 +687,7 @@ import sys
 print(f"系統編碼: {locale.getpreferredencoding()}")
 print(f"Python編碼: {sys.getdefaultencoding()}")
 
-# 强制設置UTF-8編碼
+# 強制設置UTF-8編碼
 import os
 os.environ['PYTHONIOENCODING'] = 'utf-8'
 
@@ -698,7 +698,7 @@ print(f"編碼: {test_text.encode('utf-8')}")
 print(f"解碼: {test_text.encode('utf-8').decode('utf-8')}")
 ```
 
-### 問題 7: 調用失败（OpenAI 兼容路徑）
+### 問題 7: 調用失敗（OpenAI 兼容路徑）
 
 **症狀**: `AuthenticationError`、`RateLimitError` 或 `ModelNotFound`
 
@@ -732,7 +732,7 @@ print(llm.invoke("hello").content)
 - **測試者**: {Name}
 
 ## 測試結果摘要
-- ✅ 基础連接: 通過
+- ✅ 基礎連接: 通過
 - ✅ 工具調用: 通過  
 - ✅ Web 集成: 通過
 - ✅ 端到端: 通過
@@ -746,28 +746,28 @@ print(llm.invoke("hello").content)
 ## 已知問題
 - 無重大問題
 
-## 建议
+## 建議
 - 適配器可以正常使用
-- 建议合並到主分支
+- 建議合並到主分支
 ```
 
 ## 🎯 最佳實踐
 
-1. **測試驱動開發**: 先寫測試，再實現功能
+1. **測試驅動開發**: 先寫測試，再實現功能
 2. **小步快跑**: 每完成一個功能就進行測試
 3. **自動化測試**: 使用腳本自動運行所有測試
-4. **文档同步**: 測試通過後及時更新文档
+4. **文檔同步**: 測試通過後及時更新文檔
 5. **版本控制**: 每次測試創建 git 提交記錄
 
-## 🔄 持续驗證
+## 🔄 持續驗證
 
-集成完成後，建议定期進行以下驗證：
+集成完成後，建議定期進行以下驗證：
 
-- **每周**: 運行基础連接測試
+- **每周**: 運行基礎連接測試
 - **每月**: 運行完整測試套件
 - **版本更新**: 重新運行所有測試
 - **API 變更**: 重新驗證工具調用功能
 
 ---
 
-通過遵循這個完整的測試指南，您可以確保新集成的 LLM 適配器质量可靠，功能完整，能夠穩定地為 TradingAgents 用戶提供服務。
+通過遵循這個完整的測試指南，您可以確保新集成的 LLM 適配器品質可靠，功能完整，能夠穩定地為 TradingAgents 用戶提供服務。

@@ -27,7 +27,7 @@ docker-compose up -d mongodb redis redis-commander
 if %errorlevel% equ 0 (
     echo ✅ 核心服務啟動成功
 ) else (
-    echo ❌ 核心服務啟動失败
+    echo ❌ 核心服務啟動失敗
     pause
     exit /b 1
 )
@@ -80,7 +80,7 @@ if /i "%start_management%"=="y" (
         echo ✅ Mongo Express啟動成功: http://localhost:8082
         echo    用戶名: admin, 密碼: tradingagents123
     ) else (
-        echo ❌ Mongo Express啟動失败
+        echo ❌ Mongo Express啟動失敗
     )
 )
 

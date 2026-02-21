@@ -56,26 +56,26 @@ try:
     import pymongo
     print('✅ pymongo 導入成功')
 except ImportError as e:
-    print('❌ pymongo 導入失败:', e)
+    print('❌ pymongo 導入失敗:', e)
 
 try:
     import redis
     print('✅ redis 導入成功')
 except ImportError as e:
-    print('❌ redis 導入失败:', e)
+    print('❌ redis 導入失敗:', e)
 
 try:
     import pandas
     print('✅ pandas 導入成功')
 except ImportError as e:
-    print('❌ pandas 導入失败:', e)
+    print('❌ pandas 導入失敗:', e)
 "
 
 echo.
 echo ✅ 包安裝完成!
 echo.
 echo 💡 提示:
-echo 1. 虛擬環境已激活，可以繼续運行其他腳本
+echo 1. 虛擬環境已激活，可以繼續運行其他腳本
 echo 2. 下一步運行:
 echo    python scripts\setup\initialize_system.py
 echo 3. 或檢查系統狀態:

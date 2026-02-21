@@ -36,7 +36,7 @@ def test_toolkit_tools():
         
         # 檢查所有可用方法
         all_methods = [method for method in dir(toolkit) if not method.startswith('_')]
-        print(f"📊 工具包总方法數: {len(all_methods)}")
+        print(f"📊 工具包總方法數: {len(all_methods)}")
         
         # 查找Google相關方法
         google_methods = [m for m in all_methods if 'google' in m.lower()]
@@ -66,7 +66,7 @@ def test_toolkit_tools():
                 else:
                     print("⚠️ Google新聞獲取成功但內容較少")
             except Exception as e:
-                print(f"❌ Google新聞測試失败: {e}")
+                print(f"❌ Google新聞測試失敗: {e}")
         else:
             print("❌ get_google_news 方法不存在")
         
@@ -87,7 +87,7 @@ def test_toolkit_tools():
         return True
         
     except Exception as e:
-        print(f"❌ 工具包測試失败: {e}")
+        print(f"❌ 工具包測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -103,19 +103,19 @@ def test_social_news_analysts():
             from tradingagents.agents.analysts.social_media_analyst import create_social_media_analyst
             print("✅ 社交媒體分析師模塊可用")
         except ImportError as e:
-            print(f"❌ 社交媒體分析師導入失败: {e}")
+            print(f"❌ 社交媒體分析師導入失敗: {e}")
         
         # 檢查新聞分析師
         try:
             from tradingagents.agents.analysts.news_analyst import create_news_analyst
             print("✅ 新聞分析師模塊可用")
         except ImportError as e:
-            print(f"❌ 新聞分析師導入失败: {e}")
+            print(f"❌ 新聞分析師導入失敗: {e}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 分析師測試失败: {e}")
+        print(f"❌ 分析師測試失敗: {e}")
         return False
 
 def check_data_requirements():
@@ -181,18 +181,18 @@ def main():
     # 檢查數據要求
     check_data_requirements()
     
-    # 总結結果
-    print(f"\n📊 測試結果总結:")
+    # 總結結果
+    print(f"\n📊 測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
 
 if __name__ == "__main__":
     main()

@@ -35,27 +35,27 @@ def test_pickle_compatibility():
     try:
         import pickle
         
-        # 檢查協议版本
+        # 檢查協議版本
         max_protocol = pickle.HIGHEST_PROTOCOL
-        print(f"  當前pickle協议: {max_protocol}")
+        print(f"  當前pickle協議: {max_protocol}")
         
         if max_protocol >= 5:
-            print("  ✅ 支持pickle協议5")
+            print("  ✅ 支持pickle協議5")
         else:
-            print("  ❌ 不支持pickle協议5")
+            print("  ❌ 不支持pickle協議5")
             return False
         
         # 檢查是否錯誤安裝了pickle5
         try:
             import pickle5
-            print("  ⚠️ 檢測到pickle5包，建议卸載")
+            print("  ⚠️ 檢測到pickle5包，建議卸載")
             return False
         except ImportError:
             print("  ✅ 未安裝pickle5包，配置正確")
             return True
             
     except Exception as e:
-        print(f"  ❌ pickle測試失败: {e}")
+        print(f"  ❌ pickle測試失敗: {e}")
         return False
 
 
@@ -99,7 +99,7 @@ def test_requirements_file_syntax():
         return True
         
     except Exception as e:
-        print(f"  ❌ 文件讀取失败: {e}")
+        print(f"  ❌ 文件讀取失敗: {e}")
         return False
 
 
@@ -135,7 +135,7 @@ def test_package_installation_simulation():
         print(f"  缺少包: {missing_packages}")
         print("  💡 運行以下命令安裝: pip install -r requirements_db.txt")
     
-    return True  # 這個測試总是通過，只是信息性的
+    return True  # 這個測試總是通過，只是信息性的
 
 
 def test_compatibility_checker_tool():
@@ -164,7 +164,7 @@ def test_compatibility_checker_tool():
             print("  ✅ 兼容性檢查工具運行成功")
             
             # 檢查是否檢測到pickle5問題
-            if "pickle5" in result.stdout and "建议卸載" in result.stdout:
+            if "pickle5" in result.stdout and "建議卸載" in result.stdout:
                 print("  ⚠️ 檢測到pickle5問題")
             elif "未安裝pickle5包，配置正確" in result.stdout:
                 print("  ✅ pickle5配置正確")
@@ -179,13 +179,13 @@ def test_compatibility_checker_tool():
         print("  ❌ 兼容性檢查工具運行超時")
         return False
     except Exception as e:
-        print(f"  ❌ 兼容性檢查工具運行失败: {e}")
+        print(f"  ❌ 兼容性檢查工具運行失敗: {e}")
         return False
 
 
 def test_documentation_completeness():
-    """測試文档完整性"""
-    print("🔧 測試文档完整性...")
+    """測試文件完整性"""
+    print("🔧 測試文件完整性...")
     
     docs_to_check = [
         "docs/DATABASE_SETUP_GUIDE.md",
@@ -223,7 +223,7 @@ def main():
         ("requirements文件語法", test_requirements_file_syntax),
         ("包安裝模擬", test_package_installation_simulation),
         ("兼容性檢查工具", test_compatibility_checker_tool),
-        ("文档完整性", test_documentation_completeness),
+        ("文件完整性", test_documentation_completeness),
     ]
     
     passed = 0
@@ -236,7 +236,7 @@ def main():
                 passed += 1
                 print(f"  ✅ {test_name} 通過")
             else:
-                print(f"  ❌ {test_name} 失败")
+                print(f"  ❌ {test_name} 失敗")
         except Exception as e:
             print(f"  ❌ {test_name} 異常: {e}")
     
@@ -249,17 +249,17 @@ def main():
         print("✅ 移除pickle5依賴，解決Python 3.10+兼容性問題")
         print("✅ 優化版本要求，提高環境兼容性")
         print("✅ 添加兼容性檢查工具")
-        print("✅ 完善安裝指南和故障排除文档")
+        print("✅ 完善安裝指南和故障排除文件")
         
         print("\n🚀 用戶體驗改進:")
-        print("✅ 减少安裝錯誤")
+        print("✅ 減少安裝錯誤")
         print("✅ 提供清晰的錯誤診斷")
         print("✅ 支持更多Python環境")
         print("✅ 簡化故障排除流程")
         
         return True
     else:
-        print("⚠️ 部分測試失败，需要進一步檢查")
+        print("⚠️ 部分測試失敗，需要進一步檢查")
         return False
 
 

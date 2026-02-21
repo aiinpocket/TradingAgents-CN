@@ -22,13 +22,13 @@ try:
     print("✅ MongoDB模塊導入成功")
 except ImportError as e:
     MONGODB_AVAILABLE = False
-    print(f"❌ MongoDB模塊導入失败: {e}")
+    print(f"❌ MongoDB模塊導入失敗: {e}")
 
 # 設置日誌
 logger = logging.getLogger(__name__)
 
 def safe_timestamp_to_datetime(timestamp_value):
-    """安全地将時間戳轉換為datetime對象"""
+    """安全地將時間戳轉換為datetime對象"""
     if isinstance(timestamp_value, datetime):
         # 如果已經是datetime對象（來自MongoDB）
         return timestamp_value
@@ -113,7 +113,7 @@ def remove_tag_from_analysis(analysis_id, tag):
     tags = load_tags()
     if analysis_id in tags and tag in tags[analysis_id]:
         tags[analysis_id].remove(tag)
-        if not tags[analysis_id]:  # 如果沒有標簽了，刪除该條目
+        if not tags[analysis_id]:  # 如果沒有標籤了，刪除該條目
             del tags[analysis_id]
         save_tags(tags)
 
@@ -160,13 +160,13 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
             print(f"✅ 從MongoDB加載了 {len(mongodb_results)} 個分析結果")
 
         except Exception as e:
-            print(f"❌ MongoDB加載失败: {e}")
-            logger.error(f"MongoDB加載失败: {e}")
+            print(f"❌ MongoDB加載失敗: {e}")
+            logger.error(f"MongoDB加載失敗: {e}")
             mongodb_loaded = False
     else:
-        print("⚠️ MongoDB不可用，将使用文件系統數據")
+        print("⚠️ MongoDB不可用，將使用文件系統數據")
 
-    # 只有在MongoDB加載失败或不可用時才從文件系統加載
+    # 只有在MongoDB加載失敗或不可用時才從文件系統加載
     if not mongodb_loaded:
         print("🔄 [備用數據源] 從文件系統加載分析結果")
 
@@ -187,9 +187,9 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                     all_results.append(result)
             except Exception as e:
-                st.warning(f"讀取分析結果文件 {result_file.name} 失败: {e}")
+                st.warning(f"讀取分析結果文件 {result_file.name} 失敗: {e}")
 
-        # 然後從實际的分析結果保存位置讀取
+        # 然後從實際的分析結果保存位置讀取
         project_results_dir = Path(__file__).parent.parent.parent / "data" / "analysis_results" / "detailed"
 
         if project_results_dir.exists():
@@ -255,7 +255,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                                     research_depth = metadata.get('research_depth', 1)
                                     analysts = metadata.get('analysts', analysts)
                             except Exception as e:
-                                # 如果讀取元數據失败，使用推斷邏輯
+                                # 如果讀取元數據失敗，使用推斷邏輯
                                 if len(reports) >= 5:
                                     research_depth = 3
                                 elif len(reports) >= 3:
@@ -345,20 +345,20 @@ def render_analysis_results():
             st.info("💡 提示：分析結果功能需要 'analysis' 權限")
             return
     except Exception as e:
-        st.error(f"❌ 權限檢查失败: {e}")
+        st.error(f"❌ 權限檢查失敗: {e}")
         return
     
     st.title("📊 分析結果歷史記錄")
     
-    # 侧邊栏過濾選項
+    # 側邊欄過濾選項
     with st.sidebar:
-        st.header("🔍 搜索与過濾")
+        st.header("🔍 搜索與過濾")
         
         # 文本搜索
-        search_text = st.text_input("🔍 關键詞搜索", placeholder="搜索股票代碼、摘要內容...")
+        search_text = st.text_input("🔍 關鍵詞搜索", placeholder="搜索股票代碼、摘要內容...")
         
         # 收藏過濾
-        favorites_only = st.checkbox("⭐ 仅顯示收藏")
+        favorites_only = st.checkbox("⭐ 僅顯示收藏")
         
         # 日期範围選擇
         date_range = st.selectbox(
@@ -383,7 +383,7 @@ def render_analysis_results():
         analyst_filter = st.selectbox(
             "👥 分析師類型",
             ["全部", "market_analyst", "social_media_analyst", "news_analyst", "fundamental_analyst"],
-            help="註意：社交媒體分析師仅適用於美股和港股，A股分析中不包含此類型"
+            help="註意：社交媒體分析師僅適用於美股和港股，A股分析中不包含此類型"
         )
         
         if analyst_filter == "全部":
@@ -420,7 +420,7 @@ def render_analysis_results():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📊 总分析數", len(results))
+        st.metric("📊 總分析數", len(results))
     
     with col2:
         unique_stocks = len(set(result.get('stock_symbol', 'unknown') for result in results))
@@ -435,7 +435,7 @@ def render_analysis_results():
         favorites_count = sum(1 for result in results if result.get('is_favorite', False))
         st.metric("⭐ 收藏數", favorites_count)
     
-    # 保留需要的功能按钮，移除不需要的功能
+    # 保留需要的功能按鈕，移除不需要的功能
     tab1, tab2, tab3 = st.tabs([
         "📋 結果列表", "📈 統計圖表", "📊 詳細分析"
     ])
@@ -477,7 +477,7 @@ def render_results_list(results: List[Dict[str, Any]]):
 def render_results_table(results: List[Dict[str, Any]]):
     """渲染表格視圖"""
     
-    # 準备表格數據
+    # 準備表格數據
     table_data = []
     for result in results:
         table_data.append({
@@ -524,14 +524,14 @@ def render_results_cards(results: List[Dict[str, Any]]):
                 st.caption(f"🕐 {safe_timestamp_to_datetime(result.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M:%S')}")
             
             with col2:
-                # 收藏按钮
+                # 收藏按鈕
                 is_favorite = result.get('is_favorite', False)
                 if st.button("⭐" if is_favorite else "☆", key=f"fav_{start_idx + i}"):
                     toggle_favorite(analysis_id)
                     st.rerun()
             
             with col3:
-                # 查看詳情按钮
+                # 查看詳情按鈕
                 result_id = result.get('_id') or result.get('analysis_id') or f"result_{start_idx + i}"
                 current_expanded = st.session_state.get('expanded_result_id') == result_id
                 button_text = "🔼 收起" if current_expanded else "👁️ 詳情"
@@ -582,11 +582,11 @@ def render_results_cards(results: List[Dict[str, Any]]):
     
     # 顯示分页信息
     if total_pages > 1:
-        st.info(f"第 {page + 1} 页，共 {total_pages} 页，总計 {len(results)} 條記錄")
+        st.info(f"第 {page + 1} 页，共 {total_pages} 页，總計 {len(results)} 條記錄")
     
     # 註意：詳情現在以折叠方式顯示在每個結果下方
 
-# 弹窗功能已移除，詳情現在以折叠方式顯示
+# 彈窗功能已移除，詳情現在以折疊方式顯示
 
 def toggle_favorite(analysis_id):
     """切換收藏狀態"""
@@ -641,14 +641,14 @@ def render_results_comparison(results: List[Dict[str, Any]]):
             safe_timestamp_to_datetime(result_a.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M'),
             ', '.join(result_a.get('analysts', [])),
             str(result_a.get('research_depth', 'unknown')),
-            '完成' if result_a.get('status') == 'completed' else '失败'
+            '完成' if result_a.get('status') == 'completed' else '失敗'
         ],
         '結果B': [
             result_b.get('stock_symbol', 'unknown'),
             safe_timestamp_to_datetime(result_b.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M'),
             ', '.join(result_b.get('analysts', [])),
             str(result_b.get('research_depth', 'unknown')),
-            '完成' if result_b.get('status') == 'completed' else '失败'
+            '完成' if result_b.get('status') == 'completed' else '失敗'
         ]
     }
     
@@ -663,11 +663,11 @@ def render_results_comparison(results: List[Dict[str, Any]]):
         
         with col1:
             st.write("**結果A摘要**")
-            st.text_area("", value=result_a.get('summary', '暂無摘要'), height=200, key="summary_a", disabled=True)
-        
+            st.text_area("", value=result_a.get('summary', '暫無摘要'), height=200, key="summary_a", disabled=True)
+
         with col2:
             st.write("**結果B摘要**")
-            st.text_area("", value=result_b.get('summary', '暂無摘要'), height=200, key="summary_b", disabled=True)
+            st.text_area("", value=result_b.get('summary', '暫無摘要'), height=200, key="summary_b", disabled=True)
     
     # 性能對比
     perf_a = result_a.get('performance', {})
@@ -683,14 +683,14 @@ def render_results_comparison(results: List[Dict[str, Any]]):
             if perf_a:
                 st.json(perf_a)
             else:
-                st.info("暂無性能數據")
-        
+                st.info("暫無性能數據")
+
         with col2:
             st.write("**結果B性能**")
             if perf_b:
                 st.json(perf_b)
             else:
-                st.info("暂無性能數據")
+                st.info("暫無性能數據")
 
 def render_results_charts(results: List[Dict[str, Any]]):
     """渲染分析結果統計圖表"""
@@ -721,7 +721,7 @@ def render_results_charts(results: List[Dict[str, Any]]):
         st.plotly_chart(fig_bar, use_container_width=True)
     
     # 按時間統計
-    st.subheader("📅 每日分析趋势")
+    st.subheader("📅 每日分析趨勢")
     daily_results = {}
     for result in results:
         date_str = safe_timestamp_to_datetime(result.get('timestamp', 0)).strftime('%Y-%m-%d')
@@ -742,7 +742,7 @@ def render_results_charts(results: List[Dict[str, Any]]):
             fill='tonexty'
         ))
         fig_line.update_layout(
-            title="每日分析趋势",
+            title="每日分析趨勢",
             xaxis_title="日期",
             yaxis_title="分析數量",
             hovermode='x unified'
@@ -768,19 +768,19 @@ def render_results_charts(results: List[Dict[str, Any]]):
     
     # 成功率統計
     st.subheader("✅ 分析成功率統計")
-    success_data = {'成功': 0, '失败': 0}
+    success_data = {'成功': 0, '失敗': 0}
     for result in results:
         if result.get('status') == 'completed':
             success_data['成功'] += 1
         else:
-            success_data['失败'] += 1
+            success_data['失敗'] += 1
     
-    if success_data['成功'] + success_data['失败'] > 0:
+    if success_data['成功'] + success_data['失敗'] > 0:
         fig_success = px.pie(
             values=list(success_data.values()),
             names=list(success_data.keys()),
             title="分析成功率",
-            color_discrete_map={'成功': '#4CAF50', '失败': '#F44336'}
+            color_discrete_map={'成功': '#4CAF50', '失敗': '#F44336'}
         )
         st.plotly_chart(fig_success, use_container_width=True)
     
@@ -966,10 +966,10 @@ def render_results_export(results: List[Dict[str, Any]]):
                 else:
                     st.warning("完整數據只支持 JSON 格式導出")
             
-            st.success(f"✅ {export_format} 文件準备完成，請點擊下載按钮")
+            st.success(f"✅ {export_format} 文件準備完成，請點擊下載按鈕")
             
         except Exception as e:
-            st.error(f"❌ 導出失败: {e}")
+            st.error(f"❌ 導出失敗: {e}")
 
 def render_results_comparison(results: List[Dict[str, Any]]):
     """渲染分析結果對比"""
@@ -985,7 +985,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
     
     col1, col2 = st.columns(2)
     
-    # 準备選項
+    # 準備選項
     result_options = []
     for i, result in enumerate(results[:20]):  # 限制前20個
         option = f"{result.get('stock_symbol', 'unknown')} - {safe_timestamp_to_datetime(result.get('timestamp', 0)).strftime('%m-%d %H:%M')}"
@@ -1025,7 +1025,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
             safe_timestamp_to_datetime(result_a.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M'),
             len(result_a.get('analysts', [])),
             result_a.get('research_depth', 'unknown'),
-            "✅ 完成" if result_a.get('status') == 'completed' else "❌ 失败",
+            "✅ 完成" if result_a.get('status') == 'completed' else "❌ 失敗",
             len(result_a.get('tags', []))
         ],
         "分析結果 B": [
@@ -1033,7 +1033,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
             safe_timestamp_to_datetime(result_b.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M'),
             len(result_b.get('analysts', [])),
             result_b.get('research_depth', 'unknown'),
-            "✅ 完成" if result_b.get('status') == 'completed' else "❌ 失败",
+            "✅ 完成" if result_b.get('status') == 'completed' else "❌ 失敗",
             len(result_b.get('tags', []))
         ]
     }
@@ -1049,7 +1049,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
     if perf_a or perf_b:
         st.subheader("⚡ 性能指標對比")
         
-        # 合並所有性能指標键
+        # 合並所有性能指標鍵
         all_perf_keys = set(perf_a.keys()) | set(perf_b.keys())
         
         if all_perf_keys:
@@ -1081,7 +1081,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
                 st.write("無共同標簽")
         
         with col2:
-            st.write("**仅在結果A中**")
+            st.write("**僅在結果A中**")
             only_a = tags_a - tags_b
             if only_a:
                 for tag in only_a:
@@ -1090,7 +1090,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
                 st.write("無獨有標簽")
         
         with col3:
-            st.write("**仅在結果B中**")
+            st.write("**僅在結果B中**")
             only_b = tags_b - tags_a
             if only_b:
                 for tag in only_b:
@@ -1124,11 +1124,11 @@ def render_results_comparison(results: List[Dict[str, Any]]):
     # 詳細內容對比
     st.subheader("📊 詳細內容對比")
     
-    # 定義要對比的關键字段
+    # 定義要對比的關鍵字段
     comparison_fields = [
         ('market_report', '📈 市場技術分析'),
         ('fundamentals_report', '💰 基本面分析'),
-        ('sentiment_report', '💭 市場情绪分析'),
+        ('sentiment_report', '💭 市場情緒分析'),
         ('news_report', '📰 新聞事件分析'),
         ('risk_assessment', '⚠️ 風險評估'),
         ('investment_plan', '📋 投資建議'),
@@ -1203,7 +1203,7 @@ def render_detailed_analysis(results: List[Dict[str, Any]]):
         with col2:
             analysis_time = safe_timestamp_to_datetime(selected_result.get('timestamp', 0))
             st.metric("分析時間", analysis_time.strftime('%m-%d %H:%M'))
-            status = "✅ 完成" if selected_result.get('status') == 'completed' else "❌ 失败"
+            status = "✅ 完成" if selected_result.get('status') == 'completed' else "❌ 失敗"
             st.metric("狀態", status)
         
         with col3:
@@ -1247,13 +1247,13 @@ def render_detailed_analysis_content(selected_result):
         reports = selected_result['reports']
         
         if not reports:
-            st.warning("该分析結果沒有可用的報告內容")
+            st.warning("該分析結果沒有可用的報告內容")
             return
         
         # 調試信息：顯示所有可用的報告
-        print(f"🔍 [弹窗調試] 數據來源: {selected_result.get('source', '未知')}")
-        print(f"🔍 [弹窗調試] 可用報告數量: {len(reports)}")
-        print(f"🔍 [弹窗調試] 報告類型: {list(reports.keys())}")
+        print(f"🔍 [彈窗調試] 數據來源: {selected_result.get('source', '未知')}")
+        print(f"🔍 [彈窗調試] 可用報告數量: {len(reports)}")
+        print(f"🔍 [彈窗調試] 報告類型: {list(reports.keys())}")
 
         # 創建標簽页顯示不同的報告
         report_tabs = list(reports.keys())
@@ -1263,7 +1263,7 @@ def render_detailed_analysis_content(selected_result):
             'final_trade_decision': '🎯 最終交易決策',
             'fundamentals_report': '💰 基本面分析',
             'technical_report': '📈 技術面分析',
-            'market_sentiment_report': '💭 市場情绪分析',
+            'market_sentiment_report': '💭 市場情緒分析',
             'risk_assessment_report': '⚠️ 風險評估',
             'price_target_report': '🎯 目標價格分析',
             'summary_report': '📋 分析摘要',
@@ -1276,9 +1276,9 @@ def render_detailed_analysis_content(selected_result):
         for report_key in report_tabs:
             display_name = report_display_names.get(report_key, f"📄 {report_key.replace('_', ' ').title()}")
             tab_names.append(display_name)
-            print(f"🔍 [弹窗調試] 添加標簽: {display_name}")
+            print(f"🔍 [彈窗調試] 添加標簽: {display_name}")
 
-        print(f"🔍 [弹窗調試] 总標簽數: {len(tab_names)}")
+        print(f"🔍 [彈窗調試] 總標簽數: {len(tab_names)}")
         
         if len(tab_names) == 1:
             # 只有一個報告，直接顯示
@@ -1320,7 +1320,7 @@ def render_detailed_analysis_content(selected_result):
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    /* 標簽页悬停效果 */
+    /* 標籤頁懸停效果 */
     .stTabs [data-baseweb="tab"]:hover {
         background-color: #e3f2fd;
         border-color: #2196f3;
@@ -1367,7 +1367,7 @@ def render_detailed_analysis_content(selected_result):
             'key': 'market_report',
             'title': '📈 市場技術分析',
             'icon': '📈',
-            'description': '技術指標、價格趋势、支撑阻力位分析'
+            'description': '技術指標、價格趨勢、支撐阻力位分析'
         },
         {
             'key': 'fundamentals_report',
@@ -1377,9 +1377,9 @@ def render_detailed_analysis_content(selected_result):
         },
         {
             'key': 'sentiment_report',
-            'title': '💭 市場情绪分析',
+            'title': '💭 市場情緒分析',
             'icon': '💭',
-            'description': '投資者情绪、社交媒體情绪指標'
+            'description': '投資者情緒、社交媒體情緒指標'
         },
         {
             'key': 'news_report',
@@ -1391,29 +1391,29 @@ def render_detailed_analysis_content(selected_result):
             'key': 'risk_assessment',
             'title': '⚠️ 風險評估',
             'icon': '⚠️',
-            'description': '風險因素识別、風險等級評估'
+            'description': '風險因素識別、風險等級評估'
         },
         {
             'key': 'investment_plan',
             'title': '📋 投資建議',
             'icon': '📋',
-            'description': '具體投資策略、仓位管理建議'
+            'description': '具體投資策略、倉位管理建議'
         },
         {
             'key': 'investment_debate_state',
-            'title': '🔬 研究团隊決策',
+            'title': '🔬 研究團隊決策',
             'icon': '🔬',
-            'description': '多头/空头研究員辩論分析，研究經理綜合決策'
+            'description': '多頭/空頭研究員辯論分析，研究經理綜合決策'
         },
         {
             'key': 'trader_investment_plan',
-            'title': '💼 交易团隊計劃',
+            'title': '💼 交易團隊計劃',
             'icon': '💼',
             'description': '專業交易員制定的具體交易執行計劃'
         },
         {
             'key': 'risk_debate_state',
-            'title': '⚖️ 風險管理团隊',
+            'title': '⚖️ 風險管理團隊',
             'icon': '⚖️',
             'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'
         },
@@ -1421,7 +1421,7 @@ def render_detailed_analysis_content(selected_result):
             'key': 'final_trade_decision',
             'title': '🎯 最終交易決策',
             'icon': '🎯',
-            'description': '綜合所有团隊分析後的最終投資決策'
+            'description': '綜合所有團隊分析後的最終投資決策'
         }
     ]
     
@@ -1429,7 +1429,7 @@ def render_detailed_analysis_content(selected_result):
     available_modules = []
     for module in analysis_modules:
         if module['key'] in selected_result and selected_result[module['key']]:
-            # 檢查字典類型的數據是否有實际內容
+            # 檢查字典類型的數據是否有實際內容
             if isinstance(selected_result[module['key']], dict):
                 # 對於字典，檢查是否有非空的值
                 has_content = any(v for v in selected_result[module['key']].values() if v)
@@ -1443,7 +1443,7 @@ def render_detailed_analysis_content(selected_result):
         # 如果沒有預定義模塊的數據，顯示所有可用的分析數據
         st.info("📊 顯示完整分析報告數據")
         
-        # 排除一些基础字段，只顯示分析相關的數據
+        # 排除一些基礎字段，只顯示分析相關的數據
         excluded_keys = {'analysis_id', 'timestamp', 'stock_symbol', 'analysts', 
                         'research_depth', 'status', 'summary', 'performance', 
                         'is_favorite', 'tags', 'full_data'}
@@ -1521,7 +1521,7 @@ def render_detailed_analysis_content(selected_result):
                         st.write(value)
         else:
             # 如果真的沒有任何分析數據，顯示原始JSON
-            st.warning("📊 该分析結果暂無詳細報告數據")
+            st.warning("📊 該分析結果暫無詳細報告數據")
             with st.expander("查看原始數據"):
                 st.json(selected_result)
         return
@@ -1541,7 +1541,7 @@ def render_detailed_analysis_content(selected_result):
             if isinstance(content, str):
                 st.markdown(content)
             elif isinstance(content, dict):
-                # 特殊處理团隊決策報告的字典結構
+                # 特殊處理團隊決策報告的字典結構
                 if module['key'] == 'investment_debate_state':
                     render_investment_debate_content(content)
                 elif module['key'] == 'risk_debate_state':
@@ -1559,13 +1559,13 @@ def render_detailed_analysis_content(selected_result):
                 st.write(content)
 
 def render_investment_debate_content(content):
-    """渲染投資辩論內容"""
+    """渲染投資辯論內容"""
     if 'bull_analyst_report' in content and content['bull_analyst_report']:
-        st.subheader("🐂 多头分析師觀點")
+        st.subheader("🐂 多頭分析師觀點")
         st.markdown(content['bull_analyst_report'])
     
     if 'bear_analyst_report' in content and content['bear_analyst_report']:
-        st.subheader("🐻 空头分析師觀點")
+        st.subheader("🐻 空頭分析師觀點")
         st.markdown(content['bear_analyst_report'])
     
     if 'research_manager_decision' in content and content['research_manager_decision']:
@@ -1573,7 +1573,7 @@ def render_investment_debate_content(content):
         st.markdown(content['research_manager_decision'])
 
 def render_risk_debate_content(content):
-    """渲染風險辩論內容"""
+    """渲染風險辯論內容"""
     if 'aggressive_analyst_report' in content and content['aggressive_analyst_report']:
         st.subheader("🔥 激進分析師觀點")
         st.markdown(content['aggressive_analyst_report'])
@@ -1658,7 +1658,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                                     reports[report_name] = content
                                     print(f"✅ [MongoDB保存] 讀取報告: {report_name} ({len(content)} 字符)")
                             except Exception as e:
-                                print(f"⚠️ [MongoDB保存] 讀取報告文件失败 {report_file}: {e}")
+                                print(f"⚠️ [MongoDB保存] 讀取報告文件失敗 {report_file}: {e}")
 
                         print(f"📊 [MongoDB保存] 共讀取 {len(reports)} 個報告文件")
                     else:
@@ -1678,7 +1678,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                 if success:
                     print(f"✅ [MongoDB保存] 分析結果已保存到MongoDB: {analysis_id} (包含 {len(reports)} 個報告)")
                 else:
-                    print(f"❌ [MongoDB保存] 保存失败: {analysis_id}")
+                    print(f"❌ [MongoDB保存] 保存失敗: {analysis_id}")
 
             except Exception as e:
                 print(f"❌ [MongoDB保存] 保存異常: {e}")
@@ -1687,7 +1687,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
         return True
 
     except Exception as e:
-        print(f"❌ [保存分析結果] 保存失败: {e}")
+        print(f"❌ [保存分析結果] 保存失敗: {e}")
         logger.error(f"保存分析結果異常: {e}")
         return False
 
@@ -1743,11 +1743,11 @@ def show_expanded_detail(result):
                                 else:
                                     st.write(content)
                     else:
-                        st.info("暂無詳細分析報告")
+                        st.info("暫無詳細分析報告")
                 else:
-                    st.info("暂無詳細分析報告")
+                    st.info("暫無詳細分析報告")
             else:
-                st.info("暂無詳細分析報告")
+                st.info("暫無詳細分析報告")
             return
 
         # 獲取報告數據
@@ -1758,7 +1758,7 @@ def show_expanded_detail(result):
             'final_trade_decision': '🎯 最終交易決策',
             'fundamentals_report': '💰 基本面分析',
             'technical_report': '📈 技術面分析',
-            'market_sentiment_report': '💭 市場情绪分析',
+            'market_sentiment_report': '💭 市場情緒分析',
             'risk_assessment_report': '⚠️ 風險評估',
             'price_target_report': '🎯 目標價格分析',
             'summary_report': '📋 分析摘要',
@@ -1766,13 +1766,13 @@ def show_expanded_detail(result):
             'news_report': '📰 新聞分析',
             'market_report': '📈 市場分析',
             'social_media_report': '📱 社交媒體分析',
-            'bull_state': '🐂 多头觀點',
-            'bear_state': '🐻 空头觀點',
+            'bull_state': '🐂 多頭觀點',
+            'bear_state': '🐻 空頭觀點',
             'trader_state': '💼 交易員分析',
             'invest_judge_state': '⚖️ 投資判斷',
-            'research_team_state': '🔬 研究团隊觀點',
+            'research_team_state': '🔬 研究團隊觀點',
             'risk_debate_state': '⚠️ 風險管理討論',
-            'research_team_decision': '🔬 研究团隊決策',
+            'research_team_decision': '🔬 研究團隊決策',
             'risk_management_decision': '🛡️ 風險管理決策',
             'investment_plan': '📋 投資計劃',
             'trader_investment_plan': '💼 交易員投資計劃',

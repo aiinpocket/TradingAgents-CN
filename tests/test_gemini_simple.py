@@ -39,7 +39,7 @@ def test_gemini_simple_analysis():
         config["quick_think_llm"] = "gemini-2.5-flash-lite-preview-06-17"
         config["online_tools"] = False  # 禁用在線工具避免API限制
         config["memory_enabled"] = False  # 禁用內存避免OpenAI依賴
-        config["max_debate_rounds"] = 1  # 减少轮次
+        config["max_debate_rounds"] = 1  # 減少輪次
         config["max_risk_discuss_rounds"] = 1
         
         # 修複路徑
@@ -72,8 +72,8 @@ def test_gemini_simple_analysis():
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print("✅ Gemini驱動的股票分析成功完成！")
-                print(f"   最终決策: {decision}")
+                print("✅ Gemini驅動的股票分析成功完成！")
+                print(f"   最終決策: {decision}")
                 
                 # 檢查市場報告
                 if "market_report" in state and state["market_report"]:
@@ -87,13 +87,13 @@ def test_gemini_simple_analysis():
                 return False
                 
         except Exception as e:
-            print(f"❌ 股票分析失败: {e}")
+            print(f"❌ 股票分析失敗: {e}")
             import traceback
             print(traceback.format_exc())
             return False
             
     except Exception as e:
-        print(f"❌ 簡化測試失败: {e}")
+        print(f"❌ 簡化測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -155,11 +155,11 @@ def test_gemini_analyst_direct():
                 print("⚠️ 市場分析完成但報告內容較少")
                 return True
         else:
-            print("⚠️ 市場分析完成但没有生成報告")
+            print("⚠️ 市場分析完成但沒有生成報告")
             return False
             
     except Exception as e:
-        print(f"❌ 直接分析師測試失败: {e}")
+        print(f"❌ 直接分析師測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
@@ -187,30 +187,30 @@ def main():
     print("-" * 30)
     results['簡化TradingAgents'] = test_gemini_simple_analysis()
     
-    # 总結結果
-    print(f"\n📊 簡化測試結果总結:")
+    # 總結結果
+    print(f"\n📊 簡化測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
         print("🎉 Gemini模型核心功能完全可用！")
-        print("\n💡 使用建议:")
-        print("   1. Gemini基础功能正常工作")
+        print("\n💡 使用建議:")
+        print("   1. Gemini基礎功能正常工作")
         print("   2. 可以在TradingAgents中使用Gemini")
-        print("   3. 建议禁用內存功能避免OpenAI依賴")
+        print("   3. 建議禁用內存功能避免OpenAI依賴")
         print("   4. 可以使用離線模式避免API限制")
         print("   5. 支持中文分析和推理")
     elif successful_tests > 0:
         print("⚠️ Gemini部分功能可用")
-        print("💡 核心功能正常，可以進行基础分析")
+        print("💡 核心功能正常，可以進行基礎分析")
     else:
         print("❌ Gemini模型不可用")
         print("💡 請檢查API密鑰和網絡連接")

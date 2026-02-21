@@ -47,7 +47,7 @@ def test_finnhub_api():
             else:
                 print(f"新聞內容: {news_result}")
         except Exception as e:
-            print(f"❌ FINNHUB新聞API調用失败: {e}")
+            print(f"❌ FINNHUB新聞API調用失敗: {e}")
         
         # 測試Yahoo Finance數據API
         print(f"\n📊 測試Yahoo Finance數據API...")
@@ -65,7 +65,7 @@ def test_finnhub_api():
             else:
                 print(f"股票數據: {stock_result}")
         except Exception as e:
-            print(f"❌ Yahoo Finance API調用失败: {e}")
+            print(f"❌ Yahoo Finance API調用失敗: {e}")
         
         # 測試OpenAI基本面API
         print(f"\n💼 測試OpenAI基本面API...")
@@ -82,12 +82,12 @@ def test_finnhub_api():
             else:
                 print(f"基本面數據: {fundamentals_result}")
         except Exception as e:
-            print(f"❌ OpenAI基本面API調用失败: {e}")
+            print(f"❌ OpenAI基本面API調用失敗: {e}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -125,7 +125,7 @@ def test_china_stock_api():
             else:
                 print(f"股票數據: {china_result}")
         except Exception as e:
-            print(f"❌ 中國股票數據API調用失败: {e}")
+            print(f"❌ 中國股票數據API調用失敗: {e}")
         
         # 測試中國股票基本面API
         print(f"\n💼 測試中國股票基本面API...")
@@ -142,12 +142,12 @@ def test_china_stock_api():
             else:
                 print(f"基本面數據: {china_fundamentals_result}")
         except Exception as e:
-            print(f"❌ 中國股票基本面API調用失败: {e}")
+            print(f"❌ 中國股票基本面API調用失敗: {e}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -163,9 +163,9 @@ if __name__ == "__main__":
     result2 = test_china_stock_api()
     
     print("\n" + "="*50)
-    print("🎯 測試总結:")
-    print(f"美股API測試: {'✅ 成功' if result1 else '❌ 失败'}")
-    print(f"中國股票API測試: {'✅ 成功' if result2 else '❌ 失败'}")
+    print("🎯 測試總結:")
+    print(f"美股API測試: {'✅ 成功' if result1 else '❌ 失敗'}")
+    print(f"中國股票API測試: {'✅ 成功' if result2 else '❌ 失敗'}")
     
     if result1 and result2:
         print("🎉 所有API連接正常，可以進行股票分析！")

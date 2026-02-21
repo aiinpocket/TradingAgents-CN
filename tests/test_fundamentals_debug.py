@@ -14,7 +14,6 @@ def test_fundamentals_analyst_directly():
         from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
-        from tradingagents.llm_adapters.dashscope_openai_adapter import ChatDashScopeOpenAI
         
         # 創建配置
         config = DEFAULT_CONFIG.copy()
@@ -50,7 +49,7 @@ def test_fundamentals_analyst_directly():
         print(f"  測試港股: {state['company_of_interest']}")
         print(f"  調用基本面分析師...")
         
-        # 調用分析師（這會觸發工具選擇逻辑）
+        # 調用分析師（這會觸發工具選擇邏輯）
         result = analyst(state)
         
         print(f"  ✅ 基本面分析師調用完成")
@@ -59,11 +58,10 @@ def test_fundamentals_analyst_directly():
         return True
         
     except Exception as e:
-        print(f"❌ 直接測試失败: {e}")
+        print(f"❌ 直接測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
-
 
 def test_stock_utils_import():
     """測試StockUtils導入和功能"""
@@ -72,7 +70,7 @@ def test_stock_utils_import():
     try:
         from tradingagents.utils.stock_utils import StockUtils
         
-        # 測試港股识別
+        # 測試港股識別
         ticker = "0700.HK"
         market_info = StockUtils.get_market_info(ticker)
         
@@ -83,16 +81,15 @@ def test_stock_utils_import():
         print(f"  是否美股: {market_info['is_us']}")
         
         if market_info['is_hk']:
-            print(f"  ✅ StockUtils正確识別港股")
+            print(f"  ✅ StockUtils正確識別港股")
             return True
         else:
-            print(f"  ❌ StockUtils未能识別港股")
+            print(f"  ❌ StockUtils未能識別港股")
             return False
         
     except Exception as e:
-        print(f"❌ StockUtils測試失败: {e}")
+        print(f"❌ StockUtils測試失敗: {e}")
         return False
-
 
 def test_toolkit_hk_tools():
     """測試工具包中的港股工具"""
@@ -125,9 +122,8 @@ def test_toolkit_hk_tools():
         return True
         
     except Exception as e:
-        print(f"❌ 工具包測試失败: {e}")
+        print(f"❌ 工具包測試失敗: {e}")
         return False
-
 
 def test_import_paths():
     """測試導入路徑"""
@@ -150,7 +146,6 @@ def test_import_paths():
     
     return True
 
-
 def main():
     """主測試函數"""
     print("🔧 基本面分析師調試測試")
@@ -171,7 +166,7 @@ def main():
             if test():
                 passed += 1
             else:
-                print(f"❌ 測試失败: {test.__name__}")
+                print(f"❌ 測試失敗: {test.__name__}")
         except Exception as e:
             print(f"❌ 測試異常: {test.__name__} - {e}")
     
@@ -182,9 +177,8 @@ def main():
         print("🎉 所有測試通過！")
         return True
     else:
-        print("⚠️ 部分測試失败，需要進一步檢查")
+        print("⚠️ 部分測試失敗，需要進一步檢查")
         return False
-
 
 if __name__ == "__main__":
     success = main()

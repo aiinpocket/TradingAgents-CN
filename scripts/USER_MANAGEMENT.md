@@ -99,7 +99,7 @@ scripts\user_manager.bat reset
 **語法**: `delete-user <用戶名>`
 
 ### 重置配置 (reset)
-将用戶配置重置為默認設置，包含以下默認用戶：
+將用戶配置重置為默認設置，包含以下默認用戶：
 - `admin` / `admin123` (管理員)
 - `user` / `user123` (普通用戶)
 

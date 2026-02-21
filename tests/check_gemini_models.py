@@ -54,7 +54,7 @@ def list_available_models():
         return available_models
         
     except Exception as e:
-        print(f"❌ 獲取模型列表失败: {e}")
+        print(f"❌ 獲取模型列表失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return []
@@ -86,17 +86,17 @@ def test_specific_model(model_name):
             print(f"   響應預覽: {response.text[:200]}...")
             return True
         else:
-            print("❌ 模型調用失败：無響應內容")
+            print("❌ 模型調用失敗：無響應內容")
             return False
             
     except Exception as e:
-        print(f"❌ 模型測試失败: {e}")
+        print(f"❌ 模型測試失敗: {e}")
         return False
 
 def test_langchain_with_correct_model(model_name):
     """使用正確的模型名稱測試LangChain"""
     try:
-        print(f"\n🧪 測試LangChain与模型: {model_name}")
+        print(f"\n🧪 測試LangChain與模型: {model_name}")
         print("=" * 50)
         
         from langchain_google_genai import ChatGoogleGenerativeAI
@@ -113,7 +113,7 @@ def test_langchain_with_correct_model(model_name):
         
         # 測試調用
         print("📝 測試LangChain調用...")
-        response = llm.invoke("請用中文分析一下苹果公司的投資價值")
+        response = llm.invoke("請用中文分析一下蘋果公司的投資價值")
         
         if response and response.content:
             print("✅ LangChain Gemini調用成功")
@@ -121,11 +121,11 @@ def test_langchain_with_correct_model(model_name):
             print(f"   響應預覽: {response.content[:200]}...")
             return True
         else:
-            print("❌ LangChain Gemini調用失败：無響應內容")
+            print("❌ LangChain Gemini調用失敗：無響應內容")
             return False
             
     except Exception as e:
-        print(f"❌ LangChain測試失败: {e}")
+        print(f"❌ LangChain測試失敗: {e}")
         return False
 
 def main():
@@ -145,7 +145,7 @@ def main():
     available_models = list_available_models()
     
     if not available_models:
-        print("❌ 没有找到可用的模型")
+        print("❌ 沒有找到可用的模型")
         return
     
     # 測試第一個可用模型
@@ -158,22 +158,22 @@ def main():
     # 測試LangChain集成
     langchain_success = test_langchain_with_correct_model(test_model)
     
-    # 总結結果
-    print(f"\n📊 測試結果总結:")
+    # 總結結果
+    print(f"\n📊 測試結果總結:")
     print("=" * 50)
     print(f"  可用模型數量: {len(available_models)}")
     print(f"  推薦模型: {test_model}")
-    print(f"  直接API測試: {'✅ 通過' if direct_success else '❌ 失败'}")
-    print(f"  LangChain集成: {'✅ 通過' if langchain_success else '❌ 失败'}")
+    print(f"  直接API測試: {'✅ 通過' if direct_success else '❌ 失敗'}")
+    print(f"  LangChain集成: {'✅ 通過' if langchain_success else '❌ 失敗'}")
     
     if direct_success and langchain_success:
         print(f"\n🎉 Gemini模型 {test_model} 完全可用！")
-        print(f"\n💡 使用建议:")
+        print(f"\n💡 使用建議:")
         print(f"   1. 在配置中使用模型名稱: {test_model}")
         print(f"   2. 替換所有 'gemini-pro' 為 '{test_model}'")
         print(f"   3. 確保API密鑰有效且有足夠配額")
     else:
-        print(f"\n⚠️ 模型測試部分失败，請檢查API密鑰和網絡連接")
+        print(f"\n⚠️ 模型測試部分失敗，請檢查API密鑰和網絡連接")
 
 if __name__ == "__main__":
     main()

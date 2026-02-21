@@ -32,13 +32,13 @@ except ImportError as e:
 
 def get_stock_info(stock_code: str) -> Dict[str, Any]:
     """
-    獲取單個股票的基础信息
+    獲取單個股票的基礎信息
     
     Args:
         stock_code: 股票代碼（如 '000001'）
     
     Returns:
-        Dict: 股票基础信息
+        Dict: 股票基礎信息
     
     Example:
         >>> info = get_stock_info('000001')
@@ -65,10 +65,10 @@ def get_stock_info(stock_code: str) -> Dict[str, Any]:
 
 def get_all_stocks() -> List[Dict[str, Any]]:
     """
-    獲取所有股票的基础信息
+    獲取所有股票的基礎信息
     
     Returns:
-        List[Dict]: 所有股票的基础信息列表
+        List[Dict]: 所有股票的基礎信息列表
     
     Example:
         >>> stocks = get_all_stocks()
@@ -122,10 +122,10 @@ def get_stock_data(stock_code: str, start_date: str = None, end_date: str = None
 
 def search_stocks(keyword: str) -> List[Dict[str, Any]]:
     """
-    根據關键詞搜索股票
-    
+    根據關鍵詞搜索股票
+
     Args:
-        keyword: 搜索關键詞（股票代碼或名稱的一部分）
+        keyword: 搜索關鍵詞（股票代碼或名稱的一部分）
     
     Returns:
         List[Dict]: 匹配的股票信息列表
@@ -165,7 +165,7 @@ def get_market_summary() -> Dict[str, Any]:
     
     Example:
         >>> summary = get_market_summary()
-        logger.info(f"沪市股票數量: {summary["shanghai_count']}")
+        logger.info(f"滬市股票數量: {summary["shanghai_count']}")
     """
     all_stocks = get_all_stocks()
     
@@ -255,7 +255,7 @@ def check_service_status() -> Dict[str, Any]:
         'service_available': True,
         'mongodb_status': mongodb_status,
         'unified_api_status': unified_api_status,
-        'data_sources_available': ['tushare', 'akshare', 'baostock'],
+        'data_sources_available': ['yfinance', 'finnhub'],
         'fallback_available': True,
         'checked_at': datetime.now().isoformat()
     }
@@ -300,8 +300,8 @@ if __name__ == '__main__':
     logger.info(f"\n📈 市場概覽:")
     summary = get_market_summary()
     if 'error' not in summary:
-        logger.info(f"  总股票數: {summary.get('total_count')}")
-        logger.info(f"  沪市股票: {summary.get('shanghai_count')}")
+        logger.info(f"  總股票數: {summary.get('total_count')}")
+        logger.info(f"  滬市股票: {summary.get('shanghai_count')}")
         logger.info(f"  深市股票: {summary.get('shenzhen_count')}")
         logger.info(f"  數據源: {summary.get('data_source')}")
     else:

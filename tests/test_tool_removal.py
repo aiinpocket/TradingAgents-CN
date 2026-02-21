@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試旧工具移除
+測試舊工具移除
 驗證LLM只能調用統一工具
 """
 
@@ -24,9 +24,9 @@ def test_available_tools():
             if hasattr(attr, 'name') and hasattr(attr, 'description'):
                 all_tools.append(attr.name)
         
-        print(f"  总工具數量: {len(all_tools)}")
+        print(f"  總工具數量: {len(all_tools)}")
         
-        # 檢查旧工具是否已移除
+        # 檢查舊工具是否已移除
         removed_tools = [
             'get_china_stock_data',
             'get_china_fundamentals', 
@@ -42,10 +42,10 @@ def test_available_tools():
             'get_stock_sentiment_unified'
         ]
         
-        print("\n  旧工具移除檢查:")
+        print("\n  舊工具移除檢查:")
         for tool_name in removed_tools:
             if tool_name in all_tools:
-                print(f"    ❌ {tool_name}: 仍然可用（應该已移除）")
+                print(f"    ❌ {tool_name}: 仍然可用（應該已移除）")
                 return False
             else:
                 print(f"    ✅ {tool_name}: 已移除")
@@ -66,7 +66,7 @@ def test_available_tools():
         return True
         
     except Exception as e:
-        print(f"❌ 工具移除測試失败: {e}")
+        print(f"❌ 工具移除測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -88,7 +88,7 @@ def test_fundamentals_analyst_tool_selection():
         # 創建工具包
         toolkit = Toolkit(config)
         
-        # 模擬基本面分析師的工具選擇逻辑
+        # 模擬基本面分析師的工具選擇邏輯
         from tradingagents.utils.stock_utils import StockUtils
         
         test_cases = [
@@ -103,7 +103,7 @@ def test_fundamentals_analyst_tool_selection():
             # 獲取市場信息
             market_info = StockUtils.get_market_info(ticker)
             
-            # 模擬基本面分析師的工具選擇逻辑
+            # 模擬基本面分析師的工具選擇邏輯
             if toolkit.config["online_tools"]:
                 # 使用統一的基本面分析工具
                 tools = [toolkit.get_stock_fundamentals_unified]
@@ -124,7 +124,7 @@ def test_fundamentals_analyst_tool_selection():
         return True
         
     except Exception as e:
-        print(f"❌ 基本面分析師工具選擇測試失败: {e}")
+        print(f"❌ 基本面分析師工具選擇測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -159,7 +159,7 @@ def test_market_analyst_tool_selection():
             # 獲取市場信息
             market_info = StockUtils.get_market_info(ticker)
             
-            # 模擬市場分析師的工具選擇逻辑
+            # 模擬市場分析師的工具選擇邏輯
             if toolkit.config["online_tools"]:
                 # 使用統一的市場數據工具
                 tools = [toolkit.get_stock_market_data_unified]
@@ -180,7 +180,7 @@ def test_market_analyst_tool_selection():
         return True
         
     except Exception as e:
-        print(f"❌ 市場分析師工具選擇測試失败: {e}")
+        print(f"❌ 市場分析師工具選擇測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -188,7 +188,7 @@ def test_market_analyst_tool_selection():
 
 def main():
     """主測試函數"""
-    print("🔧 旧工具移除測試")
+    print("🔧 舊工具移除測試")
     print("=" * 60)
     
     tests = [
@@ -205,7 +205,7 @@ def main():
             if test():
                 passed += 1
             else:
-                print(f"❌ 測試失败: {test.__name__}")
+                print(f"❌ 測試失敗: {test.__name__}")
         except Exception as e:
             print(f"❌ 測試異常: {test.__name__} - {e}")
     
@@ -213,15 +213,15 @@ def main():
     print(f"📊 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print("🎉 所有測試通過！旧工具移除成功")
+        print("🎉 所有測試通過！舊工具移除成功")
         print("\n📋 修複內容:")
-        print("✅ 移除了旧工具的 @tool 裝饰器")
-        print("✅ LLM無法再調用旧工具")
+        print("✅ 移除了舊工具的 @tool 裝飾器")
+        print("✅ LLM無法再調用舊工具")
         print("✅ 只能調用統一工具")
-        print("✅ 避免了工具調用混乱")
+        print("✅ 避免了工具調用混亂")
         return True
     else:
-        print("⚠️ 部分測試失败，需要進一步檢查")
+        print("⚠️ 部分測試失敗，需要進一步檢查")
         return False
 
 

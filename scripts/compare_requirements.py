@@ -1,7 +1,7 @@
 """
 比較 requirements.txt 和 pyproject.toml 中的依賴是否一致
 
-確保两個文件中聲明的依賴包保持同步
+確保兩個文件中聲明的依賴包保持同步
 """
 
 import re
@@ -66,7 +66,7 @@ def main():
     print("🔍 比較 requirements.txt 和 pyproject.toml")
     print("=" * 80)
     
-    # 解析两個文件
+    # 解析兩個文件
     print("\n📋 解析 requirements.txt...")
     req_packages = parse_requirements_txt()
     print(f"✅ 發現 {len(req_packages)} 個包")
@@ -96,7 +96,7 @@ def main():
     
     # 輸出結果
     if not missing_in_req and not missing_in_pyproject and not version_mismatch:
-        print("\n✅ 两個文件完全一致！")
+        print("\n✅ 兩個文件完全一致！")
     else:
         if missing_in_req:
             print(f"\n❌ 在 pyproject.toml 中但不在 requirements.txt 中 ({len(missing_in_req)} 個):")
@@ -104,7 +104,7 @@ def main():
             for package in sorted(missing_in_req):
                 version = pyproject_packages[package]
                 print(f"  • {package}{version}")
-            print("\n💡 建议在 requirements.txt 中添加這些包")
+            print("\n💡 建議在 requirements.txt 中添加這些包")
         
         if missing_in_pyproject:
             print(f"\n❌ 在 requirements.txt 中但不在 pyproject.toml 中 ({len(missing_in_pyproject)} 個):")
@@ -112,7 +112,7 @@ def main():
             for package in sorted(missing_in_pyproject):
                 version = req_packages[package]
                 print(f"  • {package}{version}")
-            print("\n💡 建议在 pyproject.toml 中添加這些包")
+            print("\n💡 建議在 pyproject.toml 中添加這些包")
         
         if version_mismatch:
             print(f"\n⚠️  版本不一致 ({len(version_mismatch)} 個):")
@@ -128,8 +128,8 @@ def main():
     print(f"  requirements.txt:  {len(req_packages)} 個包")
     print(f"  pyproject.toml:    {len(pyproject_packages)} 個包")
     print(f"  共同包:            {len(set(req_packages.keys()) & set(pyproject_packages.keys()))} 個")
-    print(f"  仅在 req:          {len(missing_in_pyproject)} 個")
-    print(f"  仅在 pyproject:    {len(missing_in_req)} 個")
+    print(f"  僅在 req:          {len(missing_in_pyproject)} 個")
+    print(f"  僅在 pyproject:    {len(missing_in_req)} 個")
     print(f"  版本不一致:        {len(version_mismatch)} 個")
     
     print("\n" + "=" * 80)

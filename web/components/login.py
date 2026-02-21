@@ -41,7 +41,7 @@ except ImportError:
                 from auth_manager import AuthManager, auth_manager as imported_auth_manager
                 auth_manager = imported_auth_manager
             except ImportError:
-                # 如果都失败了，創建一個簡單的認證管理器
+                # 如果都失敗了，創建一個簡單的認證管理器
                 class SimpleAuthManager:
                     def __init__(self):
                         self.authenticated = False
@@ -71,7 +71,7 @@ except ImportError:
                 auth_manager = SimpleAuthManager()
 
 def get_base64_image(image_path):
-    """将圖片轉換為base64編碼"""
+    """將圖片轉換為base64編碼"""
     try:
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
@@ -81,7 +81,7 @@ def get_base64_image(image_path):
 def render_login_form():
     """渲染登錄表單"""
     
-    # 現代化登錄页面樣式
+    # 現代化登錄頁面樣式
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -222,7 +222,7 @@ def render_login_form():
     <div class="login-container">
         <div class="login-header">
             <h1 class="login-title">🚀 TradingAgents-CN</h1>
-            <p class="login-subtitle">AI驱動的股票交易分析平台 · 让投資更智能</p>
+            <p class="login-subtitle">AI驅動的股票交易分析平台 · 讓投資更智能</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -275,7 +275,7 @@ def render_login_form():
         <div class="feature-card">
             <div class="feature-icon">📊</div>
             <div class="feature-title">智能分析</div>
-            <div class="feature-desc">AI驱動的股票分析</div>
+            <div class="feature-desc">AI驅動的股票分析</div>
         </div>
         <div class="feature-card">
             <div class="feature-icon">🔍</div>
@@ -296,7 +296,7 @@ def render_login_form():
     """, unsafe_allow_html=True)
 
 def render_sidebar_user_info():
-    """在侧邊栏渲染用戶信息"""
+    """在側邊欄渲染用戶信息"""
     
     if not auth_manager.is_authenticated():
         return
@@ -305,7 +305,7 @@ def render_sidebar_user_info():
     if not user_info:
         return
     
-    # 侧邊栏用戶信息樣式
+    # 側邊欄用戶信息樣式
     st.sidebar.markdown("""
     <style>
     .sidebar-user-info {
@@ -390,12 +390,12 @@ def render_sidebar_user_info():
     """, unsafe_allow_html=True)
 
 def render_sidebar_logout():
-    """在侧邊栏底部渲染退出按钮"""
+    """在側邊欄底部渲染退出按鈕"""
     
     if not auth_manager.is_authenticated():
         return
     
-    # 退出按钮樣式
+    # 退出按鈕樣式
     st.sidebar.markdown("""
     <style>
     .sidebar-logout-container {
@@ -425,17 +425,17 @@ def render_sidebar_logout():
     </style>
     """, unsafe_allow_html=True)
     
-    # 添加分隔線和退出按钮
+    # 添加分隔線和退出按鈕
     st.sidebar.markdown('<div class="sidebar-logout-container">', unsafe_allow_html=True)
     if st.sidebar.button("🚪 安全退出", use_container_width=True, key="sidebar_logout_btn"):
         auth_manager.logout()
-        st.sidebar.success("✅ 已安全退出，感谢使用！")
+        st.sidebar.success("✅ 已安全退出，感謝使用！")
         time.sleep(1)
         st.rerun()
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 def render_user_info():
-    """渲染用戶信息栏"""
+    """渲染用戶信息欄"""
     
     if not auth_manager.is_authenticated():
         return
@@ -444,7 +444,7 @@ def render_user_info():
     if not user_info:
         return
     
-    # 現代化用戶信息栏樣式
+    # 現代化用戶信息欄樣式
     st.markdown("""
     <style>
     .user-info-container {
@@ -542,7 +542,7 @@ def render_user_info():
     with col2:
         if st.button("🚪 安全退出", use_container_width=True, type="secondary", key="logout_btn"):
             auth_manager.logout()
-            st.success("✅ 已安全退出，感谢使用！")
+            st.success("✅ 已安全退出，感謝使用！")
             time.sleep(1)
             st.rerun()
 

@@ -46,7 +46,7 @@ def test_finnhub_fundamentals_with_cache():
             print(f"⏱️ 第一次獲取耗時: {first_time:.2f}秒")
             print(f"📄 數據預覽: {result1[:200]}...")
             
-            # 第二次獲取，應该從緩存讀取
+            # 第二次獲取，應該從緩存讀取
             print(f"\n🔍 第二次獲取 {test_ticker} 的基本面數據（從緩存獲取）...")
             start_time = time.time()
             result2 = get_fundamentals_finnhub(test_ticker, curr_date)
@@ -62,12 +62,12 @@ def test_finnhub_fundamentals_with_cache():
                 print(f"⚠️ 緩存可能未生效")
                 return False
         else:
-            print(f"❌ {test_ticker} 基本面數據獲取失败或數據過短")
+            print(f"❌ {test_ticker} 基本面數據獲取失敗或數據過短")
             print(f"📄 返回內容: {result1}")
             return False
         
     except Exception as e:
-        print(f"❌ Finnhub基本面數據測試失败: {str(e)}")
+        print(f"❌ Finnhub基本面數據測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -104,7 +104,7 @@ def test_openai_fallback_with_cache():
             print(f"📄 數據長度: {len(result1)}")
             print(f"⏱️ 第一次獲取耗時: {first_time:.2f}秒")
             
-            # 第二次獲取，應该從緩存讀取
+            # 第二次獲取，應該從緩存讀取
             print(f"\n🔍 第二次通過OpenAI接口獲取 {test_ticker} 數據（應從緩存獲取）...")
             start_time = time.time()
             result2 = get_fundamentals_openai(test_ticker, curr_date)
@@ -133,7 +133,7 @@ def test_openai_fallback_with_cache():
         return success
         
     except Exception as e:
-        print(f"❌ OpenAI fallback測試失败: {str(e)}")
+        print(f"❌ OpenAI fallback測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -160,7 +160,7 @@ def test_cache_management():
         return True
         
     except Exception as e:
-        print(f"❌ 緩存管理測試失败: {str(e)}")
+        print(f"❌ 緩存管理測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -189,13 +189,13 @@ def main():
             result = test_func()
             results.append((test_name, result))
         except Exception as e:
-            print(f"❌ 測試 '{test_name}' 執行失败: {str(e)}")
+            print(f"❌ 測試 '{test_name}' 執行失敗: {str(e)}")
             results.append((test_name, False))
     
     # 輸出測試結果
-    print(f"\n{'='*20} 測試結果汇总 {'='*20}")
+    print(f"\n{'='*20} 測試結果匯總 {'='*20}")
     for test_name, result in results:
-        status = "✅ 通過" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失敗"
         print(f"{status} {test_name}")
     
     passed = sum(1 for _, result in results if result)
@@ -206,13 +206,13 @@ def main():
         print("🎉 所有測試都通過了！Finnhub基本面數據功能和緩存系統正常工作。")
         print("\n💡 功能特性:")
         print("1. ✅ 當OpenAI配置不可用時，系統會自動使用Finnhub API")
-        print("2. ✅ Finnhub提供官方財務數據，包括PE、PS、ROE等關键指標")
+        print("2. ✅ Finnhub提供官方財務數據，包括PE、PS、ROE等關鍵指標")
         print("3. ✅ 數據來源於公司財報和SEC文件，具有較高的可靠性")
         print("4. ✅ 支持智能緩存機制，美股基本面數據緩存24小時，A股緩存12小時")
-        print("5. ✅ 緩存按市場類型分類存储，提高查找效率")
+        print("5. ✅ 緩存按市場類型分類存儲，提高查找效率")
         print("6. ✅ 自動檢測緩存有效性，過期數據會重新獲取")
     else:
-        print("⚠️ 部分測試失败，請檢查相關配置。")
+        print("⚠️ 部分測試失敗，請檢查相關配置。")
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 """
 股票工具函數
-提供股票代碼识別、分類和處理功能
+提供股票代碼識別、分類和處理功能
 """
 
 import re
@@ -13,7 +13,7 @@ logger = get_logger("default")
 
 
 class StockMarket(Enum):
-    """股票市場枚举"""
+    """股票市場枚舉"""
     CHINA_A = "china_a"      # 中國A股
     HONG_KONG = "hong_kong"  # 港股
     US = "us"                # 美股
@@ -26,7 +26,7 @@ class StockUtils:
     @staticmethod
     def identify_stock_market(ticker: str) -> StockMarket:
         """
-        识別股票代碼所屬市場
+        識別股票代碼所屬市場
         
         Args:
             ticker: 股票代碼
@@ -95,20 +95,20 @@ class StockUtils:
     @staticmethod
     def get_currency_info(ticker: str) -> Tuple[str, str]:
         """
-        根據股票代碼獲取貨币信息
-        
+        根據股票代碼獲取貨幣信息
+
         Args:
             ticker: 股票代碼
-            
+
         Returns:
-            Tuple[str, str]: (貨币名稱, 貨币符號)
+            Tuple[str, str]: (貨幣名稱, 貨幣符號)
         """
         market = StockUtils.identify_stock_market(ticker)
         
         if market == StockMarket.CHINA_A:
-            return "人民币", "¥"
+            return "人民幣", "¥"
         elif market == StockMarket.HONG_KONG:
-            return "港币", "HK$"
+            return "港幣", "HK$"
         elif market == StockMarket.US:
             return "美元", "$"
         else:

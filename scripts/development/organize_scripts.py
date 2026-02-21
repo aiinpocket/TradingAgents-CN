@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 整理TradingAgentsCN項目的scripts目錄結構
-将現有腳本按功能分類到子目錄中
+將現有腳本按功能分類到子目錄中
 """
 
 import os
@@ -36,7 +36,7 @@ def create_scripts_structure():
         "validation": {
             "description": "驗證和檢查腳本", 
             "scripts": [
-                # 這里會放置驗證腳本
+                # 這裡會放置驗證腳本
             ]
         },
         "maintenance": {
@@ -48,7 +48,7 @@ def create_scripts_structure():
             ]
         },
         "development": {
-            "description": "開發辅助腳本",
+            "description": "開發輔助腳本",
             "scripts": [
                 "prepare_upstream_contribution.py",
                 "download_finnhub_sample_data.py",
@@ -142,7 +142,7 @@ python scripts/{category}/script_name.py
                     shutil.move(str(source_path), str(target_path))
                     logger.info(f"✅ 移動: {script_name} -> scripts/{category}/")
                 except Exception as e:
-                    logger.error(f"⚠️ 移動失败 {script_name}: {e}")
+                    logger.error(f"⚠️ 移動失敗 {script_name}: {e}")
             else:
                 logger.info(f"ℹ️ 腳本不存在: {script_name}")
     
@@ -169,15 +169,15 @@ python scripts/{category}/script_name.py
 
 ### 🔧 maintenance/ - 維護腳本
 - 緩存清理
-- 數據备份
+- 數據備份
 - 依賴更新
 - 上游同步
 
-### 🛠️ development/ - 開發辅助腳本
+### 🛠️ development/ - 開發輔助腳本
 - 代碼分析
 - 性能基準測試
-- 文档生成
-- 贡献準备
+- 文件生成
+- 貢獻準備
 
 ### 🚀 deployment/ - 部署腳本
 - Web應用部署
@@ -192,7 +192,7 @@ python scripts/{category}/script_name.py
 ### 📋 git/ - Git工具腳本
 - 上游同步
 - 分支管理
-- 贡献工作流
+- 貢獻工作流
 
 ## 使用原則
 
@@ -215,7 +215,7 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
 
 ## 註意事項
 
-- 所有腳本應该從項目根目錄運行
+- 所有腳本應該從項目根目錄運行
 - 檢查腳本的依賴要求
 - 某些腳本可能需要特殊權限
 - 保持腳本的獨立性和可重用性
@@ -225,7 +225,7 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
         f.write(main_readme_content)
     logger.info(f"📝 創建主README: scripts/README.md")
     
-    # 顯示剩余的未分類腳本
+    # 顯示剩餘的未分類腳本
     logger.info(f"\n📊 檢查未分類的腳本...")
     remaining_scripts = []
     for item in scripts_path.iterdir():
@@ -237,7 +237,7 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
         logger.warning(f"⚠️ 未分類的腳本:")
         for script in remaining_scripts:
             logger.info(f"  - {script}")
-        logger.info(f"建议手動将這些腳本移動到合適的分類目錄中")
+        logger.info(f"建議手動將這些腳本移動到合適的分類目錄中")
     else:
         logger.info(f"✅ 所有腳本都已分類")
     
@@ -254,8 +254,8 @@ def main():
             logger.info(f"\n🎯 整理結果:")
             logger.info(f"✅ 創建了分類子目錄")
             logger.info(f"✅ 移動了現有腳本")
-            logger.info(f"✅ 生成了README文档")
-            logger.info(f"\n💡 建议:")
+            logger.info(f"✅ 生成了README文件")
+            logger.info(f"\n💡 建議:")
             logger.info(f"1. 驗證腳本放在 scripts/validation/")
             logger.info(f"2. 測試代碼放在 tests/")
             logger.info(f"3. 新腳本按功能放在對應分類目錄")
@@ -263,7 +263,7 @@ def main():
         return success
         
     except Exception as e:
-        logger.error(f"❌ 整理失败: {e}")
+        logger.error(f"❌ 整理失敗: {e}")
         return False
 
 if __name__ == "__main__":

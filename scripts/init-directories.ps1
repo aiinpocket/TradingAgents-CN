@@ -1,41 +1,41 @@
-# TradingAgents 目录初始化脚本 (PowerShell版本)
-# 创建Docker容器需要的本地目录结构
+# TradingAgents 目錄初始化腳本 (PowerShell版本)
+# 建立Docker容器需要的本機目錄結構
 
-Write-Host "🚀 TradingAgents 目录初始化" -ForegroundColor Green
+Write-Host "TradingAgents 目錄初始化" -ForegroundColor Green
 Write-Host "==========================" -ForegroundColor Green
 
-# 获取项目根目录
+# 取得專案根目錄
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $ProjectRoot
 
-Write-Host "📁 项目根目录: $ProjectRoot" -ForegroundColor Cyan
+Write-Host "專案根目錄: $ProjectRoot" -ForegroundColor Cyan
 
-# 创建必要的目录
+# 建立必要的目錄
 $Directories = @(
     "logs",
     "data",
     "data\cache",
-    "data\exports", 
+    "data\exports",
     "data\temp",
     "config",
     "config\runtime"
 )
 
 Write-Host ""
-Write-Host "📂 创建目录结构..." -ForegroundColor Yellow
+Write-Host "建立目錄結構..." -ForegroundColor Yellow
 
 foreach ($dir in $Directories) {
     if (-not (Test-Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
-        Write-Host "✅ 创建目录: $dir" -ForegroundColor Green
+        Write-Host "建立目錄: $dir" -ForegroundColor Green
     } else {
-        Write-Host "📁 目录已存在: $dir" -ForegroundColor Gray
+        Write-Host "目錄已存在: $dir" -ForegroundColor Gray
     }
 }
 
-# 创建 .gitkeep 文件保持目录结构
+# 建立 .gitkeep 檔案保持目錄結構
 Write-Host ""
-Write-Host "📝 创建 .gitkeep 文件..." -ForegroundColor Yellow
+Write-Host "建立 .gitkeep 檔案..." -ForegroundColor Yellow
 
 $GitkeepDirs = @(
     "logs",
@@ -49,18 +49,18 @@ foreach ($dir in $GitkeepDirs) {
     $gitkeepFile = Join-Path $dir ".gitkeep"
     if (-not (Test-Path $gitkeepFile)) {
         New-Item -ItemType File -Path $gitkeepFile -Force | Out-Null
-        Write-Host "✅ 创建: $gitkeepFile" -ForegroundColor Green
+        Write-Host "建立: $gitkeepFile" -ForegroundColor Green
     }
 }
 
-# 创建日志配置文件
+# 建立日誌配置檔案
 Write-Host ""
-Write-Host "📋 创建日志配置文件..." -ForegroundColor Yellow
+Write-Host "建立日誌配置檔案..." -ForegroundColor Yellow
 
 $LogConfigFile = "config\logging.toml"
 if (-not (Test-Path $LogConfigFile)) {
     $LogConfigContent = @'
-# TradingAgents 日志配置文件
+# TradingAgents 日誌配置檔案
 [logging]
 version = 1
 disable_existing_loggers = false
@@ -107,12 +107,12 @@ level = "INFO"
 handlers = ["console", "file"]
 propagate = false
 
-[logging.loggers.akshare]
+[logging.loggers.yfinance]
 level = "WARNING"
 handlers = ["file"]
 propagate = false
 
-[logging.loggers.tushare]
+[logging.loggers.finnhub]
 level = "WARNING"
 handlers = ["file"]
 propagate = false
@@ -121,48 +121,48 @@ propagate = false
 level = "INFO"
 handlers = ["console", "file"]
 '@
-    
+
     Set-Content -Path $LogConfigFile -Value $LogConfigContent -Encoding UTF8
-    Write-Host "✅ 创建日志配置: $LogConfigFile" -ForegroundColor Green
+    Write-Host "建立日誌配置: $LogConfigFile" -ForegroundColor Green
 } else {
-    Write-Host "📁 日志配置已存在: $LogConfigFile" -ForegroundColor Gray
+    Write-Host "日誌配置已存在: $LogConfigFile" -ForegroundColor Gray
 }
 
-# 更新 .gitignore 文件
+# 更新 .gitignore 檔案
 Write-Host ""
-Write-Host "📝 更新 .gitignore 文件..." -ForegroundColor Yellow
+Write-Host "更新 .gitignore 檔案..." -ForegroundColor Yellow
 
 $GitignoreEntries = @(
-    "# 日志文件",
+    "# 日誌檔案",
     "logs/*.log",
     "logs/*.log.*",
     "",
-    "# 数据缓存", 
+    "# 資料快取",
     "data/cache/*",
     "data/temp/*",
     "!data/cache/.gitkeep",
     "!data/temp/.gitkeep",
     "",
-    "# 运行时配置",
+    "# 執行時配置",
     "config/runtime/*",
     "!config/runtime/.gitkeep",
     "",
-    "# 导出文件",
+    "# 匯出檔案",
     "data/exports/*.pdf",
-    "data/exports/*.docx", 
+    "data/exports/*.docx",
     "data/exports/*.xlsx",
     "!data/exports/.gitkeep"
 )
 
-# 检查 .gitignore 是否存在
+# 檢查 .gitignore 是否存在
 if (-not (Test-Path ".gitignore")) {
     New-Item -ItemType File -Path ".gitignore" -Force | Out-Null
 }
 
-# 读取现有的 .gitignore 内容
+# 讀取現有的 .gitignore 內容
 $existingContent = Get-Content ".gitignore" -ErrorAction SilentlyContinue
 
-# 添加条目到 .gitignore（如果不存在）
+# 新增條目到 .gitignore（如果不存在）
 $newEntries = @()
 foreach ($entry in $GitignoreEntries) {
     if ($entry -ne "" -and $existingContent -notcontains $entry) {
@@ -174,74 +174,74 @@ if ($newEntries.Count -gt 0) {
     Add-Content -Path ".gitignore" -Value $newEntries
 }
 
-Write-Host "✅ 更新 .gitignore 文件" -ForegroundColor Green
+Write-Host "更新 .gitignore 檔案" -ForegroundColor Green
 
-# 创建 README 文件
+# 建立 README 檔案
 Write-Host ""
-Write-Host "📚 创建目录说明文件..." -ForegroundColor Yellow
+Write-Host "建立目錄說明檔案..." -ForegroundColor Yellow
 
 $ReadmeFile = "logs\README.md"
 if (-not (Test-Path $ReadmeFile)) {
     $ReadmeContent = @'
-# TradingAgents 日志目录
+# TradingAgents 日誌目錄
 
-此目录用于存储 TradingAgents 应用的日志文件。
+此目錄用於存儲 TradingAgents 應用的日誌檔案。
 
-## 日志文件说明
+## 日誌檔案說明
 
-- `tradingagents.log` - 主应用日志文件
-- `tradingagents_error.log` - 错误日志文件
-- `tradingagents.log.1`, `tradingagents.log.2` 等 - 轮转的历史日志文件
+- `tradingagents.log` - 主應用日誌檔案
+- `tradingagents_error.log` - 錯誤日誌檔案
+- `tradingagents.log.1`, `tradingagents.log.2` 等 - 輪轉的歷史日誌檔案
 
-## 日志级别
+## 日誌級別
 
-- **DEBUG** - 详细的调试信息
-- **INFO** - 一般信息
-- **WARNING** - 警告信息
-- **ERROR** - 错误信息
-- **CRITICAL** - 严重错误
+- **DEBUG** - 詳細的除錯資訊
+- **INFO** - 一般資訊
+- **WARNING** - 警告資訊
+- **ERROR** - 錯誤資訊
+- **CRITICAL** - 嚴重錯誤
 
-## 日志轮转
+## 日誌輪轉
 
-- 主日志文件最大 100MB，保留 5 个历史文件
-- 错误日志文件最大 50MB，保留 3 个历史文件
+- 主日誌檔案最大 100MB，保留 5 個歷史檔案
+- 錯誤日誌檔案最大 50MB，保留 3 個歷史檔案
 
-## 获取日志
+## 取得日誌
 
-如果遇到问题需要发送日志给开发者，请发送：
-1. `tradingagents.log` - 主日志文件
-2. `tradingagents_error.log` - 错误日志文件（如果存在）
+如果遇到問題需要發送日誌給開發者，請發送：
+1. `tradingagents.log` - 主日誌檔案
+2. `tradingagents_error.log` - 錯誤日誌檔案（如果存在）
 
-## Docker 环境
+## Docker 環境
 
-在 Docker 环境中，此目录映射到容器内的 `/app/logs` 目录。
+在 Docker 環境中，此目錄映射到容器內的 `/app/logs` 目錄。
 '@
-    
+
     Set-Content -Path $ReadmeFile -Value $ReadmeContent -Encoding UTF8
-    Write-Host "✅ 创建日志说明: $ReadmeFile" -ForegroundColor Green
+    Write-Host "建立日誌說明: $ReadmeFile" -ForegroundColor Green
 }
 
-# 显示目录结构
+# 顯示目錄結構
 Write-Host ""
-Write-Host "📋 目录结构预览:" -ForegroundColor Cyan
+Write-Host "目錄結構預覽:" -ForegroundColor Cyan
 Write-Host "=================="
 
 function Show-DirectoryTree {
     param([string]$Path = ".", [int]$Level = 0, [int]$MaxLevel = 3)
-    
+
     if ($Level -gt $MaxLevel) { return }
-    
-    $items = Get-ChildItem $Path | Where-Object { 
-        $_.Name -notlike ".git*" -and 
+
+    $items = Get-ChildItem $Path | Where-Object {
+        $_.Name -notlike ".git*" -and
         $_.Name -notlike "__pycache__*" -and
         $_.Name -notlike "*.pyc"
     } | Sort-Object @{Expression={$_.PSIsContainer}; Descending=$true}, Name
-    
+
     foreach ($item in $items) {
         $indent = "  " * $Level
-        $prefix = if ($item.PSIsContainer) { "📁" } else { "📄" }
+        $prefix = if ($item.PSIsContainer) { "[DIR]" } else { "[FILE]" }
         Write-Host "$indent$prefix $($item.Name)" -ForegroundColor Gray
-        
+
         if ($item.PSIsContainer -and $Level -lt $MaxLevel) {
             Show-DirectoryTree -Path $item.FullName -Level ($Level + 1) -MaxLevel $MaxLevel
         }
@@ -251,18 +251,18 @@ function Show-DirectoryTree {
 Show-DirectoryTree
 
 Write-Host ""
-Write-Host "🎉 目录初始化完成！" -ForegroundColor Green
+Write-Host "目錄初始化完成!" -ForegroundColor Green
 Write-Host ""
-Write-Host "💡 接下来的步骤:" -ForegroundColor Yellow
-Write-Host "1. 运行 Docker Compose: docker-compose up -d" -ForegroundColor Gray
-Write-Host "2. 检查日志文件: Get-ChildItem logs\" -ForegroundColor Gray
-Write-Host "3. 实时查看日志: Get-Content logs\tradingagents.log -Wait" -ForegroundColor Gray
+Write-Host "接下來的步驟:" -ForegroundColor Yellow
+Write-Host "1. 執行 Docker Compose: docker-compose up -d" -ForegroundColor Gray
+Write-Host "2. 檢查日誌檔案: Get-ChildItem logs\" -ForegroundColor Gray
+Write-Host "3. 即時查看日誌: Get-Content logs\tradingagents.log -Wait" -ForegroundColor Gray
 Write-Host ""
-Write-Host "📁 重要目录说明:" -ForegroundColor Cyan
-Write-Host "   logs\     - 应用日志文件" -ForegroundColor Gray
-Write-Host "   data\     - 数据缓存和导出文件" -ForegroundColor Gray
-Write-Host "   config\   - 运行时配置文件" -ForegroundColor Gray
+Write-Host "重要目錄說明:" -ForegroundColor Cyan
+Write-Host "   logs\     - 應用日誌檔案" -ForegroundColor Gray
+Write-Host "   data\     - 資料快取和匯出檔案" -ForegroundColor Gray
+Write-Host "   config\   - 執行時配置檔案" -ForegroundColor Gray
 Write-Host ""
-Write-Host "🔧 查看日志的PowerShell命令:" -ForegroundColor Yellow
+Write-Host "查看日誌的PowerShell命令:" -ForegroundColor Yellow
 Write-Host "   Get-Content logs\tradingagents.log -Tail 50" -ForegroundColor Gray
 Write-Host "   Get-Content logs\tradingagents.log -Wait" -ForegroundColor Gray

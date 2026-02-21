@@ -6,7 +6,7 @@
 
 ```
 [DEBUG] FinnhubNewsTool調用，股票代碼: AAPL 
-獲取新聞數據失败: [Errno 2] No such file or directory: '/Users/yluo/Documents/Code/ScAI/FR1-data\\finnhub_data\\news_data\\AAPL_data_formatted.json'
+獲取新聞數據失敗: [Errno 2] No such file or directory: '/Users/yluo/Documents/Code/ScAI/FR1-data\\finnhub_data\\news_data\\AAPL_data_formatted.json'
 ```
 
 這表明存在以下問題：
@@ -63,7 +63,7 @@
    # 下載所有類型數據
    python scripts/download_finnhub_data.py --all
 
-   # 强制刷新已存在的數據
+   # 強制刷新已存在的數據
    python scripts/download_finnhub_data.py --force-refresh
 
    # 下載指定天數的新聞數據
@@ -74,7 +74,7 @@
    - `--data-type`: 數據類型 (news, sentiment, transactions, all)
    - `--symbols`: 股票代碼，用逗號分隔
    - `--days`: 新聞數據天數 (默認7天)
-   - `--force-refresh`: 强制刷新已存在的數據
+   - `--force-refresh`: 強制刷新已存在的數據
    - `--all`: 下載所有類型數據
 
 #### 方法二：手動創建測試數據
@@ -113,9 +113,9 @@ print(result[:200])
 ⚠️ 無法獲取AAPL的新聞數據 (2024-12-26 到 2025-01-02)
 可能的原因：
 1. 數據文件不存在或路徑配置錯誤
-2. 指定日期範围內没有新聞數據
+2. 指定日期範围內沒有新聞數據
 3. 需要先下載或更新Finnhub新聞數據
-建议：檢查數據目錄配置或重新獲取新聞數據
+建議：檢查數據目錄配置或重新獲取新聞數據
 ```
 
 ## 配置選項
@@ -146,7 +146,7 @@ set TRADINGAGENTS_DATA_DIR=C:\your\custom\data\directory
 export TRADINGAGENTS_DATA_DIR=/your/custom/data/directory
 ```
 
-## 常见問題
+## 常見問題
 
 ### Q1: 數據目錄權限問題
 
@@ -168,7 +168,7 @@ chmod 755 ~/Documents/TradingAgents/data
 
 **解決方案**：
 1. 升級Finnhub API計劃
-2. 使用緩存减少API調用
+2. 使用緩存減少API調用
 3. 限制數據獲取頻率
 
 ### Q3: 數據格式錯誤
@@ -199,9 +199,9 @@ python scripts/download_finnhub_data.py --force-refresh
 
 3. **`tradingagents/dataflows/interface.py`**
    - 改進get_finnhub_news函數的錯誤提示
-   - 提供詳細的故障排除建议
+   - 提供詳細的故障排除建議
 
-### 路徑處理逻辑
+### 路徑處理邏輯
 
 ```python
 # 跨平台路徑構建

@@ -159,7 +159,7 @@ DEBATE_STATES = {
     "bull_turn": "看涨方發言",
     "bear_turn": "看跌方發言",
     "rebuttal": "反駁階段",
-    "conclusion": "总結階段"
+    "conclusion": "總結階段"
 }
 
 # 狀態轉換邏輯
@@ -228,7 +228,7 @@ elif market_info.get("is_us"):
 2. **美股市場**:
    - 中港两地聯動
    - 汇率風險評估
-   - 國际資本流動
+   - 國際資本流動
    - 估值差異分析
 
 3. **美股市場**:
@@ -245,7 +245,7 @@ elif market_info.get("is_us"):
    - 收入增長趨勢
    - 市場份額擴張
    - 新產品/服務機會
-   - 國际化進展
+   - 國際化進展
 
 2. **估值優勢**:
    - 相對估值吸引力
@@ -282,7 +282,7 @@ elif market_info.get("is_us"):
 3. **財務問題**:
    - 現金流恶化
    - 债務负擔過重
-   - 盈利質量下降
+   - 盈利品質下降
    - 會計問題質疑
 
 4. **宏觀環境**:
@@ -291,7 +291,7 @@ elif market_info.get("is_us"):
    - 汇率波動風險
    - 地缘政治風險
 
-## 辯論質量評估
+## 辯論品質評估
 
 ### 論證強度指標
 
@@ -304,7 +304,7 @@ elif market_info.get("is_us"):
 2. **邏輯一致性**:
    - 論證鏈條的完整性
    - 推理過程的嚴密性
-   - 結論与前提的一致性
+   - 結論與前提的一致性
    - 反駁的有效性
 
 3. **風險識別**:
@@ -313,7 +313,7 @@ elif market_info.get("is_us"):
    - 風險應對的可行性
    - 風險權衡的合理性
 
-### 辯論輸出質量
+### 辯論輸出品質
 
 ```python
 # 辯論結果結構
@@ -321,7 +321,7 @@ class DebateResult:
     bull_arguments: List[str]     # 看涨論點
     bear_arguments: List[str]     # 看跌論點
     key_disagreements: List[str]  # 主要分歧
-    consensus_points: List[str]   # 共识觀點
+    consensus_points: List[str]   # 共識觀點
     confidence_level: float       # 置信度
     recommendation_strength: str  # 建議強度
 ```
@@ -348,7 +348,7 @@ debate_params = {
     "time_limit": 300,            # 單轮時間限制(秒)
     "evidence_weight": 0.7,       # 證據權重
     "logic_weight": 0.3,          # 邏輯權重
-    "consensus_threshold": 0.8    # 共识閾值
+    "consensus_threshold": 0.8    # 共識閾值
 }
 ```
 
@@ -395,10 +395,10 @@ logger.warning(f"⚠️ [記忆系統] memory為None，跳過歷史記忆檢索"
 ### 性能指標
 
 - 辯論完成時間
-- 論證質量評分
+- 論證品質評分
 - 預測準確率
 - 風險識別率
-- 共识達成率
+- 共識達成率
 
 ## 擴展指南
 
@@ -459,7 +459,7 @@ strategy_registry = {
 - 基於數據而非情緒
 - 保持客觀分析態度
 
-### 2. 質量控制
+### 2. 品質控制
 - 驗證數據來源
 - 檢查邏輯一致性
 - 評估論證強度
@@ -469,7 +469,7 @@ strategy_registry = {
 - 並行執行分析
 - 快取重複計算
 - 優化內存使用
-- 减少冗余操作
+- 減少冗余操作
 
 ### 4. 可解釋性
 - 提供清晰的推理路徑
@@ -479,7 +479,7 @@ strategy_registry = {
 
 ## 故障排除
 
-### 常见問題
+### 常見問題
 
 1. **辯論陷入僵局**
    - 引入新的分析維度
@@ -496,7 +496,7 @@ strategy_registry = {
 3. **性能問題**
    - 啟用並行處理
    - 優化快取策略
-   - 减少分析深度
+   - 減少分析深度
    - 限制辯論輪數
 
 ### 調試技巧

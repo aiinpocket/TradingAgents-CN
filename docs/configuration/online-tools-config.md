@@ -2,7 +2,7 @@
 
 ## 📋 概述
 
-TradingAgents-CN 現在提供了更精細的在線工具控制機制，您可以通過環境變量灵活配置系統的在線/離線行為，而不再依賴於特定LLM提供商的啟用狀態。
+TradingAgents-CN 現在提供了更精細的在線工具控制機制，您可以通過環境變量靈活配置系統的在線/離線行為，而不再依賴於特定LLM提供商的啟用狀態。
 
 ## 🔧 配置字段說明
 
@@ -10,14 +10,14 @@ TradingAgents-CN 現在提供了更精細的在線工具控制機制，您可以
 
 | 環境變量 | 默認值 | 說明 |
 |---------|--------|------|
-| `ONLINE_TOOLS_ENABLED` | `false` | 在線工具总開關 |
+| `ONLINE_TOOLS_ENABLED` | `false` | 在線工具總開關 |
 | `ONLINE_NEWS_ENABLED` | `true` | 在線新聞工具開關 |
 | `REALTIME_DATA_ENABLED` | `false` | 實時數據獲取開關 |
 
 ### 配置優先級
 
 1. **環境變量** (.env文件) - 最高優先級
-2. **默認配置** (default_config.py) - 备用默認值
+2. **默認配置** (default_config.py) - 備用默認值
 
 ## 🎯 配置模式
 
@@ -132,7 +132,7 @@ print(f"實時數據: {DEFAULT_CONFIG['realtime_data']}")
 - `get_google_news` - Google新聞獲取
 - `get_reddit_news` - Reddit新聞獲取
 - `get_reddit_stock_info` - Reddit股票討論
-- `get_chinese_social_sentiment` - 中國社交媒體情绪
+- `get_chinese_social_sentiment` - 中國社交媒體情緒
 
 ### 受 `REALTIME_DATA_ENABLED` 控制的工具
 - 實時股價數據
@@ -141,22 +141,22 @@ print(f"實時數據: {DEFAULT_CONFIG['realtime_data']}")
 
 ## ⚠️ 註意事項
 
-### 1. 配置冲突處理
+### 1. 配置衝突處理
 - 如果 `ONLINE_TOOLS_ENABLED=false` 但 `ONLINE_NEWS_ENABLED=true`，新聞工具仍然可用
 - 這種設計允許更精細的控制
 
 ### 2. API配額管理
 - 在線模式會消耗API配額
-- 建议在開發階段使用離線模式
+- 建議在開發階段使用離線模式
 - 生產環境根據需要選擇合適的模式
 
 ### 3. 網絡依賴
 - 在線模式需要穩定的網絡連接
 - 網絡異常時會自動回退到緩存數據
 
-## 🔄 迁移指南
+## 🔄 遷移指南
 
-### 從旧配置迁移
+### 從旧配置遷移
 如果您之前使用的是基於 `OPENAI_ENABLED` 的配置：
 
 **旧方式:**
@@ -196,13 +196,13 @@ REALTIME_DATA_ENABLED=true
 
 ## 🔧 故障排除
 
-### 常见問題
+### 常見問題
 
 1. **配置不生效**
    - 檢查 .env 文件是否正確加載
    - 確認環境變量格式正確 (true/false)
 
-2. **工具調用失败**
+2. **工具調用失敗**
    - 檢查相關API密鑰是否配置
    - 確認網絡連接是否正常
 

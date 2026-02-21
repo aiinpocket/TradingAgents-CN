@@ -14,7 +14,7 @@ class RedisPerformanceTester:
     """Redis性能測試器"""
     
     def __init__(self, host=None, port=None, password=None, db=None):
-        # 從環境變量獲取配置，如果没有則使用默認值
+        # 從環境變量獲取配置，如果沒有則使用默認值
         self.host = host or os.getenv('REDIS_HOST', 'localhost')
         self.port = port or int(os.getenv('REDIS_PORT', 6379))
         self.password = password or os.getenv('REDIS_PASSWORD')
@@ -38,15 +38,15 @@ class RedisPerformanceTester:
             print(f"✅ 成功連接到Redis: {self.host}:{self.port}")
             return True
         except redis.ConnectionError as e:
-            print(f"❌ Redis連接失败: {e}")
+            print(f"❌ Redis連接失敗: {e}")
             return False
         except Exception as e:
             print(f"❌ 連接錯誤: {e}")
             return False
     
     def test_connection_latency(self, iterations=100):
-        """測試連接延迟"""
-        print(f"\n🔍 測試連接延迟 ({iterations} 次ping測試)...")
+        """測試連接延遲"""
+        print(f"\n🔍 測試連接延遲 ({iterations} 次ping測試)...")
         
         latencies = []
         failed_count = 0
@@ -64,7 +64,7 @@ class RedisPerformanceTester:
                     
             except Exception as e:
                 failed_count += 1
-                print(f"  第{i+1}次ping失败: {e}")
+                print(f"  第{i+1}次ping失敗: {e}")
         
         if latencies:
             avg_latency = statistics.mean(latencies)
@@ -72,12 +72,12 @@ class RedisPerformanceTester:
             max_latency = max(latencies)
             median_latency = statistics.median(latencies)
             
-            print(f"\n📊 連接延迟統計:")
-            print(f"  平均延迟: {avg_latency:.2f} ms")
-            print(f"  最小延迟: {min_latency:.2f} ms")
-            print(f"  最大延迟: {max_latency:.2f} ms")
-            print(f"  中位延迟: {median_latency:.2f} ms")
-            print(f"  失败次數: {failed_count}/{iterations}")
+            print(f"\n📊 連接延遲統計:")
+            print(f"  平均延遲: {avg_latency:.2f} ms")
+            print(f"  最小延遲: {min_latency:.2f} ms")
+            print(f"  最大延遲: {max_latency:.2f} ms")
+            print(f"  中位延遲: {median_latency:.2f} ms")
+            print(f"  失敗次數: {failed_count}/{iterations}")
             
             return {
                 'avg_latency': avg_latency,
@@ -88,7 +88,7 @@ class RedisPerformanceTester:
                 'success_rate': (iterations - failed_count) / iterations * 100
             }
         else:
-            print("❌ 所有ping測試都失败了")
+            print("❌ 所有ping測試都失敗了")
             return None
     
     def test_throughput(self, operations=1000, operation_type='set'):
@@ -130,10 +130,10 @@ class RedisPerformanceTester:
             throughput = successful_ops / duration if duration > 0 else 0
             
             print(f"\n📈 {operation_type.upper()}操作吞吐量統計:")
-            print(f"  总操作數: {operations}")
+            print(f"  總操作數: {operations}")
             print(f"  成功操作: {successful_ops}")
-            print(f"  失败操作: {failed_count}")
-            print(f"  总耗時: {duration:.2f} 秒")
+            print(f"  失敗操作: {failed_count}")
+            print(f"  總耗時: {duration:.2f} 秒")
             print(f"  吞吐量: {throughput:.2f} 操作/秒")
             print(f"  平均每操作: {(duration/successful_ops)*1000:.2f} ms")
             
@@ -148,7 +148,7 @@ class RedisPerformanceTester:
             }
             
         except Exception as e:
-            print(f"❌ 吞吐量測試失败: {e}")
+            print(f"❌ 吞吐量測試失敗: {e}")
             return None
     
     def test_concurrent_connections(self, num_threads=10, operations_per_thread=100):
@@ -219,11 +219,11 @@ class RedisPerformanceTester:
         overall_throughput = total_successful / total_duration if total_duration > 0 else 0
         
         print(f"\n📊 並發測試統計:")
-        print(f"  总線程數: {num_threads}")
-        print(f"  总操作數: {total_operations}")
+        print(f"  總線程數: {num_threads}")
+        print(f"  總操作數: {total_operations}")
         print(f"  成功操作: {total_successful}")
-        print(f"  失败操作: {total_failed}")
-        print(f"  总耗時: {total_duration:.2f} 秒")
+        print(f"  失敗操作: {total_failed}")
+        print(f"  總耗時: {total_duration:.2f} 秒")
         print(f"  整體吞吐量: {overall_throughput:.2f} 操作/秒")
         print(f"  成功率: {(total_successful/total_operations)*100:.1f}%")
         
@@ -239,8 +239,8 @@ class RedisPerformanceTester:
         }
     
     def test_memory_usage(self):
-        """測試Redis內存使用情况"""
-        print(f"\n💾 Redis內存使用情况:")
+        """測試Redis內存使用情況"""
+        print(f"\n💾 Redis內存使用情況:")
         
         try:
             info = self.redis_client.info('memory')
@@ -261,7 +261,7 @@ class RedisPerformanceTester:
             }
             
         except Exception as e:
-            print(f"❌ 獲取內存信息失败: {e}")
+            print(f"❌ 獲取內存信息失敗: {e}")
             return None
     
     def run_full_test(self):
@@ -273,7 +273,7 @@ class RedisPerformanceTester:
         
         results = {}
         
-        # 1. 連接延迟測試
+        # 1. 連接延遲測試
         results['latency'] = self.test_connection_latency(100)
         
         # 2. 吞吐量測試
@@ -292,7 +292,7 @@ class RedisPerformanceTester:
             self.redis_client.flushdb()
             print("\n🧹 清理測試數據完成")
         except Exception as e:
-            print(f"⚠️  清理測試數據失败: {e}")
+            print(f"⚠️  清理測試數據失敗: {e}")
         
         return results
 
@@ -336,7 +336,7 @@ def main():
                 json.dump(results, f, indent=2, ensure_ascii=False)
             print(f"\n💾 測試結果已保存到: {args.output}")
         except Exception as e:
-            print(f"❌ 保存結果失败: {e}")
+            print(f"❌ 保存結果失敗: {e}")
     
     print("\n✅ Redis性能測試完成!")
 

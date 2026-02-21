@@ -52,7 +52,7 @@ def setup_xvfb_display():
             'Xvfb', ':99', '-screen', '0', '1024x768x24', '-ac', '+extension', 'GLX'
         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        # 等待一下让Xvfb啟動
+        # 等待一下讓Xvfb啟動
         import time
         time.sleep(2)
 
@@ -61,8 +61,8 @@ def setup_xvfb_display():
         logger.info(f"✅ Docker虛擬顯示器設置成功")
         return True
     except Exception as e:
-        logger.error(f"⚠️ 虛擬顯示器設置失败: {e}")
-        # 即使Xvfb失败，也嘗試繼续，某些情況下wkhtmltopdf可以無头運行
+        logger.error(f"⚠️ 虛擬顯示器設置失敗: {e}")
+        # 即使Xvfb失敗，也嘗試繼續，某些情況下wkhtmltopdf可以無頭運行
         return False
 
 def get_docker_wkhtmltopdf_args():
@@ -130,11 +130,11 @@ def test_docker_pdf_generation() -> bool:
             logger.info(f"✅ Docker PDF生成測試成功")
             return True
         else:
-            logger.error(f"❌ Docker PDF生成測試失败")
+            logger.error(f"❌ Docker PDF生成測試失敗")
             return False
             
     except Exception as e:
-        logger.error(f"❌ Docker PDF測試失败: {e}")
+        logger.error(f"❌ Docker PDF測試失敗: {e}")
         return False
 
 def get_docker_pdf_extra_args():
@@ -151,7 +151,7 @@ def get_docker_pdf_extra_args():
         docker_args = []
         wkhtmltopdf_args = get_docker_wkhtmltopdf_args()
 
-        # 将wkhtmltopdf參數正確傳遞給pandoc
+        # 將wkhtmltopdf參數正確傳遞給pandoc
         for arg in wkhtmltopdf_args:
             docker_args.extend(['--pdf-engine-opt=' + arg])
 
@@ -235,6 +235,6 @@ if __name__ == "__main__":
     elif status['is_docker'] and not status['dependencies_ok']:
         logger.warning(f"\n⚠️ Docker環境缺少PDF依賴，請重新構建鏡像")
     elif status['is_docker'] and not status['pdf_test_ok']:
-        logger.error(f"\n⚠️ Docker PDF測試失败，可能需要調整配置")
+        logger.error(f"\n⚠️ Docker PDF測試失敗，可能需要調整配置")
     else:
         logger.info(f"\n✅ 非Docker環境，使用標準PDF配置")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-最终測試修複後的Gemini集成
+最終測試修複後的Gemini集成
 """
 
 import os
@@ -16,9 +16,9 @@ sys.path.insert(0, str(project_root))
 load_dotenv(project_root / ".env", override=True)
 
 def test_gemini_tradingagents():
-    """測試修複後的Gemini与TradingAgents集成"""
+    """測試修複後的Gemini與TradingAgents集成"""
     try:
-        print("🧪 測試修複後的Gemini与TradingAgents集成")
+        print("🧪 測試修複後的Gemini與TradingAgents集成")
         print("=" * 60)
         
         from tradingagents.graph.trading_graph import TradingAgentsGraph
@@ -63,14 +63,14 @@ def test_gemini_tradingagents():
         
         # 測試簡單分析
         print("📊 開始股票分析...")
-        print("   這可能需要几分鐘時間...")
+        print("   這可能需要幾分鐘時間...")
         
         try:
             state, decision = graph.propagate("AAPL", "2025-06-27")
             
             if state and decision:
-                print("✅ Gemini驱動的股票分析成功完成！")
-                print(f"   最终決策: {decision}")
+                print("✅ Gemini驅動的股票分析成功完成！")
+                print(f"   最終決策: {decision}")
                 
                 # 檢查各種報告
                 reports = ["market_report", "sentiment_report", "news_report", "fundamentals_report"]
@@ -87,21 +87,21 @@ def test_gemini_tradingagents():
                 return False
                 
         except Exception as e:
-            print(f"❌ 股票分析失败: {e}")
+            print(f"❌ 股票分析失敗: {e}")
             import traceback
             print(traceback.format_exc())
             return False
             
     except Exception as e:
-        print(f"❌ TradingAgents集成測試失败: {e}")
+        print(f"❌ TradingAgents集成測試失敗: {e}")
         import traceback
         print(traceback.format_exc())
         return False
 
 def test_gemini_basic():
-    """基础Gemini功能測試"""
+    """基礎Gemini功能測試"""
     try:
-        print("🧪 基础Gemini功能測試")
+        print("🧪 基礎Gemini功能測試")
         print("=" * 50)
         
         from langchain_google_genai import ChatGoogleGenerativeAI
@@ -118,7 +118,7 @@ def test_gemini_basic():
         
         # 測試中文對話
         print("📝 測試中文對話...")
-        response = llm.invoke("請用中文分析一下當前人工智能技術的發展趋势")
+        response = llm.invoke("請用中文分析一下當前人工智能技術的發展趨勢")
         
         if response and response.content:
             print("✅ 中文對話測試成功")
@@ -126,16 +126,16 @@ def test_gemini_basic():
             print(f"   響應預覽: {response.content[:200]}...")
             return True
         else:
-            print("❌ 中文對話測試失败")
+            print("❌ 中文對話測試失敗")
             return False
             
     except Exception as e:
-        print(f"❌ 基础功能測試失败: {e}")
+        print(f"❌ 基礎功能測試失敗: {e}")
         return False
 
 def main():
     """主測試函數"""
-    print("🧪 Gemini最终集成測試")
+    print("🧪 Gemini最終集成測試")
     print("=" * 70)
     
     # 檢查環境變量
@@ -148,30 +148,30 @@ def main():
     # 運行測試
     results = {}
     
-    print("第1步: 基础功能測試")
+    print("第1步: 基礎功能測試")
     print("-" * 30)
-    results['基础功能'] = test_gemini_basic()
+    results['基礎功能'] = test_gemini_basic()
     
     print("\n第2步: TradingAgents集成測試")
     print("-" * 30)
     results['TradingAgents集成'] = test_gemini_tradingagents()
     
-    # 总結結果
-    print(f"\n📊 最终測試結果总結:")
+    # 總結結果
+    print(f"\n📊 最終測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
         print("🎉 Gemini模型完全集成成功！")
-        print("\n💡 使用建议:")
+        print("\n💡 使用建議:")
         print("   1. 在Web界面中選擇'Google'作為LLM提供商")
         print("   2. 使用模型名稱: gemini-2.0-flash")
         print("   3. 可以進行完整的中文股票分析")
@@ -179,9 +179,9 @@ def main():
         print("   5. Gemini在多語言和推理能力方面表現優秀")
     elif successful_tests > 0:
         print("⚠️ Gemini部分功能可用")
-        if results['基础功能'] and not results['TradingAgents集成']:
-            print("💡 基础功能正常，但TradingAgents集成有問題")
-            print("   建议檢查配置和依賴")
+        if results['基礎功能'] and not results['TradingAgents集成']:
+            print("💡 基礎功能正常，但TradingAgents集成有問題")
+            print("   建議檢查配置和依賴")
     else:
         print("❌ Gemini模型不可用")
         print("💡 請檢查API密鑰、網絡連接和依賴安裝")

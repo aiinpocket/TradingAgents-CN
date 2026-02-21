@@ -49,7 +49,7 @@ def cleanup_directories():
                 logger.info(f"✅ 刪除目錄: {dir_name}")
                 cleaned_count += 1
             except Exception as e:
-                logger.error(f"❌ 刪除失败 {dir_name}: {e}")
+                logger.error(f"❌ 刪除失敗 {dir_name}: {e}")
     
     # 遞歸清理文件
     for pattern in cleanup_patterns:
@@ -59,7 +59,7 @@ def cleanup_directories():
                 logger.info(f"✅ 刪除文件: {file_path}")
                 cleaned_count += 1
             except Exception as e:
-                logger.error(f"❌ 刪除失败 {file_path}: {e}")
+                logger.error(f"❌ 刪除失敗 {file_path}: {e}")
     
     return cleaned_count
 
@@ -124,7 +124,7 @@ def update_gitignore():
             logger.info(f"✅ .gitignore已經是最新的")
             
     except Exception as e:
-        logger.error(f"❌ 更新.gitignore失败: {e}")
+        logger.error(f"❌ 更新.gitignore失敗: {e}")
 
 def analyze_upstream_contribution():
     """分析upstream_contribution目錄"""
@@ -150,9 +150,9 @@ def analyze_upstream_contribution():
     
     # 詢問是否刪除
     logger.info(f"\n💡 upstream_contribution目錄用途:")
-    logger.info(f"   - 準备向上游項目(TauricResearch/TradingAgents)贡献代碼")
+    logger.info(f"   - 準備向上游項目(TauricResearch/TradingAgents)貢獻代碼")
     logger.info(f"   - 包含移除中文內容的版本")
-    logger.info(f"   - 如果不計劃向上游贡献，可以刪除")
+    logger.info(f"   - 如果不計劃向上游貢獻，可以刪除")
     
     return len(batch_dirs) + len(json_files)
 
@@ -172,19 +172,19 @@ def main():
     # 分析upstream_contribution
     upstream_count = analyze_upstream_contribution()
     
-    # 总結
-    logger.info(f"\n📊 清理总結")
+    # 總結
+    logger.info(f"\n📊 清理總結")
     logger.info(f"=")
     logger.info(f"✅ 清理了 {cleaned_count} 個文件/目錄")
     logger.info(f"📝 更新了 .gitignore 文件")
     
     if upstream_count > 0:
         logger.warning(f"⚠️ upstream_contribution目錄包含 {upstream_count} 個項目")
-        logger.info(f"   如果不需要向上游贡献，可以手動刪除:")
+        logger.info(f"   如果不需要向上游貢獻，可以手動刪除:")
         logger.info(f"   rm -rf upstream_contribution/")
     
     logger.info(f"\n🎉 清理完成！項目目錄更加整潔")
-    logger.info(f"\n💡 建议:")
+    logger.info(f"\n💡 建議:")
     logger.info(f"   1. 檢查git狀態: git status")
     logger.info(f"   2. 提交清理更改: git add . && git commit -m '清理不必要的目錄和文件'")
     logger.info(f"   3. 如果不需要upstream_contribution，可以手動刪除")

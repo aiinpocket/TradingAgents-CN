@@ -1,6 +1,6 @@
 # 🔧 Web應用啟動問題排除指南
 
-## 🚨 常见問題
+## 🚨 常見問題
 
 ### 1. ModuleNotFoundError: No module named 'tradingagents'
 
@@ -9,7 +9,7 @@
 ModuleNotFoundError: No module named 'tradingagents'
 ```
 
-**原因**: 項目没有安裝到Python環境中，導致無法導入模塊。
+**原因**: 項目沒有安裝到Python環境中，導致無法導入模塊。
 
 **解決方案**:
 
@@ -26,12 +26,12 @@ pip install -e .
 python start_web.py
 ```
 
-#### 方案B: 使用一键安裝腳本
+#### 方案B: 使用一鍵安裝腳本
 ```bash
 # 1. 激活虛擬環境
 .\env\Scripts\activate  # Windows
 
-# 2. 運行一键安裝腳本
+# 2. 運行一鍵安裝腳本
 python scripts/install_and_run.py
 ```
 
@@ -125,7 +125,7 @@ python start_web.py
 | 啟動方式 | 優點 | 缺點 | 推薦度 |
 |---------|------|------|--------|
 | `python start_web.py` | 簡單，自動處理路徑 | 需要在項目根目錄 | ⭐⭐⭐⭐⭐ |
-| `pip install -e . && streamlit run web/app.py` | 標準方式，穩定 | 需要安裝步骤 | ⭐⭐⭐⭐ |
+| `pip install -e . && streamlit run web/app.py` | 標準方式，穩定 | 需要安裝步驟 | ⭐⭐⭐⭐ |
 | `python web/run_web.py` | 功能完整，有檢查 | 可能有導入問題 | ⭐⭐⭐ |
 | `PYTHONPATH=. streamlit run web/app.py` | 不需要安裝 | 環境變量設置複雜 | ⭐⭐ |
 
@@ -137,7 +137,7 @@ python start_web.py
 python scripts/check_api_config.py
 ```
 
-### 手動檢查步骤
+### 手動檢查步驟
 ```python
 # 檢查Python環境
 import sys
@@ -176,9 +176,9 @@ python start_web.py
 ```
 
 ### 啟動後驗證
-- [ ] 浏覽器自動打開 http://localhost:8501
-- [ ] 页面正常加載，無錯誤信息
-- [ ] 侧邊栏配置正常顯示
+- [ ] 瀏覽器自動打開 http://localhost:8501
+- [ ] 頁面正常加載，無錯誤信息
+- [ ] 側邊栏配置正常顯示
 - [ ] 可以選擇分析師和股票代碼
 
 ## 🆘 獲取幫助
@@ -212,4 +212,4 @@ python start_web.py
 2. **定期更新依賴**: `pip install -U -r requirements.txt`
 3. **保持項目結構完整**
 4. **定期清理緩存**: `python web/run_web.py --force-clean`
-5. **备份配置文件**: 定期备份.env文件
+5. **備份配置文件**: 定期備份.env文件

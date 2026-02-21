@@ -84,7 +84,7 @@ class MongoDBReportManager:
             logger.info(f"✅ MongoDB連接成功: {mongodb_database}.analysis_reports")
             
         except Exception as e:
-            logger.error(f"❌ MongoDB連接失败: {e}")
+            logger.error(f"❌ MongoDB連接失敗: {e}")
             self.connected = False
     
     def _create_indexes(self):
@@ -104,7 +104,7 @@ class MongoDBReportManager:
             logger.info("✅ MongoDB索引創建成功")
             
         except Exception as e:
-            logger.error(f"❌ MongoDB索引創建失败: {e}")
+            logger.error(f"❌ MongoDB索引創建失敗: {e}")
     
     def save_analysis_report(self, stock_symbol: str, analysis_results: Dict[str, Any],
                            reports: Dict[str, str]) -> bool:
@@ -147,11 +147,11 @@ class MongoDBReportManager:
                 logger.info(f"✅ 分析報告已保存到MongoDB: {analysis_id}")
                 return True
             else:
-                logger.error("❌ MongoDB插入失败")
+                logger.error("❌ MongoDB插入失敗")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ 保存分析報告到MongoDB失败: {e}")
+            logger.error(f"❌ 保存分析報告到MongoDB失敗: {e}")
             return False
     
     def get_analysis_reports(self, limit: int = 100, stock_symbol: str = None,
@@ -214,7 +214,7 @@ class MongoDBReportManager:
             return results
             
         except Exception as e:
-            logger.error(f"❌ 從MongoDB獲取分析報告失败: {e}")
+            logger.error(f"❌ 從MongoDB獲取分析報告失敗: {e}")
             return []
     
     def get_report_by_id(self, analysis_id: str) -> Optional[Dict[str, Any]]:
@@ -246,7 +246,7 @@ class MongoDBReportManager:
             return None
             
         except Exception as e:
-            logger.error(f"❌ 從MongoDB獲取報告失败: {e}")
+            logger.error(f"❌ 從MongoDB獲取報告失敗: {e}")
             return None
     
     def delete_report(self, analysis_id: str) -> bool:
@@ -265,7 +265,7 @@ class MongoDBReportManager:
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ 刪除分析報告失败: {e}")
+            logger.error(f"❌ 刪除分析報告失敗: {e}")
             return False
 
     def get_all_reports(self, limit: int = 1000) -> List[Dict[str, Any]]:
@@ -287,7 +287,7 @@ class MongoDBReportManager:
             return reports
 
         except Exception as e:
-            logger.error(f"❌ 從MongoDB獲取所有報告失败: {e}")
+            logger.error(f"❌ 從MongoDB獲取所有報告失敗: {e}")
             return []
 
     def fix_inconsistent_reports(self) -> bool:
@@ -336,13 +336,13 @@ class MongoDBReportManager:
                         logger.info(f"✅ 修複報告: {doc.get('analysis_id', 'unknown')}")
 
                 except Exception as e:
-                    logger.error(f"❌ 修複報告失败 {doc.get('analysis_id', 'unknown')}: {e}")
+                    logger.error(f"❌ 修複報告失敗 {doc.get('analysis_id', 'unknown')}: {e}")
 
             logger.info(f"✅ 修複完成，共修複 {fixed_count} 個報告")
             return True
 
         except Exception as e:
-            logger.error(f"❌ 修複不一致報告失败: {e}")
+            logger.error(f"❌ 修複不一致報告失敗: {e}")
             return False
 
     def save_report(self, report_data: Dict[str, Any]) -> bool:
@@ -375,7 +375,7 @@ class MongoDBReportManager:
                 return True
 
         except Exception as e:
-            logger.error(f"❌ 保存報告到MongoDB失败: {e}")
+            logger.error(f"❌ 保存報告到MongoDB失敗: {e}")
             return False
 
 

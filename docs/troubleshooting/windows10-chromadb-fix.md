@@ -25,7 +25,7 @@ Configuration error: An instance of Chroma already exists for ephemeral with dif
 MEMORY_ENABLED=false
 ```
 
-這将禁用ChromaDB內存功能，避免實例冲突。
+這將禁用ChromaDB內存功能，避免實例衝突。
 
 ### 方案2: 使用修複腳本
 
@@ -38,13 +38,13 @@ powershell -ExecutionPolicy Bypass -File scripts\fix_chromadb_win10.ps1
 
 ### 方案3: 管理員權限運行
 
-1. 右键點擊PowerShell或命令提示符
+1. 右鍵點擊PowerShell或命令提示符
 2. 選擇"以管理員身份運行"
 3. 然後啟動應用程序
 
-## 詳細解決步骤
+## 詳細解決步驟
 
-### 步骤1: 清理環境
+### 步驟1: 清理環境
 
 ```powershell
 # 1. 终止所有Python進程
@@ -58,7 +58,7 @@ Remove-Item -Path "$env:LOCALAPPDATA\Temp\*chroma*" -Recurse -Force -ErrorAction
 Get-ChildItem -Path "." -Name "__pycache__" -Recurse | Remove-Item -Recurse -Force
 ```
 
-### 步骤2: 重新安裝ChromaDB
+### 步驟2: 重新安裝ChromaDB
 
 ```powershell
 # 卸載當前版本
@@ -68,7 +68,7 @@ pip uninstall chromadb -y
 pip install "chromadb==1.0.12" --no-cache-dir --force-reinstall
 ```
 
-### 步骤3: 配置環境變量
+### 步驟3: 配置環境變量
 
 在 `.env` 文件中添加：
 
@@ -80,7 +80,7 @@ MEMORY_ENABLED=false
 MAX_WORKERS=2
 ```
 
-### 步骤4: 測試配置
+### 步驟4: 測試配置
 
 ```python
 # 測試ChromaDB是否正常工作
@@ -119,7 +119,7 @@ pip install -r requirements.txt
 如果使用Docker，可以嘗試：
 
 ```powershell
-# 强制重建鏡像
+# 強制重建鏡像
 docker-compose down --volumes
 docker-compose build --no-cache
 docker-compose up -d
@@ -135,20 +135,20 @@ docker-compose up -d
 
 4. **使用最新版本**：確保使用Python 3.8-3.11版本，避免使用Python 3.12+
 
-## 常见問題
+## 常見問題
 
-### Q: 為什么Windows 11没有這個問題？
+### Q: 為什么Windows 11沒有這個問題？
 A: Windows 11在進程隔離和內存管理方面有改進，對ChromaDB的多實例支持更好。
 
 ### Q: 禁用內存功能會影響性能吗？
 A: 會有轻微影響，但不會影響核心功能。系統會使用文件緩存替代內存緩存。
 
 ### Q: 可以永久解決這個問題吗？
-A: 建议升級到Windows 11，或者在項目配置中永久禁用內存功能。
+A: 建議升級到Windows 11，或者在項目配置中永久禁用內存功能。
 
 ## 技術原理
 
-Windows 10的ChromaDB實例冲突主要由以下原因造成：
+Windows 10的ChromaDB實例衝突主要由以下原因造成：
 
 1. **進程間通信限制**：Windows 10的進程隔離更嚴格
 2. **臨時文件鎖定**：Windows 10對臨時文件的鎖定機制不同

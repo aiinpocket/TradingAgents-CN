@@ -48,17 +48,17 @@ if [ -n "$LOG_FILES" ]; then
     echo "📄 找到以下日誌文件:"
     echo "$LOG_FILES"
     
-    # 複制每個日誌文件
+    # 複製每個日誌文件
     echo ""
-    echo "3️⃣ 複制日誌文件到本地..."
+    echo "3️⃣ 複製日誌文件到本地..."
     while IFS= read -r log_file; do
         if [ -n "$log_file" ]; then
             filename=$(basename "$log_file")
             local_file="${filename}_${TIMESTAMP}"
             
-            echo "📤 複制: $log_file -> $local_file"
+            echo "📤 複製: $log_file -> $local_file"
             if docker cp "$CONTAINER:$log_file" "$local_file"; then
-                echo "✅ 成功複制: $local_file"
+                echo "✅ 成功複製: $local_file"
                 
                 # 顯示文件信息
                 if [ -f "$local_file" ]; then
@@ -67,7 +67,7 @@ if [ -n "$LOG_FILES" ]; then
                     echo "   📊 文件大小: $size 字節, $lines 行"
                 fi
             else
-                echo "❌ 複制失败: $log_file"
+                echo "❌ 複製失敗: $log_file"
             fi
         fi
     done <<< "$LOG_FILES"
@@ -104,13 +104,13 @@ echo "📁 生成的文件:"
 ls -la *_${TIMESTAMP}* 2>/dev/null || echo "   (無額外文件生成)"
 
 echo ""
-echo "💡 使用建议:"
+echo "💡 使用建議:"
 echo "   - 如果源碼目錄的tradingagents.log為空，說明日誌可能輸出到stdout"
 echo "   - Docker標準日誌包含了應用的所有輸出"
 echo "   - 檢查應用的日誌配置，確保日誌寫入到文件"
 echo ""
 echo "📧 發送日誌文件:"
-echo "   請将 docker_logs_${TIMESTAMP}.log 文件發送給開發者"
+echo "   請將 docker_logs_${TIMESTAMP}.log 文件發送給開發者"
 if [ -f "tradingagents.log_${TIMESTAMP}" ]; then
     echo "   以及 tradingagents.log_${TIMESTAMP} 文件"
 fi

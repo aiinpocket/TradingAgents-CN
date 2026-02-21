@@ -45,23 +45,23 @@ def test_online_tools_config():
             print(f"   ✅ {key}: {value}")
             
     except Exception as e:
-        print(f"   ❌ 配置文件讀取失败: {e}")
+        print(f"   ❌ 配置文件讀取失敗: {e}")
         return False
     
-    # 3. 測試配置逻辑
-    print("\n🧠 配置逻辑驗證:")
+    # 3. 測試配置邏輯
+    print("\n🧠 配置邏輯驗證:")
     
-    # 檢查在線工具总開關
+    # 檢查在線工具總開關
     online_tools = DEFAULT_CONFIG.get('online_tools', False)
     online_news = DEFAULT_CONFIG.get('online_news', False)
     realtime_data = DEFAULT_CONFIG.get('realtime_data', False)
     
-    print(f"   📊 在線工具总開關: {'🟢 啟用' if online_tools else '🔴 禁用'}")
+    print(f"   📊 在線工具總開關: {'🟢 啟用' if online_tools else '🔴 禁用'}")
     print(f"   📰 在線新聞工具: {'🟢 啟用' if online_news else '🔴 禁用'}")
     print(f"   📈 實時數據獲取: {'🟢 啟用' if realtime_data else '🔴 禁用'}")
     
-    # 4. 配置建议
-    print("\n💡 配置建议:")
+    # 4. 配置建議
+    print("\n💡 配置建議:")
     if not online_tools and not realtime_data:
         print("   ✅ 當前為離線模式，適合開發和測試，節省API成本")
     elif online_tools and realtime_data:
@@ -70,7 +70,7 @@ def test_online_tools_config():
         print("   🔧 當前為混合模式，部分功能在線，部分離線")
     
     if online_news and not online_tools:
-        print("   💡 建议：新聞工具已啟用但总開關關闭，可能導致功能冲突")
+        print("   💡 建議：新聞工具已啟用但總開關關閉，可能導致功能衝突")
     
     return True
 
@@ -106,7 +106,7 @@ def test_toolkit_integration():
         return len(available_tools) > 0
         
     except Exception as e:
-        print(f"   ❌ 工具包集成測試失败: {e}")
+        print(f"   ❌ 工具包集成測試失敗: {e}")
         return False
 
 def show_config_examples():
@@ -131,7 +131,7 @@ def show_config_examples():
             "ONLINE_TOOLS_ENABLED": "true",
             "ONLINE_NEWS_ENABLED": "true",
             "REALTIME_DATA_ENABLED": "true",
-            "說明": "完全在線，獲取最新數據，適合實盘交易"
+            "說明": "完全在線，獲取最新數據，適合實盤交易"
         }
     }
     
@@ -155,15 +155,15 @@ def main():
     # 顯示配置示例
     show_config_examples()
     
-    # 总結
-    print("\n📊 測試总結:")
+    # 總結
+    print("\n📊 測試總結:")
     print("=" * 60)
     print(f"   配置系統: {'✅ 正常' if config_success else '❌ 異常'}")
     print(f"   工具包集成: {'✅ 正常' if toolkit_success else '❌ 異常'}")
     
     if config_success and toolkit_success:
         print("\n🎉 在線工具配置系統運行正常！")
-        print("💡 您現在可以通過環境變量灵活控制在線/離線模式")
+        print("💡 您現在可以通過環境變量靈活控制在線/離線模式")
     else:
         print("\n⚠️ 發現問題，請檢查配置")
     

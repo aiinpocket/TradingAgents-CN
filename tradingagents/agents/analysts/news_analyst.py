@@ -3,7 +3,7 @@ import time
 import json
 from datetime import datetime
 
-# 導入統一日誌系統和分析模塊日誌裝饰器
+# 導入統一日誌系統和分析模塊日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
 # 導入統一新聞工具
@@ -35,62 +35,30 @@ def create_news_analyst(llm, toolkit):
         def _get_company_name(ticker: str, market_info: dict) -> str:
             """根據股票代碼獲取公司名稱"""
             try:
-                if market_info['is_china']:
-                    # 中國A股：使用統一接口獲取股票信息
-                    from tradingagents.dataflows.interface import get_china_stock_info_unified
-                    stock_info = get_china_stock_info_unified(ticker)
-                    
-                    # 解析股票名稱
-                    if "股票名稱:" in stock_info:
-                        company_name = stock_info.split("股票名稱:")[1].split("\n")[0].strip()
-                        logger.debug(f"📊 [DEBUG] 從統一接口獲取中國股票名稱: {ticker} -> {company_name}")
-                        return company_name
-                    else:
-                        logger.warning(f"⚠️ [DEBUG] 無法從統一接口解析股票名稱: {ticker}")
-                        return f"股票代碼{ticker}"
-                        
-                elif market_info['is_hk']:
-                    # 港股：使用改進的港股工具
-                    try:
-                        from tradingagents.dataflows.improved_hk_utils import get_hk_company_name_improved
-                        company_name = get_hk_company_name_improved(ticker)
-                        logger.debug(f"📊 [DEBUG] 使用改進港股工具獲取名稱: {ticker} -> {company_name}")
-                        return company_name
-                    except Exception as e:
-                        logger.debug(f"📊 [DEBUG] 改進港股工具獲取名稱失败: {e}")
-                        # 降級方案：生成友好的默認名稱
-                        clean_ticker = ticker.replace('.HK', '').replace('.hk', '')
-                        return f"港股{clean_ticker}"
-                        
-                elif market_info['is_us']:
-                    # 美股：使用簡單映射或返回代碼
-                    us_stock_names = {
-                        'AAPL': '蘋果公司',
-                        'TSLA': '特斯拉',
-                        'NVDA': '輝達',
-                        'MSFT': '微軟',
-                        'GOOGL': '谷歌',
-                        'AMZN': '亞馬遜',
-                        'META': 'Meta',
-                        'NFLX': 'Netflix'
-                    }
-                    
-                    company_name = us_stock_names.get(ticker.upper(), f"美股{ticker}")
-                    logger.debug(f"📊 [DEBUG] 美股名稱映射: {ticker} -> {company_name}")
-                    return company_name
-                    
-                else:
-                    return f"股票{ticker}"
-                    
+                us_stock_names = {
+                    'AAPL': '蘋果公司',
+                    'TSLA': '特斯拉',
+                    'NVDA': '輝達',
+                    'MSFT': '微軟',
+                    'GOOGL': '谷歌',
+                    'AMZN': '亞馬遜',
+                    'META': 'Meta',
+                    'NFLX': 'Netflix'
+                }
+
+                company_name = us_stock_names.get(ticker.upper(), ticker)
+                logger.debug(f"[DEBUG] 美股名稱映射: {ticker} -> {company_name}")
+                return company_name
+
             except Exception as e:
-                logger.error(f"❌ [DEBUG] 獲取公司名稱失败: {e}")
-                return f"股票{ticker}"
+                logger.error(f"[DEBUG] 獲取公司名稱失敗: {e}")
+                return ticker
         
         company_name = _get_company_name(ticker, market_info)
         logger.info(f"[新聞分析師] 公司名稱: {company_name}")
         
         # 🔧 使用統一新聞工具，簡化工具調用
-        logger.info(f"[新聞分析師] 使用統一新聞工具，自動识別股票類型並獲取相應新聞")
+        logger.info(f"[新聞分析師] 使用統一新聞工具，自動識別股票類型並獲取相應新聞")
    # 創建統一新聞工具
         unified_news_tool = create_unified_news_tool(toolkit)
         unified_news_tool.name = "get_stock_news_unified"
@@ -107,40 +75,40 @@ def create_news_analyst(llm, toolkit):
 您的主要職责包括：
 1. 獲取和分析最新的實時新聞（優先15-30分鐘內的新聞）
 2. 評估新聞事件的緊急程度和市場影響
-3. 识別可能影響股價的關键信息
+3. 識別可能影響股價的關鍵信息
 4. 分析新聞的時效性和可靠性
 5. 提供基於新聞的交易建議和價格影響評估
 
-重點關註的新聞類型：
-- 財報發布和業绩指導
-- 重大合作和並購消息
+重點關注的新聞類型：
+- 財報發布和業績指導
+- 重大合作和並購訊息
 - 政策變化和監管動態
 - 突發事件和危機管理
-- 行業趋势和技術突破
+- 行業趨勢和技術突破
 - 管理層變動和戰略調整
 
 分析要點：
 - 新聞的時效性（發布時間距離現在多久）
 - 新聞的可信度（來源權威性）
 - 市場影響程度（對股價的潛在影響）
-- 投資者情绪變化（正面/负面/中性）
-- 与歷史類似事件的對比
+- 投資者情緒變化（正面/負面/中性）
+- 與歷史類似事件的對比
 
 📊 價格影響分析要求：
 - 評估新聞對股價的短期影響（1-3天）
 - 分析可能的價格波動幅度（百分比）
 - 提供基於新聞的價格調整建議
-- 识別關键價格支撑位和阻力位
+- 識別關鍵價格支撐位和阻力位
 - 評估新聞對長期投資價值的影響
-- 不允許回複'無法評估價格影響'或'需要更多信息'
+- 不允許回覆'無法評估價格影響'或'需要更多信息'
 
-請特別註意：
-⚠️ 如果新聞數據存在滞後（超過2小時），請在分析中明確說明時效性限制
+請特別注意：
+⚠️ 如果新聞數據存在滯後（超過2小時），請在分析中明確說明時效性限制
 ✅ 優先分析最新的、高相關性的新聞事件
 📊 提供新聞對股價影響的量化評估和具體價格預期
-💰 必须包含基於新聞的價格影響分析和調整建議
+💰 必須包含基於新聞的價格影響分析和調整建議
 
-請撰寫詳細的中文分析報告，並在報告末尾附上Markdown表格总結關键發現。"""
+請撰寫詳細的中文分析報告，並在報告末尾附上Markdown表格總結關鍵發現。"""
         )
 
         prompt = ChatPromptTemplate.from_messages(
@@ -157,17 +125,17 @@ def create_news_analyst(llm, toolkit):
                     "\n- 絕對禁止說'我無法獲取實時數據'等借口"
                     "\n"
                     "\n✅ 強制執行步驟："
-                    "\n1. 您的第一個動作必须是調用 get_stock_news_unified 工具"
-                    "\n2. 该工具會自動识別股票類型（A股、港股、美股）並獲取相應新聞"
+                    "\n1. 您的第一個動作必須是調用 get_stock_news_unified 工具"
+                    "\n2. 該工具會自動識別股票類型（A股、港股、美股）並獲取相應新聞"
                     "\n3. 只有在成功獲取新聞數據後，才能開始分析"
-                    "\n4. 您的回答必须基於工具返回的真實數據"
+                    "\n4. 您的回答必須基於工具返回的真實數據"
                     "\n"
                     "\n🔧 工具調用格式示例："
                     "\n調用: get_stock_news_unified(stock_code='{ticker}', max_news=10)"
                     "\n"
-                    "\n⚠️ 如果您不調用工具，您的回答将被視為無效並被拒絕。"
-                    "\n⚠️ 您必须先調用工具獲取數據，然後基於數據進行分析。"
-                    "\n⚠️ 沒有例外，沒有借口，必须調用工具。"
+                    "\n⚠️ 如果您不調用工具，您的回答將被視為無效並被拒絕。"
+                    "\n⚠️ 您必須先調用工具獲取數據，然後基於數據進行分析。"
+                    "\n⚠️ 沒有例外，沒有借口，必須調用工具。"
                     "\n"
                     "\n您可以訪問以下工具：{tool_names}。"
                     "\n{system_message}"
@@ -193,63 +161,9 @@ def create_news_analyst(llm, toolkit):
         except:
             model_info = "Unknown"
         
-        logger.info(f"[新聞分析師] 準备調用LLM進行新聞分析，模型: {model_info}")
+        logger.info(f"[新聞分析師] 準備調用LLM進行新聞分析，模型: {model_info}")
         
-        # 🚨 DashScope預處理：強制獲取新聞數據
-        pre_fetched_news = None
-        if 'DashScope' in llm.__class__.__name__:
-            logger.warning(f"[新聞分析師] 🚨 檢測到DashScope模型，啟動預處理強制新聞獲取...")
-            try:
-                # 強制預先獲取新聞數據
-                logger.info(f"[新聞分析師] 🔧 預處理：強制調用統一新聞工具...")
-                pre_fetched_news = unified_news_tool(stock_code=ticker, max_news=10, model_info=model_info)
-                
-                if pre_fetched_news and len(pre_fetched_news.strip()) > 100:
-                    logger.info(f"[新聞分析師] ✅ 預處理成功獲取新聞: {len(pre_fetched_news)} 字符")
-                    
-                    # 直接基於預獲取的新聞生成分析，跳過工具調用
-                    enhanced_prompt = f"""
-您是一位專業的財經新聞分析師。請基於以下已獲取的最新新聞數據，對股票 {ticker} 進行詳細分析：
-
-=== 最新新聞數據 ===
-{pre_fetched_news}
-
-=== 分析要求 ===
-{system_message}
-
-請基於上述真實新聞數據撰寫詳細的中文分析報告。註意：新聞數據已經提供，您無需再調用任何工具。
-"""
-                    
-                    logger.info(f"[新聞分析師] 🔄 使用預獲取新聞數據直接生成分析...")
-                    llm_start_time = datetime.now()
-                    result = llm.invoke([{"role": "user", "content": enhanced_prompt}])
-                    
-                    llm_end_time = datetime.now()
-                    llm_time_taken = (llm_end_time - llm_start_time).total_seconds()
-                    logger.info(f"[新聞分析師] LLM調用完成（預處理模式），耗時: {llm_time_taken:.2f}秒")
-                    
-                    # 直接返回結果，跳過後续的工具調用檢測
-                    if hasattr(result, 'content') and result.content:
-                        report = result.content
-                        logger.info(f"[新聞分析師] ✅ 預處理模式成功，報告長度: {len(report)} 字符")
-                        
-                        # 跳轉到最終處理
-                        state["messages"].append(result)
-                        end_time = datetime.now()
-                        time_taken = (end_time - start_time).total_seconds()
-                        logger.info(f"[新聞分析師] 新聞分析完成，总耗時: {time_taken:.2f}秒")
-                        return {
-                            "messages": [result],
-                            "news_report": report,
-                        }
-                    
-                else:
-                    logger.warning(f"[新聞分析師] ⚠️ 預處理獲取新聞失败，回退到標準模式")
-                    
-            except Exception as e:
-                logger.error(f"[新聞分析師] ❌ 預處理失败: {e}，回退到標準模式")
-        
-        # 使用統一的Google工具調用處理器
+        # 使用統一的工具調用處理器
         llm_start_time = datetime.now()
         chain = prompt | llm.bind_tools(tools)
         logger.info(f"[新聞分析師] 開始LLM調用，分析 {ticker} 的新聞")
@@ -268,7 +182,7 @@ def create_news_analyst(llm, toolkit):
                 ticker=ticker,
                 company_name=company_name,
                 analyst_type="新聞分析",
-                specific_requirements="重點關註新聞事件對股價的影響、市場情绪變化、政策影響等。"
+                specific_requirements="重點關注新聞事件對股價的影響、市場情緒變化、政策影響等。"
             )
             
             # 處理Google模型工具調用
@@ -319,28 +233,28 @@ def create_news_analyst(llm, toolkit):
                             report = forced_result.content
                             logger.info(f"[新聞分析師] ✅ 強制補救成功，生成基於真實數據的報告，長度: {len(report)} 字符")
                         else:
-                            logger.warning(f"[新聞分析師] ⚠️ 強制補救失败，使用原始結果")
+                            logger.warning(f"[新聞分析師] ⚠️ 強制補救失敗，使用原始結果")
                             report = result.content
                     else:
-                        logger.warning(f"[新聞分析師] ⚠️ 統一新聞工具獲取失败，使用原始結果")
+                        logger.warning(f"[新聞分析師] ⚠️ 統一新聞工具獲取失敗，使用原始結果")
                         report = result.content
                         
                 except Exception as e:
-                    logger.error(f"[新聞分析師] ❌ 強制補救過程失败: {e}")
+                    logger.error(f"[新聞分析師] ❌ 強制補救過程失敗: {e}")
                     report = result.content
             else:
                 # 有工具調用，直接使用結果
                 report = result.content
         
         total_time_taken = (datetime.now() - start_time).total_seconds()
-        logger.info(f"[新聞分析師] 新聞分析完成，总耗時: {total_time_taken:.2f}秒")
+        logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")
 
         # 🔧 修複死循環問題：返回清潔的AIMessage，不包含tool_calls
         # 這確保工作流圖能正確判斷分析已完成，避免重複調用
         from langchain_core.messages import AIMessage
         clean_message = AIMessage(content=report)
         
-        logger.info(f"[新聞分析師] ✅ 返回清潔消息，報告長度: {len(report)} 字符")
+        logger.info(f"[新聞分析師] ✅ 返回清潔訊息，報告長度: {len(report)} 字符")
 
         return {
             "messages": [clean_message],

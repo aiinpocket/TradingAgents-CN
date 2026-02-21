@@ -138,7 +138,7 @@ class LogAnalyzer:
             logger.info(f"📈 分析次數: {len(analysis['analysis_times'])}")
         
         if analysis['cost_summary']['total_cost'] > 0:
-            logger.info(f"💰 总成本: ¥{analysis['cost_summary']['total_cost']:.4f}")
+            logger.info(f"💰 總成本: ¥{analysis['cost_summary']['total_cost']:.4f}")
             for provider, cost in analysis['cost_summary']['by_provider'].items():
                 logger.info(f"  - {provider}: ¥{cost:.4f}")
         
@@ -202,8 +202,8 @@ class LogAnalyzer:
         }
     
     def analyze_usage(self) -> Dict[str, Any]:
-        """分析使用情况"""
-        logger.info(f"\n📈 使用情况分析")
+        """分析使用情況"""
+        logger.info(f"\n📈 使用情況分析")
         logger.info(f"=")
         
         analysis = {
@@ -244,7 +244,7 @@ class LogAnalyzer:
                 logger.info(f"  - {date}: {count}")
         
         if analysis['module_usage']:
-            logger.info(f"\n📦 模塊使用情况:")
+            logger.info(f"\n📦 模塊使用情況:")
             for module, count in Counter(analysis['module_usage']).most_common(5):
                 logger.info(f"  - {module}: {count}")
         
@@ -256,12 +256,12 @@ class LogAnalyzer:
         return analysis
     
     def _extract_duration(self, message: str, entry: Dict[str, Any]) -> Optional[float]:
-        """從消息中提取耗時"""
+        """從訊息中提取耗時"""
         # 從結構化日誌中提取
         if 'duration' in entry:
             return entry['duration']
         
-        # 從消息中提取
+        # 從訊息中提取
         match = re.search(r'耗時[：:]\s*(\d+\.?\d*)s', message)
         if match:
             return float(match.group(1))
@@ -269,12 +269,12 @@ class LogAnalyzer:
         return None
     
     def _extract_cost(self, message: str, entry: Dict[str, Any]) -> Optional[float]:
-        """從消息中提取成本"""
+        """從訊息中提取成本"""
         # 從結構化日誌中提取
         if 'cost' in entry:
             return entry['cost']
         
-        # 從消息中提取
+        # 從訊息中提取
         match = re.search(r'成本[：:]\s*¥(\d+\.?\d*)', message)
         if match:
             return float(match.group(1))
@@ -282,13 +282,13 @@ class LogAnalyzer:
         return None
     
     def _extract_provider(self, message: str, entry: Dict[str, Any]) -> Optional[str]:
-        """從消息中提取提供商"""
+        """從訊息中提取提供商"""
         # 從結構化日誌中提取
         if 'provider' in entry:
             return entry['provider']
         
-        # 從消息中提取
-        providers = ['DeepSeek', 'OpenAI', 'Tongyi', 'Gemini']
+        # 從訊息中提取
+        providers = ['OpenAI', 'Google', 'Anthropic', 'Gemini', 'OpenRouter']
         for provider in providers:
             if provider in message:
                 return provider
@@ -319,24 +319,24 @@ class LogAnalyzer:
 ## 性能分析
 - 慢操作數量: {len(performance['slow_operations'])}
 - 平均分析時間: {sum(performance['analysis_times']) / len(performance['analysis_times']):.2f}s (如果有數據)
-- 总成本: ¥{performance['cost_summary']['total_cost']:.4f}
+- 總成本: ¥{performance['cost_summary']['total_cost']:.4f}
 
-## 使用情况
+## 使用情況
 - 活躍模塊: {len(usage['module_usage'])}
 - 分析類型: {len(usage['analysis_types'])}
 
-## 建议
+## 建議
 """
-        
-        # 添加建议
+
+        # 添加建議
         if len(performance['slow_operations']) > 10:
-            report += "- ⚠️ 檢測到較多慢操作，建议優化性能\n"
-        
+            report += "- ⚠️ 檢測到較多慢操作，建議優化性能\n"
+
         if errors['error_count'] > 0:
-            report += f"- ❌ 發現 {errors['error_count']} 個錯誤，建议檢查日誌\n"
-        
+            report += f"- ❌ 發現 {errors['error_count']} 個錯誤，建議檢查日誌\n"
+
         if performance['cost_summary']['total_cost'] > 10:
-            report += "- 💰 API成本較高，建议優化調用策略\n"
+            report += "- 💰 API成本較高，建議優化調用策略\n"
         
         return report
 
@@ -364,7 +364,7 @@ def main():
             print(report)
             
     except Exception as e:
-        logger.error(f"❌ 分析失败: {e}")
+        logger.error(f"❌ 分析失敗: {e}")
         sys.exit(1)
 
 

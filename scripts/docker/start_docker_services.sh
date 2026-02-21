@@ -32,7 +32,7 @@ docker run -d \
 if [ $? -eq 0 ]; then
     echo "✅ MongoDB啟動成功 - 端口: 27017"
 else
-    echo "⚠️ MongoDB可能已在運行或啟動失败"
+    echo "⚠️ MongoDB可能已在運行或啟動失敗"
 fi
 
 # 啟動Redis
@@ -47,7 +47,7 @@ docker run -d \
 if [ $? -eq 0 ]; then
     echo "✅ Redis啟動成功 - 端口: 6379"
 else
-    echo "⚠️ Redis可能已在運行或啟動失败"
+    echo "⚠️ Redis可能已在運行或啟動失敗"
 fi
 
 # 等待服務啟動
@@ -67,7 +67,7 @@ docker run -d \
 if [ $? -eq 0 ]; then
     echo "✅ Redis Commander啟動成功 - 訪問地址: http://localhost:8081"
 else
-    echo "⚠️ Redis Commander可能已在運行或啟動失败"
+    echo "⚠️ Redis Commander可能已在運行或啟動失敗"
 fi
 
 echo ""
@@ -96,5 +96,5 @@ echo ""
 echo "💡 提示:"
 echo "   - 使用 ./stop_docker_services.sh 停止所有服務"
 echo "   - 使用 docker logs [容器名] 查看日誌"
-echo "   - 數據将持久化保存在Docker卷中"
+echo "   - 資料將持久化保存在Docker卷中"
 echo ""

@@ -41,7 +41,7 @@ def test_google_news_import():
         return True
         
     except ImportError as e:
-        print(f"❌ 導入失败: {e}")
+        print(f"❌ 導入失敗: {e}")
         return False
     except Exception as e:
         print(f"❌ 其他錯誤: {e}")
@@ -79,7 +79,7 @@ def test_reddit_import():
         return True
         
     except ImportError as e:
-        print(f"❌ 導入失败: {e}")
+        print(f"❌ 導入失敗: {e}")
         return False
     except Exception as e:
         print(f"❌ 其他錯誤: {e}")
@@ -109,8 +109,8 @@ def check_dependencies():
             print(f"❌ {description}: 未安裝 (pip install {package})")
 
 def check_actual_file_contents():
-    """檢查實际文件內容"""
-    print("\n🧪 檢查實际文件內容")
+    """檢查實際文件內容"""
+    print("\n🧪 檢查實際文件內容")
     print("=" * 50)
     
     # 檢查Google News文件
@@ -126,11 +126,11 @@ def check_actual_file_contents():
                     functions = re.findall(r'def (\w+)\(', content)
                     print(f"   文件中的函數: {functions}")
                 else:
-                    print("   文件中没有函數定義")
+                    print("   文件中沒有函數定義")
         else:
             print(f"❌ Google News文件不存在: {google_file}")
     except Exception as e:
-        print(f"❌ 檢查Google News文件失败: {e}")
+        print(f"❌ 檢查Google News文件失敗: {e}")
     
     # 檢查Reddit文件
     try:
@@ -145,11 +145,11 @@ def check_actual_file_contents():
                     functions = re.findall(r'def (\w+)\(', content)
                     print(f"   文件中的函數: {functions}")
                 else:
-                    print("   文件中没有函數定義")
+                    print("   文件中沒有函數定義")
         else:
             print(f"❌ Reddit文件不存在: {reddit_file}")
     except Exception as e:
-        print(f"❌ 檢查Reddit文件失败: {e}")
+        print(f"❌ 檢查Reddit文件失敗: {e}")
 
 def main():
     """主函數"""

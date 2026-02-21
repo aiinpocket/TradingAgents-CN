@@ -25,7 +25,7 @@ def run_command(command, description=""):
         logger.info(f"✅ {description} 成功")
         return True
     except subprocess.CalledProcessError as e:
-        logger.error(f"❌ {description} 失败")
+        logger.error(f"❌ {description} 失敗")
         logger.error(f"   錯誤: {e.stderr}")
         return False
 
@@ -45,13 +45,13 @@ def install_python_packages():
             f"安裝 {package}"
         )
         if not success:
-            logger.error(f"⚠️ {package} 安裝失败，請手動安裝")
+            logger.error(f"⚠️ {package} 安裝失敗，請手動安裝")
 
 def setup_mongodb_windows():
     """Windows環境MongoDB設置"""
     logger.info(f"\n🍃 Windows MongoDB 設置指南:")
     print("""
-    請按以下步骤手動安裝MongoDB:
+    請按以下步驟手動安裝MongoDB:
     
     1. 下載MongoDB Community Server:
        https://www.mongodb.com/try/download/community
@@ -76,7 +76,7 @@ def setup_redis_windows():
     """Windows環境Redis設置"""
     logger.info(f"\n🔴 Windows Redis 設置指南:")
     print("""
-    請按以下步骤手動安裝Redis:
+    請按以下步驟手動安裝Redis:
     
     1. 下載Redis for Windows:
        https://github.com/microsoftarchive/redis/releases
@@ -91,7 +91,7 @@ def setup_redis_windows():
        - 新開命令行窗口
        - 運行: redis-cli.exe
        - 輸入: ping
-       - 應该返回: PONG
+       - 應該返回: PONG
     
     或者使用Docker:
     docker run -d -p 6379:6379 --name redis redis:latest
@@ -120,7 +120,7 @@ def setup_mongodb_linux():
             "sudo systemctl enable mongod"
         ]
     else:
-        logger.warning(f"⚠️ 未识別的Linux發行版，請手動安裝MongoDB")
+        logger.warning(f"⚠️ 未識別的Linux發行版，請手動安裝MongoDB")
         return
     
     for cmd in commands:
@@ -147,7 +147,7 @@ def setup_redis_linux():
             "sudo systemctl enable redis"
         ]
     else:
-        logger.warning(f"⚠️ 未识別的Linux發行版，請手動安裝Redis")
+        logger.warning(f"⚠️ 未識別的Linux發行版，請手動安裝Redis")
         return
     
     for cmd in commands:
@@ -211,15 +211,15 @@ def test_connections():
         elif db_manager.is_redis_available():
             logger.info(f"✅ Redis 連接成功，MongoDB 未連接")
         else:
-            logger.error(f"❌ 數據庫連接失败")
+            logger.error(f"❌ 數據庫連接失敗")
             
         db_manager.close()
         
     except ImportError as e:
-        logger.error(f"❌ 導入失败: {e}")
+        logger.error(f"❌ 導入失敗: {e}")
         logger.info(f"請先安裝依賴包: pip install -r requirements_db.txt")
     except Exception as e:
-        logger.error(f"❌ 連接測試失败: {e}")
+        logger.error(f"❌ 連接測試失敗: {e}")
 
 def main():
     """主函數"""

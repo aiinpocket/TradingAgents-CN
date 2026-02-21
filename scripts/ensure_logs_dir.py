@@ -32,7 +32,7 @@ def ensure_logs_directory():
             os.chmod(logs_dir, 0o755)
             print("✅ 設置目錄權限: 755")
         except Exception as e:
-            print(f"⚠️ 設置權限失败: {e}")
+            print(f"⚠️ 設置權限失敗: {e}")
     
     # 創建.gitkeep文件
     gitkeep_file = logs_dir / ".gitkeep"
@@ -45,18 +45,18 @@ def ensure_logs_directory():
     if not readme_file.exists():
         readme_content = """# TradingAgents 日誌目錄
 
-此目錄用於存储 TradingAgents 應用的日誌文件。
+此目錄用於存儲 TradingAgents 應用的日誌文件。
 
 ## 日誌文件說明
 
 - `tradingagents.log` - 主應用日誌文件
 - `tradingagents_error.log` - 錯誤日誌文件（如果有錯誤）
-- `*.log.*` - 轮轉的歷史日誌文件
+- `*.log.*` - 輪轉的歷史日誌文件
 
 ## Docker映射
 
 在Docker環境中，此目錄映射到容器內的 `/app/logs` 目錄。
-容器內生成的所有日誌文件都會出現在這里。
+容器內生成的所有日誌文件都會出現在這裡。
 
 ## 獲取日誌
 
@@ -85,10 +85,10 @@ Get-Content logs/tradingagents.log -Wait
             size = log_file.stat().st_size
             print(f"   📄 {log_file.name} ({size:,} 字節)")
     else:
-        print("\n📋 暂無日誌文件")
+        print("\n📋 暫無日誌文件")
     
-    print(f"\n🎉 日誌目錄準备完成！")
-    print(f"📁 日誌将保存到: {logs_dir.absolute()}")
+    print(f"\n🎉 日誌目錄準備完成！")
+    print(f"📁 日誌將保存到: {logs_dir.absolute()}")
     
     return True
 

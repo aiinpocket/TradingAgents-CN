@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 檢查和配置MongoDB等依賴項
-確保系統可以在有或没有MongoDB的情况下正常運行
+確保系統可以在有或沒有MongoDB的情況下正常運行
 """
 
 import sys
@@ -94,8 +94,8 @@ def check_basic_dependencies():
     return missing_packages
 
 def create_fallback_config():
-    """創建無數據庫的备用配置"""
-    logger.info(f"\n⚙️ 創建备用配置...")
+    """創建無數據庫的備用配置"""
+    logger.info(f"\n⚙️ 創建備用配置...")
     
     fallback_config = {
         "cache": {
@@ -154,11 +154,11 @@ def test_cache_without_database():
             logger.info(f"✅ 數據加載成功，文件緩存工作正常")
             return True
         else:
-            logger.error(f"❌ 數據加載失败")
+            logger.error(f"❌ 數據加載失敗")
             return False
             
     except Exception as e:
-        logger.error(f"❌ 緩存測試失败: {e}")
+        logger.error(f"❌ 緩存測試失敗: {e}")
         traceback.print_exc()
         return False
 
@@ -168,7 +168,7 @@ def generate_installation_guide():
 # 依賴安裝指南
 
 ## 基本運行（無數據庫）
-系統可以在没有MongoDB和Redis的情况下正常運行，使用文件緩存。
+系統可以在沒有MongoDB和Redis的情況下正常運行，使用文件緩存。
 
 ### 必需依賴
 ```bash
@@ -208,7 +208,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 ## 配置說明
 
 ### 文件緩存模式（默認）
-- 緩存存储在本地文件系統
+- 緩存存儲在本地文件系統
 - 性能良好，適合單機使用
 - 無需額外服務
 
@@ -238,8 +238,8 @@ def main():
     pymongo_available, mongodb_running = check_mongodb_availability()
     redis_available, redis_running = check_redis_availability()
     
-    # 生成配置建议
-    logger.info(f"\n📋 配置建议:")
+    # 生成配置建議
+    logger.info(f"\n📋 配置建議:")
     
     if missing_packages:
         logger.error(f"❌ 缺少必需依賴: {', '.join(missing_packages)}")
@@ -247,15 +247,15 @@ def main():
         return False
     
     if not pymongo_available and not redis_available:
-        logger.info(f"ℹ️ 數據庫依賴未安裝，将使用文件緩存模式")
+        logger.info(f"ℹ️ 數據庫依賴未安裝，將使用文件緩存模式")
         logger.info(f"✅ 系統可以正常運行，性能良好")
         
     elif not mongodb_running and not redis_running:
-        logger.info(f"ℹ️ 數據庫服務未運行，将使用文件緩存模式")
+        logger.info(f"ℹ️ 數據庫服務未運行，將使用文件緩存模式")
         logger.info(f"✅ 系統可以正常運行")
         
     else:
-        logger.info(f"🚀 數據庫服務可用，将使用高性能緩存模式")
+        logger.info(f"🚀 數據庫服務可用，將使用高性能緩存模式")
         if mongodb_running:
             logger.info(f"  ✅ MongoDB: 數據持久化")
         if redis_running:
@@ -270,9 +270,9 @@ def main():
         f.write(guide)
     logger.info(f"\n📝 已生成依賴安裝指南: DEPENDENCY_GUIDE.md")
     
-    # 总結
+    # 總結
     logger.info(f"\n")
-    logger.info(f"📊 檢查結果总結:")
+    logger.info(f"📊 檢查結果總結:")
     logger.error(f"  基本依賴: {'✅ 完整' if not missing_packages else '❌ 缺失'}")
     logger.error(f"  MongoDB: {'✅ 可用' if mongodb_running else '❌ 不可用'}")
     logger.error(f"  Redis: {'✅ 可用' if redis_running else '❌ 不可用'}")

@@ -34,13 +34,13 @@ except ImportError:
     logger.warning("⚠️ Token跟蹤功能未啟用")
 
 def translate_analyst_labels(text):
-    """将分析師的英文標簽轉換為中文"""
+    """將分析師的英文標簽轉換為中文"""
     if not text:
         return text
 
-    # 分析師標簽翻譯映射
+    # 分析師標籤翻譯映射
     translations = {
-        'Bull Analyst:': '看涨分析師:',
+        'Bull Analyst:': '看漲分析師:',
         'Bear Analyst:': '看跌分析師:',
         'Risky Analyst:': '激進風險分析師:',
         'Safe Analyst:': '保守風險分析師:',
@@ -76,16 +76,16 @@ def extract_risk_assessment(state):
 ## ⚠️ 風險評估報告
 
 ### 🔴 激進風險分析師觀點
-{risky_analysis if risky_analysis else '暂無激進風險分析'}
+{risky_analysis if risky_analysis else '暫無激進風險分析'}
 
 ### 🟡 中性風險分析師觀點
-{neutral_analysis if neutral_analysis else '暂無中性風險分析'}
+{neutral_analysis if neutral_analysis else '暫無中性風險分析'}
 
 ### 🟢 保守風險分析師觀點
-{safe_analysis if safe_analysis else '暂無保守風險分析'}
+{safe_analysis if safe_analysis else '暫無保守風險分析'}
 
-### 🏛️ 風險管理委員會最終決议
-{judge_decision if judge_decision else '暂無風險管理決议'}
+### 🏛️ 風險管理委員會最終決議
+{judge_decision if judge_decision else '暫無風險管理決議'}
 
 ---
 *風險評估基於多角度分析，請結合個人風險承受能力做出投資決策*
@@ -105,7 +105,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         analysis_date: 分析日期
         analysts: 分析師列表
         research_depth: 研究深度
-        llm_provider: LLM提供商 (dashscope/deepseek/google)
+        llm_provider: LLM 提供商 (openai/google/anthropic/openrouter/ollama/custom_openai)
         llm_model: 大模型名稱
         progress_callback: 進度回調函數，用於更新UI狀態
     """
@@ -134,7 +134,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         )
 
         if not preparation_result.is_valid:
-            error_msg = f"❌ 股票數據驗證失败: {preparation_result.error_message}"
+            error_msg = f"❌ 股票數據驗證失敗: {preparation_result.error_message}"
             update_progress(error_msg)
             logger.error(f"[{session_id}] {error_msg}")
 
@@ -148,7 +148,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             }
 
         # 數據預獲取成功
-        success_msg = f"✅ 數據準备完成: {preparation_result.stock_name} ({preparation_result.market_type})"
+        success_msg = f"✅ 數據準備完成: {preparation_result.stock_name} ({preparation_result.market_type})"
         update_progress(success_msg)  # 使用智能檢測，不再硬編碼步驟
         logger.info(f"[{session_id}] {success_msg}")
         logger.info(f"[{session_id}] 緩存狀態: {preparation_result.cache_status}")
@@ -232,7 +232,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             # 統一使用在線工具，避免離線工具的各種問題
             config["online_tools"] = True  # 所有市場都使用統一工具
             logger.info(f"🔧 [快速分析] {market_type}使用統一工具，確保數據源正確和穩定性")
-        elif research_depth == 2:  # 2級 - 基础分析
+        elif research_depth == 2:  # 2級 - 基礎分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
             config["memory_enabled"] = True
@@ -262,7 +262,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             if research_depth == 1:  # 快速分析 - 使用最快模型
                 config["quick_think_llm"] = "gemini-2.5-flash-lite-preview-06-17"  # 1.45s
                 config["deep_think_llm"] = "gemini-2.0-flash"  # 1.87s
-            elif research_depth == 2:  # 基础分析 - 使用快速模型
+            elif research_depth == 2:  # 基礎分析 - 使用快速模型
                 config["quick_think_llm"] = "gemini-2.0-flash"  # 1.87s
                 config["deep_think_llm"] = "gemini-1.5-pro"  # 2.25s
             elif research_depth == 3:  # 標準分析 - 平衡性能
@@ -271,7 +271,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             elif research_depth == 4:  # 深度分析 - 使用強大模型
                 config["quick_think_llm"] = "gemini-2.5-flash"  # 2.73s
                 config["deep_think_llm"] = "gemini-2.5-pro"  # 16.68s
-            else:  # 全面分析 - 使用最强模型
+            else:  # 全面分析 - 使用最強模型
                 config["quick_think_llm"] = "gemini-2.5-pro"  # 16.68s
                 config["deep_think_llm"] = "gemini-2.5-pro"  # 16.68s
             
@@ -362,7 +362,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             # A股代碼不需要特殊處理，保持原樣
             formatted_symbol = stock_symbol
             logger.debug(f"🔍 [RUNNER DEBUG] A股代碼保持原樣: '{formatted_symbol}'")
-            update_progress(f"🇨🇳 準备分析A股: {formatted_symbol}")
+            update_progress(f"🇨🇳 準備分析A股: {formatted_symbol}")
         elif market_type == "港股":
             # 港股代碼轉為大寫，確保.HK後缀
             formatted_symbol = stock_symbol.upper()
@@ -370,12 +370,12 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 # 如果是純數字，添加.HK後缀
                 if formatted_symbol.isdigit():
                     formatted_symbol = f"{formatted_symbol.zfill(4)}.HK"
-            update_progress(f"🇭🇰 準备分析港股: {formatted_symbol}")
+            update_progress(f"🇭🇰 準備分析港股: {formatted_symbol}")
         else:
             # 美股代碼轉為大寫
             formatted_symbol = stock_symbol.upper()
             logger.debug(f"🔍 [RUNNER DEBUG] 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
-            update_progress(f"🇺🇸 準备分析美股: {formatted_symbol}")
+            update_progress(f"🇺🇸 準備分析美股: {formatted_symbol}")
 
         logger.debug(f"🔍 [RUNNER DEBUG] 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
@@ -402,14 +402,14 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 提取風險評估數據
         risk_assessment = extract_risk_assessment(state)
 
-        # 将風險評估添加到狀態中
+        # 將風險評估添加到狀態中
         if risk_assessment:
             state['risk_assessment'] = risk_assessment
 
-        # 記錄Token使用（實际使用量，這里使用估算值）
+        # 記錄Token使用（實際使用量，這裡使用估算值）
         if TOKEN_TRACKING_ENABLED:
-            # 在實际應用中，這些值應该從LLM響應中獲取
-            # 這里使用基於分析師數量和研究深度的估算
+            # 在實際應用中，這些值應該從LLM響應中獲取
+            # 這裡使用基於分析師數量和研究深度的估算
             actual_input_tokens = len(analysts) * (1500 if research_depth == "快速" else 2500 if research_depth == "標準" else 4000)
             actual_output_tokens = len(analysts) * (800 if research_depth == "快速" else 1200 if research_depth == "標準" else 2000)
 
@@ -442,7 +442,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 記錄分析完成的詳細日誌
         analysis_duration = time.time() - analysis_start_time
 
-        # 計算总成本（如果有Token跟蹤）
+        # 計算總成本（如果有Token跟蹤）
         total_cost = 0.0
         if TOKEN_TRACKING_ENABLED:
             try:
@@ -479,7 +479,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 for module, path in local_files.items():
                     logger.info(f"  - {module}: {path}")
             else:
-                logger.warning(f"⚠️ [本地保存] 本地報告文件保存失败")
+                logger.warning(f"⚠️ [本地保存] 本地報告文件保存失敗")
             
             # 2. 保存分析報告到MongoDB
             logger.info(f"🗄️ [MongoDB保存] 開始保存分析報告到MongoDB")
@@ -492,11 +492,11 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 logger.info(f"✅ [MongoDB保存] 分析報告已成功保存到MongoDB")
                 update_progress("✅ 分析報告已保存到數據庫和本地文件")
             else:
-                logger.warning(f"⚠️ [MongoDB保存] MongoDB報告保存失败")
+                logger.warning(f"⚠️ [MongoDB保存] MongoDB報告保存失敗")
                 if local_files:
-                    update_progress("✅ 本地報告已保存，但數據庫保存失败")
+                    update_progress("✅ 本地報告已保存，但數據庫保存失敗")
                 else:
-                    update_progress("⚠️ 報告保存失败，但分析已完成")
+                    update_progress("⚠️ 報告保存失敗，但分析已完成")
                 
         except Exception as save_error:
             logger.error(f"❌ [報告保存] 保存分析報告時發生錯誤: {str(save_error)}")
@@ -506,7 +506,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         return results
 
     except Exception as e:
-        # 記錄分析失败的詳細日誌
+        # 記錄分析失敗的詳細日誌
         analysis_duration = time.time() - analysis_start_time
 
         logger_manager.log_module_error(
@@ -514,7 +514,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             analysis_duration, str(e)
         )
 
-        logger.error(f"❌ [分析失败] 股票分析執行失败",
+        logger.error(f"❌ [分析失敗] 股票分析執行失敗",
                     extra={
                         'stock_symbol': stock_symbol,
                         'session_id': session_id,
@@ -526,7 +526,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                         'event_type': 'web_analysis_error'
                     }, exc_info=True)
 
-        # 如果真實分析失败，返回錯誤信息而不是誤導性演示數據
+        # 如果真實分析失敗，返回錯誤信息而不是誤導性演示數據
         return {
             'stock_symbol': stock_symbol,
             'analysis_date': analysis_date,
@@ -534,12 +534,12 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             'research_depth': research_depth,
             'llm_provider': llm_provider,
             'llm_model': llm_model,
-            'state': {},  # 空狀態，将顯示占位符
+            'state': {},  # 空狀態，將顯示占位符
             'decision': {},  # 空決策
             'success': False,
             'error': str(e),
             'is_demo': False,
-            'error_reason': f"分析失败: {str(e)}"
+            'error_reason': f"分析失敗: {str(e)}"
         }
 
 def format_analysis_results(results):
@@ -554,16 +554,16 @@ def format_analysis_results(results):
     state = results['state']
     decision = results['decision']
 
-    # 提取關键信息
+    # 提取關鍵信息
     # decision 可能是字符串（如 "BUY", "SELL", "HOLD"）或字典
     if isinstance(decision, str):
-        # 将英文投資建議轉換為中文
+        # 將英文投資建議轉換為中文
         action_translation = {
-            'BUY': '买入',
-            'SELL': '卖出',
+            'BUY': '買入',
+            'SELL': '賣出',
             'HOLD': '持有',
-            'buy': '买入',
-            'sell': '卖出',
+            'buy': '買入',
+            'sell': '賣出',
             'hold': '持有'
         }
         action = action_translation.get(decision.strip(), decision.strip())
@@ -582,7 +582,7 @@ def format_analysis_results(results):
             try:
                 # 嘗試轉換為浮點數
                 if isinstance(target_price, str):
-                    # 移除貨币符號和空格
+                    # 移除貨幣符號和空格
                     clean_price = target_price.replace('$', '').replace('¥', '').replace('￥', '').strip()
                     target_price = float(clean_price) if clean_price and clean_price != 'None' else None
                 elif isinstance(target_price, (int, float)):
@@ -594,13 +594,13 @@ def format_analysis_results(results):
         else:
             target_price = None
 
-        # 将英文投資建議轉換為中文
+        # 將英文投資建議轉換為中文
         action_translation = {
-            'BUY': '买入',
-            'SELL': '卖出',
+            'BUY': '買入',
+            'SELL': '賣出',
             'HOLD': '持有',
-            'buy': '买入',
-            'sell': '卖出',
+            'buy': '買入',
+            'sell': '賣出',
             'hold': '持有'
         }
         action = decision.get('action', '持有')
@@ -611,7 +611,7 @@ def format_analysis_results(results):
             'confidence': decision.get('confidence', 0.5),
             'risk_score': decision.get('risk_score', 0.3),
             'target_price': target_price,
-            'reasoning': decision.get('reasoning', '暂無分析推理')
+            'reasoning': decision.get('reasoning', '暫無分析推理')
         }
     else:
         # 處理其他類型
@@ -626,7 +626,7 @@ def format_analysis_results(results):
     # 格式化狀態信息
     formatted_state = {}
     
-    # 處理各個分析模塊的結果 - 包含完整的智能體团隊分析
+    # 處理各個分析模塊的結果 - 包含完整的智能體團隊分析
     analysis_keys = [
         'market_report',
         'fundamentals_report',
@@ -634,10 +634,10 @@ def format_analysis_results(results):
         'news_report',
         'risk_assessment',
         'investment_plan',
-        # 添加缺失的团隊決策數據，確保与CLI端一致
-        'investment_debate_state',  # 研究团隊辩論（多头/空头研究員）
-        'trader_investment_plan',   # 交易团隊計劃
-        'risk_debate_state',        # 風險管理团隊決策
+        # 添加缺失的團隊決策數據，確保與CLI端一致
+        'investment_debate_state',  # 研究團隊辯論（多頭/空頭研究員）
+        'trader_investment_plan',   # 交易團隊計劃
+        'risk_debate_state',        # 風險管理團隊決策
         'final_trade_decision'      # 最終交易決策
     ]
     
@@ -659,17 +659,17 @@ def format_analysis_results(results):
         'decision': formatted_decision,
         'state': formatted_state,
         'success': True,
-        # 将配置信息放在顶層，供前端直接訪問
+        # 將配置信息放在頂層，供前端直接訪問
         'analysis_date': results['analysis_date'],
         'analysts': results['analysts'],
         'research_depth': results['research_depth'],
-        'llm_provider': results.get('llm_provider', 'dashscope'),
+        'llm_provider': results.get('llm_provider', 'openai'),
         'llm_model': results['llm_model'],
         'metadata': {
             'analysis_date': results['analysis_date'],
             'analysts': results['analysts'],
             'research_depth': results['research_depth'],
-            'llm_provider': results.get('llm_provider', 'dashscope'),
+            'llm_provider': results.get('llm_provider', 'openai'),
             'llm_model': results['llm_model']
         }
     }
@@ -711,7 +711,7 @@ def validate_analysis_params(stock_symbol, analysis_date, analysts, research_dep
     
     # 驗證分析師列表
     if not analysts or len(analysts) == 0:
-        errors.append("必须至少選擇一個分析師")
+        errors.append("必須至少選擇一個分析師")
     
     valid_analysts = ['market', 'social', 'news', 'fundamentals']
     invalid_analysts = [a for a in analysts if a not in valid_analysts]
@@ -720,7 +720,7 @@ def validate_analysis_params(stock_symbol, analysis_date, analysts, research_dep
     
     # 驗證研究深度
     if not isinstance(research_depth, int) or research_depth < 1 or research_depth > 5:
-        errors.append("研究深度必须是1-5之間的整數")
+        errors.append("研究深度必須是1-5之間的整數")
     
     # 驗證分析日期
     try:
@@ -754,15 +754,15 @@ def get_supported_stocks():
 
 def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, research_depth, llm_provider, llm_model, error_msg, market_type="美股"):
     """
-    已弃用：生成演示分析結果
+    已棄用：生成演示分析結果
 
-    註意：此函數已弃用，因為演示數據會誤導用戶。
+    註意：此函數已棄用，因為演示數據會誤導用戶。
     現在我們使用占位符來代替演示數據。
     """
 
     import random
 
-    # 根據市場類型設置貨币符號和價格範围
+    # 根據市場類型設置貨幣符號和價格範圍
     if market_type == "港股":
         currency_symbol = "HK$"
         price_range = (50, 500)  # 港股價格範围
@@ -777,7 +777,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         market_name = "美股"
 
     # 生成模擬決策
-    actions = ['买入', '持有', '卖出']
+    actions = ['買入', '持有', '賣出']
     action = random.choice(actions)
 
     demo_decision = {
@@ -786,18 +786,18 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         'risk_score': round(random.uniform(0.2, 0.7), 2),
         'target_price': round(random.uniform(*price_range), 2),
         'reasoning': f"""
-基於對{market_name}{stock_symbol}的綜合分析，我們的AI分析团隊得出以下結論：
+基於對{market_name}{stock_symbol}的綜合分析，我們的AI分析團隊得出以下結論：
 
 **投資建議**: {action}
 **目標價格**: {currency_symbol}{round(random.uniform(*price_range), 2)}
 
 **主要分析要點**:
-1. **技術面分析**: 當前價格趋势顯示{'上涨' if action == '买入' else '下跌' if action == '卖出' else '横盘'}信號
-2. **基本面評估**: 公司財務狀况{'良好' if action == '买入' else '一般' if action == '持有' else '需關註'}
-3. **市場情绪**: 投資者情绪{'乐觀' if action == '买入' else '中性' if action == '持有' else '謹慎'}
-4. **風險評估**: 當前風險水平為{'中等' if action == '持有' else '較低' if action == '买入' else '較高'}
+1. **技術面分析**: 當前價格趨勢顯示{'上漲' if action == '買入' else '下跌' if action == '賣出' else '橫盤'}信號
+2. **基本面評估**: 公司財務狀況{'良好' if action == '買入' else '一般' if action == '持有' else '需關注'}
+3. **市場情緒**: 投資者情緒{'樂觀' if action == '買入' else '中性' if action == '持有' else '謹慎'}
+4. **風險評估**: 當前風險水平為{'中等' if action == '持有' else '較低' if action == '買入' else '較高'}
 
-**註意**: 這是演示數據，實际分析需要配置正確的API密鑰。
+**註意**: 這是演示數據，實際分析需要配置正確的API密鑰。
         """
     }
 
@@ -812,7 +812,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         demo_state['market_report'] = f"""
 ## 📈 {market_name}{stock_symbol} 技術面分析報告
 
-### 價格趋势分析
+### 價格趨勢分析
 - **當前價格**: {currency_symbol}{current_price}
 - **日內變化**: {random.choice(['+', '-'])}{round(random.uniform(0.5, 5), 2)}%
 - **52周高點**: {currency_symbol}{high_price}
@@ -820,14 +820,14 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 技術指標
 - **RSI (14日)**: {round(random.uniform(30, 70), 1)}
-- **MACD**: {'看涨' if action == 'BUY' else '看跌' if action == 'SELL' else '中性'}
+- **MACD**: {'看漲' if action == 'BUY' else '看跌' if action == 'SELL' else '中性'}
 - **移動平均線**: 價格{'高於' if action == 'BUY' else '低於' if action == 'SELL' else '接近'}20日均線
 
-### 支撑阻力位
-- **支撑位**: ${round(random.uniform(80, 120), 2)}
+### 支撐阻力位
+- **支撐位**: ${round(random.uniform(80, 120), 2)}
 - **阻力位**: ${round(random.uniform(250, 350), 2)}
 
-*註意: 這是演示數據，實际分析需要配置API密鑰*
+*註意: 這是演示數據，實際分析需要配置API密鑰*
         """
 
     if 'fundamentals' in analysts:
@@ -836,42 +836,42 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 財務指標
 - **市盈率 (P/E)**: {round(random.uniform(15, 35), 1)}
-- **市净率 (P/B)**: {round(random.uniform(1, 5), 1)}
-- **净資產收益率 (ROE)**: {round(random.uniform(10, 25), 1)}%
+- **市淨率 (P/B)**: {round(random.uniform(1, 5), 1)}
+- **淨資產收益率 (ROE)**: {round(random.uniform(10, 25), 1)}%
 - **毛利率**: {round(random.uniform(20, 60), 1)}%
 
 ### 盈利能力
 - **營收增長**: {random.choice(['+', '-'])}{round(random.uniform(5, 20), 1)}%
-- **净利润增長**: {random.choice(['+', '-'])}{round(random.uniform(10, 30), 1)}%
+- **淨利潤增長**: {random.choice(['+', '-'])}{round(random.uniform(10, 30), 1)}%
 - **每股收益**: ${round(random.uniform(2, 15), 2)}
 
 ### 財務健康度
-- **负债率**: {round(random.uniform(20, 60), 1)}%
+- **負債率**: {round(random.uniform(20, 60), 1)}%
 - **流動比率**: {round(random.uniform(1, 3), 1)}
-- **現金流**: {'正向' if action != 'SELL' else '需關註'}
+- **現金流**: {'正向' if action != 'SELL' else '需關注'}
 
-*註意: 這是演示數據，實际分析需要配置API密鑰*
+*註意: 這是演示數據，實際分析需要配置API密鑰*
         """
 
     if 'social' in analysts:
         demo_state['sentiment_report'] = f"""
-## 💭 {stock_symbol} 市場情绪分析報告
+## 💭 {stock_symbol} 市場情緒分析報告
 
-### 社交媒體情绪
-- **整體情绪**: {'積極' if action == 'BUY' else '消極' if action == 'SELL' else '中性'}
-- **情绪强度**: {round(random.uniform(0.5, 0.9), 2)}
+### 社交媒體情緒
+- **整體情緒**: {'積極' if action == 'BUY' else '消極' if action == 'SELL' else '中性'}
+- **情緒強度**: {round(random.uniform(0.5, 0.9), 2)}
 - **討論熱度**: {'高' if random.random() > 0.5 else '中等'}
 
-### 投資者情绪指標
-- **恐慌贪婪指數**: {round(random.uniform(20, 80), 0)}
-- **看涨看跌比**: {round(random.uniform(0.8, 1.5), 2)}
+### 投資者情緒指標
+- **恐慌貪婪指數**: {round(random.uniform(20, 80), 0)}
+- **看漲看跌比**: {round(random.uniform(0.8, 1.5), 2)}
 - **期權Put/Call比**: {round(random.uniform(0.5, 1.2), 2)}
 
 ### 機構投資者動向
-- **機構持仓變化**: {random.choice(['增持', '减持', '維持'])}
-- **分析師評級**: {'买入' if action == 'BUY' else '卖出' if action == 'SELL' else '持有'}
+- **機構持倉變化**: {random.choice(['增持', '減持', '維持'])}
+- **分析師評級**: {'買入' if action == 'BUY' else '賣出' if action == 'SELL' else '持有'}
 
-*註意: 這是演示數據，實际分析需要配置API密鑰*
+*註意: 這是演示數據，實際分析需要配置API密鑰*
         """
 
     if 'news' in analysts:
@@ -881,18 +881,18 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 ### 近期重要新聞
 1. **財報發布**: 公司發布{'超預期' if action == 'BUY' else '低於預期' if action == 'SELL' else '符合預期'}的季度財報
 2. **行業動態**: 所在行業面臨{'利好' if action == 'BUY' else '挑戰' if action == 'SELL' else '穩定'}政策環境
-3. **公司公告**: 管理層{'乐觀' if action == 'BUY' else '謹慎' if action == 'SELL' else '穩健'}展望未來
+3. **公司公告**: 管理層{'樂觀' if action == 'BUY' else '謹慎' if action == 'SELL' else '穩健'}展望未來
 
-### 新聞情绪分析
+### 新聞情緒分析
 - **正面新聞占比**: {round(random.uniform(40, 80), 0)}%
-- **负面新聞占比**: {round(random.uniform(10, 40), 0)}%
+- **負面新聞占比**: {round(random.uniform(10, 40), 0)}%
 - **中性新聞占比**: {round(random.uniform(20, 50), 0)}%
 
 ### 市場影響評估
-- **短期影響**: {'正面' if action == 'BUY' else '负面' if action == 'SELL' else '中性'}
+- **短期影響**: {'正面' if action == 'BUY' else '負面' if action == 'SELL' else '中性'}
 - **長期影響**: {'積極' if action != 'SELL' else '需觀察'}
 
-*註意: 這是演示數據，實际分析需要配置API密鑰*
+*註意: 這是演示數據，實際分析需要配置API密鑰*
         """
 
     # 添加風險評估和投資建議
@@ -901,14 +901,14 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 主要風險因素
 1. **市場風險**: {'低' if action == 'BUY' else '高' if action == 'SELL' else '中等'}
-2. **行業風險**: {'可控' if action != 'SELL' else '需關註'}
+2. **行業風險**: {'可控' if action != 'SELL' else '需關注'}
 3. **公司特定風險**: {'較低' if action == 'BUY' else '中等'}
 
 ### 風險等級評估
-- **总體風險等級**: {'低風險' if action == 'BUY' else '高風險' if action == 'SELL' else '中等風險'}
-- **建議仓位**: {random.choice(['轻仓', '標準仓位', '重仓']) if action != 'SELL' else '建議减仓'}
+- **總體風險等級**: {'低風險' if action == 'BUY' else '高風險' if action == 'SELL' else '中等風險'}
+- **建議倉位**: {random.choice(['輕倉', '標準倉位', '重倉']) if action != 'SELL' else '建議減倉'}
 
-*註意: 這是演示數據，實际分析需要配置API密鑰*
+*註意: 這是演示數據，實際分析需要配置API密鑰*
     """
 
     demo_state['investment_plan'] = f"""
@@ -922,47 +922,47 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 投資策略
 - **投資期限**: {'短期' if research_depth <= 2 else '中長期'}
-- **仓位管理**: {'分批建仓' if action == 'BUY' else '分批减仓' if action == 'SELL' else '維持現狀'}
+- **倉位管理**: {'分批建倉' if action == 'BUY' else '分批減倉' if action == 'SELL' else '維持現狀'}
 
-*註意: 這是演示數據，實际分析需要配置API密鑰*
+*註意: 這是演示數據，實際分析需要配置API密鑰*
     """
 
-    # 添加团隊決策演示數據，確保与CLI端一致
+    # 添加團隊決策演示數據，確保與CLI端一致
     demo_state['investment_debate_state'] = {
         'bull_history': f"""
-## 📈 多头研究員分析
+## 📈 多頭研究員分析
 
-作為多头研究員，我對{stock_symbol}持乐觀態度：
+作為多頭研究員，我對{stock_symbol}持樂觀態度：
 
 ### 🚀 投資亮點
-1. **技術面突破**: 股價突破關键阻力位，技術形態良好
-2. **基本面支撑**: 公司業绩穩健增長，財務狀况健康
-3. **市場機會**: 當前估值合理，具备上涨空間
+1. **技術面突破**: 股價突破關鍵阻力位，技術形態良好
+2. **基本面支撐**: 公司業績穩健增長，財務狀況健康
+3. **市場機會**: 當前估值合理，具備上漲空間
 
 ### 📊 數據支持
 - 近期成交量放大，資金流入明顯
-- 行業景气度提升，政策環境有利
-- 機構投資者增持，市場信心增强
+- 行業景氣度提升，政策環境有利
+- 機構投資者增持，市場信心增強
 
-**建議**: 積極买入，目標價位上調15-20%
+**建議**: 積極買入，目標價位上調15-20%
 
 *註意: 這是演示數據*
         """.strip(),
 
         'bear_history': f"""
-## 📉 空头研究員分析
+## 📉 空頭研究員分析
 
-作為空头研究員，我對{stock_symbol}持謹慎態度：
+作為空頭研究員，我對{stock_symbol}持謹慎態度：
 
 ### ⚠️ 風險因素
 1. **估值偏高**: 當前市盈率超過行業平均水平
-2. **技術風險**: 短期涨幅過大，存在回調壓力
+2. **技術風險**: 短期漲幅過大，存在回調壓力
 3. **宏觀環境**: 市場整體波動加大，不確定性增加
 
-### 📉 擔忧點
-- 成交量虽然放大，但可能是獲利盘出貨
-- 行業競爭加剧，公司市場份額面臨挑戰
-- 政策變化可能對行業產生负面影響
+### 擔憂點
+- 成交量雖然放大，但可能是獲利盤出貨
+- 行業競爭加劇，公司市場份額面臨挑戰
+- 政策變化可能對行業產生負面影響
 
 **建議**: 謹慎觀望，等待更好的入場時機
 
@@ -972,47 +972,47 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         'judge_decision': f"""
 ## 🎯 研究經理綜合決策
 
-經過多头和空头研究員的充分辩論，我的綜合判斷如下：
+經過多頭和空頭研究員的充分辯論，我的綜合判斷如下：
 
 ### 📊 綜合評估
-- **多头觀點**: 技術面和基本面都顯示積極信號
-- **空头觀點**: 估值和短期風險需要關註
-- **平衡考慮**: 機會与風險並存，需要策略性操作
+- **多頭觀點**: 技術面和基本面都顯示積極信號
+- **空頭觀點**: 估值和短期風險需要關注
+- **平衡考慮**: 機會與風險並存，需要策略性操作
 
 ### 🎯 最終建議
 基於當前市場環境和{stock_symbol}的具體情況，建議採取**{action}**策略：
 
 1. **操作建議**: {action}
-2. **仓位控制**: {'分批建仓' if action == '买入' else '分批减仓' if action == '卖出' else '維持現狀'}
-3. **風險管理**: 設置止損位，控制單只股票仓位不超過10%
+2. **倉位控制**: {'分批建倉' if action == '買入' else '分批減倉' if action == '賣出' else '維持現狀'}
+3. **風險管理**: 設置止損位，控制單只股票倉位不超過10%
 
-**決策依據**: 綜合技術面、基本面和市場情绪分析
+**決策依據**: 綜合技術面、基本面和市場情緒分析
 
 *註意: 這是演示數據*
         """.strip()
     }
 
     demo_state['trader_investment_plan'] = f"""
-## 💼 交易团隊執行計劃
+## 💼 交易團隊執行計劃
 
-基於研究团隊的分析結果，制定如下交易執行計劃：
+基於研究團隊的分析結果，制定如下交易執行計劃：
 
 ### 🎯 交易策略
 - **交易方向**: {action}
 - **目標價位**: {currency_symbol}{round(random.uniform(*price_range) * 1.1, 2)}
 - **止損價位**: {currency_symbol}{round(random.uniform(*price_range) * 0.9, 2)}
 
-### 📊 仓位管理
-- **建議仓位**: {'30-50%' if action == '买入' else '减仓至20%' if action == '卖出' else '維持現有仓位'}
-- **分批操作**: {'分3次建仓' if action == '买入' else '分2次减仓' if action == '卖出' else '暂不操作'}
-- **時間安排**: {'1-2周內完成' if action != '持有' else '持续觀察'}
+### 📊 倉位管理
+- **建議倉位**: {'30-50%' if action == '買入' else '減倉至20%' if action == '賣出' else '維持現有倉位'}
+- **分批操作**: {'分3次建倉' if action == '買入' else '分2次減倉' if action == '賣出' else '暫不操作'}
+- **時間安排**: {'1-2周內完成' if action != '持有' else '持續觀察'}
 
 ### ⚠️ 風險控制
-- **止損設置**: 跌破支撑位立即止損
+- **止損設置**: 跌破支撐位立即止損
 - **止盈策略**: 達到目標價位分批止盈
-- **監控要點**: 密切關註成交量和技術指標變化
+- **監控要點**: 密切關注成交量和技術指標變化
 
-*註意: 這是演示數據，實际交易需要配置API密鑰*
+*註意: 這是演示數據，實際交易需要配置API密鑰*
     """
 
     demo_state['risk_debate_state'] = {
@@ -1023,15 +1023,15 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 ### 💪 風險承受能力
 - **高收益機會**: 當前市場提供了難得的投資機會
-- **風險可控**: 虽然存在波動，但長期趋势向好
+- **風險可控**: 雖然存在波動，但長期趨勢向好
 - **時機把握**: 現在是積極布局的最佳時機
 
 ### 🎯 激進策略
-- **加大仓位**: 建議将仓位提升至60-80%
+- **加大倉位**: 建議將倉位提升至60-80%
 - **杠杆使用**: 可適度使用杠杆放大收益
-- **快速行動**: 機會稍纵即逝，需要果斷決策
+- **快速行動**: 機會稍縱即逝，需要果斷決策
 
-**風險評級**: 中等風險，高收益潜力
+**風險評級**: 中等風險，高收益潛力
 
 *註意: 這是演示數據*
         """.strip(),
@@ -1041,15 +1041,15 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 從風險控制角度分析{stock_symbol}：
 
-### ⚠️ 風險识別
+### ⚠️ 風險識別
 - **市場波動**: 當前市場不確定性較高
 - **估值風險**: 部分股票估值已經偏高
-- **流動性風險**: 需要關註市場流動性變化
+- **流動性風險**: 需要關注市場流動性變化
 
 ### 🔒 保守策略
-- **控制仓位**: 建議仓位不超過30%
+- **控制倉位**: 建議倉位不超過30%
 - **分散投資**: 避免過度集中於單一標的
-- **安全邊际**: 確保有足夠的安全邊际
+- **安全邊際**: 確保有足夠的安全邊際
 
 **風險評級**: 中高風險，需要謹慎操作
 
@@ -1062,14 +1062,14 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 從平衡角度分析{stock_symbol}：
 
 ### 📊 客觀評估
-- **機會与風險並存**: 當前市場既有機會也有風險
-- **適度參与**: 建議採取適度參与的策略
-- **灵活調整**: 根據市場變化及時調整策略
+- **機會與風險並存**: 當前市場既有機會也有風險
+- **適度參與**: 建議採取適度參與的策略
+- **靈活調整**: 根據市場變化及時調整策略
 
 ### ⚖️ 平衡策略
-- **中等仓位**: 建議仓位控制在40-50%
-- **動態調整**: 根據市場情況動態調整仓位
-- **風險監控**: 持续監控風險指標變化
+- **中等倉位**: 建議倉位控制在40-50%
+- **動態調整**: 根據市場情況動態調整倉位
+- **風險監控**: 持續監控風險指標變化
 
 **風險評級**: 中等風險，平衡收益
 
@@ -1082,19 +1082,19 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 綜合三位風險分析師的意见，最終風險管理決策如下：
 
 ### 📊 風險綜合評估
-- **激進觀點**: 高收益機會，建議積極參与
+- **激進觀點**: 高收益機會，建議積極參與
 - **保守觀點**: 風險較高，建議謹慎操作
-- **中性觀點**: 機會与風險並存，適度參与
+- **中性觀點**: 機會與風險並存，適度參與
 
 ### 🎯 最終風險決策
 基於當前市場環境和{stock_symbol}的風險特征：
 
 1. **風險等級**: 中等風險
-2. **建議仓位**: 40%（平衡收益与風險）
+2. **建議倉位**: 40%（平衡收益與風險）
 3. **風險控制**: 嚴格執行止損策略
 4. **監控頻率**: 每日監控，及時調整
 
-**決策理由**: 在控制風險的前提下，適度參与市場機會
+**決策理由**: 在控制風險的前提下，適度參與市場機會
 
 *註意: 這是演示數據*
         """.strip()
@@ -1103,18 +1103,18 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
     demo_state['final_trade_decision'] = f"""
 ## 🎯 最終投資決策
 
-經過分析師团隊、研究团隊、交易团隊和風險管理团隊的全面分析，最終投資決策如下：
+經過分析師團隊、研究團隊、交易團隊和風險管理團隊的全面分析，最終投資決策如下：
 
 ### 📊 決策摘要
 - **投資建議**: **{action}**
 - **置信度**: {confidence:.1%}
 - **風險評級**: 中等風險
-- **預期收益**: {'10-20%' if action == '买入' else '規避損失' if action == '卖出' else '穩健持有'}
+- **預期收益**: {'10-20%' if action == '買入' else '規避損失' if action == '賣出' else '穩健持有'}
 
 ### 🎯 執行計劃
 1. **操作方向**: {action}
-2. **目標仓位**: {'40%' if action == '买入' else '20%' if action == '卖出' else '維持現狀'}
-3. **執行時間**: {'1-2周內分批執行' if action != '持有' else '持续觀察'}
+2. **目標倉位**: {'40%' if action == '買入' else '20%' if action == '賣出' else '維持現狀'}
+3. **執行時間**: {'1-2周內分批執行' if action != '持有' else '持續觀察'}
 4. **風險控制**: 嚴格執行止損止盈策略
 
 ### 📈 預期目標
@@ -1127,7 +1127,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
 **免責聲明**: 本分析僅供參考，不構成投資建議。
 
-*註意: 這是演示數據，實际分析需要配置正確的API密鑰*
+*註意: 這是演示數據，實際分析需要配置正確的API密鑰*
     """
 
     return {
@@ -1142,5 +1142,5 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         'success': True,
         'error': None,
         'is_demo': True,
-        'demo_reason': f"API調用失败，顯示演示數據。錯誤信息: {error_msg}"
+        'demo_reason': f"API調用失敗，顯示演示數據。錯誤信息: {error_msg}"
     }

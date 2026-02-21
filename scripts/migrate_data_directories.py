@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-數據目錄重新組織迁移腳本
+數據目錄重新組織遷移腳本
 Data Directory Reorganization Migration Script
 
-此腳本将項目中分散的數據目錄重新組織為統一的結構
+此腳本將項目中分散的數據目錄重新組織為統一的結構
 """
 
 import os
@@ -26,7 +26,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class DataDirectoryMigrator:
-    """數據目錄迁移器"""
+    """數據目錄遷移器"""
     
     def __init__(self, project_root: str = None):
         self.project_root = Path(project_root) if project_root else Path(__file__).parent.parent
@@ -45,38 +45,38 @@ class DataDirectoryMigrator:
             }
         }
         
-        # 迁移映射：(源路徑, 目標路徑)
+        # 遷移映射：(源路徑, 目標路徑)
         self.migration_map = [
-            # 緩存數據迁移
+            # 緩存數據遷移
             ('tradingagents/dataflows/data_cache', 'data/cache'),
             
-            # 分析結果迁移
+            # 分析結果遷移
             ('results', 'data/analysis_results/detailed'),
             ('web/data/analysis_results', 'data/analysis_results/summary'),
             
-            # 數據庫數據迁移
+            # 數據庫數據遷移
             ('data/mongodb', 'data/databases/mongodb'),
             ('data/redis', 'data/databases/redis'),
             
-            # 會話數據迁移
+            # 會話數據遷移
             ('data/sessions', 'data/sessions/cli_sessions'),
             ('web/data/sessions', 'data/sessions/web_sessions'),
             
-            # 日誌數據迁移
+            # 日誌數據遷移
             ('web/data/operation_logs', 'data/logs/operations'),
             ('web/data/user_activities', 'data/logs/user_activities'),
             
-            # 報告數據迁移（如果存在）
+            # 報告數據遷移（如果存在）
             ('data/reports', 'data/analysis_results/exports'),
         ]
     
     def create_backup(self) -> bool:
-        """創建數據备份"""
+        """創建數據備份"""
         try:
-            logger.info(f"🔄 開始創建數據备份到: {self.backup_dir}")
+            logger.info(f"🔄 開始創建數據備份到: {self.backup_dir}")
             self.backup_dir.mkdir(exist_ok=True)
             
-            # 备份現有數據目錄
+            # 備份現有數據目錄
             backup_paths = ['data', 'web/data', 'results', 'tradingagents/dataflows/data_cache']
             
             for path in backup_paths:
@@ -90,13 +90,13 @@ class DataDirectoryMigrator:
                     else:
                         shutil.copy2(source, target)
                     
-                    logger.info(f"  ✅ 已备份: {path}")
+                    logger.info(f"  ✅ 已備份: {path}")
             
-            logger.info(f"✅ 數據备份完成: {self.backup_dir}")
+            logger.info(f"✅ 數據備份完成: {self.backup_dir}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 备份失败: {e}")
+            logger.error(f"❌ 備份失敗: {e}")
             return False
     
     def create_new_structure(self) -> bool:
@@ -127,13 +127,13 @@ class DataDirectoryMigrator:
             return True
             
         except Exception as e:
-            logger.error(f"❌ 創建目錄結構失败: {e}")
+            logger.error(f"❌ 創建目錄結構失敗: {e}")
             return False
     
     def migrate_data(self) -> bool:
-        """迁移數據"""
+        """遷移數據"""
         try:
-            logger.info("🔄 開始數據迁移...")
+            logger.info("🔄 開始數據遷移...")
             
             for source_path, target_path in self.migration_map:
                 source = self.project_root / source_path
@@ -156,16 +156,16 @@ class DataDirectoryMigrator:
                     else:
                         shutil.copy2(source, target)
                     
-                    logger.info(f"  ✅ 迁移完成: {source_path} → {target_path}")
+                    logger.info(f"  ✅ 遷移完成: {source_path} → {target_path}")
                     
                 except Exception as e:
-                    logger.error(f"  ❌ 迁移失败: {source_path} → {target_path}, 錯誤: {e}")
+                    logger.error(f"  ❌ 遷移失敗: {source_path} → {target_path}, 錯誤: {e}")
             
-            logger.info("✅ 數據迁移完成")
+            logger.info("✅ 數據遷移完成")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 數據迁移失败: {e}")
+            logger.error(f"❌ 數據遷移失敗: {e}")
             return False
     
     def _merge_directories(self, source: Path, target: Path):
@@ -214,7 +214,7 @@ TRADINGAGENTS_TEMP_DIR=${TRADINGAGENTS_DATA_DIR}/temp
 TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
 """
             
-            # 如果还没有這些配置，則添加
+            # 如果還沒有這些配置，則添加
             if 'TRADINGAGENTS_DATA_DIR' not in content:
                 content += new_config
                 
@@ -228,11 +228,11 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
             return True
             
         except Exception as e:
-            logger.error(f"❌ 更新.env文件失败: {e}")
+            logger.error(f"❌ 更新.env文件失敗: {e}")
             return False
     
     def create_migration_report(self) -> bool:
-        """創建迁移報告"""
+        """創建遷移報告"""
         try:
             report = {
                 'migration_date': datetime.now().isoformat(),
@@ -247,23 +247,23 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
             with open(report_file, 'w', encoding='utf-8') as f:
                 json.dump(report, f, ensure_ascii=False, indent=2)
             
-            logger.info(f"✅ 迁移報告已保存: {report_file}")
+            logger.info(f"✅ 遷移報告已保存: {report_file}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 創建迁移報告失败: {e}")
+            logger.error(f"❌ 創建遷移報告失敗: {e}")
             return False
     
     def cleanup_old_directories(self, confirm: bool = False) -> bool:
-        """清理旧目錄（可選）"""
+        """清理舊目錄（可選）"""
         if not confirm:
-            logger.info("⚠️ 跳過清理旧目錄（需要手動確認）")
+            logger.info("⚠️ 跳過清理舊目錄（需要手動確認）")
             return True
         
         try:
-            logger.info("🔄 清理旧目錄...")
+            logger.info("🔄 清理舊目錄...")
             
-            # 要清理的旧目錄
+            # 要清理的舊目錄
             old_dirs = [
                 'web/data',
                 'tradingagents/dataflows/data_cache'
@@ -275,36 +275,36 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
                     shutil.rmtree(old_path)
                     logger.info(f"  ✅ 已刪除: {old_dir}")
             
-            logger.info("✅ 旧目錄清理完成")
+            logger.info("✅ 舊目錄清理完成")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 清理旧目錄失败: {e}")
+            logger.error(f"❌ 清理舊目錄失敗: {e}")
             return False
     
     def run_migration(self, cleanup_old: bool = False) -> bool:
-        """運行完整的迁移流程"""
-        logger.info("🚀 開始數據目錄重新組織迁移...")
+        """運行完整的遷移流程"""
+        logger.info("🚀 開始數據目錄重新組織遷移...")
         
         steps = [
-            ("創建备份", self.create_backup),
+            ("創建備份", self.create_backup),
             ("創建新目錄結構", self.create_new_structure),
-            ("迁移數據", self.migrate_data),
+            ("遷移數據", self.migrate_data),
             ("更新環境變量", self.update_env_file),
-            ("創建迁移報告", self.create_migration_report),
+            ("創建遷移報告", self.create_migration_report),
         ]
         
         if cleanup_old:
-            steps.append(("清理旧目錄", lambda: self.cleanup_old_directories(True)))
+            steps.append(("清理舊目錄", lambda: self.cleanup_old_directories(True)))
         
         for step_name, step_func in steps:
-            logger.info(f"\n📋 執行步骤: {step_name}")
+            logger.info(f"\n📋 執行步驟: {step_name}")
             if not step_func():
-                logger.error(f"❌ 步骤失败: {step_name}")
+                logger.error(f"❌ 步驟失敗: {step_name}")
                 return False
         
         logger.info("\n🎉 數據目錄重新組織完成！")
-        logger.info(f"📁 备份位置: {self.backup_dir}")
+        logger.info(f"📁 備份位置: {self.backup_dir}")
         logger.info(f"📊 新數據目錄: {self.project_root / 'data'}")
         
         return True
@@ -314,35 +314,35 @@ def main():
     """主函數"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='數據目錄重新組織迁移腳本')
+    parser = argparse.ArgumentParser(description='數據目錄重新組織遷移腳本')
     parser.add_argument('--project-root', help='項目根目錄路徑')
-    parser.add_argument('--cleanup-old', action='store_true', help='迁移後清理旧目錄')
-    parser.add_argument('--dry-run', action='store_true', help='仅顯示迁移計劃，不執行實际迁移')
+    parser.add_argument('--cleanup-old', action='store_true', help='遷移後清理舊目錄')
+    parser.add_argument('--dry-run', action='store_true', help='僅顯示遷移計劃，不執行實際遷移')
     
     args = parser.parse_args()
     
     migrator = DataDirectoryMigrator(args.project_root)
     
     if args.dry_run:
-        logger.info("🔍 迁移計劃預覽:")
+        logger.info("🔍 遷移計劃預覽:")
         logger.info(f"📁 項目根目錄: {migrator.project_root}")
-        logger.info(f"📁 备份目錄: {migrator.backup_dir}")
-        logger.info("\n📋 迁移映射:")
+        logger.info(f"📁 備份目錄: {migrator.backup_dir}")
+        logger.info("\n📋 遷移映射:")
         for source, target in migrator.migration_map:
             logger.info(f"  {source} → {target}")
         return
     
-    # 執行迁移
+    # 執行遷移
     success = migrator.run_migration(cleanup_old=args.cleanup_old)
     
     if success:
-        logger.info("\n✅ 迁移成功完成！")
-        logger.info("\n📝 後续步骤:")
+        logger.info("\n✅ 遷移成功完成！")
+        logger.info("\n📝 後續步驟:")
         logger.info("1. 驗證新目錄結構是否正確")
         logger.info("2. 測試應用程序功能")
-        logger.info("3. 確認無誤後可刪除备份目錄")
+        logger.info("3. 確認無誤後可刪除備份目錄")
     else:
-        logger.error("\n❌ 迁移失败！請檢查日誌並從备份恢複")
+        logger.error("\n❌ 遷移失敗！請檢查日誌並從備份恢復")
 
 
 if __name__ == '__main__':

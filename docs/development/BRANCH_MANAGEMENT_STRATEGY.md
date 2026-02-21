@@ -1,6 +1,6 @@
 # 🌳 TradingAgents-CN 分支管理策略
 
-## 📋 當前分支狀况分析
+## 📋 當前分支狀況分析
 
 基於項目的發展歷程，當前可能存在以下分支：
 
@@ -13,7 +13,7 @@
 ### 🔧 功能分支（可能存在）
 - **feature/
 - **feature/data-source-upgrade** - 數據源升級
-- **hotfix/*** - 緊急修複分支
+- **hotfix/*** - 緊急修復分支
 
 ## 🎯 推薦的分支管理策略
 
@@ -24,7 +24,7 @@
 main (生產版本)
 ├── develop (開發主分支)
 ├── feature/v0.1.7 (下一版本開發)
-└── hotfix/* (緊急修複)
+└── hotfix/* (緊急修復)
 ```
 
 #### 清理策略
@@ -92,7 +92,7 @@ echo "=================="
 echo "📋 本地分支:"
 git branch
 
-echo -e "\n🌐 远程分支:"
+echo -e "\n🌐 遠端分支:"
 git branch -r
 
 echo -e "\n📊 分支關系:"
@@ -135,7 +135,7 @@ git branch --merged main | grep -E "feature/|hotfix/" | while read branch; do
 done
 ```
 
-## 📋 具體操作建议
+## 📋 具體操作建議
 
 ### 立即執行的操作
 
@@ -158,7 +158,7 @@ git log --oneline -5
 git add .
 git commit -m "完成v0.1.6所有功能"
 
-# 推送到远程
+# 推送到遠端
 git push origin feature/-integration
 ```
 
@@ -171,7 +171,7 @@ git merge feature/-integration
 # 創建版本標簽
 git tag -a v0.1.6 -m "TradingAgents-CN v0.1.6正式版"
 
-# 推送到远程
+# 推送到遠端
 git push origin main --tags
 ```
 
@@ -179,7 +179,7 @@ git push origin main --tags
 
 #### 1. 分支命名規範
 - **功能分支**: `feature/功能名稱` 或 `feature/v版本號`
-- **修複分支**: `hotfix/問題描述`
+- **修復分支**: `hotfix/問題描述`
 - **發布分支**: `release/v版本號` (可選)
 
 #### 2. 提交信息規範
@@ -197,7 +197,7 @@ Closes #issue號
 #### 3. 版本發布檢查清單
 - [ ] 所有功能開發完成
 - [ ] 測試通過
-- [ ] 文档更新
+- [ ] 文檔更新
 - [ ] 版本號更新
 - [ ] CHANGELOG更新
 - [ ] 創建發布標簽
@@ -214,7 +214,7 @@ Closes #issue號
 2. **建立標準的分支管理流程**
 3. **創建v0.1.7開發分支**
 
-### 長期行動（持续）
+### 長期行動（持續）
 1. **遵循分支命名規範**
 2. **定期清理過時分支**
 3. **維護清晰的版本歷史**
@@ -240,21 +240,21 @@ git config --global alias.cleanup "!git branch --merged main | grep -v main | xa
 
 如果在分支管理過程中遇到問題：
 
-1. **备份當前工作**
+1. **備份當前工作**
    ```bash
-   git stash push -m "备份當前工作"
+   git stash push -m "備份當前工作"
    ```
 
-2. **寻求幫助**
-   - 查看Git文档
+2. **尋求幫助**
+   - 查看Git文檔
    - 使用 `git help <command>`
-   - 咨詢团隊成員
+   - 咨詢團隊成員
 
-3. **恢複工作**
+3. **恢復工作**
    ```bash
    git stash pop
    ```
 
 ---
 
-**記住**: 分支管理的目標是让開發更有序，而不是增加複雜性。保持簡單、清晰的分支結構是關键。
+**記住**: 分支管理的目標是讓開發更有序，而不是增加複雜性。保持簡單、清晰的分支結構是關鍵。

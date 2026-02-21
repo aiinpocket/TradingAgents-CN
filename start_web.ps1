@@ -1,25 +1,25 @@
-# TradingAgents-CN Web应用启动脚本
+# TradingAgents-CN Web 應用啟動腳本
 
-Write-Host "🚀 启动TradingAgents-CN Web应用..." -ForegroundColor Green
+Write-Host "啟動 TradingAgents-CN Web 應用..." -ForegroundColor Green
 Write-Host ""
 
-# 激活虚拟环境
+# 啟動虛擬環境
 & ".\env\Scripts\Activate.ps1"
 
-# 检查项目是否已安装
+# 檢查專案是否已安裝
 try {
     python -c "import tradingagents" 2>$null
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "📦 安装项目到虚拟环境..." -ForegroundColor Yellow
+        Write-Host "安裝專案到虛擬環境..." -ForegroundColor Yellow
         pip install -e .
     }
 } catch {
-    Write-Host "📦 安装项目到虚拟环境..." -ForegroundColor Yellow
+    Write-Host "安裝專案到虛擬環境..." -ForegroundColor Yellow
     pip install -e .
 }
 
-# 启动Streamlit应用
+# 啟動 Streamlit 應用
 python start_web.py
 
-Write-Host "按任意键退出..." -ForegroundColor Yellow
+Write-Host "按任意鍵退出..." -ForegroundColor Yellow
 Read-Host

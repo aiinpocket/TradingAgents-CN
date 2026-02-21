@@ -69,13 +69,13 @@ def clean_cache_files(force_clean=False):
 
     except (OSError, RecursionError) as e:
         logger.warning(f"⚠️ 緩存搜索遇到問題: {e}")
-        logger.info(f"💡 跳過緩存清理，繼续啟動應用")
+        logger.info(f"💡 跳過緩存清理，繼續啟動應用")
 
     if not cache_dirs:
         logger.info(f"✅ 無需清理緩存文件")
         return
 
-    # 檢查環境變量是否禁用清理（使用强健的布爾值解析）
+    # 檢查環境變量是否禁用清理（使用強健的布爾值解析）
     try:
         from tradingagents.config.env_utils import parse_bool_env
         skip_clean = parse_bool_env('SKIP_CACHE_CLEAN', False)
@@ -139,7 +139,7 @@ def clean_cache_files(force_clean=False):
                     shutil.rmtree(cache_dir)
                     logger.info(f"  ✅ 已清理: {cache_dir.relative_to(project_root)}")
                 except Exception as e:
-                    logger.error(f"  ⚠️ 清理失败: {cache_dir.relative_to(project_root)} - {e}")
+                    logger.error(f"  ⚠️ 清理失敗: {cache_dir.relative_to(project_root)} - {e}")
             logger.info(f"✅ 項目緩存清理完成")
         else:
             logger.info(f"✅ 無需清理項目緩存")
@@ -152,7 +152,7 @@ def clean_cache_files(force_clean=False):
                 shutil.rmtree(cache_dir)
                 logger.info(f"  ✅ 已清理: {cache_dir.relative_to(project_root)}")
             except Exception as e:
-                logger.error(f"  ⚠️ 清理失败: {cache_dir.relative_to(project_root)} - {e}")
+                logger.error(f"  ⚠️ 清理失敗: {cache_dir.relative_to(project_root)} - {e}")
         logger.info(f"✅ 所有緩存清理完成")
 
 def check_api_keys():
@@ -180,7 +180,7 @@ def check_api_keys():
         logger.info(f"  - ANTHROPIC_API_KEY (Anthropic Claude 模型)")
         logger.info(f"\n配置方法:")
         logger.info(f"1. 複制 .env.example 為 .env")
-        logger.info(f"2. 編辑 .env 文件，填入真實API密鑰")
+        logger.info(f"2. 編輯 .env 文件，填入真實API密鑰")
         return False
 
     if not finnhub_key:
@@ -189,7 +189,7 @@ def check_api_keys():
     logger.info(f"✅ API密鑰配置完成")
     return True
 
-# 在文件顶部添加導入
+# 在文件頂部添加導入
 import signal
 import psutil
 
@@ -211,8 +211,8 @@ def main():
     # 檢查API密鑰
     logger.info(f"🔑 檢查API密鑰...")
     if not check_api_keys():
-        logger.info(f"\n💡 提示: 您仍可以啟動Web應用查看界面，但無法進行實际分析")
-        response = input("是否繼续啟動? (y/n): ").lower().strip()
+        logger.info(f"\n💡 提示: 您仍可以啟動Web應用查看界面，但無法進行實際分析")
+        response = input("是否繼續啟動? (y/n): ").lower().strip()
         if response != 'y':
             return
     
@@ -245,7 +245,7 @@ def main():
     
     logger.info(f"執行命令: {' '.join(cmd)}")
     logger.info(f"\n🎉 Web應用啟動中...")
-    logger.info(f"📱 浏覽器将自動打開 http://localhost:8501")
+    logger.info(f"📱 瀏覽器將自動打開 http://localhost:8501")
     logger.info(f"⏹️  按 Ctrl+C 停止應用")
     logger.info(f"=")
     
@@ -254,10 +254,10 @@ def main():
     
     def signal_handler(signum, frame):
         """信號處理函數"""
-        logger.info(f"\n\n⏹️ 接收到停止信號，正在關闭Web應用...")
+        logger.info(f"\n\n⏹️ 接收到停止信號，正在關閉Web應用...")
         if process:
             try:
-                # 终止進程及其子進程
+                # 終止進程及其子進程
                 parent = psutil.Process(process.pid)
                 for child in parent.children(recursive=True):
                     child.terminate()
@@ -267,7 +267,7 @@ def main():
                 parent.wait(timeout=5)
                 logger.info(f"✅ Web應用已成功停止")
             except (psutil.NoSuchProcess, psutil.TimeoutExpired):
-                logger.warning(f"⚠️ 強制终止進程")
+                logger.warning(f"⚠️ 強制終止進程")
                 if process:
                     process.kill()
         sys.exit(0)
@@ -283,7 +283,7 @@ def main():
     except KeyboardInterrupt:
         signal_handler(signal.SIGINT, None)
     except Exception as e:
-        logger.error(f"\n❌ 啟動失败: {e}")
+        logger.error(f"\n❌ 啟動失敗: {e}")
 
 if __name__ == "__main__":
     import sys

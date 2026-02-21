@@ -12,7 +12,7 @@ import shutil
 from pathlib import Path
 
 class Colors:
-    """控制台颜色"""
+    """控制台顏色"""
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
     RED = '\033[91m'
@@ -25,7 +25,7 @@ def print_colored(text, color=Colors.GREEN):
     print(f"{color}{text}{Colors.END}")
 
 def print_header():
-    """打印欢迎信息"""
+    """打印歡迎信息"""
     print_colored("=" * 60, Colors.BLUE)
     print_colored("🚀 TradingAgents-CN 快速安裝向導", Colors.BOLD)
     print_colored("=" * 60, Colors.BLUE)
@@ -120,10 +120,10 @@ def docker_install():
     
     # 提示配置API密鑰
     print_colored("\n⚠️  重要提醒:", Colors.YELLOW)
-    print_colored("請編辑.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
-    print_colored("推薦配置DeepSeek或通義千問API密鑰", Colors.YELLOW)
+    print_colored("請編輯.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
+    print_colored("推薦配置 OpenAI 或 Google AI API 密鑰", Colors.YELLOW)
     
-    input("\n按回車键繼续...")
+    input("\n按回車鍵繼續...")
     
     # 啟動Docker服務
     print_colored("🚀 啟動Docker服務...", Colors.BLUE)
@@ -137,7 +137,7 @@ def docker_install():
             print_colored("Redis管理: http://localhost:8081", Colors.GREEN)
             return True
         else:
-            print_colored(f"❌ Docker啟動失败: {result.stderr}", Colors.RED)
+            print_colored(f"❌ Docker啟動失敗: {result.stderr}", Colors.RED)
             return False
     except Exception as e:
         print_colored(f"❌ Docker啟動異常: {e}", Colors.RED)
@@ -155,7 +155,7 @@ def local_install():
             subprocess.run([sys.executable, '-m', 'venv', 'env'], check=True)
             print_colored("✅ 虛擬環境創建成功", Colors.GREEN)
         except subprocess.CalledProcessError as e:
-            print_colored(f"❌ 虛擬環境創建失败: {e}", Colors.RED)
+            print_colored(f"❌ 虛擬環境創建失敗: {e}", Colors.RED)
             return False
     
     # 激活虛擬環境的Python路徑
@@ -173,7 +173,7 @@ def local_install():
                       check=True, capture_output=True)
         print_colored("✅ pip升級成功", Colors.GREEN)
     except subprocess.CalledProcessError as e:
-        print_colored(f"⚠️  pip升級失败，繼续安裝: {e}", Colors.YELLOW)
+        print_colored(f"⚠️  pip升級失敗，繼續安裝: {e}", Colors.YELLOW)
     
     # 安裝依賴
     print_colored("📦 安裝項目依賴...", Colors.BLUE)
@@ -183,7 +183,7 @@ def local_install():
         if result.returncode == 0:
             print_colored("✅ 依賴安裝成功", Colors.GREEN)
         else:
-            print_colored(f"❌ 依賴安裝失败: {result.stderr}", Colors.RED)
+            print_colored(f"❌ 依賴安裝失敗: {result.stderr}", Colors.RED)
             return False
     except Exception as e:
         print_colored(f"❌ 依賴安裝異常: {e}", Colors.RED)
@@ -201,14 +201,14 @@ def local_install():
     
     # 提示配置API密鑰
     print_colored("\n⚠️  重要提醒:", Colors.YELLOW)
-    print_colored("請編辑.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
-    print_colored("推薦配置DeepSeek或通義千問API密鑰", Colors.YELLOW)
+    print_colored("請編輯.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
+    print_colored("推薦配置 OpenAI 或 Google AI API 密鑰", Colors.YELLOW)
     
-    input("\n按回車键繼续...")
+    input("\n按回車鍵繼續...")
     
     # 啟動應用
     print_colored("🚀 啟動應用...", Colors.BLUE)
-    print_colored("應用将在浏覽器中打開: http://localhost:8501", Colors.GREEN)
+    print_colored("應用將在瀏覽器中打開: http://localhost:8501", Colors.GREEN)
     
     # 提供啟動命令
     if platform.system() == "Windows":
@@ -227,7 +227,7 @@ def main():
     """主函數"""
     print_header()
     
-    # 檢查基础環境
+    # 檢查基礎環境
     if not check_python_version():
         return
     
@@ -238,7 +238,7 @@ def main():
     if docker_available:
         choice = choose_installation_method()
     else:
-        print_colored("\n💡 Docker未安裝，将使用本地安裝方式", Colors.YELLOW)
+        print_colored("\n💡 Docker未安裝，將使用本地安裝方式", Colors.YELLOW)
         choice = '2'
     
     # 執行安裝
@@ -251,10 +251,10 @@ def main():
     # 安裝結果
     if success:
         print_colored("\n🎉 安裝完成!", Colors.GREEN)
-        print_colored("📖 詳細文档: docs/INSTALLATION_GUIDE.md", Colors.BLUE)
+        print_colored("📖 詳細文件: docs/INSTALLATION_GUIDE.md", Colors.BLUE)
         print_colored("❓ 遇到問題: https://github.com/hsliuping/TradingAgents-CN/issues", Colors.BLUE)
     else:
-        print_colored("\n❌ 安裝失败", Colors.RED)
+        print_colored("\n❌ 安裝失敗", Colors.RED)
         print_colored("📖 請查看詳細安裝指南: docs/INSTALLATION_GUIDE.md", Colors.YELLOW)
 
 if __name__ == "__main__":

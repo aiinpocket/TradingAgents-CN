@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 優化的美股數據獲取工具
-集成緩存策略，减少API調用，提高響應速度
+集成緩存策略，減少API調用，提高響應速度
 """
 
 import os
@@ -97,72 +97,35 @@ class OptimizedUSDataProvider:
                 data_source = "finnhub"
                 logger.info(f"✅ FINNHUB數據獲取成功: {symbol}")
             else:
-                logger.error(f"⚠️ FINNHUB數據獲取失败，嘗試備用方案")
+                logger.error(f"⚠️ FINNHUB數據獲取失敗，嘗試備用方案")
                 formatted_data = None
 
         except Exception as e:
-            logger.error(f"❌ FINNHUB API調用失败: {e}")
+            logger.error(f"❌ FINNHUB API調用失敗: {e}")
             formatted_data = None
 
-        # 備用方案：根據股票類型選擇合適的數據源
+        # 備用方案：使用 Yahoo Finance 獲取數據
         if not formatted_data:
             try:
-                # 檢測股票類型
-                from tradingagents.utils.stock_utils import StockUtils
-                market_info = StockUtils.get_market_info(symbol)
+                logger.info(f"從Yahoo Finance API獲取數據: {symbol}")
+                self._wait_for_rate_limit()
 
-                if market_info['is_hk']:
-                    # 港股優先使用AKShare數據源
-                    logger.info(f"🇭🇰 嘗試使用AKShare獲取港股數據: {symbol}")
-                    try:
-                        from tradingagents.dataflows.interface import get_hk_stock_data_unified
-                        hk_data_text = get_hk_stock_data_unified(symbol, start_date, end_date)
+                ticker = yf.Ticker(symbol.upper())
+                data = ticker.history(start=start_date, end=end_date)
 
-                        if hk_data_text and "❌" not in hk_data_text:
-                            formatted_data = hk_data_text
-                            data_source = "akshare_hk"
-                            logger.info(f"✅ AKShare港股數據獲取成功: {symbol}")
-                        else:
-                            raise Exception("AKShare港股數據獲取失败")
-
-                    except Exception as e:
-                        logger.error(f"⚠️ AKShare港股數據獲取失败: {e}")
-                        # 備用方案：Yahoo Finance
-                        logger.info(f"🔄 使用Yahoo Finance備用方案獲取港股數據: {symbol}")
-
-                        self._wait_for_rate_limit()
-                        ticker = yf.Ticker(symbol)  # 港股代碼保持原格式
-                        data = ticker.history(start=start_date, end=end_date)
-
-                        if not data.empty:
-                            formatted_data = self._format_stock_data(symbol, data, start_date, end_date)
-                            data_source = "yfinance_hk"
-                            logger.info(f"✅ Yahoo Finance港股數據獲取成功: {symbol}")
-                        else:
-                            logger.error(f"❌ Yahoo Finance港股數據為空: {symbol}")
+                if data.empty:
+                    error_msg = f"未找到股票 '{symbol}' 在 {start_date} 到 {end_date} 期間的數據"
+                    logger.error(f"{error_msg}")
                 else:
-                    # 美股使用Yahoo Finance
-                    logger.info(f"🇺🇸 從Yahoo Finance API獲取美股數據: {symbol}")
-                    self._wait_for_rate_limit()
-
-                    # 獲取數據
-                    ticker = yf.Ticker(symbol.upper())
-                    data = ticker.history(start=start_date, end=end_date)
-
-                    if data.empty:
-                        error_msg = f"未找到股票 '{symbol}' 在 {start_date} 到 {end_date} 期間的數據"
-                        logger.error(f"❌ {error_msg}")
-                    else:
-                        # 格式化數據
-                        formatted_data = self._format_stock_data(symbol, data, start_date, end_date)
-                        data_source = "yfinance"
-                        logger.info(f"✅ Yahoo Finance美股數據獲取成功: {symbol}")
+                    formatted_data = self._format_stock_data(symbol, data, start_date, end_date)
+                    data_source = "yfinance"
+                    logger.info(f"Yahoo Finance數據獲取成功: {symbol}")
 
             except Exception as e:
-                logger.error(f"❌ 數據獲取失败: {e}")
+                logger.error(f"數據獲取失敗: {e}")
                 formatted_data = None
 
-        # 如果所有API都失败，生成備用數據
+        # 如果所有API都失敗，生成備用數據
         if not formatted_data:
             error_msg = "所有美股數據源都不可用"
             logger.error(f"❌ {error_msg}")
@@ -183,7 +146,7 @@ class OptimizedUSDataProvider:
                           start_date: str, end_date: str) -> str:
         """格式化股票數據為字符串"""
         
-        # 移除時区信息
+        # 移除時區信息
         if data.index.tz is not None:
             data.index = data.index.tz_localize(None)
         
@@ -218,7 +181,7 @@ class OptimizedUSDataProvider:
 - 數據期間: {start_date} 至 {end_date}
 - 數據條數: {len(data)}條
 - 最新價格: ${latest_price:.2f}
-- 期間涨跌: ${price_change:+.2f} ({price_change_pct:+.2f}%)
+- 期間漲跌: ${price_change:+.2f} ({price_change_pct:+.2f}%)
 
 ## 📈 價格統計
 - 期間最高: ${data['High'].max():.2f}
@@ -299,12 +262,12 @@ class OptimizedUSDataProvider:
 ## 📊 實時行情
 - 股票名稱: {company_name}
 - 當前價格: ${current_price:.2f}
-- 涨跌額: ${change:+.2f}
-- 涨跌幅: {change_percent:+.2f}%
-- 開盘價: ${quote.get('o', 0):.2f}
+- 漲跌額: ${change:+.2f}
+- 漲跌幅: {change_percent:+.2f}%
+- 開盤價: ${quote.get('o', 0):.2f}
 - 最高價: ${quote.get('h', 0):.2f}
 - 最低價: ${quote.get('l', 0):.2f}
-- 前收盘: ${quote.get('pc', 0):.2f}
+- 前收盤: ${quote.get('pc', 0):.2f}
 - 更新時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ## 📈 數據概覽
@@ -319,12 +282,12 @@ class OptimizedUSDataProvider:
             return formatted_data
 
         except Exception as e:
-            logger.error(f"❌ FINNHUB數據獲取失败: {e}")
+            logger.error(f"❌ FINNHUB數據獲取失敗: {e}")
             return None
 
     def _generate_fallback_data(self, symbol: str, start_date: str, end_date: str, error_msg: str) -> str:
         """生成備用數據"""
-        return f"""# {symbol} 美股數據獲取失败
+        return f"""# {symbol} 美股數據獲取失敗
 
 ## ❌ 錯誤信息
 {error_msg}
@@ -333,7 +296,7 @@ class OptimizedUSDataProvider:
 - 股票代碼: {symbol}
 - 數據期間: {start_date} 至 {end_date}
 - 最新價格: ${random.uniform(100, 300):.2f}
-- 模擬涨跌: {random.uniform(-5, 5):+.2f}%
+- 模擬漲跌: {random.uniform(-5, 5):+.2f}%
 
 ## ⚠️ 重要提示
 由於API限制或網絡問題，無法獲取實時數據。

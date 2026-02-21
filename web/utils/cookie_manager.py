@@ -1,5 +1,5 @@
 """
-Cookie管理器 - 解決Streamlit session state页面刷新丢失的問題
+Cookie管理器 - 解決Streamlit session state頁面刷新丟失的問題
 """
 
 import streamlit as st
@@ -16,7 +16,7 @@ except ImportError:
     st.warning("⚠️ streamlit-cookies-manager 未安裝，Cookie功能不可用")
 
 class CookieManager:
-    """Cookie管理器，用於持久化存储分析狀態"""
+    """Cookie管理器，用於持久化儲存分析狀態"""
 
     def __init__(self):
         self.cookie_name = "tradingagents_analysis_state"
@@ -30,14 +30,14 @@ class CookieManager:
                     password="tradingagents_secret_key_2025"  # 固定密鑰
                 )
 
-                # 檢查Cookie管理器是否準备就绪
+                # 檢查Cookie管理器是否準備就緒
                 if not self.cookies.ready():
-                    # 如果沒有準备就绪，先顯示等待信息，然後停止執行
+                    # 如果沒有準備就緒，先顯示等待信息，然後停止執行
                     st.info("🔄 正在初始化Cookie管理器，請稍候...")
                     st.stop()
 
             except Exception as e:
-                st.warning(f"⚠️ Cookie管理器初始化失败: {e}")
+                st.warning(f"⚠️ Cookie管理器初始化失敗: {e}")
                 self.cookies = None
         else:
             self.cookies = None
@@ -55,7 +55,7 @@ class CookieManager:
                 "created_at": datetime.now().isoformat()
             }
 
-            # 存储到session state（作為備份）
+            # 儲存到session state（作為備份）
             st.session_state[f"cookie_{self.cookie_name}"] = state_data
 
             # 使用專業的Cookie管理器設置cookie
@@ -66,7 +66,7 @@ class CookieManager:
             return True
 
         except Exception as e:
-            st.error(f"❌ 設置分析狀態失败: {e}")
+            st.error(f"❌ 設置分析狀態失敗: {e}")
             return False
     
     def get_analysis_state(self) -> Optional[Dict[str, Any]]:
@@ -96,7 +96,7 @@ class CookieManager:
             return None
 
         except Exception as e:
-            st.warning(f"⚠️ 獲取分析狀態失败: {e}")
+            st.warning(f"⚠️ 獲取分析狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -112,7 +112,7 @@ class CookieManager:
                 self.cookies.save()
 
         except Exception as e:
-            st.warning(f"⚠️ 清除分析狀態失败: {e}")
+            st.warning(f"⚠️ 清除分析狀態失敗: {e}")
 
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取調試信息"""
@@ -164,7 +164,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 獲取持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 獲取持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running", 
@@ -179,4 +179,4 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         cookie_manager.set_analysis_state(analysis_id, status, stock_symbol, market_type)
         
     except Exception as e:
-        st.warning(f"⚠️ 設置持久化分析ID失败: {e}")
+        st.warning(f"⚠️ 設置持久化分析ID失敗: {e}")

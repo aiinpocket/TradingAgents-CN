@@ -7,20 +7,20 @@ status: updated
 
 # TradingAgents-CN 安裝配置指導
 
-> **版本說明**: 本文档基於 `cn-0.1.14-preview` 版本編寫  
+> **版本說明**: 本文檔基於 `cn-0.1.14-preview` 版本編寫  
 > **最後更新**: 2025-01-13  
 > **狀態**: ✅ 已更新 - 包含最新的安裝和配置步驟
 
 ## 📋 目錄
 
 1. [系統要求](#系統要求)
-2. [環境準备](#環境準备)
+2. [環境準備](#環境準備)
 3. [項目安裝](#項目安裝)
 4. [環境配置](#環境配置)
 5. [數據庫配置](#數據庫配置)
 6. [啟動應用](#啟動應用)
 7. [驗證安裝](#驗證安裝)
-8. [常见問題](#常见問題)
+8. [常見問題](#常見問題)
 9. [高級配置](#高級配置)
 
 ## 🖥️ 系統要求
@@ -36,13 +36,13 @@ status: updated
 - **存储**: 10GB可用空間
 - **網絡**: 穩定的互聯網連接
 
-### 软件依賴
+### 軟體依賴
 - **Python**: 3.10+ (必需)
 - **Git**: 最新版本
 - **Redis**: 6.2+ (可選，用於緩存)
 - **MongoDB**: 4.4+ (可選，用於數據存储)
 
-## 🔧 環境準备
+## 🔧 環境準備
 
 ### 1. 安裝Python 3.10+
 
@@ -157,9 +157,9 @@ pip install -r requirements.txt
 python -c "import tradingagents; print('安裝成功!')"
 ```
 
-#### 方法3: 分步安裝 (推薦用於解決依賴冲突)
+#### 方法3: 分步安裝 (推薦用於解決依賴衝突)
 ```bash
-# 1. 安裝基础依賴
+# 1. 安裝基礎依賴
 pip install streamlit pandas numpy requests plotly
 
 # 2. 安裝LLM相關依賴
@@ -196,7 +196,7 @@ cp .env.example .env
 # TradingAgents-CN 環境配置
 # ===========================================
 
-# 基础配置
+# 基礎配置
 ENVIRONMENT=development
 DEBUG=true
 LOG_LEVEL=INFO
@@ -215,9 +215,6 @@ GOOGLE_API_KEY=your_google_api_key_here
 # ===========================================
 # 數據源API配置
 # ===========================================
-
-# 配置 (數據)
-TUSHARE_TOKEN=your__token_here
 
 # FinnHub配置 (美股數據)
 FINNHUB_API_KEY=your_finnhub_api_key_here
@@ -364,18 +361,18 @@ start_web.bat
 ```
 
 ### 2. 訪問應用
-打開浏覽器訪問: http://localhost:8501
+打開瀏覽器訪問: http://localhost:8501
 
 ### 3. 首次使用配置
 
-1. **選擇LLM提供商**: 在侧邊栏選擇已配置的LLM提供商
+1. **選擇LLM提供商**: 在側邊栏選擇已配置的LLM提供商
 2. **選擇模型**: 根據需要選擇具體的模型
 3. **配置分析參數**: 設置分析日期、股票代碼等
 4. **開始分析**: 輸入股票代碼進行測試
 
 ## ✅ 驗證安裝
 
-### 1. 基础功能測試
+### 1. 基礎功能測試
 ```bash
 # 測試Python環境
 python -c "import tradingagents; print('✅ 模塊導入成功')"
@@ -401,11 +398,11 @@ python test_data_sources.py
 
 ### 3. Web應用測試
 1. 啟動應用後訪問 http://localhost:8501
-2. 檢查侧邊栏是否正常顯示
+2. 檢查側邊栏是否正常顯示
 3. 嘗試選擇不同的LLM提供商
 4. 輸入測試股票代碼 (如: AAPL, 000001)
 
-## 🔧 常见問題
+## 🔧 常見問題
 
 ### 1. 模塊導入錯誤
 ```bash
@@ -449,7 +446,7 @@ lsof -ti:8501 | xargs kill -9
 
 ### 4. API密鑰錯誤
 ```bash
-# 問題: API密鑰驗證失败
+# 問題: API密鑰驗證失敗
 # 解決方案:
 1. 檢查.env文件中的API密鑰格式
 2. 確認API密鑰有效性
@@ -457,7 +454,7 @@ lsof -ti:8501 | xargs kill -9
 4. 查看日誌文件: logs/tradingagents.log
 ```
 
-### 5. 數據獲取失败
+### 5. 數據獲取失敗
 ```bash
 # 問題: 無法獲取股票數據
 # 解決方案:
@@ -563,20 +560,20 @@ docker-compose logs -f
 
 ## 📚 下一步
 
-安裝完成後，建議阅讀以下文档：
+安裝完成後，建議阅讀以下文檔：
 
 1. **[快速開始指南](../QUICK_START.md)** - 了解基本使用方法
 2. **[配置管理指南](./config-management-guide.md)** - 深入了解配置選項
 3. **[分析指南](./a-share-analysis-guide.md)** - 市場分析教程
 4. **[Docker部署指南](./docker-deployment-guide.md)** - 生產環境部署
-5. **[故障排除指南](../troubleshooting/)** - 常见問題解決方案
+5. **[故障排除指南](../troubleshooting/)** - 常見問題解決方案
 
 ## 🆘 獲取幫助
 
 如果遇到問題，可以通過以下方式獲取幫助：
 
 - **GitHub Issues**: [提交問題](https://github.com/your-repo/TradingAgents-CN/issues)
-- **文档**: [查看完整文档](../README.md)
+- **文檔**: [查看完整文檔](../README.md)
 - **社群**: [加入討論群](https://your-community-link)
 
 ---

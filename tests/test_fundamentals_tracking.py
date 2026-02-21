@@ -72,14 +72,14 @@ def test_fundamentals_analyst():
                     print(report[:500])
                     print("-" * 60)
             else:
-                print("❌ 返回狀態中没有 fundamentals_report")
+                print("❌ 返回狀態中沒有 fundamentals_report")
         else:
             print(f"❌ 返回結果類型不正確: {type(result)}")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -137,7 +137,7 @@ def test_unified_tool_direct():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -154,4 +154,4 @@ if __name__ == "__main__":
     if success1 and success2:
         print("\n✅ 所有測試通過")
     else:
-        print("\n❌ 部分測試失败")
+        print("\n❌ 部分測試失敗")

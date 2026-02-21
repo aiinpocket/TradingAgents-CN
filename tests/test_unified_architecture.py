@@ -41,7 +41,7 @@ def test_unified_tools_availability():
         return True
         
     except Exception as e:
-        print(f"❌ 統一工具可用性測試失败: {e}")
+        print(f"❌ 統一工具可用性測試失敗: {e}")
         return False
 
 
@@ -64,14 +64,14 @@ def test_market_analyst_unified():
         # 創建模擬LLM
         class MockLLM:
             def bind_tools(self, tools):
-                print(f"🔧 [MockLLM] 市場分析師绑定工具: {[tool.name for tool in tools]}")
+                print(f"🔧 [MockLLM] 市場分析師綁定工具: {[tool.name for tool in tools]}")
                 
-                # 檢查是否只绑定了統一工具
+                # 檢查是否只綁定了統一工具
                 if len(tools) == 1 and tools[0].name == 'get_stock_market_data_unified':
-                    print(f"  ✅ 正確绑定統一市場數據工具")
+                    print(f"  ✅ 正確綁定統一市場數據工具")
                     return self
                 else:
-                    print(f"  ❌ 绑定了錯誤的工具: {[tool.name for tool in tools]}")
+                    print(f"  ❌ 綁定了錯誤的工具: {[tool.name for tool in tools]}")
                     return self
             
             def invoke(self, messages):
@@ -95,14 +95,14 @@ def test_market_analyst_unified():
         
         print(f"  測試港股市場分析: {state['company_of_interest']}")
         
-        # 調用分析師（這會觸發工具選擇逻辑）
+        # 調用分析師（這會觸發工具選擇邏輯）
         result = analyst(state)
         
         print(f"  ✅ 市場分析師調用完成")
         return True
         
     except Exception as e:
-        print(f"❌ 市場分析師統一工具測試失败: {e}")
+        print(f"❌ 市場分析師統一工具測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -127,14 +127,14 @@ def test_fundamentals_analyst_unified():
         # 創建模擬LLM
         class MockLLM:
             def bind_tools(self, tools):
-                print(f"🔧 [MockLLM] 基本面分析師绑定工具: {[tool.name for tool in tools]}")
+                print(f"🔧 [MockLLM] 基本面分析師綁定工具: {[tool.name for tool in tools]}")
                 
-                # 檢查是否只绑定了統一工具
+                # 檢查是否只綁定了統一工具
                 if len(tools) == 1 and tools[0].name == 'get_stock_fundamentals_unified':
-                    print(f"  ✅ 正確绑定統一基本面分析工具")
+                    print(f"  ✅ 正確綁定統一基本面分析工具")
                     return self
                 else:
-                    print(f"  ❌ 绑定了錯誤的工具: {[tool.name for tool in tools]}")
+                    print(f"  ❌ 綁定了錯誤的工具: {[tool.name for tool in tools]}")
                     return self
             
             def invoke(self, messages):
@@ -158,14 +158,14 @@ def test_fundamentals_analyst_unified():
         
         print(f"  測試港股基本面分析: {state['company_of_interest']}")
         
-        # 調用分析師（這會觸發工具選擇逻辑）
+        # 調用分析師（這會觸發工具選擇邏輯）
         result = analyst(state)
         
         print(f"  ✅ 基本面分析師調用完成")
         return True
         
     except Exception as e:
-        print(f"❌ 基本面分析師統一工具測試失败: {e}")
+        print(f"❌ 基本面分析師統一工具測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -209,7 +209,7 @@ def test_stock_type_routing():
                     print(f"  ⚠️ 基本面工具路由可能有問題")
                     
             except Exception as e:
-                print(f"  ❌ 基本面工具調用失败: {e}")
+                print(f"  ❌ 基本面工具調用失敗: {e}")
                 return False
             
             # 測試市場數據工具
@@ -226,14 +226,14 @@ def test_stock_type_routing():
                     print(f"  ⚠️ 市場數據工具路由可能有問題")
                     
             except Exception as e:
-                print(f"  ❌ 市場數據工具調用失败: {e}")
+                print(f"  ❌ 市場數據工具調用失敗: {e}")
                 return False
         
         print("✅ 股票類型路由測試通過")
         return True
         
     except Exception as e:
-        print(f"❌ 股票類型路由測試失败: {e}")
+        print(f"❌ 股票類型路由測試失敗: {e}")
         return False
 
 
@@ -257,7 +257,7 @@ def main():
             if test():
                 passed += 1
             else:
-                print(f"❌ 測試失败: {test.__name__}")
+                print(f"❌ 測試失敗: {test.__name__}")
         except Exception as e:
             print(f"❌ 測試異常: {test.__name__} - {e}")
     
@@ -266,16 +266,16 @@ def main():
     
     if passed == total:
         print("🎉 所有測試通過！統一工具架構成功")
-        print("\n📋 架構優势:")
+        print("\n📋 架構優勢:")
         print("✅ 所有分析師使用統一工具")
-        print("✅ 工具內部自動识別股票類型")
-        print("✅ 避免了LLM工具調用混乱")
+        print("✅ 工具內部自動識別股票類型")
+        print("✅ 避免了LLM工具調用混亂")
         print("✅ 簡化了系統提示和處理流程")
         print("✅ 更容易維護和擴展")
         print("✅ 統一的錯誤處理和日誌記錄")
         return True
     else:
-        print("⚠️ 部分測試失败，需要進一步檢查")
+        print("⚠️ 部分測試失敗，需要進一步檢查")
         return False
 
 

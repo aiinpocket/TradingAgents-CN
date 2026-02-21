@@ -32,7 +32,7 @@ echo.
 echo ✅ 包安裝完成!
 echo.
 echo 💡 提示:
-echo 1. 如果安裝失败，可以嘗試其他鏡像:
+echo 1. 如果安裝失敗，可以嘗試其他鏡像:
 echo    - 豆瓣: -i https://pypi.douban.com/simple/ --trusted-host pypi.douban.com
 echo    - 中科大: -i https://pypi.mirrors.ustc.edu.cn/simple/ --trusted-host pypi.mirrors.ustc.edu.cn
 echo.

@@ -54,7 +54,7 @@ def test_form_data_structure():
         return True
         
     except Exception as e:
-        print(f"❌ 表單數據結構測試失败: {e}")
+        print(f"❌ 表單數據結構測試失敗: {e}")
         return False
 
 def test_validation_function():
@@ -78,13 +78,13 @@ def test_validation_function():
         if not errors:
             print("  ✅ 港股驗證通過")
         else:
-            print(f"  ❌ 港股驗證失败: {errors}")
+            print(f"  ❌ 港股驗證失敗: {errors}")
             return False
         
         return True
         
     except Exception as e:
-        print(f"❌ 驗證函數測試失败: {e}")
+        print(f"❌ 驗證函數測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -109,7 +109,7 @@ def test_analysis_runner_import():
         return True
         
     except Exception as e:
-        print(f"❌ 分析運行器導入失败: {e}")
+        print(f"❌ 分析運行器導入失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -128,7 +128,7 @@ def test_streamlit_components():
         return True
         
     except Exception as e:
-        print(f"❌ Streamlit組件測試失败: {e}")
+        print(f"❌ Streamlit組件測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -141,7 +141,7 @@ def check_potential_output_sources():
     potential_sources = [
         "表單提交狀態直接輸出",
         "布爾值轉換為字符串",
-        "調試語句残留",
+        "調試語句殘留",
         "異常處理中的輸出",
         "Streamlit組件的意外輸出"
     ]
@@ -149,7 +149,7 @@ def check_potential_output_sources():
     for source in potential_sources:
         print(f"  🔍 檢查: {source}")
     
-    print("\n  💡 建议檢查:")
+    print("\n  💡 建議檢查:")
     print("    1. 搜索代碼中的 st.write(True) 或類似語句")
     print("    2. 檢查是否有 print(True) 語句")
     print("    3. 查看是否有布爾值被意外顯示")
@@ -186,12 +186,12 @@ def main():
     if passed == total:
         print("✅ 所有測試通過，問題可能在Streamlit運行時環境")
     else:
-        print("⚠️ 發現問題，請檢查失败的測試項")
+        print("⚠️ 發現問題，請檢查失敗的測試項")
     
-    print("\n🔧 解決建议:")
+    print("\n🔧 解決建議:")
     print("1. 重啟Streamlit應用")
-    print("2. 清除浏覽器緩存")
-    print("3. 檢查是否有残留的調試輸出")
+    print("2. 清除瀏覽器緩存")
+    print("3. 檢查是否有殘留的調試輸出")
     print("4. 確認所有組件正確導入")
 
 if __name__ == "__main__":

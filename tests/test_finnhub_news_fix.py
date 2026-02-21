@@ -136,7 +136,7 @@ def create_sample_data_structure():
             "2025-01-01": [
                 {
                     "headline": "Apple發布新產品",
-                    "summary": "苹果公司今日發布了新的產品線..."
+                    "summary": "蘋果公司今日發布了新的產品線..."
                 }
             ]
         }
@@ -148,7 +148,7 @@ def create_sample_data_structure():
         print(f"✅ 創建示例數據文件: {sample_file}")
         
     except Exception as e:
-        print(f"❌ 創建目錄結構失败: {e}")
+        print(f"❌ 創建目錄結構失敗: {e}")
 
 def main():
     """主測試函數"""
@@ -171,13 +171,13 @@ def main():
         print("\n重新測試新聞數據路徑:")
         test_finnhub_news_path()
     
-    print("\n=== 測試总結 ===")
+    print("\n=== 測試總結 ===")
     print("1. 數據目錄路徑已修複為跨平台兼容")
     print("2. 添加了詳細的錯誤處理和調試信息")
     print("3. 當數據文件不存在時會提供清晰的錯誤提示")
-    print("4. 建议下載或配置正確的Finnhub數據")
+    print("4. 建議下載或配置正確的Finnhub數據")
     
-    print("\n=== 解決方案建议 ===")
+    print("\n=== 解決方案建議 ===")
     print("如果仍然遇到新聞數據問題，請:")
     print("1. 確保已正確配置Finnhub API密鑰")
     print("2. 運行數據下載腳本獲取新聞數據")

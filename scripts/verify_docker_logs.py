@@ -74,7 +74,7 @@ try:
         print(f'   📄 {log_file}: {size} 字節')
         
 except Exception as e:
-    print(f'❌ 日誌測試失败: {e}')
+    print(f'❌ 日誌測試失敗: {e}')
     import traceback
     traceback.print_exc()
 "'''
@@ -86,7 +86,7 @@ except Exception as e:
         print(output)
         return True
     else:
-        print(f"❌ 容器內日誌測試失败:")
+        print(f"❌ 容器內日誌測試失敗:")
         print(f"錯誤: {error}")
         return False
 
@@ -116,7 +116,7 @@ def check_local_logs():
         print(f"      大小: {size:,} 字節")
         print(f"      修改時間: {time.ctime(mtime)}")
         
-        # 顯示最後几行內容
+        # 顯示最後幾行內容
         if size > 0:
             try:
                 with open(log_file, 'r', encoding='utf-8') as f:
@@ -191,7 +191,7 @@ def main():
     # 2. 觸發日誌生成
     results.append(("日誌生成", trigger_logs_in_container()))
     
-    # 等待一下让日誌寫入
+    # 等待一下讓日誌寫入
     print("\n⏳ 等待日誌寫入...")
     time.sleep(3)
     
@@ -204,19 +204,19 @@ def main():
     # 5. 檢查Docker標準日誌
     results.append(("Docker標準日誌", check_docker_stdout_logs()))
     
-    # 总結結果
+    # 總結結果
     print("\n" + "=" * 60)
-    print("📋 驗證結果总結")
+    print("📋 驗證結果總結")
     print("=" * 60)
     
     passed = 0
     for check_name, result in results:
-        status = "✅ 通過" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失敗"
         print(f"{check_name}: {status}")
         if result:
             passed += 1
     
-    print(f"\n📊 总體結果: {passed}/{len(results)} 項檢查通過")
+    print(f"\n📊 總體結果: {passed}/{len(results)} 項檢查通過")
     
     if passed == len(results):
         print("\n🎉 所有檢查都通過！日誌功能正常")
@@ -228,8 +228,8 @@ def main():
         print("\n✅ 大部分功能正常")
         print("⚠️ 部分功能需要進一步檢查")
     else:
-        print("\n⚠️ 多項檢查失败，需要進一步排查")
-        print("\n🔧 建议:")
+        print("\n⚠️ 多項檢查失敗，需要進一步排查")
+        print("\n🔧 建議:")
         print("   1. 重新構建鏡像: docker-compose build")
         print("   2. 重啟容器: docker-compose down && docker-compose up -d")
         print("   3. 檢查配置: cat config/logging_docker.toml")

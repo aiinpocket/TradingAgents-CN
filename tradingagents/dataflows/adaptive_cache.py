@@ -41,7 +41,7 @@ class AdaptiveCacheSystem:
     
     def _get_cache_key(self, symbol: str, start_date: str = "", end_date: str = "", 
                       data_source: str = "default", data_type: str = "stock_data") -> str:
-        """生成緩存键"""
+        """生成緩存鍵"""
         key_data = f"{symbol}_{start_date}_{end_date}_{data_source}_{data_type}"
         return hashlib.md5(key_data.encode()).hexdigest()
     
@@ -84,7 +84,7 @@ class AdaptiveCacheSystem:
             return True
             
         except Exception as e:
-            self.logger.error(f"文件緩存保存失败: {e}")
+            self.logger.error(f"文件緩存保存失敗: {e}")
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
@@ -101,7 +101,7 @@ class AdaptiveCacheSystem:
             return cache_data
             
         except Exception as e:
-            self.logger.error(f"文件緩存加載失败: {e}")
+            self.logger.error(f"文件緩存加載失敗: {e}")
             return None
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
@@ -125,7 +125,7 @@ class AdaptiveCacheSystem:
             return True
             
         except Exception as e:
-            self.logger.error(f"Redis緩存保存失败: {e}")
+            self.logger.error(f"Redis緩存保存失敗: {e}")
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
@@ -149,7 +149,7 @@ class AdaptiveCacheSystem:
             return cache_data
             
         except Exception as e:
-            self.logger.error(f"Redis緩存加載失败: {e}")
+            self.logger.error(f"Redis緩存加載失敗: {e}")
             return None
     
     def _save_to_mongodb(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
@@ -186,7 +186,7 @@ class AdaptiveCacheSystem:
             return True
             
         except Exception as e:
-            self.logger.error(f"MongoDB緩存保存失败: {e}")
+            self.logger.error(f"MongoDB緩存保存失敗: {e}")
             return False
     
     def _load_from_mongodb(self, cache_key: str) -> Optional[Dict]:
@@ -225,16 +225,16 @@ class AdaptiveCacheSystem:
             return cache_data
             
         except Exception as e:
-            self.logger.error(f"MongoDB緩存加載失败: {e}")
+            self.logger.error(f"MongoDB緩存加載失敗: {e}")
             return None
     
     def save_data(self, symbol: str, data: Any, start_date: str = "", end_date: str = "", 
                   data_source: str = "default", data_type: str = "stock_data") -> str:
         """保存數據到緩存"""
-        # 生成緩存键
+        # 生成緩存鍵
         cache_key = self._get_cache_key(symbol, start_date, end_date, data_source, data_type)
         
-        # 準备元數據
+        # 準備元數據
         metadata = {
             'symbol': symbol,
             'start_date': start_date,
@@ -256,15 +256,15 @@ class AdaptiveCacheSystem:
         elif self.primary_backend == "file":
             success = self._save_to_file(cache_key, data, metadata)
         
-        # 如果主要後端失败，使用降級策略
+        # 如果主要後端失敗，使用降級策略
         if not success and self.fallback_enabled:
-            self.logger.warning(f"主要後端({self.primary_backend})保存失败，使用文件緩存降級")
+            self.logger.warning(f"主要後端({self.primary_backend})保存失敗，使用文件緩存降級")
             success = self._save_to_file(cache_key, data, metadata)
         
         if success:
             self.logger.info(f"數據緩存成功: {symbol} -> {cache_key} (後端: {self.primary_backend})")
         else:
-            self.logger.error(f"數據緩存失败: {symbol}")
+            self.logger.error(f"數據緩存失敗: {symbol}")
         
         return cache_key
     
@@ -280,15 +280,15 @@ class AdaptiveCacheSystem:
         elif self.primary_backend == "file":
             cache_data = self._load_from_file(cache_key)
         
-        # 如果主要後端失败，嘗試降級
+        # 如果主要後端失敗，嘗試降級
         if not cache_data and self.fallback_enabled:
-            self.logger.debug(f"主要後端({self.primary_backend})加載失败，嘗試文件緩存")
+            self.logger.debug(f"主要後端({self.primary_backend})加載失敗，嘗試文件緩存")
             cache_data = self._load_from_file(cache_key)
         
         if not cache_data:
             return None
         
-        # 檢查緩存是否有效（仅對文件緩存，數據庫緩存有自己的TTL機制）
+        # 檢查緩存是否有效（僅對文件緩存，數據庫緩存有自己的TTL機制）
         if cache_data.get('backend') == 'file':
             symbol = cache_data['metadata'].get('symbol', '')
             data_type = cache_data['metadata'].get('data_type', 'stock_data')
@@ -364,12 +364,12 @@ class AdaptiveCacheSystem:
                     cleared_files += 1
                     
             except Exception as e:
-                self.logger.error(f"清理緩存文件失败 {cache_file}: {e}")
+                self.logger.error(f"清理緩存文件失敗 {cache_file}: {e}")
         
         self.logger.info(f"文件緩存清理完成，刪除 {cleared_files} 個過期文件")
         
         # MongoDB會自動清理過期文檔（通過expires_at字段）
-        # Redis會自動清理過期键
+        # Redis會自動清理過期鍵
 
 
 # 全局緩存系統實例

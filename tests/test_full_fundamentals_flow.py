@@ -25,7 +25,7 @@ def test_full_fundamentals_flow():
         logger = get_logger("default")
         logger.setLevel("INFO")
         
-        print(f"\n🔧 步骤1: 初始化LLM和工具包...")
+        print(f"\n🔧 步驟1: 初始化LLM和工具包...")
         
         # 導入必要的模塊
         from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
@@ -40,13 +40,13 @@ def test_full_fundamentals_flow():
         toolkit = Toolkit()
         print(f"✅ 工具包初始化完成")
         
-        print(f"\n🔧 步骤2: 創建基本面分析師...")
+        print(f"\n🔧 步驟2: 創建基本面分析師...")
         
         # 創建基本面分析師
         fundamentals_analyst = create_fundamentals_analyst(llm, toolkit)
         print(f"✅ 基本面分析師創建完成")
         
-        print(f"\n🔧 步骤3: 準备分析狀態...")
+        print(f"\n🔧 步驟3: 準備分析狀態...")
         
         # 創建分析狀態
         state = {
@@ -55,12 +55,12 @@ def test_full_fundamentals_flow():
             "messages": []
         }
         
-        print(f"✅ 分析狀態準备完成")
+        print(f"✅ 分析狀態準備完成")
         print(f"   - 股票代碼: {state['company_of_interest']}")
         print(f"   - 交易日期: {state['trade_date']}")
         print(f"   - 消息數量: {len(state['messages'])}")
         
-        print(f"\n🔧 步骤4: 執行基本面分析...")
+        print(f"\n🔧 步驟4: 執行基本面分析...")
         
         # 執行基本面分析
         result = fundamentals_analyst(state)
@@ -76,7 +76,7 @@ def test_full_fundamentals_flow():
                 
                 # 檢查報告中的股票代碼
                 if report:
-                    print(f"\n🔍 最终檢查報告中的股票代碼...")
+                    print(f"\n🔍 最終檢查報告中的股票代碼...")
                     if "002027" in report:
                         print("✅ 報告中包含正確的股票代碼 002027")
                         count_002027 = report.count("002027")
@@ -94,12 +94,12 @@ def test_full_fundamentals_flow():
                         positions = [m.start() for m in re.finditer("002021", report)]
                         print(f"   002021 出現位置: {positions}")
                         
-                        # 顯示錯誤代碼周围的文本
+                        # 顯示錯誤代碼周圍的文本
                         for pos in positions[:3]:  # 只顯示前3個位置
                             start = max(0, pos - 100)
                             end = min(len(report), pos + 100)
                             context = report[start:end]
-                            print(f"   位置 {pos} 周围文本: ...{context}...")
+                            print(f"   位置 {pos} 周圍文本: ...{context}...")
                     else:
                         print("✅ 報告中不包含錯誤的股票代碼 002021")
                         
@@ -109,8 +109,8 @@ def test_full_fundamentals_flow():
                     print(report[:1000])
                     print("-" * 80)
             else:
-                print("❌ 返回結果中没有 fundamentals_report")
-                print(f"   返回結果键: {list(result.keys())}")
+                print("❌ 返回結果中沒有 fundamentals_report")
+                print(f"   返回結果鍵: {list(result.keys())}")
         else:
             print(f"❌ 返回結果類型不正確: {type(result)}")
             if hasattr(result, 'content'):
@@ -119,7 +119,7 @@ def test_full_fundamentals_flow():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -133,4 +133,4 @@ if __name__ == "__main__":
     if success:
         print("\n✅ 測試完成")
     else:
-        print("\n❌ 測試失败")
+        print("\n❌ 測試失敗")

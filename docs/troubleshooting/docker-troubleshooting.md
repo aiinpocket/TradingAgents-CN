@@ -1,8 +1,8 @@
-# Docker容器啟動失败排查指南
+# Docker容器啟動失敗排查指南
 
-## 🔍 快速排查步骤
+## 🔍 快速排查步驟
 
-### 1. 基础檢查
+### 1. 基礎檢查
 
 ```bash
 # 檢查容器狀態
@@ -33,9 +33,9 @@ docker-compose logs -f web
 docker-compose logs --tail=50 web
 ```
 
-### 3. 常见問題排查
+### 3. 常見問題排查
 
-#### 🔴 端口冲突
+#### 🔴 端口衝突
 ```bash
 # Windows檢查端口占用
 netstat -an | findstr :8501
@@ -51,7 +51,7 @@ taskkill /PID <進程ID> /F
 # 查看數據卷
 docker volume ls | findstr tradingagents
 
-# 刪除有問題的數據卷（會丢失數據）
+# 刪除有問題的數據卷（會丟失數據）
 docker volume rm tradingagents_mongodb_data
 docker volume rm tradingagents_redis_data
 
@@ -77,7 +77,7 @@ docker network create tradingagents-network
 # 查看鏡像
 docker images | findstr tradingagents
 
-# 强制重新構建
+# 強制重新構建
 docker-compose build --no-cache
 
 # 刪除鏡像重新構建
@@ -149,7 +149,7 @@ docker-compose exec redis redis-cli -a tradingagents123 ping
 
 ## 🚨 緊急修複命令
 
-### 完全重置（會丢失數據）
+### 完全重置（會丟失數據）
 ```bash
 # 停止所有容器
 docker-compose down
@@ -175,7 +175,7 @@ docker-compose up -d
 
 ## 📝 日誌分析技巧
 
-### 常见錯誤模式
+### 常見錯誤模式
 
 1. **端口占用**: `bind: address already in use`
 2. **權限問題**: `permission denied`
@@ -200,7 +200,7 @@ docker-compose logs --since="2025-01-01T00:00:00"
 
 1. **定期清理**: `docker system prune -f`
 2. **監控資源**: `docker system df`
-3. **备份數據**: 定期备份數據卷
+3. **備份數據**: 定期備份數據卷
 4. **版本控制**: 記錄工作的配置版本
 5. **健康檢查**: 配置容器健康檢查
 
@@ -210,5 +210,5 @@ docker-compose logs --since="2025-01-01T00:00:00"
 
 1. 收集完整的錯誤日誌
 2. 記錄系統環境信息
-3. 描述具體的操作步骤
+3. 描述具體的操作步驟
 4. 提供docker-compose.yml配置

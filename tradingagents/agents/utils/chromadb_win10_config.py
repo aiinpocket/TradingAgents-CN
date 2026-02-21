@@ -1,4 +1,4 @@
-﻿# Windows 10 ChromaDB 兼容性配置
+# Windows 10 ChromaDB 兼容性配置
 import os
 import tempfile
 import chromadb

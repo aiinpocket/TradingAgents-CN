@@ -22,7 +22,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
     """
     Google AI OpenAI 兼容適配器
     繼承 ChatGoogleGenerativeAI，優化工具調用和內容格式處理
-    解決Google模型工具調用返回格式与系統期望不匹配的問題
+    解決Google模型工具調用返回格式與系統期望不匹配的問題
     """
     
     def __init__(self, **kwargs):
@@ -61,7 +61,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
             if result and result.generations:
                 for generation in result.generations:
                     if hasattr(generation, 'message') and generation.message:
-                        # 優化消息內容格式
+                        # 優化訊息內容格式
                         self._optimize_message_content(generation.message)
             
             # 追蹤 token 使用量
@@ -70,15 +70,15 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
             return result
             
         except Exception as e:
-            logger.error(f"❌ Google AI 生成失败: {e}")
+            logger.error(f"❌ Google AI 生成失敗: {e}")
             # 返回一個包含錯誤信息的結果，而不是拋出異常
             from langchain_core.outputs import ChatGeneration
-            error_message = AIMessage(content=f"Google AI 調用失败: {str(e)}")
+            error_message = AIMessage(content=f"Google AI 調用失敗: {str(e)}")
             error_generation = ChatGeneration(message=error_message)
             return LLMResult(generations=[[error_generation]])
     
     def _optimize_message_content(self, message: BaseMessage):
-        """優化消息內容格式，確保包含新聞特征關键詞"""
+        """優化訊息內容格式，確保包含新聞特征關鍵詞"""
         
         if not isinstance(message, AIMessage) or not message.content:
             return
@@ -87,7 +87,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
         
         # 檢查是否是工具調用返回的新聞內容
         if self._is_news_content(content):
-            # 優化新聞內容格式，添加必要的關键詞
+            # 優化新聞內容格式，添加必要的關鍵詞
             optimized_content = self._enhance_news_content(content)
             message.content = optimized_content
             
@@ -98,16 +98,16 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
     def _is_news_content(self, content: str) -> bool:
         """判斷內容是否為新聞內容"""
         
-        # 檢查是否包含新聞相關的關键詞
+        # 檢查是否包含新聞相關的關鍵詞
         news_indicators = [
             "股票", "公司", "市場", "投資", "財經", "證券", "交易",
-            "涨跌", "業绩", "財報", "分析", "預測", "消息", "公告"
+            "漲跌", "業績", "財報", "分析", "預測", "訊息", "公告"
         ]
         
         return any(indicator in content for indicator in news_indicators) and len(content) > 200
     
     def _enhance_news_content(self, content: str) -> str:
-        """增强新聞內容，添加必要的格式化信息"""
+        """增強新聞內容，添加必要的格式化信息"""
         
         import datetime
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -119,7 +119,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
         if "發布時間" not in content and "時間" not in content:
             enhanced_content = f"發布時間: {current_date}\n\n{enhanced_content}"
         
-        # 添加新聞標題標识（如果缺少）
+        # 添加新聞標題標識（如果缺少）
         if "新聞標題" not in content and "標題" not in content:
             # 嘗試從內容中提取第一行作為標題
             lines = enhanced_content.split('\n')
@@ -163,15 +163,15 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
                     logger.debug(f"📊 [Google適配器] Token使用量: 輸入={input_tokens}, 輸出={output_tokens}")
                     
         except Exception as track_error:
-            # token 追蹤失败不應该影響主要功能
-            logger.error(f"⚠️ Google適配器 Token 追蹤失败: {track_error}")
+            # token 追蹤失敗不應該影響主要功能
+            logger.error(f"⚠️ Google適配器 Token 追蹤失敗: {track_error}")
 
 
 # 支持的模型列表
 GOOGLE_OPENAI_MODELS = {
     # Gemini 2.5 系列 - 最新驗證模型
     "gemini-2.5-pro": {
-        "description": "Gemini 2.5 Pro - 最新旗舰模型，功能強大 (16.68s)",
+        "description": "Gemini 2.5 Pro - 最新旗艦模型，功能強大 (16.68s)",
         "context_length": 32768,
         "supports_function_calling": True,
         "recommended_for": ["複雜推理", "專業分析", "高質量輸出"],
@@ -264,7 +264,7 @@ def test_google_openai_connection(
             max_tokens=50
         )
         
-        # 發送測試消息
+        # 發送測試訊息
         response = llm.invoke("你好，請簡單介紹一下你自己。")
         
         if response and hasattr(response, 'content') and response.content:
@@ -276,7 +276,7 @@ def test_google_openai_connection(
             return False
             
     except Exception as e:
-        logger.error(f"❌ Google AI OpenAI 兼容接口連接失败: {e}")
+        logger.error(f"❌ Google AI OpenAI 兼容接口連接失敗: {e}")
         return False
 
 
@@ -307,10 +307,10 @@ def test_google_openai_function_calling(
 新聞標題: {query}相關市場動態
 文章來源: 測試新聞源
 
-這是一條關於{query}的測試新聞內容。该公司近期表現良好，市場前景看好。
+這是一條關於{query}的測試新聞內容。該公司近期表現良好，市場前景看好。
 投資者對此表示關註，分析師給出積極評價。"""
         
-        # 绑定工具
+        # 綁定工具
         llm_with_tools = llm.bind_tools([test_news_tool])
         
         # 測試工具調用
@@ -327,7 +327,7 @@ def test_google_openai_function_calling(
             return True  # 即使沒有工具調用也算成功，因為模型可能選擇不調用工具
             
     except Exception as e:
-        logger.error(f"❌ Google AI Function Calling 測試失败: {e}")
+        logger.error(f"❌ Google AI Function Calling 測試失敗: {e}")
         return False
 
 
@@ -346,6 +346,6 @@ if __name__ == "__main__":
         if function_calling_ok:
             logger.info(f"\n🎉 所有測試通過！Google AI OpenAI 兼容適配器工作正常")
         else:
-            logger.error(f"\n⚠️ Function Calling 測試失败")
+            logger.error(f"\n⚠️ Function Calling 測試失敗")
     else:
-        logger.error(f"\n❌ 連接測試失败")
+        logger.error(f"\n❌ 連接測試失敗")

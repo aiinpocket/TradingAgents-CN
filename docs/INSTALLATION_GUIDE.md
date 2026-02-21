@@ -105,7 +105,7 @@ python start_web.py
 
 Docker安裝是最簡單、最穩定的方式，適合所有用戶。
 
-### 步骤1：安裝Docker
+### 步驟1：安裝Docker
 
 #### Windows
 1. 下載 [Docker Desktop for Windows](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
@@ -129,7 +129,7 @@ sudo apt install apt-transport-https ca-certificates curl gnupg lsb-release
 # 添加Docker官方GPG密鑰
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-# 添加Docker仓庫
+# 添加Docker倉庫
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # 安裝Docker
@@ -140,11 +140,11 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# 将用戶添加到docker組（可選）
+# 將用戶添加到docker組（可選）
 sudo usermod -aG docker $USER
 ```
 
-### 步骤2：驗證Docker安裝
+### 步驟2：驗證Docker安裝
 
 ```bash
 # 檢查Docker版本
@@ -278,7 +278,7 @@ pip install -r requirements.txt
 # 驗證關鍵套件安裝
 python -c "import streamlit; print('Streamlit安裝成功')"
 python -c "import openai; print('OpenAI安裝成功')"
-python -c "import akshare; print('AKShare安裝成功')"
+python -c "import finnhub; print('FinnHub安裝成功')"
 ```
 
 ### 步驟5：配置環境
@@ -453,8 +453,8 @@ python --version  # 應該顯示3.10+
 
 # 2. 檢查關鍵依賴
 python -c "import streamlit; print('✅ Streamlit正常')"
-python -c "import openai; print('✅ OpenAI正常')"
-python -c "import akshare; print('✅ AKShare正常')"
+python -c "import openai; print('OpenAI正常')"
+python -c "import finnhub; print('FinnHub正常')"
 
 # 3. 檢查環境變數
 python -c "import os; print('✅ API密鑰已配置' if os.getenv('OPENAI_API_KEY') or os.getenv('GOOGLE_API_KEY') else '❌ 需要配置API密鑰')"

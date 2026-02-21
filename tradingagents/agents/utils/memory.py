@@ -6,13 +6,13 @@ import threading
 import hashlib
 from typing import Dict, Optional
 
-# 導入統一日誌系統
-from tradingagents.utils.logging_init import get_logger
+# 導入日誌模組
+from tradingagents.utils.logging_manager import get_logger
 logger = get_logger("agents.utils.memory")
 
 
 class ChromaDBManager:
-    """單例ChromaDB管理器，避免並發創建集合的冲突"""
+    """單例ChromaDB管理器，避免並發創建集合的衝突"""
 
     _instance = None
     _lock = threading.Lock()
@@ -59,12 +59,12 @@ class ChromaDBManager:
                 
                 self._initialized = True
             except Exception as e:
-                logger.error(f"❌ [ChromaDB] 初始化失败: {e}")
+                logger.error(f"❌ [ChromaDB] 初始化失敗: {e}")
                 # 使用最簡單的配置作為備用
                 try:
                     settings = Settings(
                         allow_reset=True,
-                        anonymized_telemetry=False,  # 關键：禁用遥測
+                        anonymized_telemetry=False,  # 關鍵：禁用遙測
                         is_persistent=False
                     )
                     self._client = chromadb.Client(settings)
@@ -97,7 +97,7 @@ class ChromaDBManager:
                         collection = self._client.get_collection(name=name)
                         logger.info(f"📚 [ChromaDB] 並發創建後獲取集合: {name}")
                     except Exception as final_error:
-                        logger.error(f"❌ [ChromaDB] 集合操作失败: {name}, 錯誤: {final_error}")
+                        logger.error(f"❌ [ChromaDB] 集合操作失敗: {name}, 錯誤: {final_error}")
                         raise final_error
 
             # 緩存集合
@@ -133,7 +133,7 @@ class FinancialSituationMemory:
                 )
             else:
                 self.client = "DISABLED"
-                logger.warning(f"⚠️ 未找到OPENAI_API_KEY，記忆功能已禁用")
+                logger.warning(f"⚠️ 未找到OPENAI_API_KEY，記憶功能已禁用")
 
         # 使用單例ChromaDB管理器
         self.chroma_manager = ChromaDBManager()
@@ -149,7 +149,7 @@ class FinancialSituationMemory:
         if len(sentences) > 1:
             truncated = ""
             for sentence in sentences:
-                if len(truncated + sentence + '。') <= max_length - 50:  # 留50字符余量
+                if len(truncated + sentence + '。') <= max_length - 50:  # 留50字符餘量
                     truncated += sentence + '。'
                 else:
                     break
@@ -170,20 +170,20 @@ class FinancialSituationMemory:
                 logger.info(f"📝 智能截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字符")
                 return truncated, True
         
-        # 最後選擇：保留前半部分和後半部分的關键信息
+        # 最後選擇：保留前半部分和後半部分的關鍵信息
         front_part = text[:max_length//2]
         back_part = text[-(max_length//2-100):]  # 留100字符給連接符
         truncated = front_part + "\n...[內容截斷]...\n" + back_part
-        logger.warning(f"⚠️ 強制截斷：保留首尾關键信息，{len(text)}字符截斷為{len(truncated)}字符")
+        logger.warning(f"⚠️ 強制截斷：保留首尾關鍵信息，{len(text)}字符截斷為{len(truncated)}字符")
         return truncated, True
 
     def get_embedding(self, text):
         """Get embedding for a text using the configured provider"""
 
-        # 檢查記忆功能是否被禁用
+        # 檢查記憶功能是否被禁用
         if self.client == "DISABLED":
             # 內存功能已禁用，返回空向量
-            logger.debug(f"⚠️ 記忆功能已禁用，返回空向量")
+            logger.debug(f"⚠️ 記憶功能已禁用，返回空向量")
             return [0.0] * 1024  # 返回1024維的零向量
 
         # 驗證輸入文本
@@ -199,7 +199,7 @@ class FinancialSituationMemory:
         # 檢查是否啟用長度限制
         if self.enable_embedding_length_check and text_length > self.max_embedding_length:
             logger.warning(f"⚠️ 文本過長({text_length:,}字符 > {self.max_embedding_length:,}字符)，跳過向量化")
-            # 存储跳過信息
+            # 儲存跳過信息
             self._last_text_info = {
                 'original_length': text_length,
                 'processed_length': 0,
@@ -215,7 +215,7 @@ class FinancialSituationMemory:
         if text_length > 8192:
             logger.info(f"📝 處理長文本: {text_length}字符，提供商: {self.llm_provider}")
         
-        # 存储文本處理信息
+        # 儲存文本處理信息
         self._last_text_info = {
             'original_length': text_length,
             'processed_length': text_length,  # 不截斷，保持原長度
@@ -225,102 +225,7 @@ class FinancialSituationMemory:
             'strategy': 'no_truncation_with_fallback'  # 標記策略
         }
 
-        if (self.llm_provider == "dashscope" or
-            self.llm_provider == "alibaba" or
-            self.llm_provider == "qianfan" or
-            (self.llm_provider == "google" and self.client is None) or
-            (self.llm_provider == "deepseek" and self.client is None) or
-            (self.llm_provider == "openrouter" and self.client is None)):
-            # 使用阿里百炼的嵌入模型
-            try:
-                # 導入DashScope模塊
-                import dashscope
-                from dashscope import TextEmbedding
-
-                # 檢查DashScope API密鑰是否可用
-                if not hasattr(dashscope, 'api_key') or not dashscope.api_key:
-                    logger.warning(f"⚠️ DashScope API密鑰未設置，記忆功能降級")
-                    return [0.0] * 1024  # 返回空向量
-
-                # 嘗試調用DashScope API
-                response = TextEmbedding.call(
-                    model=self.embedding,
-                    input=text
-                )
-
-                # 檢查響應狀態
-                if response.status_code == 200:
-                    # 成功獲取embedding
-                    embedding = response.output['embeddings'][0]['embedding']
-                    logger.debug(f"✅ DashScope embedding成功，維度: {len(embedding)}")
-                    return embedding
-                else:
-                    # API返回錯誤狀態碼
-                    error_msg = f"{response.code} - {response.message}"
-                    
-                    # 檢查是否為長度限制錯誤
-                    if any(keyword in error_msg.lower() for keyword in ['length', 'token', 'limit', 'exceed']):
-                        logger.warning(f"⚠️ DashScope長度限制: {error_msg}")
-                        
-                        # 檢查是否有降級選項
-                        if hasattr(self, 'fallback_available') and self.fallback_available:
-                            logger.info(f"💡 嘗試使用OpenAI降級處理長文本")
-                            try:
-                                response = self.fallback_client.embeddings.create(
-                                    model=self.fallback_embedding,
-                                    input=text
-                                )
-                                embedding = response.data[0].embedding
-                                logger.info(f"✅ OpenAI降級成功，維度: {len(embedding)}")
-                                return embedding
-                            except Exception as fallback_error:
-                                logger.error(f"❌ OpenAI降級失败: {str(fallback_error)}")
-                                logger.info(f"💡 所有降級選項失败，記忆功能降級")
-                                return [0.0] * 1024
-                        else:
-                            logger.info(f"💡 無可用降級選項，記忆功能降級")
-                            return [0.0] * 1024
-                    else:
-                        logger.error(f"❌ DashScope API錯誤: {error_msg}")
-                        return [0.0] * 1024  # 返回空向量而不是拋出異常
-
-            except Exception as e:
-                error_str = str(e).lower()
-                
-                # 檢查是否為長度限制錯誤
-                if any(keyword in error_str for keyword in ['length', 'token', 'limit', 'exceed', 'too long']):
-                    logger.warning(f"⚠️ DashScope長度限制異常: {str(e)}")
-                    
-                    # 檢查是否有降級選項
-                    if hasattr(self, 'fallback_available') and self.fallback_available:
-                        logger.info(f"💡 嘗試使用OpenAI降級處理長文本")
-                        try:
-                            response = self.fallback_client.embeddings.create(
-                                model=self.fallback_embedding,
-                                input=text
-                            )
-                            embedding = response.data[0].embedding
-                            logger.info(f"✅ OpenAI降級成功，維度: {len(embedding)}")
-                            return embedding
-                        except Exception as fallback_error:
-                            logger.error(f"❌ OpenAI降級失败: {str(fallback_error)}")
-                            logger.info(f"💡 所有降級選項失败，記忆功能降級")
-                            return [0.0] * 1024
-                    else:
-                        logger.info(f"💡 無可用降級選項，記忆功能降級")
-                        return [0.0] * 1024
-                elif 'import' in error_str:
-                    logger.error(f"❌ DashScope包未安裝: {str(e)}")
-                elif 'connection' in error_str:
-                    logger.error(f"❌ DashScope網絡連接錯誤: {str(e)}")
-                elif 'timeout' in error_str:
-                    logger.error(f"❌ DashScope請求超時: {str(e)}")
-                else:
-                    logger.error(f"❌ DashScope embedding異常: {str(e)}")
-                
-                logger.warning(f"⚠️ 記忆功能降級，返回空向量")
-                return [0.0] * 1024
-        else:
+        if True:
             # 使用OpenAI兼容的嵌入模型
             if self.client is None:
                 logger.warning(f"⚠️ 嵌入客戶端未初始化，返回空向量")
@@ -354,7 +259,7 @@ class FinancialSituationMemory:
                 if is_length_error:
                     # 長度限制錯誤：直接降級，不截斷重試
                     logger.warning(f"⚠️ {self.llm_provider}長度限制: {str(e)}")
-                    logger.info(f"💡 為保證分析準確性，不截斷文本，記忆功能降級")
+                    logger.info(f"💡 為保證分析準確性，不截斷文本，記憶功能降級")
                 else:
                     # 其他類型的錯誤
                     if 'attributeerror' in error_str:
@@ -368,7 +273,7 @@ class FinancialSituationMemory:
                     else:
                         logger.error(f"❌ {self.llm_provider} embedding異常: {str(e)}")
                 
-                logger.warning(f"⚠️ 記忆功能降級，返回空向量")
+                logger.warning(f"⚠️ 記憶功能降級，返回空向量")
                 return [0.0] * 1024
 
     def get_embedding_config_status(self):
@@ -414,7 +319,7 @@ class FinancialSituationMemory:
         # 獲取當前情況的embedding
         query_embedding = self.get_embedding(current_situation)
         
-        # 檢查是否為空向量（記忆功能被禁用或出錯）
+        # 檢查是否為空向量（記憶功能被禁用或出錯）
         if all(x == 0.0 for x in query_embedding):
             logger.debug(f"⚠️ 查詢embedding為空向量，返回空結果")
             return []
@@ -422,7 +327,7 @@ class FinancialSituationMemory:
         # 檢查是否有足夠的數據進行查詢
         collection_count = self.situation_collection.count()
         if collection_count == 0:
-            logger.debug(f"📭 記忆庫為空，返回空結果")
+            logger.debug(f"📭 記憶庫為空，返回空結果")
             return []
         
         # 調整查詢數量，不能超過集合中的文檔數量
@@ -456,16 +361,16 @@ class FinancialSituationMemory:
                 
                 # 記錄查詢信息
                 if hasattr(self, '_last_text_info') and self._last_text_info.get('was_truncated'):
-                    logger.info(f"🔍 截斷文本查詢完成，找到{len(memories)}個相關記忆")
+                    logger.info(f"🔍 截斷文本查詢完成，找到{len(memories)}個相關記憶")
                     logger.debug(f"📊 原文長度: {self._last_text_info['original_length']}, "
                                f"處理後長度: {self._last_text_info['processed_length']}")
                 else:
-                    logger.debug(f"🔍 記忆查詢完成，找到{len(memories)}個相關記忆")
+                    logger.debug(f"🔍 記憶查詢完成，找到{len(memories)}個相關記憶")
             
             return memories
             
         except Exception as e:
-            logger.error(f"❌ 記忆查詢失败: {str(e)}")
+            logger.error(f"❌ 記憶查詢失敗: {str(e)}")
             return []
 
     def get_cache_info(self):

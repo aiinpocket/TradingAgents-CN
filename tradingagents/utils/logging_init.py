@@ -113,11 +113,11 @@ def log_startup_info():
 
 
 def log_shutdown_info():
-    """記錄應用關闭信息"""
+    """記錄應用關閉信息"""
     logger = get_logger('tradingagents.shutdown')
     
     logger.info("=" * 60)
-    logger.info("🛑 TradingAgents-CN 關闭")
+    logger.info("🛑 TradingAgents-CN 關閉")
     logger.info("=" * 60)
 
 

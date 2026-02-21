@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試增强的分析歷史功能
+測試增強的分析歷史功能
 """
 
 import sys
@@ -38,7 +38,7 @@ def test_load_analysis_results():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 
@@ -62,7 +62,7 @@ def test_comparison_functions():
         mock_result = {
             'source': 'file_system',
             'reports': {
-                'final_trade_decision': '买入建议'
+                'final_trade_decision': '買入建議'
             }
         }
         
@@ -72,7 +72,7 @@ def test_comparison_functions():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 
@@ -106,13 +106,13 @@ def test_chart_functions():
         df = pd.DataFrame(mock_data)
         print(f"✅ 創建模擬數據: {len(df)} 條記錄")
         
-        # 註意：這里只是測試函數是否可以導入，實际渲染需要Streamlit環境
+        # 注意：這裡只是測試函數是否可以導入，實際渲染需要Streamlit環境
         print("✅ 圖表函數導入成功")
         
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 
@@ -128,9 +128,9 @@ def create_test_data():
         
         # 創建測試報告
         test_reports = {
-            'final_trade_decision.md': '# 測試交易決策\n\n建议买入',
+            'final_trade_decision.md': '# 測試交易決策\n\n建議買入',
             'fundamentals_report.md': '# 測試基本面分析\n\n公司基本面良好',
-            'market_report.md': '# 測試技術分析\n\n技術指標顯示上涨趋势'
+            'market_report.md': '# 測試技術分析\n\n技術指標顯示上漲趨勢'
         }
         
         for filename, content in test_reports.items():
@@ -142,13 +142,13 @@ def create_test_data():
         return True
         
     except Exception as e:
-        print(f"❌ 創建測試數據失败: {e}")
+        print(f"❌ 創建測試數據失敗: {e}")
         return False
 
 
 def main():
     """主測試函數"""
-    print("🚀 開始測試增强的分析歷史功能")
+    print("🚀 開始測試增強的分析歷史功能")
     print("=" * 50)
     
     tests = [
@@ -167,7 +167,7 @@ def main():
             passed += 1
             print(f"✅ {test_name} 通過")
         else:
-            print(f"❌ {test_name} 失败")
+            print(f"❌ {test_name} 失敗")
     
     print("\n" + "=" * 50)
     print(f"📊 測試結果: {passed}/{total} 通過")
@@ -176,7 +176,7 @@ def main():
         print("🎉 所有測試通過！")
         return True
     else:
-        print("⚠️ 部分測試失败，請檢查代碼")
+        print("⚠️ 部分測試失敗，請檢查代碼")
         return False
 
 

@@ -24,11 +24,11 @@ def setup_docker_env():
     # 檢查.env文件
     if env_file.exists():
         logger.info(f"📁 發現現有的.env文件")
-        choice = input("是否要备份現有配置並重新配置？(y/N): ").lower()
+        choice = input("是否要備份現有配置並重新配置？(y/N): ").lower()
         if choice == 'y':
             backup_file = project_root / f".env.backup.{int(time.time())}"
             shutil.copy(env_file, backup_file)
-            logger.info(f"✅ 已备份到: {backup_file}")
+            logger.info(f"✅ 已備份到: {backup_file}")
         else:
             logger.error(f"❌ 取消配置")
             return False
@@ -71,15 +71,13 @@ def setup_docker_env():
     
     # API密鑰配置提醒
     logger.info(f"\n🔑 API密鑰配置")
-    logger.info(f"請編辑.env文件，配置以下API密鑰（至少配置一個）：")
-    logger.info(f"- TRADINGAGENTS_DEEPSEEK_API_KEY")
-    logger.info(f"- TRADINGAGENTS_DASHSCOPE_API_KEY")
-    logger.info(f"- TRADINGAGENTS_TUSHARE_TOKEN")
-    logger.info(f"- TRADINGAGENTS_FINNHUB_API_KEY")
+    logger.info(f"Please configure the following API keys in .env (at least one LLM key):")
+    logger.info(f"- OPENAI_API_KEY or GOOGLE_API_KEY (LLM provider)")
+    logger.info(f"- FINNHUB_API_KEY (financial data)")
     
     # 顯示下一步操作
     logger.info(f"\n🚀 下一步操作：")
-    logger.info(f"1. 編辑.env文件，填入您的API密鑰")
+    logger.info(f"1. 編輯.env文件，填入您的API密鑰")
     logger.info(f"2. 運行: docker-compose up -d")
     logger.info(f"3. 訪問: http://localhost:8501")
     
@@ -108,7 +106,7 @@ def check_docker():
             logger.error(f"❌ Docker未運行，請啟動Docker Desktop")
             return False
     except Exception as e:
-        logger.error(f"❌ Docker檢查失败: {e}")
+        logger.error(f"❌ Docker檢查失敗: {e}")
         return False
     
     logger.info(f"✅ Docker環境檢查通過")
@@ -129,9 +127,9 @@ def main():
         logger.info(f"\n🎉 Docker環境配置完成！")
         logger.info(f"\n📚 更多信息請參考:")
         logger.info(f"- Docker部署指南: docs/DOCKER_GUIDE.md")
-        logger.info(f"- 項目文档: README.md")
+        logger.info(f"- 項目文件: README.md")
     else:
-        logger.error(f"\n❌ 配置失败")
+        logger.error(f"\n❌ 配置失敗")
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 實時新聞數據獲取工具
-解決新聞滞後性問題
+解決新聞滯後性問題
 """
 
 import requests
@@ -121,11 +121,11 @@ class RealtimeNewsAggregator:
         
         # 記錄去重結果
         removed_count = len(all_news) - len(unique_news)
-        logger.info(f"[新聞聚合器] 新聞去重完成，移除了 {removed_count} 條重複新聞，剩余 {len(sorted_news)} 條，耗時: {dedup_time:.2f}秒")
+        logger.info(f"[新聞聚合器] 新聞去重完成，移除了 {removed_count} 條重複新聞，剩餘 {len(sorted_news)} 條，耗時: {dedup_time:.2f}秒")
         
-        # 記錄总體情況
+        # 記錄總體情況
         total_time = (datetime.now() - start_time).total_seconds()
-        logger.info(f"[新聞聚合器] {ticker} 的新聞聚合完成，總共獲取 {len(sorted_news)} 條新聞，总耗時: {total_time:.2f}秒")
+        logger.info(f"[新聞聚合器] {ticker} 的新聞聚合完成，總共獲取 {len(sorted_news)} 條新聞，總耗時: {total_time:.2f}秒")
         
         # 限制新聞數量為最新的max_news條
         if len(sorted_news) > max_news:
@@ -146,7 +146,7 @@ class RealtimeNewsAggregator:
             return []
         
         try:
-            # 計算時間範围
+            # 計算時間範圍
             end_time = datetime.now()
             start_time = end_time - timedelta(hours=hours_back)
             
@@ -187,7 +187,7 @@ class RealtimeNewsAggregator:
             return news_items
             
         except Exception as e:
-            logger.error(f"FinnHub新聞獲取失败: {e}")
+            logger.error(f"FinnHub新聞獲取失敗: {e}")
             return []
     
     def _get_alpha_vantage_news(self, ticker: str, hours_back: int) -> List[NewsItem]:
@@ -238,7 +238,7 @@ class RealtimeNewsAggregator:
             return news_items
             
         except Exception as e:
-            logger.error(f"Alpha Vantage新聞獲取失败: {e}")
+            logger.error(f"Alpha Vantage新聞獲取失敗: {e}")
             return []
     
     def _get_newsapi_news(self, ticker: str, hours_back: int) -> List[NewsItem]:
@@ -293,94 +293,18 @@ class RealtimeNewsAggregator:
             return news_items
             
         except Exception as e:
-            logger.error(f"NewsAPI新聞獲取失败: {e}")
+            logger.error(f"NewsAPI新聞獲取失敗: {e}")
             return []
     
     def _get_chinese_finance_news(self, ticker: str, hours_back: int) -> List[NewsItem]:
-        """獲取中文財經新聞"""
-        # 集成中文財經新聞API：財聯社、东方財富等
-        logger.info(f"[中文財經新聞] 開始獲取 {ticker} 的中文財經新聞，回溯時間: {hours_back}小時")
+        """獲取財經新聞（已移除中國數據源依賴）"""
+        logger.info(f"[財經新聞] 開始獲取 {ticker} 的財經新聞，回溯時間: {hours_back}小時")
         start_time = datetime.now()
-        
+
         try:
             news_items = []
-            
-            # 1. 嘗試使用AKShare獲取东方財富個股新聞
-            try:
-                logger.info(f"[中文財經新聞] 嘗試導入 AKShare 工具")
-                from .akshare_utils import get_stock_news_em
-                
-                # 處理股票代碼格式
-                # 如果是美股代碼，不使用东方財富新聞
-                if '.' in ticker and any(suffix in ticker for suffix in ['.US', '.N', '.O', '.NYSE', '.NASDAQ']):
-                    logger.info(f"[中文財經新聞] 檢測到美股代碼 {ticker}，跳過东方財富新聞獲取")
-                else:
-                    # 處理A股和港股代碼
-                    clean_ticker = ticker.replace('.SH', '').replace('.SZ', '').replace('.SS', '')\
-                                    .replace('.HK', '').replace('.XSHE', '').replace('.XSHG', '')
-                    
-                    # 獲取东方財富新聞
-                    logger.info(f"[中文財經新聞] 開始獲取 {clean_ticker} 的东方財富新聞")
-                    em_start_time = datetime.now()
-                    news_df = get_stock_news_em(clean_ticker)
-                    
-                    if not news_df.empty:
-                        logger.info(f"[中文財經新聞] 东方財富返回 {len(news_df)} 條新聞數據，開始處理")
-                        processed_count = 0
-                        skipped_count = 0
-                        error_count = 0
-                        
-                        # 轉換為NewsItem格式
-                        for _, row in news_df.iterrows():
-                            try:
-                                # 解析時間
-                                time_str = row.get('時間', '')
-                                if time_str:
-                                    # 嘗試解析時間格式，可能是'2023-01-01 12:34:56'格式
-                                    try:
-                                        publish_time = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
-                                    except:
-                                        # 嘗試其他可能的格式
-                                        try:
-                                            publish_time = datetime.strptime(time_str, '%Y-%m-%d')
-                                        except:
-                                            logger.warning(f"[中文財經新聞] 無法解析時間格式: {time_str}，使用當前時間")
-                                            publish_time = datetime.now()
-                                else:
-                                    logger.warning(f"[中文財經新聞] 新聞時間為空，使用當前時間")
-                                    publish_time = datetime.now()
-                                
-                                # 檢查時效性
-                                if publish_time < datetime.now() - timedelta(hours=hours_back):
-                                    skipped_count += 1
-                                    continue
-                                
-                                # 評估緊急程度
-                                title = row.get('標題', '')
-                                content = row.get('內容', '')
-                                urgency = self._assess_news_urgency(title, content)
-                                
-                                news_items.append(NewsItem(
-                                    title=title,
-                                    content=content,
-                                    source='东方財富',
-                                    publish_time=publish_time,
-                                    url=row.get('鏈接', ''),
-                                    urgency=urgency,
-                                    relevance_score=self._calculate_relevance(title, ticker)
-                                ))
-                                processed_count += 1
-                            except Exception as item_e:
-                                logger.error(f"[中文財經新聞] 處理东方財富新聞項目失败: {item_e}")
-                                error_count += 1
-                                continue
-                        
-                        em_time = (datetime.now() - em_start_time).total_seconds()
-                        logger.info(f"[中文財經新聞] 东方財富新聞處理完成，成功: {processed_count}條，跳過: {skipped_count}條，錯誤: {error_count}條，耗時: {em_time:.2f}秒")
-            except Exception as ak_e:
-                logger.error(f"[中文財經新聞] 獲取东方財富新聞失败: {ak_e}")
-            
-            # 2. 財聯社RSS (如果可用)
+
+            # 財聯社RSS (如果可用)
             logger.info(f"[中文財經新聞] 開始獲取財聯社RSS新聞")
             rss_start_time = datetime.now()
             rss_sources = [
@@ -407,22 +331,22 @@ class RealtimeNewsAggregator:
                     else:
                         logger.info(f"[中文財經新聞] RSS源未返回相關新聞，耗時: {rss_item_time:.2f}秒")
                 except Exception as rss_e:
-                    logger.error(f"[中文財經新聞] 解析RSS源失败: {rss_e}")
+                    logger.error(f"[中文財經新聞] 解析RSS源失敗: {rss_e}")
                     rss_error_count += 1
                     continue
             
-            # 記錄RSS獲取总結
+            # 記錄RSS獲取總結
             rss_total_time = (datetime.now() - rss_start_time).total_seconds()
-            logger.info(f"[中文財經新聞] RSS新聞獲取完成，成功源: {rss_success_count}個，失败源: {rss_error_count}個，獲取新聞: {total_rss_items}條，总耗時: {rss_total_time:.2f}秒")
+            logger.info(f"[中文財經新聞] RSS新聞獲取完成，成功源: {rss_success_count}個，失敗源: {rss_error_count}個，獲取新聞: {total_rss_items}條，總耗時: {rss_total_time:.2f}秒")
             
-            # 記錄中文財經新聞獲取总結
+            # 記錄中文財經新聞獲取總結
             total_time = (datetime.now() - start_time).total_seconds()
-            logger.info(f"[中文財經新聞] {ticker} 的中文財經新聞獲取完成，總共獲取 {len(news_items)} 條新聞，总耗時: {total_time:.2f}秒")
+            logger.info(f"[中文財經新聞] {ticker} 的中文財經新聞獲取完成，總共獲取 {len(news_items)} 條新聞，總耗時: {total_time:.2f}秒")
             
             return news_items
             
         except Exception as e:
-            logger.error(f"[中文財經新聞] 中文財經新聞獲取失败: {e}")
+            logger.error(f"[中文財經新聞] 中文財經新聞獲取失敗: {e}")
             return []
     
     def _parse_rss_feed(self, rss_url: str, ticker: str, hours_back: int) -> List[NewsItem]:
@@ -431,8 +355,8 @@ class RealtimeNewsAggregator:
         start_time = datetime.now()
         
         try:
-            # 實际實現需要使用feedparser庫
-            # 這里是簡化實現，實际項目中應该替換為真實的RSS解析邏輯
+            # 實際實現需要使用feedparser庫
+            # 這裡是簡化實現，實際項目中應該替換為真實的RSS解析邏輯
             import feedparser
             
             logger.info(f"[RSS解析] 嘗試獲取RSS源內容")
@@ -483,7 +407,7 @@ class RealtimeNewsAggregator:
                     ))
                     processed_count += 1
                 except Exception as e:
-                    logger.error(f"[RSS解析] 處理RSS條目失败: {e}")
+                    logger.error(f"[RSS解析] 處理RSS條目失敗: {e}")
                     continue
             
             total_time = (datetime.now() - start_time).total_seconds()
@@ -493,38 +417,38 @@ class RealtimeNewsAggregator:
             logger.error(f"[RSS解析] feedparser庫未安裝，無法解析RSS源")
             return []
         except Exception as e:
-            logger.error(f"[RSS解析] 解析RSS源失败: {e}")
+            logger.error(f"[RSS解析] 解析RSS源失敗: {e}")
             return []
     
     def _assess_news_urgency(self, title: str, content: str) -> str:
         """評估新聞緊急程度"""
         text = (title + ' ' + content).lower()
         
-        # 高緊急度關键詞
+        # 高緊急度關鍵詞
         high_urgency_keywords = [
             'breaking', 'urgent', 'alert', 'emergency', 'halt', 'suspend',
-            '突發', '緊急', '暂停', '停牌', '重大'
+            '突發', '緊急', '暫停', '停牌', '重大'
         ]
         
-        # 中等緊急度關键詞
+        # 中等緊急度關鍵詞
         medium_urgency_keywords = [
             'earnings', 'report', 'announce', 'launch', 'merger', 'acquisition',
             '財報', '發布', '宣布', '並購', '收購'
         ]
         
-        # 檢查高緊急度關键詞
+        # 檢查高緊急度關鍵詞
         for keyword in high_urgency_keywords:
             if keyword in text:
-                logger.debug(f"[緊急度評估] 檢測到高緊急度關键詞 '{keyword}' 在新聞中: {title[:50]}...")
+                logger.debug(f"[緊急度評估] 檢測到高緊急度關鍵詞 '{keyword}' 在新聞中: {title[:50]}...")
                 return 'high'
         
-        # 檢查中等緊急度關键詞
+        # 檢查中等緊急度關鍵詞
         for keyword in medium_urgency_keywords:
             if keyword in text:
-                logger.debug(f"[緊急度評估] 檢測到中等緊急度關键詞 '{keyword}' 在新聞中: {title[:50]}...")
+                logger.debug(f"[緊急度評估] 檢測到中等緊急度關鍵詞 '{keyword}' 在新聞中: {title[:50]}...")
                 return 'medium'
         
-        logger.debug(f"[緊急度評估] 未檢測到緊急關键詞，評估為低緊急度: {title[:50]}...")
+        logger.debug(f"[緊急度評估] 未檢測到緊急關鍵詞，評估為低緊急度: {title[:50]}...")
         return 'low'
     
     def _calculate_relevance(self, title: str, ticker: str) -> float:
@@ -532,7 +456,7 @@ class RealtimeNewsAggregator:
         text = title.lower()
         ticker_lower = ticker.lower()
         
-        # 基础相關性 - 股票代碼直接出現在標題中
+        # 基礎相關性 - 股票代碼直接出現在標題中
         if ticker_lower in text:
             logger.debug(f"[相關性計算] 股票代碼 {ticker} 直接出現在標題中，相關性評分: 1.0，標題: {title[:50]}...")
             return 1.0
@@ -546,11 +470,11 @@ class RealtimeNewsAggregator:
             'googl': ['google', 'alphabet', 'search']
         }
         
-        # 檢查公司相關關键詞
+        # 檢查公司相關關鍵詞
         if ticker_lower in company_names:
             for name in company_names[ticker_lower]:
                 if name in text:
-                    logger.debug(f"[相關性計算] 檢測到公司相關關键詞 '{name}' 在標題中，相關性評分: 0.8，標題: {title[:50]}...")
+                    logger.debug(f"[相關性計算] 檢測到公司相關關鍵詞 '{name}' 在標題中，相關性評分: 0.8，標題: {title[:50]}...")
                     return 0.8
         
         # 提取股票代碼的純數字部分（適用於中國股票）
@@ -630,7 +554,7 @@ class RealtimeNewsAggregator:
         
         report = f"# {ticker} 實時新聞分析報告\n\n"
         report += f"📅 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-        report += f"📊 新聞总數: {len(news_items)}條\n\n"
+        report += f"📊 新聞總數: {len(news_items)}條\n\n"
         
         if high_urgency:
             report += "## 🚨 緊急新聞\n\n"
@@ -685,124 +609,14 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
     start_total_time = datetime.now()
     logger.info(f"[新聞分析] 開始時間: {start_total_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
     
-    # 判斷股票類型
+    # 股票類型判斷 - 統一視為美股
     logger.info(f"[新聞分析] ========== 步驟1: 股票類型判斷 ==========")
-    stock_type = "未知"
+    stock_type = "美股"
     is_china_stock = False
     logger.info(f"[新聞分析] 原始ticker: {ticker}")
+    logger.info(f"[新聞分析] 最終判斷結果 - 股票 {ticker} 類型: {stock_type}")
     
-    if '.' in ticker:
-        logger.info(f"[新聞分析] 檢測到ticker包含點號，進行後缀匹配")
-        if any(suffix in ticker for suffix in ['.SH', '.SZ', '.SS', '.XSHE', '.XSHG']):
-            stock_type = "A股"
-            is_china_stock = True
-            logger.info(f"[新聞分析] 匹配到A股後缀，股票類型: {stock_type}")
-        elif '.HK' in ticker:
-            stock_type = "港股"
-            logger.info(f"[新聞分析] 匹配到港股後缀，股票類型: {stock_type}")
-        elif any(suffix in ticker for suffix in ['.US', '.N', '.O', '.NYSE', '.NASDAQ']):
-            stock_type = "美股"
-            logger.info(f"[新聞分析] 匹配到美股後缀，股票類型: {stock_type}")
-        else:
-            logger.info(f"[新聞分析] 未匹配到已知後缀")
-    else:
-        logger.info(f"[新聞分析] ticker不包含點號，嘗試使用StockUtils判斷")
-        # 嘗試使用StockUtils判斷股票類型
-        try:
-            from tradingagents.utils.stock_utils import StockUtils
-            logger.info(f"[新聞分析] 成功導入StockUtils，開始判斷股票類型")
-            market_info = StockUtils.get_market_info(ticker)
-            logger.info(f"[新聞分析] StockUtils返回市場信息: {market_info}")
-            if market_info['is_china']:
-                stock_type = "A股"
-                is_china_stock = True
-                logger.info(f"[新聞分析] StockUtils判斷為A股")
-            elif market_info['is_hk']:
-                stock_type = "港股"
-                logger.info(f"[新聞分析] StockUtils判斷為港股")
-            elif market_info['is_us']:
-                stock_type = "美股"
-                logger.info(f"[新聞分析] StockUtils判斷為美股")
-        except Exception as e:
-            logger.warning(f"[新聞分析] 使用StockUtils判斷股票類型失败: {e}")
-    
-    logger.info(f"[新聞分析] 最終判斷結果 - 股票 {ticker} 類型: {stock_type}, 是否A股: {is_china_stock}")
-    
-    # 對於A股，優先使用东方財富新聞源
-    if is_china_stock:
-        logger.info(f"[新聞分析] ========== 步驟2: A股东方財富新聞獲取 ==========")
-        logger.info(f"[新聞分析] 檢測到A股股票 {ticker}，優先嘗試使用东方財富新聞源")
-        try:
-            logger.info(f"[新聞分析] 嘗試導入 akshare_utils.get_stock_news_em")
-            from .akshare_utils import get_stock_news_em
-            logger.info(f"[新聞分析] 成功導入 get_stock_news_em 函數")
-            
-            # 處理A股代碼
-            clean_ticker = ticker.replace('.SH', '').replace('.SZ', '').replace('.SS', '')\
-                            .replace('.XSHE', '').replace('.XSHG', '')
-            logger.info(f"[新聞分析] 原始ticker: {ticker} -> 清理後ticker: {clean_ticker}")
-            
-            logger.info(f"[新聞分析] 準备調用 get_stock_news_em({clean_ticker}, max_news=10)")
-            logger.info(f"[新聞分析] 開始從东方財富獲取 {clean_ticker} 的新聞數據")
-            start_time = datetime.now()
-            logger.info(f"[新聞分析] 东方財富API調用開始時間: {start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
-            
-            news_df = get_stock_news_em(clean_ticker, max_news=10)
-            
-            end_time = datetime.now()
-            time_taken = (end_time - start_time).total_seconds()
-            logger.info(f"[新聞分析] 东方財富API調用結束時間: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
-            logger.info(f"[新聞分析] 东方財富API調用耗時: {time_taken:.2f}秒")
-            logger.info(f"[新聞分析] 东方財富API返回數據類型: {type(news_df)}")
-            
-            if hasattr(news_df, 'empty'):
-                logger.info(f"[新聞分析] 东方財富API返回DataFrame，是否為空: {news_df.empty}")
-                if not news_df.empty:
-                    logger.info(f"[新聞分析] 东方財富API返回DataFrame形狀: {news_df.shape}")
-                    logger.info(f"[新聞分析] 东方財富API返回DataFrame列名: {list(news_df.columns) if hasattr(news_df, 'columns') else '無列名'}")
-            else:
-                logger.info(f"[新聞分析] 东方財富API返回數據: {news_df}")
-            
-            if not news_df.empty:
-                # 構建簡單的新聞報告
-                news_count = len(news_df)
-                logger.info(f"[新聞分析] 成功獲取 {news_count} 條东方財富新聞，耗時 {time_taken:.2f} 秒")
-                
-                report = f"# {ticker} 东方財富新聞報告\n\n"
-                report += f"📅 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-                report += f"📊 新聞总數: {news_count}條\n"
-                report += f"🕒 獲取耗時: {time_taken:.2f}秒\n\n"
-                
-                # 記錄一些新聞標題示例
-                sample_titles = [row.get('新聞標題', '無標題') for _, row in news_df.head(3).iterrows()]
-                logger.info(f"[新聞分析] 新聞標題示例: {', '.join(sample_titles)}")
-                
-                logger.info(f"[新聞分析] 開始構建新聞報告")
-                for idx, (_, row) in enumerate(news_df.iterrows()):
-                    if idx < 3:  # 只記錄前3條的詳細信息
-                        logger.info(f"[新聞分析] 第{idx+1}條新聞: 標題={row.get('新聞標題', '無標題')}, 時間={row.get('發布時間', '無時間')}")
-                    report += f"### {row.get('新聞標題', '')}\n"
-                    report += f"📅 {row.get('發布時間', '')}\n"
-                    report += f"🔗 {row.get('新聞鏈接', '')}\n\n"
-                    report += f"{row.get('新聞內容', '無內容')}\n\n"
-                
-                total_time_taken = (datetime.now() - start_total_time).total_seconds()
-                logger.info(f"[新聞分析] 成功生成 {ticker} 的新聞報告，总耗時 {total_time_taken:.2f} 秒，新聞來源: 东方財富")
-                logger.info(f"[新聞分析] 報告長度: {len(report)} 字符")
-                logger.info(f"[新聞分析] ========== 东方財富新聞獲取成功，函數即将返回 ==========")
-                return report
-            else:
-                logger.warning(f"[新聞分析] 东方財富未獲取到 {ticker} 的新聞，耗時 {time_taken:.2f} 秒，嘗試使用其他新聞源")
-        except Exception as e:
-            logger.error(f"[新聞分析] 东方財富新聞獲取失败: {e}，将嘗試其他新聞源")
-            logger.error(f"[新聞分析] 異常詳情: {type(e).__name__}: {str(e)}")
-            import traceback
-            logger.error(f"[新聞分析] 異常堆棧: {traceback.format_exc()}")
-    else:
-        logger.info(f"[新聞分析] ========== 跳過A股东方財富新聞獲取 ==========")
-        logger.info(f"[新聞分析] 股票類型為 {stock_type}，不是A股，跳過东方財富新聞源")
-    
-    # 如果不是A股或A股新聞獲取失败，使用實時新聞聚合器
+    # 使用實時新聞聚合器
     logger.info(f"[新聞分析] ========== 步驟3: 實時新聞聚合器 ==========")
     aggregator = RealtimeNewsAggregator()
     logger.info(f"[新聞分析] 成功創建實時新聞聚合器實例")
@@ -836,81 +650,26 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             logger.info(f"[新聞分析] 報告格式化完成，長度: {len(report)} 字符")
             
             total_time_taken = (datetime.now() - start_total_time).total_seconds()
-            logger.info(f"[新聞分析] 成功生成 {ticker} 的新聞報告，总耗時 {total_time_taken:.2f} 秒，新聞來源: 實時新聞聚合器")
-            logger.info(f"[新聞分析] ========== 實時新聞聚合器獲取成功，函數即将返回 ==========")
+            logger.info(f"[新聞分析] 成功生成 {ticker} 的新聞報告，總耗時 {total_time_taken:.2f} 秒，新聞來源: 實時新聞聚合器")
+            logger.info(f"[新聞分析] ========== 實時新聞聚合器獲取成功，函數即將返回 ==========")
             return report
         else:
             logger.warning(f"[新聞分析] 實時新聞聚合器未獲取到 {ticker} 的新聞，耗時 {time_taken:.2f} 秒，嘗試使用備用新聞源")
-            # 如果沒有獲取到新聞，繼续嘗試備用方案
+            # 如果沒有獲取到新聞，繼續嘗試備用方案
     except Exception as e:
-        logger.error(f"[新聞分析] 實時新聞聚合器獲取失败: {e}，将嘗試備用新聞源")
+        logger.error(f"[新聞分析] 實時新聞聚合器獲取失敗: {e}，將嘗試備用新聞源")
         logger.error(f"[新聞分析] 異常詳情: {type(e).__name__}: {str(e)}")
         import traceback
         logger.error(f"[新聞分析] 異常堆棧: {traceback.format_exc()}")
-        # 發生異常時，繼续嘗試備用方案
+        # 發生異常時，繼續嘗試備用方案
     
-    # 備用方案1: 對於港股，優先嘗試使用东方財富新聞（A股已在前面處理）
-    if not is_china_stock and '.HK' in ticker:
-        logger.info(f"[新聞分析] 檢測到港股代碼 {ticker}，嘗試使用东方財富新聞源")
-        try:
-            from .akshare_utils import get_stock_news_em
-            
-            # 處理港股代碼
-            clean_ticker = ticker.replace('.HK', '')
-            
-            logger.info(f"[新聞分析] 開始從东方財富獲取港股 {clean_ticker} 的新聞數據")
-            start_time = datetime.now()
-            news_df = get_stock_news_em(clean_ticker, max_news=10)
-            end_time = datetime.now()
-            time_taken = (end_time - start_time).total_seconds()
-            
-            if not news_df.empty:
-                # 構建簡單的新聞報告
-                news_count = len(news_df)
-                logger.info(f"[新聞分析] 成功獲取 {news_count} 條东方財富港股新聞，耗時 {time_taken:.2f} 秒")
-                
-                report = f"# {ticker} 东方財富新聞報告\n\n"
-                report += f"📅 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-                report += f"📊 新聞总數: {news_count}條\n"
-                report += f"🕒 獲取耗時: {time_taken:.2f}秒\n\n"
-                
-                # 記錄一些新聞標題示例
-                sample_titles = [row.get('新聞標題', '無標題') for _, row in news_df.head(3).iterrows()]
-                logger.info(f"[新聞分析] 新聞標題示例: {', '.join(sample_titles)}")
-                
-                for _, row in news_df.iterrows():
-                    report += f"### {row.get('新聞標題', '')}\n"
-                    report += f"📅 {row.get('發布時間', '')}\n"
-                    report += f"🔗 {row.get('新聞鏈接', '')}\n\n"
-                    report += f"{row.get('新聞內容', '無內容')}\n\n"
-                
-                logger.info(f"[新聞分析] 成功生成东方財富新聞報告，新聞來源: 东方財富")
-                return report
-            else:
-                logger.warning(f"[新聞分析] 东方財富未獲取到 {clean_ticker} 的新聞數據，耗時 {time_taken:.2f} 秒，嘗試下一個備用方案")
-        except Exception as e:
-            logger.error(f"[新聞分析] 东方財富新聞獲取失败: {e}，将嘗試下一個備用方案")
-    
-    # 備用方案2: 嘗試使用Google新聞
+    # 備用方案：嘗試使用 Google 新聞
     try:
         from tradingagents.dataflows.interface import get_google_news
         
-        # 根據股票類型構建搜索查詢
-        if stock_type == "A股":
-            # A股使用中文關键詞
-            clean_ticker = ticker.replace('.SH', '').replace('.SZ', '').replace('.SS', '')\
-                           .replace('.XSHE', '').replace('.XSHG', '')
-            search_query = f"{clean_ticker} 股票 公司 財報 新聞"
-            logger.info(f"[新聞分析] 開始從Google獲取A股 {clean_ticker} 的中文新聞數據，查詢: {search_query}")
-        elif stock_type == "港股":
-            # 港股使用中文關键詞
-            clean_ticker = ticker.replace('.HK', '')
-            search_query = f"{clean_ticker} 港股 公司"
-            logger.info(f"[新聞分析] 開始從Google獲取港股 {clean_ticker} 的新聞數據，查詢: {search_query}")
-        else:
-            # 美股使用英文關键詞
-            search_query = f"{ticker} stock news"
-            logger.info(f"[新聞分析] 開始從Google獲取 {ticker} 的新聞數據，查詢: {search_query}")
+        # 美股使用英文關鍵詞進行搜索
+        search_query = f"{ticker} stock news"
+        logger.info(f"[新聞分析] 開始從Google獲取 {ticker} 的新聞數據，查詢: {search_query}")
         
         start_time = datetime.now()
         google_news = get_google_news(search_query, curr_date, 1)
@@ -934,33 +693,33 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
         else:
             logger.warning(f"[新聞分析] Google 新聞未獲取到 {ticker} 的新聞數據，耗時 {time_taken:.2f} 秒")
     except Exception as e:
-        logger.error(f"[新聞分析] Google 新聞獲取失败: {e}，所有備用方案均已嘗試")
+        logger.error(f"[新聞分析] Google 新聞獲取失敗: {e}，所有備用方案均已嘗試")
     
-    # 所有方法都失败，返回錯誤信息
+    # 所有方法都失敗，返回錯誤信息
     total_time_taken = (datetime.now() - start_total_time).total_seconds()
-    logger.error(f"[新聞分析] {ticker} 的所有新聞獲取方法均已失败，总耗時 {total_time_taken:.2f} 秒")
+    logger.error(f"[新聞分析] {ticker} 的所有新聞獲取方法均已失敗，總耗時 {total_time_taken:.2f} 秒")
     
-    # 記錄詳細的失败信息
+    # 記錄詳細的失敗信息
     failure_details = {
         "股票代碼": ticker,
         "股票類型": stock_type,
         "分析日期": curr_date,
         "回溯時間": f"{hours_back}小時",
-        "总耗時": f"{total_time_taken:.2f}秒"
+        "總耗時": f"{total_time_taken:.2f}秒"
     }
-    logger.error(f"[新聞分析] 新聞獲取失败詳情: {failure_details}")
+    logger.error(f"[新聞分析] 新聞獲取失敗詳情: {failure_details}")
     
     return f"""
-實時新聞獲取失败 - {ticker}
+實時新聞獲取失敗 - {ticker}
 分析日期: {curr_date}
 
 ❌ 錯誤信息: 所有可用的新聞源都未能獲取到相關新聞
 
 💡 備用建議:
 1. 檢查網絡連接和API密鑰配置
-2. 使用基础新聞分析作為备選
+2. 使用基礎新聞分析作為備選
 3. 關註官方財經媒體的最新報道
-4. 考慮使用專業金融终端獲取實時新聞
+4. 考慮使用專業金融終端獲取實時新聞
 
 註: 實時新聞獲取依賴外部API服務的可用性。
 """

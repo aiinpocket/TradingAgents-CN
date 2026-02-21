@@ -59,7 +59,7 @@ class AdaptiveCacheManager:
                 self.logger.info("✅ 智能配置加載成功")
                 return
             except Exception as e:
-                self.logger.warning(f"智能配置加載失败: {e}")
+                self.logger.warning(f"智能配置加載失敗: {e}")
         
         # 默認配置（純文件緩存）
         self.config = {
@@ -102,7 +102,7 @@ class AdaptiveCacheManager:
                 self.mongodb_db = self.mongodb_client.tradingagents
                 self.logger.info("✅ MongoDB後端初始化成功")
             except Exception as e:
-                self.logger.warning(f"MongoDB初始化失败: {e}")
+                self.logger.warning(f"MongoDB初始化失敗: {e}")
                 self.mongodb_enabled = False
                 self.mongodb_client = None
         
@@ -119,7 +119,7 @@ class AdaptiveCacheManager:
                 self.redis_client.ping()
                 self.logger.info("✅ Redis後端初始化成功")
             except Exception as e:
-                self.logger.warning(f"Redis初始化失败: {e}")
+                self.logger.warning(f"Redis初始化失敗: {e}")
                 self.redis_enabled = False
                 self.redis_client = None
         
@@ -142,7 +142,7 @@ class AdaptiveCacheManager:
     
     def _get_cache_key(self, symbol: str, start_date: str, end_date: str, 
                       data_source: str = "default") -> str:
-        """生成緩存键"""
+        """生成緩存鍵"""
         key_data = f"{symbol}_{start_date}_{end_date}_{data_source}"
         return hashlib.md5(key_data.encode()).hexdigest()
     
@@ -182,7 +182,7 @@ class AdaptiveCacheManager:
             
             return True
         except Exception as e:
-            self.logger.error(f"文件緩存保存失败: {e}")
+            self.logger.error(f"文件緩存保存失敗: {e}")
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
@@ -197,7 +197,7 @@ class AdaptiveCacheManager:
             
             return cache_data
         except Exception as e:
-            self.logger.error(f"文件緩存加載失败: {e}")
+            self.logger.error(f"文件緩存加載失敗: {e}")
             return None
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
@@ -216,7 +216,7 @@ class AdaptiveCacheManager:
             self.redis_client.setex(cache_key, ttl_seconds, serialized_data)
             return True
         except Exception as e:
-            self.logger.error(f"Redis緩存保存失败: {e}")
+            self.logger.error(f"Redis緩存保存失敗: {e}")
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
@@ -236,16 +236,16 @@ class AdaptiveCacheManager:
             
             return cache_data
         except Exception as e:
-            self.logger.error(f"Redis緩存加載失败: {e}")
+            self.logger.error(f"Redis緩存加載失敗: {e}")
             return None
     
     def save_stock_data(self, symbol: str, data: Any, start_date: str = None, 
                        end_date: str = None, data_source: str = "default") -> str:
         """保存股票數據到緩存"""
-        # 生成緩存键
+        # 生成緩存鍵
         cache_key = self._get_cache_key(symbol, start_date or "", end_date or "", data_source)
         
-        # 準备元數據
+        # 準備元數據
         metadata = {
             'symbol': symbol,
             'start_date': start_date,
@@ -263,19 +263,19 @@ class AdaptiveCacheManager:
         if self.primary_backend == "redis":
             success = self._save_to_redis(cache_key, data, metadata, ttl_seconds)
         elif self.primary_backend == "mongodb":
-            # MongoDB保存逻辑（簡化版）
+            # MongoDB保存邏輯（簡化版）
             success = self._save_to_file(cache_key, data, metadata)
         
-        # 如果主要後端失败，使用文件緩存作為备用
+        # 如果主要後端失敗，使用文件緩存作為備用
         if not success and self.fallback_enabled:
             success = self._save_to_file(cache_key, data, metadata)
             if success:
-                self.logger.info(f"使用文件緩存备用保存: {cache_key}")
+                self.logger.info(f"使用文件緩存備用保存: {cache_key}")
         
         if success:
             self.logger.info(f"數據保存成功: {symbol} -> {cache_key}")
         else:
-            self.logger.error(f"數據保存失败: {symbol}")
+            self.logger.error(f"數據保存失敗: {symbol}")
         
         return cache_key
     
@@ -287,14 +287,14 @@ class AdaptiveCacheManager:
         if self.primary_backend == "redis":
             cache_data = self._load_from_redis(cache_key)
         elif self.primary_backend == "mongodb":
-            # MongoDB加載逻辑（簡化版）
+            # MongoDB加載邏輯（簡化版）
             cache_data = self._load_from_file(cache_key)
         
-        # 如果主要後端失败，嘗試文件緩存
+        # 如果主要後端失敗，嘗試文件緩存
         if not cache_data and self.fallback_enabled:
             cache_data = self._load_from_file(cache_key)
             if cache_data:
-                self.logger.info(f"使用文件緩存备用加載: {cache_key}")
+                self.logger.info(f"使用文件緩存備用加載: {cache_key}")
         
         if not cache_data:
             return None
@@ -387,7 +387,7 @@ def main():
     if loaded_data == test_data:
         logger.info(f"✅ 數據加載成功")
     else:
-        logger.error(f"❌ 數據加載失败")
+        logger.error(f"❌ 數據加載失敗")
     
     # 查找緩存
     found_key = cache.find_cached_stock_data(
@@ -400,7 +400,7 @@ def main():
     if found_key:
         logger.info(f"✅ 緩存查找成功: {found_key}")
     else:
-        logger.error(f"❌ 緩存查找失败")
+        logger.error(f"❌ 緩存查找失敗")
     
     logger.info(f"\n🎉 自適應緩存管理器測試完成!")
 

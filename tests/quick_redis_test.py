@@ -33,8 +33,8 @@ def quick_redis_test(host=None, port=None, password=None):
         connect_time = (time.time() - start_time) * 1000
         print(f"✅ 連接成功! 連接時間: {connect_time:.2f} ms")
         
-        # 測試基本操作延迟
-        print("\n📊 基本操作延迟測試:")
+        # 測試基本操作延遲
+        print("\n📊 基本操作延遲測試:")
         
         # SET操作測試
         start_time = time.time()
@@ -97,7 +97,7 @@ def quick_redis_test(host=None, port=None, password=None):
         return True
         
     except redis.ConnectionError as e:
-        print(f"❌ Redis連接失败: {e}")
+        print(f"❌ Redis連接失敗: {e}")
         return False
     except redis.TimeoutError as e:
         print(f"❌ Redis連接超時: {e}")
@@ -128,7 +128,7 @@ def main():
     if success:
         print("\n✅ Redis連接測試完成!")
     else:
-        print("\n❌ Redis連接測試失败!")
+        print("\n❌ Redis連接測試失敗!")
         sys.exit(1)
 
 if __name__ == "__main__":

@@ -28,13 +28,13 @@ def load_activities(start_date: datetime = None, end_date: datetime = None) -> L
         print("❌ 活動記錄目錄不存在")
         return activities
     
-    # 確定日期範围
+    # 確定日期範圍
     if start_date is None:
         start_date = datetime.now() - timedelta(days=7)
     if end_date is None:
         end_date = datetime.now()
     
-    # 遍歷日期範围內的文件
+    # 遍歷日期範圍內的文件
     current_date = start_date.date()
     end_date_only = end_date.date()
     
@@ -52,7 +52,7 @@ def load_activities(start_date: datetime = None, end_date: datetime = None) -> L
                             if start_date <= activity_time <= end_date:
                                 activities.append(activity)
             except Exception as e:
-                print(f"❌ 讀取文件失败 {activity_file}: {e}")
+                print(f"❌ 讀取文件失敗 {activity_file}: {e}")
         
         current_date += timedelta(days=1)
     
@@ -139,8 +139,8 @@ def show_statistics(args):
     successful_activities = sum(1 for a in activities if a.get('success', True))
     success_rate = (successful_activities / total_activities * 100) if total_activities > 0 else 0
     
-    print(f"📈 总體統計:")
-    print(f"   📊 总活動數: {total_activities}")
+    print(f"📈 總體統計:")
+    print(f"   📊 總活動數: {total_activities}")
     print(f"   👥 活躍用戶: {unique_users}")
     print(f"   ✅ 成功率: {success_rate:.1f}%")
     print()
@@ -255,11 +255,11 @@ def export_activities(args):
         print(f"✅ 成功導出 {len(activities)} 條記錄到: {output_file}")
         
     except Exception as e:
-        print(f"❌ 導出失败: {e}")
+        print(f"❌ 導出失敗: {e}")
 
 def cleanup_activities(args):
-    """清理旧的活動記錄"""
-    print("🗑️ 清理旧的活動記錄")
+    """清理舊的活動記錄"""
+    print("🗑️ 清理舊的活動記錄")
     print("=" * 80)
     
     activity_dir = get_activity_dir()
@@ -271,10 +271,10 @@ def cleanup_activities(args):
     cutoff_date = datetime.now() - timedelta(days=days_to_keep)
     deleted_count = 0
     
-    print(f"🗓️ 将刪除 {cutoff_date.strftime('%Y-%m-%d')} 之前的記錄")
+    print(f"🗓️ 將刪除 {cutoff_date.strftime('%Y-%m-%d')} 之前的記錄")
     
     if not args.force:
-        confirm = input("⚠️ 確認刪除吗? (y/N): ")
+        confirm = input("⚠️ 確認刪除嗎? (y/N): ")
         if confirm.lower() != 'y':
             print("❌ 操作已取消")
             return
@@ -298,7 +298,7 @@ def cleanup_activities(args):
         print(f"✅ 成功刪除 {deleted_count} 個文件")
         
     except Exception as e:
-        print(f"❌ 清理失败: {e}")
+        print(f"❌ 清理失敗: {e}")
 
 def main():
     """主函數"""
@@ -327,9 +327,9 @@ def main():
     export_parser.add_argument('--output', help='輸出文件路徑')
     
     # cleanup 命令
-    cleanup_parser = subparsers.add_parser('cleanup', help='清理旧記錄')
+    cleanup_parser = subparsers.add_parser('cleanup', help='清理舊記錄')
     cleanup_parser.add_argument('--days', type=int, default=90, help='保留天數 (默認90天)')
-    cleanup_parser.add_argument('--force', action='store_true', help='强制刪除，不詢問確認')
+    cleanup_parser.add_argument('--force', action='store_true', help='強制刪除，不詢問確認')
     
     args = parser.parse_args()
     
@@ -353,7 +353,7 @@ def main():
     except KeyboardInterrupt:
         print("\n⚠️ 操作被用戶中斷")
     except Exception as e:
-        print(f"❌ 執行失败: {e}")
+        print(f"❌ 執行失敗: {e}")
 
 if __name__ == "__main__":
     main()

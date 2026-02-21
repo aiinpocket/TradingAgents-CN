@@ -1,125 +1,124 @@
 ---
-name: 🐛 Bug报告 / Bug Report
-about: 报告一个问题帮助我们改进 / Report a bug to help us improve
+name: Bug 回報 / Bug Report
+about: 回報一個問題幫助我們改進 / Report a bug to help us improve
 title: '[BUG] '
 labels: ['bug', 'needs-triage']
 assignees: ''
 ---
 
-## 🐛 问题描述 / Bug Description
+## 問題描述 / Bug Description
 
-**问题类型 / Issue Type:**
-- [ ] 🚀 启动/安装问题 / Startup/Installation Issue
-- [ ] 🌐 Web界面问题 / Web Interface Issue
-- [ ] 💻 CLI工具问题 / CLI Tool Issue
-- [ ] 🤖 LLM调用问题 / LLM API Issue
-- [ ] 📊 数据获取问题 / Data Acquisition Issue
-- [ ] 🐳 Docker部署问题 / Docker Deployment Issue
-- [ ] ⚙️ 配置问题 / Configuration Issue
-- [ ] 🔄 功能异常 / Feature Malfunction
-- [ ] 🐌 性能问题 / Performance Issue
+**問題類型 / Issue Type:**
+- [ ] 啟動/安裝問題 / Startup/Installation Issue
+- [ ] Web 介面問題 / Web Interface Issue
+- [ ] CLI 工具問題 / CLI Tool Issue
+- [ ] LLM 呼叫問題 / LLM API Issue
+- [ ] 資料取得問題 / Data Acquisition Issue
+- [ ] Docker 部署問題 / Docker Deployment Issue
+- [ ] 配置問題 / Configuration Issue
+- [ ] 功能異常 / Feature Malfunction
+- [ ] 效能問題 / Performance Issue
 - [ ] 其他 / Other: ___________
 
-**简要描述问题 / Brief description:**
-清晰简洁地描述遇到的问题。
+**簡要描述問題 / Brief description:**
+清晰簡潔地描述遇到的問題。
 
-**期望行为 / Expected behavior:**
-描述您期望发生的行为。
+**期望行為 / Expected behavior:**
+描述您期望發生的行為。
 
-**实际行为 / Actual behavior:**
-描述实际发生的行为。
+**實際行為 / Actual behavior:**
+描述實際發生的行為。
 
-## 🔄 复现步骤 / Steps to Reproduce
+## 重現步驟 / Steps to Reproduce
 
-请提供详细的复现步骤：
+請提供詳細的重現步驟：
 
-1. 进入 '...'
-2. 点击 '....'
-3. 滚动到 '....'
-4. 看到错误
+1. 進入 '...'
+2. 點擊 '....'
+3. 捲動到 '....'
+4. 看到錯誤
 
-## 📱 环境信息 / Environment
+## 環境資訊 / Environment
 
-**系统信息 / System Info:**
-- 操作系统 / OS: [例如 Windows 11, macOS 13, Ubuntu 22.04]
-- Python版本 / Python Version: [例如 3.10.0]
-- 项目版本 / Project Version: [例如 v0.1.6]
+**系統資訊 / System Info:**
+- 作業系統 / OS: [例如 Windows 11, macOS 13, Ubuntu 22.04]
+- Python 版本 / Python Version: [例如 3.10.0]
+- 專案版本 / Project Version: [例如 v0.1.15]
 
-**安装方式 / Installation Method:**
-- [ ] 本地安装 / Local Installation
-- [ ] Docker部署 / Docker Deployment
+**安裝方式 / Installation Method:**
+- [ ] 本機安裝 / Local Installation
+- [ ] Docker 部署 / Docker Deployment
 - [ ] 其他 / Other: ___________
 
-**依赖版本 / Dependencies:**
+**依賴版本 / Dependencies:**
 ```bash
-# 请运行以下命令并粘贴结果 / Please run the following command and paste the result
-pip list | grep -E "(streamlit|langchain|openai|requests|tushare|akshare|baostock)"
+# 請執行以下指令並貼上結果 / Please run the following command and paste the result
+pip list | grep -E "(streamlit|langchain|openai|requests|yfinance|finnhub)"
 ```
 
-**浏览器信息 / Browser Info (仅Web界面问题):**
-- 浏览器 / Browser: [例如 Chrome 120, Firefox 121, Safari 17]
-- 浏览器版本 / Version:
-- 是否使用无痕模式 / Incognito mode: [ ] 是 / Yes [ ] 否 / No
+**瀏覽器資訊 / Browser Info (僅 Web 介面問題):**
+- 瀏覽器 / Browser: [例如 Chrome 120, Firefox 121, Safari 17]
+- 瀏覽器版本 / Version:
+- 是否使用無痕模式 / Incognito mode: [ ] 是 / Yes [ ] 否 / No
 
-## 📊 配置信息 / Configuration
+## 配置資訊 / Configuration
 
-**API配置 / API Configuration:**
-- [ ] 已配置Tushare Token
-- [ ] 已配置DeepSeek API Key
-- [ ] 已配置DashScope API Key
-- [ ] 已配置FinnHub API Key
-- [ ] 已配置数据库 / Database configured
+**API 配置 / API Configuration:**
+- [ ] 已配置 OpenAI API Key
+- [ ] 已配置 Google API Key
+- [ ] 已配置 Anthropic API Key
+- [ ] 已配置 FinnHub API Key
+- [ ] 已配置資料庫 / Database configured
 
-**数据源 / Data Sources:**
-- 中国股票数据源 / Chinese Stock Source: [tushare/akshare/baostock]
-- 美股数据源 / US Stock Source: [finnhub/yfinance]
+**資料來源 / Data Sources:**
+- 美股資料來源 / US Stock Source: [yfinance/finnhub]
 
-## 📝 错误日志 / Error Logs
+## 錯誤日誌 / Error Logs
 
-**控制台错误 / Console Errors:**
+**主控台錯誤 / Console Errors:**
 ```
-请粘贴完整的错误信息和堆栈跟踪
+請貼上完整的錯誤資訊和堆疊追蹤
 Please paste the complete error message and stack trace
 ```
 
-**日志文件 / Log Files:**
+**日誌檔案 / Log Files:**
 ```bash
-# 如果启用了日志记录，请提供相关日志
+# 如果啟用了日誌記錄，請提供相關日誌
 # If logging is enabled, please provide relevant logs
 
-# Web应用日志 / Web app logs
+# Web 應用日誌 / Web app logs
 tail -n 50 logs/tradingagents.log
 
-# Docker日志 / Docker logs
+# Docker 日誌 / Docker logs
 docker-compose logs web
 ```
 
-**网络请求错误 / Network Request Errors:**
-如果是API调用问题，请提供：
-- API响应状态码 / API response status code
-- 错误响应内容 / Error response content
-- 请求参数（隐藏敏感信息）/ Request parameters (hide sensitive info)
+**網路請求錯誤 / Network Request Errors:**
+如果是 API 呼叫問題，請提供：
+- API 回應狀態碼 / API response status code
+- 錯誤回應內容 / Error response content
+- 請求參數（隱藏敏感資訊）/ Request parameters (hide sensitive info)
 
-## 📸 截图 / Screenshots
+## 截圖 / Screenshots
 
-如果适用，请添加截图来帮助解释问题。
+如果適用，請新增截圖來幫助說明問題。
 If applicable, add screenshots to help explain your problem.
 
-## 🔍 额外信息 / Additional Context
+## 額外資訊 / Additional Context
 
-添加任何其他有关问题的上下文信息。
+新增任何其他有關問題的上下文資訊。
 Add any other context about the problem here.
 
-## ✅ 检查清单 / Checklist
+## 檢查清單 / Checklist
 
-请确认您已经：
-- [ ] 搜索了现有的issues，确认这不是重复问题
-- [ ] 使用了最新版本的代码
-- [ ] 提供了完整的错误信息
-- [ ] 包含了复现步骤
-- [ ] 填写了环境信息
+請確認您已經：
+- [ ] 搜尋了現有的 issues，確認這不是重複問題
+- [ ] 使用了最新版本的程式碼
+- [ ] 提供了完整的錯誤資訊
+- [ ] 包含了重現步驟
+- [ ] 填寫了環境資訊
 
 ---
 
-**感谢您的反馈！我们会尽快处理这个问题。**
+**感謝您的回饋！我們會盡快處理這個問題。**
 **Thank you for your feedback! We will address this issue as soon as possible.**

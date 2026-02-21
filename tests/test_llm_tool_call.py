@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 測試LLM工具調用機制的詳細調試腳本
-模擬實际的LLM工具調用過程
+模擬實際的LLM工具調用過程
 """
 
 import logging
@@ -34,7 +34,7 @@ def test_function_exists():
         logger.info(f"Toolkit.get_realtime_stock_news: {toolkit_func}")
         logger.info(f"Toolkit函數類型: {type(toolkit_func)}")
     except Exception as e:
-        logger.error(f"獲取Toolkit函數失败: {e}")
+        logger.error(f"獲取Toolkit函數失敗: {e}")
 
 def test_direct_call():
     """測試直接函數調用"""
@@ -53,7 +53,7 @@ def test_direct_call():
         logger.info(f"結果前100字符: {result[:100]}...")
         return True, result
     except Exception as e:
-        logger.error(f"直接調用失败: {e}")
+        logger.error(f"直接調用失敗: {e}")
         import traceback
         logger.error(f"錯誤詳情: {traceback.format_exc()}")
         return False, None
@@ -75,7 +75,7 @@ def test_toolkit_call():
         logger.info(f"結果前100字符: {result[:100]}...")
         return True, result
     except Exception as e:
-        logger.error(f"Toolkit調用失败: {e}")
+        logger.error(f"Toolkit調用失敗: {e}")
         import traceback
         logger.error(f"錯誤詳情: {traceback.format_exc()}")
         return False, None
@@ -134,7 +134,7 @@ def simulate_llm_tool_call():
             return False, None
             
     except Exception as e:
-        logger.error(f"模擬LLM調用失败: {e}")
+        logger.error(f"模擬LLM調用失敗: {e}")
         import traceback
         logger.error(f"錯誤詳情: {traceback.format_exc()}")
         return False, None
@@ -159,16 +159,16 @@ def main():
     # 測試5: 模擬LLM調用
     llm_success, llm_result = simulate_llm_tool_call()
     
-    # 結果汇总
+    # 結果匯總
     logger.info("=" * 60)
-    logger.info("========== 測試結果汇总 ==========")
-    logger.info(f"直接函數調用: {'✓ 成功' if direct_success else '✗ 失败'}")
-    logger.info(f"Toolkit調用: {'✓ 成功' if toolkit_success else '✗ 失败'}")
-    logger.info(f"模擬LLM調用: {'✓ 成功' if llm_success else '✗ 失败'}")
+    logger.info("========== 測試結果匯總 ==========")
+    logger.info(f"直接函數調用: {'✓ 成功' if direct_success else '✗ 失敗'}")
+    logger.info(f"Toolkit調用: {'✓ 成功' if toolkit_success else '✗ 失敗'}")
+    logger.info(f"模擬LLM調用: {'✓ 成功' if llm_success else '✗ 失敗'}")
     
     # 分析問題
     if direct_success and not toolkit_success:
-        logger.warning("🔍 問題分析: Toolkit工具绑定存在問題")
+        logger.warning("🔍 問題分析: Toolkit工具綁定存在問題")
     elif direct_success and not llm_success:
         logger.warning("🔍 問題分析: LLM工具調用機制存在問題")
     elif not direct_success:

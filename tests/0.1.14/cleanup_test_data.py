@@ -47,7 +47,7 @@ def cleanup_mongodb_test_data():
         print(f"✅ 已刪除 {result2.deleted_count} 條TEST001相關記錄")
         
     except Exception as e:
-        print(f"❌ MongoDB清理失败: {e}")
+        print(f"❌ MongoDB清理失敗: {e}")
 
 def main():
     """主函數"""

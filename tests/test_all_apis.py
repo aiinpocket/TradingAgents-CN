@@ -22,8 +22,7 @@ def check_all_api_keys():
     print("=" * 50)
     
     api_keys = {
-        'DASHSCOPE_API_KEY': '阿里百炼API',
-        'FINNHUB_API_KEY': '金融數據API', 
+        'FINNHUB_API_KEY': '金融數據API',
         'GOOGLE_API_KEY': 'Google API',
         'REDDIT_CLIENT_ID': 'Reddit客戶端ID',
         'REDDIT_CLIENT_SECRET': 'Reddit客戶端密鑰',
@@ -59,7 +58,7 @@ def test_google_api():
             print("❌ Google API密鑰未配置")
             return False
         
-        # 這里可以添加具體的Google API測試
+        # 這裡可以添加具體的Google API測試
         # 例如Google News API或Google Search API
         print("✅ Google API密鑰已配置")
         print("💡 提示: 需要根據具體使用的Google服務進行測試")
@@ -67,7 +66,7 @@ def test_google_api():
         return True
         
     except Exception as e:
-        print(f"❌ Google API測試失败: {e}")
+        print(f"❌ Google API測試失敗: {e}")
         return False
 
 def test_reddit_api():
@@ -101,7 +100,7 @@ def test_reddit_api():
             subreddit = reddit.subreddit('investing')
             print(f"✅ Reddit API連接成功")
             print(f"  測試subreddit: {subreddit.display_name}")
-            print(f"  订阅者數量: {subreddit.subscribers:,}")
+            print(f"  訂閱者數量: {subreddit.subscribers:,}")
             
             return True
             
@@ -110,11 +109,11 @@ def test_reddit_api():
             print("💡 運行: pip install praw")
             return False
         except Exception as e:
-            print(f"❌ Reddit API連接失败: {e}")
+            print(f"❌ Reddit API連接失敗: {e}")
             return False
             
     except Exception as e:
-        print(f"❌ Reddit API測試失败: {e}")
+        print(f"❌ Reddit API測試失敗: {e}")
         return False
 
 def test_tradingagents_with_new_apis():
@@ -139,14 +138,14 @@ def test_tradingagents_with_new_apis():
         # 檢查Reddit相關工具  
         try:
             from tradingagents.dataflows.reddit_utils import get_reddit_sentiment
-            print("✅ Reddit情绪分析工具可用")
+            print("✅ Reddit情緒分析工具可用")
         except ImportError:
-            print("❌ Reddit情绪分析工具不可用")
+            print("❌ Reddit情緒分析工具不可用")
         
         return True
         
     except Exception as e:
-        print(f"❌ TradingAgents集成測試失败: {e}")
+        print(f"❌ TradingAgents集成測試失敗: {e}")
         return False
 
 def test_social_media_analyst():
@@ -157,19 +156,17 @@ def test_social_media_analyst():
         
         # 檢查社交媒體分析師
         from tradingagents.agents.analysts.social_media_analyst import create_social_media_analyst
-        from tradingagents.llm_adapters import ChatDashScope
         
         # 創建模型實例
-        llm = ChatDashScope(model="qwen-plus")
         
-        # 這里需要toolkit實例，暂時跳過實际測試
+        # 這裡需要toolkit實例，暫時跳過實際測試
         print("✅ 社交媒體分析師模塊可用")
-        print("💡 需要完整的toolkit實例才能進行實际測試")
+        print("💡 需要完整的toolkit實例才能進行實際測試")
         
         return True
         
     except Exception as e:
-        print(f"❌ 社交媒體分析師測試失败: {e}")
+        print(f"❌ 社交媒體分析師測試失敗: {e}")
         return False
 
 def main():
@@ -193,23 +190,23 @@ def main():
     results['TradingAgents集成'] = test_tradingagents_with_new_apis()
     results['社交媒體分析師'] = test_social_media_analyst()
     
-    # 总結結果
-    print(f"\n📊 測試結果总結:")
+    # 總結結果
+    print(f"\n📊 測試結果總結:")
     print("=" * 50)
     
     for test_name, success in results.items():
-        status = "✅ 通過" if success else "❌ 失败"
+        status = "✅ 通過" if success else "❌ 失敗"
         print(f"  {test_name}: {status}")
     
     successful_tests = sum(results.values())
     total_tests = len(results)
     
-    print(f"\n🎯 总體結果: {successful_tests}/{total_tests} 測試通過")
+    print(f"\n🎯 總體結果: {successful_tests}/{total_tests} 測試通過")
     
     if successful_tests == total_tests:
         print("🎉 所有測試通過！")
     else:
-        print("⚠️ 部分測試失败，請檢查配置")
+        print("⚠️ 部分測試失敗，請檢查配置")
 
 if __name__ == "__main__":
     main()

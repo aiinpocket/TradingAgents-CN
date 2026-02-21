@@ -31,7 +31,7 @@ def main():
     )
     
     if not in_venv:
-        print("⚠️ 建议在虛擬環境中運行:")
+        print("⚠️ 建議在虛擬環境中運行:")
         print("   Windows: .\\env\\Scripts\\activate")
         print("   Linux/macOS: source env/bin/activate")
         print()
@@ -46,7 +46,7 @@ def main():
             subprocess.run([sys.executable, "-m", "pip", "install", "streamlit", "plotly"], check=True)
             print("✅ Streamlit安裝成功")
         except subprocess.CalledProcessError:
-            print("❌ Streamlit安裝失败，請手動安裝: pip install streamlit plotly")
+            print("❌ Streamlit安裝失敗，請手動安裝: pip install streamlit plotly")
             return
     
     # 設置環境變量，添加項目根目錄到Python路徑
@@ -69,7 +69,7 @@ def main():
     ]
     
     print("🌐 啟動Web應用...")
-    print("📱 浏覽器将自動打開 http://localhost:8501")
+    print("📱 瀏覽器將自動打開 http://localhost:8501")
     print("⏹️  按 Ctrl+C 停止應用")
     print("=" * 50)
     
@@ -79,7 +79,7 @@ def main():
     except KeyboardInterrupt:
         print("\n⏹️ Web應用已停止")
     except Exception as e:
-        print(f"\n❌ 啟動失败: {e}")
+        print(f"\n❌ 啟動失敗: {e}")
         print("\n💡 如果遇到模塊導入問題，請嘗試:")
         print("   1. 激活虛擬環境")
         print("   2. 運行: pip install -e .")

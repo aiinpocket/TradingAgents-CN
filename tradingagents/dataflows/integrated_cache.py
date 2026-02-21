@@ -45,7 +45,7 @@ class IntegratedCacheManager:
                 self.use_adaptive = True
                 self.logger.info("✅ 自適應緩存系統已啟用")
             except Exception as e:
-                self.logger.warning(f"自適應緩存系統初始化失败，使用傳統緩存: {e}")
+                self.logger.warning(f"自適應緩存系統初始化失敗，使用傳統緩存: {e}")
                 self.use_adaptive = False
         else:
             self.logger.info("自適應緩存系統不可用，使用傳統文件緩存")
@@ -81,7 +81,7 @@ class IntegratedCacheManager:
             data_source: 數據源
             
         Returns:
-            緩存键
+            緩存鍵
         """
         if self.use_adaptive:
             # 使用自適應緩存系統
@@ -108,7 +108,7 @@ class IntegratedCacheManager:
         從緩存加載股票數據
         
         Args:
-            cache_key: 緩存键
+            cache_key: 緩存鍵
             
         Returns:
             股票數據或None
@@ -132,7 +132,7 @@ class IntegratedCacheManager:
             data_source: 數據源
             
         Returns:
-            緩存键或None
+            緩存鍵或None
         """
         if self.use_adaptive:
             # 使用自適應緩存系統
@@ -223,7 +223,7 @@ class IntegratedCacheManager:
         if self.use_adaptive:
             self.adaptive_cache.clear_expired_cache()
         
-        # 总是清理傳統緩存
+        # 總是清理傳統緩存
         self.legacy_cache.clear_expired_cache()
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
@@ -254,7 +254,7 @@ class IntegratedCacheManager:
     def get_performance_mode(self) -> str:
         """獲取性能模式"""
         if not self.use_adaptive:
-            return "基础模式 (文件緩存)"
+            return "基礎模式 (文件緩存)"
         
         mongodb_available = self.db_manager.is_mongodb_available()
         redis_available = self.db_manager.is_redis_available()

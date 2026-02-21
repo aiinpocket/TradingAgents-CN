@@ -32,17 +32,17 @@ def test_cache_manager_fundamentals():
 **數據獲取時間**: {datetime.now().strftime('%Y-%m-%d')}
 **數據來源**: 測試數據
 
-## 公司概况
+## 公司概況
 - **公司名稱**: Apple Inc.
 - **行業**: 科技
-- **市值**: 3000000 百万美元
+- **市值**: 3000000 百萬美元
 
-## 關键財務指標
+## 關鍵財務指標
 | 指標 | 數值 |
 |------|------|
 | 市盈率 (PE) | 25.50 |
 | 市銷率 (PS) | 7.20 |
-| 净資產收益率 (ROE) | 15.30% |
+| 淨資產收益率 (ROE) | 15.30% |
 
 ## 數據說明
 - 這是測試數據，用於驗證緩存功能
@@ -51,7 +51,7 @@ def test_cache_manager_fundamentals():
         # 測試保存到緩存
         print(f"\n💾 測試保存基本面數據到緩存...")
         cache_key = cache.save_fundamentals_data(test_symbol, test_data, data_source="test")
-        print(f"✅ 數據已保存，緩存键: {cache_key}")
+        print(f"✅ 數據已保存，緩存鍵: {cache_key}")
         
         # 測試從緩存加載
         print(f"\n📖 測試從緩存加載基本面數據...")
@@ -60,13 +60,13 @@ def test_cache_manager_fundamentals():
             print(f"✅ 數據加載成功，長度: {len(loaded_data)}")
             print(f"📄 數據預覽: {loaded_data[:200]}...")
         else:
-            print(f"❌ 數據加載失败")
+            print(f"❌ 數據加載失敗")
         
         # 測試查找緩存
         print(f"\n🔍 測試查找基本面緩存數據...")
         found_key = cache.find_cached_fundamentals_data(test_symbol, data_source="test")
         if found_key:
-            print(f"✅ 找到緩存數據，緩存键: {found_key}")
+            print(f"✅ 找到緩存數據，緩存鍵: {found_key}")
         else:
             print(f"❌ 未找到緩存數據")
         
@@ -78,7 +78,7 @@ def test_cache_manager_fundamentals():
         return True
         
     except Exception as e:
-        print(f"❌ 緩存管理器測試失败: {str(e)}")
+        print(f"❌ 緩存管理器測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -93,14 +93,14 @@ def test_fundamentals_with_cache():
         test_symbol = "MSFT"
         curr_date = datetime.now().strftime('%Y-%m-%d')
         
-        print(f"\n📊 第一次獲取 {test_symbol} 基本面數據（應该從API獲取）...")
+        print(f"\n📊 第一次獲取 {test_symbol} 基本面數據（應該從API獲取）...")
         start_time = time.time()
         result1 = get_fundamentals_finnhub(test_symbol, curr_date)
         first_time = time.time() - start_time
         print(f"⏱️ 第一次獲取耗時: {first_time:.2f}秒")
         print(f"📄 數據長度: {len(result1)}")
         
-        print(f"\n📊 第二次獲取 {test_symbol} 基本面數據（應该從緩存獲取）...")
+        print(f"\n📊 第二次獲取 {test_symbol} 基本面數據（應該從緩存獲取）...")
         start_time = time.time()
         result2 = get_fundamentals_finnhub(test_symbol, curr_date)
         second_time = time.time() - start_time
@@ -115,14 +115,14 @@ def test_fundamentals_with_cache():
         
         # 驗證數據一致性
         if result1 == result2:
-            print(f"✅ 两次獲取的數據完全一致")
+            print(f"✅ 兩次獲取的數據完全一致")
         else:
-            print(f"⚠️ 两次獲取的數據不一致，可能是緩存問題")
+            print(f"⚠️ 兩次獲取的數據不一致，可能是緩存問題")
         
         return True
         
     except Exception as e:
-        print(f"❌ 基本面數據緩存測試失败: {str(e)}")
+        print(f"❌ 基本面數據緩存測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -163,7 +163,7 @@ def test_cache_ttl():
         return True
         
     except Exception as e:
-        print(f"❌ 緩存TTL測試失败: {str(e)}")
+        print(f"❌ 緩存TTL測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -191,13 +191,13 @@ def main():
             result = test_func()
             results.append((test_name, result))
         except Exception as e:
-            print(f"❌ 測試 '{test_name}' 執行失败: {str(e)}")
+            print(f"❌ 測試 '{test_name}' 執行失敗: {str(e)}")
             results.append((test_name, False))
     
     # 輸出測試結果
-    print(f"\n{'='*20} 測試結果汇总 {'='*20}")
+    print(f"\n{'='*20} 測試結果匯總 {'='*20}")
     for test_name, result in results:
-        status = "✅ 通過" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失敗"
         print(f"{status} {test_name}")
     
     passed = sum(1 for _, result in results if result)
@@ -207,7 +207,7 @@ def main():
     if passed == total:
         print("🎉 所有測試都通過了！基本面數據緩存功能正常工作。")
     else:
-        print("⚠️ 部分測試失败，請檢查相關功能。")
+        print("⚠️ 部分測試失敗，請檢查相關功能。")
 
 if __name__ == "__main__":
     main()

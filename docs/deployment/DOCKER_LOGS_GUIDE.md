@@ -12,7 +12,7 @@
 
 ```yaml
 volumes:
-  - ./logs:/app/logs  # 将容器內日誌映射到本地logs目錄
+  - ./logs:/app/logs  # 將容器內日誌映射到本地logs目錄
 ```
 
 ### 2. **環境變量配置**
@@ -172,7 +172,7 @@ Compress-Archive -Path logs\*,docker_logs.txt -DestinationPath "tradingagents_lo
 
 ### **問題1: logs目錄為空**
 
-**原因**: 容器內應用可能将日誌輸出到stdout而不是文件
+**原因**: 容器內應用可能將日誌輸出到stdout而不是文件
 
 **解決方案**:
 1. 檢查Docker日誌: `docker-compose logs web`
@@ -195,14 +195,14 @@ chmod 755 logs/
 **自動轮轉**: 配置了自動轮轉，主日誌文件最大100MB
 **手動清理**:
 ```bash
-# 备份並清空日誌
+# 備份並清空日誌
 cp logs/tradingagents.log logs/tradingagents.log.backup
 > logs/tradingagents.log
 ```
 
 ### **問題4: 容器無法啟動**
 
-**檢查步骤**:
+**檢查步驟**:
 1. 檢查Docker狀態: `docker info`
 2. 檢查端口占用: `netstat -tlnp | grep 8501`
 3. 查看啟動日誌: `docker-compose logs web`
@@ -211,10 +211,10 @@ cp logs/tradingagents.log logs/tradingagents.log.backup
 ## 📊 日誌級別說明
 
 - **DEBUG**: 詳細的調試信息，包含函數調用、變量值等
-- **INFO**: 一般信息，程序正常運行的關键步骤
-- **WARNING**: 警告信息，程序可以繼续運行但需要註意
-- **ERROR**: 錯誤信息，程序遇到錯誤但可以恢複
-- **CRITICAL**: 嚴重錯誤，程序可能無法繼续運行
+- **INFO**: 一般信息，程序正常運行的關鍵步驟
+- **WARNING**: 警告信息，程序可以繼續運行但需要註意
+- **ERROR**: 錯誤信息，程序遇到錯誤但可以恢復
+- **CRITICAL**: 嚴重錯誤，程序可能無法繼續運行
 
 ## 🎯 最佳實踐
 
@@ -230,9 +230,9 @@ grep -i error logs/tradingagents.log | tail -20
 ls -lh logs/
 ```
 
-### **3. 备份重要日誌**
+### **3. 備份重要日誌**
 ```bash
-# 定期备份日誌
+# 定期備份日誌
 cp logs/tradingagents.log backups/tradingagents_$(date +%Y%m%d).log
 ```
 
@@ -247,9 +247,9 @@ tail -f logs/tradingagents.log | grep -i "error\|warning"
 如果遇到問題：
 
 1. **收集日誌**: 使用上述方法收集完整日誌
-2. **描述問題**: 詳細描述問題現象和重現步骤
+2. **描述問題**: 詳細描述問題現象和重現步驟
 3. **環境信息**: 提供操作系統、Docker版本等信息
-4. **發送文件**: 将日誌文件發送給開發者
+4. **發送文件**: 將日誌文件發送給開發者
 
 ---
 

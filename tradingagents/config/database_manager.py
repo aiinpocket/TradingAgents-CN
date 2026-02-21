@@ -42,7 +42,7 @@ class DatabaseManager:
         except ImportError:
             self.logger.info("python-dotenv未安裝，直接讀取環境變量")
 
-        # 使用强健的布爾值解析（兼容Python 3.13+）
+        # 使用強健的布爾值解析（兼容Python 3.13+）
         from .env_utils import parse_bool_env
         self.mongodb_enabled = parse_bool_env("MONGODB_ENABLED", False)
         self.redis_enabled = parse_bool_env("REDIS_ENABLED", False)
@@ -115,7 +115,7 @@ class DatabaseManager:
         except ImportError:
             return False, "pymongo未安裝"
         except Exception as e:
-            return False, f"MongoDB連接失败: {str(e)}"
+            return False, f"MongoDB連接失敗: {str(e)}"
     
     def _detect_redis(self) -> Tuple[bool, str]:
         """檢測Redis是否可用"""
@@ -149,7 +149,7 @@ class DatabaseManager:
         except ImportError:
             return False, "redis未安裝"
         except Exception as e:
-            return False, f"Redis連接失败: {str(e)}"
+            return False, f"Redis連接失敗: {str(e)}"
     
     def _detect_databases(self):
         """檢測所有數據庫"""
@@ -213,7 +213,7 @@ class DatabaseManager:
                 self.mongodb_client = pymongo.MongoClient(**connect_kwargs)
                 self.logger.info("MongoDB客戶端初始化成功")
             except Exception as e:
-                self.logger.error(f"MongoDB客戶端初始化失败: {e}")
+                self.logger.error(f"MongoDB客戶端初始化失敗: {e}")
                 self.mongodb_available = False
 
         # 初始化Redis連接
@@ -236,7 +236,7 @@ class DatabaseManager:
                 self.redis_client = redis.Redis(**connect_kwargs)
                 self.logger.info("Redis客戶端初始化成功")
             except Exception as e:
-                self.logger.error(f"Redis客戶端初始化失败: {e}")
+                self.logger.error(f"Redis客戶端初始化失敗: {e}")
                 self.redis_available = False
     
     def get_mongodb_client(self):
@@ -292,7 +292,7 @@ class DatabaseManager:
                 "port": self.redis_config["port"]
             },
             "cache_backend": self.get_cache_backend(),
-            "fallback_enabled": True  # 总是啟用降級
+            "fallback_enabled": True  # 總是啟用降級
         }
 
     def get_cache_stats(self) -> Dict[str, Any]:
@@ -311,7 +311,7 @@ class DatabaseManager:
                 stats["redis_keys"] = self.redis_client.dbsize()
                 stats["redis_memory"] = info.get("used_memory_human", "N/A")
             except Exception as e:
-                self.logger.error(f"獲取Redis統計失败: {e}")
+                self.logger.error(f"獲取Redis統計失敗: {e}")
 
         return stats
 
@@ -325,7 +325,7 @@ class DatabaseManager:
                 if keys:
                     cleared_count += self.redis_client.delete(*keys)
             except Exception as e:
-                self.logger.error(f"Redis緩存清理失败: {e}")
+                self.logger.error(f"Redis緩存清理失敗: {e}")
 
         return cleared_count
 

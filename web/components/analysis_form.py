@@ -7,6 +7,7 @@ import datetime
 
 # 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
+from tradingagents.i18n import t
 
 # 導入用戶活動記錄器
 try:
@@ -20,7 +21,7 @@ logger = get_logger('web')
 def render_analysis_form():
     """渲染股票分析表單"""
 
-    st.subheader("📋 分析配置")
+    st.subheader(t("analysis.analysis_config"))
 
     # 獲取緩存的表單配置（確保不為None）
     cached_config = st.session_state.get('form_config') or {}
@@ -28,9 +29,9 @@ def render_analysis_form():
     # 調試信息（只在沒有分析運行時記錄，避免重複）
     if not st.session_state.get('analysis_running', False):
         if cached_config:
-            logger.debug(f"📊 [配置恢複] 使用緩存配置: {cached_config}")
+            logger.debug(f"[配置恢複] 使用緩存配置: {cached_config}")
         else:
-            logger.debug("📊 [配置恢複] 使用默認配置")
+            logger.debug("[配置恢複] 使用默認配置")
 
     # 創建表單
     with st.form("analysis_form", clear_on_submit=False):
@@ -38,31 +39,31 @@ def render_analysis_form():
         # 在表單開始時保存當前配置（用於檢測變化）
         initial_config = cached_config.copy() if cached_config else {}
         col1, col2 = st.columns(2)
-        
+
         with col1:
             # 市場選擇（固定為美股）
-            market_type = "美股"
-            st.info("📊 目前僅支援美股分析")
+            market_type = t("analysis.us_market")
+            st.info(t("analysis.us_market_only"))
 
             # 根據市場類型顯示不同的輸入提示
             cached_stock = cached_config.get('stock_symbol', '') if cached_config else ''
 
             stock_symbol = st.text_input(
-                "股票代碼 📈",
-                value=cached_stock if (cached_config and cached_config.get('market_type') == '美股') else '',
-                placeholder="輸入美股代碼，如 AAPL, TSLA, MSFT，然後按回車確認",
-                help="輸入要分析的美股代碼，輸入完成後請按回車键確認",
+                t("analysis.stock_symbol"),
+                value=cached_stock if (cached_config and cached_config.get('market_type') in ('美股', 'US Market')) else '',
+                placeholder=t("analysis.stock_placeholder"),
+                help=t("analysis.stock_help"),
                 key="us_stock_input",
                 autocomplete="off"
             ).upper().strip()
 
-            logger.debug(f"🔍 [FORM DEBUG] 美股text_input返回值: '{stock_symbol}'")
-            
+            logger.debug(f"[FORM DEBUG] text_input: '{stock_symbol}'")
+
             # 分析日期
             analysis_date = st.date_input(
-                "分析日期 📅",
+                t("analysis.trade_date"),
                 value=datetime.date.today(),
-                help="選擇分析的基準日期"
+                help=t("analysis.trade_date")
             )
         
         with col2:
@@ -74,7 +75,7 @@ def render_analysis_form():
                 value=cached_depth,
                 format_func=lambda x: {
                     1: "1級 - 快速分析",
-                    2: "2級 - 基础分析",
+                    2: "2級 - 基礎分析",
                     3: "3級 - 標準分析",
                     4: "4級 - 深度分析",
                     5: "5級 - 全面分析"
@@ -82,26 +83,26 @@ def render_analysis_form():
                 help="選擇分析的深度級別，級別越高分析越詳細但耗時更長"
             )
         
-        # 分析師团隊選擇
-        st.markdown("### 👥 選擇分析師团隊")
+        # 分析師團隊選擇
+        st.markdown("### 👥 選擇分析師團隊")
 
         col1, col2 = st.columns(2)
 
         # 獲取緩存的分析師選擇和市場類型
         cached_analysts = cached_config.get('selected_analysts', ['market', 'fundamentals']) if cached_config else ['market', 'fundamentals']
-        cached_market_type = cached_config.get('market_type', 'A股') if cached_config else 'A股'
+        cached_market_type = cached_config.get('market_type', t("analysis.us_market")) if cached_config else t("analysis.us_market")
 
         with col1:
             market_analyst = st.checkbox(
                 "📈 市場分析師",
                 value='market' in cached_analysts,
-                help="專註於技術面分析、價格趋势、技術指標"
+                help="專註於技術面分析、價格趨勢、技術指標"
             )
 
             social_analyst = st.checkbox(
                 "💭 社交媒體分析師",
                 value='social' in cached_analysts,
-                help="分析社交媒體情绪、投資者情绪指標"
+                help="分析社交媒體情緒、投資者情緒指標"
             )
 
         with col2:
@@ -137,9 +138,9 @@ def render_analysis_form():
         # 高級選項
         with st.expander("🔧 高級選項"):
             include_sentiment = st.checkbox(
-                "包含情绪分析",
+                "包含情緒分析",
                 value=True,
-                help="是否包含市場情绪和投資者情绪分析"
+                help="是否包含市場情緒和投資者情緒分析"
             )
             
             include_risk_assessment = st.checkbox(
@@ -156,7 +157,7 @@ def render_analysis_form():
 
         # 顯示輸入狀態提示
         if not stock_symbol:
-            st.info("💡 請在上方輸入股票代碼，輸入完成後按回車键確認")
+            st.info("💡 請在上方輸入股票代碼，輸入完成後按回車鍵確認")
         else:
             st.success(f"✅ 已輸入股票代碼: {stock_symbol}")
 
@@ -170,7 +171,7 @@ def render_analysis_form():
                 input.addEventListener('input', function() {
                     if (this.value.trim()) {
                         this.style.borderColor = '#00ff00';
-                        this.title = '按回車键確認輸入';
+                        this.title = '按回車鍵確認輸入';
                     } else {
                         this.style.borderColor = '';
                         this.title = '';
@@ -181,7 +182,7 @@ def render_analysis_form():
         </script>
         """, unsafe_allow_html=True)
 
-        # 在提交按钮前檢測配置變化並保存
+        # 在提交按鈕前檢測配置變化並保存
         current_config = {
             'stock_symbol': stock_symbol,
             'market_type': market_type,
@@ -207,9 +208,9 @@ def render_analysis_form():
                 )
                 logger.debug(f"📊 [配置自動保存] 表單配置已更新")
             except Exception as e:
-                logger.warning(f"⚠️ [配置自動保存] 保存失败: {e}")
+                logger.warning(f"⚠️ [配置自動保存] 保存失敗: {e}")
 
-        # 提交按钮（不禁用，让用戶可以點擊）
+        # 提交按鈕（不禁用，讓用戶可以點擊）
         submitted = st.form_submit_button(
             "🚀 開始分析",
             type="primary",
@@ -238,7 +239,7 @@ def render_analysis_form():
             'custom_prompt': custom_prompt
         }
 
-        # 保存表單配置到緩存和持久化存储
+        # 保存表單配置到緩存和持久化儲存
         form_config = {
             'stock_symbol': stock_symbol,
             'market_type': market_type,
@@ -250,7 +251,7 @@ def render_analysis_form():
         }
         st.session_state.form_config = form_config
 
-        # 保存到持久化存储
+        # 保存到持久化儲存
         try:
             from utils.smart_session_manager import smart_session_manager
             # 獲取當前分析ID（如果有的話）
@@ -263,7 +264,7 @@ def render_analysis_form():
                 form_config=form_config
             )
         except Exception as e:
-            logger.warning(f"⚠️ [配置持久化] 保存失败: {e}")
+            logger.warning(f"⚠️ [配置持久化] 保存失敗: {e}")
 
         # 記錄用戶分析請求活動
         if user_activity_logger:
@@ -283,7 +284,7 @@ def render_analysis_form():
                 )
                 logger.debug(f"📊 [用戶活動] 已記錄分析請求: {stock_symbol}")
             except Exception as e:
-                logger.warning(f"⚠️ [用戶活動] 記錄失败: {e}")
+                logger.warning(f"⚠️ [用戶活動] 記錄失敗: {e}")
 
         logger.info(f"📊 [配置緩存] 表單配置已保存: {form_config}")
 
@@ -293,7 +294,7 @@ def render_analysis_form():
         return form_data
     elif submitted and not stock_symbol:
         # 用戶點擊了提交但沒有輸入股票代碼
-        logger.error(f"🔍 [FORM DEBUG] 提交失败：股票代碼為空")
+        logger.error(f"🔍 [FORM DEBUG] 提交失敗：股票代碼為空")
         st.error("❌ 請輸入股票代碼後再提交")
         return {'submitted': False}
     else:

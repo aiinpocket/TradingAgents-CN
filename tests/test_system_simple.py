@@ -27,7 +27,7 @@ def test_basic_system():
             print(f"  MongoDB啟用: {config['database']['mongodb']['enabled']}")
             print(f"  Redis啟用: {config['database']['redis']['enabled']}")
         except Exception as e:
-            print(f"❌ 配置文件解析失败: {e}")
+            print(f"❌ 配置文件解析失敗: {e}")
     else:
         print(f"❌ 配置文件不存在: {config_file}")
     
@@ -47,7 +47,7 @@ def test_basic_system():
             print("✅ MongoDB 連接成功")
             mongodb_available = True
         except Exception:
-            print("❌ MongoDB 連接失败（正常，如果没有安裝MongoDB）")
+            print("❌ MongoDB 連接失敗（正常，如果沒有安裝MongoDB）")
             mongodb_available = False
     except ImportError:
         print("❌ pymongo 未安裝")
@@ -65,7 +65,7 @@ def test_basic_system():
             print("✅ Redis 連接成功")
             redis_available = True
         except Exception:
-            print("❌ Redis 連接失败（正常，如果没有安裝Redis）")
+            print("❌ Redis 連接失敗（正常，如果沒有安裝Redis）")
             redis_available = False
     except ImportError:
         print("❌ redis 未安裝")
@@ -100,11 +100,11 @@ def test_basic_system():
         if loaded_data == test_data:
             print("✅ 數據加載成功")
         else:
-            print("❌ 數據加載失败")
+            print("❌ 數據加載失敗")
             return False
         
     except Exception as e:
-        print(f"❌ 緩存系統測試失败: {e}")
+        print(f"❌ 緩存系統測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -127,13 +127,13 @@ def test_basic_system():
         print(f"  緩存後端: {status['cache_backend']}")
         
     except Exception as e:
-        print(f"❌ 數據庫管理器測試失败: {e}")
+        print(f"❌ 數據庫管理器測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
     
-    # 5. 总結
-    print("\n📊 系統測試总結:")
+    # 5. 總結
+    print("\n📊 系統測試總結:")
     print("✅ 緩存系統正常工作")
     print("✅ 數據庫管理器正常工作")
     
@@ -146,7 +146,7 @@ def test_basic_system():
     print("\n🎯 系統特性:")
     print("✅ 智能緩存：自動選擇最佳緩存後端")
     print("✅ 降級支持：數據庫不可用時自動使用文件緩存")
-    print("✅ 配置灵活：支持多種數據庫配置")
+    print("✅ 配置靈活：支持多種數據庫配置")
     print("✅ 性能優化：根據可用資源自動調整")
     
     return True
@@ -166,7 +166,7 @@ def main():
         return success
         
     except Exception as e:
-        print(f"❌ 系統測試失败: {e}")
+        print(f"❌ 系統測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False

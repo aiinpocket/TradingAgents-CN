@@ -54,7 +54,7 @@ class BranchAnalyzer:
         return success
     
     def get_merge_base(self, branch1: str, branch2: str) -> str:
-        """獲取两個分支的合並基點"""
+        """獲取兩個分支的合並基點"""
         success, stdout, _ = self.run_git_command(['merge-base', branch1, branch2])
         return stdout if success else ""
     
@@ -133,18 +133,18 @@ class BranchAnalyzer:
                 
                 # 判斷是否可以刪除
                 if commit_percentage > 80 or file_percentage > 80:
-                    logger.info(f"   💡 建议: 可以安全刪除 {branch}")
+                    logger.info(f"   💡 建議: 可以安全刪除 {branch}")
                 elif branch_data[branch]['is_merged']:
-                    logger.info(f"   💡 建议: 已合並到main，可以刪除 {branch}")
+                    logger.info(f"   💡 建議: 已合並到main，可以刪除 {branch}")
                 else:
-                    logger.warning(f"   ⚠️ 建议: 需要進一步檢查 {branch}")
+                    logger.warning(f"   ⚠️ 建議: 需要進一步檢查 {branch}")
         
-        # 生成清理建议
+        # 生成清理建議
         self.generate_cleanup_recommendations(branch_data)
     
     def generate_cleanup_recommendations(self, branch_data: Dict):
-        """生成清理建议"""
-        logger.info(f"\n🧹 分支清理建议")
+        """生成清理建議"""
+        logger.info(f"\n🧹 分支清理建議")
         logger.info(f"=")
         
         can_delete = []
@@ -175,41 +175,41 @@ class BranchAnalyzer:
                 logger.info(f"   git push origin --delete {branch}")
         
         if should_keep:
-            logger.warning(f"\n⚠️ 建议保留的分支:")
+            logger.warning(f"\n⚠️ 建議保留的分支:")
             for branch in should_keep:
                 logger.info(f"   - {branch}")
         
-        # 特別建议
-        logger.info(f"\n💡 特別建议:")
-        logger.info(f"   1. feature/tushare-integration 包含最完整的功能，應该保留")
+        # 特別建議
+        logger.info(f"\n💡 特別建議:")
+        logger.info(f"   1. feature/tushare-integration 包含最完整的功能，應該保留")
         logger.info(f"   2. 如果AKShare分支的功能已經在Tushare分支中，可以刪除")
-        logger.info(f"   3. 刪除前建议創建备份分支")
-        logger.info(f"   4. 確認团隊成員没有在使用這些分支")
+        logger.info(f"   3. 刪除前建議創建備份分支")
+        logger.info(f"   4. 確認團隊成員沒有在使用這些分支")
     
     def create_backup_script(self):
-        """創建备份腳本"""
-        logger.info(f"\n💾 創建备份腳本")
+        """創建備份腳本"""
+        logger.info(f"\n💾 創建備份腳本")
         logger.info(f"=")
         
         backup_script = """#!/bin/bash
-# 分支备份腳本
-echo "🔄 創建分支备份..."
+# 分支備份腳本
+echo "🔄 創建分支備份..."
 
-# 創建备份分支
+# 創建備份分支
 git checkout feature/akshare-integration 2>/dev/null && git checkout -b backup/akshare-integration-$(date +%Y%m%d)
 git checkout feature/akshare-integration-clean 2>/dev/null && git checkout -b backup/akshare-integration-clean-$(date +%Y%m%d)
 
-# 推送备份到远程
+# 推送備份到遠程
 git push origin backup/akshare-integration-$(date +%Y%m%d) 2>/dev/null
 git push origin backup/akshare-integration-clean-$(date +%Y%m%d) 2>/dev/null
 
-echo "✅ 备份完成"
+echo "✅ 備份完成"
 """
         
         with open('backup_branches.sh', 'w') as f:
             f.write(backup_script)
         
-        logger.info(f"📝 备份腳本已創建: backup_branches.sh")
+        logger.info(f"📝 備份腳本已創建: backup_branches.sh")
         logger.info(f"💡 使用方法: bash backup_branches.sh")
 
 def main():
@@ -217,10 +217,10 @@ def main():
     analyzer.analyze_branches()
     analyzer.create_backup_script()
     
-    logger.info(f"\n🎯 总結建议:")
+    logger.info(f"\n🎯 總結建議:")
     logger.info(f"1. 運行此腳本查看詳細分析結果")
     logger.info(f"2. 如果確認AKShare分支功能已包含在Tushare分支中，可以刪除")
-    logger.info(f"3. 刪除前先創建备份分支")
+    logger.info(f"3. 刪除前先創建備份分支")
     logger.info(f"4. 保留feature/tushare-integration作為主要開發分支")
 
 if __name__ == '__main__':

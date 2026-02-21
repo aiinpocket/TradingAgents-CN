@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 MongoDB數據驗證腳本
-驗證A股股票基础信息是否正確同步到MongoDB
+驗證A股股票基礎信息是否正確同步到MongoDB
 """
 
 import os
@@ -20,7 +20,7 @@ try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
-    print("⚠️ python-dotenv未安裝，将使用系統環境變量")
+    print("⚠️ python-dotenv未安裝，將使用系統環境變量")
 
 def get_mongodb_config() -> Dict[str, Any]:
     """獲取MongoDB配置"""
@@ -63,7 +63,7 @@ def connect_mongodb():
         return client, db
         
     except Exception as e:
-        print(f"❌ MongoDB連接失败: {e}")
+        print(f"❌ MongoDB連接失敗: {e}")
         return None, None
 
 def verify_stock_data(db):
@@ -74,12 +74,12 @@ def verify_stock_data(db):
     collection = db['stock_basic_info']
     
     print("\n" + "="*60)
-    print("📊 MongoDB中的A股基础信息驗證")
+    print("📊 MongoDB中的A股基礎信息驗證")
     print("="*60)
     
-    # 1. 总記錄數
+    # 1. 總記錄數
     total_count = collection.count_documents({})
-    print(f"📈 总記錄數: {total_count:,}")
+    print(f"📈 總記錄數: {total_count:,}")
     
     # 2. 按市場統計
     print("\n🏢 市場分布:")
@@ -110,7 +110,7 @@ def verify_stock_data(db):
             'stock_cn': '股票',
             'etf_cn': 'ETF基金',
             'index_cn': '指數',
-            'bond_cn': '债券'
+            'bond_cn': '債券'
         }.get(category['_id'], category['_id'])
         print(f"  {category_name}: {category['count']:,} 條")
     
@@ -158,21 +158,21 @@ def verify_stock_data(db):
     
     # 查找ETF
     etf_count = collection.count_documents({'sec': 'etf_cn'})
-    print(f"  ETF基金总數: {etf_count:,}")
+    print(f"  ETF基金總數: {etf_count:,}")
     
     # 查找指數
     index_count = collection.count_documents({'sec': 'index_cn'})
-    print(f"  指數总數: {index_count:,}")
+    print(f"  指數總數: {index_count:,}")
 
 def main():
     """主函數"""
-    print("🔍 正在驗證MongoDB中的A股基础信息...")
+    print("🔍 正在驗證MongoDB中的A股基礎信息...")
     
     # 連接MongoDB
     client, db = connect_mongodb()
     
     if client is None or db is None:
-        print("❌ 無法連接到MongoDB，驗證失败")
+        print("❌ 無法連接到MongoDB，驗證失敗")
         return
     
     try:
@@ -187,10 +187,10 @@ def main():
         traceback.print_exc()
     
     finally:
-        # 關闭連接
+        # 關閉連接
         if client:
             client.close()
-            print("🔒 MongoDB連接已關闭")
+            print("🔒 MongoDB連接已關閉")
 
 if __name__ == "__main__":
     main()

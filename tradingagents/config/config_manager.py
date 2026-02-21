@@ -47,7 +47,7 @@ class PricingConfig:
     model_name: str  # 模型名稱
     input_price_per_1k: float  # 輸入token價格（每1000個token）
     output_price_per_1k: float  # 輸出token價格（每1000個token）
-    currency: str = "CNY"  # 貨币單位
+    currency: str = "USD"  # 貨幣單位
 
 
 @dataclass
@@ -78,7 +78,7 @@ class ConfigManager:
         # 加載.env文件（保持向後兼容）
         self._load_env_file()
 
-        # 初始化MongoDB存储（如果可用）
+        # 初始化MongoDB存儲（如果可用）
         self.mongodb_storage = None
         self._init_mongodb_storage()
 
@@ -104,10 +104,10 @@ class ConfigManager:
         env_key = env_key_map.get(provider.lower())
         if env_key:
             api_key = os.getenv(env_key, "")
-            # 對OpenAI密鑰進行格式驗證（始终啟用）
+            # 對OpenAI密鑰進行格式驗證（始終啟用）
             if provider.lower() == "openai" and api_key:
                 if not self.validate_openai_api_key_format(api_key):
-                    logger.warning(f"⚠️ OpenAI API密鑰格式不正確，将被忽略: {api_key[:10]}...")
+                    logger.warning(f"⚠️ OpenAI API密鑰格式不正確，將被忽略: {api_key[:10]}...")
                     return ""
             return api_key
         return ""
@@ -117,8 +117,8 @@ class ConfigManager:
         驗證OpenAI API密鑰格式
         
         OpenAI API密鑰格式規則：
-        1. 以 'sk-' 開头
-        2. 总長度通常為51個字符
+        1. 以 'sk-' 開頭
+        2. 總長度通常為51個字符
         3. 包含字母、數字和可能的特殊字符
         
         Args:
@@ -130,7 +130,7 @@ class ConfigManager:
         if not api_key or not isinstance(api_key, str):
             return False
         
-        # 檢查是否以 'sk-' 開头
+        # 檢查是否以 'sk-' 開頭
         if not api_key.startswith('sk-'):
             return False
         
@@ -138,7 +138,7 @@ class ConfigManager:
         if len(api_key) != 51:
             return False
         
-        # 檢查格式：sk- 後面應该是48個字符的字母數字組合
+        # 檢查格式：sk- 後面應該是48個字符的字母數字組合
         pattern = r'^sk-[A-Za-z0-9]{48}$'
         if not re.match(pattern, api_key):
             return False
@@ -146,11 +146,11 @@ class ConfigManager:
         return True
     
     def _init_mongodb_storage(self):
-        """初始化MongoDB存储"""
+        """初始化MongoDB存儲"""
         if not MONGODB_AVAILABLE:
             return
-        
-        # 檢查是否啟用MongoDB存储
+
+        # 檢查是否啟用MongoDB存儲
         use_mongodb = os.getenv("USE_MONGODB_STORAGE", "false").lower() == "true"
         if not use_mongodb:
             return
@@ -165,13 +165,13 @@ class ConfigManager:
             )
             
             if self.mongodb_storage.is_connected():
-                logger.info("✅ MongoDB存储已啟用")
+                logger.info("✅ MongoDB存儲已啟用")
             else:
                 self.mongodb_storage = None
-                logger.warning("⚠️ MongoDB連接失败，将使用JSON文件存储")
+                logger.warning("⚠️ MongoDB連接失敗，將使用JSON文件存儲")
 
         except Exception as e:
-            logger.error(f"❌ MongoDB初始化失败: {e}", exc_info=True)
+            logger.error(f"❌ MongoDB初始化失敗: {e}", exc_info=True)
             self.mongodb_storage = None
 
     def _init_default_configs(self):
@@ -303,7 +303,7 @@ class ConfigManager:
                     env_api_key = self._get_env_api_key(model.provider)
                     if env_api_key:
                         model.api_key = env_api_key
-                        # 如果.env中有API密鑰，自動啟用该模型
+                        # 如果.env中有API密鑰，自動啟用該模型
                         if not model.enabled:
                             model.enabled = True
                     
@@ -313,14 +313,14 @@ class ConfigManager:
                         if not openai_enabled:
                             model.enabled = False
                             logger.info(f"🔒 OpenAI模型已禁用: {model.model_name}")
-                        # 如果有API密鑰但格式不正確，禁用模型（驗證始终啟用）
+                        # 如果有API密鑰但格式不正確，禁用模型（驗證始終啟用）
                         elif model.api_key and not self.validate_openai_api_key_format(model.api_key):
                             model.enabled = False
                             logger.warning(f"⚠️ OpenAI模型因密鑰格式不正確而禁用: {model.model_name}")
 
                 return models
         except Exception as e:
-            logger.error(f"加載模型配置失败: {e}")
+            logger.error(f"加載模型配置失敗: {e}")
             return []
     
     def save_models(self, models: List[ModelConfig]):
@@ -330,7 +330,7 @@ class ConfigManager:
             with open(self.models_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            logger.error(f"保存模型配置失败: {e}")
+            logger.error(f"保存模型配置失敗: {e}")
     
     def load_pricing(self) -> List[PricingConfig]:
         """加載定價配置"""
@@ -339,7 +339,7 @@ class ConfigManager:
                 data = json.load(f)
             return [PricingConfig(**item) for item in data]
         except Exception as e:
-            logger.error(f"加載定價配置失败: {e}")
+            logger.error(f"加載定價配置失敗: {e}")
             return []
     
     def save_pricing(self, pricing: List[PricingConfig]):
@@ -349,7 +349,7 @@ class ConfigManager:
             with open(self.pricing_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            logger.error(f"保存定價配置失败: {e}")
+            logger.error(f"保存定價配置失敗: {e}")
     
     def load_usage_records(self) -> List[UsageRecord]:
         """加載使用記錄"""
@@ -360,7 +360,7 @@ class ConfigManager:
                 data = json.load(f)
                 return [UsageRecord(**item) for item in data]
         except Exception as e:
-            logger.error(f"加載使用記錄失败: {e}")
+            logger.error(f"加載使用記錄失敗: {e}")
             return []
     
     def save_usage_records(self, records: List[UsageRecord]):
@@ -370,7 +370,7 @@ class ConfigManager:
             with open(self.usage_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            logger.error(f"保存使用記錄失败: {e}")
+            logger.error(f"保存使用記錄失敗: {e}")
     
     def add_usage_record(self, provider: str, model_name: str, input_tokens: int,
                         output_tokens: int, session_id: str, analysis_type: str = "stock_analysis"):
@@ -389,15 +389,15 @@ class ConfigManager:
             analysis_type=analysis_type
         )
         
-        # 優先使用MongoDB存储
+        # 優先使用MongoDB存儲
         if self.mongodb_storage and self.mongodb_storage.is_connected():
             success = self.mongodb_storage.save_usage_record(record)
             if success:
                 return record
             else:
-                logger.error(f"⚠️ MongoDB保存失败，回退到JSON文件存储")
-        
-        # 回退到JSON文件存储
+                logger.error(f"⚠️ MongoDB保存失敗，回退到JSON文件存儲")
+
+        # 回退到JSON文件存儲
         records = self.load_usage_records()
         records.append(record)
         
@@ -453,7 +453,7 @@ class ConfigManager:
                 }
                 self.save_settings(settings)
         except Exception as e:
-            logger.error(f"加載設置失败: {e}")
+            logger.error(f"加載設置失敗: {e}")
             settings = {}
 
         # 合並.env中的其他配置
@@ -507,7 +507,7 @@ class ConfigManager:
             with open(self.settings_file, 'w', encoding='utf-8') as f:
                 json.dump(settings, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            logger.error(f"保存設置失败: {e}")
+            logger.error(f"保存設置失敗: {e}")
     
     def get_enabled_models(self) -> List[ModelConfig]:
         """獲取啟用的模型"""
@@ -527,7 +527,7 @@ class ConfigManager:
         # 優先使用MongoDB獲取統計
         if self.mongodb_storage and self.mongodb_storage.is_connected():
             try:
-                # 從MongoDB獲取基础統計
+                # 從MongoDB獲取基礎統計
                 stats = self.mongodb_storage.get_usage_statistics(days)
                 # 獲取供應商統計
                 provider_stats = self.mongodb_storage.get_provider_statistics(days)
@@ -537,7 +537,7 @@ class ConfigManager:
                     stats["records_count"] = stats.get("total_requests", 0)
                     return stats
             except Exception as e:
-                logger.error(f"⚠️ MongoDB統計獲取失败，回退到JSON文件: {e}")
+                logger.error(f"⚠️ MongoDB統計獲取失敗，回退到JSON文件: {e}")
         
         # 回退到JSON文件統計
         records = self.load_usage_records()
@@ -627,7 +627,7 @@ class ConfigManager:
                     os.makedirs(directory, exist_ok=True)
                     logger.info(f"✅ 創建目錄: {directory}")
                 except Exception as e:
-                    logger.error(f"❌ 創建目錄失败 {directory}: {e}")
+                    logger.error(f"❌ 創建目錄失敗 {directory}: {e}")
     
     def set_openai_enabled(self, enabled: bool):
         """設置OpenAI模型啟用狀態"""
@@ -695,12 +695,12 @@ class TokenTracker:
         settings = self.config_manager.load_settings()
         threshold = settings.get("cost_alert_threshold", 100.0)
 
-        # 獲取今日总成本
+        # 獲取今日總成本
         today_stats = self.config_manager.get_usage_statistics(1)
         total_today = today_stats["total_cost"]
 
         if total_today >= threshold:
-            logger.warning(f"⚠️ 成本警告: 今日成本已達到 ¥{total_today:.4f}，超過阈值 ¥{threshold}",
+            logger.warning(f"⚠️ 成本警告: 今日成本已達到 ${total_today:.4f}，超過閾值 ${threshold}",
                           extra={'cost': total_today, 'threshold': threshold, 'event_type': 'cost_alert'})
 
     def get_session_cost(self, session_id: str) -> float:

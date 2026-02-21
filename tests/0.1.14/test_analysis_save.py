@@ -21,48 +21,48 @@ def create_mock_analysis_results():
         'state': {
             'market_report': """# TEST123 股票技術分析報告
 
-## 📈 價格趋势分析
-當前股價呈現上涨趋势，技術指標向好。
+## 📈 價格趨勢分析
+當前股價呈現上漲趨勢，技術指標向好。
 
 ## 📊 技術指標
-- RSI: 65.2 (偏强)
+- RSI: 65.2 (偏強)
 - MACD: 金叉向上
-- 成交量: 放量上涨
+- 成交量: 放量上漲
 
-## 🎯 操作建议
-建议在回調時买入，目標價位上涨15%。
+## 🎯 操作建議
+建議在回調時買入，目標價位上漲15%。
 """,
             'fundamentals_report': """# TEST123 基本面分析報告
 
-## 💰 財務狀况
-公司財務狀况良好，盈利能力强。
+## 💰 財務狀況
+公司財務狀況良好，盈利能力強。
 
-## 📊 關键指標
+## 📊 關鍵指標
 - ROE: 18.5%
 - PE: 15.2倍
-- 净利润增長: 15.2%
+- 淨利潤增長: 15.2%
 
 ## 💡 投資價值
 估值合理，具有投資價值。
 """,
-            'final_trade_decision': """# TEST123 最终交易決策
+            'final_trade_decision': """# TEST123 最終交易決策
 
-## 🎯 投資建议
-**行動**: 买入
+## 🎯 投資建議
+**行動**: 買入
 **置信度**: 85%
-**目標價格**: 上涨15-20%
+**目標價格**: 上漲15-20%
 
 ## 💡 決策依據
-基於技術面和基本面综合分析，建议买入。
+基於技術面和基本面綜合分析，建議買入。
 """
         },
         'decision': {
             'action': 'buy',
             'confidence': 0.85,
             'target_price': 'up 15-20%',
-            'reasoning': '技術面和基本面都支持买入決策'
+            'reasoning': '技術面和基本面都支持買入決策'
         },
-        'summary': 'TEST123股票综合分析顯示具有良好投資潜力，建议买入。'
+        'summary': 'TEST123股票綜合分析顯示具有良好投資潛力，建議買入。'
     }
 
 def test_save_analysis_result():
@@ -147,12 +147,12 @@ def test_save_analysis_result():
                 print(f"❌ 詳細報告目錄未創建: {reports_dir}")
             
         else:
-            print("❌ 分析結果保存失败")
+            print("❌ 分析結果保存失敗")
         
         return success
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -187,7 +187,7 @@ def test_mongodb_save():
             return False
             
     except Exception as e:
-        print(f"❌ MongoDB測試失败: {e}")
+        print(f"❌ MongoDB測試失敗: {e}")
         return False
 
 def main():
@@ -202,8 +202,8 @@ def main():
     mongodb_success = test_mongodb_save()
     
     print(f"\n🎉 測試完成")
-    print(f"📄 文件保存: {'✅ 成功' if save_success else '❌ 失败'}")
-    print(f"🗄️ MongoDB保存: {'✅ 成功' if mongodb_success else '❌ 失败'}")
+    print(f"📄 文件保存: {'✅ 成功' if save_success else '❌ 失敗'}")
+    print(f"🗄️ MongoDB保存: {'✅ 成功' if mongodb_success else '❌ 失敗'}")
 
 if __name__ == "__main__":
     main()

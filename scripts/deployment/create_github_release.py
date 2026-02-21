@@ -32,39 +32,36 @@ def run_command(command, cwd=None):
 def create_release_notes():
     """創建發布說明"""
     release_notes = """
-## 🌐 Web管理界面和Google AI支持
+## Web管理界面與多LLM提供商支援
 
-TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理界面和Google AI模型支持！
+TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理界面和多LLM提供商支援！
 
-### ✨ 主要新功能
+### 主要新功能
 
-#### 🌐 Streamlit Web管理界面
-- 🎯 完整的Web股票分析平台
-- 📊 直觀的用戶界面和實時進度顯示
-- 🤖 支持多種LLM提供商選擇（阿里百炼/Google AI）
-- 📈 可視化的分析結果展示
-- 📱 響應式設計，支持移動端訪問
+#### Streamlit Web管理界面
+- 完整的Web股票分析平台
+- 直觀的使用者界面和即時進度顯示
+- 支援多種LLM提供商選擇（OpenAI / Google AI / Anthropic）
+- 視覺化的分析結果展示
+- 響應式設計，支援行動裝置存取
 
-#### 🤖 Google AI模型集成
-- 🧠 完整的Google Gemini模型支持
-- 🔧 支持gemini-2.0-flash、gemini-1.5-pro等模型
-- 🌍 智能混合嵌入服務（Google AI推理 + 阿里百炼嵌入）
-- 💾 完美的中文分析能力和穩定的LangChain集成
+#### 多LLM提供商支援
+- OpenAI（GPT-4、GPT-4o-mini）
+- Google AI（Gemini 2.5 系列）
+- Anthropic（Claude 4 系列）
+- OpenRouter、Ollama、自訂 OpenAI 相容端點
+- Web界面支援LLM提供商無縫切換
+- 統一的配置管理界面
 
-#### 🔧 多LLM提供商支持
-- 🔄 Web界面支持LLM提供商無缝切換
-- ⚙️ 自動配置最優嵌入服務
-- 🎛️ 統一的配置管理界面
+### 改進優化
 
-### 🔧 改進優化
+- 新增分析配置資訊顯示
+- 項目結構優化（tests/docs/web目錄規範化）
+- 多種API服務配置支援
+- 完整的測試體系（25+個測試檔案）
+- 完整的使用文件和配置指南
 
-- 📊 新增分析配置信息顯示
-- 🗂️ 項目結構優化（tests/docs/web目錄規範化）
-- 🔑 多種API服務配置支持
-- 🧪 完整的測試體系（25+個測試文件）
-- 📚 完整的使用文档和配置指南
-
-### 🚀 快速開始
+### 快速開始
 
 #### 1. 安裝依賴
 ```bash
@@ -73,12 +70,13 @@ pip install -r requirements.txt
 
 #### 2. 配置API密鑰
 ```bash
-# 複制環境變量模板
+# 複製環境變數模板
 cp .env.example .env
 
-# 編辑.env文件，添加您的API密鑰
-# DASHSCOPE_API_KEY=your_dashscope_key  # 阿里百炼（推薦）
+# 編輯 .env 檔案，添加您的API密鑰
+# OPENAI_API_KEY=your_openai_key        # OpenAI（推薦）
 # GOOGLE_API_KEY=your_google_key        # Google AI（可選）
+# ANTHROPIC_API_KEY=your_anthropic_key  # Anthropic（可選）
 ```
 
 #### 3. 啟動Web界面
@@ -86,46 +84,45 @@ cp .env.example .env
 # 啟動Web管理界面
 python -m streamlit run web/app.py
 
-# 或使用快捷腳本
-start_web.bat  # Windows
+# 或使用啟動腳本
+python start_web.py
 ```
 
 #### 4. 使用CLI工具
 ```bash
-# 使用阿里百炼模型
+# 使用OpenAI模型
 python cli/main.py --stock AAPL --analysts market fundamentals
 
 # 使用Google AI模型
 python cli/main.py --llm-provider google --model gemini-2.0-flash --stock TSLA
 ```
 
-### 📚 文档和支持
+### 文件和支援
 
-- 📖 [完整文档](./docs/)
-- 🌐 [Web界面指南](./web/README.md)
-- 🤖 [Google AI配置指南](./docs/configuration/google-ai-setup.md)
-- 🧪 [測試指南](./tests/README.md)
-- 💡 [示例代碼](./examples/)
+- [完整文件](./docs/)
+- [Web界面指南](./web/README.md)
+- [Google AI配置指南](./docs/configuration/google-ai-setup.md)
+- [測試指南](./tests/README.md)
+- [範例代碼](./examples/)
 
-### 🎯 推薦配置
+### 推薦配置
 
 **最佳性能組合**：
-- **LLM提供商**: Google AI
-- **推薦模型**: gemini-2.0-flash
-- **嵌入服務**: 阿里百炼（自動配置）
+- **LLM提供商**: OpenAI 或 Google AI
+- **推薦模型**: gpt-4o-mini / gemini-2.0-flash
 - **分析師**: 市場技術 + 基本面分析師
 
-### 🙏 致谢
+### 致謝
 
-感谢 [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) 原始項目的開發者們，為金融AI領域提供了優秀的開源框架。
+感謝 [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) 原始項目的開發者們，為金融AI領域提供了優秀的開源框架。
 
-### 📄 許可證
+### 許可證
 
 本項目遵循 Apache 2.0 許可證。
 
 ---
 
-**🚀 立即體驗**: `python -m streamlit run web/app.py`
+**立即體驗**: `python -m streamlit run web/app.py`
 """
     return release_notes.strip()
 
@@ -135,11 +132,10 @@ def show_release_info():
     logger.info(f"=")
     
     logger.info(f"\n📋 發布內容:")
-    logger.info(f"  🌐 完整的Web管理界面")
-    logger.info(f"  🤖 Google AI模型集成")
-    logger.info(f"  🔧 多LLM提供商支持")
-    logger.info(f"  🧪 完整的測試體系")
-    logger.info(f"  📚 詳細的使用文档")
+    logger.info(f"  完整的Web管理界面")
+    logger.info(f"  多LLM提供商支援（OpenAI / Google AI / Anthropic）")
+    logger.info(f"  完整的測試體系")
+    logger.info(f"  詳細的使用文件")
     
     logger.info(f"\n🔗 GitHub鏈接:")
     logger.info(f"  📦 Release: https://github.com/hsliuping/TradingAgents-CN/releases/tag/cn-v0.1.2")
@@ -151,12 +147,12 @@ def show_release_info():
     logger.info(f"  3. pip install -r requirements.txt")
     logger.info(f"  4. python -m streamlit run web/app.py")
     
-    logger.info(f"\n💡 主要特性:")
-    logger.info(f"  ✅ Web界面股票分析")
-    logger.info(f"  ✅ Google AI + 阿里百炼雙模型支持")
-    logger.info(f"  ✅ 實時分析進度顯示")
-    logger.info(f"  ✅ 多分析師協作決策")
-    logger.info(f"  ✅ 完整的中文支持")
+    logger.info(f"\n主要特性:")
+    logger.info(f"  Web界面股票分析")
+    logger.info(f"  多LLM提供商支援（OpenAI / Google AI / Anthropic）")
+    logger.info(f"  即時分析進度顯示")
+    logger.info(f"  多分析師協作決策")
+    logger.info(f"  完整的繁體中文支援")
 
 def main():
     """主函數"""
@@ -172,7 +168,7 @@ def main():
     # 檢查是否有未推送的提交
     success, stdout, stderr = run_command("git status --porcelain")
     if not success:
-        logger.error(f"❌ Git狀態檢查失败: {stderr}")
+        logger.error(f"❌ Git狀態檢查失敗: {stderr}")
         return False
     
     if stdout.strip():
@@ -216,8 +212,8 @@ def main():
 if __name__ == "__main__":
     success = main()
     if success:
-        logger.info(f"\n🎉 GitHub Release準备完成！")
+        logger.info(f"\n GitHub Release準備完成！")
         logger.info(f"請按照上述指南在GitHub上創建Release")
     else:
-        logger.error(f"\n❌ GitHub Release準备失败")
+        logger.error(f"\n GitHub Release準備失敗")
         sys.exit(1)

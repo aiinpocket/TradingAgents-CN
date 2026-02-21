@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 環境變量解析工具
-提供兼容Python 3.13+的强健環境變量解析功能
+提供兼容Python 3.13+的強健環境變量解析功能
 """
 
 import os
@@ -59,7 +59,7 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     elif value_lower in false_values:
         return False
     else:
-        # 如果無法识別，記錄警告並返回默認值
+        # 如果無法識別，記錄警告並返回默認值
         print(f"⚠️ 無法解析環境變量 {env_var}='{value}'，使用默認值 {default}")
         return default
 

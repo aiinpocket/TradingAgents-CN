@@ -2,7 +2,7 @@
 
 ## 概述
 
-本文档提供了 TradingAgents 框架的高級使用示例，包括自定義智能體開發、複雜策略實現、性能優化和生產環境部署等高級功能。
+本文檔提供了 TradingAgents 框架的高級使用示例，包括自定義智能體開發、複雜策略實現、性能優化和生產環境部署等高級功能。
 
 ## 示例 1: 自定義分析師智能體
 
@@ -52,7 +52,7 @@ class QuantitativeAnalyst(BaseAnalyst):
         # 5. 風險調整收益分析
         risk_adjusted_metrics = self._risk_adjusted_analysis(historical_data)
 
-        # 6. 综合量化評分
+        # 6. 綜合量化評分
         quant_score = self._calculate_quant_score({
             "stat_arb": stat_arb_signals,
             "momentum": momentum_signals,
@@ -107,10 +107,10 @@ class QuantitativeAnalyst(BaseAnalyst):
         momentum_6m = self._calculate_momentum(data, 126)   # 6個月
         momentum_12m = self._calculate_momentum(data, 252)  # 12個月
 
-        # 動量强度
+        # 動量強度
         momentum_strength = self._calculate_momentum_strength(data)
 
-        # 動量持续性
+        # 動量持續性
         momentum_persistence = self._calculate_momentum_persistence(data)
 
         return {
@@ -147,7 +147,7 @@ class PortfolioOptimizer:
         # 2. 計算預期收益
         expected_returns = self._calculate_expected_returns(assets_data)
 
-        # 3. 構建協方差矩阵
+        # 3. 構建協方差矩陣
         covariance_matrix = self._build_covariance_matrix(assets_data)
 
         # 4. 風險模型分析
@@ -203,7 +203,7 @@ class PortfolioOptimizer:
         ta = TradingAgentsGraph(debug=False, config=self.config)
         state, decision = ta.propagate(symbol, target_date)
 
-        # 提取關键指標
+        # 提取關鍵指標
         return {
             "symbol": symbol,
             "decision": decision,
@@ -230,7 +230,7 @@ class PortfolioOptimizer:
             portfolio_return = np.sum(weights * expected_returns)
             portfolio_risk = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))
             sharpe_ratio = portfolio_return / portfolio_risk if portfolio_risk > 0 else 0
-            return -sharpe_ratio  # 最小化负夏普比率
+            return -sharpe_ratio  # 最小化負夏普比率
 
         # 約束條件
         constraints_list = [
@@ -278,7 +278,7 @@ class PortfolioOptimizer:
                 }
             }
         else:
-            # 如果優化失败，使用等權重
+            # 如果優化失敗，使用等權重
             equal_weights = np.array([1/n_assets] * n_assets)
             return {
                 "weights": equal_weights,
@@ -319,7 +319,7 @@ class RealTimeTradingSystem:
                 config=self.config
             )
 
-        # 啟動市場數據订阅
+        # 啟動市場數據訂閱
         await self.market_data_feed.subscribe(watchlist)
 
         # 啟動主交易循環
@@ -379,7 +379,7 @@ class RealTimeTradingSystem:
     def _should_reanalyze(self, symbol: str, market_data: Dict) -> bool:
         """判斷是否需要重新分析"""
 
-        # 價格變動阈值
+        # 價格變動閾值
         price_change_threshold = 0.02  # 2%
 
         current_price = market_data.get("price", 0)
@@ -390,7 +390,7 @@ class RealTimeTradingSystem:
 
         price_change = abs(current_price - last_analysis_price) / last_analysis_price
 
-        # 如果價格變動超過阈值，或者距離上次分析超過一定時間
+        # 如果價格變動超過閾值，或者距離上次分析超過一定時間
         time_threshold = 300  # 5分鐘
         last_analysis_time = getattr(self.trading_agents[symbol], 'last_analysis_time', 0)
         time_since_last = time.time() - last_analysis_time
@@ -410,7 +410,7 @@ class RealTimeTradingSystem:
 
         # 創建快速分析智能體
         quick_agent = TradingAgentsGraph(
-            selected_analysts=["market", "news"],  # 只使用關键分析師
+            selected_analysts=["market", "news"],  # 只使用關鍵分析師
             debug=False,
             config=quick_config
         )
@@ -447,11 +447,11 @@ class AdvancedBacktester:
     def run_comprehensive_backtest(self, strategy_config: Dict,
                                  start_date: str, end_date: str,
                                  universe: List[str]) -> Dict:
-        """運行综合回測"""
+        """運行綜合回測"""
 
         print(f"開始回測: {start_date} 到 {end_date}, 股票池: {len(universe)} 只")
 
-        # 1. 數據準备
+        # 1. 數據準備
         historical_data = self._prepare_historical_data(universe, start_date, end_date)
 
         # 2. 策略執行
@@ -487,7 +487,7 @@ class AdvancedBacktester:
         trading_history = []
         portfolio = Portfolio(initial_capital=strategy_config.get("initial_capital", 1000000))
 
-        # 按日期顺序執行
+        # 按日期順序執行
         dates = sorted(historical_data.keys())
 
         for date in dates:
@@ -524,7 +524,7 @@ class AdvancedBacktester:
         # 計算收益序列
         returns = self._calculate_returns(trading_history)
 
-        # 基础性能指標
+        # 基礎性能指標
         total_return = self._calculate_total_return(returns)
         annualized_return = self._calculate_annualized_return(returns)
         volatility = self._calculate_volatility(returns)

@@ -53,7 +53,7 @@ def test_safe_dataframe():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 
@@ -80,7 +80,7 @@ def test_comparison_data():
                 '2025-07-31 13:00',
                 2,  # 整數
                 4,  # 整數
-                "❌ 失败",
+                "❌ 失敗",
                 1   # 整數
             ]
         }
@@ -98,7 +98,7 @@ def test_comparison_data():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 
@@ -132,7 +132,7 @@ def test_timeline_data():
         return True
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         return False
 
 
@@ -165,7 +165,7 @@ def test_arrow_conversion():
         return True
         
     except Exception as e:
-        print(f"❌ Arrow轉換失败: {e}")
+        print(f"❌ Arrow轉換失敗: {e}")
         return False
 
 
@@ -190,7 +190,7 @@ def main():
             passed += 1
             print(f"✅ {test_name} 通過")
         else:
-            print(f"❌ {test_name} 失败")
+            print(f"❌ {test_name} 失敗")
     
     print("\n" + "=" * 50)
     print(f"📊 測試結果: {passed}/{total} 通過")
@@ -199,7 +199,7 @@ def main():
         print("🎉 所有測試通過！DataFrame Arrow轉換問題已修複")
         return True
     else:
-        print("⚠️ 部分測試失败，需要進一步檢查")
+        print("⚠️ 部分測試失敗，需要進一步檢查")
         return False
 
 

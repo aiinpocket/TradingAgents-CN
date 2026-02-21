@@ -1,11 +1,11 @@
 """
-页面頭部組件
+頁面頭部組件
 """
 
 import streamlit as st
 
 def render_header():
-    """渲染页面頭部"""
+    """渲染頁面頭部"""
     
     # 主標題
     st.markdown("""
@@ -22,7 +22,7 @@ def render_header():
         st.markdown("""
         <div class="metric-card">
             <h4>🤖 智能體協作</h4>
-            <p>專業分析師团隊協同工作</p>
+            <p>專業分析師團隊協同工作</p>
         </div>
         """, unsafe_allow_html=True)
     

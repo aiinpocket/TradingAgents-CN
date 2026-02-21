@@ -21,7 +21,7 @@ FileNotFoundError: [WinError 2] 系統找不到指定的文件。: 'C:\\code\\Tr
 
 1. **Python字節碼文件生成**：當Python運行時，會在`__pycache__`目錄中生成`.pyc`字節碼文件
 2. **臨時文件命名**：Python有時會創建帶有隨機後缀的臨時字節碼文件
-3. **文件監控冲突**：Streamlit的watchdog監控器會嘗試監控這些臨時文件
+3. **文件監控衝突**：Streamlit的watchdog監控器會嘗試監控這些臨時文件
 4. **文件刪除競爭**：當Python刪除或重命名這些臨時文件時，watchdog仍在嘗試訪問它們
 5. **FileNotFoundError**：導致文件未找到錯誤
 
@@ -90,7 +90,7 @@ os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 
 3. **監控日誌**：
    - 查看控制台輸出
-   - 確認没有FileNotFoundError
+   - 確認沒有FileNotFoundError
 
 ## 預防措施
 
@@ -99,25 +99,25 @@ os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 3. **配置監控**：使用Streamlit配置文件排除不必要的文件監控
 4. **環境隔離**：使用虛擬環境避免全局Python環境污染
 
-## 相關文档
+## 相關文檔
 
-- [Streamlit配置文档](https://docs.streamlit.io/library/advanced-features/configuration)
+- [Streamlit配置文檔](https://docs.streamlit.io/library/advanced-features/configuration)
 - [Python字節碼文件說明](https://docs.python.org/3/tutorial/modules.html#compiled-python-files)
 - [Watchdog文件監控庫](https://python-watchdog.readthedocs.io/)
 
-## 常见問題
+## 常見問題
 
 **Q: 為什么會生成這些臨時文件？**
-A: Python在編譯模塊時會創建字節碼文件以提高加載速度，有時會使用臨時文件名避免冲突。
+A: Python在編譯模塊時會創建字節碼文件以提高加載速度，有時會使用臨時文件名避免衝突。
 
 **Q: 這個錯誤會影響應用功能吗？**
 A: 通常不會影響核心功能，但會在控制台產生錯誤日誌，影響開發體驗。
 
 **Q: 可以完全禁用文件監控吗？**
-A: 不建议，文件監控用於熱重載功能。建议使用排除模式而不是完全禁用。
+A: 不建議，文件監控用於熱重載功能。建議使用排除模式而不是完全禁用。
 
 ## 更新日誌
 
-- **2025-07-03**: 創建解決方案文档
+- **2025-07-03**: 創建解決方案文檔
 - **2025-07-03**: 添加Streamlit配置文件
 - **2025-07-03**: 更新.gitignore規則

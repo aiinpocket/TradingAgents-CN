@@ -2,7 +2,7 @@
 
 ## 🎯 功能概述
 
-TradingAgents-CN 提供了完整的Docker容器化部署方案，支持一键啟動完整的分析環境，包括Web應用、數據庫、緩存系統和管理界面。
+TradingAgents-CN 提供了完整的Docker容器化部署方案，支持一鍵啟動完整的分析環境，包括Web應用、數據庫、緩存系統和管理界面。
 
 ## 🏗️ 架構設計
 
@@ -62,7 +62,7 @@ TradingAgents-CN 提供了完整的Docker容器化部署方案，支持一键啟
 - 4GB+ 可用內存
 - 10GB+ 可用磁盘空間
 
-### 一键部署
+### 一鍵部署
 
 ```bash
 # 1. 克隆項目
@@ -88,8 +88,8 @@ docker-compose ps
 #### 構建過程詳解
 
 ```bash
-# 構建過程包括以下步骤：
-1. 📥 下載基础鏡像 (python:3.10-slim)
+# 構建過程包括以下步驟：
+1. 📥 下載基礎鏡像 (python:3.10-slim)
 2. 🔧 安裝系統依賴 (pandoc, wkhtmltopdf, 中文字體)
 3. 📦 安裝Python依賴包 (requirements.txt)
 4. 📁 複制應用代碼到容器
@@ -102,7 +102,7 @@ docker-compose ps
 - 💻 內存需求: 構建時需要2GB+內存
 ```
 
-#### 構建優化建议
+#### 構建優化建議
 
 ```bash
 # 1. 使用國內鏡像源加速 (可選)
@@ -196,11 +196,9 @@ volumes:
 # .env 文件示例
 # LLM API配置
 OPENAI_API_KEY=your_openai_key
-DEEPSEEK_API_KEY=your_
-QWEN_API_KEY=your_qwen_key
+GOOGLE_API_KEY=your_google_key
 
 # 數據源配置
-TUSHARE_TOKEN=your__token
 FINNHUB_API_KEY=your_finnhub_key
 
 # 數據庫配置
@@ -259,17 +257,17 @@ docker logs TradingAgents-web
 docker logs TradingAgents-mongodb
 docker logs TradingAgents-redis
 
-# 查看資源使用情况
+# 查看資源使用情況
 docker stats
 ```
 
 ### 數據管理
 
 ```bash
-# 备份MongoDB數據
+# 備份MongoDB數據
 docker exec TradingAgents-mongodb mongodump --out /backup
 
-# 备份Redis數據
+# 備份Redis數據
 docker exec TradingAgents-redis redis-cli BGSAVE
 
 # 清理緩存
@@ -291,9 +289,9 @@ docker-compose up -d --build
 
 ## 🚨 故障排除
 
-### 常见問題
+### 常見問題
 
-1. **端口冲突**
+1. **端口衝突**
    ```bash
    # 檢查端口占用
    netstat -tulpn | grep :8501
@@ -312,7 +310,7 @@ docker-compose up -d --build
          memory: 4G
    ```
 
-3. **數據庫連接失败**
+3. **數據庫連接失敗**
    ```bash
    # 檢查數據庫服務狀態
    docker logs TradingAgents-mongodb
@@ -381,22 +379,22 @@ services:
       - tradingagents
 ```
 
-## 🙏 致谢
+## 🙏 致謝
 
-### 功能贡献者
+### 功能貢獻者
 
-Docker容器化功能由社区贡献者 **[@breeze303](https://github.com/breeze303)** 設計並實現，包括：
+Docker容器化功能由社群貢獻者 **[@breeze303](https://github.com/breeze303)** 設計並實現，包括：
 
 - 🐳 Docker Compose多服務編排配置
 - 🏗️ 容器化架構設計和優化
 - 📊 數據庫和緩存服務集成
 - 🔧 開發環境Volume映射配置
-- 📚 完整的部署文档和最佳實踐
+- 📚 完整的部署文檔和最佳實踐
 
-感谢他的杰出贡献，让TradingAgents-CN擁有了專業級的容器化部署能力！
+感謝他的傑出貢獻，讓TradingAgents-CN擁有了專業級的容器化部署能力！
 
 ---
 
 *最後更新: 2025-07-13*  
 *版本: cn-0.1.7*  
-*功能贡献: [@breeze303](https://github.com/breeze303)*
+*功能貢獻: [@breeze303](https://github.com/breeze303)*

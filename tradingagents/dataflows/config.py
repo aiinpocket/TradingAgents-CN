@@ -52,7 +52,7 @@ def get_config() -> Dict:
         DATA_DIR = current_data_dir
 
     # 註意：數據庫配置現在由 tradingagents.config.database_manager 管理
-    # 這里不再包含數據庫配置，避免配置冲突
+    # 這裡不再包含數據庫配置，避免配置衝突
     config_copy = _config.copy()
 
     return config_copy

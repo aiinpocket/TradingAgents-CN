@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-緩存管理页面
+緩存管理頁面
 用戶可以查看、管理和清理股票數據緩存
 """
 
@@ -20,7 +20,6 @@ from utils.ui_utils import apply_hide_deploy_button_css
 try:
     from tradingagents.dataflows.cache_manager import get_cache
     from tradingagents.dataflows.optimized_us_data import get_optimized_us_data_provider
-    from tradingagents.dataflows.optimized_china_data import get_optimized_china_data_provider
     CACHE_AVAILABLE = True
     OPTIMIZED_PROVIDERS_AVAILABLE = True
 except ImportError as e:
@@ -35,7 +34,7 @@ def main():
         layout="wide"
     )
     
-    # 應用隱藏Deploy按钮的CSS樣式
+    # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
     st.title("💾 股票數據緩存管理")
@@ -48,11 +47,11 @@ def main():
     # 獲取緩存實例
     cache = get_cache()
     
-    # 侧邊栏操作
+    # 側邊欄操作
     with st.sidebar:
         st.header("🛠️ 緩存操作")
         
-        # 刷新按钮
+        # 刷新按鈕
         if st.button("🔄 刷新統計", type="primary"):
             st.rerun()
         
@@ -90,9 +89,9 @@ def main():
             
             with metric_col1:
                 st.metric(
-                    label="总文件數",
+                    label="總文件數",
                     value=stats['total_files'],
-                    help="緩存中的总文件數量"
+                    help="緩存中的總文件數量"
                 )
                 
                 st.metric(
@@ -103,9 +102,9 @@ def main():
             
             with metric_col2:
                 st.metric(
-                    label="总大小",
+                    label="總大小",
                     value=f"{stats['total_size_mb']} MB",
-                    help="緩存文件占用的磁盘空間"
+                    help="緩存文件占用的磁碟空間"
                 )
                 
                 st.metric(
@@ -122,7 +121,7 @@ def main():
             )
             
         except Exception as e:
-            st.error(f"獲取緩存統計失败: {e}")
+            st.error(f"獲取緩存統計失敗: {e}")
 
     with col2:
         st.subheader("⚙️ 緩存配置")
@@ -178,27 +177,11 @@ def main():
                             with st.expander("查看結果"):
                                 st.text(result[:500] + "..." if len(result) > 500 else result)
                         except Exception as e:
-                            st.error(f"❌ 美股緩存測試失败: {e}")
+                            st.error(f"❌ 美股緩存測試失敗: {e}")
 
         with test_col2:
-            st.markdown("**測試A股數據緩存**")
-            china_symbol = st.text_input("A股代碼", value="000001", key="china_test")
-            if st.button("測試A股緩存", key="test_china"):
-                if china_symbol:
-                    with st.spinner(f"測試 {china_symbol} 緩存..."):
-                        try:
-                            from datetime import datetime, timedelta
-                            provider = get_optimized_china_data_provider()
-                            result = provider.get_stock_data(
-                                symbol=china_symbol,
-                                start_date=(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'),
-                                end_date=datetime.now().strftime('%Y-%m-%d')
-                            )
-                            st.success("✅ A股緩存測試成功")
-                            with st.expander("查看結果"):
-                                st.text(result[:500] + "..." if len(result) > 500 else result)
-                        except Exception as e:
-                            st.error(f"❌ A股緩存測試失败: {e}")
+            st.markdown("**測試說明**")
+            st.info("目前僅支援美股數據測試。請在左側輸入美股代碼進行測試。")
     else:
         st.warning("優化數據提供器不可用，無法進行緩存測試")
 
@@ -211,7 +194,7 @@ def main():
         **緩存機制說明：**
         
         🔹 **股票數據緩存**：6小時有效期
-        - 减少API調用次數
+        - 減少API調用次數
         - 提高數據獲取速度
         - 支持離線分析
         
@@ -220,7 +203,7 @@ def main():
         - 節省API配額
         
         🔹 **基本面數據緩存**：24小時有效期
-        - 减少基本面分析API調用
+        - 減少基本面分析API調用
         - 提高分析響應速度
         """)
         
@@ -305,14 +288,14 @@ def main():
                 
                 st.info(f"📊 找到 {len(cache_items)} 個 {data_type} 類型的緩存文件")
             else:
-                st.info(f"📭 暂無 {data_type} 類型的緩存文件")
+                st.info(f"📭 暫無 {data_type} 類型的緩存文件")
         else:
-            st.info("📭 暂無緩存文件")
+            st.info("📭 暫無緩存文件")
             
     except Exception as e:
-        st.error(f"讀取緩存詳情失败: {e}")
+        st.error(f"讀取緩存詳情失敗: {e}")
     
-    # 页腳信息
+    # 頁腳資訊
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666; font-size: 0.9em;'>

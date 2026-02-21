@@ -46,7 +46,7 @@ class InstallationTester:
             self.results.append("✅ 虛擬環境: 已激活")
             return True
         else:
-            self.errors.append("⚠️ 虛擬環境: 未激活 (建议使用虛擬環境)")
+            self.errors.append("⚠️ 虛擬環境: 未激活 (建議使用虛擬環境)")
             return False
     
     def test_core_modules(self) -> bool:
@@ -67,7 +67,7 @@ class InstallationTester:
                 importlib.import_module(module)
                 self.results.append(f"✅ 核心模塊: {module}")
             except ImportError as e:
-                self.errors.append(f"❌ 核心模塊導入失败: {module} - {e}")
+                self.errors.append(f"❌ 核心模塊導入失敗: {module} - {e}")
                 success = False
         
         return success
@@ -84,7 +84,7 @@ class InstallationTester:
             ('yfinance', '股票數據'),
             ('openai', 'OpenAI客戶端'),
             ('langchain', 'LangChain框架'),
-            ('plotly', '圖表绘制'),
+            ('plotly', '圖表繪製'),
             ('redis', 'Redis客戶端'),
             ('pymongo', 'MongoDB客戶端')
         ]
@@ -133,7 +133,7 @@ class InstallationTester:
         if env_file.exists():
             self.results.append("✅ 環境變量文件: .env 存在")
             
-            # 讀取並檢查關键配置
+            # 讀取並檢查關鍵配置
             try:
                 with open(env_file, 'r', encoding='utf-8') as f:
                     content = f.read()
@@ -155,7 +155,7 @@ class InstallationTester:
                     self.errors.append("⚠️ 未發現已配置的API密鑰")
                 
             except Exception as e:
-                self.errors.append(f"❌ 讀取.env文件失败: {e}")
+                self.errors.append(f"❌ 讀取.env文件失敗: {e}")
                 return False
         else:
             self.errors.append("⚠️ 環境變量文件: .env 不存在 (請複制.env.example)")
@@ -169,7 +169,7 @@ class InstallationTester:
         
         web_files = [
             ('web/app.py', 'Streamlit主應用'),
-            ('web/components/sidebar.py', '侧邊栏組件'),
+            ('web/components/sidebar.py', '側邊欄組件'),
             ('start_web.py', '啟動腳本')
         ]
         
@@ -201,7 +201,7 @@ class InstallationTester:
                     full_path.mkdir(parents=True, exist_ok=True)
                     self.results.append(f"✅ 數據目錄: {dir_path} (已創建)")
                 except Exception as e:
-                    self.errors.append(f"❌ 創建目錄失败: {dir_path} - {e}")
+                    self.errors.append(f"❌ 創建目錄失敗: {dir_path} - {e}")
                     return False
             else:
                 self.results.append(f"✅ 數據目錄: {dir_path} (已存在)")
@@ -239,9 +239,9 @@ class InstallationTester:
         return test_results
     
     def print_summary(self, test_results: Dict[str, bool]):
-        """打印測試总結"""
+        """打印測試總結"""
         print("=" * 60)
-        print("📊 測試总結")
+        print("📊 測試總結")
         print("=" * 60)
         
         # 成功的測試
@@ -250,20 +250,20 @@ class InstallationTester:
             for result in self.results:
                 print(f"  {result}")
         
-        # 失败的測試
+        # 失敗的測試
         if self.errors:
             print("\n❌ 問題項目:")
             for error in self.errors:
                 print(f"  {error}")
         
-        # 总體狀態
+        # 總體狀態
         total_tests = len(test_results)
         passed_tests = sum(test_results.values())
-        
+
         print(f"\n📈 測試統計:")
-        print(f"  总測試數: {total_tests}")
+        print(f"  總測試數: {total_tests}")
         print(f"  通過測試: {passed_tests}")
-        print(f"  失败測試: {total_tests - passed_tests}")
+        print(f"  失敗測試: {total_tests - passed_tests}")
         print(f"  成功率: {passed_tests/total_tests*100:.1f}%")
         
         if passed_tests == total_tests:
@@ -271,8 +271,8 @@ class InstallationTester:
             print("   你可以開始使用TradingAgents-CN了！")
             print("   運行: python start_web.py")
         else:
-            print("\n⚠️ 安裝驗證發現問題，請根據上述錯誤信息進行修複。")
-            print("   參考文档: docs/guides/installation-guide.md")
+            print("\n⚠️ 安裝驗證發現問題，請根據上述錯誤資訊進行修復。")
+            print("   參考文件: docs/guides/installation-guide.md")
 
 def main():
     """主函數"""

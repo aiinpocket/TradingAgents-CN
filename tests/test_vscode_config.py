@@ -10,7 +10,6 @@ import json
 import subprocess
 from pathlib import Path
 
-
 def test_python_environment():
     """測試Python環境配置"""
     print("🐍 Python環境驗證")
@@ -38,7 +37,6 @@ def test_python_environment():
     
     return True
 
-
 def test_vscode_settings():
     """測試VSCode設置文件"""
     print("\n🔧 VSCode設置驗證")
@@ -56,7 +54,7 @@ def test_vscode_settings():
         
         print("✅ settings.json 格式正確")
         
-        # 檢查關键配置
+        # 檢查關鍵配置
         key_settings = {
             'python.defaultInterpreterPath': './env/Scripts/python.exe',
             'python.terminal.activateEnvironment': True,
@@ -79,9 +77,8 @@ def test_vscode_settings():
         print(f"❌ settings.json 格式錯誤: {e}")
         return False
     except Exception as e:
-        print(f"❌ 讀取settings.json失败: {e}")
+        print(f"❌ 讀取settings.json失敗: {e}")
         return False
-
 
 def test_virtual_env_path():
     """測試虛擬環境路徑"""
@@ -113,10 +110,9 @@ def test_virtual_env_path():
     
     return True
 
-
 def test_package_imports():
-    """測試關键包導入"""
-    print("\n📦 關键包導入驗證")
+    """測試關鍵包導入"""
+    print("\n📦 關鍵包導入驗證")
     print("=" * 50)
     
     packages = [
@@ -124,7 +120,6 @@ def test_package_imports():
         ('langchain_openai', 'LangChain OpenAI'),
         ('pandas', 'Pandas'),
         ('numpy', 'NumPy'),
-        ('tushare', 'Tushare'),
         ('streamlit', 'Streamlit'),
         ('tradingagents', 'TradingAgents')
     ]
@@ -143,7 +138,6 @@ def test_package_imports():
     
     print(f"\n📊 包導入結果: {success_count}/{len(packages)} 成功")
     return success_count >= len(packages) * 0.8  # 80%成功率
-
 
 def test_project_structure():
     """測試項目結構"""
@@ -181,7 +175,6 @@ def test_project_structure():
     
     return True
 
-
 def test_environment_variables():
     """測試環境變量"""
     print("\n🔑 環境變量驗證")
@@ -195,10 +188,8 @@ def test_environment_variables():
     
     print("✅ .env文件存在")
     
-    # 檢查關键環境變量
+    # 檢查關鍵環境變量
     key_vars = [
-        'DASHSCOPE_API_KEY',
-        'TUSHARE_TOKEN',
         'OPENAI_API_KEY',
         'FINNHUB_API_KEY'
     ]
@@ -212,7 +203,6 @@ def test_environment_variables():
     
     return True
 
-
 def test_simple_functionality():
     """測試基本功能"""
     print("\n⚡ 基本功能驗證")
@@ -220,7 +210,6 @@ def test_simple_functionality():
     
     try:
         # 測試TradingAgents導入
-        from tradingagents.llm_adapters import ChatDashScopeOpenAI
         print("✅ TradingAgents LLM適配器導入成功")
         
         # 測試數據流導入
@@ -234,9 +223,8 @@ def test_simple_functionality():
         return True
         
     except Exception as e:
-        print(f"❌ 功能測試失败: {e}")
+        print(f"❌ 功能測試失敗: {e}")
         return False
-
 
 def main():
     """主測試函數"""
@@ -246,7 +234,7 @@ def main():
     print("   - Python虛擬環境配置")
     print("   - VSCode設置文件")
     print("   - 項目結構完整性")
-    print("   - 關键包導入")
+    print("   - 關鍵包導入")
     print("   - 環境變量配置")
     print("=" * 70)
     
@@ -270,13 +258,13 @@ def main():
             print(f"❌ {test_name}測試異常: {e}")
             results.append((test_name, False))
     
-    # 总結
-    print("\n📋 VSCode配置驗證总結")
+    # 總結
+    print("\n📋 VSCode配置驗證總結")
     print("=" * 60)
     
     passed = 0
     for test_name, result in results:
-        status = "✅ 通過" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失敗"
         print(f"{test_name}: {status}")
         if result:
             passed += 1
@@ -288,7 +276,7 @@ def main():
         print("\n🎉 VSCode配置完全正確！")
         print("\n💡 現在您可以:")
         print("   ✅ 在VSCode中正常開發和調試")
-        print("   ✅ 使用集成终端運行Python代碼")
+        print("   ✅ 使用集成終端運行Python代碼")
         print("   ✅ 運行測試和格式化代碼")
         print("   ✅ 使用智能代碼補全和錯誤檢查")
     elif passed >= total * 0.8:
@@ -296,14 +284,13 @@ def main():
         print("⚠️ 部分功能可能需要調整")
     else:
         print("\n⚠️ VSCode配置需要修複")
-        print("請檢查失败的項目並重新配置")
+        print("請檢查失敗的項目並重新配置")
     
-    print("\n🎯 使用建议:")
+    print("\n🎯 使用建議:")
     print("   1. 確保在VSCode中選擇了正確的Python解釋器")
     print("   2. 重啟VSCode以應用新的配置")
     print("   3. 使用Ctrl+Shift+P -> 'Python: Select Interpreter'")
-    print("   4. 在集成终端中驗證虛擬環境已激活")
-
+    print("   4. 在集成終端中驗證虛擬環境已激活")
 
 if __name__ == "__main__":
     main()

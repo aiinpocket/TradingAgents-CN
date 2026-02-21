@@ -2,7 +2,7 @@
 
 ## 概述
 
-本指南提供了 TradingAgents 框架的詳細安裝說明，包括不同操作系統的安裝步骤、依賴管理、環境配置和常见問題解決方案。
+本指南提供了 TradingAgents 框架的詳細安裝說明，包括不同操作系統的安裝步驟、依賴管理、環境配置和常見問題解決方案。
 
 ## 系統要求
 
@@ -12,15 +12,15 @@
 - **存储**: 至少 5GB 可用磁盘空間
 - **網絡**: 穩定的互聯網連接 (用於API調用和數據獲取)
 
-### 软件要求
+### 軟體要求
 - **操作系統**: 
   - Windows 10/11 (64位)
   - macOS 10.15 (Catalina) 或更高版本
   - Linux (Ubuntu 18.04+, CentOS 7+, 或其他主流發行版)
 - **Python**: 3.10, 3.11, 或 3.12 (推薦 3.11)
-- **Git**: 用於克隆代碼仓庫
+- **Git**: 用於克隆代碼倉庫
 
-## 安裝步骤
+## 安裝步驟
 
 ### 1. 安裝 Python
 
@@ -77,7 +77,7 @@ pip3 --version
 
 #### Linux (CentOS/RHEL)
 ```bash
-# 安裝 EPEL 仓庫
+# 安裝 EPEL 倉庫
 sudo yum install epel-release
 
 # 安裝 Python 3.11
@@ -94,7 +94,7 @@ pip3.11 --version
 ### 2. 克隆項目
 
 ```bash
-# 克隆項目仓庫
+# 克隆項目倉庫
 git clone https://github.com/TauricResearch/TradingAgents.git
 
 # 進入項目目錄
@@ -146,7 +146,7 @@ pipenv shell
 
 ### 4. 安裝依賴
 
-#### 基础安裝
+#### 基礎安裝
 ```bash
 # 升級 pip
 pip install --upgrade pip
@@ -193,14 +193,14 @@ python -m ipykernel install --user --name=tradingagents
 
 **OpenAI API**
 1. 訪問 [OpenAI Platform](https://platform.openai.com/)
-2. 註冊账戶並登錄
-3. 導航到 API Keys 页面
+2. 註冊帳戶並登錄
+3. 導航到 API Keys 頁面
 4. 創建新的 API 密鑰
 5. 複制密鑰 (註意: 只顯示一次)
 
 **FinnHub API**
 1. 訪問 [FinnHub](https://finnhub.io/)
-2. 註冊免費账戶
+2. 註冊免費帳戶
 3. 在儀表板中找到 API 密鑰
 4. 複制密鑰
 
@@ -333,7 +333,7 @@ def test_installation():
         from tradingagents.default_config import DEFAULT_CONFIG
         print("✅ TradingAgents 核心模塊導入成功")
     except ImportError as e:
-        print(f"❌ TradingAgents 導入失败: {e}")
+        print(f"❌ TradingAgents 導入失敗: {e}")
         return False
     
     print("\n🎉 安裝驗證完成!")
@@ -349,7 +349,7 @@ if __name__ == "__main__":
 python test_installation.py
 ```
 
-## 常见問題解決
+## 常見問題解決
 
 ### 1. Python 版本問題
 ```bash
@@ -382,7 +382,7 @@ source venv/bin/activate  # Linux/macOS
 
 ### 3. 網絡連接問題
 ```bash
-# 問題: pip 安裝超時或連接失败
+# 問題: pip 安裝超時或連接失敗
 # 解決方案:
 
 # 使用國內鏡像源
@@ -392,9 +392,9 @@ pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
-### 4. 依賴冲突問題
+### 4. 依賴衝突問題
 ```bash
-# 問題: 包版本冲突
+# 問題: 包版本衝突
 # 解決方案:
 
 # 清理環境重新安裝
@@ -500,4 +500,4 @@ unset OPENAI_API_KEY
 unset FINNHUB_API_KEY
 ```
 
-安裝完成後，您可以繼续阅讀 [快速開始指南](quick-start.md) 來開始使用 TradingAgents。
+安裝完成後，您可以繼續阅讀 [快速開始指南](quick-start.md) 來開始使用 TradingAgents。

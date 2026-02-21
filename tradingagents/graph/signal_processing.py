@@ -2,7 +2,7 @@
 
 from langchain_openai import ChatOpenAI
 
-# 導入統一日誌系統和圖處理模塊日誌裝饰器
+# 導入統一日誌系統和圖處理模塊日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_graph_module
 logger = get_logger("graph.signal_processing")
@@ -51,7 +51,7 @@ class SignalProcessor:
                 'reasoning': '信號內容為空，默認持有建議'
             }
 
-        # 檢測股票類型和貨币
+        # 檢測股票類型和貨幣
         from tradingagents.utils.stock_utils import StockUtils
 
         market_info = StockUtils.get_market_info(stock_symbol)
@@ -60,7 +60,7 @@ class SignalProcessor:
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.info(f"🔍 [SignalProcessor] 處理信號: 股票={stock_symbol}, 市場={market_info['market_name']}, 貨币={currency}",
+        logger.info(f"🔍 [SignalProcessor] 處理信號: 股票={stock_symbol}, 市場={market_info['market_name']}, 貨幣={currency}",
                    extra={'stock_symbol': stock_symbol, 'market': market_info['market_name'], 'currency': currency})
 
         messages = [
@@ -71,23 +71,23 @@ class SignalProcessor:
 請從提供的分析報告中提取以下信息，並以JSON格式返回：
 
 {{
-    "action": "买入/持有/卖出",
-    "target_price": 數字({currency}價格，**必须提供具體數值，不能為null**),
+    "action": "買入/持有/賣出",
+    "target_price": 數字({currency}價格，**必須提供具體數值，不能為null**),
     "confidence": 數字(0-1之間，如果沒有明確提及則為0.7),
     "risk_score": 數字(0-1之間，如果沒有明確提及則為0.5),
     "reasoning": "決策的主要理由摘要"
 }}
 
 請確保：
-1. action字段必须是"买入"、"持有"或"卖出"之一（絕對不允許使用英文buy/hold/sell）
-2. target_price必须是具體的數字,target_price應该是合理的{currency}價格數字（使用{currency_symbol}符號）
-3. confidence和risk_score應该在0-1之間
-4. reasoning應该是簡潔的中文摘要
-5. 所有內容必须使用中文，不允許任何英文投資建議
+1. action字段必須是"買入"、"持有"或"賣出"之一（絕對不允許使用英文buy/hold/sell）
+2. target_price必須是具體的數字,target_price應該是合理的{currency}價格數字（使用{currency_symbol}符號）
+3. confidence和risk_score應該在0-1之間
+4. reasoning應該是簡潔的中文摘要
+5. 所有內容必須使用中文，不允許任何英文投資建議
 
 特別註意：
 - 股票代碼 {stock_symbol or '未知'} 是{market_info['market_name']}，使用{currency}計價
-- 目標價格必须与股票的交易貨币一致（{currency_symbol}）
+- 目標價格必須與股票的交易貨幣一致（{currency_symbol}）
 
 如果某些信息在報告中沒有明確提及，請使用合理的默認值。""",
             ),
@@ -99,13 +99,13 @@ class SignalProcessor:
             logger.error(f"❌ [SignalProcessor] messages為空")
             return self._get_default_decision()
         
-        # 驗證human消息內容
+        # 驗證human訊息內容
         human_content = messages[1][1] if len(messages) > 1 else ""
         if not human_content or len(human_content.strip()) == 0:
-            logger.error(f"❌ [SignalProcessor] human消息內容為空")
+            logger.error(f"❌ [SignalProcessor] human訊息內容為空")
             return self._get_default_decision()
 
-        logger.debug(f"🔍 [SignalProcessor] 準备調用LLM，消息數量: {len(messages)}, 信號長度: {len(full_signal)}")
+        logger.debug(f"🔍 [SignalProcessor] 準備調用LLM，訊息數量: {len(messages)}, 信號長度: {len(full_signal)}")
 
         try:
             response = self.quick_thinking_llm.invoke(messages).content
@@ -124,13 +124,13 @@ class SignalProcessor:
 
                 # 驗證和標準化數據
                 action = decision_data.get('action', '持有')
-                if action not in ['买入', '持有', '卖出']:
+                if action not in ['買入', '持有', '賣出']:
                     # 嘗試映射英文和其他變體
                     action_map = {
-                        'buy': '买入', 'hold': '持有', 'sell': '卖出',
-                        'BUY': '买入', 'HOLD': '持有', 'SELL': '卖出',
-                        '購买': '买入', '保持': '持有', '出售': '卖出',
-                        'purchase': '买入', 'keep': '持有', 'dispose': '卖出'
+                        'buy': '買入', 'hold': '持有', 'sell': '賣出',
+                        'BUY': '買入', 'HOLD': '持有', 'SELL': '賣出',
+                        '購买': '買入', '保持': '持有', '出售': '賣出',
+                        'purchase': '買入', 'keep': '持有', 'dispose': '賣出'
                     }
                     action = action_map.get(action, '持有')
                     if action != decision_data.get('action', '持有'):
@@ -143,7 +143,7 @@ class SignalProcessor:
                     reasoning = decision_data.get('reasoning', '')
                     full_text = f"{reasoning} {full_signal}"  # 擴大搜索範围
                     
-                    # 增强的價格匹配模式
+                    # 增強的價格匹配模式
                     price_patterns = [
                         r'目標價[位格]?[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',  # 目標價位: 45.50
                         r'目標[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',         # 目標: 45.50
@@ -157,7 +157,7 @@ class SignalProcessor:
                         r'建議[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',        # 建議: 45.50
                         r'預期[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',        # 預期: 45.50
                         r'看[到至]\s*[¥\$]?(\d+(?:\.\d+)?)',          # 看到45.50
-                        r'上涨[到至]\s*[¥\$]?(\d+(?:\.\d+)?)',        # 上涨到45.50
+                        r'上漲[到至]\s*[¥\$]?(\d+(?:\.\d+)?)',        # 上漲到45.50
                         r'(\d+(?:\.\d+)?)\s*[¥\$]',                  # 45.50¥
                     ]
                     
@@ -191,7 +191,7 @@ class SignalProcessor:
                         logger.debug(f"🔍 [SignalProcessor] 處理後的目標價格: {target_price}")
                     except (ValueError, TypeError):
                         target_price = None
-                        logger.warning(f"🔍 [SignalProcessor] 價格轉換失败，設置為None")
+                        logger.warning(f"🔍 [SignalProcessor] 價格轉換失敗，設置為None")
 
                 result = {
                     'action': action,
@@ -217,7 +217,7 @@ class SignalProcessor:
         """智能價格推算方法"""
         import re
         
-        # 嘗試從文本中提取當前價格和涨跌幅信息
+        # 嘗試從文本中提取當前價格和漲跌幅信息
         current_price = None
         percentage_change = None
         
@@ -238,12 +238,12 @@ class SignalProcessor:
                 except ValueError:
                     continue
         
-        # 提取涨跌幅信息
+        # 提取漲跌幅信息
         percentage_patterns = [
-            r'上涨\s*(\d+(?:\.\d+)?)%',
-            r'涨幅\s*(\d+(?:\.\d+)?)%',
+            r'上漲\s*(\d+(?:\.\d+)?)%',
+            r'漲幅\s*(\d+(?:\.\d+)?)%',
             r'增長\s*(\d+(?:\.\d+)?)%',
-            r'(\d+(?:\.\d+)?)%\s*的?上涨',
+            r'(\d+(?:\.\d+)?)%\s*的?上漲',
         ]
         
         for pattern in percentage_patterns:
@@ -257,19 +257,19 @@ class SignalProcessor:
         
         # 基於動作和信息推算目標價
         if current_price and percentage_change:
-            if action == '买入':
+            if action == '買入':
                 return round(current_price * (1 + percentage_change), 2)
-            elif action == '卖出':
+            elif action == '賣出':
                 return round(current_price * (1 - percentage_change), 2)
         
-        # 如果有當前價格但沒有涨跌幅，使用默認估算
+        # 如果有當前價格但沒有漲跌幅，使用默認估算
         if current_price:
-            if action == '买入':
-                # 买入建議默認10-20%涨幅
+            if action == '買入':
+                # 買入建議默認10-20%漲幅
                 multiplier = 1.15 if is_china else 1.12
                 return round(current_price * multiplier, 2)
-            elif action == '卖出':
-                # 卖出建議默認5-10%跌幅
+            elif action == '賣出':
+                # 賣出建議默認5-10%跌幅
                 multiplier = 0.95 if is_china else 0.92
                 return round(current_price * multiplier, 2)
             else:  # 持有
@@ -284,14 +284,14 @@ class SignalProcessor:
 
         # 提取動作
         action = '持有'  # 默認
-        if re.search(r'买入|BUY', text, re.IGNORECASE):
-            action = '买入'
-        elif re.search(r'卖出|SELL', text, re.IGNORECASE):
-            action = '卖出'
+        if re.search(r'買入|BUY', text, re.IGNORECASE):
+            action = '買入'
+        elif re.search(r'賣出|SELL', text, re.IGNORECASE):
+            action = '賣出'
         elif re.search(r'持有|HOLD', text, re.IGNORECASE):
             action = '持有'
 
-        # 嘗試提取目標價格（使用增强的模式）
+        # 嘗試提取目標價格（使用增強的模式）
         target_price = None
         price_patterns = [
             r'目標價[位格]?[：:]?\s*[¥\$]?(\d+(?:\.\d+)?)',  # 目標價位: 45.50
@@ -314,7 +314,7 @@ class SignalProcessor:
         # 如果沒有找到價格，嘗試智能推算
         if target_price is None:
             # 檢測股票類型
-            is_china = True  # 默認假設是A股，實际應该從上下文獲取
+            is_china = False  # 預設為美股
             target_price = self._smart_price_estimation(text, action, is_china)
 
         return {

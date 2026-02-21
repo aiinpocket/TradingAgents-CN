@@ -143,10 +143,10 @@ def check_analysis_status(analysis_id: str) -> str:
             if status in ['completed', 'failed']:
                 return status
             else:
-                # 狀態顯示運行中但線程已死亡，說明異常终止
+                # 狀態顯示運行中但線程已死亡，說明異常終止
                 return 'failed'
         else:
             return 'not_found'
     except Exception as e:
-        logger.error(f"📊 [狀態檢查] 檢查進度數據失败: {e}")
+        logger.error(f"📊 [狀態檢查] 檢查進度數據失敗: {e}")
         return 'not_found'

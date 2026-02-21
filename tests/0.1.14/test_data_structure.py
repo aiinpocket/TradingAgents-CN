@@ -44,7 +44,7 @@ def test_data_structure():
         return results
         
     except Exception as e:
-        print(f"❌ 測試失败: {e}")
+        print(f"❌ 測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return None

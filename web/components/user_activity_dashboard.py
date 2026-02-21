@@ -33,7 +33,7 @@ def render_user_activity_dashboard():
     
     st.title("📊 用戶活動記錄儀表板")
     
-    # 侧邊栏過濾選項
+    # 側邊欄過濾選項
     with st.sidebar:
         st.header("🔍 過濾選項")
         
@@ -82,7 +82,7 @@ def render_user_activity_dashboard():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📊 总活動數", len(activities))
+        st.metric("📊 總活動數", len(activities))
     
     with col2:
         unique_users = len(set(a['username'] for a in activities))
@@ -152,7 +152,7 @@ def render_activity_charts(activities: List[Dict[str, Any]]):
             marker=dict(size=6)
         ))
         fig_line.update_layout(
-            title="每日活動趋势",
+            title="每日活動趨勢",
             xaxis_title="日期",
             yaxis_title="活動數量"
         )
@@ -239,7 +239,7 @@ def render_user_analysis(activities: List[Dict[str, Any]]):
         col1, col2 = st.columns(2)
         
         with col1:
-            st.metric("📊 总活動數", len(user_activities))
+            st.metric("📊 總活動數", len(user_activities))
             
             # 成功率
             successful = sum(1 for a in user_activities if a.get('success', True))
@@ -289,7 +289,7 @@ def render_export_options(activities: List[Dict[str, Any]]):
     
     if st.button("📥 導出數據", type="primary"):
         try:
-            # 準备導出數據
+            # 準備導出數據
             export_data = []
             for activity in activities:
                 timestamp = datetime.fromtimestamp(activity['timestamp'])
@@ -302,7 +302,7 @@ def render_export_options(activities: List[Dict[str, Any]]):
                     "活動名稱": activity.get('action_name', ''),
                     "會話ID": activity.get('session_id', ''),
                     "IP地址": activity.get('ip_address', ''),
-                    "页面URL": activity.get('page_url', ''),
+                    "頁面URL": activity.get('page_url', ''),
                     "耗時(ms)": activity.get('duration_ms', ''),
                     "成功": activity.get('success', True),
                     "錯誤信息": activity.get('error_message', '')
@@ -337,7 +337,7 @@ def render_export_options(activities: List[Dict[str, Any]]):
             
             elif export_format == "Excel":
                 df = pd.DataFrame(export_data)
-                # 註意：這里需要安裝 openpyxl 庫
+                # 註意：這裡需要安裝 openpyxl 庫
                 excel_buffer = df.to_excel(index=False, engine='openpyxl')
                 st.download_button(
                     label="📥 下載 Excel 文件",
@@ -346,13 +346,13 @@ def render_export_options(activities: List[Dict[str, Any]]):
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
             
-            st.success(f"✅ 成功準备 {len(activities)} 條記錄的導出文件")
+            st.success(f"✅ 成功準備 {len(activities)} 條記錄的導出文件")
             
         except Exception as e:
-            st.error(f"❌ 導出失败: {e}")
+            st.error(f"❌ 導出失敗: {e}")
 
 def render_activity_summary_widget():
-    """渲染活動摘要小部件（用於主页面）"""
+    """渲染活動摘要小部件（用於主頁面）"""
     
     if not user_activity_logger or not auth_manager:
         return

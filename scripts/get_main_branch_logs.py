@@ -25,7 +25,7 @@ def find_tradingagents_container():
     """查找TradingAgents Web容器"""
     print("🔍 查找TradingAgents Web容器...")
     
-    # 根據docker-compose.yml，容器名應该是 TradingAgents-web
+    # 根據docker-compose.yml，容器名應該是 TradingAgents-web
     container_names = [
         "TradingAgents-web",
         "tradingagents-web", 
@@ -39,7 +39,7 @@ def find_tradingagents_container():
             print(f"✅ 找到容器: {output.strip()}")
             return output.strip()
     
-    # 如果没找到，列出所有容器
+    # 如果沒找到，列出所有容器
     print("⚠️ 未找到預期的容器，列出所有運行中的容器:")
     success, output, error = run_command("docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'")
     if success:
@@ -139,7 +139,7 @@ def get_docker_logs(container_name):
         print(f"   📊 日誌行數: {lines:,}")
         print(f"   📊 文件大小: {size:,} 字節")
         
-        # 顯示最後几行
+        # 顯示最後幾行
         print(f"\n👀 最後10行日誌預覽:")
         print("=" * 60)
         last_lines = output.split('\n')[-11:-1]  # 最後10行
@@ -150,7 +150,7 @@ def get_docker_logs(container_name):
         
         return docker_log_file
     else:
-        print(f"❌ 獲取Docker日誌失败: {error}")
+        print(f"❌ 獲取Docker日誌失敗: {error}")
         return None
 
 def copy_log_files(container_name, log_files):
@@ -195,7 +195,7 @@ def copy_log_files(container_name, log_files):
                 
                 copied_files.append(local_file)
         else:
-            print(f"   ❌ 複制失败: {error}")
+            print(f"   ❌ 複制失敗: {error}")
     
     return copied_files
 
@@ -232,7 +232,7 @@ if os.path.exists('/app/logs'):
     if success:
         print(output)
     else:
-        print(f"   ❌ 檢查失败: {error}")
+        print(f"   ❌ 檢查失敗: {error}")
 
 def get_recent_activity(container_name):
     """獲取最近的活動日誌"""
@@ -253,7 +253,7 @@ def get_recent_activity(container_name):
         else:
             print("   ❌ 最近1小時無日誌輸出")
     else:
-        print(f"   ❌ 獲取失败: {error}")
+        print(f"   ❌ 獲取失敗: {error}")
 
 def main():
     """主函數"""
@@ -287,9 +287,9 @@ def main():
     # 7. 獲取最近活動
     get_recent_activity(container_name)
     
-    # 8. 生成总結報告
+    # 8. 生成總結報告
     print("\n" + "=" * 60)
-    print("📋 日誌獲取总結報告")
+    print("📋 日誌獲取總結報告")
     print("=" * 60)
     
     print(f"🐳 容器名稱: {container_name}")
@@ -304,13 +304,13 @@ def main():
         for file in copied_files:
             print(f"   - {file}")
     
-    print(f"\n💡 建议:")
+    print(f"\n💡 建議:")
     if not log_files:
-        print("   - 應用可能将日誌輸出到stdout，已通過Docker日誌捕獲")
+        print("   - 應用可能將日誌輸出到stdout，已通過Docker日誌捕獲")
         print("   - 檢查應用的日誌配置，確保寫入到文件")
         print("   - 考慮在docker-compose.yml中添加日誌目錄掛載")
     
-    print("   - 将獲取到的日誌文件發送給開發者進行問題診斷")
+    print("   - 將獲取到的日誌文件發送給開發者進行問題診斷")
     
     if docker_log_file:
         print(f"\n📧 主要發送文件: {docker_log_file}")

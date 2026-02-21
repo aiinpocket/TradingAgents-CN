@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 異步進度跟蹤器
-支持Redis和文件两種存储方式，前端定時轮詢獲取進度
+支持Redis和文件兩種儲存方式，前端定時輪詢獲取進度
 """
 
 import json
@@ -18,7 +18,7 @@ logger = get_logger('async_progress')
 
 def safe_serialize(obj):
     """安全序列化對象，處理不可序列化的類型"""
-    # 特殊處理LangChain消息對象
+    # 特殊處理LangChain訊息對象
     if hasattr(obj, '__class__') and 'Message' in obj.__class__.__name__:
         try:
             # 嘗試使用LangChain的序列化方法
@@ -27,7 +27,7 @@ def safe_serialize(obj):
             elif hasattr(obj, 'to_dict'):
                 return obj.to_dict()
             else:
-                # 手動提取消息內容
+                # 手動提取訊息內容
                 return {
                     'type': obj.__class__.__name__,
                     'content': getattr(obj, 'content', str(obj)),
@@ -35,7 +35,7 @@ def safe_serialize(obj):
                     'response_metadata': getattr(obj, 'response_metadata', {})
                 }
         except Exception:
-            # 如果所有方法都失败，返回字符串表示
+            # 如果所有方法都失敗，返回字符串表示
             return {
                 'type': obj.__class__.__name__,
                 'content': str(obj)
@@ -96,25 +96,25 @@ class AsyncProgressTracker:
             'elapsed_time': 0.0,
             'estimated_total_time': self.estimated_duration,
             'remaining_time': self.estimated_duration,
-            'last_message': '準备開始分析...',
+            'last_message': '準備開始分析...',
             'last_update': time.time(),
             'start_time': self.start_time,
             'steps': self.analysis_steps
         }
         
-        # 嘗試初始化Redis，失败則使用文件
+        # 嘗試初始化Redis，失敗則使用文件
         self.redis_client = None
         self.use_redis = self._init_redis()
         
         if not self.use_redis:
-            # 使用文件存储
+            # 使用文件儲存
             self.progress_file = f"./data/progress_{analysis_id}.json"
             os.makedirs(os.path.dirname(self.progress_file), exist_ok=True)
         
         # 保存初始狀態
         self._save_progress()
         
-        logger.info(f"📊 [異步進度] 初始化完成: {analysis_id}, 存储方式: {'Redis' if self.use_redis else '文件'}")
+        logger.info(f"📊 [異步進度] 初始化完成: {analysis_id}, 儲存方式: {'Redis' if self.use_redis else '文件'}")
 
         # 註冊到日誌系統進行自動進度更新
         try:
@@ -127,7 +127,7 @@ class AsyncProgressTracker:
                     register_analysis_tracker(self.analysis_id, self)
                     print(f"✅ [進度集成] 跟蹤器註冊成功: {self.analysis_id}")
                 except Exception as e:
-                    print(f"❌ [進度集成] 跟蹤器註冊失败: {e}")
+                    print(f"❌ [進度集成] 跟蹤器註冊失敗: {e}")
 
             # 在單獨線程中註冊，避免阻塞主線程
             register_thread = threading.Thread(target=register_with_timeout, daemon=True)
@@ -135,7 +135,7 @@ class AsyncProgressTracker:
             register_thread.join(timeout=2.0)  # 2秒超時
 
             if register_thread.is_alive():
-                print(f"⚠️ [進度集成] 跟蹤器註冊超時，繼续執行: {self.analysis_id}")
+                print(f"⚠️ [進度集成] 跟蹤器註冊超時，繼續執行: {self.analysis_id}")
 
         except ImportError:
             logger.debug("📊 [異步進度] 日誌集成不可用")
@@ -151,7 +151,7 @@ class AsyncProgressTracker:
             logger.info(f"🔍 [Redis檢查] REDIS_ENABLED原值='{redis_enabled_raw}' -> 處理後='{redis_enabled}'")
 
             if redis_enabled != 'true':
-                logger.info(f"📊 [異步進度] Redis已禁用，使用文件存储")
+                logger.info(f"📊 [異步進度] Redis已禁用，使用文件儲存")
                 return False
 
             import redis
@@ -184,17 +184,17 @@ class AsyncProgressTracker:
             logger.info(f"📊 [異步進度] Redis連接成功: {redis_host}:{redis_port}")
             return True
         except Exception as e:
-            logger.warning(f"📊 [異步進度] Redis連接失败，使用文件存储: {e}")
+            logger.warning(f"📊 [異步進度] Redis連接失敗，使用文件儲存: {e}")
             return False
     
     def _generate_dynamic_steps(self) -> List[Dict]:
         """根據分析師數量和研究深度動態生成分析步驟"""
         steps = [
-            {"name": "📋 準备階段", "description": "驗證股票代碼，檢查數據源可用性", "weight": 0.05},
+            {"name": "📋 準備階段", "description": "驗證股票代碼，檢查數據源可用性", "weight": 0.05},
             {"name": "🔧 環境檢查", "description": "檢查API密鑰配置，確保數據獲取正常", "weight": 0.02},
             {"name": "💰 成本估算", "description": "根據分析深度預估API調用成本", "weight": 0.01},
             {"name": "⚙️ 參數設置", "description": "配置分析參數和AI模型選擇", "weight": 0.02},
-            {"name": "🚀 啟動引擎", "description": "初始化AI分析引擎，準备開始分析", "weight": 0.05},
+            {"name": "🚀 啟動引擎", "description": "初始化AI分析引擎，準備開始分析", "weight": 0.05},
         ]
 
         # 為每個分析師添加專門的步驟
@@ -207,17 +207,17 @@ class AsyncProgressTracker:
                 "weight": analyst_base_weight
             })
 
-        # 根據研究深度添加後续步驟
+        # 根據研究深度添加後續步驟
         if self.research_depth >= 2:
-            # 標準和深度分析包含研究員辩論
+            # 標準和深度分析包含研究員辯論
             steps.extend([
-                {"name": "📈 多头觀點", "description": "從乐觀角度分析投資機會和上涨潜力", "weight": 0.06},
-                {"name": "📉 空头觀點", "description": "從謹慎角度分析投資風險和下跌可能", "weight": 0.06},
+                {"name": "📈 多頭觀點", "description": "從樂觀角度分析投資機會和上漲潛力", "weight": 0.06},
+                {"name": "📉 空頭觀點", "description": "從謹慎角度分析投資風險和下跌可能", "weight": 0.06},
                 {"name": "🤝 觀點整合", "description": "綜合多空觀點，形成平衡的投資建議", "weight": 0.05},
             ])
 
         # 所有深度都包含交易決策
-        steps.append({"name": "💡 投資建議", "description": "基於分析結果制定具體的买卖建議", "weight": 0.06})
+        steps.append({"name": "💡 投資建議", "description": "基於分析結果制定具體的買賣建議", "weight": 0.06})
 
         if self.research_depth >= 3:
             # 深度分析包含詳細風險評估
@@ -229,12 +229,12 @@ class AsyncProgressTracker:
             ])
         else:
             # 快速和標準分析的簡化風險評估
-            steps.append({"name": "⚠️ 風險提示", "description": "识別主要投資風險並提供風險提示", "weight": 0.05})
+            steps.append({"name": "⚠️ 風險提示", "description": "識別主要投資風險並提供風險提示", "weight": 0.05})
 
         # 最後的整理步驟
         steps.append({"name": "📊 生成報告", "description": "整理所有分析結果，生成最終投資報告", "weight": 0.04})
 
-        # 重新平衡權重，確保总和為1.0
+        # 重新平衡權重，確保總和為1.0
         total_weight = sum(step["weight"] for step in steps)
         for step in steps:
             step["weight"] = step["weight"] / total_weight
@@ -247,7 +247,7 @@ class AsyncProgressTracker:
             'market': '市場分析師',
             'fundamentals': '基本面分析師',
             'technical': '技術分析師',
-            'sentiment': '情绪分析師',
+            'sentiment': '情緒分析師',
             'risk': '風險分析師'
         }
         return name_map.get(analyst, f'{analyst}分析師')
@@ -257,7 +257,7 @@ class AsyncProgressTracker:
         analyst_info = {
             'market': {
                 "name": "📊 市場分析",
-                "description": "分析股價走势、成交量、市場熱度等市場表現"
+                "description": "分析股價走勢、成交量、市場熱度等市場表現"
             },
             'fundamentals': {
                 "name": "💼 基本面分析",
@@ -265,11 +265,11 @@ class AsyncProgressTracker:
             },
             'technical': {
                 "name": "📈 技術分析",
-                "description": "分析K線圖形、技術指標、支撑阻力等技術面"
+                "description": "分析K線圖形、技術指標、支撐阻力等技術面"
             },
             'sentiment': {
-                "name": "💭 情绪分析",
-                "description": "分析市場情绪、投資者心理、舆論倾向等"
+                "name": "💭 情緒分析",
+                "description": "分析市場情緒、投資者心理、舆論倾向等"
             },
             'news': {
                 "name": "📰 新聞分析",
@@ -277,11 +277,11 @@ class AsyncProgressTracker:
             },
             'social_media': {
                 "name": "🌐 社交媒體",
-                "description": "分析社交媒體討論、網絡熱度、散戶情绪等"
+                "description": "分析社交媒體討論、網絡熱度、散戶情緒等"
             },
             'risk': {
                 "name": "⚠️ 風險分析",
-                "description": "识別投資風險、評估風險等級、制定風控措施"
+                "description": "識別投資風險、評估風險等級、制定風控措施"
             }
         }
 
@@ -291,30 +291,33 @@ class AsyncProgressTracker:
         })
     
     def _estimate_total_duration(self) -> float:
-        """根據分析師數量、研究深度、模型類型預估总時長（秒）"""
-        # 基础時間（秒）- 環境準备、配置等
+        """根據分析師數量、研究深度、模型類型預估總時長（秒）"""
+        # 基礎時間（秒）- 環境準備、配置等
         base_time = 60
         
-        # 每個分析師的實际耗時（基於真實測試數據）
+        # 每個分析師的實際耗時（基於真實測試數據）
         analyst_base_time = {
             1: 120,  # 快速分析：每個分析師約2分鐘
-            2: 180,  # 基础分析：每個分析師約3分鐘  
+            2: 180,  # 基礎分析：每個分析師約3分鐘  
             3: 240   # 標準分析：每個分析師約4分鐘
         }.get(self.research_depth, 180)
         
         analyst_time = len(self.analysts) * analyst_base_time
         
-        # 模型速度影響（基於實际測試）
+        # 模型速度影響（基於實際測試）
         model_multiplier = {
-            'dashscope': 1.0,  # 阿里百炼速度適中
-            'deepseek': 0.7,   # DeepSeek較快
-            'google': 1.3      # Google較慢
+            'openai': 0.8,
+            'google': 1.3,
+            'anthropic': 1.0,
+            'openrouter': 1.1,
+            'ollama': 1.5,
+            'custom_openai': 1.0
         }.get(self.llm_provider, 1.0)
         
         # 研究深度額外影響（工具調用複雜度）
         depth_multiplier = {
             1: 0.8,  # 快速分析，較少工具調用
-            2: 1.0,  # 基础分析，標準工具調用
+            2: 1.0,  # 基礎分析，標準工具調用
             3: 1.3   # 標準分析，更多工具調用和推理
         }.get(self.research_depth, 1.0)
         
@@ -335,7 +338,7 @@ class AsyncProgressTracker:
             self.current_step = step
             logger.debug(f"📊 [異步進度] 步驟推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
 
-        # 如果是完成消息，確保進度為100%
+        # 如果是完成訊息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "✅ 分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
             logger.info(f"📊 [異步進度] 分析完成，設置為最終步驟")
@@ -347,7 +350,7 @@ class AsyncProgressTracker:
         # 更新進度數據
         current_step_info = self.analysis_steps[self.current_step] if self.current_step < len(self.analysis_steps) else self.analysis_steps[-1]
 
-        # 特殊處理工具調用消息，更新步驟描述但不改變步驟
+        # 特殊處理工具調用訊息，更新步驟描述但不改變步驟
         step_description = current_step_info['description']
         if "工具調用" in message:
             # 提取工具名稱並更新描述
@@ -378,7 +381,7 @@ class AsyncProgressTracker:
             'status': 'completed' if progress_percentage >= 100 else 'running'
         })
 
-        # 保存到存储
+        # 保存到儲存
         self._save_progress()
 
         # 詳細的更新日誌
@@ -387,16 +390,16 @@ class AsyncProgressTracker:
         logger.debug(f"📊 [進度詳情] 步驟{self.current_step + 1}/{len(self.analysis_steps)} ({step_name}), 進度{progress_percentage:.1f}%, 耗時{elapsed_time:.1f}s")
     
     def _detect_step_from_message(self, message: str) -> Optional[int]:
-        """根據消息內容智能檢測當前步驟"""
+        """根據訊息內容智能檢測當前步驟"""
         message_lower = message.lower()
 
-        # 開始分析階段 - 只匹配最初的開始消息
+        # 開始分析階段 - 只匹配最初的開始訊息
         if "🚀 開始股票分析" in message:
             return 0
         # 數據驗證階段
-        elif "驗證" in message or "預獲取" in message or "數據準备" in message:
+        elif "驗證" in message or "預獲取" in message or "數據準備" in message:
             return 0
-        # 環境準备階段
+        # 環境準備階段
         elif "環境" in message or "api" in message_lower or "密鑰" in message:
             return 1
         # 成本預估階段
@@ -418,7 +421,7 @@ class AsyncProgressTracker:
             elif "technical_analyst" in message or "technical" in message:
                 return self._find_step_by_keyword(["技術分析", "技術"])
             elif "sentiment_analyst" in message or "sentiment" in message:
-                return self._find_step_by_keyword(["情绪分析", "情绪"])
+                return self._find_step_by_keyword(["情緒分析", "情緒"])
             elif "news_analyst" in message or "news" in message:
                 return self._find_step_by_keyword(["新聞分析", "新聞"])
             elif "social_media_analyst" in message or "social" in message:
@@ -426,9 +429,9 @@ class AsyncProgressTracker:
             elif "risk_analyst" in message or "risk" in message:
                 return self._find_step_by_keyword(["風險分析", "風險"])
             elif "bull_researcher" in message or "bull" in message:
-                return self._find_step_by_keyword(["多头觀點", "多头", "看涨"])
+                return self._find_step_by_keyword(["多頭觀點", "多頭", "看漲"])
             elif "bear_researcher" in message or "bear" in message:
-                return self._find_step_by_keyword(["空头觀點", "空头", "看跌"])
+                return self._find_step_by_keyword(["空頭觀點", "空頭", "看跌"])
             elif "research_manager" in message:
                 return self._find_step_by_keyword(["觀點整合", "整合"])
             elif "trader" in message:
@@ -452,7 +455,7 @@ class AsyncProgressTracker:
         return None
 
     def _find_step_by_keyword(self, keywords) -> Optional[int]:
-        """根據關键詞查找步驟索引"""
+        """根據關鍵詞查找步驟索引"""
         if isinstance(keywords, str):
             keywords = [keywords]
 
@@ -484,24 +487,24 @@ class AsyncProgressTracker:
         return min(completed_weight / total_weight, 1.0)
     
     def _estimate_remaining_time(self, progress: float, elapsed_time: float) -> float:
-        """基於总預估時間計算剩余時間"""
-        # 如果進度已完成，剩余時間為0
+        """基於總預估時間計算剩餘時間"""
+        # 如果進度已完成，剩餘時間為0
         if progress >= 1.0:
             return 0.0
 
-        # 使用簡單而準確的方法：总預估時間 - 已花費時間
+        # 使用簡單而準確的方法：總預估時間 - 已花費時間
         remaining = max(self.estimated_duration - elapsed_time, 0)
 
         # 如果已經超過預估時間，根據當前進度動態調整
         if remaining <= 0 and progress > 0:
-            # 基於當前進度重新估算总時間，然後計算剩余
+            # 基於當前進度重新估算總時間，然後計算剩餘
             estimated_total = elapsed_time / progress
             remaining = max(estimated_total - elapsed_time, 0)
 
         return remaining
     
     def _save_progress(self):
-        """保存進度到存储"""
+        """保存進度到儲存"""
         try:
             current_step_name = self.progress_data.get('current_step_name', '未知')
             progress_pct = self.progress_data.get('progress_percentage', 0)
@@ -515,7 +518,7 @@ class AsyncProgressTracker:
                 self.redis_client.setex(key, 3600, data_json)  # 1小時過期
 
                 logger.info(f"📊 [Redis寫入] {self.analysis_id} -> {status} | {current_step_name} | {progress_pct:.1f}%")
-                logger.debug(f"📊 [Redis詳情] 键: {key}, 數據大小: {len(data_json)} 字節")
+                logger.debug(f"📊 [Redis詳情] 鍵: {key}, 數據大小: {len(data_json)} 字節")
             else:
                 # 保存到文件（安全序列化）
                 safe_data = safe_serialize(self.progress_data)
@@ -526,21 +529,21 @@ class AsyncProgressTracker:
                 logger.debug(f"📊 [文件詳情] 路徑: {self.progress_file}")
 
         except Exception as e:
-            logger.error(f"📊 [異步進度] 保存失败: {e}")
-            # 嘗試備用存储方式
+            logger.error(f"📊 [異步進度] 保存失敗: {e}")
+            # 嘗試備用儲存方式
             try:
                 if self.use_redis:
-                    # Redis失败，嘗試文件存储
-                    logger.warning(f"📊 [異步進度] Redis保存失败，嘗試文件存储")
+                    # Redis失敗，嘗試文件儲存
+                    logger.warning(f"📊 [異步進度] Redis保存失敗，嘗試文件儲存")
                     backup_file = f"./data/progress_{self.analysis_id}.json"
                     os.makedirs(os.path.dirname(backup_file), exist_ok=True)
                     safe_data = safe_serialize(self.progress_data)
                     with open(backup_file, 'w', encoding='utf-8') as f:
                         json.dump(safe_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"📊 [備用存储] 文件保存成功: {backup_file}")
+                    logger.info(f"📊 [備用儲存] 文件保存成功: {backup_file}")
                 else:
-                    # 文件存储失败，嘗試簡化數據
-                    logger.warning(f"📊 [異步進度] 文件保存失败，嘗試簡化數據")
+                    # 文件儲存失敗，嘗試簡化數據
+                    logger.warning(f"📊 [異步進度] 文件保存失敗，嘗試簡化數據")
                     simplified_data = {
                         'analysis_id': self.analysis_id,
                         'status': self.progress_data.get('status', 'unknown'),
@@ -551,9 +554,9 @@ class AsyncProgressTracker:
                     backup_file = f"./data/progress_{self.analysis_id}.json"
                     with open(backup_file, 'w', encoding='utf-8') as f:
                         json.dump(simplified_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"📊 [備用存储] 簡化數據保存成功: {backup_file}")
+                    logger.info(f"📊 [備用儲存] 簡化數據保存成功: {backup_file}")
             except Exception as backup_e:
-                logger.error(f"📊 [異步進度] 備用存储也失败: {backup_e}")
+                logger.error(f"📊 [異步進度] 備用儲存也失敗: {backup_e}")
     
     def get_progress(self) -> Dict[str, Any]:
         """獲取當前進度"""
@@ -572,7 +575,7 @@ class AsyncProgressTracker:
                 self.progress_data['raw_results'] = safe_serialize(results)
                 logger.info(f"📊 [異步進度] 保存分析結果: {self.analysis_id}")
             except Exception as e:
-                logger.warning(f"📊 [異步進度] 結果序列化失败: {e}")
+                logger.warning(f"📊 [異步進度] 結果序列化失敗: {e}")
                 self.progress_data['raw_results'] = str(results)  # 最後的fallback
 
         self._save_progress()
@@ -586,12 +589,12 @@ class AsyncProgressTracker:
             pass
     
     def mark_failed(self, error_message: str):
-        """標記分析失败"""
+        """標記分析失敗"""
         self.progress_data['status'] = 'failed'
-        self.progress_data['last_message'] = f"分析失败: {error_message}"
+        self.progress_data['last_message'] = f"分析失敗: {error_message}"
         self.progress_data['last_update'] = time.time()
         self._save_progress()
-        logger.error(f"📊 [異步進度] 分析失败: {self.analysis_id}, 錯誤: {error_message}")
+        logger.error(f"📊 [異步進度] 分析失敗: {self.analysis_id}, 錯誤: {error_message}")
 
         # 從日誌系統註銷
         try:
@@ -639,7 +642,7 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
                 if data:
                     return json.loads(data)
             except Exception as e:
-                logger.debug(f"📊 [異步進度] Redis讀取失败: {e}")
+                logger.debug(f"📊 [異步進度] Redis讀取失敗: {e}")
 
         # 嘗試文件
         progress_file = f"./data/progress_{analysis_id}.json"
@@ -649,7 +652,7 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
 
         return None
     except Exception as e:
-        logger.error(f"📊 [異步進度] 獲取進度失败: {analysis_id}, 錯誤: {e}")
+        logger.error(f"📊 [異步進度] 獲取進度失敗: {analysis_id}, 錯誤: {e}")
         return None
 
 def format_time(seconds: float) -> str:
@@ -698,12 +701,12 @@ def get_latest_analysis_id() -> Optional[str]:
                         decode_responses=True
                     )
 
-                # 獲取所有progress键
+                # 獲取所有progress鍵
                 keys = redis_client.keys("progress:*")
                 if not keys:
                     return None
 
-                # 獲取每個键的數據，找到最新的
+                # 獲取每個鍵的數據，找到最新的
                 latest_time = 0
                 latest_id = None
 
@@ -715,7 +718,7 @@ def get_latest_analysis_id() -> Optional[str]:
                             last_update = progress_data.get('last_update', 0)
                             if last_update > latest_time:
                                 latest_time = last_update
-                                # 從键名中提取analysis_id (去掉"progress:"前缀)
+                                # 從鍵名中提取analysis_id (去掉"progress:"前綴)
                                 latest_id = key.replace('progress:', '')
                     except Exception:
                         continue
@@ -725,9 +728,9 @@ def get_latest_analysis_id() -> Optional[str]:
                     return latest_id
 
             except Exception as e:
-                logger.debug(f"📊 [恢複分析] Redis查找失败: {e}")
+                logger.debug(f"📊 [恢複分析] Redis查找失敗: {e}")
 
-        # 如果Redis失败或未啟用，嘗試從文件查找
+        # 如果Redis失敗或未啟用，嘗試從文件查找
         data_dir = Path("data")
         if data_dir.exists():
             progress_files = list(data_dir.glob("progress_*.json"))
@@ -737,11 +740,11 @@ def get_latest_analysis_id() -> Optional[str]:
                 # 從文件名提取analysis_id
                 filename = latest_file.name
                 if filename.startswith("progress_") and filename.endswith(".json"):
-                    analysis_id = filename[9:-5]  # 去掉前缀和後缀
+                    analysis_id = filename[9:-5]  # 去掉前綴和後綴
                     logger.debug(f"📊 [恢複分析] 從文件找到最新分析ID: {analysis_id}")
                     return analysis_id
 
         return None
     except Exception as e:
-        logger.error(f"📊 [恢複分析] 獲取最新分析ID失败: {e}")
+        logger.error(f"📊 [恢複分析] 獲取最新分析ID失敗: {e}")
         return None

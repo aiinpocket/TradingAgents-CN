@@ -21,7 +21,7 @@ def test_pypandoc_import():
         print("✅ pypandoc導入成功")
         return True
     except ImportError as e:
-        print(f"❌ pypandoc導入失败: {e}")
+        print(f"❌ pypandoc導入失敗: {e}")
         return False
 
 def test_pandoc_version():
@@ -33,7 +33,7 @@ def test_pandoc_version():
         print(f"✅ Pandoc版本: {version}")
         return True
     except Exception as e:
-        print(f"❌ 獲取pandoc版本失败: {e}")
+        print(f"❌ 獲取pandoc版本失敗: {e}")
         return False
 
 def test_pandoc_download():
@@ -59,7 +59,7 @@ def test_pandoc_download():
         return True
         
     except Exception as e:
-        print(f"❌ Pandoc下載失败: {e}")
+        print(f"❌ Pandoc下載失敗: {e}")
         return False
 
 def test_markdown_conversion():
@@ -80,19 +80,19 @@ def test_markdown_conversion():
 這是一個測試報告，用於驗證pypandoc的轉換功能。
 
 ### 技術分析
-- 價格趋势：上涨
+- 價格趨勢：上漲
 - 成交量：正常
 - 技術指標：良好
 
-### 投資建议
-**建议**: 买入
+### 投資建議
+**建議**: 買入
 **置信度**: 85%
 
 ---
 *報告生成時間: 2025-01-12 15:30:00*
 """
         
-        print("📄 測試Markdown內容準备完成")
+        print("📄 測試Markdown內容準備完成")
         
         # 測試轉換為HTML
         try:
@@ -100,7 +100,7 @@ def test_markdown_conversion():
             print("✅ Markdown → HTML 轉換成功")
             print(f"   輸出長度: {len(html_output)} 字符")
         except Exception as e:
-            print(f"❌ Markdown → HTML 轉換失败: {e}")
+            print(f"❌ Markdown → HTML 轉換失敗: {e}")
             return False
         
         # 測試轉換為DOCX
@@ -129,10 +129,10 @@ def test_markdown_conversion():
                 return False
                 
         except Exception as e:
-            print(f"❌ Markdown → DOCX 轉換失败: {e}")
+            print(f"❌ Markdown → DOCX 轉換失敗: {e}")
             return False
         
-        # 測試轉換為PDF (可能失败，因為需要額外工具)
+        # 測試轉換為PDF (可能失敗，因為需要額外工具)
         try:
             with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
                 output_file = tmp_file.name
@@ -156,13 +156,13 @@ def test_markdown_conversion():
                 print("⚠️ PDF文件未生成 (可能缺少PDF引擎)")
                 
         except Exception as e:
-            print(f"⚠️ Markdown → PDF 轉換失败: {e}")
+            print(f"⚠️ Markdown → PDF 轉換失敗: {e}")
             print("   這是正常的，PDF轉換需要額外的工具如wkhtmltopdf")
         
         return True
         
     except Exception as e:
-        print(f"❌ 轉換測試失败: {e}")
+        print(f"❌ 轉換測試失敗: {e}")
         return False
 
 def test_report_exporter():
@@ -186,16 +186,14 @@ def test_report_exporter():
                 'confidence': 0.85,
                 'risk_score': 0.3,
                 'target_price': '¥15.50',
-                'reasoning': '基於技術分析和基本面分析，该股票具有良好的投資價值。'
+                'reasoning': '基於技術分析和基本面分析，該股票具有良好的投資價值。'
             },
             'state': {
-                'market_report': '技術指標顯示上涨趋势，成交量放大。',
-                'fundamentals_report': '公司財務狀况良好，盈利能力强。',
-                'sentiment_report': '市場情绪積極，投資者信心較强。'
+                'market_report': '技術指標顯示上漲趨勢，成交量放大。',
+                'fundamentals_report': '公司財務狀況良好，盈利能力強。',
+                'sentiment_report': '市場情緒積極，投資者信心較強。'
             },
-            'llm_provider': 'deepseek',
-            'llm_model': 'deepseek-chat',
-            'analysts': ['技術分析師', '基本面分析師', '情绪分析師'],
+            'analysts': ['技術分析師', '基本面分析師', '情緒分析師'],
             'research_depth': '深度分析',
             'is_demo': False
         }
@@ -206,7 +204,7 @@ def test_report_exporter():
             print("✅ Markdown報告生成成功")
             print(f"   內容長度: {len(md_content)} 字符")
         except Exception as e:
-            print(f"❌ Markdown報告生成失败: {e}")
+            print(f"❌ Markdown報告生成失敗: {e}")
             return False
         
         # 測試DOCX導出 (如果pandoc可用)
@@ -216,7 +214,7 @@ def test_report_exporter():
                 print("✅ DOCX報告生成成功")
                 print(f"   內容大小: {len(docx_content)} 字節")
             except Exception as e:
-                print(f"❌ DOCX報告生成失败: {e}")
+                print(f"❌ DOCX報告生成失敗: {e}")
                 return False
         else:
             print("⚠️ 跳過DOCX測試 (pandoc不可用)")
@@ -224,7 +222,7 @@ def test_report_exporter():
         return True
         
     except Exception as e:
-        print(f"❌ 報告導出器測試失败: {e}")
+        print(f"❌ 報告導出器測試失敗: {e}")
         return False
 
 def main():
@@ -251,27 +249,27 @@ def main():
             print(f"❌ 測試異常: {e}")
             results.append((test_name, False))
     
-    # 总結
+    # 總結
     print("\n" + "="*50)
-    print("📊 測試結果总結")
+    print("📊 測試結果總結")
     print("="*50)
     
     passed = 0
     total = len(results)
     
     for test_name, result in results:
-        status = "✅ 通過" if result else "❌ 失败"
+        status = "✅ 通過" if result else "❌ 失敗"
         print(f"{test_name:20} {status}")
         if result:
             passed += 1
     
-    print(f"\n总計: {passed}/{total} 測試通過")
+    print(f"\n總計: {passed}/{total} 測試通過")
     
     if passed == total:
         print("🎉 所有測試通過！pypandoc功能正常")
         return True
     else:
-        print("⚠️ 部分測試失败，請檢查配置")
+        print("⚠️ 部分測試失敗，請檢查配置")
         return False
 
 if __name__ == "__main__":
