@@ -5,17 +5,20 @@
 
 import streamlit as st
 import os
-import logging
-import sys
 from pathlib import Path
-
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
 
 from web.utils.persistence import load_model_selection, save_model_selection
 from web.utils.model_fetcher import fetch_models, clear_cache
 
-logger = logging.getLogger(__name__)
+# 日誌模組
+try:
+    from tradingagents.utils.logging_manager import get_logger
+    logger = get_logger('web')
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)
+
+project_root = Path(__file__).parent.parent.parent
 
 
 def get_version():

@@ -5,11 +5,16 @@ MongoDB報告管理器
 """
 
 import os
-import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 
-logger = logging.getLogger(__name__)
+# 日誌模組
+try:
+    from tradingagents.utils.logging_manager import get_logger
+    logger = get_logger('web')
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)
 
 try:
     from pymongo import MongoClient

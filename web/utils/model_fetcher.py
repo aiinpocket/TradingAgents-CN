@@ -5,11 +5,16 @@
 
 import os
 import time
-import logging
 import requests
 from typing import Optional
 
-logger = logging.getLogger(__name__)
+# 日誌模組
+try:
+    from tradingagents.utils.logging_manager import get_logger
+    logger = get_logger('web')
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)
 
 # 模型列表快取（模組層級，跨 Streamlit rerun 保持）
 _model_cache: dict = {}

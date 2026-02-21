@@ -4,9 +4,14 @@
 """
 
 import streamlit as st
-import logging
 
-logger = logging.getLogger(__name__)
+# 日誌模組
+try:
+    from tradingagents.utils.logging_manager import get_logger
+    logger = get_logger('web')
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)
 
 class ModelPersistence:
     """模型選擇持久化管理器"""

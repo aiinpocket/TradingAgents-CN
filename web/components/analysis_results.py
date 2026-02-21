@@ -12,7 +12,13 @@ from typing import Dict, List, Any
 import json
 import os
 from pathlib import Path
-import logging
+# 日誌模組
+try:
+    from tradingagents.utils.logging_manager import get_logger
+    logger = get_logger('web')
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)
 
 # MongoDB相關導入
 try:
@@ -20,9 +26,6 @@ try:
     MONGODB_AVAILABLE = True
 except ImportError as e:
     MONGODB_AVAILABLE = False
-
-# 設置日誌
-logger = logging.getLogger(__name__)
 
 def safe_timestamp_to_datetime(timestamp_value):
     """安全地將時間戳轉換為datetime對象"""
