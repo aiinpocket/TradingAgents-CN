@@ -32,11 +32,16 @@ from components.sidebar import render_sidebar
 from components.header import render_header
 from components.analysis_form import render_analysis_form
 from components.results_display import render_results
+from components.analysis_results import save_analysis_result
+from components.async_progress_display import display_unified_progress
 from utils.api_checker import check_api_keys
 from utils.analysis_runner import run_stock_analysis, validate_analysis_params, format_analysis_results
-from utils.async_progress_tracker import AsyncProgressTracker
-from components.async_progress_display import display_unified_progress
+from utils.async_progress_tracker import AsyncProgressTracker, get_latest_analysis_id, get_progress_by_id
 from utils.smart_session_manager import get_persistent_analysis_id, set_persistent_analysis_id
+from utils.thread_tracker import (
+    check_analysis_status, register_analysis_thread,
+    unregister_analysis_thread, cleanup_dead_analysis_threads
+)
 
 # 頁面設定
 st.set_page_config(
@@ -261,9 +266,6 @@ def initialize_session_state():
     # 嘗試從最新完成的分析中恢複結果
     if not st.session_state.analysis_results:
         try:
-            from utils.async_progress_tracker import get_latest_analysis_id, get_progress_by_id
-            from utils.analysis_runner import format_analysis_results
-
             latest_id = get_latest_analysis_id()
             if latest_id:
                 progress_data = get_progress_by_id(latest_id)
@@ -281,7 +283,7 @@ def initialize_session_state():
                         # 檢查分析狀態
                         analysis_status = progress_data.get('status', 'completed')
                         st.session_state.analysis_running = (analysis_status == 'running')
-                        # 恢複股票信息
+                        # 恢複股票資訊
                         if 'stock_symbol' in raw_results:
                             st.session_state.last_stock_symbol = raw_results.get('stock_symbol', '')
                         if 'market_type' in raw_results:
@@ -295,8 +297,6 @@ def initialize_session_state():
     try:
         persistent_analysis_id = get_persistent_analysis_id()
         if persistent_analysis_id:
-            # 使用線程檢測來檢查分析狀態
-            from utils.thread_tracker import check_analysis_status
             actual_status = check_analysis_status(persistent_analysis_id)
 
             # 只在狀態變化時記錄日誌，避免重複
@@ -418,7 +418,6 @@ def main():
         keys_to_remove = [k for k in st.session_state.keys() if 'auto_refresh' in k]
         for key in keys_to_remove:
             del st.session_state[key]
-        from utils.thread_tracker import cleanup_dead_analysis_threads
         cleanup_dead_analysis_threads()
         st.sidebar.success("已清理")
         st.rerun()
@@ -480,14 +479,7 @@ def main():
             st.session_state.last_stock_symbol = form_data['stock_symbol']
             st.session_state.last_market_type = form_data.get('market_type', '美股')
 
-            auto_refresh_keys = [
-                f"auto_refresh_unified_{analysis_id}",
-                f"auto_refresh_unified_default_{analysis_id}",
-                f"auto_refresh_static_{analysis_id}",
-                f"auto_refresh_streamlit_{analysis_id}"
-            ]
-            for key in auto_refresh_keys:
-                st.session_state[key] = True
+            st.session_state[f"auto_refresh_unified_{analysis_id}"] = True
 
             import threading
 
@@ -507,7 +499,6 @@ def main():
                     async_tracker.mark_completed("分析成功完成", results=results)
 
                     try:
-                        from components.analysis_results import save_analysis_result
                         save_analysis_result(
                             analysis_id=analysis_id,
                             stock_symbol=form_data['stock_symbol'],
@@ -524,7 +515,6 @@ def main():
                 except Exception as e:
                     async_tracker.mark_failed(str(e))
                     try:
-                        from components.analysis_results import save_analysis_result
                         save_analysis_result(
                             analysis_id=analysis_id,
                             stock_symbol=form_data['stock_symbol'],
@@ -538,14 +528,12 @@ def main():
                     logger.error(f"分析失敗 {analysis_id}: {e}")
 
                 finally:
-                    from utils.thread_tracker import unregister_analysis_thread
                     unregister_analysis_thread(analysis_id)
 
             analysis_thread = threading.Thread(target=run_analysis_in_background)
             analysis_thread.daemon = True
             analysis_thread.start()
 
-            from utils.thread_tracker import register_analysis_thread
             register_analysis_thread(analysis_id, analysis_thread)
 
             logger.info(f"分析執行緒已啟動: {analysis_id}")
@@ -557,14 +545,12 @@ def main():
     if current_analysis_id:
         st.markdown("---")
 
-        from utils.thread_tracker import check_analysis_status
         actual_status = check_analysis_status(current_analysis_id)
         is_running = (actual_status == 'running')
 
         if st.session_state.get('analysis_running', False) != is_running:
             st.session_state.analysis_running = is_running
 
-        from utils.async_progress_tracker import get_progress_by_id
         progress_data = get_progress_by_id(current_analysis_id)
 
         if is_running:
@@ -590,7 +576,6 @@ def main():
                         st.session_state.analysis_running = False
 
                         try:
-                            from components.analysis_results import save_analysis_result
                             stock_symbol = progress_data.get('stock_symbol', st.session_state.get('last_stock_symbol', 'unknown'))
                             save_analysis_result(
                                 analysis_id=current_analysis_id,

@@ -6,7 +6,6 @@
 
 import os
 import json
-import pickle
 import hashlib
 import logging
 from datetime import datetime, timedelta
@@ -45,7 +44,7 @@ class AdaptiveCacheManager:
         self.logger.info(f"緩存管理器初始化完成，主要後端: {self.primary_backend}")
     
     def _load_smart_config(self):
-        """加載智能配置"""
+        """載入智能配置"""
         if SMART_CONFIG_AVAILABLE:
             try:
                 config_manager = get_smart_config()
@@ -56,10 +55,10 @@ class AdaptiveCacheManager:
                 self.fallback_enabled = self.config["cache"]["fallback_enabled"]
                 self.ttl_settings = self.config["cache"]["ttl_settings"]
                 
-                self.logger.info(" 智能配置加載成功")
+                self.logger.info(" 智能配置載入成功")
                 return
             except Exception as e:
-                self.logger.warning(f"智能配置加載失敗: {e}")
+                self.logger.warning(f"智能配置載入失敗: {e}")
         
         # 預設配置（純文件緩存）
         self.config = {
@@ -159,37 +158,65 @@ class AdaptiveCacheManager:
         return datetime.now() < expiry_time
     
     def _save_to_file(self, cache_key: str, data: Any, metadata: Dict) -> bool:
-        """保存到文件緩存"""
+        """保存到檔案快取（使用 JSON 格式避免 pickle 反序列化風險）"""
         try:
-            cache_file = self.cache_dir / f"{cache_key}.pkl"
+            cache_file = self.cache_dir / f"{cache_key}.json"
             cache_data = {
-                'data': data,
+                'data': self._serialize_data(data),
                 'metadata': metadata,
-                'timestamp': datetime.now()
+                'timestamp': datetime.now().isoformat()
             }
-            
-            with open(cache_file, 'wb') as f:
-                pickle.dump(cache_data, f)
-            
+
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                json.dump(cache_data, f, ensure_ascii=False)
+
             return True
         except Exception as e:
-            self.logger.error(f"文件緩存保存失敗: {e}")
+            self.logger.error(f"檔案快取保存失敗: {e}")
             return False
-    
+
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
-        """從文件緩存加載"""
+        """從檔案快取載入（JSON 格式）"""
         try:
-            cache_file = self.cache_dir / f"{cache_key}.pkl"
+            cache_file = self.cache_dir / f"{cache_key}.json"
             if not cache_file.exists():
                 return None
-            
-            with open(cache_file, 'rb') as f:
-                cache_data = pickle.load(f)
-            
+
+            with open(cache_file, 'r', encoding='utf-8') as f:
+                cache_data = json.load(f)
+
+            # 還原序列化的數據
+            if 'data' in cache_data and isinstance(cache_data['data'], dict) and '_type' in cache_data['data']:
+                cache_data['data'] = self._deserialize_data(cache_data['data'])
+
             return cache_data
         except Exception as e:
-            self.logger.error(f"文件緩存加載失敗: {e}")
+            self.logger.error(f"檔案快取載入失敗: {e}")
             return None
+
+    def _serialize_data(self, data: Any) -> Any:
+        """將數據序列化為 JSON 安全格式"""
+        if isinstance(data, pd.DataFrame):
+            return {'_type': 'dataframe', '_value': data.to_json()}
+        elif isinstance(data, pd.Series):
+            return {'_type': 'series', '_value': data.to_json()}
+        elif isinstance(data, datetime):
+            return {'_type': 'datetime', '_value': data.isoformat()}
+        else:
+            return {'_type': 'raw', '_value': data}
+
+    def _deserialize_data(self, serialized: dict) -> Any:
+        """從 JSON 安全格式還原數據"""
+        data_type = serialized.get('_type', 'raw')
+        value = serialized.get('_value')
+        if data_type == 'dataframe':
+            return pd.read_json(value)
+        elif data_type == 'series':
+            return pd.read_json(value, typ='series')
+        elif data_type == 'datetime':
+            return datetime.fromisoformat(value)
+        else:
+            return value
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
         """保存到Redis緩存"""
@@ -203,7 +230,7 @@ class AdaptiveCacheManager:
                 'timestamp': datetime.now().isoformat()
             }
             
-            serialized_data = pickle.dumps(cache_data)
+            serialized_data = json.dumps(cache_data, ensure_ascii=False, default=str)
             self.redis_client.setex(cache_key, ttl_seconds, serialized_data)
             return True
         except Exception as e:
@@ -211,7 +238,7 @@ class AdaptiveCacheManager:
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
-        """從Redis緩存加載"""
+        """從Redis緩存載入"""
         if not self.redis_client:
             return None
         
@@ -220,14 +247,14 @@ class AdaptiveCacheManager:
             if not serialized_data:
                 return None
             
-            cache_data = pickle.loads(serialized_data)
+            cache_data = json.loads(serialized_data)
             # 轉換時間戳
             if isinstance(cache_data['timestamp'], str):
                 cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
             
             return cache_data
         except Exception as e:
-            self.logger.error(f"Redis緩存加載失敗: {e}")
+            self.logger.error(f"Redis緩存載入失敗: {e}")
             return None
     
     def save_stock_data(self, symbol: str, data: Any, start_date: str = None, 
@@ -236,7 +263,7 @@ class AdaptiveCacheManager:
         # 生成緩存鍵
         cache_key = self._get_cache_key(symbol, start_date or "", end_date or "", data_source)
         
-        # 準備元數據
+        # 準備中繼資料
         metadata = {
             'symbol': symbol,
             'start_date': start_date,
@@ -271,21 +298,21 @@ class AdaptiveCacheManager:
         return cache_key
     
     def load_stock_data(self, cache_key: str) -> Optional[Any]:
-        """從緩存加載股票數據"""
+        """從緩存載入股票數據"""
         cache_data = None
         
-        # 根據主要後端加載
+        # 根據主要後端載入
         if self.primary_backend == "redis":
             cache_data = self._load_from_redis(cache_key)
         elif self.primary_backend == "mongodb":
-            # MongoDB加載邏輯（簡化版）
+            # MongoDB載入邏輯（簡化版）
             cache_data = self._load_from_file(cache_key)
         
         # 如果主要後端失敗，嘗試文件緩存
         if not cache_data and self.fallback_enabled:
             cache_data = self._load_from_file(cache_key)
             if cache_data:
-                self.logger.info(f"使用文件緩存備用加載: {cache_key}")
+                self.logger.info(f"使用文件緩存備用載入: {cache_key}")
         
         if not cache_data:
             return None
@@ -313,7 +340,7 @@ class AdaptiveCacheManager:
         return None
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計信息"""
+        """獲取緩存統計資訊"""
         stats = {
             'primary_backend': self.primary_backend,
             'mongodb_enabled': self.mongodb_enabled,
@@ -373,12 +400,12 @@ def main():
     )
     logger.info(f" 數據保存: {cache_key}")
     
-    # 加載數據
+    # 載入數據
     loaded_data = cache.load_stock_data(cache_key)
     if loaded_data == test_data:
-        logger.info(f" 數據加載成功")
+        logger.info(f" 數據載入成功")
     else:
-        logger.error(f" 數據加載失敗")
+        logger.error(f" 數據載入失敗")
     
     # 查找緩存
     found_key = cache.find_cached_stock_data(

@@ -56,12 +56,33 @@ class TradingAgentsGraph:
 
         # 初始化 LLM（僅支援 OpenAI 和 Anthropic）
         provider = self.config["llm_provider"].lower()
+        backend_url = self.config.get("backend_url", "")
+
         if provider == "openai":
-            self.deep_thinking_llm = ChatOpenAI(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
-            self.quick_thinking_llm = ChatOpenAI(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
+            # OpenAI 支援自訂 base_url（用於相容 API 代理等場景）
+            openai_kwargs = {"model": self.config["deep_think_llm"]}
+            if backend_url:
+                openai_kwargs["base_url"] = backend_url
+            self.deep_thinking_llm = ChatOpenAI(**openai_kwargs)
+
+            openai_kwargs_quick = {"model": self.config["quick_think_llm"]}
+            if backend_url:
+                openai_kwargs_quick["base_url"] = backend_url
+            self.quick_thinking_llm = ChatOpenAI(**openai_kwargs_quick)
+
         elif provider == "anthropic":
-            self.deep_thinking_llm = ChatAnthropic(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
-            self.quick_thinking_llm = ChatAnthropic(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
+            # Anthropic 使用獨立的 API 端點，不傳入 OpenAI 的 base_url
+            anthropic_kwargs = {"model": self.config["deep_think_llm"]}
+            anthropic_base = self.config.get("anthropic_base_url", "")
+            if anthropic_base:
+                anthropic_kwargs["base_url"] = anthropic_base
+            self.deep_thinking_llm = ChatAnthropic(**anthropic_kwargs)
+
+            anthropic_kwargs_quick = {"model": self.config["quick_think_llm"]}
+            if anthropic_base:
+                anthropic_kwargs_quick["base_url"] = anthropic_base
+            self.quick_thinking_llm = ChatAnthropic(**anthropic_kwargs_quick)
+
         else:
             raise ValueError(f"不支援的 LLM 提供商: {self.config['llm_provider']}。僅支援 openai 和 anthropic。")
         
