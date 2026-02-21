@@ -199,7 +199,7 @@ def log_llm_call(provider: str, model: str):
     LLM調用專用日誌裝飾器
     
     Args:
-        provider: LLM 提供商（如：openai、google、anthropic 等）
+        provider: LLM 提供商（如：openai、anthropic）
         model: 模型名稱
     """
     def decorator(func: Callable) -> Callable:
