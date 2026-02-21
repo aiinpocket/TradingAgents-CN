@@ -257,7 +257,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             config["backend_url"] = "https://api.anthropic.com/"
             logger.info(f" [Anthropic] 使用模型: {llm_model}")
 
-        # 修複路徑問題 - 優先使用環境變數配置
+        # 修復路徑問題 - 優先使用環境變數配置
         # 資料目錄：優先使用環境變數，否則使用預設路徑
         if not config.get("data_dir") or config["data_dir"] == "./data":
             env_data_dir = os.getenv("TRADINGAGENTS_DATA_DIR")

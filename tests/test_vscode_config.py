@@ -283,7 +283,7 @@ def main():
         print("\n VSCode配置基本正確！")
         print(" 部分功能可能需要調整")
     else:
-        print("\n VSCode配置需要修複")
+        print("\n VSCode配置需要修復")
         print("請檢查失敗的項目並重新配置")
     
     print("\n 使用建議:")

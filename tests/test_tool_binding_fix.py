@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試統一新聞工具的LangChain綁定修複
+測試統一新聞工具的LangChain綁定修復
 """
 
 from tradingagents.agents.utils.agent_utils import Toolkit
@@ -8,8 +8,8 @@ from tradingagents.tools.unified_news_tool import create_unified_news_tool
 from langchain_core.utils.function_calling import convert_to_openai_tool
 
 def test_tool_binding():
-    """測試工具綁定是否修複"""
-    print("=== 測試統一新聞工具的LangChain綁定修複 ===")
+    """測試工具綁定是否修復"""
+    print("=== 測試統一新聞工具的LangChain綁定修復 ===")
     
     # 建立工具包
     toolkit = Toolkit()
@@ -56,7 +56,7 @@ def test_tool_binding():
         return False
     
     print("\n=== 測試完成 ===")
-    print(" 統一新聞工具的LangChain綁定問題已修複")
+    print(" 統一新聞工具的LangChain綁定問題已修復")
     print(" 函式簽名與檔案字串現在匹配")
     print(" 工具可以正常綁定到LLM")
     

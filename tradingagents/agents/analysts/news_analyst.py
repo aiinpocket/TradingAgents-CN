@@ -221,7 +221,7 @@ def create_news_analyst(llm, toolkit):
         total_time_taken = (datetime.now() - start_time).total_seconds()
         logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")
 
-        # 修複死迴圈問題：返回清潔的AIMessage，不包含tool_calls
+        # 修復死迴圈問題：返回清潔的AIMessage，不包含tool_calls
         # 這確保工作流圖能正確判斷分析已完成，避免重複呼叫
         from langchain_core.messages import AIMessage
         clean_message = AIMessage(content=report)

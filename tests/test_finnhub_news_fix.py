@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-測試Finnhub新聞資料路徑修複
+測試Finnhub新聞資料路徑修復
 
 這個指令碼用於驗證:
 1. 資料目錄路徑配置是否正確
@@ -152,7 +152,7 @@ def create_sample_data_structure():
 
 def main():
     """主測試函式"""
-    print("Finnhub新聞資料路徑修複測試")
+    print("Finnhub新聞資料路徑修復測試")
     print("=" * 50)
     
     # 測試資料目錄配置
@@ -172,7 +172,7 @@ def main():
         test_finnhub_news_path()
     
     print("\n=== 測試總結 ===")
-    print("1. 資料目錄路徑已修複為跨平台相容")
+    print("1. 資料目錄路徑已修復為跨平台相容")
     print("2. 新增了詳細的錯誤處理和除錯資訊")
     print("3. 當資料檔案不存在時會提供清晰的錯誤提示")
     print("4. 建議下載或配置正確的Finnhub資料")

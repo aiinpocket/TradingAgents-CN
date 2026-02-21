@@ -48,7 +48,7 @@ def test_graph_initialization():
         config["memory_enabled"] = True
         config["online_tools"] = True
         
-        # 修複路徑
+        # 修復路徑
         config["data_dir"] = str(project_root / "data")
         config["results_dir"] = str(project_root / "results")
         config["data_cache_dir"] = str(project_root / "tradingagents" / "dataflows" / "data_cache")

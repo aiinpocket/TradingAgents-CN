@@ -132,16 +132,16 @@ def test_problem_solving_effect():
         
         ui = CLIUserInterface()
         
-        print(" 對比修複前後的使用者體驗:")
+        print(" 對比修復前後的使用者體驗:")
         print("-" * 50)
         
-        print("\n 修複前的使用者體驗:")
+        print("\n 修復前的使用者體驗:")
         print("     基本面分析完成")
         print("   [長時間等待，使用者不知道系統在做什麼...]")
         print("   [使用者可能以為程式卡死了...]")
         print("   步驟 4: 投資決策生成")
         
-        print("\n 修複後的使用者體驗:")
+        print("\n 修復後的使用者體驗:")
         ui.show_success(" 基本面分析完成")
         time.sleep(0.3)
         ui.show_progress(" 研究團隊開始深度分析...")

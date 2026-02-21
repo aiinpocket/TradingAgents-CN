@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試格式化修複
+測試格式化修復
 """
 
 import sys
@@ -124,7 +124,7 @@ def test_format_analysis_results():
 
 def main():
     """主測試函式"""
-    print(" 格式化修複測試")
+    print(" 格式化修復測試")
     print("=" * 60)
     
     test_format_analysis_results()

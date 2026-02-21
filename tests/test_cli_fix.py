@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-測試CLI修複 - KeyError: 'stock_symbol' 問題
+測試CLI修復 - KeyError: 'stock_symbol' 問題
 Test CLI Fix - KeyError: 'stock_symbol' Issue
 
-這個測試驗證了CLI中selections字典鍵名不匹配問題的修複
+這個測試驗證了CLI中selections字典鍵名不匹配問題的修復
 This test verifies the fix for the selections dictionary key mismatch issue in CLI
 """
 
@@ -166,7 +166,7 @@ def main():
     執行所有測試
     Run all tests
     """
-    print(" 開始CLI修複驗證測試...")
+    print(" 開始CLI修復驗證測試...")
     print("=" * 50)
     
     tests = [
@@ -186,7 +186,7 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有測試通過！KeyError: 'stock_symbol' 問題已修複")
+        print(" 所有測試通過！KeyError: 'stock_symbol' 問題已修復")
         return True
     else:
         print(" 部分測試失敗，需要進一步檢查")

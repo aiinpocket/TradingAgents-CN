@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試CLI日誌修複效果
+測試CLI日誌修復效果
 驗證使用者介面是否清爽，日誌是否只寫入檔案
 """
 
@@ -50,7 +50,7 @@ def test_cli_logging_setup():
         print("\n 測試日誌輸出:")
         print("   執行 logger.info('測試訊息')...")
         logger.info("這是一條測試日誌訊息，應該只寫入檔案，不在主控台顯示")
-        print("    如果上面沒有顯示時間戳和日誌資訊，說明修複成功")
+        print("    如果上面沒有顯示時間戳和日誌資訊，說明修復成功")
         
         return True
         
@@ -93,7 +93,7 @@ def test_log_file_writing():
         import glob
         
         # 寫入測試日誌
-        test_message = "CLI日誌修複測試訊息 - 這應該只出現在日誌檔案中"
+        test_message = "CLI日誌修復測試訊息 - 這應該只出現在日誌檔案中"
         logger.info(test_message)
         
         # 查找日誌檔案
@@ -137,8 +137,8 @@ def test_cli_interface_preview():
         
         console = Console()
         
-        # 模擬修複後的CLI介面
-        print(" 模擬修複後的CLI介面:")
+        # 模擬修復後的CLI介面
+        print(" 模擬修復後的CLI介面:")
         print("-" * 40)
         
         # 標題
@@ -165,7 +165,7 @@ def test_cli_interface_preview():
 
 def main():
     """主測試函式"""
-    print(" 開始測試CLI日誌修複效果")
+    print(" 開始測試CLI日誌修復效果")
     print("=" * 80)
     
     results = []
@@ -204,8 +204,8 @@ def main():
     print(f"\n 總體結果: {passed}/{total} 測試通過")
     
     if passed == total:
-        print(" 所有測試通過！CLI日誌修複成功")
-        print("\n 修複效果:")
+        print(" 所有測試通過！CLI日誌修復成功")
+        print("\n 修復效果:")
         print("1.  主控台不再顯示技術日誌資訊")
         print("2.  使用者介面清爽美觀")
         print("3.  系統日誌正常寫入檔案")

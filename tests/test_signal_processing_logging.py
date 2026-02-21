@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試訊號處理模組的日誌記錄修複
+測試訊號處理模組的日誌記錄修復
 """
 
 import os
@@ -168,7 +168,7 @@ def test_logging_extraction():
 
 def main():
     """主測試函式"""
-    print(" 開始測試訊號處理日誌記錄修複")
+    print(" 開始測試訊號處理日誌記錄修復")
     print("=" * 100)
     
     results = []
@@ -199,8 +199,8 @@ def main():
     print(f"\n 總體結果: {passed}/{total} 測試通過")
     
     if passed == total:
-        print(" 所有測試通過！訊號處理日誌記錄修複成功")
-        print("\n 修複效果:")
+        print(" 所有測試通過！訊號處理日誌記錄修復成功")
+        print("\n 修復效果:")
         print("1.  正確提取訊號處理模組的股票代碼")
         print("2.  日誌顯示準確的股票資訊")
         print("3.  避免顯示 'unknown' 股票代碼")

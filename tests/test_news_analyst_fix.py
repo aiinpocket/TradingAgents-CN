@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試新聞分析師工具呼叫參數修複
+測試新聞分析師工具呼叫參數修復
 驗證強制呼叫和備用工具呼叫是否正確傳遞了所需參數
 """
 
@@ -15,7 +15,7 @@ from tradingagents.agents.utils.agent_utils import Toolkit
 
 def test_tool_parameters():
     """測試工具參數是否正確"""
-    print(" 測試新聞分析師工具呼叫參數修複")
+    print(" 測試新聞分析師工具呼叫參數修復")
     print("=" * 50)
     
     # 初始化工具包
@@ -33,7 +33,7 @@ def test_tool_parameters():
     # 測試 get_realtime_stock_news 工具
     print(" 測試 get_realtime_stock_news 工具呼叫...")
     try:
-        # 模擬修複後的呼叫方式
+        # 模擬修復後的呼叫方式
         params = {"ticker": ticker, "curr_date": curr_date}
         print(f"   參數: {params}")
         
@@ -50,7 +50,7 @@ def test_tool_parameters():
     # 測試 get_google_news 工具
     print(" 測試 get_google_news 工具呼叫...")
     try:
-        # 模擬修複後的呼叫方式
+        # 模擬修復後的呼叫方式
         params = {"query": f"{ticker} 股票 新聞", "curr_date": curr_date}
         print(f"   參數: {params}")
         
@@ -64,8 +64,8 @@ def test_tool_parameters():
     
     print()
     
-    # 測試修複前的錯誤呼叫方式（應該失敗）
-    print(" 測試修複前的錯誤呼叫方式（應該失敗）...")
+    # 測試修復前的錯誤呼叫方式（應該失敗）
+    print(" 測試修復前的錯誤呼叫方式（應該失敗）...")
     
     print("   測試 get_realtime_stock_news 缺少 curr_date:")
     try:
@@ -84,10 +84,10 @@ def test_tool_parameters():
         print(f"    正確失敗: {e}")
     
     print()
-    print(" 修複總結:")
+    print(" 修復總結:")
     print("   1.  get_realtime_stock_news 現在正確傳遞 ticker 和 curr_date")
     print("   2.  get_google_news 現在正確傳遞 query 和 curr_date")
-    print("   3.  修複了 Pydantic 驗證錯誤")
+    print("   3.  修復了 Pydantic 驗證錯誤")
     print("   4.  新聞分析師應該能夠正常取得新聞資料")
 
 if __name__ == "__main__":

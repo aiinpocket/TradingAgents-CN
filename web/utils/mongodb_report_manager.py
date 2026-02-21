@@ -296,9 +296,9 @@ class MongoDBReportManager:
             return []
 
     def fix_inconsistent_reports(self) -> bool:
-        """修複不一致的報告資料結構"""
+        """修復不一致的報告資料結構"""
         if not self.connected:
-            logger.warning("MongoDB未連接，跳過修複")
+            logger.warning("MongoDB未連接，跳過修復")
             return False
 
         try:
@@ -315,10 +315,10 @@ class MongoDBReportManager:
             inconsistent_docs = list(cursor)
 
             if not inconsistent_docs:
-                logger.info("所有報告資料結構一致，無需修複")
+                logger.info("所有報告資料結構一致，無需修復")
                 return True
 
-            logger.info(f"發現 {len(inconsistent_docs)} 個不一致的報告，開始修複...")
+            logger.info(f"發現 {len(inconsistent_docs)} 個不一致的報告，開始修復...")
 
             fixed_count = 0
             for doc in inconsistent_docs:
@@ -338,16 +338,16 @@ class MongoDBReportManager:
 
                     if result.modified_count > 0:
                         fixed_count += 1
-                        logger.info(f"修複報告: {doc.get('analysis_id', 'unknown')}")
+                        logger.info(f"修復報告: {doc.get('analysis_id', 'unknown')}")
 
                 except Exception as e:
-                    logger.error(f"修複報告失敗 {doc.get('analysis_id', 'unknown')}: {e}")
+                    logger.error(f"修復報告失敗 {doc.get('analysis_id', 'unknown')}: {e}")
 
-            logger.info(f"修複完成，共修複 {fixed_count} 個報告")
+            logger.info(f"修復完成，共修復 {fixed_count} 個報告")
             return True
 
         except Exception as e:
-            logger.error(f"修複不一致報告失敗: {e}")
+            logger.error(f"修復不一致報告失敗: {e}")
             return False
 
     def save_report(self, report_data: Dict[str, Any]) -> bool:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試DataFrame Arrow轉換修複
+測試DataFrame Arrow轉換修復
 """
 
 import sys
@@ -171,7 +171,7 @@ def test_arrow_conversion():
 
 def main():
     """主測試函式"""
-    print(" 開始測試DataFrame Arrow轉換修複")
+    print(" 開始測試DataFrame Arrow轉換修復")
     print("=" * 50)
     
     tests = [
@@ -196,7 +196,7 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有測試通過！DataFrame Arrow轉換問題已修複")
+        print(" 所有測試通過！DataFrame Arrow轉換問題已修復")
         return True
     else:
         print(" 部分測試失敗，需要進一步檢查")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試重複進度提示修複效果
+測試重複進度提示修復效果
 驗證分析師完成提示不會重複顯示
 """
 
@@ -239,7 +239,7 @@ def test_real_scenario_simulation():
 
 def main():
     """主測試函式"""
-    print(" 開始測試重複進度提示修複效果")
+    print(" 開始測試重複進度提示修復效果")
     print("=" * 80)
     
     results = []
@@ -278,8 +278,8 @@ def main():
     print(f"\n 總體結果: {passed}/{total} 測試通過")
     
     if passed == total:
-        print(" 所有測試通過！重複進度提示問題已修複")
-        print("\n 修複效果:")
+        print(" 所有測試通過！重複進度提示問題已修復")
+        print("\n 修復效果:")
         print("1.  每個分析師只顯示一次完成提示")
         print("2.  流式處理中的重複chunk被正確處理")
         print("3.  分析師完成狀態正確追蹤")

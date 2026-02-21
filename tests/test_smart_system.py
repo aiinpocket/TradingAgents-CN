@@ -283,7 +283,7 @@ if __name__ == "__main__":
     else:
         print("\n需要解決的問題:")
         print("1. 檢查依賴安裝")
-        print("2. 修複配置問題")
+        print("2. 修復配置問題")
         print("3. 重新執行測試")
     
     sys.exit(0 if success else 1)

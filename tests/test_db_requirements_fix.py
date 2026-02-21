@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試資料庫依賴套件相容性修複
+測試資料庫依賴套件相容性修復
 驗證requirements_db.txt的相容性改進
 """
 
@@ -214,7 +214,7 @@ def test_documentation_completeness():
 
 def main():
     """主測試函式"""
-    print(" 資料庫依賴套件相容性修複測試")
+    print(" 資料庫依賴套件相容性修復測試")
     print("=" * 60)
     
     tests = [
@@ -244,8 +244,8 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有測試通過！資料庫依賴套件相容性修複成功")
-        print("\n 修複內容:")
+        print(" 所有測試通過！資料庫依賴套件相容性修復成功")
+        print("\n 修復內容:")
         print(" 移除pickle5依賴，解決Python 3.10+相容性問題")
         print(" 優化版本要求，提高環境相容性")
         print(" 新增相容性檢查工具")

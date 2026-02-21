@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試投資建議中文化修複
+測試投資建議中文化修復
 """
 
 import os
@@ -34,7 +34,7 @@ def test_web_components():
         for decision in test_cases:
             action = decision.get('action', 'N/A')
             
-            # 應用我們的修複邏輯
+            # 應用我們的修復邏輯
             action_translation = {
                 'BUY': '買入',
                 'SELL': '賣出', 
@@ -79,7 +79,7 @@ def test_analysis_runner():
         for decision in test_decisions:
             print(f"\n輸入決策: {decision}")
             
-            # 應用我們的修複邏輯
+            # 應用我們的修復邏輯
             if isinstance(decision, str):
                 action_translation = {
                     'BUY': '買入',
@@ -138,7 +138,7 @@ def test_demo_data():
         # 模擬演示資料生成
         import random
         
-        actions = ['買入', '持有', '賣出']  # 修複後應該使用中文
+        actions = ['買入', '持有', '賣出']  # 修復後應該使用中文
         action = random.choice(actions)
         
         print(f"演示投資建議: {action}")
@@ -170,7 +170,7 @@ def test_demo_data():
 
 def main():
     """主函式"""
-    print(" 投資建議中文化修複測試")
+    print(" 投資建議中文化修復測試")
     print("=" * 60)
     
     success1 = test_web_components()
@@ -179,15 +179,15 @@ def main():
     
     print("\n" + "=" * 60)
     if success1 and success2 and success3:
-        print(" 投資建議中文化修複測試全部通過！")
-        print("\n 修複效果:")
+        print(" 投資建議中文化修復測試全部通過！")
+        print("\n 修復效果:")
         print("   - Web介面投資建議顯示中文")
         print("   - 分析結果處理使用中文")
         print("   - 演示資料生成中文內容")
         print("\n現在所有投資建議都應該顯示為中文：買入/賣出/持有")
     else:
-        print(" 投資建議中文化修複測試失敗")
-        print("   需要進一步檢查和修複")
+        print(" 投資建議中文化修復測試失敗")
+        print("   需要進一步檢查和修復")
     
     return success1 and success2 and success3
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-測試條件邏輯修複
+測試條件邏輯修復
 驗證 tool_calls 屬性檢查是否正確
 """
 
 def test_conditional_logic_fix():
-    """測試條件邏輯修複"""
-    print(" 測試條件邏輯修複...")
+    """測試條件邏輯修復"""
+    print(" 測試條件邏輯修復...")
     
     try:
         from tradingagents.graph.conditional_logic import ConditionalLogic
@@ -75,11 +75,11 @@ def test_conditional_logic_fix():
                 print(f"     基本面分析異常: {e}")
                 return False
         
-        print("\n 條件邏輯修複測試通過")
+        print("\n 條件邏輯修復測試通過")
         return True
         
     except Exception as e:
-        print(f" 條件邏輯修複測試失敗: {e}")
+        print(f" 條件邏輯修復測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -116,7 +116,7 @@ def test_cli_basic_functionality():
 
 def main():
     """主測試函式"""
-    print(" 條件邏輯修複測試")
+    print(" 條件邏輯修復測試")
     print("=" * 50)
     
     tests = [
@@ -140,12 +140,12 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有測試通過！條件邏輯修複成功")
-        print("\n 修複內容:")
-        print(" 修複了 tool_calls 屬性檢查")
+        print(" 所有測試通過！條件邏輯修復成功")
+        print("\n 修復內容:")
+        print(" 修復了 tool_calls 屬性檢查")
         print(" 新增了 hasattr 安全檢查")
         print(" 避免了 ToolMessage 屬性錯誤")
-        print(" 所有條件邏輯函式都已修複")
+        print(" 所有條件邏輯函式都已修復")
         return True
     else:
         print(" 部分測試失敗，需要進一步檢查")
