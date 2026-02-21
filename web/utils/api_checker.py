@@ -12,23 +12,23 @@ def check_api_keys():
     openai_key = os.getenv("OPENAI_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
 
-    # 構建詳細狀態
+    # 構建詳細狀態（只顯示配置狀態，不洩露密鑰內容）
     details = {
         "FINNHUB_API_KEY": {
             "configured": bool(finnhub_key),
-            "display": f"{finnhub_key[:12]}..." if finnhub_key else "未配置",
+            "display": "已配置" if finnhub_key else "未配置",
             "required": True,
             "description": "金融資料 API 密鑰"
         },
         "OPENAI_API_KEY": {
             "configured": bool(openai_key),
-            "display": f"{openai_key[:12]}..." if openai_key else "未配置",
+            "display": "已配置" if openai_key else "未配置",
             "required": False,
             "description": "OpenAI API 密鑰"
         },
         "ANTHROPIC_API_KEY": {
             "configured": bool(anthropic_key),
-            "display": f"{anthropic_key[:12]}..." if anthropic_key else "未配置",
+            "display": "已配置" if anthropic_key else "未配置",
             "required": False,
             "description": "Anthropic API 密鑰"
         },
