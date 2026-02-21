@@ -52,7 +52,7 @@ DEFAULT_API_KEY_DISPLAY_LENGTH = 12
 # 初始化日誌系統
 logger = get_logger("cli")
 
-# CLI專用日誌配置：禁用控制台輸出，只保留文件日誌
+# CLI專用日誌配置：禁用控制台輸出，只保留檔案日誌
 def setup_cli_logging():
     """
     CLI模式下的日誌配置：移除控制台輸出，保持界面清爽
@@ -66,7 +66,7 @@ def setup_cli_logging():
     # 獲取根日誌器
     root_logger = logging.getLogger()
 
-    # 移除所有控制台處理器，只保留文件日誌
+    # 移除所有控制台處理器，只保留檔案日誌
     for handler in root_logger.handlers[:]:
         if isinstance(handler, logging.StreamHandler) and hasattr(handler, 'stream'):
             if handler.stream.name in ['<stderr>', '<stdout>']:
@@ -79,7 +79,7 @@ def setup_cli_logging():
             if handler.stream.name in ['<stderr>', '<stdout>']:
                 tradingagents_logger.removeHandler(handler)
 
-    # 記錄CLI啟動日誌（只寫入文件）
+    # 記錄CLI啟動日誌（只寫入檔案）
     logger.debug("CLI模式啟動，控制台日誌已禁用，保持界面清爽")
 
 # 設置CLI日誌配置

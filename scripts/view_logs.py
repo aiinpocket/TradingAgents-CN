@@ -89,7 +89,7 @@ def view_log_file(log_file, lines=50):
         print("-" * 80)
         
     except Exception as e:
-        print(f" 讀取文件失敗: {e}")
+        print(f" 讀取檔案失敗: {e}")
 
 def tail_log_file(log_file):
     """實時跟蹤日誌檔案"""
@@ -99,7 +99,7 @@ def tail_log_file(log_file):
     
     try:
         with open(log_file, 'r', encoding='utf-8') as f:
-            # 移動到文件末尾
+            # 移動到檔案末尾
             f.seek(0, 2)
             
             while True:
@@ -183,7 +183,7 @@ def main():
                 log_files = show_log_files()
                 if log_files:
                     try:
-                        file_num = int(input(f"\n選擇文件 (1-{len(log_files)}): ")) - 1
+                        file_num = int(input(f"\n選擇檔案 (1-{len(log_files)}): ")) - 1
                         if 0 <= file_num < len(log_files):
                             lines = input("顯示行數 (預設50，0=全部): ").strip()
                             lines = int(lines) if lines else 50
@@ -196,7 +196,7 @@ def main():
                 log_files = show_log_files()
                 if log_files:
                     try:
-                        file_num = int(input(f"\n選擇文件 (1-{len(log_files)}): ")) - 1
+                        file_num = int(input(f"\n選擇檔案 (1-{len(log_files)}): ")) - 1
                         if 0 <= file_num < len(log_files):
                             tail_log_file(log_files[file_num])
                         else:

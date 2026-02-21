@@ -78,7 +78,7 @@ def explore_container_filesystem(container_name):
                 if line.strip():
                     print(f"   {line}")
             
-            # 查找.log文件
+            # 查找.log檔案
             success, output, error = run_command([
                 "docker", "exec", container_name,
                 "find", location, "-maxdepth", "2", "-name", "*.log", "-type", "f"
@@ -99,9 +99,9 @@ def get_log_file_info(container_name, log_file):
     # 檔案大小和修改時間
     success, output, error = run_command(f"docker exec {container_name} ls -lh {log_file}")
     if success:
-        print(f"   文件詳情: {output.strip()}")
+        print(f"   檔案詳情: {output.strip()}")
     
-    # 文件行數
+    # 檔案行數
     success, output, error = run_command(f"docker exec {container_name} wc -l {log_file}")
     if success:
         lines = output.strip().split()[0]
@@ -143,15 +143,15 @@ def copy_log_file(container_name, log_file, local_path=None):
             size = os.path.getsize(local_path)
             print(f"   檔案大小: {size:,} 字節")
             
-            # 顯示文件的最後幾行
-            print(f"\n 文件內容預覽 (最後10行):")
+            # 顯示檔案的最後幾行
+            print(f"\n 檔案內容預覽 (最後10行):")
             try:
                 with open(local_path, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
                     for line in lines[-10:]:
                         print(f"   {line.rstrip()}")
             except Exception as e:
-                print(f"    無法預覽文件內容: {e}")
+                print(f"    無法預覽檔案內容: {e}")
         
         return local_path
     else:
@@ -194,7 +194,7 @@ def main():
     docker_log_file = get_docker_logs(container_name)
     
     if not log_files:
-        print("\n 未在容器中找到.log文件")
+        print("\n 未在容器中找到.log檔案")
         print(" 可能的原因:")
         print("   - 日誌配置為輸出到stdout/stderr (被Docker捕獲)")
         print("   - 日誌檔案在其他位置")
@@ -236,7 +236,7 @@ def main():
     
     # 6. 處理選中的日誌檔案
     if selected_log:
-        # 單個文件處理
+        # 單個檔案處理
         get_log_file_info(container_name, selected_log)
         preview_log_file(container_name, selected_log)
         
@@ -247,7 +247,7 @@ def main():
                 print(f"\n 日誌檔案獲取完成!")
                 print(f" 本地檔案: {local_file}")
     else:
-        # 多個文件處理
+        # 多個檔案處理
         print(f"\n 複制所有 {len(selected_logs)} 個日誌檔案...")
         copied_files = []
         for log_file in selected_logs:

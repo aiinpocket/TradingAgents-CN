@@ -15,7 +15,7 @@ logger = get_logger('web')
 def is_docker_environment() -> bool:
     """檢測是否在Docker環境中運行"""
     try:
-        # 檢查/.dockerenv文件
+        # 檢查/.dockerenv檔案
         if os.path.exists('/.dockerenv'):
             return True
         
@@ -123,9 +123,9 @@ def test_docker_pdf_generation() -> bool:
             extra_args=extra_args
         )
         
-        # 檢查文件是否生成
+        # 檢查檔案是否生成
         if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
-            os.unlink(output_file)  # 清理測試文件
+            os.unlink(output_file)  # 清理測試檔案
             logger.info("Docker PDF生成測試成功")
             return True
         else:

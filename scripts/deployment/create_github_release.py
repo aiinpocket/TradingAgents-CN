@@ -58,7 +58,7 @@ TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理界�
 - 項目結構優化（tests/docs/web目錄規範化）
 - 多種API服務配置支援
 - 完整的測試體系（25+個測試檔案）
-- 完整的使用文件和配置指南
+- 完整的使用檔案和配置指南
 
 ### 快速開始
 
@@ -95,9 +95,9 @@ python cli/main.py --stock AAPL --analysts market fundamentals
 python cli/main.py --llm-provider anthropic --model claude-sonnet-4 --stock TSLA
 ```
 
-### 文件和支援
+### 檔案和支援
 
-- [完整文件](./docs/)
+- [完整檔案](./docs/)
 - [Web界面指南](./web/README.md)
 - [測試指南](./tests/README.md)
 - [範例代碼](./examples/)
@@ -132,7 +132,7 @@ def show_release_info():
     logger.info(f"  完整的Web管理界面")
     logger.info(f"  多LLM提供商支援（OpenAI / Anthropic）")
     logger.info(f"  完整的測試體系")
-    logger.info(f"  詳細的使用文件")
+    logger.info(f"  詳細的使用檔案")
     
     logger.info(f"\n GitHub鏈接:")
     logger.info(f"   Release: https://github.com/aiinpocket/TradingAgents-CN/releases/tag/cn-v0.1.2")
@@ -185,7 +185,7 @@ def main():
     # 生成發布說明
     release_notes = create_release_notes()
     
-    # 保存發布說明到文件
+    # 保存發布說明到檔案
     with open("RELEASE_NOTES_v0.1.2.md", "w", encoding="utf-8") as f:
         f.write(release_notes)
     

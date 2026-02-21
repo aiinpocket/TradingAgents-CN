@@ -33,9 +33,9 @@ def setup_docker_env():
             logger.error(f" 取消配置")
             return False
     
-    # 複制模板文件
+    # 複制模板檔案
     if not env_example.exists():
-        logger.error(f" 找不到.env.example文件")
+        logger.error(f" 找不到.env.example檔案")
         return False
     
     shutil.copy(env_example, env_file)
@@ -63,7 +63,7 @@ def setup_docker_env():
         replacement = f'{key}={value}'
         content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
     
-    # 寫回文件
+    # 寫回檔案
     with open(env_file, 'w', encoding='utf-8') as f:
         f.write(content)
     
@@ -127,7 +127,7 @@ def main():
         logger.info(f"\n Docker環境配置完成！")
         logger.info(f"\n 更多資訊請參考:")
         logger.info(f"- Docker部署指南: docs/DOCKER_GUIDE.md")
-        logger.info(f"- 項目文件: README.md")
+        logger.info(f"- 項目檔案: README.md")
     else:
         logger.error(f"\n 配置失敗")
 

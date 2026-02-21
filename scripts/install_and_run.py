@@ -89,7 +89,7 @@ def check_env_file():
                 print(f" 創建.env 檔案失敗: {e}")
                 return False
         else:
-            print(" 找不到.env_example文件")
+            print(" 找不到.env_example檔案")
             return False
     else:
         print(" .env 檔案存在")
@@ -150,7 +150,7 @@ def main():
     if not install_web_dependencies():
         return
     
-    # 檢查環境文件
+    # 檢查環境檔案
     if not check_env_file():
         return
     

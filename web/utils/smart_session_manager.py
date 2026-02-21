@@ -1,6 +1,6 @@
 """
 智能會話管理器 - 自動選擇最佳儲存方案
-優先級：Redis > 文件儲存
+優先級：Redis > 檔案儲存
 """
 
 import streamlit as st
@@ -36,7 +36,7 @@ class SmartSessionManager:
             from .file_session_manager import file_session_manager
             self.file_manager = file_session_manager
         except Exception as e:
-            st.error(f"文件會話管理器初始化失敗: {e}")
+            st.error(f"檔案會話管理器初始化失敗: {e}")
     
     def save_analysis_state(self, analysis_id: str, status: str = "running",
                            stock_symbol: str = "", market_type: str = "",
@@ -51,16 +51,16 @@ class SmartSessionManager:
                 if success:
                     return True
             except Exception as e:
-                st.warning(f"Redis保存失敗，切換到文件儲存: {e}")
+                st.warning(f"Redis保存失敗，切換到檔案儲存: {e}")
                 self.use_redis = False
 
-        # 使用文件儲存作為fallback
+        # 使用檔案儲存作為fallback
         if self.file_manager:
             try:
                 success = self.file_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type, form_config)
                 return success
             except Exception as e:
-                st.error(f"文件儲存也失敗了: {e}")
+                st.error(f"檔案儲存也失敗了: {e}")
                 return False
         
         return False
@@ -74,15 +74,15 @@ class SmartSessionManager:
                 if data:
                     return data
             except Exception as e:
-                st.warning(f"Redis載入失敗，切換到文件儲存: {e}")
+                st.warning(f"Redis載入失敗，切換到檔案儲存: {e}")
                 self.use_redis = False
         
-        # 從文件儲存載入
+        # 從檔案儲存載入
         if self.file_manager:
             try:
                 return self.file_manager.load_analysis_state()
             except Exception as e:
-                st.error(f"文件儲存載入失敗: {e}")
+                st.error(f"檔案儲存載入失敗: {e}")
                 return None
         
         return None
@@ -106,7 +106,7 @@ class SmartSessionManager:
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取除錯資訊"""
         debug_info = {
-            "storage_type": "Redis" if self.use_redis else "文件儲存",
+            "storage_type": "Redis" if self.use_redis else "檔案儲存",
             "redis_available": self.redis_manager is not None,
             "file_manager_available": self.file_manager is not None,
             "use_redis": self.use_redis

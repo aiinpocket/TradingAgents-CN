@@ -85,13 +85,13 @@ def extract_imports_from_file(file_path: Path) -> Set[str]:
             imports.add(match.group(1))
             
     except Exception as e:
-        print(f"  讀取文件失敗 {file_path}: {e}")
+        print(f"  讀取檔案失敗 {file_path}: {e}")
     
     return imports
 
 
 def scan_directory(directory: Path) -> Set[str]:
-    """掃描目錄中所有 Python 文件的匯入"""
+    """掃描目錄中所有 Python 檔案的匯入"""
     all_imports = set()
     
     for py_file in directory.rglob('*.py'):

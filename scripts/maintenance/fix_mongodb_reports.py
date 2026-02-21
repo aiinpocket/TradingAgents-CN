@@ -4,9 +4,9 @@
 
 這個腳本用於修復MongoDB中保存的分析報告數據結構不一致的問題。
 主要解決以下問題：
-1. 缺少reports字段的文件
-2. reports字段為空或None的文件
-3. 字段結構不標準的文件
+1. 缺少reports字段的檔案
+2. reports字段為空或None的檔案
+3. 字段結構不標準的檔案
 
 使用方法：
 python scripts/maintenance/fix_mongodb_reports.py

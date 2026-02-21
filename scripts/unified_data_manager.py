@@ -21,10 +21,10 @@ class UnifiedDataDirectoryManager:
         初始化數據目錄管理器
         
         Args:
-            project_root: 項目根目錄，預設為當前文件的上級目錄
+            project_root: 項目根目錄，預設為當前檔案的上級目錄
         """
         if project_root is None:
-            # 假設此文件在 scripts/ 目錄下
+            # 假設此檔案在 scripts/ 目錄下
             self.project_root = Path(__file__).parent.parent
         else:
             self.project_root = Path(project_root)

@@ -86,7 +86,7 @@ class AdaptiveCacheSystem:
             return value
 
     def _save_to_file(self, cache_key: str, data: Any, metadata: Dict) -> bool:
-        """保存到文件緩存（使用 JSON 格式取代 pickle）"""
+        """保存到檔案緩存（使用 JSON 格式取代 pickle）"""
         try:
             cache_file = self.cache_dir / f"{cache_key}.json"
             cache_data = {
@@ -99,15 +99,15 @@ class AdaptiveCacheSystem:
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(cache_data, f, ensure_ascii=False, default=str)
 
-            self.logger.debug(f"文件緩存保存成功: {cache_key}")
+            self.logger.debug(f"檔案緩存保存成功: {cache_key}")
             return True
 
         except Exception as e:
-            self.logger.error(f"文件緩存保存失敗: {e}")
+            self.logger.error(f"檔案緩存保存失敗: {e}")
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
-        """從文件緩存載入（支援 JSON 格式，兼容舊 .pkl 檔案）"""
+        """從檔案緩存載入（支援 JSON 格式，兼容舊 .pkl 檔案）"""
         try:
             # 優先使用 JSON 格式
             json_file = self.cache_dir / f"{cache_key}.json"
@@ -119,7 +119,7 @@ class AdaptiveCacheSystem:
                 # 還原時間戳
                 if isinstance(cache_data['timestamp'], str):
                     cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
-                self.logger.debug(f"文件緩存載入成功 (JSON): {cache_key}")
+                self.logger.debug(f"檔案緩存載入成功 (JSON): {cache_key}")
                 return cache_data
 
             # 舊格式 .pkl 檔案不再支援載入（安全考量）
@@ -131,7 +131,7 @@ class AdaptiveCacheSystem:
             return None
 
         except Exception as e:
-            self.logger.error(f"文件緩存載入失敗: {e}")
+            self.logger.error(f"檔案緩存載入失敗: {e}")
             return None
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
@@ -294,7 +294,7 @@ class AdaptiveCacheSystem:
         
         # 如果主要後端失敗，使用降級策略
         if not success and self.fallback_enabled:
-            self.logger.warning(f"主要後端({self.primary_backend})保存失敗，使用文件緩存降級")
+            self.logger.warning(f"主要後端({self.primary_backend})保存失敗，使用檔案緩存降級")
             success = self._save_to_file(cache_key, data, metadata)
         
         if success:
@@ -318,20 +318,20 @@ class AdaptiveCacheSystem:
         
         # 如果主要後端失敗，嘗試降級
         if not cache_data and self.fallback_enabled:
-            self.logger.debug(f"主要後端({self.primary_backend})載入失敗，嘗試文件緩存")
+            self.logger.debug(f"主要後端({self.primary_backend})載入失敗，嘗試檔案緩存")
             cache_data = self._load_from_file(cache_key)
         
         if not cache_data:
             return None
         
-        # 檢查緩存是否有效（僅對文件緩存，數據庫緩存有自己的TTL機制）
+        # 檢查緩存是否有效（僅對檔案緩存，數據庫緩存有自己的TTL機制）
         if cache_data.get('backend') == 'file':
             symbol = cache_data['metadata'].get('symbol', '')
             data_type = cache_data['metadata'].get('data_type', 'stock_data')
             ttl_seconds = self._get_ttl_seconds(symbol, data_type)
             
             if not self._is_cache_valid(cache_data['timestamp'], ttl_seconds):
-                self.logger.debug(f"文件緩存已過期: {cache_key}")
+                self.logger.debug(f"檔案緩存已過期: {cache_key}")
                 return None
         
         return cache_data['data']
@@ -415,7 +415,7 @@ class AdaptiveCacheSystem:
             except Exception as e:
                 self.logger.error(f"刪除舊快取檔案失敗 {pkl_file}: {e}")
 
-        self.logger.info(f"文件緩存清理完成，刪除 {cleared_files} 個過期/不安全文件")
+        self.logger.info(f"檔案緩存清理完成，刪除 {cleared_files} 個過期/不安全檔案")
 
         # MongoDB 會自動清理過期文檔（透過 expires_at 字段）
         # Redis 會自動清理過期鍵

@@ -124,10 +124,10 @@ class FinnhubDataDownloader:
         for symbol in symbols:
             logger.info(f" 下載 {symbol} 的新聞數據...")
             
-            # 檢查文件是否存在且有效
+            # 檢查檔案是否存在且有效
             file_path = news_dir / f"{symbol}_data_formatted.json"
             if file_path.exists() and not force_refresh:
-                # 檢查文件是否有內容
+                # 檢查檔案是否有內容
                 try:
                     file_size = file_path.stat().st_size
                     if file_size > 10:  # 檔案大小大於10字節才認為有效
@@ -136,7 +136,7 @@ class FinnhubDataDownloader:
                     else:
                         logger.warning(f" {symbol} 資料檔案存在但為空 (大小: {file_size} 字節)，重新下載")
                 except Exception as e:
-                    logger.warning(f" 檢查 {symbol} 文件狀態失敗: {e}，重新下載")
+                    logger.warning(f" 檢查 {symbol} 檔案狀態失敗: {e}，重新下載")
 
             logger.info(f" 開始下載 {symbol} 的新聞數據...")
             
@@ -176,7 +176,7 @@ class FinnhubDataDownloader:
                         file_size = file_path.stat().st_size
                         logger.info(f" {symbol} 新聞數據已保存: {len(formatted_data)} 條, 檔案大小: {file_size} 字節")
                     else:
-                        logger.error(f" {symbol} 檔案保存失敗，文件不存在")
+                        logger.error(f" {symbol} 檔案保存失敗，檔案不存在")
 
                 except Exception as e:
                     logger.error(f" {symbol} 檔案保存異常: {e}")
@@ -206,7 +206,7 @@ class FinnhubDataDownloader:
         for symbol in symbols:
             logger.info(f" 下載 {symbol} 的內部人情緒數據...")
             
-            # 檢查文件是否存在
+            # 檢查檔案是否存在
             file_path = sentiment_dir / f"{symbol}_data_formatted.json"
             if file_path.exists() and not force_refresh:
                 logger.info(f" {symbol} 情緒資料檔案已存在，跳過下載")
@@ -245,7 +245,7 @@ class FinnhubDataDownloader:
         for symbol in symbols:
             logger.info(f" 下載 {symbol} 的內部人交易數據...")
             
-            # 檢查文件是否存在
+            # 檢查檔案是否存在
             file_path = trans_dir / f"{symbol}_data_formatted.json"
             if file_path.exists() and not force_refresh:
                 logger.info(f" {symbol} 交易資料檔案已存在，跳過下載")

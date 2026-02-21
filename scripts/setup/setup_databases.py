@@ -188,7 +188,7 @@ def setup_docker_option():
 def create_env_template():
     """創建環境變量模板"""
     logger.info(f" 數據庫配置已整合到主要的 .env 檔案中")
-    logger.info(f"請參考 .env.example 文件進行配置")
+    logger.info(f"請參考 .env.example 檔案進行配置")
 
 def test_connections():
     """測試數據庫連接"""

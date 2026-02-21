@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-獨立的文件轉換測試腳本
+獨立的檔案轉換測試腳本
 用於測試Markdown到Word/PDF的轉換，無需重新生成分析內容
 """
 
@@ -75,7 +75,7 @@ def test_markdown_content():
     return test_content
 
 def save_test_content():
-    """保存測試內容到文件"""
+    """保存測試內容到檔案"""
     content = test_markdown_content()
     
     with open('test_content.md', 'w', encoding='utf-8') as f:
@@ -128,18 +128,18 @@ def test_word_conversion(md_content):
                     extra_args=test_case['extra_args']
                 )
                 
-                # 檢查文件
+                # 檢查檔案
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
                     print(f" 轉換成功! 檔案大小: {file_size} 字節")
                     
-                    # 保存成功的文件
+                    # 保存成功的檔案
                     success_file = f"test_output_{i}.docx"
                     os.rename(output_file, success_file)
-                    print(f" 文件已保存為: {success_file}")
+                    print(f" 檔案已保存為: {success_file}")
                     return True
                 else:
-                    print(f" 轉換失敗: 文件未生成或為空")
+                    print(f" 轉換失敗: 檔案未生成或為空")
                     
             except Exception as e:
                 print(f" 轉換失敗: {e}")
@@ -191,18 +191,18 @@ def test_pdf_conversion(md_content):
                     extra_args=extra_args
                 )
                 
-                # 檢查文件
+                # 檢查檔案
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
                     print(f" 轉換成功! 檔案大小: {file_size} 字節")
                     
-                    # 保存成功的文件
+                    # 保存成功的檔案
                     success_file = f"test_output_{i}.pdf"
                     os.rename(output_file, success_file)
-                    print(f" 文件已保存為: {success_file}")
+                    print(f" 檔案已保存為: {success_file}")
                     return True
                 else:
-                    print(f" 轉換失敗: 文件未生成或為空")
+                    print(f" 轉換失敗: 檔案未生成或為空")
                     
             except Exception as e:
                 print(f" 轉換失敗: {e}")
@@ -219,7 +219,7 @@ def test_pdf_conversion(md_content):
 
 def main():
     """主測試函數"""
-    print(" 獨立文件轉換測試 (Volume映射版本)")
+    print(" 獨立檔案轉換測試 (Volume映射版本)")
     print("=" * 50)
     print(f" 當前工作目錄: {os.getcwd()}")
     print(f" Docker環境檢測: {os.path.exists('/.dockerenv')}")

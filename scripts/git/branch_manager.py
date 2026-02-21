@@ -98,13 +98,13 @@ class BranchManager:
         success, stdout, _ = self.run_git_command(['status', '--porcelain'])
         if success:
             if stdout:
-                logger.warning(f" 未提交的更改: {len(stdout.split())} 個文件")
+                logger.warning(f" 未提交的更改: {len(stdout.split())} 個檔案")
                 for line in stdout.split('\n')[:5]:  # 只顯示前5個
                     if line:
                         logger.info(f"   {line}")
                 lines = stdout.split('\n')
                 if len(lines) > 5:
-                    logger.info(f"   ... 還有 {len(lines) - 5} 個文件")
+                    logger.info(f"   ... 還有 {len(lines) - 5} 個檔案")
             else:
                 logger.info(f" 工作目錄乾淨")
         

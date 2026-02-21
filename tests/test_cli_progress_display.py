@@ -157,9 +157,9 @@ def test_progress_vs_logging():
         ui.show_success("數據獲取完成")
         ui.show_warning("網絡延遲較高")
         
-        # 系統日誌（只寫入文件，不在控制台顯示）
-        print("\n 系統日誌（只寫入文件）:")
-        logger.info("這是系統日誌消息，應該只寫入文件")
+        # 系統日誌（只寫入檔案，不在控制台顯示）
+        print("\n 系統日誌（只寫入檔案）:")
+        logger.info("這是系統日誌消息，應該只寫入檔案")
         logger.debug("這是除錯資訊，用戶看不到")
         logger.error("這是錯誤日誌，只記錄在檔案中")
         

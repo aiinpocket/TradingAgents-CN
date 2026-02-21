@@ -101,8 +101,8 @@ def test_save_analysis_result():
         if success:
             print(" 分析結果保存成功！")
             
-            # 檢查文件是否創建
-            print(f"\n 檢查保存的文件:")
+            # 檢查檔案是否創建
+            print(f"\n 檢查保存的檔案:")
             
             # 檢查JSON 檔案
             from web.components.analysis_results import get_analysis_results_dir
@@ -142,7 +142,7 @@ def test_save_analysis_result():
                     for file in report_files:
                         print(f"   - {file.name}")
                 else:
-                    print(" 報告目錄存在但無文件")
+                    print(" 報告目錄存在但無檔案")
             else:
                 print(f" 詳細報告目錄未創建: {reports_dir}")
             

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-文件一致性測試
+檔案一致性測試
 Documentation Consistency Test
 
 測試檔案中的配置和說明是否一致
@@ -25,7 +25,7 @@ def test_redis_commander_port_consistency():
     """
     print(" 測試 Redis Commander 端口配置一致性...")
     
-    # 檢查 .env.example 文件
+    # 檢查 .env.example 檔案
     env_example_path = project_root / ".env.example"
     if env_example_path.exists():
         with open(env_example_path, 'r', encoding='utf-8') as f:
@@ -37,7 +37,7 @@ def test_redis_commander_port_consistency():
                 print(" .env.example 中 Redis Commander 端口配置不正確")
                 return False
     
-    # 檢查 database_setup.md 文件
+    # 檢查 database_setup.md 檔案
     db_setup_path = project_root / "docs" / "database_setup.md"
     if db_setup_path.exists():
         with open(db_setup_path, 'r', encoding='utf-8') as f:
@@ -59,7 +59,7 @@ def test_cli_command_format_consistency():
     """
     print("\n 測試 CLI 命令格式一致性...")
     
-    # 檢查主要文件文件
+    # 檢查主要檔案檔案
     docs_to_check = [
         "README-CN.md",
         "docs/configuration/config-guide.md"
@@ -110,12 +110,12 @@ def test_cli_smart_suggestions():
 
 def test_documentation_structure():
     """
-    測試文件結構的完整性
+    測試檔案結構的完整性
     Test documentation structure completeness
     """
-    print("\n 測試文件結構完整性...")
+    print("\n 測試檔案結構完整性...")
     
-    # 檢查關鍵文件是否存在
+    # 檢查關鍵檔案是否存在
     key_docs = [
         "README.md",
         "docs/README.md",
@@ -131,10 +131,10 @@ def test_documentation_structure():
             missing_docs.append(doc)
     
     if not missing_docs:
-        print(" 所有關鍵文件都存在")
+        print(" 所有關鍵檔案都存在")
         return True
     else:
-        print(f" 缺少文件: {', '.join(missing_docs)}")
+        print(f" 缺少檔案: {', '.join(missing_docs)}")
         return False
 
 
@@ -143,7 +143,7 @@ def main():
     主測試函數
     Main test function
     """
-    print(" 開始文件一致性測試...")
+    print(" 開始檔案一致性測試...")
     print("=" * 50)
     
     tests = [
@@ -167,7 +167,7 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有文件一致性測試通過！")
+        print(" 所有檔案一致性測試通過！")
         return True
     else:
         print(" 部分測試未通過，請檢查上述問題")

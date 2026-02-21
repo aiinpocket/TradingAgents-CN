@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-文件一致性檢查腳本
-檢查文件與代碼的一致性，確保文件內容準確反映實際實現
+檔案一致性檢查腳本
+檢查檔案與代碼的一致性，確保檔案內容準確反映實際實現
 """
 
 import os
@@ -17,7 +17,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 class DocumentationChecker:
-    """文件一致性檢查器"""
+    """檔案一致性檢查器"""
     
     def __init__(self):
         self.project_root = project_root
@@ -27,7 +27,7 @@ class DocumentationChecker:
         
     def check_all(self) -> Dict[str, List[str]]:
         """執行所有檢查"""
-        print(" 開始文件一致性檢查...")
+        print(" 開始檔案一致性檢查...")
         
         results = {
             "version_consistency": self.check_version_consistency(),
@@ -47,7 +47,7 @@ class DocumentationChecker:
         # 讀取項目版本
         version_file = self.project_root / "VERSION"
         if not version_file.exists():
-            issues.append(" VERSION 文件不存在")
+            issues.append(" VERSION 檔案不存在")
             return issues
             
         project_version = version_file.read_text().strip()
@@ -71,16 +71,16 @@ class DocumentationChecker:
                         if version_match:
                             doc_version = version_match.group(1).strip()
                             if doc_version != project_version:
-                                issues.append(f" {doc_file.relative_to(self.project_root)}: 版本不一致 (文件: {doc_version}, 項目: {project_version})")
+                                issues.append(f" {doc_file.relative_to(self.project_root)}: 版本不一致 (檔案: {doc_version}, 項目: {project_version})")
                         else:
                             issues.append(f" {doc_file.relative_to(self.project_root)}: 缺少版本資訊")
                 else:
-                    # 核心文件應該有版本頭部
+                    # 核心檔案應該有版本頭部
                     if any(keyword in str(doc_file) for keyword in ["agents", "architecture", "development"]):
                         issues.append(f" {doc_file.relative_to(self.project_root)}: 缺少版本頭部")
                         
             except Exception as e:
-                issues.append(f" 讀取文件失敗 {doc_file}: {e}")
+                issues.append(f" 讀取檔案失敗 {doc_file}: {e}")
         
         return issues
     
@@ -124,7 +124,7 @@ class DocumentationChecker:
                             issues.append(f" {doc_file.name}: 提到create函數但沒有正確的函數簽名")
                     
                 except Exception as e:
-                    issues.append(f" 讀取智能體文件失敗 {doc_file}: {e}")
+                    issues.append(f" 讀取智能體檔案失敗 {doc_file}: {e}")
         
         return issues
     
@@ -166,26 +166,26 @@ class DocumentationChecker:
         return issues
     
     def check_api_references(self) -> List[str]:
-        """檢查API參考文件"""
+        """檢查API參考檔案"""
         print(" 檢查API參考...")
         issues = []
         
-        # 檢查是否有API參考文件
+        # 檢查是否有API參考檔案
         api_ref_dir = self.docs_dir / "reference"
         if not api_ref_dir.exists():
-            issues.append(" 缺少API參考文件目錄")
+            issues.append(" 缺少API參考檔案目錄")
             return issues
         
-        # 檢查智能體API文件
+        # 檢查智能體API檔案
         agents_ref = api_ref_dir / "agents"
         if not agents_ref.exists():
-            issues.append(" 缺少智能體API參考文件")
+            issues.append(" 缺少智能體API參考檔案")
         
         return issues
     
     def check_file_existence(self) -> List[str]:
         """檢查檔案中引用的檔案是否存在"""
-        print(" 檢查文件引用...")
+        print(" 檢查檔案引用...")
         issues = []
         
         doc_files = list(self.docs_dir.rglob("*.md"))
@@ -202,16 +202,16 @@ class DocumentationChecker:
                     # 解析相對路徑
                     ref_path = doc_file.parent / ref
                     if not ref_path.exists():
-                        issues.append(f" {doc_file.relative_to(self.project_root)}: 引用的文件不存在 - {ref}")
+                        issues.append(f" {doc_file.relative_to(self.project_root)}: 引用的檔案不存在 - {ref}")
                 
             except Exception as e:
-                issues.append(f" 檢查文件引用失敗 {doc_file}: {e}")
+                issues.append(f" 檢查檔案引用失敗 {doc_file}: {e}")
         
         return issues
     
     def generate_report(self, results: Dict[str, List[str]]) -> str:
         """生成檢查報告"""
-        report = ["# 文件一致性檢查報告\n"]
+        report = ["# 檔案一致性檢查報告\n"]
         report.append(f"**檢查時間**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         
         total_issues = sum(len(issues) for issues in results.values())

@@ -477,9 +477,9 @@ class ReportExporter:
                     extra_args=extra_args
                 )
 
-                # 檢查文件是否生成且有內容
+                # 檢查檔案是否生成且有內容
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
-                    # 讀取生成的PDF文件
+                    # 讀取生成的PDF檔案
                     with open(output_file, 'rb') as f:
                         pdf_content = f.read()
 
@@ -489,7 +489,7 @@ class ReportExporter:
                     logger.info(f"PDF生成成功，使用引擎: {engine or '預設'}")
                     return pdf_content
                 else:
-                    raise Exception("PDF文件生成失敗或為空")
+                    raise Exception("PDF檔案生成失敗或為空")
 
             except Exception as e:
                 last_error = str(e)
@@ -645,7 +645,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         reports_dir = stock_dir / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
 
-        # 創建message_tool.log文件
+        # 創建message_tool.log檔案
         log_file = stock_dir / "message_tool.log"
         log_file.touch(exist_ok=True)
 
@@ -725,7 +725,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 else:
                     report_content = f"# {module_info['title']}\n\n{str(content)}"
 
-                # 保存文件
+                # 保存檔案
                 file_path = reports_dir / module_info['filename']
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(report_content)
@@ -772,7 +772,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             json.dump(metadata, f, ensure_ascii=False, indent=2)
 
         logger.info(f"保存分析中繼資料: {metadata_file}")
-        logger.info(f"分模塊報告保存完成，共保存 {len(saved_files)} 個文件")
+        logger.info(f"分模塊報告保存完成，共保存 {len(saved_files)} 個檔案")
         logger.info(f"保存目錄: {os.path.normpath(str(reports_dir))}")
 
         # 同時保存到MongoDB
@@ -787,7 +787,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 reports_content = {}
 
                 logger.info(f"[MongoDB調試] 開始讀取 {len(saved_files)} 個報告檔案")
-                # 讀取已保存的文件內容
+                # 讀取已保存的檔案內容
                 for module_key, file_path in saved_files.items():
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
@@ -859,7 +859,7 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
         stock_dir = results_dir / stock_symbol / analysis_date / "reports"
         stock_dir.mkdir(parents=True, exist_ok=True)
 
-        # 保存文件
+        # 保存檔案
         file_path = stock_dir / filename
         with open(file_path, 'wb') as f:
             f.write(content)
@@ -956,7 +956,7 @@ def render_export_buttons(results: Dict[str, Any]):
                 # 4. 顯示保存結果
                 if modular_files and saved_path:
                     st.success(f"已保存 {len(modular_files)} 個分模塊報告 + 1個彙總報告")
-                    with st.expander("查看保存的文件"):
+                    with st.expander("查看保存的檔案"):
                         st.write("**分模塊報告:**")
                         for module, path in modular_files.items():
                             st.write(f"- {module}: `{path}`")
@@ -997,7 +997,7 @@ def render_export_buttons(results: Dict[str, Any]):
                         # 4. 顯示保存結果
                         if modular_files and saved_path:
                             st.success(f"已保存 {len(modular_files)} 個分模塊報告 + 1個Word彙總報告")
-                            with st.expander("查看保存的文件"):
+                            with st.expander("查看保存的檔案"):
                                 st.write("**分模塊報告:**")
                                 for module, path in modular_files.items():
                                     st.write(f"- {module}: `{path}`")
@@ -1069,7 +1069,7 @@ def render_export_buttons(results: Dict[str, Any]):
                         # 4. 顯示保存結果
                         if modular_files and saved_path:
                             st.success(f"已保存 {len(modular_files)} 個分模塊報告 + 1個PDF彙總報告")
-                            with st.expander("查看保存的文件"):
+                            with st.expander("查看保存的檔案"):
                                 st.write("**分模塊報告:**")
                                 for module, path in modular_files.items():
                                     st.write(f"- {module}: `{path}`")

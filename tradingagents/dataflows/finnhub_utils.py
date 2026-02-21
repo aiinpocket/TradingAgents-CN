@@ -39,7 +39,7 @@ def get_data_in_range(ticker, start_date, end_date, data_type, data_dir, period=
         with open(data_path, "r", encoding="utf-8") as f:
             data = json.load(f)
     except FileNotFoundError:
-        logger.error(f"[ERROR] 文件未找到: {data_path}")
+        logger.error(f"[ERROR] 檔案未找到: {data_path}")
         return {}
     except json.JSONDecodeError as e:
         logger.error(f"[ERROR] JSON解析錯誤: {e}")

@@ -810,7 +810,7 @@ def get_fundamentals_finnhub(ticker, curr_date):
         # 數據可用性說明
         report += "## 數據說明\n"
         report += "- 本報告使用Finnhub API提供的官方財務數據\n"
-        report += "- 數據來源於公司財報和SEC文件\n"
+        report += "- 數據來源於公司財報和SEC檔案\n"
         report += "- TTM表示過去12個月數據\n"
         report += "- Annual表示年度數據\n\n"
         

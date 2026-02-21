@@ -131,14 +131,14 @@ def test_env_config():
     print(" 數據庫管理器正常工作")
     print(" 緩存系統正常工作")
     print(" 支持MongoDB和Redis的完整配置")
-    print(" 在數據庫不可用時自動降級到文件緩存")
+    print(" 在數據庫不可用時自動降級到檔案緩存")
     
     print("\n 配置說明:")
     print("1. 系統讀取.env 檔案中的數據庫配置")
     print("2. 自動檢測MongoDB和Redis是否可用")
     print("3. 根據可用性選擇最佳緩存後端")
     print("4. 支持用戶名密碼認證")
-    print("5. 在數據庫不可用時自動使用文件緩存")
+    print("5. 在數據庫不可用時自動使用檔案緩存")
     
     return True
 
@@ -151,7 +151,7 @@ def main():
             print("\n .env配置測試完成!")
             print("\n 系統特性:")
             print(" 使用項目現有的.env配置")
-            print(" 預設不依賴數據庫，可以純文件緩存運行")
+            print(" 預設不依賴數據庫，可以純檔案緩存運行")
             print(" 自動檢測和使用可用的數據庫")
             print(" 支持完整的MongoDB和Redis配置")
             print(" 智能降級，確保系統穩定性")

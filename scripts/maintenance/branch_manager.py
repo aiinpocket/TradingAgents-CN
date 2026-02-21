@@ -121,7 +121,7 @@ class BranchManager:
         if not self.run_git_command(f'git push -u origin {full_branch_name}'):
             logger.error(f"  推送到遠程失敗，分支僅在本地創建")
         
-        # 創建分支資訊文件
+        # 創建分支資訊檔案
         self.create_branch_info(full_branch_name, branch_type, description)
         
         logger.info(f" 分支 {full_branch_name} 創建成功！")
@@ -130,7 +130,7 @@ class BranchManager:
         return True
     
     def create_branch_info(self, branch_name, branch_type, description):
-        """創建分支資訊文件"""
+        """創建分支資訊檔案"""
         info_dir = Path('.git/branch_info')
         info_dir.mkdir(exist_ok=True)
         

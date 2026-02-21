@@ -58,7 +58,7 @@ def test_finnhub_news_path():
     news_data_path = os.path.join(data_dir, "finnhub_data", "news_data", f"{ticker}_data_formatted.json")
     
     print(f"新聞數據檔案路徑: {news_data_path}")
-    print(f"文件是否存在: {os.path.exists(news_data_path)}")
+    print(f"檔案是否存在: {os.path.exists(news_data_path)}")
     
     # 檢查目錄結構
     finnhub_dir = os.path.join(data_dir, "finnhub_data")
@@ -69,7 +69,7 @@ def test_finnhub_news_path():
     
     if os.path.exists(news_dir):
         files = os.listdir(news_dir)
-        print(f"新聞數據目錄中的文件: {files[:5]}...")  # 只顯示前5個文件
+        print(f"新聞數據目錄中的檔案: {files[:5]}...")  # 只顯示前5個檔案
     
     return os.path.exists(news_data_path)
 

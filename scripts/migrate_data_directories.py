@@ -175,7 +175,7 @@ class DataDirectoryMigrator:
                 target_file = target / relative_path
                 target_file.parent.mkdir(parents=True, exist_ok=True)
                 
-                # 如果目標文件已存在，重命名
+                # 如果目標檔案已存在，重命名
                 if target_file.exists():
                     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                     target_file = target_file.with_name(f"{target_file.stem}_{timestamp}{target_file.suffix}")

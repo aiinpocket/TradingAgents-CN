@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 自適應緩存管理器 - 根據可用服務自動選擇最佳緩存策略
-支持文件緩存、Redis緩存、MongoDB緩存的智能切換
+支持檔案緩存、Redis緩存、MongoDB緩存的智能切換
 """
 
 import os
@@ -60,7 +60,7 @@ class AdaptiveCacheManager:
             except Exception as e:
                 self.logger.warning(f"智能配置載入失敗: {e}")
         
-        # 預設配置（純文件緩存）
+        # 預設配置（純檔案緩存）
         self.config = {
             "cache": {
                 "primary_backend": "file",
@@ -78,7 +78,7 @@ class AdaptiveCacheManager:
         self.fallback_enabled = True
         self.ttl_settings = self.config["cache"]["ttl_settings"]
         
-        self.logger.info("使用預設配置（純文件緩存）")
+        self.logger.info("使用預設配置（純檔案緩存）")
     
     def _init_backends(self):
         """初始化緩存後端"""
@@ -126,7 +126,7 @@ class AdaptiveCacheManager:
                 self.logger.info("Redis不可用，降級到MongoDB")
             else:
                 self.primary_backend = "file"
-                self.logger.info("Redis不可用，降級到文件緩存")
+                self.logger.info("Redis不可用，降級到檔案緩存")
         
         elif self.primary_backend == "mongodb" and not self.mongodb_enabled:
             if self.redis_enabled:
@@ -134,7 +134,7 @@ class AdaptiveCacheManager:
                 self.logger.info("MongoDB不可用，降級到Redis")
             else:
                 self.primary_backend = "file"
-                self.logger.info("MongoDB不可用，降級到文件緩存")
+                self.logger.info("MongoDB不可用，降級到檔案緩存")
     
     def _get_cache_key(self, symbol: str, start_date: str, end_date: str, 
                       data_source: str = "default") -> str:
@@ -284,11 +284,11 @@ class AdaptiveCacheManager:
             # MongoDB保存邏輯（簡化版）
             success = self._save_to_file(cache_key, data, metadata)
         
-        # 如果主要後端失敗，使用文件緩存作為備用
+        # 如果主要後端失敗，使用檔案緩存作為備用
         if not success and self.fallback_enabled:
             success = self._save_to_file(cache_key, data, metadata)
             if success:
-                self.logger.info(f"使用文件緩存備用保存: {cache_key}")
+                self.logger.info(f"使用檔案緩存備用保存: {cache_key}")
         
         if success:
             self.logger.info(f"數據保存成功: {symbol} -> {cache_key}")
@@ -308,11 +308,11 @@ class AdaptiveCacheManager:
             # MongoDB載入邏輯（簡化版）
             cache_data = self._load_from_file(cache_key)
         
-        # 如果主要後端失敗，嘗試文件緩存
+        # 如果主要後端失敗，嘗試檔案緩存
         if not cache_data and self.fallback_enabled:
             cache_data = self._load_from_file(cache_key)
             if cache_data:
-                self.logger.info(f"使用文件緩存備用載入: {cache_key}")
+                self.logger.info(f"使用檔案緩存備用載入: {cache_key}")
         
         if not cache_data:
             return None

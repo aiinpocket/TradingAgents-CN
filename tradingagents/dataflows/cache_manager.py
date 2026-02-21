@@ -28,7 +28,7 @@ class StockDataCache:
             cache_dir: 緩存目錄路徑，預設為 tradingagents/dataflows/data_cache
         """
         if cache_dir is None:
-            # 獲取當前文件所在目錄
+            # 獲取當前檔案所在目錄
             current_dir = Path(__file__).parent
             cache_dir = current_dir / "data_cache"
 
@@ -65,11 +65,11 @@ class StockDataCache:
             }
         }
 
-        # 內容長度限制配置（文件緩存預設不限制）
+        # 內容長度限制配置（檔案緩存預設不限制）
         self.content_length_config = {
             'max_content_length': int(os.getenv('MAX_CACHE_CONTENT_LENGTH', '50000')),  # 50K字符
             'long_text_providers': ['openai', 'anthropic'],  # 支援長文本的提供商
-            'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 文件緩存預設不限制
+            'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 檔案緩存預設不限制
         }
 
         logger.info(f"緩存管理器初始化完成，緩存目錄: {self.cache_dir}")
@@ -561,7 +561,7 @@ class StockDataCache:
                 elif data_type == 'fundamentals':
                     stats['fundamentals_count'] += 1
                 
-                # 檢查是否為跳過的緩存（沒有實際文件）
+                # 檢查是否為跳過的緩存（沒有實際檔案）
                 data_file = Path(metadata.get('file_path', ''))
                 if not data_file.exists():
                     stats['skipped_count'] += 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-快速集成測試 - 驗證複制的文件是否正常工作
+快速集成測試 - 驗證複制的檔案是否正常工作
 """
 
 import os
@@ -11,8 +11,8 @@ from datetime import datetime
 print(" TradingAgents 集成測試")
 print("=" * 40)
 
-# 測試1：檢查文件是否存在
-print("\n 檢查複制的文件...")
+# 測試1：檢查檔案是否存在
+print("\n 檢查複制的檔案...")
 files_to_check = [
     'tradingagents/dataflows/cache_manager.py',
     'tradingagents/dataflows/optimized_us_data.py',
@@ -24,7 +24,7 @@ for file_path in files_to_check:
         size = os.path.getsize(file_path)
         print(f" {file_path} (大小: {size:,} 字節)")
     else:
-        print(f" {file_path} (文件不存在)")
+        print(f" {file_path} (檔案不存在)")
 
 # 測試2：檢查Python語法
 print("\n 檢查Python語法...")
@@ -184,7 +184,7 @@ print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # 生成測試報告
 print("\n 測試總結:")
-print("1. 文件複制: 檢查文件是否正確複制")
+print("1. 檔案複制: 檢查檔案是否正確複制")
 print("2. 語法檢查: 驗證Python語法正確性")
 print("3. 模塊匯入: 測試模塊是否可以正常匯入")
 print("4. 功能測試: 驗證緩存基本功能")
@@ -193,7 +193,7 @@ print("6. 統計資訊: 獲取緩存使用統計")
 
 print("\n 下一步:")
 print("1. 如果測試通過，可以開始清理中文內容")
-print("2. 添加英文文件和註釋")
+print("2. 添加英文檔案和註釋")
 print("3. 創建完整的測試用例")
 print("4. 準備性能基準報告")
 print("5. 聯系上游項目維護者")

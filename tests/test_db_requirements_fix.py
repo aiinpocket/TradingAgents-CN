@@ -60,20 +60,20 @@ def test_pickle_compatibility():
 
 
 def test_requirements_file_syntax():
-    """測試requirements文件語法"""
+    """測試requirements檔案語法"""
     print(" 測試requirements_db.txt語法...")
     
     requirements_file = os.path.join(project_root, "requirements_db.txt")
     
     if not os.path.exists(requirements_file):
-        print("   requirements_db.txt文件不存在")
+        print("   requirements_db.txt檔案不存在")
         return False
     
     try:
         with open(requirements_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         
-        print(f"  文件行數: {len(lines)}")
+        print(f"  檔案行數: {len(lines)}")
         
         # 檢查是否包含pickle5
         pickle5_found = False
@@ -145,7 +145,7 @@ def test_compatibility_checker_tool():
     checker_file = os.path.join(project_root, "check_db_requirements.py")
     
     if not os.path.exists(checker_file):
-        print("   check_db_requirements.py文件不存在")
+        print("   check_db_requirements.py檔案不存在")
         return False
     
     try:
@@ -184,8 +184,8 @@ def test_compatibility_checker_tool():
 
 
 def test_documentation_completeness():
-    """測試文件完整性"""
-    print(" 測試文件完整性...")
+    """測試檔案完整性"""
+    print(" 測試檔案完整性...")
     
     docs_to_check = [
         "docs/DATABASE_SETUP_GUIDE.md",
@@ -204,7 +204,7 @@ def test_documentation_completeness():
             if size > 1000:  # 至少1KB
                 print(f"    檔案大小: {size} 字節")
             else:
-                print(f"     文件較小: {size} 字節")
+                print(f"     檔案較小: {size} 字節")
         else:
             print(f"   {doc_path}: 不存在")
             all_exist = False
@@ -220,10 +220,10 @@ def main():
     tests = [
         ("Python版本檢查", test_python_version_check),
         ("pickle兼容性", test_pickle_compatibility),
-        ("requirements文件語法", test_requirements_file_syntax),
+        ("requirements檔案語法", test_requirements_file_syntax),
         ("包安裝模擬", test_package_installation_simulation),
         ("兼容性檢查工具", test_compatibility_checker_tool),
-        ("文件完整性", test_documentation_completeness),
+        ("檔案完整性", test_documentation_completeness),
     ]
     
     passed = 0
@@ -249,7 +249,7 @@ def main():
         print(" 移除pickle5依賴，解決Python 3.10+兼容性問題")
         print(" 優化版本要求，提高環境兼容性")
         print(" 添加兼容性檢查工具")
-        print(" 完善安裝指南和故障排除文件")
+        print(" 完善安裝指南和故障排除檔案")
         
         print("\n 用戶體驗改進:")
         print(" 減少安裝錯誤")

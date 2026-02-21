@@ -156,7 +156,7 @@ def test_pdf_generation():
 - **測試目的**: 驗證PDF生成功能
 
 ## 測試內容
-這是一個測試文件，用於驗證PDF生成是否正常工作。
+這是一個測試檔案，用於驗證PDF生成是否正常工作。
 
 ### 中文支持測試
 - 中文字符顯示測試
@@ -194,11 +194,11 @@ def test_pdf_generation():
             file_size = os.path.getsize(output_file)
             logger.info(f" PDF生成測試成功！檔案大小: {file_size} 字節")
             
-            # 清理測試文件
+            # 清理測試檔案
             os.unlink(output_file)
             return True
         else:
-            logger.error(f" PDF文件生成失敗")
+            logger.error(f" PDF檔案生成失敗")
             return False
             
     except Exception as e:

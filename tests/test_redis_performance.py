@@ -305,7 +305,7 @@ def main():
     parser.add_argument("--db", type=int, default=0, help="Redis數據庫編號")
     parser.add_argument("--test", choices=['latency', 'throughput', 'concurrent', 'memory', 'all'], 
                        default='all', help="測試類型")
-    parser.add_argument("--output", help="結果輸出文件(JSON格式)")
+    parser.add_argument("--output", help="結果輸出檔案(JSON格式)")
     
     args = parser.parse_args()
     

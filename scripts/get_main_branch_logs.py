@@ -116,7 +116,7 @@ def explore_log_locations(container_name):
                 found_logs.append(log_file)
                 print(f"    找到日誌檔案: {log_file}")
                 
-                # 獲取文件資訊
+                # 獲取檔案資訊
                 success2, output2, error2 = run_command(f"docker exec {container_name} ls -lh {log_file}")
                 if success2:
                     print(f"      詳情: {output2.strip()}")
@@ -185,18 +185,18 @@ def copy_log_files(container_name, log_files):
                 size = os.path.getsize(local_file)
                 print(f"    檔案大小: {size:,} 字節")
                 
-                # 預覽文件內容
+                # 預覽檔案內容
                 try:
                     with open(local_file, 'r', encoding='utf-8') as f:
                         lines = f.readlines()
-                        print(f"    文件行數: {len(lines):,}")
+                        print(f"    檔案行數: {len(lines):,}")
                         
                         if lines:
                             print(f"    最後3行預覽:")
                             for line in lines[-3:]:
                                 print(f"      {line.rstrip()}")
                 except Exception as e:
-                    print(f"    無法預覽文件: {e}")
+                    print(f"    無法預覽檔案: {e}")
                 
                 copied_files.append(local_file)
         else:
@@ -303,7 +303,7 @@ def main():
     
     print(f" 容器名稱: {container_name}")
     print(f" 找到容器內日誌檔案: {len(log_files)} 個")
-    print(f" 成功複制文件: {len(copied_files)} 個")
+    print(f" 成功複制檔案: {len(copied_files)} 個")
     
     if docker_log_file:
         print(f" Docker標準日誌: {docker_log_file}")
@@ -316,13 +316,13 @@ def main():
     print(f"\n 建議:")
     if not log_files:
         print("   - 應用可能將日誌輸出到stdout，已通過Docker日誌捕獲")
-        print("   - 檢查應用的日誌配置，確保寫入到文件")
+        print("   - 檢查應用的日誌配置，確保寫入到檔案")
         print("   - 考慮在docker-compose.yml中添加日誌目錄掛載")
     
     print("   - 將獲取到的日誌檔案發送給開發者進行問題診斷")
     
     if docker_log_file:
-        print(f"\n 主要發送文件: {docker_log_file}")
+        print(f"\n 主要發送檔案: {docker_log_file}")
     
     return True
 

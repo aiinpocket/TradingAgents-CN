@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-批量更新文件腳本
-為所有核心文件添加版本資訊頭部，修復常見問題
+批量更新檔案腳本
+為所有核心檔案添加版本資訊頭部，修復常見問題
 """
 
 import os
@@ -16,7 +16,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 class DocumentationUpdater:
-    """文件批量更新器"""
+    """檔案批量更新器"""
     
     def __init__(self):
         self.project_root = project_root
@@ -31,7 +31,7 @@ class DocumentationUpdater:
         
         self.current_date = datetime.now().strftime('%Y-%m-%d')
         
-        # 需要添加版本頭部的核心文件
+        # 需要添加版本頭部的核心檔案
         self.core_docs = [
             "agents/managers.md",
             "agents/researchers.md", 
@@ -56,14 +56,14 @@ status: {status}
 """
     
     def add_version_headers(self) -> List[str]:
-        """為核心文件添加版本頭部"""
-        print(" 為核心文件添加版本頭部...")
+        """為核心檔案添加版本頭部"""
+        print(" 為核心檔案添加版本頭部...")
         updated_files = []
         
         for doc_path in self.core_docs:
             full_path = self.docs_dir / doc_path
             if not full_path.exists():
-                print(f"    文件不存在: {doc_path}")
+                print(f"    檔案不存在: {doc_path}")
                 continue
             
             try:
@@ -90,7 +90,7 @@ status: {status}
         print(" 修復代碼塊問題...")
         fixed_files = []
         
-        # 查找所有markdown文件
+        # 查找所有markdown檔案
         md_files = list(self.docs_dir.rglob("*.md"))
         
         for md_file in md_files:
@@ -124,7 +124,7 @@ status: {status}
                         fixed_block = block + '\n    pass'
                         content = content.replace(f'```python\n{block}\n```', f'```python\n{fixed_block}\n```')
                 
-                # 如果內容有變化，保存文件
+                # 如果內容有變化，保存檔案
                 if content != original_content:
                     md_file.write_text(content, encoding='utf-8')
                     fixed_files.append(str(md_file.relative_to(self.project_root)))
@@ -136,12 +136,12 @@ status: {status}
         return fixed_files
     
     def update_status_tracking(self, updated_files: List[str], fixed_files: List[str]):
-        """更新文件狀態追蹤"""
-        print(" 更新文件狀態追蹤...")
+        """更新檔案狀態追蹤"""
+        print(" 更新檔案狀態追蹤...")
         
         status_file = self.docs_dir / "DOCUMENTATION_STATUS.md"
         if not status_file.exists():
-            print("    狀態追蹤文件不存在")
+            print("    狀態追蹤檔案不存在")
             return
         
         try:
@@ -154,19 +154,19 @@ status: {status}
                 content
             )
             
-            # 在文件末尾添加更新記錄
+            # 在檔案末尾添加更新記錄
             update_record = f"""
 ## 最新更新記錄
 
 ### {self.current_date} 批量更新
--  為 {len(updated_files)} 個核心文件添加了版本頭部
--  修復了 {len(fixed_files)} 個文件的代碼塊問題
--  更新了文件狀態追蹤
+-  為 {len(updated_files)} 個核心檔案添加了版本頭部
+-  修復了 {len(fixed_files)} 個檔案的代碼塊問題
+-  更新了檔案狀態追蹤
 
-**更新的文件:**
+**更新的檔案:**
 {chr(10).join(f'- {file}' for file in updated_files)}
 
-**修復的文件:**
+**修復的檔案:**
 {chr(10).join(f'- {file}' for file in fixed_files)}
 """
             
@@ -179,31 +179,31 @@ status: {status}
     
     def generate_summary_report(self, updated_files: List[str], fixed_files: List[str]) -> str:
         """生成更新摘要報告"""
-        report = f"""# 文件批量更新報告
+        report = f"""# 檔案批量更新報告
 
 **更新時間**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 **項目版本**: {self.current_version}
 
 ## 更新摘要
 
--  添加版本頭部: {len(updated_files)} 個文件
--  修復代碼塊問題: {len(fixed_files)} 個文件
--  更新狀態追蹤: 1 個文件
+-  添加版本頭部: {len(updated_files)} 個檔案
+-  修復代碼塊問題: {len(fixed_files)} 個檔案
+-  更新狀態追蹤: 1 個檔案
 
 ## 詳細更新列表
 
-### 添加版本頭部的文件
+### 添加版本頭部的檔案
 {chr(10).join(f'-  {file}' for file in updated_files) if updated_files else '- 無'}
 
-### 修復代碼塊的文件  
+### 修復代碼塊的檔案  
 {chr(10).join(f'-  {file}' for file in fixed_files) if fixed_files else '- 無'}
 
 ## 下一步建議
 
-1. **繼續更新其他文件**: 還有更多文件需要添加版本頭部
+1. **繼續更新其他檔案**: 還有更多檔案需要添加版本頭部
 2. **驗證代碼示例**: 檢查修復後的代碼塊是否正確
-3. **更新API參考**: 創建或更新API參考文件
-4. **建立定期檢查**: 設置定期的文件一致性檢查
+3. **更新API參考**: 創建或更新API參考檔案
+4. **建立定期檢查**: 設置定期的檔案一致性檢查
 
 ## 質量檢查
 
@@ -219,7 +219,7 @@ python scripts/check_doc_consistency.py
 
 def main():
     """主函數"""
-    print(" 開始批量更新文件...")
+    print(" 開始批量更新檔案...")
     
     updater = DocumentationUpdater()
     
@@ -238,8 +238,8 @@ def main():
     report_file.write_text(report, encoding='utf-8')
     
     print(f"\n 批量更新完成！")
-    print(f"    添加版本頭部: {len(updated_files)} 個文件")
-    print(f"    修復代碼塊: {len(fixed_files)} 個文件")
+    print(f"    添加版本頭部: {len(updated_files)} 個檔案")
+    print(f"    修復代碼塊: {len(fixed_files)} 個檔案")
     print(f"    報告已保存到: {report_file}")
     
     print(f"\n 建議運行以下命令驗證更新效果:")

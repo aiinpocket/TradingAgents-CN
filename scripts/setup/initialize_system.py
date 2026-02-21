@@ -97,7 +97,7 @@ def initialize_system():
         logger.info(f" 選擇MongoDB作為主要緩存後端")
     else:
         primary_backend = "file"
-        logger.info(f" 選擇文件作為主要緩存後端")
+        logger.info(f" 選擇檔案作為主要緩存後端")
     
     # 創建配置
     config = {
@@ -214,7 +214,7 @@ def initialize_system():
 
 ### 自動降級支持
 - 系統會自動檢測可用的數據庫服務
-- 如果數據庫不可用，自動使用文件緩存
+- 如果數據庫不可用，自動使用檔案緩存
 - 保證系統在任何環境下都能正常運行
 
 ### 性能優化
@@ -298,7 +298,7 @@ python scripts/validation/check_system_status.py
     if mongodb_available or redis_available:
         logger.info(f"\n 系統運行在高性能模式!")
     else:
-        logger.info(f"\n 系統運行在文件緩存模式")
+        logger.info(f"\n 系統運行在檔案緩存模式")
         logger.info(f" 安裝MongoDB/Redis可獲得更好性能")
     
     logger.info(f"\n 下一步:")

@@ -91,7 +91,7 @@ def create_scripts_structure():
         category_path.mkdir(exist_ok=True)
         logger.info(f" 創建目錄: scripts/{category} - {info['description']}")
         
-        # 創建README文件
+        # 創建README檔案
         readme_path = category_path / "README.md"
         readme_content = f"""# {category.title()} Scripts
 
@@ -176,7 +176,7 @@ python scripts/{category}/script_name.py
 ###  development/ - 開發輔助腳本
 - 代碼分析
 - 性能基準測試
-- 文件生成
+- 檔案生成
 - 貢獻準備
 
 ###  deployment/ - 部署腳本
@@ -254,7 +254,7 @@ def main():
             logger.info(f"\n 整理結果:")
             logger.info(f" 創建了分類子目錄")
             logger.info(f" 移動了現有腳本")
-            logger.info(f" 生成了README文件")
+            logger.info(f" 生成了README檔案")
             logger.info(f"\n 建議:")
             logger.info(f"1. 驗證腳本放在 scripts/validation/")
             logger.info(f"2. 測試代碼放在 tests/")

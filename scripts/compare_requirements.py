@@ -12,7 +12,7 @@ project_root = Path(__file__).parent.parent
 
 
 def parse_requirements_txt() -> Dict[str, str]:
-    """解析 requirements.txt 文件"""
+    """解析 requirements.txt 檔案"""
     requirements_file = project_root / 'requirements.txt'
     packages = {}
     
@@ -34,7 +34,7 @@ def parse_requirements_txt() -> Dict[str, str]:
 
 
 def parse_pyproject_toml() -> Dict[str, str]:
-    """解析 pyproject.toml 文件"""
+    """解析 pyproject.toml 檔案"""
     pyproject_file = project_root / 'pyproject.toml'
     packages = {}
     
@@ -66,7 +66,7 @@ def main():
     print(" 比較 requirements.txt 和 pyproject.toml")
     print("=" * 80)
     
-    # 解析兩個文件
+    # 解析兩個檔案
     print("\n 解析 requirements.txt...")
     req_packages = parse_requirements_txt()
     print(f" 發現 {len(req_packages)} 個包")
@@ -96,7 +96,7 @@ def main():
     
     # 輸出結果
     if not missing_in_req and not missing_in_pyproject and not version_mismatch:
-        print("\n 兩個文件完全一致！")
+        print("\n 兩個檔案完全一致！")
     else:
         if missing_in_req:
             print(f"\n 在 pyproject.toml 中但不在 requirements.txt 中 ({len(missing_in_req)} 個):")

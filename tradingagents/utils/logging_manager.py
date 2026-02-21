@@ -183,9 +183,9 @@ class TradingAgentsLogger:
             try:
                 log_dir.mkdir(parents=True, exist_ok=True)
             except (OSError, PermissionError) as e:
-                # 如果無法創建日誌目錄（例如只讀檔案系統），禁用文件日誌
+                # 如果無法創建日誌目錄（例如只讀檔案系統），禁用檔案日誌
                 import warnings
-                warnings.warn(f"無法創建日誌目錄 {log_dir}: {e}，禁用文件日誌")
+                warnings.warn(f"無法創建日誌目錄 {log_dir}: {e}，禁用檔案日誌")
                 self.config['handlers']['file']['enabled'] = False
         
         # 設置根日誌級別
@@ -225,7 +225,7 @@ class TradingAgentsLogger:
         logger.addHandler(console_handler)
     
     def _add_file_handler(self, logger: logging.Logger):
-        """添加文件處理器"""
+        """添加檔案處理器"""
         if not self.config['handlers']['file']['enabled']:
             return
             

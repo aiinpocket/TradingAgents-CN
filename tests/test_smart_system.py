@@ -178,11 +178,11 @@ def test_fallback_mechanism():
         print(f"主要後端: {cache.primary_backend}")
         
         if cache.primary_backend == "file":
-            print(" 使用文件緩存，無需降級")
+            print(" 使用檔案緩存，無需降級")
         elif cache.primary_backend == "redis" and not cache.redis_enabled:
-            print(" Redis不可用，已自動降級到文件緩存")
+            print(" Redis不可用，已自動降級到檔案緩存")
         elif cache.primary_backend == "mongodb" and not cache.mongodb_enabled:
-            print(" MongoDB不可用，已自動降級到文件緩存")
+            print(" MongoDB不可用，已自動降級到檔案緩存")
         else:
             print(f" {cache.primary_backend} 後端正常工作")
         
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     if success:
         print("\n下一步:")
         print("1. 清理中文內容")
-        print("2. 添加英文文件")
+        print("2. 添加英文檔案")
         print("3. 準備上游貢獻")
     else:
         print("\n需要解決的問題:")

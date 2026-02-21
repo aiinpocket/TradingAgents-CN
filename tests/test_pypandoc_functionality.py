@@ -116,7 +116,7 @@ def test_markdown_conversion():
                 extra_args=['--toc', '--number-sections']
             )
             
-            # 檢查文件是否生成
+            # 檢查檔案是否生成
             if os.path.exists(output_file):
                 file_size = os.path.getsize(output_file)
                 print(f" Markdown → DOCX 轉換成功")
@@ -125,7 +125,7 @@ def test_markdown_conversion():
                 # 清理暫存檔案
                 os.unlink(output_file)
             else:
-                print(" DOCX文件未生成")
+                print(" DOCX檔案未生成")
                 return False
                 
         except Exception as e:
@@ -153,7 +153,7 @@ def test_markdown_conversion():
                 # 清理暫存檔案
                 os.unlink(output_file)
             else:
-                print(" PDF文件未生成 (可能缺少PDF引擎)")
+                print(" PDF檔案未生成 (可能缺少PDF引擎)")
                 
         except Exception as e:
             print(f" Markdown → PDF 轉換失敗: {e}")

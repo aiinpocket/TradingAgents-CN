@@ -90,9 +90,9 @@ class VersionManager:
             logger.error(f" 創建Git標籤失敗: {e}")
     
     def update_changelog(self, version, changes=None):
-        """更新CHANGELOG文件"""
+        """更新CHANGELOG檔案"""
         if not self.changelog_file.exists():
-            logger.error(f" CHANGELOG.md 文件不存在")
+            logger.error(f" CHANGELOG.md 檔案不存在")
             return
         
         # 讀取現有內容
@@ -118,7 +118,7 @@ class VersionManager:
         
         lines.insert(insert_index, new_entry)
         
-        # 寫回文件
+        # 寫回檔案
         with open(self.changelog_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(lines))
         
@@ -170,7 +170,7 @@ class VersionManager:
         current_version = self.get_current_version()
         logger.info(f" TradingAgents 版本資訊")
         logger.info(f"當前版本: {current_version}")
-        logger.info(f"版本文件: {self.version_file}")
+        logger.info(f"版本檔案: {self.version_file}")
         logger.info(f"更新日誌: {self.changelog_file}")
         
         # 顯示Git標籤

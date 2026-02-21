@@ -34,13 +34,13 @@ def ensure_logs_directory():
         except Exception as e:
             print(f" 設置權限失敗: {e}")
     
-    # 創建.gitkeep文件
+    # 創建.gitkeep檔案
     gitkeep_file = logs_dir / ".gitkeep"
     if not gitkeep_file.exists():
         gitkeep_file.touch()
-        print(" 創建.gitkeep文件")
+        print(" 創建.gitkeep檔案")
     
-    # 創建README文件
+    # 創建README檔案
     readme_file = logs_dir / "README.md"
     if not readme_file.exists():
         readme_content = """# TradingAgents 日誌目錄
@@ -75,7 +75,7 @@ Get-Content logs/tradingagents.log -Wait
 ```
 """
         readme_file.write_text(readme_content, encoding='utf-8')
-        print(" 創建README.md文件")
+        print(" 創建README.md檔案")
     
     # 檢查現有日誌檔案
     log_files = list(logs_dir.glob("*.log*"))

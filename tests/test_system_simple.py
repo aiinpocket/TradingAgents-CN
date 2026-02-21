@@ -140,12 +140,12 @@ def test_basic_system():
     if mongodb_available or redis_available:
         print(" 數據庫可用，系統運行在高性能模式")
     else:
-        print(" 數據庫不可用，系統運行在文件緩存模式")
-        print(" 這是正常的，系統可以完全使用文件緩存工作")
+        print(" 數據庫不可用，系統運行在檔案緩存模式")
+        print(" 這是正常的，系統可以完全使用檔案緩存工作")
     
     print("\n 系統特性:")
     print(" 智能緩存：自動選擇最佳緩存後端")
-    print(" 降級支持：數據庫不可用時自動使用文件緩存")
+    print(" 降級支持：數據庫不可用時自動使用檔案緩存")
     print(" 配置靈活：支持多種數據庫配置")
     print(" 性能優化：根據可用資源自動調整")
     

@@ -11,8 +11,8 @@ from pathlib import Path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def cleanup_test_files():
-    """清理測試文件"""
-    print(" 清理測試文件...")
+    """清理測試檔案"""
+    print(" 清理測試檔案...")
     
     # 清理詳細報告目錄
     project_root = Path(__file__).parent

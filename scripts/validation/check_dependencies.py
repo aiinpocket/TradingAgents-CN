@@ -100,7 +100,7 @@ def create_fallback_config():
     fallback_config = {
         "cache": {
             "enabled": True,
-            "backend": "file",  # 使用文件緩存而不是數據庫
+            "backend": "file",  # 使用檔案緩存而不是數據庫
             "file_cache_dir": "./tradingagents/dataflows/data_cache",
             "ttl_settings": {
                 "us_stock_data": 7200,      # 2小時
@@ -123,7 +123,7 @@ def create_fallback_config():
 
 def test_cache_without_database():
     """測試不使用數據庫的緩存功能"""
-    logger.info(f"\n 測試文件緩存功能...")
+    logger.info(f"\n 測試檔案緩存功能...")
     
     try:
         # 匯入緩存管理器
@@ -148,7 +148,7 @@ def test_cache_without_database():
         # 載入數據
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            logger.info(f" 數據載入成功，文件緩存工作正常")
+            logger.info(f" 數據載入成功，檔案緩存工作正常")
             return True
         else:
             logger.error(f" 數據載入失敗")
@@ -165,7 +165,7 @@ def generate_installation_guide():
 # 依賴安裝指南
 
 ## 基本運行（無數據庫）
-系統可以在沒有MongoDB和Redis的情況下正常運行，使用文件緩存。
+系統可以在沒有MongoDB和Redis的情況下正常運行，使用檔案緩存。
 
 ### 必需依賴
 ```bash
@@ -204,7 +204,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 
 ## 配置說明
 
-### 文件緩存模式（預設）
+### 檔案緩存模式（預設）
 - 緩存存儲在本地檔案系統
 - 性能良好，適合單機使用
 - 無需額外服務
@@ -217,7 +217,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 ## 運行模式檢測
 系統會自動檢測可用的服務：
 1. 如果MongoDB/Redis可用，自動使用數據庫緩存
-2. 如果不可用，自動降級到文件緩存
+2. 如果不可用，自動降級到檔案緩存
 3. 功能完全兼容，性能略有差異
 """
     
@@ -244,11 +244,11 @@ def main():
         return False
     
     if not pymongo_available and not redis_available:
-        logger.info(f"[INFO]數據庫依賴未安裝，將使用文件緩存模式")
+        logger.info(f"[INFO]數據庫依賴未安裝，將使用檔案緩存模式")
         logger.info(f" 系統可以正常運行，性能良好")
         
     elif not mongodb_running and not redis_running:
-        logger.info(f"[INFO]數據庫服務未運行，將使用文件緩存模式")
+        logger.info(f"[INFO]數據庫服務未運行，將使用檔案緩存模式")
         logger.info(f" 系統可以正常運行")
         
     else:

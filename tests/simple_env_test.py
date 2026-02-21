@@ -97,7 +97,7 @@ def test_env_reading():
     if mongodb_available or redis_available:
         print(" 數據庫可用，系統將使用高性能模式")
     else:
-        print(" 數據庫不可用，系統將使用文件緩存模式")
+        print(" 數據庫不可用，系統將使用檔案緩存模式")
         print(" 這是正常的，系統可以正常工作")
     
     return True

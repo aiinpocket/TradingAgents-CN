@@ -38,7 +38,7 @@ def test_python_environment():
     return True
 
 def test_vscode_settings():
-    """測試VSCode設置文件"""
+    """測試VSCode設置檔案"""
     print("\n VSCode設置驗證")
     print("=" * 50)
     
@@ -93,20 +93,20 @@ def test_virtual_env_path():
     
     print(" env目錄存在")
     
-    # 檢查Python可執行文件
+    # 檢查Python可執行檔案
     python_exe = env_dir / 'Scripts' / 'python.exe'
     if python_exe.exists():
-        print(f" Python可執行文件: {python_exe}")
+        print(f" Python可執行檔案: {python_exe}")
     else:
-        print(f" Python可執行文件不存在: {python_exe}")
+        print(f" Python可執行檔案不存在: {python_exe}")
         return False
     
     # 檢查pip
     pip_exe = env_dir / 'Scripts' / 'pip.exe'
     if pip_exe.exists():
-        print(f" pip可執行文件: {pip_exe}")
+        print(f" pip可執行檔案: {pip_exe}")
     else:
-        print(f" pip可執行文件不存在: {pip_exe}")
+        print(f" pip可執行檔案不存在: {pip_exe}")
     
     return True
 
@@ -166,12 +166,12 @@ def test_project_structure():
         else:
             print(f" 目錄: {dir_name}")
     
-    # 檢查文件
+    # 檢查檔案
     for file_name in required_files:
         if os.path.exists(file_name):
-            print(f" 文件: {file_name}")
+            print(f" 檔案: {file_name}")
         else:
-            print(f" 文件: {file_name}")
+            print(f" 檔案: {file_name}")
     
     return True
 
@@ -232,7 +232,7 @@ def main():
     print("=" * 70)
     print(" 驗證目標:")
     print("   - Python虛擬環境配置")
-    print("   - VSCode設置文件")
+    print("   - VSCode設置檔案")
     print("   - 項目結構完整性")
     print("   - 關鍵包匯入")
     print("   - 環境變量配置")

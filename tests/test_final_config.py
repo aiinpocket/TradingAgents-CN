@@ -116,7 +116,7 @@ def test_final_config():
     print(" 使用.env 檔案進行配置")
     print(" 通過MONGODB_ENABLED和REDIS_ENABLED控制啟用狀態")
     print(" 預設情況下數據庫都是禁用的")
-    print(" 系統使用文件緩存，性能良好")
+    print(" 系統使用檔案緩存，性能良好")
     print(" 可以通過修改.env 檔案啟用數據庫")
     
     print("\n 使用說明:")
@@ -124,7 +124,7 @@ def test_final_config():
     print("2. 啟用MongoDB：將MONGODB_ENABLED設置為true")
     print("3. 啟用Redis：將REDIS_ENABLED設置為true")
     print("4. 系統會自動檢測並使用啟用的數據庫")
-    print("5. 如果數據庫不可用，自動降級到文件緩存")
+    print("5. 如果數據庫不可用，自動降級到檔案緩存")
     
     return True
 
@@ -139,7 +139,7 @@ def main():
             print(" 簡化配置：只需要.env 檔案")
             print(" 明確控制：通過啟用開關控制數據庫")
             print(" 預設安全：預設不啟用數據庫")
-            print(" 智能降級：數據庫不可用時自動使用文件緩存")
+            print(" 智能降級：數據庫不可用時自動使用檔案緩存")
             print(" 性能優化：有數據庫時自動使用高性能模式")
         
         return success

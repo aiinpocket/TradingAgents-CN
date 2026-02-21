@@ -99,7 +99,7 @@ def test_news_analyst_integration():
         # 4. 驗證工作流程中的使用
         print(f"\n 第四步：驗證工作流程中的使用...")
         
-        # 檢查工作流程設置文件
+        # 檢查工作流程設置檔案
         setup_file = "tradingagents/graph/setup.py"
         try:
             with open(setup_file, "r", encoding="utf-8") as f:
@@ -118,7 +118,7 @@ def test_news_analyst_integration():
                     print(f"   {check_name}: 未在工作流程中找到")
                     
         except Exception as e:
-            print(f"   無法讀取工作流程設置文件: {e}")
+            print(f"   無法讀取工作流程設置檔案: {e}")
         
         # 5. 測試工具調用
         print(f"\n 第五步：測試工具調用...")

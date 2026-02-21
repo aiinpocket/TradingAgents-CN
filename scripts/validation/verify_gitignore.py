@@ -59,13 +59,13 @@ def main():
             logger.error(f" .gitignore 未包含 docs/contribution/")
             return False
     else:
-        logger.error(f" .gitignore 文件不存在")
+        logger.error(f" .gitignore 檔案不存在")
         return False
     
     # 檢查Git跟蹤狀態
     logger.debug(f"\n 檢查Git跟蹤狀態...")
     
-    # 檢查是否有contribution文件被跟蹤
+    # 檢查是否有contribution檔案被跟蹤
     success, output, error = run_git_command(
         "git ls-files docs/contribution/", 
         cwd=str(project_path)
@@ -74,17 +74,17 @@ def main():
     if success:
         if output:
             tracked_files = output.split('\n')
-            logger.warning(f" 仍有 {len(tracked_files)} 個文件被Git跟蹤:")
+            logger.warning(f" 仍有 {len(tracked_files)} 個檔案被Git跟蹤:")
             for file in tracked_files[:5]:  # 只顯示前5個
                 logger.info(f"  - {file}")
             if len(tracked_files) > 5:
-                logger.info(f"  ... 還有 {len(tracked_files) - 5} 個文件")
+                logger.info(f"  ... 還有 {len(tracked_files) - 5} 個檔案")
             
-            logger.info(f"\n 需要從Git跟蹤中移除這些文件:")
+            logger.info(f"\n 需要從Git跟蹤中移除這些檔案:")
             logger.info(f"git rm -r --cached docs/contribution/")
             return False
         else:
-            logger.info(f" 沒有contribution文件被Git跟蹤")
+            logger.info(f" 沒有contribution檔案被Git跟蹤")
     else:
         logger.warning(f" 無法檢查Git跟蹤狀態: {error}")
     
@@ -93,23 +93,23 @@ def main():
     
     test_file = contribution_path / "test_ignore.txt"
     try:
-        # 創建測試文件
+        # 創建測試檔案
         with open(test_file, 'w', encoding='utf-8') as f:
-            f.write("測試文件")
+            f.write("測試檔案")
         
-        # 檢查Git是否忽略了這個文件
+        # 檢查Git是否忽略了這個檔案
         success, output, error = run_git_command(
             f"git check-ignore {test_file.relative_to(project_path)}", 
             cwd=str(project_path)
         )
         
         if success:
-            logger.info(f" .gitignore 正常工作，測試文件被忽略")
+            logger.info(f" .gitignore 正常工作，測試檔案被忽略")
         else:
             logger.error(f" .gitignore 可能未生效")
             return False
         
-        # 刪除測試文件
+        # 刪除測試檔案
         test_file.unlink()
         
     except Exception as e:
@@ -148,7 +148,7 @@ def main():
     logger.info(f"\n 總結:")
     logger.info(f" docs/contribution 目錄已成功配置為不被Git管理")
     logger.info(f" 本地檔案保留，但不會被版本控制")
-    logger.info(f" 新增的contribution文件將自動被忽略")
+    logger.info(f" 新增的contribution檔案將自動被忽略")
     
     return True
 

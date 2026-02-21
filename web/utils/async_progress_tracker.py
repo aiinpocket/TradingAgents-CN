@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 異步進度跟蹤器
-支持Redis和文件兩種儲存方式，前端定時輪詢獲取進度
+支持Redis和檔案兩種儲存方式，前端定時輪詢獲取進度
 """
 
 import json
@@ -101,19 +101,19 @@ class AsyncProgressTracker:
             'steps': self.analysis_steps
         }
         
-        # 嘗試初始化Redis，失敗則使用文件
+        # 嘗試初始化Redis，失敗則使用檔案
         self.redis_client = None
         self.use_redis = self._init_redis()
         
         if not self.use_redis:
-            # 使用文件儲存
+            # 使用檔案儲存
             self.progress_file = f"./data/progress_{analysis_id}.json"
             os.makedirs(os.path.dirname(self.progress_file), exist_ok=True)
         
         # 保存初始狀態
         self._save_progress()
         
-        logger.info(f"[異步進度] 初始化完成: {analysis_id}, 儲存方式: {'Redis' if self.use_redis else '文件'}")
+        logger.info(f"[異步進度] 初始化完成: {analysis_id}, 儲存方式: {'Redis' if self.use_redis else '檔案'}")
 
         # 註冊到日誌系統進行自動進度更新
         try:
@@ -150,7 +150,7 @@ class AsyncProgressTracker:
             logger.info(f"[Redis檢查] REDIS_ENABLED原值='{redis_enabled_raw}' -> 處理後='{redis_enabled}'")
 
             if redis_enabled != 'true':
-                logger.info("[異步進度] Redis已禁用，使用文件儲存")
+                logger.info("[異步進度] Redis已禁用，使用檔案儲存")
                 return False
 
             import redis
@@ -183,7 +183,7 @@ class AsyncProgressTracker:
             logger.info(f"[異步進度] Redis連接成功: {redis_host}:{redis_port}")
             return True
         except Exception as e:
-            logger.warning(f"[異步進度] Redis連接失敗，使用文件儲存: {e}")
+            logger.warning(f"[異步進度] Redis連接失敗，使用檔案儲存: {e}")
             return False
     
     def _generate_dynamic_steps(self) -> List[Dict]:
@@ -515,21 +515,21 @@ class AsyncProgressTracker:
                 logger.info(f"[Redis寫入] {self.analysis_id} -> {status} | {current_step_name} | {progress_pct:.1f}%")
                 logger.debug(f"[Redis詳情] 鍵: {key}, 數據大小: {len(data_json)} 字節")
             else:
-                # 保存到文件（安全序列化）
+                # 保存到檔案（安全序列化）
                 safe_data = safe_serialize(self.progress_data)
                 with open(self.progress_file, 'w', encoding='utf-8') as f:
                     json.dump(safe_data, f, ensure_ascii=False, indent=2)
 
-                logger.info(f"[文件寫入] {self.analysis_id} -> {status} | {current_step_name} | {progress_pct:.1f}%")
-                logger.debug(f"[文件詳情] 路徑: {self.progress_file}")
+                logger.info(f"[檔案寫入] {self.analysis_id} -> {status} | {current_step_name} | {progress_pct:.1f}%")
+                logger.debug(f"[檔案詳情] 路徑: {self.progress_file}")
 
         except Exception as e:
             logger.error(f"[異步進度] 保存失敗: {e}")
             # 嘗試備用儲存方式
             try:
                 if self.use_redis:
-                    # Redis失敗，嘗試文件儲存
-                    logger.warning("[異步進度] Redis保存失敗，嘗試文件儲存")
+                    # Redis失敗，嘗試檔案儲存
+                    logger.warning("[異步進度] Redis保存失敗，嘗試檔案儲存")
                     backup_file = f"./data/progress_{self.analysis_id}.json"
                     os.makedirs(os.path.dirname(backup_file), exist_ok=True)
                     safe_data = safe_serialize(self.progress_data)
@@ -537,7 +537,7 @@ class AsyncProgressTracker:
                         json.dump(safe_data, f, ensure_ascii=False, indent=2)
                     logger.info(f"[備用儲存] 檔案保存成功: {backup_file}")
                 else:
-                    # 文件儲存失敗，嘗試簡化數據
+                    # 檔案儲存失敗，嘗試簡化數據
                     logger.warning("[異步進度] 檔案保存失敗，嘗試簡化數據")
                     simplified_data = {
                         'analysis_id': self.analysis_id,
@@ -639,7 +639,7 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
             except Exception as e:
                 logger.debug(f"[異步進度] Redis讀取失敗: {e}")
 
-        # 嘗試文件
+        # 嘗試檔案
         progress_file = f"./data/progress_{analysis_id}.json"
         if os.path.exists(progress_file):
             with open(progress_file, 'r', encoding='utf-8') as f:
@@ -725,7 +725,7 @@ def get_latest_analysis_id() -> Optional[str]:
             except Exception as e:
                 logger.debug(f"[恢複分析] Redis查找失敗: {e}")
 
-        # 如果Redis失敗或未啟用，嘗試從文件查找
+        # 如果Redis失敗或未啟用，嘗試從檔案查找
         data_dir = Path("data")
         if data_dir.exists():
             progress_files = list(data_dir.glob("progress_*.json"))
@@ -736,7 +736,7 @@ def get_latest_analysis_id() -> Optional[str]:
                 filename = latest_file.name
                 if filename.startswith("progress_") and filename.endswith(".json"):
                     analysis_id = filename[9:-5]  # 去掉前綴和後綴
-                    logger.debug(f"[恢複分析] 從文件找到最新分析ID: {analysis_id}")
+                    logger.debug(f"[恢複分析] 從檔案找到最新分析ID: {analysis_id}")
                     return analysis_id
 
         return None

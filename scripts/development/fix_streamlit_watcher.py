@@ -3,7 +3,7 @@
 Streamlit檔案監控錯誤修復腳本
 
 這個腳本用於修復Streamlit應用中的檔案監控錯誤：
-FileNotFoundError: [WinError 2] 系統找不到指定的文件。: '__pycache__\\*.pyc.*'
+FileNotFoundError: [WinError 2] 系統找不到指定的檔案。: '__pycache__\\*.pyc.*'
 
 使用方法:
 python scripts/fix_streamlit_watcher.py
@@ -20,7 +20,7 @@ logger = get_logger('scripts')
 
 
 def clean_pycache_files():
-    """清理所有__pycache__目錄和.pyc文件"""
+    """清理所有__pycache__目錄和.pyc檔案"""
     
     project_root = Path(__file__).parent.parent
     logger.debug(f" 掃描項目目錄: {project_root}")
@@ -43,9 +43,9 @@ def clean_pycache_files():
             except Exception as e:
                 logger.error(f"   刪除失敗: {cache_dir.relative_to(project_root)} - {e}")
     
-    # 清理單獨的.pyc文件
+    # 清理單獨的.pyc檔案
     if pyc_files:
-        logger.info(f"\n 發現 {len(pyc_files)} 個.pyc文件")
+        logger.info(f"\n 發現 {len(pyc_files)} 個.pyc檔案")
         for pyc_file in pyc_files:
             try:
                 pyc_file.unlink()
@@ -54,9 +54,9 @@ def clean_pycache_files():
             except Exception as e:
                 logger.error(f"   刪除失敗: {pyc_file.relative_to(project_root)} - {e}")
     
-    # 清理.pyo文件
+    # 清理.pyo檔案
     if pyo_files:
-        logger.info(f"\n 發現 {len(pyo_files)} 個.pyo文件")
+        logger.info(f"\n 發現 {len(pyo_files)} 個.pyo檔案")
         for pyo_file in pyo_files:
             try:
                 pyo_file.unlink()
@@ -68,7 +68,7 @@ def clean_pycache_files():
     if total_cleaned == 0:
         logger.info(f"\n 沒有發現需要清理的快取檔案")
     else:
-        logger.info(f"\n 總共清理了 {total_cleaned} 個文件/目錄")
+        logger.info(f"\n 總共清理了 {total_cleaned} 個檔案/目錄")
 
 def check_streamlit_config():
     """檢查Streamlit配置檔"""
@@ -155,7 +155,7 @@ def main():
         logger.info(f" 修復完成!")
         logger.info(f"\n 建議:")
         logger.info(f"  1. 重啟Streamlit應用")
-        logger.info(f"  2. 如果問題仍然存在，請查看文件:")
+        logger.info(f"  2. 如果問題仍然存在，請查看檔案:")
         logger.info(f"     docs/troubleshooting/streamlit-file-watcher-fix.md")
         logger.info(f"  3. 考慮使用虛擬環境隔離Python包")
         

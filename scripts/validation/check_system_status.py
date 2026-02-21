@@ -110,7 +110,7 @@ def check_system_status():
         stats = cache.get_cache_stats()
         if 'adaptive_cache' in stats:
             adaptive_stats = stats['adaptive_cache']
-            logger.info(f"  文件緩存數量: {adaptive_stats.get('file_cache_count', 0)}")
+            logger.info(f"  檔案緩存數量: {adaptive_stats.get('file_cache_count', 0)}")
             if 'redis_keys' in adaptive_stats:
                 logger.info(f"  Redis鍵數量: {adaptive_stats['redis_keys']}")
             if 'mongodb_cache_count' in adaptive_stats:
@@ -217,7 +217,7 @@ def check_system_status():
         if cache.is_database_available():
             logger.info(f" 數據庫可用，系統運行在最佳性能模式")
         else:
-            logger.info(f"[INFO]數據庫不可用，系統使用文件緩存模式")
+            logger.info(f"[INFO]數據庫不可用，系統使用檔案緩存模式")
             logger.info(f" 提升性能建議:")
             logger.info(f"  1. 配置環境變量啟用數據庫:")
             logger.info(f"     MONGODB_ENABLED=true")

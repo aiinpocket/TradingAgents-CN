@@ -414,7 +414,7 @@ class ConfigManager:
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
                     settings = json.load(f)
             else:
-                # 如果設置文件不存在，創建預設設置
+                # 如果設置檔案不存在，創建預設設置
                 settings = {
                     "default_provider": "openai",
                     "default_model": "gpt-4o-mini",
@@ -695,7 +695,7 @@ class TokenTracker:
 # 全局配置管理器實例 - 使用項目根目錄的配置
 def _get_project_config_dir():
     """獲取項目根目錄的配置目錄"""
-    # 從當前文件位置推斷項目根目錄
+    # 從當前檔案位置推斷項目根目錄
     current_file = Path(__file__)  # tradingagents/config/config_manager.py
     project_root = current_file.parent.parent.parent  # 向上三級到項目根目錄
     return str(project_root / "config")

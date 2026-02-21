@@ -130,7 +130,7 @@ def check_local_logs():
                         for line in lines[-3:]:
                             print(f"        {line.rstrip()}")
             except Exception as e:
-                print(f"       無法讀取文件: {e}")
+                print(f"       無法讀取檔案: {e}")
         print()
     
     return True

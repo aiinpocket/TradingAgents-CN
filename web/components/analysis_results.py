@@ -810,7 +810,7 @@ def render_results_export(results: List[Dict[str, Any]]):
                     csv_data = df.to_csv(index=False, encoding='utf-8-sig')
                     
                     st.download_button(
-                        label="下載 CSV 文件",
+                        label="下載 CSV 檔案",
                         data=csv_data,
                         file_name=f"analysis_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                         mime="text/csv"
@@ -837,7 +837,7 @@ def render_results_export(results: List[Dict[str, Any]]):
                     excel_data = output.getvalue()
                     
                     st.download_button(
-                        label="下載 Excel 文件",
+                        label="下載 Excel 檔案",
                         data=excel_data,
                         file_name=f"analysis_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -856,7 +856,7 @@ def render_results_export(results: List[Dict[str, Any]]):
                 else:
                     st.warning("完整數據只支持 JSON 格式匯出")
             
-            st.success(f"{export_format} 文件準備完成，請點擊下載按鈕")
+            st.success(f"{export_format} 檔案準備完成，請點擊下載按鈕")
             
         except Exception as e:
             st.error(f"匯出失敗: {e}")

@@ -104,7 +104,7 @@ def docker_install():
     
     # 檢查項目目錄
     if not Path('docker-compose.yml').exists():
-        print_colored(" 未找到docker-compose.yml文件", Colors.RED)
+        print_colored(" 未找到docker-compose.yml檔案", Colors.RED)
         print_colored("請確保在項目根目錄運行此腳本", Colors.YELLOW)
         return False
     
@@ -115,7 +115,7 @@ def docker_install():
             shutil.copy('.env.example', '.env')
             print_colored(" 已創建.env 檔案", Colors.GREEN)
         else:
-            print_colored(" 未找到.env.example文件", Colors.RED)
+            print_colored(" 未找到.env.example檔案", Colors.RED)
             return False
     
     # 提示配置API密鑰
@@ -196,7 +196,7 @@ def local_install():
             shutil.copy('.env.example', '.env')
             print_colored(" 已創建.env 檔案", Colors.GREEN)
         else:
-            print_colored(" 未找到.env.example文件", Colors.RED)
+            print_colored(" 未找到.env.example檔案", Colors.RED)
             return False
     
     # 提示配置API密鑰
@@ -251,7 +251,7 @@ def main():
     # 安裝結果
     if success:
         print_colored("\n 安裝完成!", Colors.GREEN)
-        print_colored(" 詳細文件: docs/INSTALLATION_GUIDE.md", Colors.BLUE)
+        print_colored(" 詳細檔案: docs/INSTALLATION_GUIDE.md", Colors.BLUE)
         print_colored(" 遇到問題: https://github.com/aiinpocket/TradingAgents-CN/issues", Colors.BLUE)
     else:
         print_colored("\n 安裝失敗", Colors.RED)

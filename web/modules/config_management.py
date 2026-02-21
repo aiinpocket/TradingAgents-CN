@@ -137,7 +137,7 @@ def render_model_config():
     為了安全起見，新模型的配置（包括API密鑰）只能透過 `.env` 檔案設定。
 
     **步驟：**
-    1. 開啟專案根目錄的 `.env` 文件
+    1. 開啟專案根目錄的 `.env` 檔案
     2. 添加相應的API密鑰環境變數：
        - OpenAI: `OPENAI_API_KEY=your_key`
        - Anthropic: `ANTHROPIC_API_KEY=your_key`
@@ -530,7 +530,7 @@ def render_env_status():
      **配置優先級說明:**
     - API密鑰優先從 `.env` 檔案讀取
     - Web界面配置作為補充和管理工具
-    - 修改 `.env` 文件後需重啟應用生效
+    - 修改 `.env` 檔案後需重啟應用生效
     - 推薦使用 `.env` 檔案管理敏感資訊
     """)
 

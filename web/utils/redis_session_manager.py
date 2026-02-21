@@ -53,7 +53,7 @@ class RedisSessionManager:
             # 只有在Redis啟用時才顯示連接失敗警告
             redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower()
             if redis_enabled == 'true':
-                st.warning(f"Redis連接失敗，使用文件儲存: {e}")
+                st.warning(f"Redis連接失敗，使用檔案儲存: {e}")
             return False
     
     def _get_session_key(self) -> str:
@@ -111,7 +111,7 @@ class RedisSessionManager:
                     json.dumps(session_data)
                 )
             else:
-                # 保存到文件（fallback）
+                # 保存到檔案（fallback）
                 self._save_to_file(session_key, session_data)
             
             # 同時保存到session state
@@ -155,7 +155,7 @@ class RedisSessionManager:
                 # 從Redis刪除
                 self.redis_client.delete(session_key)
             else:
-                # 從文件刪除（fallback）
+                # 從檔案刪除（fallback）
                 self._delete_file(session_key)
             
             # 清除session state
@@ -168,7 +168,7 @@ class RedisSessionManager:
             st.warning(f"清除會話狀態失敗: {e}")
     
     def _save_to_file(self, session_key: str, session_data: Dict[str, Any]):
-        """保存到文件（fallback方案）"""
+        """保存到檔案（fallback方案）"""
         try:
             import os
             os.makedirs("./data", exist_ok=True)
@@ -193,7 +193,7 @@ class RedisSessionManager:
                 if time.time() - timestamp < (self.max_age_hours * 3600):
                     return data
                 else:
-                    # 過期了，刪除文件
+                    # 過期了，刪除檔案
                     os.remove(filename)
             
             return None
@@ -203,14 +203,14 @@ class RedisSessionManager:
             return None
     
     def _delete_file(self, session_key: str):
-        """刪除文件（fallback方案）"""
+        """刪除檔案（fallback方案）"""
         try:
             filename = f"./data/{session_key.replace(':', '_')}.json"
             if os.path.exists(filename):
                 os.remove(filename)
                 
         except Exception as e:
-            st.warning(f"文件刪除失敗: {e}")
+            st.warning(f"檔案刪除失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取除錯資訊"""

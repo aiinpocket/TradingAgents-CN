@@ -18,8 +18,8 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 def cleanup_file_cache(max_age_days: int = 7):
-    """清理文件緩存"""
-    logger.info(f" 清理 {max_age_days} 天前的文件緩存...")
+    """清理檔案緩存"""
+    logger.info(f" 清理 {max_age_days} 天前的檔案緩存...")
     
     cache_dirs = [
         project_root / "cache",
@@ -47,7 +47,7 @@ def cleanup_file_cache(max_age_days: int = 7):
                 except Exception as e:
                     logger.error(f"   刪除失敗: {cache_file.name} - {e}")
     
-    logger.info(f" 文件緩存清理完成，刪除了 {total_cleaned} 個文件")
+    logger.info(f" 檔案緩存清理完成，刪除了 {total_cleaned} 個檔案")
     return total_cleaned
 
 def cleanup_database_cache(max_age_days: int = 7):
@@ -95,7 +95,7 @@ def cleanup_python_cache():
                 try:
                     cache_file.unlink()
                     total_cleaned += 1
-                    logger.info(f"   刪除文件: {cache_file.relative_to(project_root)}")
+                    logger.info(f"   刪除檔案: {cache_file.relative_to(project_root)}")
                 except Exception as e:
                     logger.error(f"   刪除失敗: {cache_file.relative_to(project_root)} - {e}")
     
@@ -114,7 +114,7 @@ def get_cache_statistics():
         logger.info(f" 緩存模式: {cache.get_performance_mode()}")
         logger.info(f" 數據庫可用: {'是' if cache.is_database_available() else '否'}")
         
-        # 統計文件緩存
+        # 統計檔案緩存
         cache_dirs = [
             project_root / "cache",
             project_root / "data" / "cache",
@@ -131,7 +131,7 @@ def get_cache_statistics():
                         total_files += 1
                         total_size += cache_file.stat().st_size
         
-        logger.info(f" 文件緩存: {total_files} 個文件，{total_size / 1024 / 1024:.2f} MB")
+        logger.info(f" 檔案緩存: {total_files} 個檔案，{total_size / 1024 / 1024:.2f} MB")
         
     except Exception as e:
         logger.error(f" 獲取緩存統計失敗: {e}")
@@ -171,7 +171,7 @@ def main():
     logger.info(f"\n 使用提示:")
     logger.info(f"  --stats     查看緩存統計")
     logger.info(f"  --days 3    清理3天前的緩存")
-    logger.info(f"  --type file 只清理文件緩存")
+    logger.info(f"  --type file 只清理檔案緩存")
 
 if __name__ == "__main__":
     main()

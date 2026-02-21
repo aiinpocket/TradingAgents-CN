@@ -113,7 +113,7 @@ class SmartConfigManager:
         self.config = {
             "cache": {
                 "enabled": True,
-                "primary_backend": "file",  # 預設使用文件緩存
+                "primary_backend": "file",  # 預設使用檔案緩存
                 "fallback_enabled": True,
                 "ttl_settings": {
                     "us_stock_data": 7200,      # 2小時
@@ -144,28 +144,28 @@ class SmartConfigManager:
             self.config["cache"]["primary_backend"] = "redis"
             self.config["cache"]["secondary_backend"] = "mongodb"
             self.config["cache"]["tertiary_backend"] = "file"
-            logger.info(f" 配置模式: Redis + MongoDB + 文件緩存")
+            logger.info(f" 配置模式: Redis + MongoDB + 檔案緩存")
             
         elif self.redis_available:
             self.config["cache"]["primary_backend"] = "redis"
             self.config["cache"]["secondary_backend"] = "file"
-            logger.info(f" 配置模式: Redis + 文件緩存")
+            logger.info(f" 配置模式: Redis + 檔案緩存")
             
         elif self.mongodb_available:
             self.config["cache"]["primary_backend"] = "mongodb"
             self.config["cache"]["secondary_backend"] = "file"
-            logger.info(f" 配置模式: MongoDB + 文件緩存")
+            logger.info(f" 配置模式: MongoDB + 檔案緩存")
             
         else:
             self.config["cache"]["primary_backend"] = "file"
-            logger.info(f" 配置模式: 純文件緩存")
+            logger.info(f" 配置模式: 純檔案緩存")
     
     def get_config(self) -> Dict[str, Any]:
         """獲取配置"""
         return self.config.copy()
     
     def save_config(self, config_path: str = "smart_config.json"):
-        """保存配置到文件"""
+        """保存配置到檔案"""
         try:
             with open(config_path, 'w', encoding='utf-8') as f:
                 json.dump(self.config, f, indent=2, ensure_ascii=False)
@@ -213,13 +213,13 @@ class SmartConfigManager:
         
         # 運行模式
         if self.mongodb_available and self.redis_available:
-            mode = " 高性能模式 (Redis + MongoDB + 文件)"
+            mode = " 高性能模式 (Redis + MongoDB + 檔案)"
         elif self.redis_available:
-            mode = " 快速模式 (Redis + 文件)"
+            mode = " 快速模式 (Redis + 檔案)"
         elif self.mongodb_available:
-            mode = " 持久化模式 (MongoDB + 文件)"
+            mode = " 持久化模式 (MongoDB + 檔案)"
         else:
-            mode = " 基礎模式 (純文件緩存)"
+            mode = " 基礎模式 (純檔案緩存)"
         
         logger.info(f"  運行模式: {mode}")
         

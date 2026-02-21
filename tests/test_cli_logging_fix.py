@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 測試CLI日誌修複效果
-驗證用戶界面是否清爽，日誌是否只寫入文件
+驗證用戶界面是否清爽，日誌是否只寫入檔案
 """
 
 import os
@@ -49,7 +49,7 @@ def test_cli_logging_setup():
         # 測試日誌輸出
         print("\n 測試日誌輸出:")
         print("   執行 logger.info('測試消息')...")
-        logger.info("這是一條測試日誌消息，應該只寫入文件，不在控制台顯示")
+        logger.info("這是一條測試日誌消息，應該只寫入檔案，不在控制台顯示")
         print("    如果上面沒有顯示時間戳和日誌資訊，說明修複成功")
         
         return True
@@ -208,7 +208,7 @@ def main():
         print("\n 修複效果:")
         print("1.  控制台不再顯示技術日誌資訊")
         print("2.  用戶界面清爽美觀")
-        print("3.  系統日誌正常寫入文件")
+        print("3.  系統日誌正常寫入檔案")
         print("4.  用戶提示使用Rich Console顯示")
         
         print("\n 用戶體驗改善:")

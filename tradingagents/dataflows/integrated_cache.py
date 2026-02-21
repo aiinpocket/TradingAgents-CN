@@ -48,7 +48,7 @@ class IntegratedCacheManager:
                 self.logger.warning(f"自適應緩存系統初始化失敗，使用傳統緩存: {e}")
                 self.use_adaptive = False
         else:
-            self.logger.info("自適應緩存系統不可用，使用傳統文件緩存")
+            self.logger.info("自適應緩存系統不可用，使用傳統檔案緩存")
         
         # 顯示當前配置
         self._log_cache_status()
@@ -66,7 +66,7 @@ class IntegratedCacheManager:
             self.logger.info(f"  Redis: {'可用' if redis_available else '不可用'}")
             self.logger.info(f"  降級支持: {'啟用' if self.adaptive_cache.fallback_enabled else '禁用'}")
         else:
-            self.logger.info("使用傳統文件緩存系統")
+            self.logger.info("使用傳統檔案緩存系統")
     
     def save_stock_data(self, symbol: str, data: Any, start_date: str = None, 
                        end_date: str = None, data_source: str = "default") -> str:
@@ -254,19 +254,19 @@ class IntegratedCacheManager:
     def get_performance_mode(self) -> str:
         """獲取性能模式"""
         if not self.use_adaptive:
-            return "基礎模式 (文件緩存)"
+            return "基礎模式 (檔案緩存)"
         
         mongodb_available = self.db_manager.is_mongodb_available()
         redis_available = self.db_manager.is_redis_available()
         
         if redis_available and mongodb_available:
-            return "高性能模式 (Redis + MongoDB + 文件)"
+            return "高性能模式 (Redis + MongoDB + 檔案)"
         elif redis_available:
-            return "快速模式 (Redis + 文件)"
+            return "快速模式 (Redis + 檔案)"
         elif mongodb_available:
-            return "持久化模式 (MongoDB + 文件)"
+            return "持久化模式 (MongoDB + 檔案)"
         else:
-            return "標準模式 (智能文件緩存)"
+            return "標準模式 (智能檔案緩存)"
 
 
 # 全局集成緩存管理器實例

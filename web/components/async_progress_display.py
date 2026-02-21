@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 異步進度顯示組件
-從 Redis 或文件獲取進度狀態，使用非阻塞式自動刷新
+從 Redis 或檔案獲取進度狀態，使用非阻塞式自動刷新
 """
 
 import streamlit as st

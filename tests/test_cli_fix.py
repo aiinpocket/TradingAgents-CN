@@ -90,7 +90,7 @@ def test_process_signal_call():
     print("\n 測試process_signal調用...")
     
     try:
-        # 讀取main.py文件內容
+        # 讀取main.py檔案內容
         main_file = project_root / 'cli' / 'main.py'
         with open(main_file, 'r', encoding='utf-8') as f:
             content = f.read()
