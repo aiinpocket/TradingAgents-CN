@@ -348,7 +348,7 @@ class Toolkit:
         支持美股新聞的英文和中文雙語搜索。
         
         Args:
-            ticker (str): 股票代碼，如 AAPL, TSM, 600036.SH
+            ticker (str): 股票代碼，如 AAPL, TSM, MSFT
             curr_date (str): 當前日期，格式為 yyyy-mm-dd
         Returns:
             str: 包含實時新聞分析、緊急程度評估、時效性說明的格式化報告
