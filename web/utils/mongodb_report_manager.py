@@ -8,13 +8,11 @@ import os
 import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Any
-from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 try:
     from pymongo import MongoClient
-    from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
     MONGODB_AVAILABLE = True
 except ImportError:
     MONGODB_AVAILABLE = False

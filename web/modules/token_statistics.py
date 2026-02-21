@@ -26,7 +26,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from utils.ui_utils import apply_hide_deploy_button_css
 
-from tradingagents.config.config_manager import config_manager, token_tracker, UsageRecord
+from tradingagents.config.config_manager import config_manager, UsageRecord
 
 def render_token_statistics():
     """渲染Token統計頁面"""

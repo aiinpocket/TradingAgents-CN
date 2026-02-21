@@ -6,7 +6,6 @@
 
 import streamlit as st
 import sys
-import os
 from pathlib import Path
 
 # 添加項目根目錄到路徑

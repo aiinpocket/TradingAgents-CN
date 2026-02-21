@@ -7,7 +7,6 @@ Docker環境PDF導出適配器
 import os
 import subprocess
 import tempfile
-from typing import Optional
 
 # 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
