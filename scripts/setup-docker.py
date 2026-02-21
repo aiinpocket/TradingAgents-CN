@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Docker環境快速配置指令碼
-幫助用戶快速配置Docker部署環境
+幫助使用者快速配置Docker部署環境
 """
 
 import os
@@ -79,7 +79,7 @@ def setup_docker_env():
     logger.info(f"\n 下一步操作：")
     logger.info(f"1. 編輯.env 檔案，填入您的API密鑰")
     logger.info(f"2. 執行: docker-compose up -d")
-    logger.info(f"3. 訪問: http://localhost:8501")
+    logger.info(f"3. 存取: http://localhost:8501")
     
     return True
 

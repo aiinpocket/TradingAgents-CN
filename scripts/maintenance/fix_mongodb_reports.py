@@ -75,12 +75,12 @@ def main():
             print(" 所有報告資料結構一致，無需修復")
             return True
         
-        # 2. 詢問用戶是否繼續修復
+        # 2. 詢問使用者是否繼續修復
         print(f"\n 準備修復 {inconsistent_count} 個不一致的報告")
         response = input("是否繼續修復？(y/N): ").strip().lower()
         
         if response not in ['y', 'yes']:
-            print(" 用戶取消修復操作")
+            print(" 使用者取消修復操作")
             return False
         
         # 3. 執行修復

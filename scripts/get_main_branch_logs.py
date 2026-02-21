@@ -227,7 +227,7 @@ def check_log_configuration(container_name):
 import os
 import logging
 print("Python日誌配置:")
-print(f"  日誌級別: {os.getenv('TRADINGAGENTS_LOG_LEVEL', 'NOT_SET')}")
+print(f"  日誌等級: {os.getenv('TRADINGAGENTS_LOG_LEVEL', 'NOT_SET')}")
 print(f"  日誌目錄: {os.getenv('TRADINGAGENTS_LOG_DIR', 'NOT_SET')}")
 print(f"  當前工作目錄: {os.getcwd()}")
 print(f"  日誌目錄是否存在: {os.path.exists('/app/logs')}")
@@ -331,7 +331,7 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\n\n 操作被用戶中斷")
+        print("\n\n 操作被使用者中斷")
         sys.exit(1)
     except Exception as e:
         print(f"\n 發生錯誤: {e}")

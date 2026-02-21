@@ -41,7 +41,7 @@ def find_container():
             print(f" 找到容器: {output.strip()}")
             return output.strip()
     
-    # 如果沒找到，列出所有容器讓用戶選擇
+    # 如果沒找到，列出所有容器讓使用者選擇
     print(" 未找到預期的容器名稱，列出所有執行中的容器:")
     success, output, error = run_command("docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'")
     if success:
@@ -209,7 +209,7 @@ def main():
     for i, log_file in enumerate(log_files, 1):
         print(f"   {i}. {log_file}")
     
-    # 5. 讓用戶選擇要處理的日誌檔案
+    # 5. 讓使用者選擇要處理的日誌檔案
     if len(log_files) == 1:
         selected_log = log_files[0]
         print(f"\n 自動選擇唯一的日誌檔案: {selected_log}")
@@ -271,7 +271,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\n 操作被用戶中斷")
+        print("\n\n 操作被使用者中斷")
     except Exception as e:
         print(f"\n 發生錯誤: {e}")
         import traceback

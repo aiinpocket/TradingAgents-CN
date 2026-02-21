@@ -110,8 +110,8 @@ def capture_screenshots():
         driver = webdriver.Chrome(options=chrome_options)
         
         try:
-            # 訪問Web介面
-            logger.info(" 正在訪問Web介面...")
+            # 存取Web介面
+            logger.info(" 正在存取Web介面...")
             driver.get("http://localhost:8501")
             
             # 等待頁面載入
@@ -192,8 +192,8 @@ python start_web.py
 docker-compose up -d
 ```
 
-### 2. 訪問介面
-打開瀏覽器訪問: http://localhost:8501
+### 2. 存取介面
+打開瀏覽器存取: http://localhost:8501
 
 ### 3. 捕獲截圖
 按照以下場景進行截圖:
@@ -258,7 +258,7 @@ def main():
     # 建立截圖指南
     create_screenshot_guide()
     
-    # 詢問用戶是否要自動捕獲截圖
+    # 詢問使用者是否要自動捕獲截圖
     try:
         choice = input("\n是否要自動捕獲Web介面截圖? (y/n): ").lower().strip()
         if choice in ['y', 'yes', '是']:
@@ -271,7 +271,7 @@ def main():
         else:
             logger.info(" 請參考手動截圖指南: docs/images/screenshot-guide.md")
     except KeyboardInterrupt:
-        logger.info("\n 用戶取消操作")
+        logger.info("\n 使用者取消操作")
 
 if __name__ == "__main__":
     main()

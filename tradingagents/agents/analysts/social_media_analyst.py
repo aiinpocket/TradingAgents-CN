@@ -117,7 +117,7 @@ def create_social_media_analyst(llm, toolkit):
                     " 將從您停下的地方繼續幫助。執行您能做的以取得進展。"
                     " 如果您或任何其他助手有最終交易提案：**買入/持有/賣出**或可交付成果，"
                     " 請在您的回應前加上最終交易提案：**買入/持有/賣出**，以便團隊知道停止。"
-                    " 您可以訪問以下工具：{tool_names}。\n{system_message}"
+                    " 您可以存取以下工具：{tool_names}。\n{system_message}"
                     "供您參考，當前日期是{current_date}。我們要分析的當前公司是{ticker}。請用中文撰寫所有分析內容。",
                 ),
                 MessagesPlaceholder(variable_name="messages"),

@@ -194,7 +194,7 @@ def main():
     # 顯示GitHub Release建立指南
     logger.info(f"\n GitHub Release建立指南:")
     logger.info(f"=")
-    logger.info(f"1. 訪問: https://github.com/aiinpocket/TradingAgents-CN/releases/new")
+    logger.info(f"1. 存取: https://github.com/aiinpocket/TradingAgents-CN/releases/new")
     logger.info(f"2. 選擇標籤: cn-v0.1.2")
     logger.info(f"3. 發布標題: TradingAgents-CN v0.1.2 - Web管理介面")
     logger.info(f"4. 複製 RELEASE_NOTES_v0.1.2.md 的內容到描述框")

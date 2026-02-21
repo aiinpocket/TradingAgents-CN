@@ -61,9 +61,9 @@ try:
     logger = get_logger('docker_test')
     
     print(' 寫入測試日誌...')
-    logger.info(' Docker環境日誌測試 - INFO級別')
-    logger.warning(' Docker環境日誌測試 - WARNING級別')
-    logger.error(' Docker環境日誌測試 - ERROR級別')
+    logger.info(' Docker環境日誌測試 - INFO等級')
+    logger.warning(' Docker環境日誌測試 - WARNING等級')
+    logger.error(' Docker環境日誌測試 - ERROR等級')
     
     print(' 日誌寫入完成')
     
@@ -166,7 +166,7 @@ def check_container_logs():
         
         return True
     else:
-        print(f" 無法訪問容器內日誌目錄: {error}")
+        print(f" 無法存取容器內日誌目錄: {error}")
         return False
 
 def check_docker_stdout_logs():

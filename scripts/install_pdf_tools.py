@@ -237,7 +237,7 @@ def main():
     
     # 提供手動安裝指導
     logger.info(f"\n 手動安裝指導:")
-    logger.info(f"1. 訪問 https://wkhtmltopdf.org/downloads.html")
+    logger.info(f"1. 存取 https://wkhtmltopdf.org/downloads.html")
     logger.info(f"2. 下載適合您系統的安裝包")
     logger.info(f"3. 按照說明安裝")
     logger.info(f"4. 確保wkhtmltopdf在系統PATH中")

@@ -856,7 +856,7 @@ def render_export_buttons(results: Dict[str, Any]):
 
         with st.expander("如何安裝pandoc"):
             st.markdown("""
-            **Windows用戶:**
+            **Windows使用者:**
             ```bash
             # 使用Chocolatey (推薦)
             choco install pandoc
@@ -873,7 +873,7 @@ def render_export_buttons(results: Dict[str, Any]):
             ```
             """)
 
-        # 在Docker環境下，即使pandoc有問題也顯示所有按鈕，讓用戶嘗試
+        # 在Docker環境下，即使pandoc有問題也顯示所有按鈕，讓使用者嘗試
     
     # 生成檔案名稱
     stock_symbol = results.get('stock_symbol', 'analysis')
@@ -883,7 +883,7 @@ def render_export_buttons(results: Dict[str, Any]):
     
     with col1:
         if st.button("匯出 Markdown", help="匯出為Markdown格式"):
-            logger.info(f"用戶點擊Markdown匯出按鈕 - 股票: {stock_symbol}")
+            logger.info(f"使用者點擊Markdown匯出按鈕 - 股票: {stock_symbol}")
             # 1. 保存分模組報告（CLI格式）
             logger.info("開始保存分模組報告（CLI格式）...")
             modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
@@ -920,7 +920,7 @@ def render_export_buttons(results: Dict[str, Any]):
     
     with col2:
         if st.button("匯出 Word", help="匯出為Word 檔案格式"):
-            logger.info(f"用戶點擊Word匯出按鈕 - 股票: {stock_symbol}")
+            logger.info(f"使用者點擊Word匯出按鈕 - 股票: {stock_symbol}")
             with st.spinner("正在生成Word 檔案，請稍候..."):
                 try:
                     logger.info("開始Word匯出流程...")
@@ -992,7 +992,7 @@ def render_export_buttons(results: Dict[str, Any]):
     
     with col3:
         if st.button("匯出 PDF", help="匯出為PDF格式 (需要額外工具)"):
-            logger.info(f"用戶點擊PDF匯出按鈕 - 股票: {stock_symbol}")
+            logger.info(f"使用者點擊PDF匯出按鈕 - 股票: {stock_symbol}")
             with st.spinner("正在生成PDF，請稍候..."):
                 try:
                     logger.info("開始PDF匯出流程...")

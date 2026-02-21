@@ -16,7 +16,7 @@ class ProgressLogHandler(logging.Handler):
     自定義日誌處理器，將模組開始/完成訊息轉發給進度跟蹤器
     """
     
-    # 類級別的跟蹤器註冊表
+    # 類別層級的跟蹤器註冊表
     _trackers: Dict[str, 'AsyncProgressTracker'] = {}
     _lock = threading.Lock()
     

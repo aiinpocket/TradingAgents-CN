@@ -137,7 +137,7 @@ def test_env_config():
     print("1. 系統讀取.env 檔案中的資料庫配置")
     print("2. 自動檢測MongoDB和Redis是否可用")
     print("3. 根據可用性選擇最佳快取後端")
-    print("4. 支援用戶名密碼認證")
+    print("4. 支援使用者名密碼認證")
     print("5. 在資料庫不可用時自動使用檔案快取")
     
     return True

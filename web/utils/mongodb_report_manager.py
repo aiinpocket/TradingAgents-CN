@@ -64,7 +64,7 @@ class MongoDBReportManager:
                 "connectTimeoutMS": 5000
             }
 
-            # 如果有用戶名和密碼，添加認證資訊
+            # 如果有使用者名和密碼，添加認證資訊
             if mongodb_username and mongodb_password:
                 connect_kwargs.update({
                     "username": mongodb_username,

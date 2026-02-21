@@ -80,7 +80,7 @@ def migrate_system_settings(env_config):
     if env_config['log_level'] and settings.get('log_level') != env_config['log_level']:
         settings['log_level'] = env_config['log_level']
         updated = True
-        logger.info(f" 更新日誌級別: {env_config['log_level']}")
+        logger.info(f" 更新日誌等級: {env_config['log_level']}")
     
     # 添加其他配置
     if env_config['finnhub_api_key']:
@@ -125,7 +125,7 @@ def main():
         logger.info(f"\n 配置遷移完成！")
         logger.info(f"\n 下一步:")
         logger.info(f"1. 啟動Web介面: python -m streamlit run web/app.py")
-        logger.info(f"2. 訪問 ' 配置管理' 頁面查看遷移結果")
+        logger.info(f"2. 存取 ' 配置管理' 頁面查看遷移結果")
         logger.info(f"3. 根據需要調整模型參數和定價配置")
         logger.info(f"4. 可以繼續使用 .env 檔案，也可以完全使用Web配置")
         

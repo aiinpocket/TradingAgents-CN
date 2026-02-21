@@ -251,7 +251,7 @@ def main():
         print(" 添加相容性檢查工具")
         print(" 完善安裝指南和故障排除檔案")
         
-        print("\n 用戶體驗改進:")
+        print("\n 使用者體驗改進:")
         print(" 減少安裝錯誤")
         print(" 提供清晰的錯誤診斷")
         print(" 支援更多Python環境")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 測試時間預估顯示效果
-驗證用戶能夠看到分析階段的時間預估
+驗證使用者能夠看到分析階段的時間預估
 """
 
 import os
@@ -97,8 +97,8 @@ def test_time_estimation_display():
         return False
 
 def test_user_expectation_management():
-    """測試用戶期望管理"""
-    print("\n 測試用戶期望管理效果")
+    """測試使用者期望管理"""
+    print("\n 測試使用者期望管理效果")
     print("=" * 80)
     
     try:
@@ -106,13 +106,13 @@ def test_user_expectation_management():
         
         ui = CLIUserInterface()
         
-        print(" 對比有無時間預估的用戶體驗:")
+        print(" 對比有無時間預估的使用者體驗:")
         print("-" * 50)
         
         print("\n 沒有時間預估的體驗:")
         print("   步驟 3: 智慧分析階段")
         print("    啟動分析師團隊...")
-        print("   [用戶不知道要等多久，可能會焦慮]")
+        print("   [使用者不知道要等多久，可能會焦慮]")
         
         print("\n 有時間預估的體驗:")
         ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
@@ -120,10 +120,10 @@ def test_user_expectation_management():
         ui.show_user_message(" 提示：智慧分析包含多個團隊協作，請耐心等待約10分鐘", "dim")
         
         print("\n 改進效果:")
-        print("    用戶知道大概需要等待的時間")
+        print("    使用者知道大概需要等待的時間")
         print("    設定合理的期望，減少焦慮")
         print("    解釋為什麼需要這麼長時間")
-        print("    提升用戶對系統專業性的認知")
+        print("    提升使用者對系統專業性的認知")
         
         return True
         
@@ -203,7 +203,7 @@ def test_progress_communication():
         # 策略1: 明確時間預估
         print("\n策略1: 明確時間預估")
         ui.show_step_header(3, "智慧分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
-        print("    讓用戶知道大概需要等待多長時間")
+        print("    讓使用者知道大概需要等待多長時間")
         
         # 策略2: 解釋原因
         print("\n策略2: 解釋原因")
@@ -227,7 +227,7 @@ def test_progress_communication():
                 ui.show_success(update.replace(" ", ""))
             time.sleep(0.2)
         
-        print("    讓用戶知道當前進展")
+        print("    讓使用者知道當前進展")
         
         # 策略4: 階段性裡程碑
         print("\n策略4: 階段性裡程碑")
@@ -265,7 +265,7 @@ def main():
     # 測試1: 時間預估顯示
     results.append(test_time_estimation_display())
     
-    # 測試2: 用戶期望管理
+    # 測試2: 使用者期望管理
     results.append(test_user_expectation_management())
     
     # 測試3: 不同時間預估場景
@@ -284,7 +284,7 @@ def main():
     
     test_names = [
         "時間預估顯示效果",
-        "用戶期望管理",
+        "使用者期望管理",
         "不同時間預估場景",
         "進度溝通策略"
     ]
@@ -298,12 +298,12 @@ def main():
     if passed == total:
         print(" 所有測試通過！時間預估顯示效果優秀")
         print("\n 改進效果:")
-        print("1.  用戶知道智慧分析階段大約需要10分鐘")
+        print("1.  使用者知道智慧分析階段大約需要10分鐘")
         print("2.  設定合理期望，減少等待焦慮")
         print("3.  解釋分析複雜性，增強專業感")
-        print("4.  提升用戶對系統能力的認知")
+        print("4.  提升使用者對系統能力的認知")
         
-        print("\n 用戶體驗提升:")
+        print("\n 使用者體驗提升:")
         print("- 明確的時間預期，不會感到無限等待")
         print("- 理解分析的複雜性和專業性")
         print("- 對系統的工作過程有信心")

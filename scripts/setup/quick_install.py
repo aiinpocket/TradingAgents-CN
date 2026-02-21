@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 TradingAgents-CN 快速安裝指令碼
-自動檢測環境並引導用戶完成安裝配置
+自動檢測環境並引導使用者完成安裝配置
 """
 
 import os
@@ -132,7 +132,7 @@ def docker_install():
                               capture_output=True, text=True)
         if result.returncode == 0:
             print_colored(" Docker服務啟動成功!", Colors.GREEN)
-            print_colored("\n 訪問地址:", Colors.BLUE)
+            print_colored("\n 存取地址:", Colors.BLUE)
             print_colored("主應用: http://localhost:8501", Colors.GREEN)
             print_colored("Redis管理: http://localhost:8081", Colors.GREEN)
             return True

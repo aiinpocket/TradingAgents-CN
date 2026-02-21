@@ -32,7 +32,7 @@ def init_logging(config_override: Optional[dict] = None) -> None:
     # 記錄初始化資訊
     logger.info("TradingAgents-CN 日誌系統初始化完成")
     logger.info(f"日誌目錄: {logger_manager.config.get('handlers', {}).get('file', {}).get('directory', 'N/A')}")
-    logger.info(f"日誌級別: {logger_manager.config.get('level', 'INFO')}")
+    logger.info(f"日誌等級: {logger_manager.config.get('level', 'INFO')}")
     
     # Docker環境特殊處理
     if logger_manager.config.get('docker', {}).get('enabled', False):

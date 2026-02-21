@@ -602,7 +602,7 @@ def format_analysis_results(results):
         'decision': formatted_decision,
         'state': formatted_state,
         'success': True,
-        # 將配置資訊放在頂層，供前端直接訪問
+        # 將配置資訊放在頂層，供前端直接存取
         'analysis_date': results['analysis_date'],
         'analysts': results['analysts'],
         'research_depth': results['research_depth'],

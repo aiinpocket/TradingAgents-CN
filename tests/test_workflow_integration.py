@@ -152,7 +152,7 @@ def test_news_analyst_integration():
         print(f"   工作流程: 已集成到整體交易智慧體流程")
         
         print(f"\n 在整體流程中的使用情況：")
-        print(f"  1. 當用戶選擇包含'news'的分析師時，系統會自動載入新聞分析師")
+        print(f"  1. 當使用者選擇包含'news'的分析師時，系統會自動載入新聞分析師")
         print(f"  2. 新聞分析師會建立並綁定統一新聞工具到LLM")
         print(f"  3. LLM在分析時會呼叫 get_stock_news_unified 工具")
         print(f"  4. 統一工具會自動識別美股股票並取得相應新聞")

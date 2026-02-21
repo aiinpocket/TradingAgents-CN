@@ -90,7 +90,7 @@ def setup_redis_windows():
        - 執行: redis-server.exe
        
     4. 測試Redis連接:
-       - 新開命令行窗口
+       - 新開命令行視窗
        - 執行: redis-cli.exe
        - 輸入: ping
        - 應該返回: PONG

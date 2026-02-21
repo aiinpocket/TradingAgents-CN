@@ -27,7 +27,7 @@ def test_selections_dictionary_keys():
     try:
         from cli.main import get_user_selections
         
-        # 模擬用戶輸入
+        # 模擬使用者輸入
         with patch('typer.prompt') as mock_prompt, \
              patch('cli.main.select_market') as mock_market, \
              patch('cli.main.select_analysts') as mock_analysts, \

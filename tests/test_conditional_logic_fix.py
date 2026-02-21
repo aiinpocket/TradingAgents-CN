@@ -15,7 +15,7 @@ def test_conditional_logic_fix():
         # 建立條件邏輯實例
         logic = ConditionalLogic()
         
-        # 測試不同類型的消息
+        # 測試不同類型的訊息
         test_cases = [
             {
                 "name": "AIMessage with tool_calls",

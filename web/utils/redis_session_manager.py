@@ -72,7 +72,7 @@ class RedisSessionManager:
             user_agent = headers.get('User-Agent', 'unknown')
             x_forwarded_for = headers.get('X-Forwarded-For', 'unknown')
             
-            # 生成基於用戶資訊的唯一標識
+            # 生成基於使用者資訊的唯一標識
             unique_str = f"{user_agent}_{x_forwarded_for}_{int(time.time() / 3600)}"  # 按小時分組
             session_hash = hashlib.sha256(unique_str.encode()).hexdigest()[:16]
             

@@ -161,7 +161,7 @@ def test_news_analyst_integration():
                         else:
                             print(" 可能需要進一步優化")
                     else:
-                        print(" 消息內容為空")
+                        print(" 訊息內容為空")
                 else:
                     print(" 未取得到分析結果")
                     

@@ -94,7 +94,7 @@ class DatabaseManager:
                 "connectTimeoutMS": self.mongodb_config["timeout"]
             }
 
-            # 如果有用戶名和密碼，添加認證
+            # 如果有使用者名和密碼，添加認證
             if self.mongodb_config["username"] and self.mongodb_config["password"]:
                 connect_kwargs.update({
                     "username": self.mongodb_config["username"],
@@ -200,7 +200,7 @@ class DatabaseManager:
                     "serverSelectionTimeoutMS": self.mongodb_config["timeout"]
                 }
 
-                # 如果有用戶名和密碼，添加認證
+                # 如果有使用者名和密碼，添加認證
                 if self.mongodb_config["username"] and self.mongodb_config["password"]:
                     connect_kwargs.update({
                         "username": self.mongodb_config["username"],

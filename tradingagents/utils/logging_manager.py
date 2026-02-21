@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 統一日誌管理器
-提供項目級別的日誌配置和管理功能
+提供專案層級的日誌配置和管理功能
 """
 
 import logging
@@ -188,7 +188,7 @@ class TradingAgentsLogger:
                 warnings.warn(f"無法建立日誌目錄 {log_dir}: {e}，禁用檔案日誌")
                 self.config['handlers']['file']['enabled'] = False
         
-        # 設定根日誌級別
+        # 設定根日誌等級
         root_logger = logging.getLogger()
         root_logger.setLevel(getattr(logging, self.config['level']))
         

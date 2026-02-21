@@ -189,7 +189,7 @@ def main():
     # 安裝失敗
     logger.error(f"\n 所有安裝方法都失敗了")
     logger.info(f"\n 手動安裝指南:")
-    logger.info(f"1. 訪問 https://github.com/jgm/pandoc/releases")
+    logger.info(f"1. 存取 https://github.com/jgm/pandoc/releases")
     logger.info(f"2. 下載適合您系統的安裝包")
     logger.info(f"3. 按照官方檔案安裝")
     logger.info(f"4. 確保pandoc在系統PATH中")

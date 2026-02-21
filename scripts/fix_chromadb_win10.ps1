@@ -88,7 +88,7 @@ from chromadb.config import Settings
 
 # Windows 10 專用配置
 def get_win10_chromadb_client():
-    '''取得Windows 10相容的ChromaDB用戶端'''
+    '''取得Windows 10相容的ChromaDB使用者端'''
     settings = Settings(
         allow_reset=True,
         anonymized_telemetry=False,
@@ -184,7 +184,7 @@ Write-Host ""
 Write-Host "Windows 10與Windows 11的主要差異:" -ForegroundColor Cyan
 Write-Host "1. 檔案系統權限管理不同" -ForegroundColor White
 Write-Host "2. 暫存檔案處理機制不同" -ForegroundColor White
-Write-Host "3. 程序隔離級別不同" -ForegroundColor White
+Write-Host "3. 程式隔離等級不同" -ForegroundColor White
 Write-Host "4. 記憶體管理策略不同" -ForegroundColor White
 Write-Host ""
 

@@ -54,8 +54,8 @@ def init_mongodb():
         
         logger.info(f" 分析結果集合建立完成")
         
-        # 建立用戶會話集合和索引
-        logger.info(f" 建立用戶會話集合...")
+        # 建立使用者會話集合和索引
+        logger.info(f" 建立使用者會話集合...")
         sessions_collection = db.user_sessions
         
         # 建立索引
@@ -63,7 +63,7 @@ def init_mongodb():
         sessions_collection.create_index([("created_at", -1)])
         sessions_collection.create_index([("last_activity", -1)])
         
-        logger.info(f" 用戶會話集合建立完成")
+        logger.info(f" 使用者會話集合建立完成")
         
         # 建立配置集合
         logger.info(f" 建立配置集合...")
@@ -119,7 +119,7 @@ def init_mongodb():
         logger.info(f"\n 資料庫統計:")
         logger.info(f"  - 股票資料: {stock_data_collection.count_documents({})} 條記錄")
         logger.info(f"  - 分析結果: {analysis_collection.count_documents({})} 條記錄")
-        logger.info(f"  - 用戶會話: {sessions_collection.count_documents({})} 條記錄")
+        logger.info(f"  - 使用者會話: {sessions_collection.count_documents({})} 條記錄")
         logger.info(f"  - 配置項: {config_collection.count_documents({})} 條記錄")
         
         return True
@@ -274,8 +274,8 @@ def main():
         logger.info(f"\n 資料庫初始化完成！")
         logger.info(f"\n 下一步:")
         logger.info(f"1. 啟動Web應用: python start_web.py")
-        logger.info(f"2. 訪問快取管理: http://localhost:8501 -> 快取管理")
-        logger.info(f"3. 訪問Redis管理介面: http://localhost:8081")
+        logger.info(f"2. 存取快取管理: http://localhost:8501 -> 快取管理")
+        logger.info(f"3. 存取Redis管理介面: http://localhost:8081")
         return True
     else:
         logger.error(f"\n 部分初始化失敗，請檢查錯誤訊息")

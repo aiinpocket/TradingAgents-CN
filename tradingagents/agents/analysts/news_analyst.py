@@ -134,7 +134,7 @@ def create_news_analyst(llm, toolkit):
                     "\n注意：您必須先呼叫工具取得資料，然後基於資料進行分析。"
                     "\n注意：沒有例外，沒有借口，必須呼叫工具。"
                     "\n"
-                    "\n您可以訪問以下工具：{tool_names}。"
+                    "\n您可以存取以下工具：{tool_names}。"
                     "\n{system_message}"
                     "\n供您參考，當前日期是{current_date}。我們正在查看公司{ticker}。"
                     "\n請按照上述要求執行，用中文撰寫所有分析內容。",

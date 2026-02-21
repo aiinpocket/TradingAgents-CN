@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 快取管理頁面
-用戶可以查看、管理和清理股票資料快取
+使用者可以查看、管理和清理股票資料快取
 """
 
 import streamlit as st

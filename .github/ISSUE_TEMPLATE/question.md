@@ -120,6 +120,6 @@ If helpful, please add screenshots.
 - [快速開始指南](../README.md#啟動應用)
 - [配置說明](../README.md#配置api密鑰)
 
-**社區支持 / Community Support:**
+**社群支援 / Community Support:**
 -  [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
 -  郵箱: hsliup@163.com

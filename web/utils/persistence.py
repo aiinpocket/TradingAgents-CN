@@ -1,6 +1,6 @@
 """
 持久化工具
-使用URL參數和session state結合的方式來持久化用戶選擇
+使用URL參數和session state結合的方式來持久化使用者選擇
 """
 
 import streamlit as st

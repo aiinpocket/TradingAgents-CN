@@ -55,9 +55,9 @@ def create_sample_news_data(ticker, data_dir, days=7):
         ],
         "MSFT": [
             "微軟云業務Azure收入大幅增長",
-            "微軟AI助手Copilot用戶數量激增",
+            "微軟AI助手Copilot使用者數量激增",
             "微軟與OpenAI合作深化",
-            "微軟Office 365訂閱用戶創新高",
+            "微軟Office 365訂閱使用者創新高",
             "微軟遊戲業務表現亮眼"
         ],
         "GOOGL": [

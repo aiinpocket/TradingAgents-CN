@@ -152,7 +152,7 @@ def test_llm_tool_calling_simulation():
         
         # 驗證結果
         if isinstance(result, dict) and 'messages' in result:
-            print(f"   返回了正確的消息格式")
+            print(f"   返回了正確的訊息格式")
             return True
         else:
             print(f"   返回格式錯誤: {result}")
@@ -247,7 +247,7 @@ def main():
         print(" 避免了工具呼叫混亂")
         print(" 簡化了系統架構")
         print(" 提高了可維護性")
-        print(" 統一了用戶體驗")
+        print(" 統一了使用者體驗")
         
         print("\n 您的建議完美實現:")
         print(" '工具還是用同一個工具，工具當中自己判斷後續的處理邏輯'")

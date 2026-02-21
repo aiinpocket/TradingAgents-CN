@@ -85,16 +85,16 @@ setup_cli_logging()
 
 console = Console()
 
-# CLI用戶介面管理器
+# CLI使用者介面管理器
 class CLIUserInterface:
-    """CLI用戶介面管理器：處理用戶顯示和進度提示"""
+    """CLI使用者介面管理器：處理使用者顯示和進度提示"""
 
     def __init__(self):
         self.console = Console()
         self.logger = get_logger("cli")
 
     def show_user_message(self, message: str, style: str = ""):
-        """顯示用戶訊息"""
+        """顯示使用者訊息"""
         if style:
             self.console.print(f"[{style}]{message}[/{style}]")
         else:
@@ -600,7 +600,7 @@ def get_user_selections():
     console.print(
         create_question_box(
             "步驟 5: 研究深度 | Step 5: Research Depth",
-            "選擇您的研究深度級別 | Select your research depth level"
+            "選擇您的研究深度等級 | Select your research depth level"
         )
     )
     selected_research_depth = select_research_depth()
@@ -699,7 +699,7 @@ def get_analysis_date():
             analysis_date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
             if analysis_date.date() > datetime.datetime.now().date():
                 console.print(f"[red]錯誤：分析日期不能是未來日期 | Error: Analysis date cannot be in the future[/red]")
-                logger.warning(f"用戶輸入未來日期: {date_str}")
+                logger.warning(f"使用者輸入未來日期: {date_str}")
                 continue
             return date_str
         except ValueError:

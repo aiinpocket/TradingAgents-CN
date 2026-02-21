@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 測試CLI進度顯示效果
-模擬分析流程，驗證用戶體驗
+模擬分析流程，驗證使用者體驗
 """
 
 import os
@@ -13,8 +13,8 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 def test_cli_ui_manager():
-    """測試CLI用戶介面管理器"""
-    print(" 測試CLI用戶介面管理器")
+    """測試CLI使用者介面管理器"""
+    print(" 測試CLI使用者介面管理器")
     print("=" * 60)
     
     try:
@@ -23,24 +23,24 @@ def test_cli_ui_manager():
         # 建立UI管理器
         ui = CLIUserInterface()
         
-        print(" 測試各種消息類型:")
+        print(" 測試各種訊息類型:")
         print("-" * 40)
         
-        # 測試用戶消息
-        ui.show_user_message("這是普通用戶消息")
-        ui.show_user_message("這是帶樣式的消息", "bold cyan")
+        # 測試使用者訊息
+        ui.show_user_message("這是普通使用者訊息")
+        ui.show_user_message("這是帶樣式的訊息", "bold cyan")
         
-        # 測試進度消息
+        # 測試進度訊息
         ui.show_progress("正在初始化系統...")
         time.sleep(0.5)
         
-        # 測試成功消息
+        # 測試成功訊息
         ui.show_success("系統初始化完成")
         
-        # 測試警告消息
+        # 測試警告訊息
         ui.show_warning("這是一條警告資訊")
         
-        # 測試錯誤消息
+        # 測試錯誤訊息
         ui.show_error("這是一條錯誤訊息")
         
         # 測試步驟標題
@@ -49,7 +49,7 @@ def test_cli_ui_manager():
         # 測試資料資訊
         ui.show_data_info("股票資訊", "AAPL", "Apple Inc.")
         
-        print("\n CLI用戶介面管理器測試完成")
+        print("\n CLI使用者介面管理器測試完成")
         return True
         
     except Exception as e:
@@ -148,19 +148,19 @@ def test_progress_vs_logging():
         
         ui = CLIUserInterface()
         
-        print(" 測試用戶介面 vs 系統日誌:")
+        print(" 測試使用者介面 vs 系統日誌:")
         print("-" * 40)
         
-        # 用戶介面消息（清爽顯示）
-        print("\n 用戶介面消息:")
+        # 使用者介面訊息（清爽顯示）
+        print("\n 使用者介面訊息:")
         ui.show_progress("正在取得資料...")
         ui.show_success("資料取得完成")
         ui.show_warning("網路延遲較高")
         
         # 系統日誌（只寫入檔案，不在主控台顯示）
         print("\n 系統日誌（只寫入檔案）:")
-        logger.info("這是系統日誌消息，應該只寫入檔案")
-        logger.debug("這是除錯資訊，用戶看不到")
+        logger.info("這是系統日誌訊息，應該只寫入檔案")
+        logger.debug("這是除錯資訊，使用者看不到")
         logger.error("這是錯誤日誌，只記錄在檔案中")
         
         print(" 如果上面沒有顯示時間戳和模組名，說明日誌分離成功")
@@ -172,8 +172,8 @@ def test_progress_vs_logging():
         return False
 
 def test_user_experience():
-    """測試用戶體驗"""
-    print("\n 測試用戶體驗")
+    """測試使用者體驗"""
+    print("\n 測試使用者體驗")
     print("=" * 60)
     
     try:
@@ -181,34 +181,34 @@ def test_user_experience():
         
         ui = CLIUserInterface()
         
-        print(" 用戶體驗要點:")
+        print(" 使用者體驗要點:")
         print("-" * 40)
         
         # 清晰的進度指示
         ui.show_step_header(1, "清晰的步驟指示")
-        print("    用戶知道當前在哪個階段")
+        print("    使用者知道當前在哪個階段")
         
         # 及時的反饋
         ui.show_progress("及時的進度反饋")
-        print("    用戶知道系統在工作")
+        print("    使用者知道系統在工作")
         
         # 成功的確認
         ui.show_success("明確的成功確認")
-        print("    用戶知道操作成功")
+        print("    使用者知道操作成功")
         
         # 友好的錯誤提示
         ui.show_error("友好的錯誤提示")
-        print("    用戶知道出了什麼問題")
+        print("    使用者知道出了什麼問題")
         
         # 重要資訊突出
         ui.show_data_info("重要資料", "AAPL", "關鍵資訊突出顯示")
         print("    重要資訊容易識別")
         
-        print("\n 用戶體驗測試完成")
+        print("\n 使用者體驗測試完成")
         print(" 改進效果:")
         print("   - 介面清爽，沒有技術日誌干擾")
-        print("   - 進度清晰，用戶不會感到等待焦慮")
-        print("   - 反饋及時，用戶體驗流暢")
+        print("   - 進度清晰，使用者不會感到等待焦慮")
+        print("   - 反饋及時，使用者體驗流暢")
         print("   - 資訊分層，重要內容突出")
         
         return True
@@ -224,7 +224,7 @@ def main():
     
     results = []
     
-    # 測試1: CLI用戶介面管理器
+    # 測試1: CLI使用者介面管理器
     results.append(test_cli_ui_manager())
     
     # 測試2: 分析流程模擬
@@ -233,7 +233,7 @@ def main():
     # 測試3: 進度顯示 vs 日誌記錄
     results.append(test_progress_vs_logging())
     
-    # 測試4: 用戶體驗
+    # 測試4: 使用者體驗
     results.append(test_user_experience())
     
     # 總結結果
@@ -245,10 +245,10 @@ def main():
     total = len(results)
     
     test_names = [
-        "CLI用戶介面管理器",
+        "CLI使用者介面管理器",
         "分析流程進度顯示",
         "進度顯示與日誌分離",
-        "用戶體驗測試"
+        "使用者體驗測試"
     ]
     
     for i, (name, result) in enumerate(zip(test_names, results)):
@@ -261,12 +261,12 @@ def main():
         print(" 所有測試通過！CLI進度顯示效果優秀")
         print("\n 改進成果:")
         print("1.  清晰的步驟指示和進度反饋")
-        print("2.  用戶介面和系統日誌完全分離")
-        print("3.  重要過程資訊及時顯示給用戶")
+        print("2.  使用者介面和系統日誌完全分離")
+        print("3.  重要過程資訊及時顯示給使用者")
         print("4.  介面保持清爽美觀")
-        print("5.  用戶不再需要等待很久才知道結果")
+        print("5.  使用者不再需要等待很久才知道結果")
         
-        print("\n 用戶體驗提升:")
+        print("\n 使用者體驗提升:")
         print("- 知道系統在做什麼（進度顯示）")
         print("- 知道當前在哪個階段（步驟標題）")
         print("- 知道操作是否成功（成功/錯誤提示）")

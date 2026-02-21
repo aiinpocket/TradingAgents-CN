@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 測試詳細進度顯示效果
-驗證用戶在每個階段都能看到系統在工作
+驗證使用者在每個階段都能看到系統在工作
 """
 
 import os
@@ -60,7 +60,7 @@ def test_complete_analysis_flow():
             completed_analysts.add("fundamentals_report")
         time.sleep(0.5)
         
-        # 研究團隊階段（這裡是用戶感到"卡頓"的地方）
+        # 研究團隊階段（這裡是使用者感到"卡頓"的地方）
         print("\n [關鍵階段] 基本面分析完成後的深度分析:")
         print("-" * 50)
         
@@ -132,16 +132,16 @@ def test_problem_solving_effect():
         
         ui = CLIUserInterface()
         
-        print(" 對比修複前後的用戶體驗:")
+        print(" 對比修複前後的使用者體驗:")
         print("-" * 50)
         
-        print("\n 修複前的用戶體驗:")
+        print("\n 修複前的使用者體驗:")
         print("     基本面分析完成")
-        print("   [長時間等待，用戶不知道系統在做什麼...]")
-        print("   [用戶可能以為程序卡死了...]")
+        print("   [長時間等待，使用者不知道系統在做什麼...]")
+        print("   [使用者可能以為程序卡死了...]")
         print("   步驟 4: 投資決策生成")
         
-        print("\n 修複後的用戶體驗:")
+        print("\n 修複後的使用者體驗:")
         ui.show_success(" 基本面分析完成")
         time.sleep(0.3)
         ui.show_progress(" 研究團隊開始深度分析...")
@@ -159,10 +159,10 @@ def test_problem_solving_effect():
         ui.show_step_header(4, "投資決策生成 | Investment Decision Generation")
         
         print("\n 改進效果:")
-        print("    用戶知道系統在每個階段都在工作")
+        print("    使用者知道系統在每個階段都在工作")
         print("    清晰的進度指示，消除等待焦慮")
         print("    專業的分析流程展示")
-        print("    增強用戶對系統的信任")
+        print("    增強使用者對系統的信任")
         
         return True
         
@@ -217,16 +217,16 @@ def test_analysis_stages():
             print(f"   參與者: {', '.join(stage['analysts'])}")
             
             if i == 1:
-                print("    用戶能看到每個分析師的完成狀態")
+                print("    使用者能看到每個分析師的完成狀態")
             elif i in [2, 3, 4]:
-                print("    新增進度顯示，用戶知道系統在工作")
+                print("    新增進度顯示，使用者知道系統在工作")
             else:
                 print("    清晰的最終決策過程")
         
         print(f"\n 總結:")
         print(f"   - 總共 {len(stages)} 個主要階段")
         print(f"   - 每個階段都有明確的進度指示")
-        print(f"   - 用戶不會感到系統'卡頓'")
+        print(f"   - 使用者不會感到系統'卡頓'")
         print(f"   - 專業的投資分析流程")
         
         return True
@@ -275,11 +275,11 @@ def main():
         print(" 所有測試通過！詳細進度顯示效果優秀")
         print("\n 解決的核心問題:")
         print("1.  消除了基本面分析後的'卡頓'感")
-        print("2.  用戶知道每個階段系統都在工作")
+        print("2.  使用者知道每個階段系統都在工作")
         print("3.  清晰的多團隊協作流程展示")
         print("4.  專業的投資分析體驗")
         
-        print("\n 用戶體驗提升:")
+        print("\n 使用者體驗提升:")
         print("- 不再擔心程序卡死或出錯")
         print("- 了解TradingAgents的專業分析流程")
         print("- 對系統的工作過程有信心")
@@ -288,7 +288,7 @@ def main():
         print("\n 技術實現亮點:")
         print("- 多階段進度跟蹤")
         print("- 智慧重複提示防止")
-        print("- 用戶友好的進度描述")
+        print("- 使用者友好的進度描述")
         print("- 完整的分析流程可視化")
     else:
         print(" 部分測試失敗，需要進一步優化")

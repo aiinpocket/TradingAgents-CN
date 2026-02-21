@@ -193,7 +193,7 @@ if (-not (Test-Path $ReadmeFile)) {
 - `tradingagents_error.log` - 錯誤日誌檔案
 - `tradingagents.log.1`, `tradingagents.log.2` 等 - 輪轉的歷史日誌檔案
 
-## 日誌級別
+## 日誌等級
 
 - **DEBUG** - 詳細的除錯資訊
 - **INFO** - 一般資訊
