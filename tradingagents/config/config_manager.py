@@ -31,7 +31,7 @@ except ImportError:
 @dataclass
 class ModelConfig:
     """模型配置"""
-    provider: str  # 供應商：openai, google, anthropic, etc.
+    provider: str  # 供應商：openai, anthropic
     model_name: str  # 模型名稱
     api_key: str  # API密鑰
     base_url: Optional[str] = None  # 自定義API地址
