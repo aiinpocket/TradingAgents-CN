@@ -373,7 +373,7 @@ def create_price_chart(price_data):
         y=price_data['price'],
         mode='lines',
         name='股價',
-        line=dict(color='#1E293B', width=2)
+        line=dict(color='#1864AB', width=2)
     ))
 
     fig.update_layout(
@@ -401,7 +401,7 @@ def create_sentiment_gauge(sentiment_score):
         delta={'reference': 50},
         gauge={
             'axis': {'range': [None, 100]},
-            'bar': {'color': "#0F766E"},
+            'bar': {'color': "#1864AB"},
             'steps': [
                 {'range': [0, 25], 'color': "#F1F5F9"},
                 {'range': [25, 50], 'color': "#E2E8F0"},

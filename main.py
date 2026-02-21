@@ -19,7 +19,7 @@ ta = TradingAgentsGraph(debug=False, config=config)
 
 # 執行分析
 _, decision = ta.propagate("NVDA", "2024-05-10")
-print(decision)
+logger.info(f"交易決策: {decision}")
 
 # 反思與記憶（參數為持倉收益）
 # ta.reflect_and_remember(1000)

@@ -299,14 +299,12 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
 
     return status in ['completed', 'failed']
 
-# 新增：靜態進度顯示（不會觸發頁面刷新）
+# 靜態進度顯示（不會觸發頁面刷新）
 def display_static_progress(analysis_id: str) -> bool:
     """
     顯示靜態進度（不自動刷新）
     返回是否已完成
     """
-    import streamlit as st
-
     # 使用session state避免重複創建組件
     progress_key = f"progress_display_{analysis_id}"
     if progress_key not in st.session_state:
@@ -321,9 +319,8 @@ def display_static_progress(analysis_id: str) -> bool:
 
     status = progress_data.get('status', 'running')
 
-    # 調試信息（可以在生產環境中移除）
-    import datetime
-    current_time = datetime.datetime.now().strftime('%H:%M:%S')
+    from datetime import datetime as dt_now
+    current_time = dt_now.now().strftime('%H:%M:%S')
     logger.debug(f"[進度顯示] {current_time} - 狀態: {status}, 進度: {progress_data.get('progress_percentage', 0):.1f}%")
 
     # 顯示基本信息（移除分析ID顯示）
@@ -448,8 +445,6 @@ def display_unified_progress(analysis_id: str, show_refresh_controls: bool = Tru
     統一的進度顯示函數，避免重複元素
     返回是否已完成
     """
-    import streamlit as st
-
     # 簡化邏輯：直接調用顯示函數，通過參數控制是否顯示刷新按鈕
     # 調用方負責確保只在需要的地方傳入show_refresh_controls=True
     return display_static_progress_with_controls(analysis_id, show_refresh_controls)
@@ -459,7 +454,6 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
     """
     顯示靜態進度，可控制是否顯示刷新控件
     """
-    import streamlit as st
     from web.utils.async_progress_tracker import get_progress_by_id
 
     # 獲取進度數據
