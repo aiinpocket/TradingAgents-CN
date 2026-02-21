@@ -56,8 +56,8 @@ class UnifiedNewsAnalyzer:
         # 統一使用美股新聞取得方法
         result = self._get_us_share_news(stock_code, max_news, model_info)
         
-        logger.info(f"[統一新聞工具] 新聞取得完成，結果長度: {len(result)} 字符")
-        logger.info(f"[統一新聞工具] 返回結果預覽 (前1000字符): {result[:1000]}")
+        logger.info(f"[統一新聞工具] 新聞取得完成，結果長度: {len(result)} 字元")
+        logger.info(f"[統一新聞工具] 返回結果預覽 (前1000字元): {result[:1000]}")
 
         if not result or len(result.strip()) < 50:
             logger.warning("[統一新聞工具] 返回結果異常短或為空！")
@@ -108,7 +108,7 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] OpenAI美股新聞取得成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] OpenAI美股新聞取得成功: {len(result)} 字元")
                     return self._format_news_result(result, "OpenAI美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] OpenAI美股新聞取得失敗: {e}")
@@ -121,7 +121,7 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] Google美股新聞取得成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] Google美股新聞取得成功: {len(result)} 字元")
                     return self._format_news_result(result, "Google美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] Google美股新聞取得失敗: {e}")
@@ -133,7 +133,7 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_finnhub_news.invoke({"symbol": stock_code, "max_results": min(max_news, 50)})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] FinnHub美股新聞取得成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] FinnHub美股新聞取得成功: {len(result)} 字元")
                     return self._format_news_result(result, "FinnHub美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] FinnHub美股新聞取得失敗: {e}")
@@ -144,12 +144,12 @@ class UnifiedNewsAnalyzer:
         """格式化新聞結果"""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        logger.info(f"[統一新聞工具] 新聞內容長度: {len(news_content)} 字符")
+        logger.info(f"[統一新聞工具] 新聞內容長度: {len(news_content)} 字元")
 
         formatted_result = f"""
 === 新聞資料來源: {source} ===
 取得時間: {timestamp}
-資料長度: {len(news_content)} 字符
+資料長度: {len(news_content)} 字元
 
 === 新聞內容 ===
 {news_content}

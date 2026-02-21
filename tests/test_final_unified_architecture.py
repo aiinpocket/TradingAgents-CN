@@ -198,7 +198,7 @@ def test_unified_tools_functionality():
                     print(f"     統一基本面工具正確處理{expected_market}")
                 else:
                     print(f"     統一基本面工具處理結果可能有問題")
-                    print(f"    結果前200字符: {result[:200]}...")
+                    print(f"    結果前200字元: {result[:200]}...")
                     
             except Exception as e:
                 print(f"     統一基本面工具呼叫失敗: {e}")

@@ -114,8 +114,8 @@ class ConfigManager:
         
         OpenAI API密鑰格式規則：
         1. 以 'sk-' 開頭
-        2. 總長度通常為51個字符
-        3. 包含字母、數字和可能的特殊字符
+        2. 總長度通常為51個字元
+        3. 包含字母、數字和可能的特殊字元
         
         Args:
             api_key: 要驗證的API密鑰
@@ -130,11 +130,11 @@ class ConfigManager:
         if not api_key.startswith('sk-'):
             return False
         
-        # 檢查長度（OpenAI密鑰通常為51個字符）
+        # 檢查長度（OpenAI密鑰通常為51個字元）
         if len(api_key) != 51:
             return False
         
-        # 檢查格式：sk- 後面應該是48個字符的字母數字組合
+        # 檢查格式：sk- 後面應該是48個字元的字母數字組合
         pattern = r'^sk-[A-Za-z0-9]{48}$'
         if not re.match(pattern, api_key):
             return False

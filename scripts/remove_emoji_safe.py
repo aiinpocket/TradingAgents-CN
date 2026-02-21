@@ -34,7 +34,7 @@ EMOJI_PATTERN = re.compile(
     "\U0000303D"             # Part Alternation Mark
     "\U00003297"             # Circled Ideograph Congratulation
     "\U00003299"             # Circled Ideograph Secret
-    # 保留 (c) 和 (R) 符號 - 這些是合法文字符號
+    # 保留 (c) 和 (R) 符號 - 這些是合法文字元號
     "\U0000200D"             # ZWJ
     "\U000020E3"             # Combining Enclosing Keycap
     "\U0000231A-\U0000231B"  # Watch, Hourglass

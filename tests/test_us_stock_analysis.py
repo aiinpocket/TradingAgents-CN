@@ -52,7 +52,7 @@ def test_us_stock_market_analysis():
         
         if len(result['market_report']) > 100:
             print(f" 報告內容正常")
-            print(f"報告前300字符:")
+            print(f"報告前300字元:")
             print(result['market_report'][:300])
         else:
             print(f" 報告內容異常:")
@@ -113,7 +113,7 @@ def test_us_stock_fundamentals_analysis():
         
         if len(result['fundamentals_report']) > 100:
             print(f" 報告內容正常")
-            print(f"報告前300字符:")
+            print(f"報告前300字元:")
             print(result['fundamentals_report'][:300])
         else:
             print(f" 報告內容異常:")

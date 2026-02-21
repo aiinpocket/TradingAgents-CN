@@ -626,7 +626,7 @@ def validate_analysis_params(stock_symbol, analysis_date, analysts, research_dep
     if not stock_symbol or len(stock_symbol.strip()) == 0:
         errors.append("股票代碼不能為空")
     elif len(stock_symbol.strip()) > 10:
-        errors.append("股票代碼長度不能超過10個字符")
+        errors.append("股票代碼長度不能超過10個字元")
     else:
         # 驗證美股代碼格式
         symbol = stock_symbol.strip()

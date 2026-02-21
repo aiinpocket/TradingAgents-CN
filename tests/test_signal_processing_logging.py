@@ -62,7 +62,7 @@ def test_signal_processing_logging():
             
             print(f" [測試] 呼叫信號處理器...")
             print(f"   股票代碼: {stock_symbol}")
-            print(f"   信號長度: {len(mock_signal)} 字符")
+            print(f"   信號長度: {len(mock_signal)} 字元")
             
             try:
                 # 呼叫信號處理器（這裡應該會觸發日誌記錄）

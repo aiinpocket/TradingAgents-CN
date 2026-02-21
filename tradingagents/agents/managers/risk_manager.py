@@ -68,10 +68,10 @@ def create_risk_manager(llm, memory):
                 if response and hasattr(response, 'content') and response.content:
                     response_content = response.content.strip()
                     if len(response_content) > 10:  # 確保回應有實質內容
-                        logger.info(f"[Risk Manager] LLM呼叫成功，生成決策長度: {len(response_content)} 字符")
+                        logger.info(f"[Risk Manager] LLM呼叫成功，生成決策長度: {len(response_content)} 字元")
                         break
                     else:
-                        logger.warning(f"[Risk Manager] LLM回應內容過短: {len(response_content)} 字符")
+                        logger.warning(f"[Risk Manager] LLM回應內容過短: {len(response_content)} 字元")
                         response_content = ""
                 else:
                     logger.warning("[Risk Manager] LLM回應為空或無效")
@@ -118,7 +118,7 @@ def create_risk_manager(llm, memory):
             "count": risk_debate_state["count"],
         }
 
-        logger.info(f"[Risk Manager] 最終決策生成完成，內容長度: {len(response_content)} 字符")
+        logger.info(f"[Risk Manager] 最終決策生成完成，內容長度: {len(response_content)} 字元")
         
         return {
             "risk_debate_state": new_risk_debate_state,

@@ -118,7 +118,7 @@ def start_web_app():
     ]
     
     print(" Web應用啟動中...")
-    print(" 瀏覽器將自動打開 http://localhost:8501")
+    print(" 瀏覽器將自動開啟 http://localhost:8501")
     print("[STOP] 按 Ctrl+C 停止應用")
     print("=" * 50)
     

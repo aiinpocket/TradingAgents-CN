@@ -64,11 +64,11 @@ def setup_mongodb_windows():
        - 勾選 "Install MongoDB Compass" (可選的圖形介面)
     
     3. 啟動MongoDB服務:
-       - 打開服務管理器 (services.msc)
+       - 開啟服務管理器 (services.msc)
        - 找到 "MongoDB" 服務並啟動
        
     4. 驗證安裝:
-       - 打開命令行，執行: mongosh
+       - 開啟命令行，執行: mongosh
        - 如果連接成功，說明安裝正確
     
     預設連接地址: mongodb://localhost:27017
@@ -86,7 +86,7 @@ def setup_redis_windows():
     2. 解壓到目錄 (如 C:\\Redis)
     
     3. 啟動Redis 伺服器:
-       - 打開命令行，進入Redis目錄
+       - 開啟命令行，進入Redis目錄
        - 執行: redis-server.exe
        
     4. 測試Redis連接:

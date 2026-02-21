@@ -108,7 +108,7 @@ def test_get_finnhub_news():
         look_back_days=7
     )
     
-    print(f"函式返回結果: {result[:200]}...")  # 只顯示前200個字符
+    print(f"函式返回結果: {result[:200]}...")  # 只顯示前200個字元
     print(f"是否包含錯誤訊息: {'無法取得' in result}")
 
 def create_sample_data_structure():

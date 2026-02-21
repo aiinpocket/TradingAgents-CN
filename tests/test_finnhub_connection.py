@@ -42,7 +42,7 @@ def test_finnhub_api():
             print(f" FINNHUB新聞API呼叫成功")
             print(f"新聞資料長度: {len(news_result) if news_result else 0}")
             if news_result and len(news_result) > 100:
-                print(f"新聞內容前200字符:")
+                print(f"新聞內容前200字元:")
                 print(news_result[:200])
             else:
                 print(f"新聞內容: {news_result}")
@@ -60,7 +60,7 @@ def test_finnhub_api():
             print(f" Yahoo Finance API呼叫成功")
             print(f"股票資料長度: {len(stock_result) if stock_result else 0}")
             if stock_result and len(stock_result) > 100:
-                print(f"股票資料前200字符:")
+                print(f"股票資料前200字元:")
                 print(stock_result[:200])
             else:
                 print(f"股票資料: {stock_result}")
@@ -77,7 +77,7 @@ def test_finnhub_api():
             print(f" OpenAI基本面API呼叫成功")
             print(f"基本面資料長度: {len(fundamentals_result) if fundamentals_result else 0}")
             if fundamentals_result and len(fundamentals_result) > 100:
-                print(f"基本面資料前200字符:")
+                print(f"基本面資料前200字元:")
                 print(fundamentals_result[:200])
             else:
                 print(f"基本面資料: {fundamentals_result}")

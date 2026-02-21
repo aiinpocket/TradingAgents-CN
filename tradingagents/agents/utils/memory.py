@@ -110,7 +110,7 @@ class FinancialSituationMemory:
         self.llm_provider = config.get("llm_provider", "openai").lower()
 
         # 配置向量快取的長度限制（向量快取預設啟用長度檢查）
-        self.max_embedding_length = int(os.getenv('MAX_EMBEDDING_CONTENT_LENGTH', '50000'))  # 預設50K字符
+        self.max_embedding_length = int(os.getenv('MAX_EMBEDDING_CONTENT_LENGTH', '50000'))  # 預設50K字元
         self.enable_embedding_length_check = os.getenv('ENABLE_EMBEDDING_LENGTH_CHECK', 'true').lower() == 'true'  # 向量快取預設啟用
         
         # 根據LLM提供商選擇嵌入模型和客戶端
@@ -148,12 +148,12 @@ class FinancialSituationMemory:
         if len(sentences) > 1:
             truncated = ""
             for sentence in sentences:
-                if len(truncated + sentence + '。') <= max_length - 50:  # 留50字符餘量
+                if len(truncated + sentence + '。') <= max_length - 50:  # 留50字元餘量
                     truncated += sentence + '。'
                 else:
                     break
             if len(truncated) > max_length // 2:  # 至少保留一半內容
-                logger.info(f"智慧截斷：在句子邊界截斷，保留{len(truncated)}/{len(text)}字符")
+                logger.info(f"智慧截斷：在句子邊界截斷，保留{len(truncated)}/{len(text)}字元")
                 return truncated, True
         
         # 嘗試在段落邊界截斷
@@ -166,14 +166,14 @@ class FinancialSituationMemory:
                 else:
                     break
             if len(truncated) > max_length // 2:
-                logger.info(f"智慧截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字符")
+                logger.info(f"智慧截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字元")
                 return truncated, True
         
         # 最後選擇：保留前半部分和後半部分的關鍵資訊
         front_part = text[:max_length//2]
-        back_part = text[-(max_length//2-100):]  # 留100字符給連接符
+        back_part = text[-(max_length//2-100):]  # 留100字元給連接符
         truncated = front_part + "\n...[內容截斷]...\n" + back_part
-        logger.warning(f"強制截斷：保留首尾關鍵資訊，{len(text)}字符截斷為{len(truncated)}字符")
+        logger.warning(f"強制截斷：保留首尾關鍵資訊，{len(text)}字元截斷為{len(truncated)}字元")
         return truncated, True
 
     def get_embedding(self, text):
@@ -197,7 +197,7 @@ class FinancialSituationMemory:
         
         # 檢查是否啟用長度限制
         if self.enable_embedding_length_check and text_length > self.max_embedding_length:
-            logger.warning(f"文本過長({text_length:,}字符 > {self.max_embedding_length:,}字符)，跳過向量化")
+            logger.warning(f"文本過長({text_length:,}字元 > {self.max_embedding_length:,}字元)，跳過向量化")
             # 儲存跳過資訊
             self._last_text_info = {
                 'original_length': text_length,
@@ -212,7 +212,7 @@ class FinancialSituationMemory:
         
         # 記錄文本資訊（不進行任何截斷）
         if text_length > 8192:
-            logger.info(f"處理長文本: {text_length}字符，提供商: {self.llm_provider}")
+            logger.info(f"處理長文本: {text_length}字元，提供商: {self.llm_provider}")
         
         # 儲存文本處理資訊
         self._last_text_info = {
@@ -280,7 +280,7 @@ class FinancialSituationMemory:
         return {
             'enabled': self.enable_embedding_length_check,
             'max_embedding_length': self.max_embedding_length,
-            'max_embedding_length_formatted': f"{self.max_embedding_length:,}字符",
+            'max_embedding_length_formatted': f"{self.max_embedding_length:,}字元",
             'provider': self.llm_provider,
             'client_status': 'DISABLED' if self.client == "DISABLED" else 'ENABLED'
         }

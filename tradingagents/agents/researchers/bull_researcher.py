@@ -31,7 +31,7 @@ def create_bull_researcher(llm, memory):
         logger.debug(f"- 情緒報告長度: {len(sentiment_report)}")
         logger.debug(f"- 新聞報告長度: {len(news_report)}")
         logger.debug(f"- 基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"- 基本面報告前200字符: {fundamentals_report[:200]}...")
+        logger.debug(f"- 基本面報告前200字元: {fundamentals_report[:200]}...")
         logger.debug(f"- 股票代碼: {company_name}, 類型: {market_info['market_name']}, 貨幣: {currency}")
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"

@@ -67,7 +67,7 @@ class StockDataCache:
 
         # 內容長度限制配置（檔案快取預設不限制）
         self.content_length_config = {
-            'max_content_length': int(os.getenv('MAX_CACHE_CONTENT_LENGTH', '50000')),  # 50K字符
+            'max_content_length': int(os.getenv('MAX_CACHE_CONTENT_LENGTH', '50000')),  # 50K字元
             'long_text_providers': ['openai', 'anthropic'],  # 支援長文本的提供商
             'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 檔案快取預設不限制
         }
@@ -128,12 +128,12 @@ class StockDataCache:
         available_long_providers = [p for p in available_providers if p in long_text_providers]
         
         if not available_long_providers:
-            logger.warning(f"內容過長({content_length:,}字符 > {max_length:,}字符)且無可用長文本提供商，跳過{data_type}快取")
+            logger.warning(f"內容過長({content_length:,}字元 > {max_length:,}字元)且無可用長文本提供商，跳過{data_type}快取")
             logger.info(f"可用提供商: {available_providers}")
             logger.info(f"長文本提供商: {long_text_providers}")
             return True
         else:
-            logger.info(f"內容較長({content_length:,}字符)但有可用長文本提供商({available_long_providers})，繼續快取")
+            logger.info(f"內容較長({content_length:,}字元)但有可用長文本提供商({available_long_providers})，繼續快取")
             return False
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
@@ -586,7 +586,7 @@ class StockDataCache:
         return {
             'enabled': self.content_length_config['enable_length_check'],
             'max_content_length': self.content_length_config['max_content_length'],
-            'max_content_length_formatted': f"{self.content_length_config['max_content_length']:,}字符",
+            'max_content_length_formatted': f"{self.content_length_config['max_content_length']:,}字元",
             'long_text_providers': long_text_providers,
             'available_providers': available_providers,
             'available_long_providers': available_long_providers,

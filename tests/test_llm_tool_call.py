@@ -49,8 +49,8 @@ def test_direct_call():
         
         logger.info(f"呼叫成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
         logger.info(f"返回結果類型: {type(result)}")
-        logger.info(f"返回結果長度: {len(result)} 字符")
-        logger.info(f"結果前100字符: {result[:100]}...")
+        logger.info(f"返回結果長度: {len(result)} 字元")
+        logger.info(f"結果前100字元: {result[:100]}...")
         return True, result
     except Exception as e:
         logger.error(f"直接呼叫失敗: {e}")
@@ -71,8 +71,8 @@ def test_toolkit_call():
         
         logger.info(f"Toolkit呼叫成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
         logger.info(f"返回結果類型: {type(result)}")
-        logger.info(f"返回結果長度: {len(result)} 字符")
-        logger.info(f"結果前100字符: {result[:100]}...")
+        logger.info(f"返回結果長度: {len(result)} 字元")
+        logger.info(f"結果前100字元: {result[:100]}...")
         return True, result
     except Exception as e:
         logger.error(f"Toolkit呼叫失敗: {e}")
@@ -127,7 +127,7 @@ def simulate_llm_tool_call():
             end_time = datetime.now()
             
             logger.info(f"模擬LLM呼叫成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
-            logger.info(f"返回結果長度: {len(result)} 字符")
+            logger.info(f"返回結果長度: {len(result)} 字元")
             return True, result
         else:
             logger.error(f"函式 {func_name} 不存在於Toolkit中")

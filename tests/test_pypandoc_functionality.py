@@ -98,7 +98,7 @@ def test_markdown_conversion():
         try:
             html_output = pypandoc.convert_text(test_markdown, 'html', format='markdown')
             print(" Markdown → HTML 轉換成功")
-            print(f"   輸出長度: {len(html_output)} 字符")
+            print(f"   輸出長度: {len(html_output)} 字元")
         except Exception as e:
             print(f" Markdown → HTML 轉換失敗: {e}")
             return False
@@ -202,7 +202,7 @@ def test_report_exporter():
         try:
             md_content = exporter.generate_markdown_report(test_results)
             print(" Markdown報告生成成功")
-            print(f"   內容長度: {len(md_content)} 字符")
+            print(f"   內容長度: {len(md_content)} 字元")
         except Exception as e:
             print(f" Markdown報告生成失敗: {e}")
             return False

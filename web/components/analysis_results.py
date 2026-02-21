@@ -218,7 +218,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                                 # 如果是最終決策報告，提取摘要
                                 if report_name == "final_trade_decision":
-                                    # 提取前200個字符作為摘要
+                                    # 提取前200個字元作為摘要
                                     summary_content = content[:200].replace('#', '').replace('*', '').strip()
                                     if len(content) > 200:
                                         summary_content += "..."
@@ -1047,7 +1047,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                                     content = f.read()
                                     report_name = report_file.stem
                                     reports[report_name] = content
-                                    logger.debug(f"[MongoDB保存] 讀取報告: {report_name} ({len(content)} 字符)")
+                                    logger.debug(f"[MongoDB保存] 讀取報告: {report_name} ({len(content)} 字元)")
                             except Exception as e:
                                 logger.debug(f"[MongoDB保存] 讀取報告檔案失敗 {report_file}: {e}")
 

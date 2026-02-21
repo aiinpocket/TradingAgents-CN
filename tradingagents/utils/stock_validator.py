@@ -109,7 +109,7 @@ class StockDataPreparer:
             return StockDataPreparationResult(
                 is_valid=False,
                 stock_code=stock_code,
-                error_message="股票代碼長度不能超過10個字符",
+                error_message="股票代碼長度不能超過10個字元",
                 suggestion="請檢查股票代碼格式"
             )
         

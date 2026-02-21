@@ -252,7 +252,7 @@ def create_fundamentals_analyst(llm, toolkit):
                     'end_date': current_date,
                     'curr_date': current_date
                 })
-                logger.debug(f"統一工具資料取得成功，長度: {len(combined_data)}字符")
+                logger.debug(f"統一工具資料取得成功，長度: {len(combined_data)}字元")
             else:
                 combined_data = "統一基本面分析工具不可用"
                 logger.debug("統一工具未找到")

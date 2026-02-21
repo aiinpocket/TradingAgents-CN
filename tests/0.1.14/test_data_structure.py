@@ -31,7 +31,7 @@ def test_data_structure():
                 reports = result['reports']
                 print(f"   reports內容: {list(reports.keys())}")
                 
-                # 顯示第一個報告的前100個字符
+                # 顯示第一個報告的前100個字元
                 if reports:
                     first_report_key = list(reports.keys())[0]
                     first_report_content = reports[first_report_key]

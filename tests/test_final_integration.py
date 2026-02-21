@@ -64,7 +64,7 @@ def test_final_integration():
             })
             
             if result and len(result) > 100:
-                print(f"   成功取得新聞 ({len(result)} 字符)")
+                print(f"   成功取得新聞 ({len(result)} 字元)")
                 # 檢查是否包含預期內容
                 if case["code"] in result:
                     print(f"   包含股票代碼")

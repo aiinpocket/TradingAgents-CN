@@ -143,7 +143,7 @@ def test_news_analyst_integration():
                     if hasattr(final_message, 'content'):
                         report = final_message.content
                         print(f" 成功取得新聞分析報告")
-                        print(f" 報告長度: {len(report)} 字符")
+                        print(f" 報告長度: {len(report)} 字元")
                         
                         # 顯示報告摘要
                         if len(report) > 300:

@@ -82,7 +82,7 @@ def save_test_content():
         f.write(content)
     
     print(f" 測試內容已保存到 test_content.md")
-    print(f" 內容長度: {len(content)} 字符")
+    print(f" 內容長度: {len(content)} 字元")
     return content
 
 def test_word_conversion(md_content):

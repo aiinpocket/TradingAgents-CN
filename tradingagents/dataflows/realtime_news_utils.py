@@ -450,7 +450,7 @@ class RealtimeNewsAggregator:
         time_taken = (end_time - start_time).total_seconds()
         report_length = len(report)
         
-        logger.info(f"[新聞報告] {ticker} 新聞報告生成完成，耗時: {time_taken:.2f}秒，報告長度: {report_length}字符")
+        logger.info(f"[新聞報告] {ticker} 新聞報告生成完成，耗時: {time_taken:.2f}秒，報告長度: {report_length}字元")
         
         # 記錄時效性資訊
         time_diff_minutes = time_diff.total_seconds() / 60
@@ -507,7 +507,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             # 格式化報告
             logger.info("[新聞分析] 開始格式化新聞報告")
             report = aggregator.format_news_report(news_items, ticker)
-            logger.info(f"[新聞分析] 報告格式化完成，長度: {len(report)} 字符")
+            logger.info(f"[新聞分析] 報告格式化完成，長度: {len(report)} 字元")
             
             total_time_taken = (datetime.now() - start_total_time).total_seconds()
             logger.info(f"[新聞分析] 成功生成 {ticker} 的新聞報告，總耗時 {total_time_taken:.2f} 秒，新聞來源: 實時新聞聚合器")

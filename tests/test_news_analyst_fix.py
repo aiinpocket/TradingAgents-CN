@@ -40,7 +40,7 @@ def test_tool_parameters():
         # 檢查工具是否接受這些參數
         result = toolkit.get_realtime_stock_news.invoke(params)
         print(f"    get_realtime_stock_news 呼叫成功")
-        print(f"    傳回資料長度: {len(result) if result else 0} 字符")
+        print(f"    傳回資料長度: {len(result) if result else 0} 字元")
         
     except Exception as e:
         print(f"    get_realtime_stock_news 呼叫失敗: {e}")
@@ -57,7 +57,7 @@ def test_tool_parameters():
         # 檢查工具是否接受這些參數
         result = toolkit.get_google_news.invoke(params)
         print(f"    get_google_news 呼叫成功")
-        print(f"    傳回資料長度: {len(result) if result else 0} 字符")
+        print(f"    傳回資料長度: {len(result) if result else 0} 字元")
         
     except Exception as e:
         print(f"    get_google_news 呼叫失敗: {e}")

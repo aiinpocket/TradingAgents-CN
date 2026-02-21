@@ -193,7 +193,7 @@ docker-compose up -d
 ```
 
 ### 2. 存取介面
-打開瀏覽器存取: http://localhost:8501
+開啟瀏覽器存取: http://localhost:8501
 
 ### 3. 捕獲截圖
 按照以下場景進行截圖:

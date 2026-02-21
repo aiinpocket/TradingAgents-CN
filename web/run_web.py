@@ -210,7 +210,7 @@ def main():
     
     logger.info(f"執行命令: {' '.join(cmd)}")
     logger.info("\n Web應用啟動中...")
-    logger.info("瀏覽器將自動打開 http://localhost:8501")
+    logger.info("瀏覽器將自動開啟 http://localhost:8501")
     logger.info("按 Ctrl+C 停止應用")
     logger.info("=")
     

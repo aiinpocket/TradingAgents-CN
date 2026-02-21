@@ -208,7 +208,7 @@ def local_install():
     
     # 啟動應用
     print_colored(" 啟動應用...", Colors.BLUE)
-    print_colored("應用將在瀏覽器中打開: http://localhost:8501", Colors.GREEN)
+    print_colored("應用將在瀏覽器中開啟: http://localhost:8501", Colors.GREEN)
     
     # 提供啟動命令
     if platform.system() == "Windows":

@@ -85,22 +85,22 @@ class ReportExporter:
             setup_xvfb_display()
     
     def _clean_text_for_markdown(self, text: str) -> str:
-        """清理文本中可能導致YAML解析問題的字符"""
+        """清理文本中可能導致YAML解析問題的字元"""
         if not text:
             return "N/A"
 
-        # 轉換為字串並清理特殊字符
+        # 轉換為字串並清理特殊字元
         text = str(text)
 
-        # 移除可能導致YAML解析問題的字符
+        # 移除可能導致YAML解析問題的字元
         text = text.replace('&', '&amp;') # HTML轉義
         text = text.replace('<', '&lt;')
         text = text.replace('>', '&gt;')
         text = text.replace('"', '&quot;')
         text = text.replace("'", '&#39;')
 
-        # 移除可能的YAML特殊字符
-        text = text.replace('---', '—') # 替換三個連字符
+        # 移除可能的YAML特殊字元
+        text = text.replace('---', '—') # 替換三個連字元
         text = text.replace('...', '…') # 替換三個點
 
         return text
@@ -110,7 +110,7 @@ class ReportExporter:
         if not content:
             return ""
 
-        # 確保內容不以可能被誤認為YAML的字符開頭
+        # 確保內容不以可能被誤認為YAML的字元開頭
         content = content.strip()
 
         # 如果第一行看起來像YAML分隔符，添加空行
@@ -118,13 +118,13 @@ class ReportExporter:
         if lines and (lines[0].startswith('---') or lines[0].startswith('...')):
             content = '\n'+ content
 
-        # 替換可能導致YAML解析問題的字符序列，但保護表格分隔符
+        # 替換可能導致YAML解析問題的字元序列，但保護表格分隔符
         # 先保護表格分隔符
         content = content.replace('|------|------|', '|TABLESEP|TABLESEP|')
         content = content.replace('|------|', '|TABLESEP|')
 
-        # 然後替換其他的三連字符
-        content = content.replace('---', '—') # 替換三個連字符
+        # 然後替換其他的三連字元
+        content = content.replace('---', '—') # 替換三個連字元
         content = content.replace('...', '…') # 替換三個點
 
         # 恢復表格分隔符
@@ -322,7 +322,7 @@ class ReportExporter:
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
         md_content = self.generate_markdown_report(results)
-        logger.info(f"Markdown內容生成完成，長度: {len(md_content)} 字符")
+        logger.info(f"Markdown內容生成完成，長度: {len(md_content)} 字元")
 
         try:
             logger.info("建立暫存檔案用於docx輸出...")
@@ -339,7 +339,7 @@ class ReportExporter:
 
             # 清理內容避免YAML解析問題
             cleaned_content = self._clean_markdown_for_pandoc(md_content)
-            logger.info(f"內容清理完成，清理後長度: {len(cleaned_content)} 字符")
+            logger.info(f"內容清理完成，清理後長度: {len(cleaned_content)} 字元")
 
             # 使用測試成功的參數進行轉換
             pypandoc.convert_text(
@@ -380,7 +380,7 @@ class ReportExporter:
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
         md_content = self.generate_markdown_report(results)
-        logger.info(f"Markdown內容生成完成，長度: {len(md_content)} 字符")
+        logger.info(f"Markdown內容生成完成，長度: {len(md_content)} 字元")
 
         # 簡化的PDF引擎列表，優先使用最可能成功的
         pdf_engines = [
@@ -487,7 +487,7 @@ class ReportExporter:
             if format_type == 'markdown':
                 logger.info("生成Markdown報告...")
                 content = self.generate_markdown_report(results)
-                logger.info(f"Markdown報告生成成功，長度: {len(content)} 字符")
+                logger.info(f"Markdown報告生成成功，長度: {len(content)} 字元")
                 return content.encode('utf-8')
 
             elif format_type == 'docx':
@@ -738,7 +738,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                         with open(file_path, 'r', encoding='utf-8') as f:
                             content = f.read()
                             reports_content[module_key] = content
-                            logger.info(f"[MongoDB除錯] 成功讀取 {module_key}: {len(content)} 字符")
+                            logger.info(f"[MongoDB除錯] 成功讀取 {module_key}: {len(content)} 字元")
                     except Exception as e:
                         logger.warning(f"讀取報告檔案失敗 {file_path}: {e}")
 

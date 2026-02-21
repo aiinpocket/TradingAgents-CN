@@ -100,7 +100,7 @@ def test_docker_pdf_generation() -> bool:
         <body>
             <h1>Docker PDF 測試</h1>
             <p>這是在Docker環境中生成的PDF測試檔案。</p>
-            <p>中文字符測試：你好世界！</p>
+            <p>中文字元測試：你好世界！</p>
         </body>
         </html>
         """

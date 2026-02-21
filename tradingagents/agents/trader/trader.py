@@ -26,7 +26,7 @@ def create_trader(llm, memory):
         logger.debug(f"交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
         logger.debug(f"貨幣符號: {currency_symbol}")
         logger.debug(f"基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"基本面報告前200字符: {fundamentals_report[:200]}...")
+        logger.debug(f"基本面報告前200字元: {fundamentals_report[:200]}...")
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
 
@@ -99,7 +99,7 @@ def create_trader(llm, memory):
 
         logger.debug("LLM呼叫完成")
         logger.debug(f"交易員回覆長度: {len(result.content)}")
-        logger.debug(f"交易員回覆前500字符: {result.content[:500]}...")
+        logger.debug(f"交易員回覆前500字元: {result.content[:500]}...")
         logger.debug("===== 交易員節點結束 =====")
 
         return {

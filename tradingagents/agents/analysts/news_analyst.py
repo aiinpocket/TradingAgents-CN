@@ -183,7 +183,7 @@ def create_news_analyst(llm, toolkit):
                     forced_news = unified_news_tool(stock_code=ticker, max_news=10, model_info="")
                     
                     if forced_news and len(forced_news.strip()) > 100:
-                        logger.info(f"[新聞分析師] 強制取得新聞成功: {len(forced_news)} 字符")
+                        logger.info(f"[新聞分析師] 強制取得新聞成功: {len(forced_news)} 字元")
                         
                         # 基於真實新聞資料重新生成分析
                         forced_prompt = f"""
@@ -203,7 +203,7 @@ def create_news_analyst(llm, toolkit):
                         
                         if hasattr(forced_result, 'content') and forced_result.content:
                             report = forced_result.content
-                            logger.info(f"[新聞分析師] 強制補救成功，生成基於真實資料的報告，長度: {len(report)} 字符")
+                            logger.info(f"[新聞分析師] 強制補救成功，生成基於真實資料的報告，長度: {len(report)} 字元")
                         else:
                             logger.warning("[新聞分析師] 強制補救失敗，使用原始結果")
                             report = result.content
@@ -226,7 +226,7 @@ def create_news_analyst(llm, toolkit):
         from langchain_core.messages import AIMessage
         clean_message = AIMessage(content=report)
         
-        logger.info(f"[新聞分析師] 返回清潔訊息，報告長度: {len(report)} 字符")
+        logger.info(f"[新聞分析師] 返回清潔訊息，報告長度: {len(report)} 字元")
 
         return {
             "messages": [clean_message],
