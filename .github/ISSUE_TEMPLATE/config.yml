@@ -1,15 +1,15 @@
 blank_issues_enabled: false
 contact_links:
   - name: "Project Documentation"
-    url: https://github.com/hsliuping/TradingAgents-CN/blob/main/README.md
+    url: https://github.com/aiinpocket/TradingAgents-CN/blob/main/README.md
     about: "View complete project documentation and usage guide"
 
   - name: "Docker Deployment Guide"
-    url: https://github.com/hsliuping/TradingAgents-CN/blob/main/docs/DOCKER_GUIDE.md
+    url: https://github.com/aiinpocket/TradingAgents-CN/blob/main/docs/DOCKER_GUIDE.md
     about: "Detailed guide for Docker containerized deployment"
 
   - name: "Discussions"
-    url: https://github.com/hsliuping/TradingAgents-CN/discussions
+    url: https://github.com/aiinpocket/TradingAgents-CN/discussions
     about: "Technical discussions, idea sharing and community communication"
 
   - name: "Original Project"

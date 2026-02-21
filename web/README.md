@@ -249,7 +249,7 @@ streamlit run web/app.py --logger.level=debug
 
 1. 查看 [完整文件](../docs/)
 2. 執行 [測試程式](../tests/test_web_fix.py)
-3. 提交 [GitHub Issue](https://github.com/hsliuping/TradingAgents-CN/issues)
+3. 提交 [GitHub Issue](https://github.com/aiinpocket/TradingAgents-CN/issues)
 
 ## 開發指南
 

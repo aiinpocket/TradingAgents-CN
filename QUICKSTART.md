@@ -11,7 +11,7 @@
 
 ```bash
 # 1. 複製專案
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 配置環境變數
@@ -56,7 +56,7 @@ docker-compose up -d --build
 
 ```bash
 # 1. 複製專案
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 建立虛擬環境
@@ -247,10 +247,10 @@ docker-compose restart
 
 ### 參與貢獻
 
-- [回報問題](https://github.com/hsliuping/TradingAgents-CN/issues)
-- [功能建議](https://github.com/hsliuping/TradingAgents-CN/discussions)
-- [提交程式碼](https://github.com/hsliuping/TradingAgents-CN/pulls)
-- [完善文件](https://github.com/hsliuping/TradingAgents-CN/tree/develop/docs)
+- [回報問題](https://github.com/aiinpocket/TradingAgents-CN/issues)
+- [功能建議](https://github.com/aiinpocket/TradingAgents-CN/discussions)
+- [提交程式碼](https://github.com/aiinpocket/TradingAgents-CN/pulls)
+- [完善文件](https://github.com/aiinpocket/TradingAgents-CN/tree/develop/docs)
 
 ---
 
@@ -258,7 +258,7 @@ docker-compose restart
 
 **提示**: 建議先用熟悉的美股代碼進行測試，體驗完整的分析流程。
 
-**技術支援**: [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
+**技術支援**: [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
 
 ---
 

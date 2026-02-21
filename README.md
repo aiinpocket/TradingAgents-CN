@@ -349,7 +349,7 @@ v1.0.0-preview
 
 ```bash
 # 1. 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 
@@ -458,7 +458,7 @@ python start_web.py
 
 ```bash
 # 1. 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 
@@ -1360,7 +1360,7 @@ TradingAgents-CN
 
 ## 
 
-- **GitHub Issues**: [](https://github.com/hsliuping/TradingAgents-CN/issues)
+- **GitHub Issues**: [](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - **Email**: hsliup@163.com
 - ****: [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents)
 - ****: [](docs/)
@@ -1380,6 +1380,6 @@ TradingAgents-CN
 
 ** Star**
 
-[ Star this repo](https://github.com/hsliuping/TradingAgents-CN) | [ Fork this repo](https://github.com/hsliuping/TradingAgents-CN/fork) | [ Read the docs](./docs/)
+[ Star this repo](https://github.com/aiinpocket/TradingAgents-CN) | [ Fork this repo](https://github.com/aiinpocket/TradingAgents-CN/fork) | [ Read the docs](./docs/)
 
 </div>

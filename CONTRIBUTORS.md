@@ -37,11 +37,11 @@
 
 - **[@YifanHere](https://github.com/YifanHere)**
   - **主要貢獻**：
-    -  **CLI代碼質量改進** ([PR #158](https://github.com/hsliuping/TradingAgents-CN/pull/158))
+    -  **CLI代碼質量改進** ([PR #158](https://github.com/aiinpocket/TradingAgents-CN/pull/158))
       - 優化命令行界面的用戶體驗和錯誤處理機制
       - 提升了命令行工具的穩定性和用戶友好性
       - 貢獻時間：2025年
-    -  **關鍵Bug修複** ([PR #173](https://github.com/hsliuping/TradingAgents-CN/pull/173))
+    -  **關鍵Bug修複** ([PR #173](https://github.com/aiinpocket/TradingAgents-CN/pull/173))
       - 發現並報告了關鍵的 `KeyError: 'volume'` 問題
       - 提供了詳細的問題分析、根因定位和修複方案
       - 顯著提升了Tushare數據源的系統穩定性，解決了緩存數據標準化問題
@@ -128,9 +128,9 @@
 
 如果您想成為貢獻者或有任何問題，請通過以下方式聯系我們：
 
-- **GitHub Issues**: [提交問題或建議](https://github.com/hsliuping/TradingAgents-CN/issues)
-- **GitHub Discussions**: [參與社區討論](https://github.com/hsliuping/TradingAgents-CN/discussions)
-- **Pull Requests**: [提交代碼貢獻](https://github.com/hsliuping/TradingAgents-CN/pulls)
+- **GitHub Issues**: [提交問題或建議](https://github.com/aiinpocket/TradingAgents-CN/issues)
+- **GitHub Discussions**: [參與社區討論](https://github.com/aiinpocket/TradingAgents-CN/discussions)
+- **Pull Requests**: [提交代碼貢獻](https://github.com/aiinpocket/TradingAgents-CN/pulls)
 - 加入到ＱＱ群：782124367
 
 ##  致謝
