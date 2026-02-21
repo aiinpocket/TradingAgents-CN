@@ -500,9 +500,9 @@ class ReportExporter:
 
                 # 清理可能存在的臨時文件
                 try:
-                    if 'output_file'in locals() and os.path.exists(output_file):
+                    if 'output_file' in locals() and os.path.exists(output_file):
                         os.unlink(output_file)
-                except Exception as e:
+                except OSError:
                     pass
 
                 continue

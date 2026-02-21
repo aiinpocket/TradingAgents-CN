@@ -93,14 +93,14 @@ class SmartSessionManager:
         if self.use_redis and self.redis_manager:
             try:
                 self.redis_manager.clear_analysis_state()
-            except Exception as e:
+            except Exception:
                 pass
-        
+
         # 清除文件中的數據
         if self.file_manager:
             try:
                 self.file_manager.clear_analysis_state()
-            except Exception as e:
+            except Exception:
                 pass
     
     def get_debug_info(self) -> Dict[str, Any]:
@@ -158,7 +158,7 @@ def get_persistent_analysis_id() -> Optional[str]:
             if latest_id:
                 st.session_state.current_analysis_id = latest_id
                 return latest_id
-        except Exception as e:
+        except Exception:
             pass
         
         return None

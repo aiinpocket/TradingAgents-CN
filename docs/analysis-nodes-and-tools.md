@@ -530,7 +530,7 @@ from tradingagents.graph.trading_graph import TradingAgentsGraph
 graph = TradingAgentsGraph(
  selected_analysts=["market", "fundamentals"],
  config={
- "llm_provider": "google",
+ "llm_provider": "openai",
  "research_depth": 2,
  "online_tools": True
  }
@@ -688,7 +688,7 @@ tracker = AsyncProgressTracker(
  analysis_id="analysis_123",
  analysts=["market", "fundamentals"],
  research_depth=2,
- llm_provider="google"
+ llm_provider="openai"
 )
 ```
 

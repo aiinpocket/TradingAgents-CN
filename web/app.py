@@ -42,7 +42,7 @@ from utils.smart_session_manager import get_persistent_analysis_id, set_persiste
 # 頁面設定
 st.set_page_config(
     page_title="TradingAgents",
-    page_icon="",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items=None

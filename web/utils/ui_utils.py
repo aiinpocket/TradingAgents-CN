@@ -1,141 +1,31 @@
 #!/usr/bin/env python3
 """
 UI工具函數
-提供通用的UI組件和樣式
+提供通用的UI組件和樣式，統一管理所有 Streamlit 隱藏元素的 CSS
 """
 
 import streamlit as st
 
+
 def apply_hide_deploy_button_css():
     """
-    應用隱藏Deploy按鈕和工具列的CSS樣式
-    在所有頁面中調用此函數以確保一致的UI體驗
+    隱藏 Streamlit 預設 UI 元素（工具列、Deploy 按鈕、頁腳等）
+    在子頁面（config_management, cache_management, token_statistics）中調用
+    主頁面 app.py 已在全域樣式中包含這些規則，無需重複調用
     """
     st.markdown("""
     <style>
-        /* 隱藏Streamlit頂部工具列和Deploy按鈕 - 多種選擇器確保兼容性 */
-        .stAppToolbar {
-            display: none !important;
-        }
-        
-        header[data-testid="stHeader"] {
-            display: none !important;
-        }
-        
-        .stDeployButton {
-            display: none !important;
-        }
-        
-        /* 新版本Streamlit的Deploy按鈕選擇器 */
-        [data-testid="stToolbar"] {
-            display: none !important;
-        }
-        
-        [data-testid="stDecoration"] {
-            display: none !important;
-        }
-        
-        [data-testid="stStatusWidget"] {
-            display: none !important;
-        }
-        
-        /* 隱藏整個頂部區域 */
-        .stApp > header {
-            display: none !important;
-        }
-        
-        .stApp > div[data-testid="stToolbar"] {
-            display: none !important;
-        }
-        
-        /* 隱藏主菜單按鈕 */
-        #MainMenu {
-            visibility: hidden !important;
-            display: none !important;
-        }
-        
-        /* 隱藏頁腳 */
-        footer {
-            visibility: hidden !important;
-            display: none !important;
-        }
-        
-        /* 隱藏"Made with Streamlit"標識 */
+        .stAppToolbar,
+        header[data-testid="stHeader"],
+        .stDeployButton,
+        [data-testid="stToolbar"],
+        [data-testid="stDecoration"],
+        [data-testid="stStatusWidget"],
+        .stApp > header,
+        #MainMenu,
+        footer,
         .viewerBadge_container__1QSob {
             display: none !important;
-        }
-        
-        /* 隱藏所有可能的工具列元素 */
-        div[data-testid="stToolbar"] {
-            display: none !important;
-        }
-        
-        /* 隱藏右上角的所有按鈕 */
-        .stApp > div > div > div > div > section > div {
-            padding-top: 0 !important;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-def apply_common_styles():
-    """
-    應用通用的頁面樣式
-    包括隱藏Deploy按鈕和其他美化樣式
-    """
-    # 隱藏Deploy按鈕
-    apply_hide_deploy_button_css()
-    
-    # 其他通用樣式
-    st.markdown("""
-    <style>
-        /* 應用樣式 */
-        .main-header {
-            background-color: #0F172A;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 2rem;
-            color: white;
-            text-align: center;
-        }
-
-        .metric-card {
-            background: #F8FAFC;
-            padding: 1rem;
-            border-radius: 6px;
-            border-left: 3px solid #0369A1;
-            margin: 0.5rem 0;
-        }
-
-        .analysis-section {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 6px;
-            border: 1px solid #E2E8F0;
-            margin: 1rem 0;
-        }
-        
-        .success-box {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .warning-box {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .error-box {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            padding: 1rem;
-            margin: 1rem 0;
         }
     </style>
     """, unsafe_allow_html=True)

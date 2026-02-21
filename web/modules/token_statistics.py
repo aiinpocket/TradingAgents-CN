@@ -431,7 +431,7 @@ def main():
     """主函數"""
     st.set_page_config(
         page_title="Token統計 - TradingAgents",
-        page_icon="",
+        page_icon=None,
         layout="wide"
     )
     

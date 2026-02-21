@@ -29,7 +29,7 @@ except ImportError as e:
 def main():
     st.set_page_config(
         page_title="緩存管理 - TradingAgents",
-        page_icon="",
+        page_icon=None,
         layout="wide"
     )
     

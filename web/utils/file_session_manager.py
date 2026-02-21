@@ -76,11 +76,11 @@ class FileSessionManager:
                     file_age = current_time - session_file.stat().st_mtime
                     if file_age > max_age_seconds:
                         session_file.unlink()
-                except Exception as e:
+                except OSError:
                     continue
-                    
-        except Exception as e:
-            pass  # 清理失敗不影響主要功能
+
+        except OSError:
+            pass
     
     def save_analysis_state(self, analysis_id: str, status: str = "running",
                            stock_symbol: str = "", market_type: str = "",

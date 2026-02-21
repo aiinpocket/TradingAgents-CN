@@ -390,8 +390,8 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if TOKEN_TRACKING_ENABLED:
             try:
                 total_cost = token_tracker.get_session_cost(session_id)
-            except Exception as e:
-                pass
+            except Exception:
+                logger.debug("Token 成本查詢失敗，使用預設值 0")
 
         logger_manager.log_analysis_complete(
             logger, stock_symbol, "comprehensive_analysis", session_id,

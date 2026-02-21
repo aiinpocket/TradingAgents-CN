@@ -551,7 +551,7 @@ def main():
     """主函數"""
     st.set_page_config(
         page_title="配置管理 - TradingAgents",
-        page_icon="",
+        page_icon=None,
         layout="wide"
     )
     

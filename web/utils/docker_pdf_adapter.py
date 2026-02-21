@@ -24,7 +24,7 @@ def is_docker_environment() -> bool:
             content = f.read()
             if 'docker' in content or 'containerd' in content:
                 return True
-    except Exception as e:
+    except (OSError, IOError):
         pass
     
     # 檢查環境變量
@@ -40,10 +40,10 @@ def setup_xvfb_display():
         try:
             result = subprocess.run(['pgrep', 'Xvfb'], capture_output=True, timeout=2)
             if result.returncode == 0:
-                logger.info(f"Xvfb已在運行")
+                logger.info("Xvfb已在運行")
                 os.environ['DISPLAY'] = ':99'
                 return True
-        except Exception as e:
+        except (FileNotFoundError, subprocess.TimeoutExpired):
             pass
 
         # 啟動Xvfb虛擬顯示器 (後台運行)
