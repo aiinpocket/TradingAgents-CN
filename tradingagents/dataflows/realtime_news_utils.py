@@ -15,7 +15,6 @@ from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
 
-
 @dataclass
 class NewsItem:
     """新聞項目資料結構"""

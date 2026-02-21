@@ -688,7 +688,6 @@ class TokenTracker:
 
 
 
-
 # 全局配置管理器實例 - 使用專案根目錄的配置
 def _get_project_config_dir():
     """取得專案根目錄的配置目錄"""

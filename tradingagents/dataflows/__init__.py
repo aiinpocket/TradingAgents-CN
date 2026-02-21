@@ -1,7 +1,3 @@
-# 匯入基礎模組
-from .finnhub_utils import get_data_in_range
-from .googlenews_utils import getNewsData
-
 # 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')

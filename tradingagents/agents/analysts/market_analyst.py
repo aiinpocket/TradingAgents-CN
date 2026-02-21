@@ -21,7 +21,6 @@ def _calc_start_date(trade_date: str, days_back: int = 90) -> str:
         return (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
 
 
-
 def _get_company_name(ticker: str, market_info: dict) -> str:
     """
     根據股票代碼取得公司名稱

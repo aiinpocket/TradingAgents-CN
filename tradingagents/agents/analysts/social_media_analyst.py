@@ -6,7 +6,6 @@ from tradingagents.utils.tool_logging import log_analyst_module
 logger = get_logger("analysts.social_media")
 
 
-
 def _get_company_name_for_social_media(ticker: str, market_info: dict) -> str:
     """
     為社交媒體分析師取得公司名稱

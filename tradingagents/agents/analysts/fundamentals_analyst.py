@@ -13,7 +13,6 @@ from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 
-
 def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
     """
     為基本面分析師取得公司名稱

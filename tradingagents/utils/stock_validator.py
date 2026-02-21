@@ -258,8 +258,6 @@ class StockDataPreparer:
             )
 
 
-
-
 # 全局資料準備器實例
 _stock_preparer = None
 

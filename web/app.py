@@ -81,27 +81,9 @@ def initialize_session_state():
             latest_id = get_latest_analysis_id()
             if latest_id:
                 progress_data = get_progress_by_id(latest_id)
-                if (progress_data and
-                    progress_data.get('status') == 'completed' and
-                    'raw_results' in progress_data):
-
-                    # 恢復分析結果
-                    raw_results = progress_data['raw_results']
-                    formatted_results = format_analysis_results(raw_results)
-
-                    if formatted_results:
-                        st.session_state.analysis_results = formatted_results
-                        st.session_state.current_analysis_id = latest_id
-                        # 檢查分析狀態
-                        analysis_status = progress_data.get('status', 'completed')
-                        st.session_state.analysis_running = (analysis_status == 'running')
-                        # 恢復股票資訊
-                        if 'stock_symbol' in raw_results:
-                            st.session_state.last_stock_symbol = raw_results.get('stock_symbol', '')
-                        if 'market_type' in raw_results:
-                            st.session_state.last_market_type = raw_results.get('market_type', '')
-                        logger.info(f"[結果恢復] 從分析 {latest_id} 恢復結果，狀態: {analysis_status}")
-
+                if progress_data and progress_data.get('status') == 'completed':
+                    if _restore_results_from_progress(progress_data, latest_id):
+                        logger.info(f"[結果恢復] 從分析 {latest_id} 恢復結果")
         except Exception as e:
             logger.warning(f"[結果恢復] 恢復失敗: {e}")
 
@@ -146,6 +128,44 @@ def initialize_session_state():
     except Exception as e:
         logger.warning(f"[配置恢復] 表單配置恢復失敗: {e}")
 
+
+def _save_result_safe(analysis_id: str, stock_symbol: str,
+                      analysts: list, research_depth: int,
+                      result_data, status: str):
+    """安全保存分析結果，統一異常處理"""
+    try:
+        save_analysis_result(
+            analysis_id=analysis_id,
+            stock_symbol=stock_symbol,
+            analysts=analysts,
+            research_depth=research_depth,
+            result_data=result_data,
+            status=status
+        )
+    except Exception as e:
+        logger.error(f"保存分析結果異常: {e}")
+
+
+def _restore_results_from_progress(progress_data: dict, analysis_id: str) -> bool:
+    """從進度資料恢復分析結果至 session_state，成功回傳 True"""
+    if not progress_data or 'raw_results' not in progress_data:
+        return False
+    try:
+        raw_results = progress_data['raw_results']
+        formatted_results = format_analysis_results(raw_results)
+        if not formatted_results:
+            return False
+        st.session_state.analysis_results = formatted_results
+        st.session_state.current_analysis_id = analysis_id
+        st.session_state.analysis_running = (progress_data.get('status') == 'running')
+        if 'stock_symbol' in raw_results:
+            st.session_state.last_stock_symbol = raw_results.get('stock_symbol', '')
+        if 'market_type' in raw_results:
+            st.session_state.last_market_type = raw_results.get('market_type', '')
+        return True
+    except Exception as e:
+        logger.warning(f"[結果恢復] 恢復失敗: {e}")
+        return False
 
 
 def main():
@@ -306,34 +326,20 @@ def main():
                         progress_callback=progress_callback
                     )
                     async_tracker.mark_completed("分析成功完成", results=results)
-
-                    try:
-                        save_analysis_result(
-                            analysis_id=analysis_id,
-                            stock_symbol=form_data['stock_symbol'],
-                            analysts=form_data['analysts'],
-                            research_depth=form_data['research_depth'],
-                            result_data=results,
-                            status="completed"
-                        )
-                    except Exception as save_error:
-                        logger.error(f"保存分析結果異常: {save_error}")
-
+                    _save_result_safe(
+                        analysis_id, form_data['stock_symbol'],
+                        form_data['analysts'], form_data['research_depth'],
+                        results, "completed"
+                    )
                     logger.info(f"分析完成: {analysis_id}")
 
                 except Exception as e:
                     async_tracker.mark_failed(str(e))
-                    try:
-                        save_analysis_result(
-                            analysis_id=analysis_id,
-                            stock_symbol=form_data['stock_symbol'],
-                            analysts=form_data['analysts'],
-                            research_depth=form_data['research_depth'],
-                            result_data={"error": str(e)},
-                            status="failed"
-                        )
-                    except Exception as save_error:
-                        logger.error(f"保存失敗記錄異常: {save_error}")
+                    _save_result_safe(
+                        analysis_id, form_data['stock_symbol'],
+                        form_data['analysts'], form_data['research_depth'],
+                        {"error": str(e)}, "failed"
+                    )
                     logger.error(f"分析失敗 {analysis_id}: {e}")
 
                 finally:
@@ -379,33 +385,21 @@ def main():
 
         # 分析完成後恢復結果
         if is_completed and not st.session_state.get('analysis_results') and progress_data:
-            if 'raw_results' in progress_data:
-                try:
-                    raw_results = progress_data['raw_results']
-                    formatted_results = format_analysis_results(raw_results)
-                    if formatted_results:
-                        st.session_state.analysis_results = formatted_results
-                        st.session_state.analysis_running = False
-
-                        try:
-                            stock_symbol = progress_data.get('stock_symbol', st.session_state.get('last_stock_symbol', 'unknown'))
-                            save_analysis_result(
-                                analysis_id=current_analysis_id,
-                                stock_symbol=stock_symbol,
-                                analysts=progress_data.get('analysts', []),
-                                research_depth=progress_data.get('research_depth', 3),
-                                result_data=raw_results,
-                                status="completed"
-                            )
-                        except Exception as save_error:
-                            logger.error(f"保存結果異常: {save_error}")
-
-                        refresh_key = f"results_refreshed_{current_analysis_id}"
-                        if not st.session_state.get(refresh_key, False):
-                            st.session_state[refresh_key] = True
-                            st.rerun()
-                except Exception as e:
-                    logger.warning(f"恢復結果失敗: {e}")
+            if _restore_results_from_progress(progress_data, current_analysis_id):
+                st.session_state.analysis_running = False
+                stock_symbol = progress_data.get(
+                    'stock_symbol', st.session_state.get('last_stock_symbol', 'unknown')
+                )
+                _save_result_safe(
+                    current_analysis_id, stock_symbol,
+                    progress_data.get('analysts', []),
+                    progress_data.get('research_depth', 3),
+                    progress_data.get('raw_results', {}), "completed"
+                )
+                refresh_key = f"results_refreshed_{current_analysis_id}"
+                if not st.session_state.get(refresh_key, False):
+                    st.session_state[refresh_key] = True
+                    st.rerun()
 
         if is_completed and st.session_state.get('analysis_running', False):
             st.session_state.analysis_running = False

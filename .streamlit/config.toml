@@ -1,5 +1,6 @@
 [server]
 # 伺服器配置
+# address: Docker 環境使用 0.0.0.0，本地開發由 run_web.py 覆寫為 localhost
 port = 8501
 address = "0.0.0.0"
 headless = true
