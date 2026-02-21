@@ -151,11 +151,11 @@ class BranchManager:
             logger.error(f" 切換到main分支失敗: {stderr}")
             return False
         
-        # 拉取最新代碼
-        logger.info(f" 拉取最新代碼...")
+        # 拉取最新程式碼
+        logger.info(f" 拉取最新程式碼...")
         success, _, stderr = self.run_git_command(['pull', 'origin', 'main'])
         if not success:
-            logger.error(f" 拉取代碼失敗: {stderr}")
+            logger.error(f" 拉取程式碼失敗: {stderr}")
             return False
         
         # 合併當前功能分支（如果不是main）
@@ -235,8 +235,8 @@ class BranchManager:
             logger.error(f" 切換失敗: {stderr}")
             return False
         
-        # 拉取最新代碼
-        logger.info(f" 拉取最新代碼...")
+        # 拉取最新程式碼
+        logger.info(f" 拉取最新程式碼...")
         success, _, stderr = self.run_git_command(['pull', 'origin', base_branch])
         if not success:
             logger.error(f" 拉取失敗: {stderr}")

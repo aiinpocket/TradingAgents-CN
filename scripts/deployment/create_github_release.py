@@ -100,7 +100,7 @@ python cli/main.py --llm-provider anthropic --model claude-sonnet-4 --stock TSLA
 - [完整檔案](./docs/)
 - [Web界面指南](./web/README.md)
 - [測試指南](./tests/README.md)
-- [範例代碼](./examples/)
+- [範例程式碼](./examples/)
 
 ### 推薦配置
 

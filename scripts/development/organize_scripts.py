@@ -174,7 +174,7 @@ python scripts/{category}/script_name.py
 - 上游同步
 
 ###  development/ - 開發輔助指令碼
-- 代碼分析
+- 程式碼分析
 - 性能基準測試
 - 檔案生成
 - 貢獻準備
@@ -257,7 +257,7 @@ def main():
             logger.info(f" 生成了README檔案")
             logger.info(f"\n 建議:")
             logger.info(f"1. 驗證指令碼放在 scripts/validation/")
-            logger.info(f"2. 測試代碼放在 tests/")
+            logger.info(f"2. 測試程式碼放在 tests/")
             logger.info(f"3. 新指令碼按功能放在對應分類目錄")
         
         return success

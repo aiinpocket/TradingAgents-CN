@@ -85,7 +85,7 @@ def setup_redis_windows():
        
     2. 解壓到目錄 (如 C:\\Redis)
     
-    3. 啟動Redis服務器:
+    3. 啟動Redis 伺服器:
        - 打開命令行，進入Redis目錄
        - 執行: redis-server.exe
        

@@ -176,7 +176,7 @@ def main():
         print(" 所有測試通過！")
         return True
     else:
-        print(" 部分測試失敗，請檢查代碼")
+        print(" 部分測試失敗，請檢查程式碼")
         return False
 
 

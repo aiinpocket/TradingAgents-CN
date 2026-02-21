@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TradingAgents-CN 啟動腳本
+TradingAgents-CN 啟動指令碼
 設定 PYTHONPATH 後委託給 web/run_web.py
 """
 
@@ -17,7 +17,7 @@ def main():
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
-    # 設定 PYTHONPATH 環境變量（子進程也能正確匯入）
+    # 設定 PYTHONPATH 環境變數（子進程也能正確匯入）
     current_path = os.environ.get('PYTHONPATH', '')
     if str(project_root) not in current_path:
         separator = os.pathsep if current_path else ''

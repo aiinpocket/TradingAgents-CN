@@ -86,8 +86,8 @@ status: {status}
         return updated_files
     
     def fix_code_blocks(self) -> List[str]:
-        """修復檔案中的代碼塊問題"""
-        print(" 修復代碼塊問題...")
+        """修復檔案中的程式碼區塊問題"""
+        print(" 修復程式碼區塊問題...")
         fixed_files = []
         
         # 查找所有markdown檔案
@@ -98,15 +98,15 @@ status: {status}
                 content = md_file.read_text(encoding='utf-8')
                 original_content = content
                 
-                # 修復常見的代碼塊問題
+                # 修復常見的程式碼區塊問題
                 
                 # 1. 修復中文冒號
                 content = re.sub(r'：', ':', content)
                 
-                # 2. 修復箭頭符號（在代碼塊中）
+                # 2. 修復箭頭符號（在程式碼區塊中）
                 content = re.sub(r'→', '->', content)
                 
-                # 3. 修復BaseAnalyst引用（在代碼塊外的說明中）
+                # 3. 修復BaseAnalyst引用（在程式碼區塊外的說明中）
                 if "BaseAnalyst" in content and "已廢棄" not in content:
                     # 在提到BaseAnalyst的地方添加廢棄說明
                     content = re.sub(
@@ -115,8 +115,8 @@ status: {status}
                         content
                     )
                 
-                # 4. 修復不完整的代碼塊
-                # 查找以```python開始但沒有正確結束的代碼塊
+                # 4. 修復不完整的程式碼區塊
+                # 查找以```python開始但沒有正確結束的程式碼區塊
                 python_blocks = re.findall(r'```python\n(.*?)\n```', content, re.DOTALL)
                 for block in python_blocks:
                     if block.strip().endswith(':') and not block.strip().endswith('"""'):
@@ -160,7 +160,7 @@ status: {status}
 
 ### {self.current_date} 批量更新
 -  為 {len(updated_files)} 個核心檔案添加了版本頭部
--  修復了 {len(fixed_files)} 個檔案的代碼塊問題
+-  修復了 {len(fixed_files)} 個檔案的程式碼區塊問題
 -  更新了檔案狀態追蹤
 
 **更新的檔案:**
@@ -187,7 +187,7 @@ status: {status}
 ## 更新摘要
 
 -  添加版本頭部: {len(updated_files)} 個檔案
--  修復代碼塊問題: {len(fixed_files)} 個檔案
+-  修復程式碼區塊問題: {len(fixed_files)} 個檔案
 -  更新狀態追蹤: 1 個檔案
 
 ## 詳細更新列表
@@ -195,13 +195,13 @@ status: {status}
 ### 添加版本頭部的檔案
 {chr(10).join(f'-  {file}' for file in updated_files) if updated_files else '- 無'}
 
-### 修復代碼塊的檔案  
+### 修復程式碼區塊的檔案  
 {chr(10).join(f'-  {file}' for file in fixed_files) if fixed_files else '- 無'}
 
 ## 下一步建議
 
 1. **繼續更新其他檔案**: 還有更多檔案需要添加版本頭部
-2. **驗證代碼示例**: 檢查修復後的代碼塊是否正確
+2. **驗證程式碼示例**: 檢查修復後的程式碼區塊是否正確
 3. **更新API參考**: 建立或更新API參考檔案
 4. **建立定期檢查**: 設定定期的檔案一致性檢查
 
@@ -226,7 +226,7 @@ def main():
     # 1. 添加版本頭部
     updated_files = updater.add_version_headers()
     
-    # 2. 修復代碼塊問題
+    # 2. 修復程式碼區塊問題
     fixed_files = updater.fix_code_blocks()
     
     # 3. 更新狀態追蹤
@@ -239,7 +239,7 @@ def main():
     
     print(f"\n 批量更新完成！")
     print(f"    添加版本頭部: {len(updated_files)} 個檔案")
-    print(f"    修復代碼塊: {len(fixed_files)} 個檔案")
+    print(f"    修復程式碼區塊: {len(fixed_files)} 個檔案")
     print(f"    報告已保存到: {report_file}")
     
     print(f"\n 建議執行以下命令驗證更新效果:")

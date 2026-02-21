@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 檔案一致性檢查指令碼
-檢查檔案與代碼的一致性，確保檔案內容準確反映實際實現
+檢查檔案與程式碼的一致性，確保檔案內容準確反映實際實現
 """
 
 import os
@@ -129,8 +129,8 @@ class DocumentationChecker:
         return issues
     
     def check_code_examples(self) -> List[str]:
-        """檢查檔案中的代碼示例"""
-        print(" 檢查代碼示例...")
+        """檢查檔案中的程式碼示例"""
+        print(" 檢查程式碼示例...")
         issues = []
         
         doc_files = list(self.docs_dir.rglob("*.md"))
@@ -138,7 +138,7 @@ class DocumentationChecker:
             try:
                 content = doc_file.read_text(encoding='utf-8')
                 
-                # 提取Python代碼塊
+                # 提取Python程式碼區塊
                 python_blocks = re.findall(r'```python\n(.*?)\n```', content, re.DOTALL)
                 
                 for i, code_block in enumerate(python_blocks):
@@ -147,21 +147,21 @@ class DocumentationChecker:
                         # 簡單的語法檢查
                         ast.parse(code_block)
                     except SyntaxError as e:
-                        issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 語法錯誤 - {e}")
+                        issues.append(f" {doc_file.relative_to(self.project_root)} 程式碼區塊 {i+1}: 語法錯誤 - {e}")
                     
                     # 檢查是否使用了已廢棄的類
                     if "BaseAnalyst" in code_block:
-                        issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 使用了已廢棄的BaseAnalyst類")
+                        issues.append(f" {doc_file.relative_to(self.project_root)} 程式碼區塊 {i+1}: 使用了已廢棄的BaseAnalyst類")
                     
                     # 檢查匯入語句的正確性
                     import_lines = [line.strip() for line in code_block.split('\n') if line.strip().startswith('from tradingagents')]
                     for import_line in import_lines:
                         # 簡單檢查模組路徑是否存在
                         if 'from tradingagents.agents.analysts.base_analyst' in import_line:
-                            issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 匯入不存在的base_analyst模組")
+                            issues.append(f" {doc_file.relative_to(self.project_root)} 程式碼區塊 {i+1}: 匯入不存在的base_analyst模組")
                 
             except Exception as e:
-                issues.append(f" 檢查代碼示例失敗 {doc_file}: {e}")
+                issues.append(f" 檢查程式碼示例失敗 {doc_file}: {e}")
         
         return issues
     

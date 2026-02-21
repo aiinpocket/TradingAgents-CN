@@ -276,9 +276,9 @@ def main():
         print("\n VSCode配置完全正確！")
         print("\n 現在您可以:")
         print("    在VSCode中正常開發和除錯")
-        print("    使用集成終端執行Python代碼")
-        print("    執行測試和格式化代碼")
-        print("    使用智慧代碼補全和錯誤檢查")
+        print("    使用集成終端執行Python程式碼")
+        print("    執行測試和格式化程式碼")
+        print("    使用智慧程式碼補全和錯誤檢查")
     elif passed >= total * 0.8:
         print("\n VSCode配置基本正確！")
         print(" 部分功能可能需要調整")

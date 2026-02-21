@@ -118,10 +118,10 @@ def test_process_signal_call():
 
 def test_code_consistency():
     """
-    測試代碼一致性 - 確保所有地方都使用相同的鍵名
+    測試程式碼一致性 - 確保所有地方都使用相同的鍵名
     Test code consistency - ensure all places use the same key names
     """
-    print("\n 測試代碼一致性...")
+    print("\n 測試程式碼一致性...")
     
     try:
         main_file = project_root / 'cli' / 'main.py'
@@ -154,7 +154,7 @@ def test_code_consistency():
             else:
                 print(f" 未發現問題: {issue}")
         
-        print(" 代碼一致性測試通過")
+        print(" 程式碼一致性測試通過")
         return True
         
     except Exception as e:
