@@ -7,7 +7,7 @@ This guide explains how to configure data directory paths in TradingAgents, reso
 ## 概述 | Overview
 
 TradingAgents支持靈活的數據目錄配置，允許用戶：
-- 自定義數據存储位置
+- 自定義數據存儲位置
 - 通過環境變量配置
 - 使用CLI命令管理
 - 自動創建必要的目錄結構

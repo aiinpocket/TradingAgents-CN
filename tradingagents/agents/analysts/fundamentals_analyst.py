@@ -62,20 +62,18 @@ def create_fundamentals_analyst(llm, toolkit):
         logger.debug(f"📊 [DEBUG] 當前狀態中的訊息數量: {len(state.get('messages', []))}")
         logger.debug(f"📊 [DEBUG] 現有基本面報告: {state.get('fundamentals_report', 'None')}")
 
-        # 獲取股票市場信息
-        from tradingagents.utils.stock_utils import StockUtils
-        logger.info(f"📊 [基本面分析師] 正在分析股票: {ticker}")
+        # 取得股票市場資訊（僅支援美股）
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        logger.info(f"[基本面分析師] 正在分析股票: {ticker}")
 
-        # 添加詳細的股票代碼追蹤日誌
-        logger.info(f"🔍 [股票代碼追蹤] 基本面分析師接收到的原始股票代碼: '{ticker}' (類型: {type(ticker)})")
-        logger.info(f"🔍 [股票代碼追蹤] 股票代碼長度: {len(str(ticker))}")
-        logger.info(f"🔍 [股票代碼追蹤] 股票代碼字符: {list(str(ticker))}")
+        # 股票代碼追蹤日誌
+        logger.info(f"[股票代碼追蹤] 基本面分析師接收到的股票代碼: '{ticker}' (類型: {type(ticker)})")
 
-        market_info = StockUtils.get_market_info(ticker)
-        logger.info(f"🔍 [股票代碼追蹤] StockUtils.get_market_info 返回的市場信息: {market_info}")
+        market_info = get_stock_market_info(ticker)
+        logger.info(f"[股票代碼追蹤] get_stock_market_info 返回的市場資訊: {market_info}")
 
-        logger.debug(f"📊 [DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']}")
-        logger.debug(f"📊 [DEBUG] 詳細市場信息: is_china={market_info['is_china']}, is_hk={market_info['is_hk']}, is_us={market_info['is_us']}")
+        logger.debug(f"[DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
+        logger.debug(f"[DEBUG] 市場資訊: is_us={market_info['is_us']}")
         logger.debug(f"📊 [DEBUG] 工具配置檢查: online_tools={toolkit.config['online_tools']}")
 
         # 獲取公司名稱

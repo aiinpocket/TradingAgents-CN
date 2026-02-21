@@ -35,7 +35,7 @@ tradingagents/
 1. 適配器基類: <mcsymbol name="OpenAICompatibleBase" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="32" type="class"></mcsymbol> —— 為所有 OpenAI 兼容的 LLM 提供統一實現，是新增提供商最重要的擴展點 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile>
 2. 工廠方法: <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> —— 運行時根據提供商與模型創建對應的適配器實例（建議優先使用）
 3. 提供商註冊: 在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 中的 `OPENAI_COMPATIBLE_PROVIDERS` 字典 —— 統一管理 base_url、API Key 環境變量名、受支持模型等（單一信息源）
-4. 前端集成: <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> —— 模型選擇界面負责把用戶選擇的 llm_provider 和 llm_model 傳遞到後端
+4. 前端集成: <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> —— 模型選擇界面負責把用戶選擇的 llm_provider 和 llm_model 傳遞到後端
 5. 運行時入口: <mcfile name="trading_graph.py" path="tradingagents/graph/trading_graph.py"></mcfile> 中統一使用工廠方法創建 LLM；<mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile> 僅作為參數傳遞與流程編排，通常無需為新增提供商做修改
 
 ## 🚀 快速開始

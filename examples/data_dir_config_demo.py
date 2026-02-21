@@ -194,7 +194,7 @@ config_manager.set_data_dir("/path/to/your/data/directory")
 ```
 
 [bold green]4. 配置文件位置:[/bold green]
-- 配置文件存储在: config/settings.json
+- 配置檔案儲存在: config/settings.json
 - 支持的配置項:
   - data_dir: 數據目錄
   - cache_dir: 緩存目錄

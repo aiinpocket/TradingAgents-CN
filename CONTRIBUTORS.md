@@ -19,12 +19,12 @@
   - 影響：為用戶提供了靈活的分析報告輸出選項
   - 貢獻時間：2025年
 
-### 🤖 AI模型集成與擴展
+### AI 模型整合與擴展
 
 - **[@charliecai](https://github.com/charliecai)**
-  - 貢獻內容：添加硅基流動(SiliconFlow) LLM提供商支持
-  - 技術細節：完整的API集成、配置管理和用戶界面支持
-  - 影響：為用戶提供了更多的AI模型選擇，擴展了平台的LLM生態
+  - 貢獻內容：LLM 提供商整合支援
+  - 技術細節：完整的 API 整合、配置管理和使用者介面支援
+  - 影響：為使用者提供了更多的 AI 模型選擇，擴展了平台的 LLM 生態
   - 貢獻時間：2025年
 
 - **[@yifanhere](https://github.com/yifanhere)**
@@ -57,7 +57,7 @@
 | ------------- | ---------- | ------------------------------- |
 | 🐳 容器化部署 | 1          | Docker配置、部署優化            |
 | 📄 功能開發   | 1          | 報告導出系統                    |
-| 🤖 AI模型集成 | 3          | 硅基流動LLM提供商支持、日誌系統修複、千帆模型集成 |
+| AI 模型整合 | 3          | LLM 提供商支援、日誌系統修正 |
 | 🐛 Bug修複    | 1          | 關鍵穩定性問題修複、CLI錯誤處理 |
 | 🔧 代碼優化   | 1          | 命令行界面優化、用戶體驗改進    |
 
@@ -79,8 +79,7 @@
 
 ### 🏅 最佳AI集成貢獻獎
 
-- **[@charliecai](https://github.com/charliecai)** - 硅基流動(SiliconFlow) LLM提供商集成
-- **TradingAgents-CN團隊** - 百度千帆(Qianfan) ERNIE模型集成，提供OpenAI兼容接口
+- **[@charliecai](https://github.com/charliecai)** - LLM 提供商整合
 
 ### 🛠️ 最佳Bug修複貢獻獎
 

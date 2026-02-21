@@ -135,13 +135,13 @@ print('分析結果:', result)
 python -c "
 # 同上配置，測試美股
 result = ta.run_analysis('AAPL', '2025-01-08')
-print('苹果公司分析:', result)
+print('蘋果公司分析:', result)
 "
 ```
 
 **測試股票建議**：
-- `AAPL` - 苹果公司
-- `MSFT` - 微软
+- `AAPL` - 蘋果公司
+- `MSFT` - 微軟
 - `GOOGL` - 谷歌
 - `TSLA` - 特斯拉
 

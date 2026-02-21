@@ -52,11 +52,8 @@ db.configurations.insertOne({
     "config_name": "ttl_settings",
     "config_value": {
         "us_stock_data": 7200,      // 美股資料2小時
-        "china_stock_data": 3600,   // A股資料1小時
         "us_news": 21600,           // 美股新聞6小時
-        "china_news": 14400,        // A股新聞4小時
-        "us_fundamentals": 86400,   // 美股基本面24小時
-        "china_fundamentals": 43200 // A股基本面12小時
+        "us_fundamentals": 86400    // 美股基本面24小時
     },
     "description": "快取TTL配置",
     "created_at": currentTime,
@@ -110,19 +107,6 @@ db.stock_data.insertOne({
         "sector": "Technology",
         "last_price": 150.00,
         "currency": "USD"
-    },
-    "created_at": currentTime,
-    "updated_at": currentTime
-});
-
-db.stock_data.insertOne({
-    "symbol": "000001",
-    "market_type": "china",
-    "data": {
-        "company_name": "平安銀行",
-        "sector": "金融",
-        "last_price": 12.50,
-        "currency": "CNY"
     },
     "created_at": currentTime,
     "updated_at": currentTime

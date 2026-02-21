@@ -8,7 +8,7 @@ TradingAgents提供了完整的Token使用統計和成本跟蹤功能，包括�
 
 - **實時Token統計**: 自動記錄每次LLM調用的輸入和輸出token數量
 - **成本計算**: 根據不同供應商的定價自動計算使用成本
-- **多存储支持**: 支持JSON文件存储和MongoDB數據庫存储
+- **多存儲支持**: 支持JSON文件存儲和MongoDB數據庫存儲
 - **統計分析**: 提供詳細的使用統計和成本分析
 - **成本警告**: 當使用成本超過閾值時自動提醒
 
@@ -39,9 +39,9 @@ COST_ALERT_THRESHOLD=100.0
 OPENAI_API_KEY=your_openai_key
 ```
 
-### 2. 存储配置
+### 2. 存儲配置
 
-#### 選項1: JSON文件存储（默認）
+#### 選項1: JSON文件存儲（默認）
 
 默認情況下，Token使用記錄保存在 `config/usage.json` 文件中。
 
@@ -53,12 +53,12 @@ MAX_USAGE_RECORDS=10000
 AUTO_SAVE_USAGE=true
 ```
 
-#### 選項2: MongoDB存储（推薦用於生產環境）
+#### 選項2: MongoDB存儲（推薦用於生產環境）
 
-對於大量數據和高性能需求，推薦使用MongoDB存储：
+對於大量數據和高性能需求，推薦使用MongoDB存儲：
 
 ```bash
-# 啟用MongoDB存储
+# 啟用MongoDB存儲
 USE_MONGODB_STORAGE=true
 
 # MongoDB連接字符串
@@ -72,7 +72,7 @@ MONGODB_CONNECTION_STRING=mongodb://localhost:27017/
 MONGODB_DATABASE_NAME=tradingagents
 ```
 
-### 3. 安裝MongoDB依賴（如果使用MongoDB存储）
+### 3. 安裝MongoDB依賴（如果使用MongoDB存儲）
 
 ```bash
 pip install pymongo
@@ -96,7 +96,7 @@ llm = Chat
 
 # 發送消息（自動記錄token使用）
 response = llm.invoke([
-    HumanMessage(content="分析一下苹果公司的股票")
+    HumanMessage(content="分析一下蘋果公司的股票")
 ], session_id="my_session", analysis_type="stock_analysis")
 ```
 
@@ -189,9 +189,9 @@ config_manager.save_pricing(pricing_list)
 python tests/test_
 ```
 
-## MongoDB存储優勢
+## MongoDB存儲優勢
 
-使用MongoDB存储相比JSON文件存储有以下優勢：
+使用MongoDB存儲相比JSON文件存儲有以下優勢：
 
 1. **高性能**: 支持大量數據的高效查詢和聚合
 2. **可擴展性**: 支持分布式部署和水平擴展
@@ -237,7 +237,7 @@ python tests/test_
 
 ## 最佳實踐
 
-1. **生產環境使用MongoDB存储**
+1. **生產環境使用MongoDB存儲**
 2. **定期備份使用數據**
 3. **監控成本趨勢，及時調整策略**
 4. **使用有意義的會話ID和分析類型**

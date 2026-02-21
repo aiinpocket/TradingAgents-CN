@@ -154,7 +154,7 @@ def test__chinese_analysis():
             temperature=0.1
         )
         
-        test_prompt = """請簡要分析苹果公司（AAPL）的投資價值，包括：
+        test_prompt = """請簡要分析蘋果公司（AAPL）的投資價值，包括：
         1. 公司基本面
         2. 技術面趨勢
         3. 投資建議
@@ -166,7 +166,7 @@ def test__chinese_analysis():
         # 檢查響應是否包含中文和關鍵分析要素
         content = response.content
         if (any('\u4e00' <= char <= '\u9fff' for char in content) and 
-            ("苹果" in content or "AAPL" in content) and
+            ("蘋果" in content or "AAPL" in content) and
             len(content) > 50):
             print("✅ 中文金融分析能力正常")
             print(f"📄 分析內容預覽: {content[:150]}...")

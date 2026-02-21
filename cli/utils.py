@@ -4,7 +4,7 @@ from rich.console import Console
 
 from cli.models import AnalystType
 from tradingagents.utils.logging_manager import get_logger
-from tradingagents.utils.stock_utils import StockUtils
+from tradingagents.utils.stock_utils import get_stock_market_info
 
 logger = get_logger('cli')
 console = Console()

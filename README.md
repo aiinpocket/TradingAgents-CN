@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/Version-cn--0.1.15-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/Version-0.1.18-green.svg)](./VERSION)
 [![Documentation](https://img.shields.io/badge/docs-中文文檔-green.svg)](./docs/)
 [![Original](https://img.shields.io/badge/基於-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
@@ -132,7 +132,7 @@ v1.0.0-preview 版本現已開放使用！詳細安裝和使用說明請參閱�
 ### 🗄️ 數據管理優化
 
 - **MongoDB集成增強**: 改進的MongoDB連接和數據管理
-- **數據目錄重組**: 優化的數據存储結構和管理
+- **數據目錄重組**: 優化的數據存儲結構和管理
 - **數據遷移腳本**: 完整的數據遷移和備份工具
 - **緩存優化**: 提升數據加載和分析結果緩存性能
 
@@ -323,7 +323,7 @@ v1.0.0-preview 版本現已開放使用！詳細安裝和使用說明請參閱�
 | **🔧 新聞過濾器**      | 🆕 v0.1.12  | 多層次過濾，基礎/增強/集成三級處理       |
 | **📰 統一新聞工具**    | 🆕 v0.1.12  | 整合多源新聞，統一接口，智能檢索         |
 | **🤖 多LLM提供商**     | 🆕 v0.1.11  | 4大提供商，60+模型，智能分類管理         |
-| **💾 模型選擇持久化**  | 🆕 v0.1.11  | URL參數存储，刷新保持，配置分享          |
+| **💾 模型選擇持久化**  | 🆕 v0.1.11  | URL參數存儲，刷新保持，配置分享          |
 | **🎯 快速選擇按鈕**    | 🆕 v0.1.11  | 一鍵切換熱門模型，提升操作效率           |
 | **📊 實時進度顯示**    | ✅ v0.1.10  | 異步進度跟蹤，智能步驟識別，準確時間計算 |
 | **💾 智能會話管理**    | ✅ v0.1.10  | 狀態持久化，自動降級，跨頁面恢複         |
@@ -358,7 +358,7 @@ v1.0.0-preview 版本現已開放使用！詳細安裝和使用說明請參閱�
 | ├─**Meta**      | Llama 4 Maverick/Scout       | 最新Llama 4系列         | ✅ 集成  |
 | └─**自定義**    | 任意OpenRouter模型ID         | 無限擴展，個性化選擇    | ✅ 集成  |
 
-**🎯 快速選擇**: 5個熱門模型快速按鈕 | **💾 持久化**: URL參數存储，刷新保持 | **🔄 智能切換**: 一鍵切換不同提供商
+**🎯 快速選擇**: 5個熱門模型快速按鈕 | **💾 持久化**: URL參數存儲，刷新保持 | **🔄 智能切換**: 一鍵切換不同提供商
 
 ### 📊 數據源與市場
 
@@ -492,7 +492,7 @@ python scripts/user_password_manager.py reset  # 重置為默認配置
 
 ### 📁 配置文件位置
 
-用戶配置存储在：`web/config/users.json`
+用戶配置存儲在：`web/config/users.json`
 
 > 📚 **詳細文檔**: 完整的用戶管理指南請參考 [scripts/USER_MANAGEMENT.md](scripts/USER_MANAGEMENT.md)
 
@@ -511,7 +511,7 @@ python scripts/user_password_manager.py reset  # 重置為默認配置
 - **🔧 多層次過濾**: 基礎、增強、集成三級新聞過濾機制
 - **📰 統一新聞工具**: 整合多源新聞，提供統一的智能檢索接口
 - **🆕 多LLM集成**: v0.1.11新增4大提供商，60+模型，一站式AI體驗
-- **💾 配置持久化**: 模型選擇真正持久化，URL參數存储，刷新保持
+- **💾 配置持久化**: 模型選擇真正持久化，URL參數存儲，刷新保持
 - **🎯 快速切換**: 5個熱門模型快速按鈕，一鍵切換不同AI
 - **🆕 實時進度**: v0.1.10異步進度跟蹤，告別黑盒等待
 - **💾 智能會話**: 狀態持久化，頁面刷新不遺失分析結果
@@ -542,7 +542,7 @@ python scripts/user_password_manager.py reset  # 重置為默認配置
 **Docker部署包含的服務**:
 
 - 🌐 **Web應用**: TradingAgents-CN主程序
-- 🗄️ **MongoDB**: 數據持久化存储
+- 🗄️ **MongoDB**: 數據持久化存儲
 - ⚡ **Redis**: 高速緩存
 - 📊 **MongoDB Express**: 數據庫管理界面
 - 🎛️ **Redis Commander**: 緩存管理界面
@@ -659,14 +659,14 @@ ANTHROPIC_API_KEY=your_anthropic_api_key
 
 ### 🗄️ 數據庫配置（MongoDB + Redis）
 
-#### 高性能數據存储支持
+#### 高性能數據存儲支持
 
 本項目支持 **MongoDB** 和 **Redis** 數據庫，提供：
 
 - **📊 股票數據緩存**: 減少API調用，提升響應速度
 - **🔄 智能降級機制**: MongoDB → API → 本地緩存的多層數據源
 - **⚡ 高性能緩存**: Redis緩存熱點數據，毫秒級響應
-- **🛡️ 數據持久化**: MongoDB存储歷史數據，支持離線分析
+- **🛡️ 數據持久化**: MongoDB存儲歷史數據，支持離線分析
 
 #### 數據庫部署方式
 
@@ -762,7 +762,7 @@ DATABASE_CONFIG = {
 
 **MongoDB 功能**：
 
-- ✅ 股票基礎信息存储
+- ✅ 股票基礎信息存儲
 - ✅ 歷史價格數據緩存
 - ✅ 分析結果持久化
 - ✅ 用戶配置管理
@@ -783,8 +783,8 @@ DATABASE_CONFIG = {
 ```
 📊 數據獲取流程：
 1. 🔍 檢查 Redis 緩存 (毫秒級)
-2. 📚 查詢 MongoDB 存储 (秒級)
-3. 🌐 調用通達信API (秒級)
+2. 📚 查詢 MongoDB 存儲 (秒級)
+3. 🌐 調用 Yahoo Finance / FinnHub API (秒級)
 4. 💾 本地文件緩存 (備用)
 5. ❌ 返回錯誤信息
 ```
@@ -915,7 +915,7 @@ python scripts/maintenance/cleanup_cache.py --days 7
 
 - 🎯 **投資決策摘要** - 買入/持有/賣出建議，置信度，風險評分
 - 📊 **詳細分析報告** - 技術分析，基本面分析，市場情緒，新聞事件
-- ⚠️ **風險提示** - 完整的投資風險聲明和免责條款
+- ⚠️ **風險提示** - 完整的投資風險聲明和免責條款
 - 📋 **配置信息** - 分析參數，模型信息，生成時間
 
 **使用方法**：
@@ -1022,7 +1022,7 @@ config["quick_think_llm"] = "gemini-2.5-flash"    # 快速任務
 # 創建交易智能體
 ta = TradingAgentsGraph(debug=True, config=config)
 
-# 分析股票 (以苹果公司為例)
+# 分析股票 (以蘋果公司為例)
 state, decision = ta.propagate("AAPL", "2024-01-15")
 
 # 輸出分析結果
@@ -1047,7 +1047,7 @@ python tests/integration/test_google_integration.py
 
 #### 📁 數據目錄配置
 
-**新功能**: 靈活配置數據存储路徑，支持多種配置方式：
+**新功能**: 靈活配置數據存儲路徑，支持多種配置方式：
 
 ```bash
 # 查看當前數據目錄配置

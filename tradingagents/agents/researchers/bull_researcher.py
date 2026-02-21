@@ -21,25 +21,21 @@ def create_bull_researcher(llm, memory):
         news_report = state["news_report"]
         fundamentals_report = state["fundamentals_report"]
 
-        # 使用統一的股票類型檢測
+        # 取得股票市場資訊（僅支援美股）
         company_name = state.get('company_of_interest', 'Unknown')
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(company_name)
-        is_china = market_info['is_china']
-        is_hk = market_info['is_hk']
-        is_us = market_info['is_us']
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(company_name)
 
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.debug(f"🐂 [DEBUG] 接收到的報告:")
-        logger.debug(f"🐂 [DEBUG] - 市場報告長度: {len(market_research_report)}")
-        logger.debug(f"🐂 [DEBUG] - 情緒報告長度: {len(sentiment_report)}")
-        logger.debug(f"🐂 [DEBUG] - 新聞報告長度: {len(news_report)}")
-        logger.debug(f"🐂 [DEBUG] - 基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"🐂 [DEBUG] - 基本面報告前200字符: {fundamentals_report[:200]}...")
-        logger.debug(f"🐂 [DEBUG] - 股票代碼: {company_name}, 類型: {market_info['market_name']}, 貨幣: {currency}")
-        logger.debug(f"🐂 [DEBUG] - 市場詳情: 中國A股={is_china}, 港股={is_hk}, 美股={is_us}")
+        logger.debug(f"[DEBUG] 接收到的報告:")
+        logger.debug(f"[DEBUG] - 市場報告長度: {len(market_research_report)}")
+        logger.debug(f"[DEBUG] - 情緒報告長度: {len(sentiment_report)}")
+        logger.debug(f"[DEBUG] - 新聞報告長度: {len(news_report)}")
+        logger.debug(f"[DEBUG] - 基本面報告長度: {len(fundamentals_report)}")
+        logger.debug(f"[DEBUG] - 基本面報告前200字符: {fundamentals_report[:200]}...")
+        logger.debug(f"[DEBUG] - 股票代碼: {company_name}, 類型: {market_info['market_name']}, 貨幣: {currency}")
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
 
@@ -58,7 +54,7 @@ def create_bull_researcher(llm, memory):
 
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 
-⚠️ 重要提醒：當前分析的是 {'中國A股' if is_china else '海外股票'}，所有價格和估值請使用 {currency}（{currency_symbol}）作為單位。
+⚠️ 重要提醒：當前分析的是{market_info['market_name']}，所有價格和估值請使用 {currency}（{currency_symbol}）作為單位。
 
 你的任務是構建基於證據的強有力案例，強調增長潛力、競爭優勢和積極的市場指標。利用提供的研究和數據來解決擔憂並有效反駁看跌論點。
 

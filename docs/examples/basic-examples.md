@@ -14,7 +14,7 @@ from tradingagents.default_config import DEFAULT_CONFIG
 # 使用默認配置
 ta = TradingAgentsGraph(debug=True, config=DEFAULT_CONFIG.copy())
 
-# 分析苹果公司股票
+# 分析蘋果公司股票
 state, decision = ta.propagate("AAPL", "2024-01-15")
 
 print(f"推薦動作: {decision['action']}")
@@ -26,7 +26,7 @@ print(f"推理: {decision['reasoning']}")
 ```
 推薦動作: buy
 置信度: 0.75
-推理: 基於强劲的基本面數據和積極的技術指標，建議買入AAPL股票...
+推理: 基於強勁的基本面數據和積極的技術指標，建議買入AAPL股票...
 ```
 
 ## 示例 2: 自定義配置分析

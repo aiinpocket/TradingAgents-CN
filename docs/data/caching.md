@@ -18,9 +18,9 @@ graph TB
     
     subgraph "緩存層次"
         L1[L1: 內存緩存<br/>最快訪問]
-        L2[L2: 本地文件緩存<br/>持久化存储]
+        L2[L2: 本地文件緩存<br/>持久化存儲]
         L3[L3: Redis緩存<br/>分布式共享]
-        L4[L4: 數據庫緩存<br/>長期存储]
+        L4[L4: 數據庫緩存<br/>長期存儲]
     end
     
     subgraph "數據源"
@@ -189,7 +189,7 @@ class MemoryCache:
         if len(self.cache) >= self.max_size * self.cleanup_threshold:
             self._cleanup_cache()
         
-        # 存储數據
+        # 存儲數據
         self.cache[key] = {
             "data": data,
             "timestamp": time.time(),
@@ -235,7 +235,7 @@ class MemoryCache:
 ### 持久化文件緩存
 ```python
 class FileCache:
-    """文件緩存 - 持久化存储"""
+    """文件緩存 - 持久化存儲"""
     
     def __init__(self, config: Dict):
         self.config = config

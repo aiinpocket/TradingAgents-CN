@@ -128,27 +128,14 @@ def main():
 
         # 顯示緩存配置信息
         if hasattr(cache, 'cache_config'):
-            config_tabs = st.tabs(["美股配置", "A股配置"])
-
-            with config_tabs[0]:
-                st.markdown("**美股數據緩存配置**")
-                us_configs = {k: v for k, v in cache.cache_config.items() if k.startswith('us_')}
-                for config_name, config_data in us_configs.items():
-                    st.info(f"""
-                    **{config_data.get('description', config_name)}**
-                    - TTL: {config_data.get('ttl_hours', 'N/A')} 小時
-                    - 最大文件數: {config_data.get('max_files', 'N/A')}
-                    """)
-
-            with config_tabs[1]:
-                st.markdown("**A股數據緩存配置**")
-                china_configs = {k: v for k, v in cache.cache_config.items() if k.startswith('china_')}
-                for config_name, config_data in china_configs.items():
-                    st.info(f"""
-                    **{config_data.get('description', config_name)}**
-                    - TTL: {config_data.get('ttl_hours', 'N/A')} 小時
-                    - 最大文件數: {config_data.get('max_files', 'N/A')}
-                    """)
+            st.markdown("**美股數據緩存配置**")
+            us_configs = {k: v for k, v in cache.cache_config.items() if k.startswith('us_')}
+            for config_name, config_data in us_configs.items():
+                st.info(f"""
+                **{config_data.get('description', config_name)}**
+                - TTL: {config_data.get('ttl_hours', 'N/A')} 小時
+                - 最大文件數: {config_data.get('max_files', 'N/A')}
+                """)
         else:
             st.warning("緩存配置信息不可用")
 

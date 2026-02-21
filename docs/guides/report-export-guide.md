@@ -379,7 +379,7 @@ AAPL_technical_20250713.docx
 600519_fundamental_20250713.md
 ```
 
-### 2. 存储管理
+### 2. 存儲管理
 ```bash
 # 定期清理舊文件
 find exports/ -name "*.pdf" -mtime +30 -delete

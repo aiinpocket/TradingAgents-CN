@@ -358,10 +358,10 @@ class AsyncProgressTracker:
                 step_description = "正在獲取市場數據和技術指標..."
             elif "get_stock_fundamentals_unified" in message:
                 step_description = "正在獲取基本面數據和財務指標..."
-            elif "get_china_stock_data" in message:
-                step_description = "正在獲取A股市場數據..."
-            elif "get_china_fundamentals" in message:
-                step_description = "正在獲取A股基本面數據..."
+            elif "get_us_stock_data" in message:
+                step_description = "正在獲取美股市場數據..."
+            elif "get_us_fundamentals" in message:
+                step_description = "正在獲取美股基本面數據..."
             else:
                 step_description = "正在調用分析工具..."
         elif "模塊開始" in message:

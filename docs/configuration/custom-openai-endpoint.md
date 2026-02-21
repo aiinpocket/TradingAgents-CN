@@ -124,19 +124,6 @@ CUSTOM_OPENAI_BASE_URL=https://api.openai.com/v1
 模型: 
 ```
 
-### 5. 使用硅基流動（SiliconFlow）
-```
-端點: https://api.siliconflow.cn/v1
-密鑰: 您的SiliconFlow API密鑰
-模型: meta-llama/Llama-3-8b-instruct（免費）
-```
-
-硅基流動是一家專註於AI基礎設施的服務商，提供：
-- 🆓 **免費模型**: Llama-3-8B等多個模型免費使用
-- 💰 **按量計費**: 靈活的定價方案
-- 🔌 **OpenAI兼容**: 完全兼容OpenAI API格式
-- 🚀 **高性能**: 優化的推理性能和低延遲
-
 ## 故障排除
 
 ### 常見問題

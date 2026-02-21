@@ -51,12 +51,10 @@ class SignalProcessor:
                 'reasoning': '信號內容為空，默認持有建議'
             }
 
-        # 檢測股票類型和貨幣
-        from tradingagents.utils.stock_utils import StockUtils
+        # 取得股票市場資訊（僅支援美股）
+        from tradingagents.utils.stock_utils import get_stock_market_info
 
-        market_info = StockUtils.get_market_info(stock_symbol)
-        is_china = market_info['is_china']
-        is_hk = market_info['is_hk']
+        market_info = get_stock_market_info(stock_symbol)
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
@@ -173,7 +171,7 @@ class SignalProcessor:
 
                     # 如果仍然沒有找到價格，嘗試智能推算
                     if target_price is None or target_price == "null" or target_price == "":
-                        target_price = self._smart_price_estimation(full_text, action, is_china)
+                        target_price = self._smart_price_estimation(full_text, action, False)
                         if target_price:
                             logger.debug(f"🔍 [SignalProcessor] 智能推算目標價格: {target_price}")
                         else:
@@ -213,8 +211,8 @@ class SignalProcessor:
             # 回退到簡單提取
             return self._extract_simple_decision(full_signal)
 
-    def _smart_price_estimation(self, text: str, action: str, is_china: bool) -> float:
-        """智能價格推算方法"""
+    def _smart_price_estimation(self, text: str, action: str, is_china: bool = False) -> float:
+        """智能價格推算方法（僅支援美股）"""
         import re
         
         # 嘗試從文本中提取當前價格和漲跌幅信息
@@ -262,16 +260,14 @@ class SignalProcessor:
             elif action == '賣出':
                 return round(current_price * (1 - percentage_change), 2)
         
-        # 如果有當前價格但沒有漲跌幅，使用默認估算
+        # 如果有當前價格但沒有漲跌幅，使用預設估算（美股）
         if current_price:
             if action == '買入':
-                # 買入建議默認10-20%漲幅
-                multiplier = 1.15 if is_china else 1.12
-                return round(current_price * multiplier, 2)
+                # 買入建議預設12%漲幅
+                return round(current_price * 1.12, 2)
             elif action == '賣出':
-                # 賣出建議默認5-10%跌幅
-                multiplier = 0.95 if is_china else 0.92
-                return round(current_price * multiplier, 2)
+                # 賣出建議預設8%跌幅
+                return round(current_price * 0.92, 2)
             else:  # 持有
                 # 持有建議使用當前價格
                 return current_price
@@ -311,11 +307,9 @@ class SignalProcessor:
                 except ValueError:
                     continue
 
-        # 如果沒有找到價格，嘗試智能推算
+        # 如果沒有找到價格，嘗試智能推算（僅美股）
         if target_price is None:
-            # 檢測股票類型
-            is_china = False  # 預設為美股
-            target_price = self._smart_price_estimation(text, action, is_china)
+            target_price = self._smart_price_estimation(text, action)
 
         return {
             'action': action,

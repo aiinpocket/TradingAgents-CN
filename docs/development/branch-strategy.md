@@ -8,7 +8,7 @@
 main (生產分支)
 ├── develop (開發主分支)
 ├── feature/* (功能開發分支)
-├── enhancement/* (中文增强分支)
+├── enhancement/* (中文增強分支)
 ├── hotfix/* (緊急修複分支)
 ├── release/* (發布準備分支)
 └── upstream-sync/* (上游同步分支)
@@ -34,9 +34,9 @@ main (生產分支)
 - **生命周期**: 短期（1-2周）
 - **示例**: `feature/portfolio-optimization`
 
-#### 🇨🇳 **enhancement/** - 中文增强分支
-- **命名**: `enhancement/增强名稱`
-- **用途**: 中文本地化和增强功能
+#### 🇨🇳 **enhancement/** - 中文增強分支
+- **命名**: `enhancement/增強名稱`
+- **用途**: 中文本地化和增強功能
 - **生命周期**: 中期（2-4周）
 - **示例**: `enhancement/chinese-llm-integration`
 
@@ -75,7 +75,7 @@ graph LR
     I --> J[發布]
 ```
 
-### 中文增强流程
+### 中文增強流程
 
 ```mermaid
 graph LR
@@ -113,10 +113,10 @@ git checkout -b feature/portfolio-analysis
 git push -u origin feature/portfolio-analysis
 ```
 
-### 創建中文增强分支
+### 創建中文增強分支
 
 ```bash
-# 從develop創建增强分支
+# 從develop創建增強分支
 git checkout develop
 git pull origin develop
 git checkout -b enhancement/tushare-integration
@@ -165,8 +165,8 @@ feature/功能名稱-簡短描述
 feature/chinese-data-source
 feature/risk-management-enhancement
 
-# 中文增强
-enhancement/增强類型-具體內容
+# 中文增強
+enhancement/增強類型-具體內容
 enhancement/llm-baidu-integration
 enhancement/chinese-financial-terms
 
@@ -365,7 +365,7 @@ python scripts/branch_manager.py delete feature/portfolio-optimization
 - [ ] 進行了代碼審查
 - [ ] 測試了與現有功能的兼容性
 
-### 2. 中文增强開發流程
+### 2. 中文增強開發流程
 
 #### 本地化功能開發
 ```bash
@@ -395,7 +395,7 @@ git push origin enhancement/finnhub-integration
 # 建立PR到develop分支
 ```
 
-#### 中文增强檢查清單
+#### 中文增強檢查清單
 - [ ] 功能適配中國金融市場特點
 - [ ] 添加了完整的中文文檔
 - [ ] 支持中文金融術語
@@ -443,7 +443,7 @@ git push origin develop
 #### 正式版本發布
 ```bash
 # 步驟1: 創建發布分支
-python scripts/branch_manager.py create release v1.1.0-cn -d "v1.1.0中文增强版發布"
+python scripts/branch_manager.py create release v1.1.0-cn -d "v1.1.0中文增強版發布"
 
 # 步驟2: 版本準備
 # 更新版本號
@@ -493,7 +493,7 @@ python scripts/sync_upstream.py
 # upstream-sync/20240115
 
 # 步驟3: 解決可能的衝突
-# 保護我們的中文文檔和增强功能
+# 保護我們的中文文檔和增強功能
 # 採用上游的核心代碼更新
 
 # 步驟4: 測試同步結果

@@ -49,7 +49,7 @@ STDLIB_MODULES = {
 INTERNAL_MODULES = {
     'tradingagents', 'web', 'cli', 'app', 'tests', 'scripts', 'examples',
     'auth_manager', 'components', 'modules', 'utils',  # web/ 下的內部模塊
-    'enhanced_stock_list_fetcher', 'stock_data_service',  # 內部服務模塊
+    'stock_data_service',  # 內部服務模組
 }
 
 # 已知的包名映射（import 名稱 -> PyPI 包名）

@@ -477,7 +477,7 @@ class RealtimeNewsAggregator:
                     logger.debug(f"[相關性計算] 檢測到公司相關關鍵詞 '{name}' 在標題中，相關性評分: 0.8，標題: {title[:50]}...")
                     return 0.8
         
-        # 提取股票代碼的純數字部分（適用於中國股票）
+        # 提取股票代碼的純數字部分
         pure_code = ''.join(filter(str.isdigit, ticker))
         if pure_code and pure_code in text:
             logger.debug(f"[相關性計算] 股票代碼數字部分 {pure_code} 出現在標題中，相關性評分: 0.9，標題: {title[:50]}...")
@@ -609,12 +609,11 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
     start_total_time = datetime.now()
     logger.info(f"[新聞分析] 開始時間: {start_total_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
     
-    # 股票類型判斷 - 統一視為美股
+    # 股票類型判斷 - 美股
     logger.info(f"[新聞分析] ========== 步驟1: 股票類型判斷 ==========")
     stock_type = "美股"
-    is_china_stock = False
     logger.info(f"[新聞分析] 原始ticker: {ticker}")
-    logger.info(f"[新聞分析] 最終判斷結果 - 股票 {ticker} 類型: {stock_type}")
+    logger.info(f"[新聞分析] 股票 {ticker} 類型: {stock_type}")
     
     # 使用實時新聞聚合器
     logger.info(f"[新聞分析] ========== 步驟3: 實時新聞聚合器 ==========")

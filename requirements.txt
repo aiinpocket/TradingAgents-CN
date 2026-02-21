@@ -1,16 +1,10 @@
-# ⚠️ 註意：此文件保留用於兼容性，但推薦使用 pyproject.toml
+# 此檔案保留用於相容性，推薦使用 pyproject.toml
 #
 # 推薦安裝方式：
 #   pip install -e .
 #
-# 國內用戶推薦使用鏡像加速（詳见 docs/installation-mirror.md）：
-#   pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
-#
-# 或永久配置鏡像：
-#   pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-#
-# 此文件与 pyproject.toml 保持同步
-# 最後更新：2025-10-21
+# 此檔案與 pyproject.toml 保持同步
+# 最後更新：2026-02-21
 #
 # 移除了以下間接依賴（會被其他包自動安裝）：
 # - pydantic (langchain 依賴)
@@ -41,11 +35,8 @@ pandas>=2.3.0
 pytz>=2025.2
 beautifulsoup4>=4.12.0
 
-# ==================== 數據源 ====================
-akshare>=1.16.98
-tushare>=1.4.21
+# ==================== 資料來源（美股） ====================
 yfinance>=0.2.63
-baostock>=0.8.8
 finnhub-python>=2.4.23
 eodhd>=1.0.32
 feedparser>=6.0.11

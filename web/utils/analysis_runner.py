@@ -287,10 +287,6 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             config["backend_url"] = "https://openrouter.ai/api/v1"
             logger.info(f"🌐 [OpenRouter] 使用模型: {llm_model}")
             logger.info(f"🌐 [OpenRouter] API端點: https://openrouter.ai/api/v1")
-        elif llm_provider == "siliconflow":
-            config["backend_url"] = "https://api.siliconflow.cn/v1"
-            logger.info(f"🌐 [SiliconFlow] 使用模型: {llm_model}")
-            logger.info(f"🌐 [SiliconFlow] API端點: https://api.siliconflow.cn/v1")
         elif llm_provider == "custom_openai":
             # 自定義OpenAI端點
             custom_base_url = st.session_state.get("custom_openai_base_url", "https://api.openai.com/v1")
@@ -353,29 +349,14 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.info(f"股票代碼: {stock_symbol}")
         logger.info(f"分析日期: {analysis_date}")
 
-        # 根據市場類型調整股票代碼格式
+        # 調整股票代碼格式
         logger.debug(f"🔍 [RUNNER DEBUG] ===== 股票代碼格式化 =====")
         logger.debug(f"🔍 [RUNNER DEBUG] 原始股票代碼: '{stock_symbol}'")
-        logger.debug(f"🔍 [RUNNER DEBUG] 市場類型: '{market_type}'")
 
-        if market_type == "A股":
-            # A股代碼不需要特殊處理，保持原樣
-            formatted_symbol = stock_symbol
-            logger.debug(f"🔍 [RUNNER DEBUG] A股代碼保持原樣: '{formatted_symbol}'")
-            update_progress(f"🇨🇳 準備分析A股: {formatted_symbol}")
-        elif market_type == "港股":
-            # 港股代碼轉為大寫，確保.HK後缀
-            formatted_symbol = stock_symbol.upper()
-            if not formatted_symbol.endswith('.HK'):
-                # 如果是純數字，添加.HK後缀
-                if formatted_symbol.isdigit():
-                    formatted_symbol = f"{formatted_symbol.zfill(4)}.HK"
-            update_progress(f"🇭🇰 準備分析港股: {formatted_symbol}")
-        else:
-            # 美股代碼轉為大寫
-            formatted_symbol = stock_symbol.upper()
-            logger.debug(f"🔍 [RUNNER DEBUG] 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
-            update_progress(f"🇺🇸 準備分析美股: {formatted_symbol}")
+        # 美股代碼轉為大寫
+        formatted_symbol = stock_symbol.upper()
+        logger.debug(f"🔍 [RUNNER DEBUG] 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
+        update_progress(f"準備分析美股: {formatted_symbol}")
 
         logger.debug(f"🔍 [RUNNER DEBUG] 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
@@ -674,7 +655,7 @@ def format_analysis_results(results):
         }
     }
 
-def validate_analysis_params(stock_symbol, analysis_date, analysts, research_depth, market_type="美股"):
+def validate_analysis_params(stock_symbol, analysis_date, analysts, research_depth):
     """驗證分析參數"""
 
     errors = []
@@ -685,29 +666,11 @@ def validate_analysis_params(stock_symbol, analysis_date, analysts, research_dep
     elif len(stock_symbol.strip()) > 10:
         errors.append("股票代碼長度不能超過10個字符")
     else:
-        # 根據市場類型驗證代碼格式
+        # 驗證美股代碼格式
         symbol = stock_symbol.strip()
-        if market_type == "A股":
-            # A股：6位數字
-            import re
-            if not re.match(r'^\d{6}$', symbol):
-                errors.append("A股代碼格式錯誤，應為6位數字（如：000001）")
-        elif market_type == "港股":
-            # 港股：4-5位數字.HK 或 純4-5位數字
-            import re
-            symbol_upper = symbol.upper()
-            # 檢查是否為 XXXX.HK 或 XXXXX.HK 格式
-            hk_format = re.match(r'^\d{4,5}\.HK$', symbol_upper)
-            # 檢查是否為純4-5位數字格式
-            digit_format = re.match(r'^\d{4,5}$', symbol)
-
-            if not (hk_format or digit_format):
-                errors.append("港股代碼格式錯誤，應為4位數字.HK（如：0700.HK）或4位數字（如：0700）")
-        elif market_type == "美股":
-            # 美股：1-5位字母
-            import re
-            if not re.match(r'^[A-Z]{1,5}$', symbol.upper()):
-                errors.append("美股代碼格式錯誤，應為1-5位字母（如：AAPL）")
+        import re
+        if not re.match(r'^[A-Z]{1,5}$', symbol.upper()):
+            errors.append("美股代碼格式錯誤，應為1-5位字母（如：AAPL）")
     
     # 驗證分析師列表
     if not analysts or len(analysts) == 0:
@@ -762,19 +725,10 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
     import random
 
-    # 根據市場類型設置貨幣符號和價格範圍
-    if market_type == "港股":
-        currency_symbol = "HK$"
-        price_range = (50, 500)  # 港股價格範圍
-        market_name = "港股"
-    elif market_type == "A股":
-        currency_symbol = "¥"
-        price_range = (5, 100)   # A股價格範圍
-        market_name = "A股"
-    else:  # 美股
-        currency_symbol = "$"
-        price_range = (50, 300)  # 美股價格範圍
-        market_name = "美股"
+    # 美股貨幣符號和價格範圍
+    currency_symbol = "$"
+    price_range = (50, 300)
+    market_name = "美股"
 
     # 生成模擬決策
     actions = ['買入', '持有', '賣出']

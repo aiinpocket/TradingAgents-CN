@@ -16,21 +16,17 @@ def create_trader(llm, memory):
         news_report = state["news_report"]
         fundamentals_report = state["fundamentals_report"]
 
-        # 使用統一的股票類型檢測
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(company_name)
-        is_china = market_info['is_china']
-        is_hk = market_info['is_hk']
-        is_us = market_info['is_us']
+        # 取得股票市場資訊（僅支援美股）
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(company_name)
 
-        # 根據股票類型確定貨幣單位
+        # 確定貨幣單位
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.debug(f"💰 [DEBUG] ===== 交易員節點開始 =====")
-        logger.debug(f"💰 [DEBUG] 交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
-        logger.debug(f"💰 [DEBUG] 貨幣符號: {currency_symbol}")
-        logger.debug(f"💰 [DEBUG] 市場詳情: 中國A股={is_china}, 港股={is_hk}, 美股={is_us}")
+        logger.debug(f"[DEBUG] ===== 交易員節點開始 =====")
+        logger.debug(f"[DEBUG] 交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
+        logger.debug(f"[DEBUG] 貨幣符號: {currency_symbol}")
         logger.debug(f"💰 [DEBUG] 基本面報告長度: {len(fundamentals_report)}")
         logger.debug(f"💰 [DEBUG] 基本面報告前200字符: {fundamentals_report[:200]}...")
 
@@ -86,8 +82,7 @@ def create_trader(llm, memory):
 - 即使市場情緒過熱，也要基於合理估值給出目標價
 
 特別註意：
-- 如果是中國A股（6位數字代碼），請使用人民幣（¥）作為價格單位
-- 如果是美股或港股，請使用美元（$）作為價格單位
+- 所有價格使用美元（$）作為單位
 - 目標價位必須與當前股價的貨幣單位保持一致
 - 必須使用基本面報告中提供的正確公司名稱
 - **絕對不允許說"無法確定目標價"或"需要更多信息"**

@@ -4,6 +4,7 @@ Cookie管理器 - 解決Streamlit session state頁面刷新丟失的問題
 
 import streamlit as st
 import json
+import os
 import time
 from typing import Optional, Dict, Any
 from datetime import datetime, timedelta
@@ -25,9 +26,14 @@ class CookieManager:
         # 初始化Cookie管理器
         if COOKIES_AVAILABLE:
             try:
+                # 從環境變數讀取加密密鑰，若未設定則使用隨機生成的預設值
+                cookie_secret = os.environ.get(
+                    "COOKIE_SECRET_KEY",
+                    "change_this_to_a_random_secret_key"
+                )
                 self.cookies = EncryptedCookieManager(
                     prefix="tradingagents_",
-                    password="tradingagents_secret_key_2025"  # 固定密鑰
+                    password=cookie_secret
                 )
 
                 # 檢查Cookie管理器是否準備就緒

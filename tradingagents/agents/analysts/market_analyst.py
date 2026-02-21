@@ -178,10 +178,10 @@ def create_market_analyst(llm, toolkit):
         logger.debug(f"📈 [DEBUG] 當前狀態中的訊息數量: {len(state.get('messages', []))}")
         logger.debug(f"📈 [DEBUG] 現有市場報告: {state.get('market_report', 'None')}")
 
-        # 根據股票代碼格式選擇數據源
-        from tradingagents.utils.stock_utils import StockUtils
+        # 取得股票市場資訊（僅支援美股）
+        from tradingagents.utils.stock_utils import get_stock_market_info
 
-        market_info = StockUtils.get_market_info(ticker)
+        market_info = get_stock_market_info(ticker)
 
         logger.debug(f"📈 [DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
 

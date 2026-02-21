@@ -893,7 +893,7 @@ def main():
     if os.getenv('DEBUG_MODE') == 'true':
         if st.button("🔄 清除會話狀態"):
             st.session_state.clear()
-            st.experimental_rerun()
+            st.rerun()
 
     # 渲染頁面頭部
     render_header()
@@ -1157,8 +1157,7 @@ def main():
                 stock_symbol=form_data['stock_symbol'],
                 analysis_date=form_data['analysis_date'],
                 analysts=form_data['analysts'],
-                research_depth=form_data['research_depth'],
-                market_type=form_data.get('market_type', '美股')
+                research_depth=form_data['research_depth']
             )
 
             if not is_valid:

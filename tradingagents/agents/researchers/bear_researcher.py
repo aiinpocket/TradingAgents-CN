@@ -19,13 +19,10 @@ def create_bear_researcher(llm, memory):
         news_report = state["news_report"]
         fundamentals_report = state["fundamentals_report"]
 
-        # 使用統一的股票類型檢測
+        # 取得股票市場資訊（僅支援美股）
         company_name = state.get('company_of_interest', 'Unknown')
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(company_name)
-        is_china = market_info['is_china']
-        is_hk = market_info['is_hk']
-        is_us = market_info['is_us']
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(company_name)
 
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']

@@ -49,9 +49,9 @@ def create_social_media_analyst(llm, toolkit):
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
         
-        # 獲取股票市場信息
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(ticker)
+        # 取得股票市場資訊（僅支援美股）
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(ticker)
         
         # 獲取公司名稱
         company_name = _get_company_name_for_social_media(ticker, market_info)

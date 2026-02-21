@@ -8,8 +8,8 @@ from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
 # 導入統一新聞工具
 from tradingagents.tools.unified_news_tool import create_unified_news_tool
-# 導入股票工具類
-from tradingagents.utils.stock_utils import StockUtils
+# 導入股票市場資訊工具
+from tradingagents.utils.stock_utils import get_stock_market_info
 # 導入Google工具調用處理器
 from tradingagents.agents.utils.google_tool_handler import GoogleToolCallHandler
 
@@ -27,8 +27,8 @@ def create_news_analyst(llm, toolkit):
         session_id = state.get("session_id", "未知會話")
         logger.info(f"[新聞分析師] 會話ID: {session_id}，開始時間: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
         
-        # 獲取市場信息
-        market_info = StockUtils.get_market_info(ticker)
+        # 取得市場資訊（僅支援美股）
+        market_info = get_stock_market_info(ticker)
         logger.info(f"[新聞分析師] 股票類型: {market_info['market_name']}")
         
         # 獲取公司名稱
@@ -72,7 +72,7 @@ def create_news_analyst(llm, toolkit):
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 
 
-您的主要職责包括：
+您的主要職責包括：
 1. 獲取和分析最新的實時新聞（優先15-30分鐘內的新聞）
 2. 評估新聞事件的緊急程度和市場影響
 3. 識別可能影響股價的關鍵信息
@@ -126,7 +126,7 @@ def create_news_analyst(llm, toolkit):
                     "\n"
                     "\n✅ 強制執行步驟："
                     "\n1. 您的第一個動作必須是調用 get_stock_news_unified 工具"
-                    "\n2. 該工具會自動識別股票類型（A股、港股、美股）並獲取相應新聞"
+                    "\n2. 該工具會自動獲取美股相關新聞"
                     "\n3. 只有在成功獲取新聞數據後，才能開始分析"
                     "\n4. 您的回答必須基於工具返回的真實數據"
                     "\n"

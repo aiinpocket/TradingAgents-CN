@@ -252,14 +252,8 @@ def render_decision_summary(decision, stock_symbol=None):
         logger.debug(f"🔍 [DEBUG] target_price from decision: {target_price}, type: {type(target_price)}")
         logger.debug(f"🔍 [DEBUG] decision keys: {list(decision.keys()) if isinstance(decision, dict) else 'Not a dict'}")
 
-        # 根據股票代碼確定貨幣符號
-        def is_china_stock(ticker_code):
-            import re
-
-            return re.match(r'^\d{6}$', str(ticker_code)) if ticker_code else False
-
-        is_china = is_china_stock(stock_symbol)
-        currency_symbol = "¥" if is_china else "$"
+        # 僅支援美股，統一使用美元符號
+        currency_symbol = "$"
 
         # 處理目標價格顯示
         if target_price is not None and isinstance(target_price, (int, float)) and target_price > 0:
