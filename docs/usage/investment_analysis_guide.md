@@ -102,8 +102,8 @@ ANALYSIS_DATE = "2024-06-26" #
 
 ```python
 # 
-"deep_think_llm": "gpt-4", # 
-"quick_think_llm": "gemini-flash", # 
+"deep_think_llm": "o4-mini", #
+"quick_think_llm": "gpt-4o-mini", #
 ```
 
 ### 2. 

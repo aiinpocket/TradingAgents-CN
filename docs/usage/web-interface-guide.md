@@ -44,7 +44,7 @@ streamlit run web/app.py
 
 ****:
 - ****: 1 ()
-- **AI**: gemini-flash ()
+- **AI**: gpt-4o-mini
 - ****: ()
 - ****: ()
 
@@ -59,7 +59,7 @@ streamlit run web/app.py
 
 ****:
 - ****: 1
-- **AI**: gemini-pro ()
+- **AI**: gpt-4o
 - ****: 
 - ****: ()
 
@@ -73,7 +73,7 @@ streamlit run web/app.py
 
 ****:
 - ****: 1 () + 2 ()
-- **AI**: gemini-pro ()
+- **AI**: gpt-4o
 - ****: 
 - ****: 
 
@@ -88,7 +88,7 @@ streamlit run web/app.py
 
 ****:
 - ****: 2 () + 2 ()
-- **AI**: gemini-pro ()
+- **AI**: gpt-4o
 - ****: 
 - ****: 
 

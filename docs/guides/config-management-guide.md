@@ -60,9 +60,8 @@ python -m streamlit run web/app.py
 
 | | | | |
 |--------|----------|------|------|
-| **OpenAI** | gpt-3.5-turbo, gpt-4, gpt-4-turbo | USD | |
-| **Google** | gemini-pro, gemini-pro-vision | USD | Google |
-| **Anthropic** | claude-3-sonnet, claude-3-opus | USD | |
+| **OpenAI** | gpt-4o, gpt-4o-mini, o4-mini | USD | |
+| **Anthropic** | claude-sonnet-4, claude-haiku-4 | USD | |
 
 ### 
 
@@ -109,13 +108,13 @@ python -m streamlit run web/app.py
 | gpt-4 | $0.03 | $0.06 | |
 | gpt-4-turbo | $0.01 | $0.03 | |
 
-#### **Google (USD/1000 tokens)**
+#### **Anthropic (USD/1000 tokens)**
 | | | | |
 |------|----------|----------|------|
-| gemini-pro | $0.00025 | $0.0005 | |
-| gemini-pro-vision | $0.00025 | $0.0005 | |
+| claude-sonnet-4 | $0.003 | $0.015 | |
+| claude-haiku-4 | $0.001 | $0.005 | |
 
-### 
+###
 
 1. **""** 
 2. 

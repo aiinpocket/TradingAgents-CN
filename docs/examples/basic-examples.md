@@ -156,12 +156,11 @@ def compare_llm_providers(symbol, date):
  "deep_think_llm": "gpt-4o-mini",
  "quick_think_llm": "gpt-4o-mini",
  },
- "Google": {
- "llm_provider": "google",
- "deep_think_llm": "gemini-pro",
- "quick_think_llm": "gemini-pro",
+ "Anthropic": {
+ "llm_provider": "anthropic",
+ "deep_think_llm": "claude-sonnet-4",
+ "quick_think_llm": "claude-haiku-4",
  },
- # : API
  }
  
  results = {}
