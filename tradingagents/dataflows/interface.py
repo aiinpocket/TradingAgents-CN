@@ -108,7 +108,7 @@ def get_finnhub_company_insider_sentiment(
     data = get_data_in_range(ticker, before, curr_date, "insider_senti", DATA_DIR)
 
     if len(data) == 0:
-        return ""
+        return f"[{ticker}] 在指定期間內無內部人情緒數據。"
 
     result_str = ""
     seen_dicts = []
@@ -149,7 +149,7 @@ def get_finnhub_company_insider_transactions(
     data = get_data_in_range(ticker, before, curr_date, "insider_trans", DATA_DIR)
 
     if len(data) == 0:
-        return ""
+        return f"[{ticker}] 在指定期間內無內部人交易數據。"
 
     result_str = ""
 
@@ -199,7 +199,7 @@ def get_simfin_balance_sheet(
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
         logger.info("No balance sheet available before the given current date.")
-        return ""
+        return f"[{ticker}] 在指定日期前無可用的資產負債表數據。"
 
     # Get the most recent balance sheet by selecting the row with the latest Publish Date
     latest_balance_sheet = filtered_df.loc[filtered_df["Publish Date"].idxmax()]
@@ -246,7 +246,7 @@ def get_simfin_cashflow(
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
         logger.info("No cash flow statement available before the given current date.")
-        return ""
+        return f"[{ticker}] 在指定日期前無可用的現金流量表數據。"
 
     # Get the most recent cash flow statement by selecting the row with the latest Publish Date
     latest_cash_flow = filtered_df.loc[filtered_df["Publish Date"].idxmax()]
@@ -293,7 +293,7 @@ def get_simfin_income_statements(
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
         logger.info("No income statement available before the given current date.")
-        return ""
+        return f"[{ticker}] 在指定日期前無可用的損益表數據。"
 
     # Get the most recent income statement by selecting the row with the latest Publish Date
     latest_income = filtered_df.loc[filtered_df["Publish Date"].idxmax()]
@@ -332,7 +332,7 @@ def get_google_news(
 
     if len(news_results) == 0:
         logger.warning(f"[Google新聞] 未找到相關新聞，查詢: {query}")
-        return ""
+        return f"在指定期間內未找到 {query.replace('+', ' ')} 的相關 Google 新聞。"
 
     logger.info(f"[Google新聞] 成功獲取 {len(news_results)} 條新聞，查詢: {query}")
     return f"## {query.replace('+', ' ')} Google News, from {before} to {curr_date}:\n\n{news_str}"
@@ -498,7 +498,7 @@ def get_stockstats_indicator(
         logger.error(
             f"Error getting stockstats indicator data for indicator {indicator} on {curr_date}: {e}"
         )
-        return ""
+        return f"[{symbol}] 無法獲取 {indicator} 技術指標數據: {e}"
 
     return str(indicator_value)
 
