@@ -30,8 +30,8 @@ services:
       TRADINGAGENTS_LOG_MAX_SIZE: "100MB"
       TRADINGAGENTS_LOG_BACKUP_COUNT: "5"
       # Docker 專用資料庫配置（覆蓋 .env 中的本機配置）
-      TRADINGAGENTS_MONGODB_URL: mongodb://admin:${MONGODB_PASSWORD:-tradingagents123}@mongodb:27017/tradingagents?authSource=admin
-      TRADINGAGENTS_REDIS_URL: redis://:${REDIS_PASSWORD:-tradingagents123}@redis:6379
+      TRADINGAGENTS_MONGODB_URL: mongodb://admin:${MONGODB_PASSWORD:?MONGODB_PASSWORD is required}@mongodb:27017/tradingagents?authSource=admin
+      TRADINGAGENTS_REDIS_URL: redis://:${REDIS_PASSWORD:?REDIS_PASSWORD is required}@redis:6379
       TRADINGAGENTS_CACHE_TYPE: redis
       # Docker 環境標識和 PDF 支援
       DOCKER_CONTAINER: "true"
@@ -67,7 +67,7 @@ services:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-tradingagents123}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:?MONGODB_PASSWORD is required}
       MONGO_INITDB_DATABASE: tradingagents
     volumes:
       - mongodb_data:/data/db
@@ -88,7 +88,7 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-tradingagents123}
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD is required}
     volumes:
       - redis_data:/data
     networks:
@@ -108,7 +108,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - REDIS_HOSTS=local:redis:6379:0:${REDIS_PASSWORD:-tradingagents123}
+      - REDIS_HOSTS=local:redis:6379:0:${REDIS_PASSWORD:?REDIS_PASSWORD is required}
     networks:
       - tradingagents-network
     depends_on:
@@ -129,10 +129,10 @@ services:
       - "8082:8081"
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD:-tradingagents123}
-      ME_CONFIG_MONGODB_URL: mongodb://admin:${MONGODB_PASSWORD:-tradingagents123}@mongodb:27017/
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD:?MONGODB_PASSWORD is required}
+      ME_CONFIG_MONGODB_URL: mongodb://admin:${MONGODB_PASSWORD:?MONGODB_PASSWORD is required}@mongodb:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD:-tradingagents123}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD:?MONGODB_PASSWORD is required}
     networks:
       - tradingagents-network
     depends_on:

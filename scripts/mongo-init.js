@@ -4,17 +4,10 @@
 // 切換到admin資料庫
 db = db.getSiblingDB('admin');
 
-// 建立應用使用者
-db.createUser({
-  user: 'tradingagents',
-  pwd: 'tradingagents123',
-  roles: [
-    {
-      role: 'readWrite',
-      db: 'tradingagents'
-    }
-  ]
-});
+// 建立應用使用者（密碼從環境變數 MONGO_INITDB_ROOT_PASSWORD 讀取）
+// Docker Compose 中已透過環境變數設定 root 密碼
+// 此腳本只負責建立資料庫結構，不額外建立應用使用者
+// 應用程式使用 admin 帳戶連線（由 MONGODB_PASSWORD 環境變數控制）
 
 // 切換到應用資料庫
 db = db.getSiblingDB('tradingagents');
