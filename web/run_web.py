@@ -48,48 +48,20 @@ def clean_cache_files(force_clean=False):
         force_clean: 是否強制清理，默認False（可選清理）
     """
 
-    project_root = Path(__file__).parent.parent
-
-    # 安全的緩存目錄搜索，避免遞歸錯誤
-    cache_dirs = []
-    try:
-        # 限制搜索深度，避免循環符號鏈接問題
-        for root, dirs, files in os.walk(project_root):
-            # 限制搜索深度為5層，避免過深遞歸
-            depth = root.replace(str(project_root), '').count(os.sep)
-            if depth >= 5:
-                dirs[:] = [] # 不再深入搜索
-                continue
-
-            # 跳過已知的問題目錄
-            dirs[:] = [d for d in dirs if d not in {'.git', 'node_modules', '.venv', 'env', '.tox'}]
-
-            if '__pycache__'in dirs:
-                cache_dirs.append(Path(root) / '__pycache__')
-
-    except (OSError, RecursionError) as e:
-        logger.warning(f"緩存搜索遇到問題: {e}")
-        logger.info(f"跳過緩存清理，繼續啟動應用")
-
-    if not cache_dirs:
-        logger.info(f"無需清理緩存文件")
-        return
-
-    # 檢查環境變量是否禁用清理（使用強健的布爾值解析）
+    # 檢查環境變量是否禁用清理
     try:
         from tradingagents.config.env_utils import parse_bool_env
         skip_clean = parse_bool_env('SKIP_CACHE_CLEAN', False)
     except ImportError:
-        # 回退到原始方法
         skip_clean = os.getenv('SKIP_CACHE_CLEAN', 'false').lower() == 'true'
 
     if skip_clean and not force_clean:
-        logger.info(f"跳過緩存清理（SKIP_CACHE_CLEAN=true）")
+        logger.info("跳過緩存清理（SKIP_CACHE_CLEAN=true）")
         return
 
     project_root = Path(__file__).parent.parent
 
-    # 安全地查找緩存目錄，避免遞歸深度問題
+    # 在特定目錄中安全查找緩存，避免遞歸深度問題
     cache_dirs = []
     try:
         # 只在特定目錄中查找，避免深度遞歸
