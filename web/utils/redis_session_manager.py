@@ -74,13 +74,13 @@ class RedisSessionManager:
             
             # 生成基於用戶信息的唯一標識
             unique_str = f"{user_agent}_{x_forwarded_for}_{int(time.time() / 3600)}"  # 按小時分組
-            session_hash = hashlib.md5(unique_str.encode()).hexdigest()[:16]
+            session_hash = hashlib.sha256(unique_str.encode()).hexdigest()[:16]
             
             return f"{self.session_prefix}fallback_{session_hash}"
             
         except Exception as e:
             # 最後的fallback：使用時間戳
-            timestamp_hash = hashlib.md5(str(int(time.time() / 3600)).encode()).hexdigest()[:16]
+            timestamp_hash = hashlib.sha256(str(int(time.time() / 3600)).encode()).hexdigest()[:16]
             return f"{self.session_prefix}timestamp_{timestamp_hash}"
     
     def save_analysis_state(self, analysis_id: str, status: str = "running",

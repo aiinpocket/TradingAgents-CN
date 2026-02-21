@@ -6,7 +6,7 @@
 
 import streamlit as st
 import time
-from typing import Optional, Dict, Any
+from typing import Dict, Any
 from web.utils.async_progress_tracker import get_progress_by_id, format_time
 
 # 導入日誌模塊

@@ -29,7 +29,6 @@ except ImportError:
 try:
     from .docker_pdf_adapter import (
         is_docker_environment,
-        get_docker_pdf_extra_args,
         setup_xvfb_display,
         get_docker_status_info
     )
@@ -40,8 +39,6 @@ except ImportError:
 
 # 導入導出相關庫
 try:
-    import markdown
-
     # 導入pypandoc（用於markdown轉docx和pdf）
     import pypandoc
 

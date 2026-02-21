@@ -22,7 +22,6 @@ except ImportError as e:
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 import pandas as pd
-from tqdm import tqdm
 from openai import OpenAI
 
 # 嘗試導入yfinance，如果失敗則設定為None
