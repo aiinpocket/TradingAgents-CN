@@ -293,15 +293,11 @@ def render_sidebar():
                 clear_cache()
                 st.rerun()
 
-        # LLM 提供商選擇
-        providers = ["openai", "google", "anthropic", "openrouter", "custom_openai", "ollama"]
+        # LLM 提供商選擇（僅啟用已配置 API 金鑰的提供商）
+        providers = ["openai", "anthropic"]
         provider_labels = {
             "openai": "OpenAI",
-            "google": "Google AI",
             "anthropic": "Anthropic (Claude)",
-            "openrouter": "OpenRouter",
-            "custom_openai": "自定義 OpenAI 端點",
-            "ollama": "Ollama (本地)"
         }
 
         current_provider = st.session_state.llm_provider
@@ -327,35 +323,17 @@ def render_sidebar():
         else:
             st.session_state.llm_provider = llm_provider
 
-        # 根據提供商渲染對應的模型選擇區塊
-        if llm_provider == "openrouter":
-            llm_model = _render_openrouter_section()
-        elif llm_provider == "custom_openai":
-            llm_model = _render_custom_openai_section()
-        else:
-            # OpenAI / Google / Anthropic / Ollama 共用邏輯
-            provider_help = {
-                "openai": "從 OpenAI API 動態取得的可用模型",
-                "google": "從 Google AI API 動態取得的可用 Gemini 模型",
-                "anthropic": "從 Anthropic API 動態取得的可用 Claude 模型",
-                "ollama": "從本地 Ollama 服務取得的已下載模型",
-            }
-            llm_model = _render_model_selector(
-                provider=llm_provider,
-                label=f"選擇{provider_labels.get(llm_provider, '')}模型",
-                help_text=provider_help.get(llm_provider, "選擇模型"),
-                select_key=f"{llm_provider}_model_select"
-            )
-
-            # 提供商特定提示
-            env_keys = {
-                "openai": "OPENAI_API_KEY",
-                "google": "GOOGLE_API_KEY",
-                "anthropic": "ANTHROPIC_API_KEY",
-            }
-            env_key = env_keys.get(llm_provider)
-            if env_key:
-                st.info(f"**{provider_labels.get(llm_provider, '')}配置**: 在 .env 檔案中設定 {env_key}")
+        # 根據提供商渲染對應的模型選擇區塊（僅 OpenAI 和 Anthropic）
+        provider_help = {
+            "openai": "從 OpenAI API 動態取得的可用模型",
+            "anthropic": "從 Anthropic API 動態取得的可用 Claude 模型",
+        }
+        llm_model = _render_model_selector(
+            provider=llm_provider,
+            label=f"選擇{provider_labels.get(llm_provider, '')}模型",
+            help_text=provider_help.get(llm_provider, "選擇模型"),
+            select_key=f"{llm_provider}_model_select"
+        )
 
         # 更新 session state 與持久化
         if st.session_state.llm_model != llm_model:
@@ -408,20 +386,9 @@ def render_sidebar():
                 st.warning(f"{label}: {key_val[:8]}... (格式異常)")
 
         st.markdown("*必需配置:*")
+        _show_key_status("OpenAI", "OPENAI_API_KEY", "sk-")
+        _show_key_status("Anthropic", "ANTHROPIC_API_KEY", "sk-")
         _show_key_status("FinnHub", "FINNHUB_API_KEY")
-
-        st.markdown("*可選配置:*")
-        # 只顯示已設定的密鑰
-        optional_keys = [
-            ("Google AI", "GOOGLE_API_KEY", "AIza"),
-            ("OpenAI", "OPENAI_API_KEY", "sk-"),
-            ("Anthropic", "ANTHROPIC_API_KEY", "sk-"),
-            ("OpenRouter", "OPENROUTER_API_KEY", ""),
-        ]
-        for label, env_name, prefix in optional_keys:
-            val = os.getenv(env_name, "")
-            if val and not val.startswith("your_") and val != "CHANGE_ME":
-                _show_key_status(label, env_name, prefix)
 
         st.markdown("---")
 
