@@ -109,18 +109,18 @@ ta = TradingAgentsGraph(
     config=config
 )
 
-# 測試招商銀行
-result = ta.run_analysis('000001', '2025-01-08')
+# 測試 Apple
+result = ta.run_analysis('AAPL', '2025-01-08')
 print('分析結果:', result)
 "
 ```
 
 **測試股票建議**：
-- `000001` - 平安銀行
-- `600519` - 贵州茅台  
-- `000858` - 五糧液
-- `002594` - 比亞迪
-- `300750` - 寧德時代
+- `AAPL` - Apple Inc.
+- `MSFT` - Microsoft Corp.
+- `TSLA` - Tesla Inc.
+- `GOOGL` - Alphabet Inc.
+- `AMZN` - Amazon.com Inc.
 
 **測試要點**：
 - [ ] 是否包含真實財務指標（PE、PB、ROE等）
@@ -221,9 +221,9 @@ python tests/test_
 ```bash
 # 測試數據獲取
 python -c "
-from tradingagents.dataflows.tdx_utils import get_china_stock_data
-data = get_china_stock_data('000001', '2025-01-01', '2025-01-08')
-print('數據獲取結果:', data[:200] if data else '獲取失敗')
+from tradingagents.dataflows.yfin_utils import get_stock_data
+data = get_stock_data('AAPL', '2025-01-01', '2025-01-08')
+print('資料取得結果:', data[:200] if data else '取得失敗')
 "
 ```
 

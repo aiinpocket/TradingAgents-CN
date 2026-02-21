@@ -81,7 +81,7 @@ def check_analysis_records():
         import traceback
         print(f"詳細錯誤: {traceback.format_exc()}")
 
-def check_specific_stock(stock_symbol="000001"):
+def check_specific_stock(stock_symbol="AAPL"):
     """檢查特定股票的記錄"""
     print(f"\n🔍 檢查股票 {stock_symbol} 的記錄...")
     
@@ -127,7 +127,7 @@ def main():
     check_analysis_records()
     
     # 檢查特定股票
-    check_specific_stock("000001")
+    check_specific_stock("AAPL")
     
     print(f"\n🎉 檢查完成")
 

@@ -150,8 +150,8 @@ def main():
             ("DEMO001", "示例科技股"),
             ("DEMO002", "示例銀行股"),
             ("DEMO003", "示例消費股"),
-            ("000001", "平安銀行"),
-            ("000002", "萬科A")
+            ("AAPL", "Apple Inc."),
+            ("MSFT", "Microsoft Corp.")
         ]
         
         success_count = 0

@@ -17,15 +17,15 @@ def get_stock_info(stock_code: str) -> Optional[Dict[str, Any]]:
     獲取單個股票的基礎信息
     
     Args:
-        stock_code: 股票代碼（如 '000001'）
-    
+        stock_code: 股票代碼（如 'AAPL'）
+
     Returns:
-        Dict: 股票信息，包含code, name, market, category等字段
-              如果獲取失敗，返回包含error字段的字典
-    
+        Dict: 股票資訊，包含 code, name, market, category 等欄位
+              如果取得失敗，回傳包含 error 欄位的字典
+
     Example:
-        >>> info = get_stock_info('000001')
-        >>> print(info['name'])  # 輸出: 平安銀行
+        >>> info = get_stock_info('AAPL')
+        >>> print(info['name'])  # 輸出: Apple Inc.
     """
     service = get_stock_data_service()
     return service.get_stock_basic_info(stock_code)
@@ -65,7 +65,7 @@ def get_stock_data(stock_code: str, start_date: str, end_date: str) -> str:
         str: 格式化的股票數據報告
     
     Example:
-        >>> data = get_stock_data('000001', '2024-01-01', '2024-01-31')
+        >>> data = get_stock_data('AAPL', '2024-01-01', '2024-01-31')
         >>> print(data)
     """
     service = get_stock_data_service()

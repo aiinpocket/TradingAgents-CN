@@ -50,7 +50,7 @@ TradingAgents-CN 提供了強大的報告導出功能，支持將股票分析結
 
 ```bash
 # 使用CLI進行分析並導出
-python main.py --symbol 000001 --export-format word,pdf
+python main.py --symbol AAPL --export-format word,pdf
 ```
 
 ## 📊 報告內容結構
@@ -158,9 +158,9 @@ EXPORT_WATERMARK=false                 # 是否添加水印
 ```
 格式: {股票代碼}_analysis_{YYYYMMDD_HHMMSS}.{擴展名}
 示例: 
-- 000001_analysis_20250113_143022.docx
-- AAPL_analysis_20250113_143022.pdf
-- 600519_analysis_20250113_143022.md
+- AAPL_analysis_20250113_143022.docx
+- MSFT_analysis_20250113_143022.pdf
+- TSLA_analysis_20250113_143022.md
 ```
 
 ### 存儲位置

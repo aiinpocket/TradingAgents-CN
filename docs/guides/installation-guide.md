@@ -400,7 +400,7 @@ python test_data_sources.py
 1. 啟動應用後訪問 http://localhost:8501
 2. 檢查側邊欄是否正常顯示
 3. 嘗試選擇不同的LLM提供商
-4. 輸入測試股票代碼 (如: AAPL, 000001)
+4. 輸入測試股票代碼 (如: AAPL, MSFT)
 
 ## 🔧 常見問題
 

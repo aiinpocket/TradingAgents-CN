@@ -69,7 +69,7 @@ http://localhost:8501
 
 # 進行股票分析
 # 1. 選擇LLM模型
-# 2. 輸入股票代碼 (如: 000001, AAPL)
+# 2. 輸入股票代碼 (如: AAPL, MSFT)
 # 3. 選擇分析深度
 # 4. 點擊"開始分析"
 # 5. 等待分析完成
@@ -110,13 +110,13 @@ http://localhost:8501
 
 **示例內容**:
 ```markdown
-# 股票分析報告: 平安銀行 (000001)
+# 股票分析報告: Apple Inc. (AAPL)
 
-## 📊 基本信息
-- **股票代碼**: 000001
-- **股票名稱**: 平安銀行
+## 基本資訊
+- **股票代碼**: AAPL
+- **股票名稱**: Apple Inc.
 - **分析時間**: 2025-07-13 14:30:00
-- **當前價格**: ¥12.45
+- **當前價格**: $198.45
 
 ## 📈 技術分析
 ### 趨勢分析
@@ -344,7 +344,7 @@ from tradingagents.export.report_exporter import ReportExporter
 exporter = ReportExporter()
 
 # 批量導出
-symbols = ['000001', '600519', '000858', 'AAPL', 'TSLA']
+symbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN']
 for symbol in symbols:
     # 獲取分析結果
     analysis_result = get_analysis_result(symbol)
@@ -374,9 +374,9 @@ crontab -e
 {股票代碼}_{分析類型}_{日期}.{格式}
 
 # 示例
-000001_comprehensive_20250713.pdf
-AAPL_technical_20250713.docx
-600519_fundamental_20250713.md
+AAPL_comprehensive_20250713.pdf
+MSFT_technical_20250713.docx
+TSLA_fundamental_20250713.md
 ```
 
 ### 2. 存儲管理

@@ -46,7 +46,7 @@ def test_tool_binding():
     # 測試工具調用
     print("\n2. 測試工具調用...")
     try:
-        result = unified_tool('000001', 5)
+        result = unified_tool('AAPL', 5)
         print(f" 工具調用成功，結果長度: {len(result)} 字符")
         print(f"結果預覽: {result[:200]}...")
     except Exception as e:

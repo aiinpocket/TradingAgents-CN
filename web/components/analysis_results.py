@@ -360,7 +360,7 @@ def render_analysis_results():
             start_date = (datetime.now() - timedelta(days=days)).date()
         
         # 股票代碼過濾
-        stock_filter = st.text_input("股票代碼", placeholder="如: 000001, AAPL")
+        stock_filter = st.text_input("股票代碼", placeholder="如: AAPL, MSFT")
         
         # 分析師類型過濾
         analyst_filter = st.selectbox(
