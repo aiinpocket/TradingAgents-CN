@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-整理TradingAgentsCN項目的scripts目錄結構
+整理TradingAgents-CN項目的scripts目錄結構
 將現有指令碼按功能分類到子目錄中
 """
 
@@ -16,10 +16,10 @@ logger = get_logger('scripts')
 def create_scripts_structure():
     """建立scripts子目錄結構"""
     
-    project_path = Path("C:/code/TradingAgentsCN")
+    project_path = Path(__file__).resolve().parent.parent.parent
     scripts_path = project_path / "scripts"
     
-    logger.info(f" 整理TradingAgentsCN項目的scripts目錄")
+    logger.info(f" 整理TradingAgents-CN項目的scripts目錄")
     logger.info(f"=")
     
     # 定義目錄結構和指令碼分類
@@ -110,7 +110,7 @@ def create_scripts_structure():
 
 ```bash
 # 進入項目根目錄
-cd C:\\code\\TradingAgentsCN
+cd TradingAgents-CN
 
 # 執行指令碼
 python scripts/{category}/script_name.py
@@ -151,7 +151,7 @@ python scripts/{category}/script_name.py
     main_readme_path = scripts_path / "README.md"
     main_readme_content = """# Scripts Directory
 
-這個目錄包含TradingAgentsCN項目的各種指令碼工具。
+這個目錄包含TradingAgents-CN項目的各種指令碼工具。
 
 ## 目錄結構
 
@@ -204,7 +204,7 @@ python scripts/{category}/script_name.py
 ### 執行方式
 ```bash
 # 從項目根目錄執行
-cd C:\\code\\TradingAgentsCN
+cd TradingAgents-CN
 
 # Python指令碼
 python scripts/validation/verify_gitignore.py

@@ -33,8 +33,8 @@ def main():
     logger.info(f" 驗證docs/contribution目錄的Git配置")
     logger.info(f"=")
     
-    # 設定項目路徑
-    project_path = Path("C:/code/TradingAgentsCN")
+    # 自動偵測項目根目錄
+    project_path = Path(__file__).resolve().parent.parent.parent
     contribution_path = project_path / "docs" / "contribution"
     gitignore_path = project_path / ".gitignore"
     
