@@ -7,6 +7,8 @@ TradingAgents Web 介面
 import streamlit as st
 import os
 import sys
+import uuid
+import threading
 from pathlib import Path
 import datetime
 from dotenv import load_dotenv
@@ -451,7 +453,6 @@ def main():
             st.session_state.analysis_running = True
             st.session_state.analysis_results = None
 
-            import uuid
             analysis_id = f"analysis_{uuid.uuid4().hex[:8]}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
             form_config = st.session_state.get('form_config', {})
@@ -480,8 +481,6 @@ def main():
             st.session_state.last_market_type = form_data.get('market_type', '美股')
 
             st.session_state[f"auto_refresh_unified_{analysis_id}"] = True
-
-            import threading
 
             def run_analysis_in_background():
                 """背景執行緒執行分析"""

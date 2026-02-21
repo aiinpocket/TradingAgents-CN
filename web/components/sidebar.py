@@ -21,6 +21,7 @@ except ImportError:
 project_root = Path(__file__).parent.parent.parent
 
 
+@st.cache_data(ttl=3600)
 def get_version():
     """從 VERSION 檔案讀取專案版本號"""
     try:
