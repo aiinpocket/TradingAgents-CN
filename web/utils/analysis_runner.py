@@ -103,7 +103,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         research_depth: 研究深度
         llm_provider: LLM 提供商 (openai/anthropic)
         llm_model: 大模型名稱
-        progress_callback: 進度回呼函數，用於更新UI狀態
+        progress_callback: 進度回呼函式，用於更新UI狀態
     """
 
     def update_progress(message, step=None, total_steps=None):

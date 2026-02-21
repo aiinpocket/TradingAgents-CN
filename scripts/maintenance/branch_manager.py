@@ -270,7 +270,7 @@ class BranchManager:
             logger.info(f" 已刪除 {len(branches_to_delete)} 個分支")
 
 def main():
-    """主函數"""
+    """主函式"""
     parser = argparse.ArgumentParser(description="分支管理工具")
     subparsers = parser.add_subparsers(dest='command', help='可用命令')
     

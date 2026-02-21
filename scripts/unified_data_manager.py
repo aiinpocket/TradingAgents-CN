@@ -240,7 +240,7 @@ def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> Unified
 
 def get_data_path(key: str, create: bool = True) -> Path:
     """
-    便捷函數：取得資料目錄路徑
+    便捷函式：取得資料目錄路徑
     
     Args:
         key: 目錄鍵名
@@ -252,7 +252,7 @@ def get_data_path(key: str, create: bool = True) -> Path:
     return get_data_manager().get_path(key, create=create)
 
 def main():
-    """命令行工具主函數"""
+    """命令行工具主函式"""
     import argparse
     
     parser = argparse.ArgumentParser(description='統一資料目錄配置管理器')

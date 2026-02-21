@@ -11,7 +11,7 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 def test_format_analysis_results():
-    """測試分析結果格式化函數"""
+    """測試分析結果格式化函式"""
     
     from web.utils.analysis_runner import format_analysis_results
     
@@ -123,7 +123,7 @@ def test_format_analysis_results():
         print(f" 失敗結果格式化失敗: {e}")
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 格式化修複測試")
     print("=" * 60)
     

@@ -12,7 +12,7 @@ import shutil
 from pathlib import Path
 
 class Colors:
-    """控制台顏色"""
+    """主控台顏色"""
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
     RED = '\033[91m'
@@ -224,7 +224,7 @@ def local_install():
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     print_header()
     
     # 檢查基礎環境

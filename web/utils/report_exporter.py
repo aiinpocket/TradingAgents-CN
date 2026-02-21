@@ -526,7 +526,7 @@ report_exporter = ReportExporter()
 
 
 def _format_team_decision_content(content: Dict[str, Any], module_key: str) -> str:
-    """格式化團隊決策內容（獨立函數版本）"""
+    """格式化團隊決策內容（獨立函式版本）"""
     formatted_content = ""
 
     if module_key == 'investment_debate_state':

@@ -226,7 +226,7 @@ def test_report_exporter():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" pypandoc功能測試")
     print("=" * 50)
     

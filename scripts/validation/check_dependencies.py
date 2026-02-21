@@ -224,7 +224,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
     return guide
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" TradingAgents 依賴檢查和配置")
     logger.info(f"=")
     

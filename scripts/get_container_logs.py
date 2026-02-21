@@ -177,7 +177,7 @@ def get_docker_logs(container_name):
         return None
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" TradingAgents Docker容器日誌取得工具")
     print("=" * 60)
     

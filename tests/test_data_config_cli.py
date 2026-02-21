@@ -126,7 +126,7 @@ def test_cli_commands():
 
 def main():
     """
-    主測試函數
+    主測試函式
     Main test function
     """
     print("資料目錄配置功能測試 | Data Directory Configuration Feature Test")

@@ -157,7 +157,7 @@ def test_progress_vs_logging():
         ui.show_success("資料取得完成")
         ui.show_warning("網路延遲較高")
         
-        # 系統日誌（只寫入檔案，不在控制台顯示）
+        # 系統日誌（只寫入檔案，不在主控台顯示）
         print("\n 系統日誌（只寫入檔案）:")
         logger.info("這是系統日誌消息，應該只寫入檔案")
         logger.debug("這是除錯資訊，用戶看不到")
@@ -218,7 +218,7 @@ def test_user_experience():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始測試CLI進度顯示效果")
     print("=" * 80)
     

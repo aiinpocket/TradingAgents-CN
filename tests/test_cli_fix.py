@@ -51,7 +51,7 @@ def test_selections_dictionary_keys():
             mock_shallow.return_value = 'gpt-4o-mini'
             mock_deep.return_value = 'gpt-4o'
             
-            # 呼叫函數
+            # 呼叫函式
             selections = get_user_selections()
             
             # 驗證必要的鍵存在

@@ -227,7 +227,7 @@ def test_simple_functionality():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" VSCode配置驗證測試")
     print("=" * 70)
     print(" 驗證目標:")

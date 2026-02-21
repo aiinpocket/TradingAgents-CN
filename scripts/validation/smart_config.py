@@ -261,7 +261,7 @@ def get_cache_backend() -> str:
 
 
 def main():
-    """主函數 - 演示智能配置系統"""
+    """主函式 - 演示智能配置系統"""
     logger.info(f" TradingAgents 智能配置系統")
     logger.info(f"=")
     

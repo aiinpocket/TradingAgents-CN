@@ -461,10 +461,10 @@ class RealtimeNewsAggregator:
 
 def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) -> str:
     """
-    取得實時股票新聞的主要介面函數
+    取得實時股票新聞的主要介面函式
     """
-    logger.info("[新聞分析] ========== 函數入口 ==========")
-    logger.info("[新聞分析] 函數: get_realtime_stock_news")
+    logger.info("[新聞分析] ========== 函式入口 ==========")
+    logger.info("[新聞分析] 函式: get_realtime_stock_news")
     logger.info(f"[新聞分析] 參數: ticker={ticker}, curr_date={curr_date}, hours_back={hours_back}")
     logger.info(f"[新聞分析] 開始取得 {ticker} 的實時新聞，日期: {curr_date}, 回溯時間: {hours_back}小時")
     start_total_time = datetime.now()
@@ -511,7 +511,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             
             total_time_taken = (datetime.now() - start_total_time).total_seconds()
             logger.info(f"[新聞分析] 成功生成 {ticker} 的新聞報告，總耗時 {total_time_taken:.2f} 秒，新聞來源: 實時新聞聚合器")
-            logger.info("[新聞分析] ========== 實時新聞聚合器取得成功，函數即將返回 ==========")
+            logger.info("[新聞分析] ========== 實時新聞聚合器取得成功，函式即將返回 ==========")
             return report
         else:
             logger.warning(f"[新聞分析] 實時新聞聚合器未取得到 {ticker} 的新聞，耗時 {time_taken:.2f} 秒，嘗試使用備用新聞源")

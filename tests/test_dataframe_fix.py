@@ -13,12 +13,12 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_safe_dataframe():
-    """測試安全DataFrame函數"""
+    """測試安全DataFrame函式"""
     try:
         from web.components.analysis_results import safe_dataframe
         import pandas as pd
         
-        print(" 測試安全DataFrame函數...")
+        print(" 測試安全DataFrame函式...")
         
         # 測試混合資料類型
         mixed_data = {
@@ -27,7 +27,7 @@ def test_safe_dataframe():
             '結果B': ['MSFT', '2025-07-31 13:00', 2, 4]
         }
         
-        # 使用安全函數建立DataFrame
+        # 使用安全函式建立DataFrame
         df = safe_dataframe(mixed_data)
         print(f" 安全DataFrame建立成功，形狀: {df.shape}")
         
@@ -153,7 +153,7 @@ def test_arrow_conversion():
             '混合列': ['text', 123, 45.6]  # 混合類型
         }
         
-        # 使用安全函數
+        # 使用安全函式
         df = safe_dataframe(problematic_data)
         
         # 嘗試轉換為Arrow
@@ -170,12 +170,12 @@ def test_arrow_conversion():
 
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始測試DataFrame Arrow轉換修複")
     print("=" * 50)
     
     tests = [
-        ("安全DataFrame函數", test_safe_dataframe),
+        ("安全DataFrame函式", test_safe_dataframe),
         ("對比資料建立", test_comparison_data),
         ("時間線資料建立", test_timeline_data),
         ("Arrow轉換", test_arrow_conversion)

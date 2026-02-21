@@ -207,7 +207,7 @@ class TradingAgentsLogger:
         self._configure_specific_loggers()
     
     def _add_console_handler(self, logger: logging.Logger):
-        """添加控制台處理器"""
+        """添加主控台處理器"""
         if not self.config['handlers']['console']['enabled']:
             return
             
@@ -410,12 +410,12 @@ def get_logger_manager() -> TradingAgentsLogger:
 
 
 def get_logger(name: str) -> logging.Logger:
-    """取得指定名稱的日誌器（便捷函數）"""
+    """取得指定名稱的日誌器（便捷函式）"""
     return get_logger_manager().get_logger(name)
 
 
 def setup_logging(config: Optional[Dict[str, Any]] = None):
-    """設定項目日誌系統（便捷函數）"""
+    """設定項目日誌系統（便捷函式）"""
     global _logger_manager
     _logger_manager = TradingAgentsLogger(config)
     return _logger_manager

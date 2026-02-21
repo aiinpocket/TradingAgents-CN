@@ -169,7 +169,7 @@ def test_demo_data():
         return False
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" 投資建議中文化修複測試")
     print("=" * 60)
     

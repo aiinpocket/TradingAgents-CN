@@ -236,7 +236,7 @@ def test_analysis_stages():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始測試詳細進度顯示效果")
     print("=" * 100)
     

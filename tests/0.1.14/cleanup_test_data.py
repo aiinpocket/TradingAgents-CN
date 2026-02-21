@@ -50,7 +50,7 @@ def cleanup_mongodb_test_data():
         print(f" MongoDB清理失敗: {e}")
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" 清理測試資料")
     print("=" * 30)
     

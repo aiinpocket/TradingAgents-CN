@@ -66,10 +66,10 @@ def test_news_analyst_integration():
         except Exception as e:
             print(f"   統一新聞工具匯入失敗: {e}")
         
-        # 3. 檢查新聞分析師源碼中的集成情況
-        print(f"\n 第三步：檢查新聞分析師源碼集成...")
+        # 3. 檢查新聞分析師原始碼中的集成情況
+        print(f"\n 第三步：檢查新聞分析師原始碼集成...")
         
-        # 讀取新聞分析師源碼
+        # 讀取新聞分析師原始碼
         news_analyst_file = "tradingagents/agents/analysts/news_analyst.py"
         try:
             with open(news_analyst_file, "r", encoding="utf-8") as f:
@@ -94,7 +94,7 @@ def test_news_analyst_integration():
                     print(f"   {check_name}: 未找到")
                     
         except Exception as e:
-            print(f"   無法讀取新聞分析師源碼: {e}")
+            print(f"   無法讀取新聞分析師原始碼: {e}")
         
         # 4. 驗證工作流程中的使用
         print(f"\n 第四步：驗證工作流程中的使用...")

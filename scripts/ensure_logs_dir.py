@@ -93,7 +93,7 @@ Get-Content logs/tradingagents.log -Wait
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     try:
         ensure_logs_directory()
         return True

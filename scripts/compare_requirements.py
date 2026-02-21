@@ -61,7 +61,7 @@ def parse_pyproject_toml() -> Dict[str, str]:
 
 
 def main():
-    """主函數"""
+    """主函式"""
     print("=" * 80)
     print(" 比較 requirements.txt 和 pyproject.toml")
     print("=" * 80)

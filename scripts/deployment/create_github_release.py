@@ -152,7 +152,7 @@ def show_release_info():
     logger.info(f"  完整的繁體中文支援")
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" 建立GitHub Release")
     logger.info(f"=")
     

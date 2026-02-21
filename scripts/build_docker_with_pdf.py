@@ -114,7 +114,7 @@ def test_docker_container():
     return result
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" 構建包含PDF支援的Docker鏡像")
     logger.info(f"=")
     

@@ -72,7 +72,7 @@ def test_streamlit_components():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" Web配置管理頁面測試")
     print("=" * 60)
     

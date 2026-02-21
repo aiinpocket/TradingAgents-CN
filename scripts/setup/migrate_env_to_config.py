@@ -95,7 +95,7 @@ def migrate_system_settings(env_config):
         logger.info(f"[INFO]系統設定無需更新")
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" .env 配置遷移工具")
     logger.info(f"=")
     

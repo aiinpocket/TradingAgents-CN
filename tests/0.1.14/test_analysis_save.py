@@ -71,7 +71,7 @@ def test_save_analysis_result():
     print("=" * 40)
     
     try:
-        # 匯入保存函數
+        # 匯入保存函式
         from web.components.analysis_results import save_analysis_result
         
         # 建立模擬資料
@@ -191,7 +191,7 @@ def test_mongodb_save():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 分析結果保存功能測試")
     print("=" * 50)
     

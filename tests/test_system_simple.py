@@ -152,7 +152,7 @@ def test_basic_system():
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     try:
         success = test_basic_system()
         

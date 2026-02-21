@@ -153,12 +153,12 @@ class RedisPerformanceTester:
     
     def test_concurrent_connections(self, num_threads=10, operations_per_thread=100):
         """測試並發連接性能"""
-        print(f"\n 測試並發連接性能 ({num_threads} 線程, 每線程 {operations_per_thread} 操作)...")
+        print(f"\n 測試並發連接性能 ({num_threads} 執行緒, 每執行緒 {operations_per_thread} 操作)...")
         
         def worker_task(thread_id):
-            """工作線程任務"""
+            """工作執行緒任務"""
             try:
-                # 每個線程建立自己的Redis連接
+                # 每個執行緒建立自己的Redis連接
                 client = redis.Redis(
                     host=self.host,
                     port=self.port,
@@ -207,7 +207,7 @@ class RedisPerformanceTester:
             for future in as_completed(futures):
                 result = future.result()
                 results.append(result)
-                print(f"  線程 {result['thread_id']} 完成")
+                print(f"  執行緒 {result['thread_id']} 完成")
         
         end_time = time.time()
         total_duration = end_time - start_time
@@ -219,7 +219,7 @@ class RedisPerformanceTester:
         overall_throughput = total_successful / total_duration if total_duration > 0 else 0
         
         print(f"\n 並發測試統計:")
-        print(f"  總線程數: {num_threads}")
+        print(f"  總執行緒數: {num_threads}")
         print(f"  總操作數: {total_operations}")
         print(f"  成功操作: {total_successful}")
         print(f"  失敗操作: {total_failed}")
@@ -297,7 +297,7 @@ class RedisPerformanceTester:
         return results
 
 def main():
-    """主函數"""
+    """主函式"""
     parser = argparse.ArgumentParser(description="Redis性能測試工具")
     parser.add_argument("--host", default="localhost", help="Redis主機地址")
     parser.add_argument("--port", type=int, default=6379, help="Redis端口")

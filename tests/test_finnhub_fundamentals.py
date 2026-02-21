@@ -166,7 +166,7 @@ def test_cache_management():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始Finnhub基本面資料功能和快取測試")
     print("=" * 60)
     

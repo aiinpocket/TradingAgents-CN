@@ -224,7 +224,7 @@ def test_connections():
         logger.error(f" 連接測試失敗: {e}")
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" TradingAgents 資料庫環境設定")
     logger.info(f"=")
     

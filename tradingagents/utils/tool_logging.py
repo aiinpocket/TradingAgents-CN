@@ -24,7 +24,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
     工具呼叫日誌裝飾器
     
     Args:
-        tool_name: 工具名稱，如果不提供則使用函數名
+        tool_name: 工具名稱，如果不提供則使用函式名
         log_args: 是否記錄參數
         log_result: 是否記錄返回結果（註意：可能包含大量資料）
     """
@@ -63,7 +63,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
             )
             
             try:
-                # 執行工具函數
+                # 執行工具函式
                 result = func(*args, **kwargs)
                 
                 # 計算執行時間
@@ -257,10 +257,10 @@ def log_llm_call(provider: str, model: str):
     return decorator
 
 
-# 便捷函數
+# 便捷函式
 def log_tool_usage(tool_name: str, symbol: str = None, **extra_data):
     """
-    記錄工具使用情況的便捷函數
+    記錄工具使用情況的便捷函式
     
     Args:
         tool_name: 工具名稱
@@ -282,7 +282,7 @@ def log_tool_usage(tool_name: str, symbol: str = None, **extra_data):
 
 def log_analysis_step(step_name: str, symbol: str, **extra_data):
     """
-    記錄分析步驟的便捷函數
+    記錄分析步驟的便捷函式
 
     Args:
         step_name: 步驟名稱
@@ -359,7 +359,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
             )
 
             try:
-                # 執行分析函數
+                # 執行分析函式
                 result = func(*args, **kwargs)
 
                 # 計算執行時間

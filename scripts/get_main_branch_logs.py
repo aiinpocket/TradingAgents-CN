@@ -265,7 +265,7 @@ def get_recent_activity(container_name):
         print(f"    取得失敗: {error}")
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" TradingAgents 主分支日誌取得工具")
     print("=" * 60)
     print(f"執行時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

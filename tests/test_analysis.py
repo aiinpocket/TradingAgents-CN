@@ -88,7 +88,7 @@ def test_simple_analysis():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" TradingAgents 功能測試")
     print("=" * 50)
     

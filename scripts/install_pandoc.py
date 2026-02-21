@@ -163,7 +163,7 @@ def install_pandoc_linux():
     return False
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" Pandoc安裝指令碼")
     logger.info(f"=")
     

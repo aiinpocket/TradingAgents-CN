@@ -115,7 +115,7 @@ def test_cli_basic_functionality():
 
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 條件邏輯修複測試")
     print("=" * 50)
     
@@ -145,7 +145,7 @@ def main():
         print(" 修複了 tool_calls 屬性檢查")
         print(" 添加了 hasattr 安全檢查")
         print(" 避免了 ToolMessage 屬性錯誤")
-        print(" 所有條件邏輯函數都已修複")
+        print(" 所有條件邏輯函式都已修複")
         return True
     else:
         print(" 部分測試失敗，需要進一步檢查")

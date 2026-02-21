@@ -413,7 +413,7 @@ def export_statistics_data(days: int):
         st.error(f"匯出失敗: {str(e)}")
 
 def main():
-    """主函數"""
+    """主函式"""
     st.set_page_config(
         page_title="Token統計 - TradingAgents",
         page_icon=None,

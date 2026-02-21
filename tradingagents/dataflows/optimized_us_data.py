@@ -319,7 +319,7 @@ def get_optimized_us_data_provider() -> OptimizedUSDataProvider:
 def get_us_stock_data_cached(symbol: str, start_date: str, end_date: str, 
                            force_refresh: bool = False) -> str:
     """
-    取得美股資料的便捷函數
+    取得美股資料的便捷函式
     
     Args:
         symbol: 股票代碼

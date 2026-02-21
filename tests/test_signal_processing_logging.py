@@ -110,11 +110,11 @@ def test_logging_extraction():
         # 模擬信號處理模組的呼叫
         from tradingagents.utils.tool_logging import log_graph_module
         
-        # 建立一個測試函數來驗證日誌裝飾器
+        # 建立一個測試函式來驗證日誌裝飾器
         @log_graph_module("signal_processing")
         def mock_process_signal(self, full_signal: str, stock_symbol: str = None) -> dict:
-            """模擬信號處理函數"""
-            print(f" [模擬函數] 接收到的參數:")
+            """模擬信號處理函式"""
+            print(f" [模擬函式] 接收到的參數:")
             print(f"   full_signal 長度: {len(full_signal) if full_signal else 0}")
             print(f"   stock_symbol: {stock_symbol}")
             
@@ -167,7 +167,7 @@ def test_logging_extraction():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始測試信號處理日誌記錄修複")
     print("=" * 100)
     

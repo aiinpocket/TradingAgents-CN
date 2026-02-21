@@ -21,24 +21,24 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(name)s | %(level
 logger = logging.getLogger(__name__)
 
 def test_function_exists():
-    """測試函數是否存在"""
-    logger.info("========== 測試1: 函數存在性檢查 ==========")
+    """測試函式是否存在"""
+    logger.info("========== 測試1: 函式存在性檢查 ==========")
     
-    # 檢查直接匯入的函數
-    logger.info(f"get_realtime_stock_news 函數: {get_realtime_stock_news}")
-    logger.info(f"函數類型: {type(get_realtime_stock_news)}")
+    # 檢查直接匯入的函式
+    logger.info(f"get_realtime_stock_news 函式: {get_realtime_stock_news}")
+    logger.info(f"函式類型: {type(get_realtime_stock_news)}")
     
-    # 檢查Toolkit中的函數
+    # 檢查Toolkit中的函式
     try:
         toolkit_func = getattr(Toolkit, 'get_realtime_stock_news', None)
         logger.info(f"Toolkit.get_realtime_stock_news: {toolkit_func}")
-        logger.info(f"Toolkit函數類型: {type(toolkit_func)}")
+        logger.info(f"Toolkit函式類型: {type(toolkit_func)}")
     except Exception as e:
-        logger.error(f"取得Toolkit函數失敗: {e}")
+        logger.error(f"取得Toolkit函式失敗: {e}")
 
 def test_direct_call():
-    """測試直接函數呼叫"""
-    logger.info("========== 測試2: 直接函數呼叫 ==========")
+    """測試直接函式呼叫"""
+    logger.info("========== 測試2: 直接函式呼叫 ==========")
     try:
         curr_date = datetime.now().strftime('%Y-%m-%d')
         logger.info(f"呼叫參數: ticker='AAPL', date='{curr_date}'")
@@ -120,7 +120,7 @@ def simulate_llm_tool_call():
         
         if hasattr(Toolkit, func_name):
             func = getattr(Toolkit, func_name)
-            logger.info(f"找到函數: {func}")
+            logger.info(f"找到函式: {func}")
             
             start_time = datetime.now()
             result = func(**args)
@@ -130,7 +130,7 @@ def simulate_llm_tool_call():
             logger.info(f"返回結果長度: {len(result)} 字符")
             return True, result
         else:
-            logger.error(f"函數 {func_name} 不存在於Toolkit中")
+            logger.error(f"函式 {func_name} 不存在於Toolkit中")
             return False, None
             
     except Exception as e:
@@ -140,11 +140,11 @@ def simulate_llm_tool_call():
         return False, None
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     logger.info("開始LLM工具呼叫機制詳細測試")
     logger.info("=" * 60)
     
-    # 測試1: 函數存在性
+    # 測試1: 函式存在性
     test_function_exists()
     
     # 測試2: 直接呼叫
@@ -162,7 +162,7 @@ def main():
     # 結果匯總
     logger.info("=" * 60)
     logger.info("========== 測試結果匯總 ==========")
-    logger.info(f"直接函數呼叫: {' 成功' if direct_success else ' 失敗'}")
+    logger.info(f"直接函式呼叫: {' 成功' if direct_success else ' 失敗'}")
     logger.info(f"Toolkit呼叫: {' 成功' if toolkit_success else ' 失敗'}")
     logger.info(f"模擬LLM呼叫: {' 成功' if llm_success else ' 失敗'}")
     
@@ -172,7 +172,7 @@ def main():
     elif direct_success and not llm_success:
         logger.warning(" 問題分析: LLM工具呼叫機制存在問題")
     elif not direct_success:
-        logger.warning(" 問題分析: 函數本身存在問題")
+        logger.warning(" 問題分析: 函式本身存在問題")
     else:
         logger.info(" 問題分析: 所有呼叫方式都成功")
     

@@ -246,7 +246,7 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     try:
         success = create_scripts_structure()
         

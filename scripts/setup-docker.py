@@ -113,7 +113,7 @@ def check_docker():
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     import time
 
     

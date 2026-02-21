@@ -256,7 +256,7 @@ def test_progress_communication():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始測試時間預估顯示效果")
     print("=" * 100)
     

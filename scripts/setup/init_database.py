@@ -246,7 +246,7 @@ def test_database_connection():
 
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" TradingAgents 資料庫初始化")
     logger.info(f"=")
     

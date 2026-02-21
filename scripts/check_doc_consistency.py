@@ -116,12 +116,12 @@ class DocumentationChecker:
                     
                     # 檢查是否提到了BaseAnalyst類（應該已經移除）
                     if "class BaseAnalyst" in content:
-                        issues.append(f" {doc_file.name}: 仍然提到BaseAnalyst類，應該更新為函數式架構")
+                        issues.append(f" {doc_file.name}: 仍然提到BaseAnalyst類，應該更新為函式式架構")
                     
-                    # 檢查是否提到了create_*_analyst函數
+                    # 檢查是否提到了create_*_analyst函式
                     if "create_" in content and "analyst" in content:
                         if "def create_" not in content:
-                            issues.append(f" {doc_file.name}: 提到create函數但沒有正確的函數簽名")
+                            issues.append(f" {doc_file.name}: 提到create函式但沒有正確的函式簽名")
                     
                 except Exception as e:
                     issues.append(f" 讀取智能體檔案失敗 {doc_file}: {e}")
@@ -230,7 +230,7 @@ class DocumentationChecker:
         return "\n".join(report)
 
 def main():
-    """主函數"""
+    """主函式"""
     checker = DocumentationChecker()
     results = checker.check_all()
     

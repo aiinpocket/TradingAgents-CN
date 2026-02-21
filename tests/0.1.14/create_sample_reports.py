@@ -135,7 +135,7 @@ def create_sample_report(stock_symbol: str, stock_name: str):
     return analysis_results, reports
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" 建立示例分析報告...")
     
     try:

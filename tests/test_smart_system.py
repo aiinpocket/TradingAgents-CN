@@ -229,7 +229,7 @@ def generate_test_report(results):
             print("  - 檢查降級機制配置")
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" TradingAgents 智能系統完整測試")
     print("=" * 50)
     print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

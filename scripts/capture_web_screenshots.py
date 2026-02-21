@@ -251,7 +251,7 @@ pip install selenium
     logger.info(f" 截圖指南已建立: {guide_path}")
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(" TradingAgents-CN Web界面截圖捕獲工具")
     logger.info("=" * 50)
     

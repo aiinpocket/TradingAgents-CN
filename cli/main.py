@@ -50,10 +50,10 @@ DEFAULT_API_KEY_DISPLAY_LENGTH = 12
 # 初始化日誌系統
 logger = get_logger("cli")
 
-# CLI專用日誌配置：禁用控制台輸出，只保留檔案日誌
+# CLI專用日誌配置：禁用主控台輸出，只保留檔案日誌
 def setup_cli_logging():
     """
-    CLI模式下的日誌配置：移除控制台輸出，保持界面清爽
+    CLI模式下的日誌配置：移除主控台輸出，保持界面清爽
     Configure logging for CLI mode: remove console output to keep interface clean
     """
     import logging
@@ -64,13 +64,13 @@ def setup_cli_logging():
     # 取得根日誌器
     root_logger = logging.getLogger()
 
-    # 移除所有控制台處理器，只保留檔案日誌
+    # 移除所有主控台處理器，只保留檔案日誌
     for handler in root_logger.handlers[:]:
         if isinstance(handler, logging.StreamHandler) and hasattr(handler, 'stream'):
             if handler.stream.name in ['<stderr>', '<stdout>']:
                 root_logger.removeHandler(handler)
 
-    # 同時移除tradingagents日誌器的控制台處理器
+    # 同時移除tradingagents日誌器的主控台處理器
     tradingagents_logger = logging.getLogger('tradingagents')
     for handler in tradingagents_logger.handlers[:]:
         if isinstance(handler, logging.StreamHandler) and hasattr(handler, 'stream'):
@@ -78,7 +78,7 @@ def setup_cli_logging():
                 tradingagents_logger.removeHandler(handler)
 
     # 記錄CLI啟動日誌（只寫入檔案）
-    logger.debug("CLI模式啟動，控制台日誌已禁用，保持界面清爽")
+    logger.debug("CLI模式啟動，主控台日誌已禁用，保持界面清爽")
 
 # 設定CLI日誌配置
 setup_cli_logging()
@@ -1868,7 +1868,7 @@ def help_chinese():
 
 
 def main():
-    """主函數 - 預設進入分析模式"""
+    """主函式 - 預設進入分析模式"""
 
     # 如果沒有參數，直接進入分析模式
     if len(sys.argv) == 1:

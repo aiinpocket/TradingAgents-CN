@@ -212,7 +212,7 @@ def test_unified_tools_functionality():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 最終統一工具架構測試")
     print("=" * 70)
     

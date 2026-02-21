@@ -309,7 +309,7 @@ python scripts/validation/check_system_status.py
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     try:
         success = initialize_system()
         return success

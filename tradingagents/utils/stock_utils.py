@@ -1,5 +1,5 @@
 """
-美股工具函數
+美股工具函式
 提供美股代碼識別和處理功能
 """
 
@@ -62,7 +62,7 @@ def get_stock_market_info(ticker: str) -> Dict:
     }
 
 
-# 向後相容函數
+# 向後相容函式
 def is_us_stock(ticker: str) -> bool:
     """判斷是否為有效的美股代碼"""
     return is_valid_us_ticker(ticker)

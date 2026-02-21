@@ -143,7 +143,7 @@ def test_env_config():
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     try:
         success = test_env_config()
         

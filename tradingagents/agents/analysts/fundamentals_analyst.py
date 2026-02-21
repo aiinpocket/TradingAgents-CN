@@ -164,7 +164,7 @@ def create_fundamentals_analyst(llm, toolkit):
         ])
 
         prompt = prompt.partial(system_message=system_message)
-        # 安全地取得工具名稱，處理函數和工具物件
+        # 安全地取得工具名稱，處理函式和工具物件
         tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):

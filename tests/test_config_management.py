@@ -225,7 +225,7 @@ def test_usage_statistics():
         print(" 使用統計測試通過")
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 配置管理功能測試")
     print("=" * 60)
     

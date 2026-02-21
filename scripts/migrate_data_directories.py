@@ -310,7 +310,7 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
 
 
 def main():
-    """主函數"""
+    """主函式"""
     import argparse
     
     parser = argparse.ArgumentParser(description='資料目錄重新組織遷移指令碼')

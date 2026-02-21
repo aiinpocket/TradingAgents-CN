@@ -538,7 +538,7 @@ def render_env_status():
 
 
 def main():
-    """主函數"""
+    """主函式"""
     st.set_page_config(
         page_title="配置管理 - TradingAgents",
         page_icon=None,

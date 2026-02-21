@@ -274,7 +274,7 @@ def get_stock_preparer(default_period_days: int = 30) -> StockDataPreparer:
 def prepare_stock_data(stock_code: str, market_type: str = "auto",
                       period_days: int = None, analysis_date: str = None) -> StockDataPreparationResult:
     """
-    便捷函數：預取得和驗證股票資料（僅支援美股）
+    便捷函式：預取得和驗證股票資料（僅支援美股）
 
     Args:
         stock_code: 股票代碼（美股，1-5位字母）
@@ -292,7 +292,7 @@ def prepare_stock_data(stock_code: str, market_type: str = "auto",
 def is_stock_data_ready(stock_code: str, market_type: str = "auto",
                        period_days: int = None, analysis_date: str = None) -> bool:
     """
-    便捷函數：檢查股票資料是否準備就緒（僅支援美股）
+    便捷函式：檢查股票資料是否準備就緒（僅支援美股）
 
     Args:
         stock_code: 股票代碼（美股，1-5位字母）
@@ -310,7 +310,7 @@ def is_stock_data_ready(stock_code: str, market_type: str = "auto",
 def get_stock_preparation_message(stock_code: str, market_type: str = "auto",
                                  period_days: int = None, analysis_date: str = None) -> str:
     """
-    便捷函數：取得股票資料準備訊息（僅支援美股）
+    便捷函式：取得股票資料準備訊息（僅支援美股）
 
     Args:
         stock_code: 股票代碼（美股，1-5位字母）

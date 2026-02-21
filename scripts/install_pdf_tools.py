@@ -206,7 +206,7 @@ def test_pdf_generation():
         return False
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" PDF工具安裝指令碼")
     logger.info(f"=")
     

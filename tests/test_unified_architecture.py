@@ -238,7 +238,7 @@ def test_stock_type_routing():
 
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 統一工具架構測試")
     print("=" * 60)
     

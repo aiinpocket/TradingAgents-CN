@@ -29,7 +29,7 @@ def run_git_command(cmd, cwd=None):
         return False, "", str(e)
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" 驗證docs/contribution目錄的Git配置")
     logger.info(f"=")
     

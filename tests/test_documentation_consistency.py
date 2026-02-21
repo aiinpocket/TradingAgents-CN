@@ -140,7 +140,7 @@ def test_documentation_structure():
 
 def main():
     """
-    主測試函數
+    主測試函式
     Main test function
     """
     print(" 開始檔案一致性測試...")

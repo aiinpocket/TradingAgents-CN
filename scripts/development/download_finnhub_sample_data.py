@@ -187,7 +187,7 @@ def create_sample_insider_data(ticker, data_dir, data_type):
 
 def main():
     """
-    主函數
+    主函式
     """
     logger.info(f"Finnhub示例資料下載指令碼")
     logger.info(f"=")

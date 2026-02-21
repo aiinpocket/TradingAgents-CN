@@ -158,7 +158,7 @@ def search_logs(keyword, log_files=None):
     print(f" 總共找到 {total_matches} 個匹配")
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" TradingAgents 日誌查看工具")
     print("=" * 50)
     

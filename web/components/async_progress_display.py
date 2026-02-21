@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-異步進度顯示元件
+非同步進度顯示元件
 從 Redis 或檔案取得進度狀態，使用非阻塞式自動刷新
 """
 
@@ -18,7 +18,7 @@ AUTO_REFRESH_INTERVAL = 3
 
 def display_unified_progress(analysis_id: str, show_refresh_controls: bool = True) -> bool:
     """
-    統一的進度顯示函數
+    統一的進度顯示函式
     返回 True 表示分析已完成/失敗，False 表示仍在進行中
     """
     from web.utils.async_progress_tracker import get_progress_by_id

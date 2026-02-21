@@ -57,7 +57,7 @@ def test_tool_binding():
     
     print("\n=== 測試完成 ===")
     print(" 統一新聞工具的LangChain綁定問題已修複")
-    print(" 函數簽名與檔案字串現在匹配")
+    print(" 函式簽名與檔案字串現在匹配")
     print(" 工具可以正常綁定到LLM")
     
     return True

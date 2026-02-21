@@ -45,7 +45,7 @@ def check_syntax(file_path: str) -> Tuple[bool, str]:
 
 
 def main():
-    """主函數 - 執行語法檢查"""
+    """主函式 - 執行語法檢查"""
     logger.error(f" 快速語法檢查 - 查找有錯誤的檔案...\n")
     
     current_dir = os.getcwd()

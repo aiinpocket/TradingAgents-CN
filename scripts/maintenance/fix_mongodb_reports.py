@@ -32,7 +32,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" MongoDB分析報告資料修復工具")
     print("=" * 50)
     

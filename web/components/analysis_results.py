@@ -323,7 +323,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
         
         filtered_results.append(result)
     
-    # 按時間倒序排列 - 使用安全的時間戳轉換函數確保類型一致
+    # 按時間倒序排列 - 使用安全的時間戳轉換函式確保類型一致
     filtered_results.sort(key=lambda x: safe_timestamp_to_datetime(x.get('timestamp', 0)), reverse=True)
     
     # 限制數量

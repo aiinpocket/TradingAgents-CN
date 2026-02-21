@@ -111,7 +111,7 @@ status: {status}
                     # 在提到BaseAnalyst的地方添加廢棄說明
                     content = re.sub(
                         r'BaseAnalyst',
-                        'BaseAnalyst (已廢棄，現使用函數式架構)',
+                        'BaseAnalyst (已廢棄，現使用函式式架構)',
                         content
                     )
                 
@@ -120,7 +120,7 @@ status: {status}
                 python_blocks = re.findall(r'```python\n(.*?)\n```', content, re.DOTALL)
                 for block in python_blocks:
                     if block.strip().endswith(':') and not block.strip().endswith('"""'):
-                        # 不完整的函數定義，添加pass
+                        # 不完整的函式定義，添加pass
                         fixed_block = block + '\n    pass'
                         content = content.replace(f'```python\n{block}\n```', f'```python\n{fixed_block}\n```')
                 
@@ -218,7 +218,7 @@ python scripts/check_doc_consistency.py
         return report
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" 開始批量更新檔案...")
     
     updater = DocumentationUpdater()

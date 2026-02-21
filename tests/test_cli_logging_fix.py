@@ -28,7 +28,7 @@ def test_cli_logging_setup():
         console_handlers_before = sum(1 for h in logger_manager.root_logger.handlers 
                                     if hasattr(h, 'stream') and h.stream.name == '<stderr>')
         print(f"   總處理器數量: {handlers_before}")
-        print(f"   控制台處理器數量: {console_handlers_before}")
+        print(f"   主控台處理器數量: {console_handlers_before}")
         
         # 執行CLI日誌設定
         setup_cli_logging()
@@ -38,18 +38,18 @@ def test_cli_logging_setup():
         console_handlers_after = sum(1 for h in logger_manager.root_logger.handlers 
                                    if hasattr(h, 'stream') and h.stream.name == '<stderr>')
         print(f"   總處理器數量: {handlers_after}")
-        print(f"   控制台處理器數量: {console_handlers_after}")
+        print(f"   主控台處理器數量: {console_handlers_after}")
         
         # 驗證效果
         if console_handlers_after < console_handlers_before:
-            print(" 控制台日誌處理器已成功移除")
+            print(" 主控台日誌處理器已成功移除")
         else:
-            print(" 控制台日誌處理器未完全移除")
+            print(" 主控台日誌處理器未完全移除")
         
         # 測試日誌輸出
         print("\n 測試日誌輸出:")
         print("   執行 logger.info('測試消息')...")
-        logger.info("這是一條測試日誌消息，應該只寫入檔案，不在控制台顯示")
+        logger.info("這是一條測試日誌消息，應該只寫入檔案，不在主控台顯示")
         print("    如果上面沒有顯示時間戳和日誌資訊，說明修複成功")
         
         return True
@@ -164,7 +164,7 @@ def test_cli_interface_preview():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始測試CLI日誌修複效果")
     print("=" * 80)
     
@@ -206,7 +206,7 @@ def main():
     if passed == total:
         print(" 所有測試通過！CLI日誌修複成功")
         print("\n 修複效果:")
-        print("1.  控制台不再顯示技術日誌資訊")
+        print("1.  主控台不再顯示技術日誌資訊")
         print("2.  用戶界面清爽美觀")
         print("3.  系統日誌正常寫入檔案")
         print("4.  用戶提示使用Rich Console顯示")

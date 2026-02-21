@@ -213,7 +213,7 @@ def test_documentation_completeness():
 
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 資料庫依賴套件相容性修複測試")
     print("=" * 60)
     

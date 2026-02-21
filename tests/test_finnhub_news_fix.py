@@ -74,7 +74,7 @@ def test_finnhub_news_path():
     return os.path.exists(news_data_path)
 
 def test_get_data_in_range():
-    """測試get_data_in_range函數的錯誤處理"""
+    """測試get_data_in_range函式的錯誤處理"""
     print("\n=== 測試get_data_in_range錯誤處理 ===")
     
     config = get_config()
@@ -98,8 +98,8 @@ def test_get_data_in_range():
     print(f"是否為空字典: {result == {}}")
 
 def test_get_finnhub_news():
-    """測試get_finnhub_news函數"""
-    print("\n=== 測試get_finnhub_news函數 ===")
+    """測試get_finnhub_news函式"""
+    print("\n=== 測試get_finnhub_news函式 ===")
     
     # 測試不存在的股票代碼
     result = get_finnhub_news(
@@ -108,7 +108,7 @@ def test_get_finnhub_news():
         look_back_days=7
     )
     
-    print(f"函數返回結果: {result[:200]}...")  # 只顯示前200個字符
+    print(f"函式返回結果: {result[:200]}...")  # 只顯示前200個字符
     print(f"是否包含錯誤訊息: {'無法取得' in result}")
 
 def create_sample_data_structure():
@@ -151,7 +151,7 @@ def create_sample_data_structure():
         print(f" 建立目錄結構失敗: {e}")
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print("Finnhub新聞資料路徑修複測試")
     print("=" * 50)
     

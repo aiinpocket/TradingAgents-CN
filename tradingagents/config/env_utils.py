@@ -216,23 +216,23 @@ def validate_required_env_vars(required_vars: list) -> dict:
     return results
 
 
-# 相容性函數：保持向後相容
+# 相容性函式：保持向後相容
 def get_bool_env(env_var: str, default: bool = False) -> bool:
-    """向後相容的布爾值解析函數"""
+    """向後相容的布爾值解析函式"""
     return parse_bool_env(env_var, default)
 
 
 def get_int_env(env_var: str, default: int = 0) -> int:
-    """向後相容的整數解析函數"""
+    """向後相容的整數解析函式"""
     return parse_int_env(env_var, default)
 
 
 def get_str_env(env_var: str, default: str = "") -> str:
-    """向後相容的字串解析函數"""
+    """向後相容的字串解析函式"""
     return parse_str_env(env_var, default)
 
 
-# 匯出主要函數
+# 匯出主要函式
 __all__ = [
     'parse_bool_env',
     'parse_int_env', 

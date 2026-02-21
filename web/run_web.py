@@ -163,7 +163,7 @@ def check_api_keys():
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     
     logger.info("TradingAgents-CN Web應用啟動器")
     logger.info("=")
@@ -217,25 +217,25 @@ def main():
     logger.info("按 Ctrl+C 停止應用")
     logger.info("=")
     
-    # 建立進程物件而不是直接執行
+    # 建立行程物件而不是直接執行
     process = None
     
     def signal_handler(signum, frame):
-        """信號處理函數"""
+        """信號處理函式"""
         logger.info("\n\n 接收到停止信號，正在關閉Web應用...")
         if process:
             try:
-                # 終止進程及其子進程
+                # 終止行程及其子行程
                 parent = psutil.Process(process.pid)
                 for child in parent.children(recursive=True):
                     child.terminate()
                 parent.terminate()
                 
-                # 等待進程結束
+                # 等待行程結束
                 parent.wait(timeout=5)
                 logger.info("Web應用已成功停止")
             except (psutil.NoSuchProcess, psutil.TimeoutExpired):
-                logger.warning("強制終止進程")
+                logger.warning("強制終止行程")
                 if process:
                     process.kill()
         sys.exit(0)
@@ -245,9 +245,9 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
     
     try:
-        # 啟動Streamlit進程
+        # 啟動Streamlit行程
         process = subprocess.Popen(cmd, cwd=web_dir)
-        process.wait() # 等待進程結束
+        process.wait() # 等待行程結束
     except KeyboardInterrupt:
         signal_handler(signal.SIGINT, None)
     except Exception as e:

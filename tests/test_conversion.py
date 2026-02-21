@@ -218,7 +218,7 @@ def test_pdf_conversion(md_content):
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 獨立檔案轉換測試 (Volume映射版本)")
     print("=" * 50)
     print(f" 當前工作目錄: {os.getcwd()}")

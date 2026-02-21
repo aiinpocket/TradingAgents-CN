@@ -186,7 +186,7 @@ def check_docker_stdout_logs():
         return False
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" Docker日誌功能驗證")
     print("=" * 60)
     

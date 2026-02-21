@@ -238,7 +238,7 @@ def test_real_scenario_simulation():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始測試重複進度提示修複效果")
     print("=" * 80)
     

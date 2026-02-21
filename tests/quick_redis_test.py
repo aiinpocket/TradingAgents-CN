@@ -107,7 +107,7 @@ def quick_redis_test(host=None, port=None, password=None):
         return False
 
 def main():
-    """主函數"""
+    """主函式"""
     if len(sys.argv) > 1:
         host = sys.argv[1]
     else:

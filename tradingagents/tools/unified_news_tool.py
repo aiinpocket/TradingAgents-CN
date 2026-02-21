@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 統一新聞分析工具
-整合美股市場的新聞取得邏輯到一個工具函數中
+整合美股市場的新聞取得邏輯到一個工具函式中
 讓大模型只需要呼叫一個工具就能取得美股的新聞資料
 """
 
@@ -163,7 +163,7 @@ class UnifiedNewsAnalyzer:
 
 
 def create_unified_news_tool(toolkit):
-    """建立統一新聞工具函數"""
+    """建立統一新聞工具函式"""
     analyzer = UnifiedNewsAnalyzer(toolkit)
     
     def get_stock_news_unified(stock_code: str, max_news: int = 100, model_info: str = ""):

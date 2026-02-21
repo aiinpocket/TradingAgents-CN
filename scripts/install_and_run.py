@@ -134,7 +134,7 @@ def start_web_app():
     return True
 
 def main():
-    """主函數"""
+    """主函式"""
     print(" TradingAgents-CN 安裝和啟動工具")
     print("=" * 50)
     

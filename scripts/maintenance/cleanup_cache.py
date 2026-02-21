@@ -137,7 +137,7 @@ def get_cache_statistics():
         logger.error(f" 取得快取統計失敗: {e}")
 
 def main():
-    """主函數"""
+    """主函式"""
     logger.info(f" TradingAgents 快取清理工具")
     logger.info(f"=")
     

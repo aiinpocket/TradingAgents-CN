@@ -268,7 +268,7 @@ class FinnhubDataDownloader:
             time.sleep(1)
 
 def main():
-    """主函數"""
+    """主函式"""
     parser = argparse.ArgumentParser(description='Finnhub資料下載指令碼')
     
     parser.add_argument('--data-type', 

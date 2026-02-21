@@ -84,8 +84,8 @@ def test_cache_manager_fundamentals():
         return False
 
 def test_fundamentals_with_cache():
-    """測試基本面資料取得函數的快取功能"""
-    print(f"\n 測試基本面資料取得函數的快取功能...")
+    """測試基本面資料取得函式的快取功能"""
+    print(f"\n 測試基本面資料取得函式的快取功能...")
     
     try:
         from tradingagents.dataflows.interface import get_fundamentals_openai, get_fundamentals_finnhub
@@ -169,7 +169,7 @@ def test_cache_ttl():
         return False
 
 def main():
-    """主測試函數"""
+    """主測試函式"""
     print(" 開始基本面資料快取功能測試")
     print("=" * 50)
     

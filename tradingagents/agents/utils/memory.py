@@ -75,7 +75,7 @@ class ChromaDBManager:
                 self._initialized = True
 
     def get_or_create_collection(self, name: str):
-        """線程安全地取得或建立集合"""
+        """執行緒安全地取得或建立集合"""
         with self._lock:
             if name in self._collections:
                 logger.info(f"[ChromaDB] 使用快取集合: {name}")

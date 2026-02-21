@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-異步進度跟蹤器
+非同步進度跟蹤器
 支援Redis和檔案兩種儲存方式，前端定時輪詢取得進度
 """
 
@@ -68,7 +68,7 @@ def safe_serialize(obj):
             return str(obj)  # 轉換為字串
 
 class AsyncProgressTracker:
-    """異步進度跟蹤器"""
+    """非同步進度跟蹤器"""
     
     def __init__(self, analysis_id: str, analysts: List[str], research_depth: int, llm_provider: str):
         self.analysis_id = analysis_id
@@ -112,7 +112,7 @@ class AsyncProgressTracker:
         # 保存初始狀態
         self._save_progress()
         
-        logger.info(f"[異步進度] 初始化完成: {analysis_id}, 儲存方式: {'Redis' if self.use_redis else '檔案'}")
+        logger.info(f"[非同步進度] 初始化完成: {analysis_id}, 儲存方式: {'Redis' if self.use_redis else '檔案'}")
 
         # 註冊到日誌系統進行自動進度更新
         try:
@@ -127,7 +127,7 @@ class AsyncProgressTracker:
                 except Exception as e:
                     logger.debug(f"[進度集成] 跟蹤器註冊失敗: {e}")
 
-            # 在單獨線程中註冊，避免阻塞主線程
+            # 在單獨執行緒中註冊，避免阻塞主執行緒
             register_thread = threading.Thread(target=register_with_timeout, daemon=True)
             register_thread.start()
             register_thread.join(timeout=2.0)  # 2秒超時
@@ -136,7 +136,7 @@ class AsyncProgressTracker:
                 logger.debug(f"[進度集成] 跟蹤器註冊超時，繼續執行: {self.analysis_id}")
 
         except ImportError:
-            logger.debug("[異步進度] 日誌集成不可用")
+            logger.debug("[非同步進度] 日誌集成不可用")
         except Exception as e:
             logger.debug(f"[進度集成] 跟蹤器註冊異常: {e}")
     
@@ -149,7 +149,7 @@ class AsyncProgressTracker:
             logger.info(f"[Redis檢查] REDIS_ENABLED原值='{redis_enabled_raw}' -> 處理後='{redis_enabled}'")
 
             if redis_enabled != 'true':
-                logger.info("[異步進度] Redis已禁用，使用檔案儲存")
+                logger.info("[非同步進度] Redis已禁用，使用檔案儲存")
                 return False
 
             import redis
@@ -179,10 +179,10 @@ class AsyncProgressTracker:
 
             # 測試連接
             self.redis_client.ping()
-            logger.info(f"[異步進度] Redis連接成功: {redis_host}:{redis_port}")
+            logger.info(f"[非同步進度] Redis連接成功: {redis_host}:{redis_port}")
             return True
         except Exception as e:
-            logger.warning(f"[異步進度] Redis連接失敗，使用檔案儲存: {e}")
+            logger.warning(f"[非同步進度] Redis連接失敗，使用檔案儲存: {e}")
             return False
     
     def _generate_dynamic_steps(self) -> List[Dict]:
@@ -330,12 +330,12 @@ class AsyncProgressTracker:
         # 更新步驟（防止倒退）
         if step is not None and step >= self.current_step:
             self.current_step = step
-            logger.debug(f"[異步進度] 步驟推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
+            logger.debug(f"[非同步進度] 步驟推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
 
         # 如果是完成訊息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
-            logger.info("[異步進度] 分析完成，設定為最終步驟")
+            logger.info("[非同步進度] 分析完成，設定為最終步驟")
 
         # 計算進度
         progress_percentage = self._calculate_weighted_progress() * 100
@@ -523,12 +523,12 @@ class AsyncProgressTracker:
                 logger.debug(f"[檔案詳情] 路徑: {self.progress_file}")
 
         except Exception as e:
-            logger.error(f"[異步進度] 保存失敗: {e}")
+            logger.error(f"[非同步進度] 保存失敗: {e}")
             # 嘗試備用儲存方式
             try:
                 if self.use_redis:
                     # Redis失敗，嘗試檔案儲存
-                    logger.warning("[異步進度] Redis保存失敗，嘗試檔案儲存")
+                    logger.warning("[非同步進度] Redis保存失敗，嘗試檔案儲存")
                     backup_file = f"./data/progress_{self.analysis_id}.json"
                     os.makedirs(os.path.dirname(backup_file), exist_ok=True)
                     safe_data = safe_serialize(self.progress_data)
@@ -537,7 +537,7 @@ class AsyncProgressTracker:
                     logger.info(f"[備用儲存] 檔案保存成功: {backup_file}")
                 else:
                     # 檔案儲存失敗，嘗試簡化資料
-                    logger.warning("[異步進度] 檔案保存失敗，嘗試簡化資料")
+                    logger.warning("[非同步進度] 檔案保存失敗，嘗試簡化資料")
                     simplified_data = {
                         'analysis_id': self.analysis_id,
                         'status': self.progress_data.get('status', 'unknown'),
@@ -550,7 +550,7 @@ class AsyncProgressTracker:
                         json.dump(simplified_data, f, ensure_ascii=False, indent=2)
                     logger.info(f"[備用儲存] 簡化資料保存成功: {backup_file}")
             except Exception as backup_e:
-                logger.error(f"[異步進度] 備用儲存也失敗: {backup_e}")
+                logger.error(f"[非同步進度] 備用儲存也失敗: {backup_e}")
     
     def get_progress(self) -> Dict[str, Any]:
         """取得當前進度"""
@@ -567,13 +567,13 @@ class AsyncProgressTracker:
         if results is not None:
             try:
                 self.progress_data['raw_results'] = safe_serialize(results)
-                logger.info(f"[異步進度] 保存分析結果: {self.analysis_id}")
+                logger.info(f"[非同步進度] 保存分析結果: {self.analysis_id}")
             except Exception as e:
-                logger.warning(f"[異步進度] 結果序列化失敗: {e}")
+                logger.warning(f"[非同步進度] 結果序列化失敗: {e}")
                 self.progress_data['raw_results'] = str(results)  # 最後的fallback
 
         self._save_progress()
-        logger.info(f"[異步進度] 分析完成: {self.analysis_id}")
+        logger.info(f"[非同步進度] 分析完成: {self.analysis_id}")
 
         # 從日誌系統註銷
         try:
@@ -588,7 +588,7 @@ class AsyncProgressTracker:
         self.progress_data['last_message'] = f"分析失敗: {error_message}"
         self.progress_data['last_update'] = time.time()
         self._save_progress()
-        logger.error(f"[異步進度] 分析失敗: {self.analysis_id}, 錯誤: {error_message}")
+        logger.error(f"[非同步進度] 分析失敗: {self.analysis_id}, 錯誤: {error_message}")
 
         # 從日誌系統註銷
         try:
@@ -636,7 +636,7 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
                 if data:
                     return json.loads(data)
             except Exception as e:
-                logger.debug(f"[異步進度] Redis讀取失敗: {e}")
+                logger.debug(f"[非同步進度] Redis讀取失敗: {e}")
 
         # 嘗試檔案
         progress_file = f"./data/progress_{analysis_id}.json"
@@ -646,7 +646,7 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
 
         return None
     except Exception as e:
-        logger.error(f"[異步進度] 取得進度失敗: {analysis_id}, 錯誤: {e}")
+        logger.error(f"[非同步進度] 取得進度失敗: {analysis_id}, 錯誤: {e}")
         return None
 
 def format_time(seconds: float) -> str:

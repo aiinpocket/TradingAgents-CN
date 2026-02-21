@@ -145,7 +145,7 @@ def normalize_package_name(import_name: str) -> str:
 
 
 def main():
-    """主函數"""
+    """主函式"""
     print("=" * 80)
     print(" 檢查 pyproject.toml 中缺失的依賴套件")
     print("=" * 80)

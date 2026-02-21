@@ -117,7 +117,7 @@ def set_environment_variables():
         logger.info(f"   建議建立.env 檔案並添加: PYTHONDONTWRITEBYTECODE=1")
 
 def main():
-    """主函數"""
+    """主函式"""
     
     logger.error(f" Streamlit檔案監控錯誤修復工具")
     logger.info(f"=")

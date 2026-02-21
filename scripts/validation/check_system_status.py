@@ -238,7 +238,7 @@ def check_system_status():
     logger.info(f" 系統狀態檢查完成!")
 
 def main():
-    """主函數"""
+    """主函式"""
     try:
         check_system_status()
         return True

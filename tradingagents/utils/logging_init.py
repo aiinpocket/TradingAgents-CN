@@ -121,7 +121,7 @@ def log_shutdown_info():
     logger.info("=" * 60)
 
 
-# 便捷函數
+# 便捷函式
 def setup_web_logging():
     """設定Web應用專用日誌"""
     init_logging()

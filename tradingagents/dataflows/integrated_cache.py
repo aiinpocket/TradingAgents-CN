@@ -275,7 +275,7 @@ def get_cache() -> IntegratedCacheManager:
         _integrated_cache = IntegratedCacheManager()
     return _integrated_cache
 
-# 向後相容的函數
+# 向後相容的函式
 def get_stock_cache():
     """向後相容：取得股票快取"""
     return get_cache()

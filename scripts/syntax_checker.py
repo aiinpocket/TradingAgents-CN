@@ -56,7 +56,7 @@ def check_syntax(file_path: str) -> Tuple[bool, str]:
 
 def main():
     """
-    主函數 - 執行語法檢查
+    主函式 - 執行語法檢查
     Main function - Execute syntax checking
     """
     logger.error(f" 開始檢查項目中的Python檔案語法錯誤...")
