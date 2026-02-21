@@ -1,9 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain import hub
-import time
-import json
-import traceback
 
 # 導入分析模塊日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
@@ -366,8 +363,7 @@ def create_market_analyst(llm, toolkit):
                 }
 
             except Exception as e:
-                logger.error(f"[市場分析師] 工具執行或分析生成失敗: {e}")
-                traceback.print_exc()
+                logger.error(f"[市場分析師] 工具執行或分析生成失敗: {e}", exc_info=True)
 
                 report = f"市場分析師調用了工具但分析生成失敗: {[call.get('name', 'unknown') for call in result.tool_calls]}"
 

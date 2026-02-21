@@ -4,7 +4,6 @@
 """
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import AIMessage
 
 # 導入分析模塊日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
