@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, List, Union
 import pandas as pd
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -46,12 +46,12 @@ class DatabaseCacheManager:
         初始化數據庫緩存管理器
 
         Args:
-            mongodb_url: MongoDB連接URL，預設使用配置文件端口
-            redis_url: Redis連接URL，預設使用配置文件端口
+            mongodb_url: MongoDB連接URL，預設使用配置檔端口
+            redis_url: Redis連接URL，預設使用配置檔端口
             mongodb_db: MongoDB數據庫名
             redis_db: Redis數據庫編號
         """
-        # 從配置文件獲取正確的端口
+        # 從配置檔獲取正確的端口
         mongodb_port = os.getenv("MONGODB_PORT", "27018")
         redis_port = os.getenv("REDIS_PORT", "6380")
         mongodb_password = os.getenv("MONGODB_PASSWORD", "")

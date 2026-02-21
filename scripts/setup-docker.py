@@ -8,7 +8,7 @@ import os
 import shutil
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -21,9 +21,9 @@ def setup_docker_env():
     logger.info(f" TradingAgents-CN Docker環境配置向導")
     logger.info(f"=")
     
-    # 檢查.env文件
+    # 檢查.env 檔案
     if env_file.exists():
-        logger.info(f" 發現現有的.env文件")
+        logger.info(f" 發現現有的.env 檔案")
         choice = input("是否要備份現有配置並重新配置？(y/N): ").lower()
         if choice == 'y':
             backup_file = project_root / f".env.backup.{int(time.time())}"
@@ -41,7 +41,7 @@ def setup_docker_env():
     shutil.copy(env_example, env_file)
     logger.info(f" 已複制配置模板")
     
-    # 讀取配置文件
+    # 讀取配置檔
     with open(env_file, 'r', encoding='utf-8') as f:
         content = f.read()
     
@@ -77,7 +77,7 @@ def setup_docker_env():
     
     # 顯示下一步操作
     logger.info(f"\n 下一步操作：")
-    logger.info(f"1. 編輯.env文件，填入您的API密鑰")
+    logger.info(f"1. 編輯.env 檔案，填入您的API密鑰")
     logger.info(f"2. 運行: docker-compose up -d")
     logger.info(f"3. 訪問: http://localhost:8501")
     

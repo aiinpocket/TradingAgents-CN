@@ -46,7 +46,7 @@ def main():
             min_value=1,
             max_value=30,
             value=7,
-            help="刪除指定天數之前的緩存文件"
+            help="刪除指定天數之前的快取檔案"
         )
         
         if st.button("清理過期緩存", type="secondary"):
@@ -70,35 +70,35 @@ def main():
             
             with metric_col1:
                 st.metric(
-                    label="總文件數",
+                    label="總檔案數",
                     value=stats['total_files'],
-                    help="緩存中的總文件數量"
+                    help="緩存中的總檔案數量"
                 )
                 
                 st.metric(
                     label="股票數據",
                     value=f"{stats['stock_data_count']}個",
-                    help="緩存的股票數據文件數量"
+                    help="緩存的股票資料檔案數量"
                 )
             
             with metric_col2:
                 st.metric(
                     label="總大小",
                     value=f"{stats['total_size_mb']} MB",
-                    help="緩存文件占用的磁碟空間"
+                    help="緩存檔案佔用的磁碟空間"
                 )
                 
                 st.metric(
                     label="新聞數據",
                     value=f"{stats['news_count']}個",
-                    help="緩存的新聞數據文件數量"
+                    help="緩存的新聞資料檔案數量"
                 )
             
             # 基本面數據
             st.metric(
                 label="基本面數據",
                 value=f"{stats['fundamentals_count']}個",
-                help="緩存的基本面數據文件數量"
+                help="緩存的基本面資料檔案數量"
             )
             
         except Exception as e:
@@ -115,7 +115,7 @@ def main():
                 st.info(f"""
                 **{config_data.get('description', config_name)}**
                 - TTL: {config_data.get('ttl_hours', 'N/A')} 小時
-                - 最大文件數: {config_data.get('max_files', 'N/A')}
+                - 最大檔案數: {config_data.get('max_files', 'N/A')}
                 """)
         else:
             st.warning("緩存配置資訊不可用")
@@ -186,7 +186,7 @@ def main():
 ├──  stock_data/     # 股票數據緩存
 ├──  news_data/      # 新聞數據緩存
 ├──  fundamentals/   # 基本面數據緩存
-└──  metadata/       # 中繼資料文件
+└──  metadata/       # 中繼資料檔
         """)
     
     st.markdown("---")
@@ -205,7 +205,7 @@ def main():
         }[x]
     )
     
-    # 顯示緩存文件列表
+    # 顯示緩存檔案列表
     try:
         metadata_files = list(cache.metadata_dir.glob("*_meta.json"))
         
@@ -250,15 +250,15 @@ def main():
                         "cached_at": st.column_config.TextColumn("緩存時間", width="medium"),
                         "start_date": st.column_config.TextColumn("開始日期", width="small"),
                         "end_date": st.column_config.TextColumn("結束日期", width="small"),
-                        "file_path": st.column_config.TextColumn("文件路徑", width="large")
+                        "file_path": st.column_config.TextColumn("檔案路徑", width="large")
                     }
                 )
                 
-                st.info(f"找到 {len(cache_items)} 個 {data_type} 類型的緩存文件")
+                st.info(f"找到 {len(cache_items)} 個 {data_type} 類型的快取檔案")
             else:
-                st.info(f"暫無 {data_type} 類型的緩存文件")
+                st.info(f"暫無 {data_type} 類型的快取檔案")
         else:
-            st.info("暫無緩存文件")
+            st.info("暫無快取檔案")
             
     except Exception as e:
         st.error(f"讀取緩存詳情失敗: {e}")

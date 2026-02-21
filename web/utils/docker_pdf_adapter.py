@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Docker環境PDF導出適配器
+Docker環境PDF匯出適配器
 處理Docker容器中的PDF生成特殊需求
 """
 
@@ -8,7 +8,7 @@ import os
 import subprocess
 import tempfile
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('web')
 

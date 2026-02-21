@@ -70,5 +70,5 @@ def get_optimal_chromadb_client():
         )
         return chromadb.Client(settings)
 
-# 導出配置
+# 匯出配置
 __all__ = ['get_win11_chromadb_client', 'get_optimal_chromadb_client', 'is_windows_11']

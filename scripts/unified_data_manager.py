@@ -202,8 +202,8 @@ class UnifiedDataDirectoryManager:
             ' 分析結果': ['analysis_results', 'results_summary', 'results_detailed', 'results_exports'],
             ' 數據庫': ['databases', 'db_mongodb', 'db_redis'],
             ' 會話數據': ['sessions', 'sessions_web', 'sessions_cli'],
-            ' 日誌文件': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
-            ' 配置文件': ['config', 'config_user', 'config_system'],
+            ' 日誌檔案': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
+            ' 配置檔': ['config', 'config_user', 'config_system'],
             ' 臨時文件': ['temp', 'temp_downloads', 'temp_processing'],
         }
         

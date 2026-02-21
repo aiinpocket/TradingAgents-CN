@@ -29,5 +29,5 @@ def get_win10_chromadb_client():
         )
         return chromadb.Client(basic_settings)
 
-# 導出配置
+# 匯出配置
 __all__ = ['get_win10_chromadb_client']

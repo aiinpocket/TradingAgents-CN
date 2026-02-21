@@ -78,7 +78,7 @@ def render_model_config():
         
         # 編輯模型參數（API密鑰不可修改）
         st.markdown("**編輯模型參數**")
-        st.info(" **安全提示**: API密鑰只能通過 `.env` 文件配置，無法在Web界面修改")
+        st.info(" **安全提示**: API密鑰只能通過 `.env` 檔案配置，無法在Web界面修改")
 
         # 選擇要編輯的模型
         model_options = [f"{m.provider} - {m.model_name}" for m in models]
@@ -98,7 +98,7 @@ def render_model_config():
             elif model.api_key:
                 st.warning(f"API密鑰: 使用舊配置（建議遷移到 `.env`）")
             else:
-                st.error(f"API密鑰: 未配置（請在 `.env` 文件中設置）")
+                st.error(f"API密鑰: 未配置（請在 `.env` 檔案中設置）")
 
             col1, col2 = st.columns(2)
 
@@ -451,9 +451,9 @@ def render_system_settings():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("導出配置", help="導出所有配置到JSON文件", key="export_config"):
-            # 這裡可以實現配置導出功能
-            st.info("配置導出功能開發中...")
+        if st.button("匯出配置", help="匯出所有配置到JSON 檔案", key="export_config"):
+            # 這裡可以實現配置匯出功能
+            st.info("配置匯出功能開發中...")
     
     with col2:
         if st.button("清空使用記錄", help="清空所有使用記錄", key="clear_usage_records"):
@@ -469,7 +469,7 @@ def render_system_settings():
     with col3:
         if st.button("重置配置", help="重置所有配置到預設值", key="reset_all_config"):
             if st.session_state.get("confirm_reset", False):
-                # 刪除配置文件，重新初始化
+                # 刪除配置檔，重新初始化
                 import shutil
                 if config_manager.config_dir.exists():
                     shutil.rmtree(config_manager.config_dir)
@@ -489,14 +489,14 @@ def render_env_status():
     # 獲取.env配置狀態
     env_status = config_manager.get_env_config_status()
 
-    # 顯示.env文件狀態
+    # 顯示.env 檔案狀態
     col1, col2 = st.columns(2)
 
     with col1:
         if env_status["env_file_exists"]:
-            st.success(" .env 文件已存在")
+            st.success(" .env 檔案已存在")
         else:
-            st.error(" .env 文件不存在")
+            st.error(" .env 檔案不存在")
             st.info("請複制 .env.example 為 .env 並配置API密鑰")
 
     with col2:
@@ -528,10 +528,10 @@ def render_env_status():
     # 配置優先級說明
     st.info("""
      **配置優先級說明:**
-    - API密鑰優先從 `.env` 文件讀取
+    - API密鑰優先從 `.env` 檔案讀取
     - Web界面配置作為補充和管理工具
     - 修改 `.env` 文件後需重啟應用生效
-    - 推薦使用 `.env` 文件管理敏感資訊
+    - 推薦使用 `.env` 檔案管理敏感資訊
     """)
 
     st.divider()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-將 .env 文件中的配置遷移到新的JSON配置系統
+將 .env 檔案中的配置遷移到新的JSON配置系統
 """
 
 import os
@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -19,10 +19,10 @@ sys.path.insert(0, str(project_root))
 from tradingagents.config.config_manager import config_manager, ModelConfig
 
 def load_env_config():
-    """載入 .env 文件配置"""
+    """載入 .env 檔案配置"""
     env_file = project_root / ".env"
     if not env_file.exists():
-        logger.error(f" .env 文件不存在")
+        logger.error(f" .env 檔案不存在")
         return None
     
     load_dotenv(env_file)
@@ -127,7 +127,7 @@ def main():
         logger.info(f"1. 啟動Web界面: python -m streamlit run web/app.py")
         logger.info(f"2. 訪問 ' 配置管理' 頁面查看遷移結果")
         logger.info(f"3. 根據需要調整模型參數和定價配置")
-        logger.info(f"4. 可以繼續使用 .env 文件，也可以完全使用Web配置")
+        logger.info(f"4. 可以繼續使用 .env 檔案，也可以完全使用Web配置")
         
         return True
         

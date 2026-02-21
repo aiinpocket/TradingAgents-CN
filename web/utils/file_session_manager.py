@@ -60,7 +60,7 @@ class FileSessionManager:
             return fingerprint
     
     def _get_session_file_path(self, fingerprint: str) -> Path:
-        """獲取會話文件路徑"""
+        """獲取會話檔案路徑"""
         return self.data_dir / f"{fingerprint}.json"
     
     def _cleanup_old_sessions(self):
@@ -183,7 +183,7 @@ class FileSessionManager:
                 "session_state_keys": [k for k in st.session_state.keys() if 'analysis' in k.lower() or 'session' in k.lower()]
             }
             
-            # 統計會話文件數量
+            # 統計會話檔案數量
             session_files = list(self.data_dir.glob("*.json"))
             debug_info["total_session_files"] = len(session_files)
             debug_info["session_files"] = [f.name for f in session_files]

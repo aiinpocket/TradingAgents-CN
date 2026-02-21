@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 測試pypandoc功能
-驗證導出功能的依賴是否正常工作
+驗證匯出功能的依賴是否正常工作
 """
 
 import sys
@@ -14,14 +14,14 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_pypandoc_import():
-    """測試pypandoc導入"""
-    print(" 測試pypandoc導入...")
+    """測試pypandoc匯入"""
+    print(" 測試pypandoc匯入...")
     try:
         import pypandoc
-        print(" pypandoc導入成功")
+        print(" pypandoc匯入成功")
         return True
     except ImportError as e:
-        print(f" pypandoc導入失敗: {e}")
+        print(f" pypandoc匯入失敗: {e}")
         return False
 
 def test_pandoc_version():
@@ -120,7 +120,7 @@ def test_markdown_conversion():
             if os.path.exists(output_file):
                 file_size = os.path.getsize(output_file)
                 print(f" Markdown → DOCX 轉換成功")
-                print(f"   文件大小: {file_size} 字節")
+                print(f"   檔案大小: {file_size} 字節")
                 
                 # 清理臨時文件
                 os.unlink(output_file)
@@ -148,7 +148,7 @@ def test_markdown_conversion():
             if os.path.exists(output_file):
                 file_size = os.path.getsize(output_file)
                 print(f" Markdown → PDF 轉換成功")
-                print(f"   文件大小: {file_size} 字節")
+                print(f"   檔案大小: {file_size} 字節")
                 
                 # 清理臨時文件
                 os.unlink(output_file)
@@ -166,16 +166,16 @@ def test_markdown_conversion():
         return False
 
 def test_report_exporter():
-    """測試報告導出器"""
-    print("\n 測試報告導出器...")
+    """測試報告匯出器"""
+    print("\n 測試報告匯出器...")
     
     try:
         from web.utils.report_exporter import ReportExporter
         
-        # 創建導出器實例
+        # 創建匯出器實例
         exporter = ReportExporter()
-        print(f" 報告導出器創建成功")
-        print(f"   導出功能可用: {exporter.export_available}")
+        print(f" 報告匯出器創建成功")
+        print(f"   匯出功能可用: {exporter.export_available}")
         print(f"   Pandoc可用: {exporter.pandoc_available}")
         
         # 測試數據
@@ -198,7 +198,7 @@ def test_report_exporter():
             'is_demo': False
         }
         
-        # 測試Markdown導出
+        # 測試Markdown匯出
         try:
             md_content = exporter.generate_markdown_report(test_results)
             print(" Markdown報告生成成功")
@@ -207,7 +207,7 @@ def test_report_exporter():
             print(f" Markdown報告生成失敗: {e}")
             return False
         
-        # 測試DOCX導出 (如果pandoc可用)
+        # 測試DOCX匯出 (如果pandoc可用)
         if exporter.pandoc_available:
             try:
                 docx_content = exporter.generate_docx_report(test_results)
@@ -222,7 +222,7 @@ def test_report_exporter():
         return True
         
     except Exception as e:
-        print(f" 報告導出器測試失敗: {e}")
+        print(f" 報告匯出器測試失敗: {e}")
         return False
 
 def main():
@@ -231,11 +231,11 @@ def main():
     print("=" * 50)
     
     tests = [
-        ("pypandoc導入", test_pypandoc_import),
+        ("pypandoc匯入", test_pypandoc_import),
         ("pandoc版本", test_pandoc_version),
         ("pandoc下載", test_pandoc_download),
         ("Markdown轉換", test_markdown_conversion),
-        ("報告導出器", test_report_exporter),
+        ("報告匯出器", test_report_exporter),
     ]
     
     results = []

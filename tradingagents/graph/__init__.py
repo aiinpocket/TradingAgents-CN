@@ -7,7 +7,7 @@ from .propagation import Propagator
 from .reflection import Reflector
 from .signal_processing import SignalProcessor
 
-# 導入統一日誌系統
+# 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 

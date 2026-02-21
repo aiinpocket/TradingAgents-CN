@@ -45,8 +45,8 @@ def render_token_statistics():
         if st.button("刷新數據", use_container_width=True):
             st.rerun()
         
-        # 導出數據按鈕
-        if st.button("導出統計數據", use_container_width=True):
+        # 匯出數據按鈕
+        if st.button("匯出統計數據", use_container_width=True):
             export_statistics_data(days)
     
     # 獲取統計數據
@@ -86,7 +86,7 @@ def render_token_statistics():
         
     except Exception as e:
         st.error(f"獲取統計數據失敗: {str(e)}")
-        st.info("請檢查配置文件和數據儲存是否正常")
+        st.info("請檢查配置檔和數據儲存是否正常")
 
 def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     """渲染概覽指標"""
@@ -372,12 +372,12 @@ def load_detailed_records(days: int) -> List[UsageRecord]:
         return []
 
 def export_statistics_data(days: int):
-    """導出統計數據"""
+    """匯出統計數據"""
     try:
         stats = config_manager.get_usage_statistics(days)
         records = load_detailed_records(days)
         
-        # 創建導出數據
+        # 創建匯出數據
         export_data = {
             'summary': stats,
             'detailed_records': [
@@ -395,7 +395,7 @@ def export_statistics_data(days: int):
             ]
         }
         
-        # 生成文件名
+        # 生成檔案名稱
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f"token_statistics_{timestamp}.json"
         
@@ -410,7 +410,7 @@ def export_statistics_data(days: int):
         st.success(f"統計數據已準備好下載: {filename}")
         
     except Exception as e:
-        st.error(f"導出失敗: {str(e)}")
+        st.error(f"匯出失敗: {str(e)}")
 
 def main():
     """主函數"""

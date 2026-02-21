@@ -8,7 +8,7 @@ import os
 import sys
 from datetime import datetime
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -255,7 +255,7 @@ def main():
         logger.error(f"\n 數據庫連接失敗，請檢查:")
         logger.info(f"1. Docker服務是否啟動: docker ps")
         logger.info(f"2. 運行啟動腳本: scripts/start_docker_services.bat")
-        logger.info(f"3. 檢查環境變量配置: .env文件")
+        logger.info(f"3. 檢查環境變量配置: .env 檔案")
         return False
     
     # 初始化MongoDB

@@ -16,7 +16,7 @@ import psutil
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('web')
 
@@ -46,7 +46,7 @@ def check_dependencies():
 
 def clean_cache_files(force_clean=False):
     """
-    清理Python緩存文件，避免Streamlit文件監控錯誤
+    清理Python快取檔案，避免Streamlit文件監控錯誤
 
     Args:
         force_clean: 是否強制清理，預設False（可選清理）
@@ -101,14 +101,14 @@ def clean_cache_files(force_clean=False):
         return
 
     if not cache_dirs:
-        logger.info("無需清理緩存文件")
+        logger.info("無需清理快取檔案")
         return
 
     if not force_clean:
         # 可選清理：只清理項目代碼的緩存，不清理虛擬環境
         project_cache_dirs = [d for d in cache_dirs if 'env' not in str(d)]
         if project_cache_dirs:
-            logger.info("清理項目緩存文件...")
+            logger.info("清理項目快取檔案...")
             for cache_dir in project_cache_dirs:
                 try:
                     shutil.rmtree(cache_dir)
@@ -120,7 +120,7 @@ def clean_cache_files(force_clean=False):
             logger.info("無需清理項目緩存")
     else:
         # 強制清理：清理所有緩存
-        logger.info("強制清理所有緩存文件...")
+        logger.info("強制清理所有快取檔案...")
         for cache_dir in cache_dirs:
             try:
                 import shutil
@@ -148,12 +148,12 @@ def check_api_keys():
 
     if not llm_configured:
         logger.warning("未檢測到任何 LLM 提供商的 API 密鑰")
-        logger.info("請確保在.env文件中至少配置以下其中一個密鑰:")
+        logger.info("請確保在.env 檔案中至少配置以下其中一個密鑰:")
         logger.info("- OPENAI_API_KEY (OpenAI GPT 模型)")
         logger.info("- ANTHROPIC_API_KEY (Anthropic Claude 模型)")
         logger.info("\n配置方法:")
         logger.info("1. 複制 .env.example 為 .env")
-        logger.info("2. 編輯 .env 文件，填入真實API密鑰")
+        logger.info("2. 編輯 .env 檔案，填入真實API密鑰")
         return False
 
     if not finnhub_key:
@@ -168,7 +168,7 @@ def main():
     logger.info("TradingAgents-CN Web應用啟動器")
     logger.info("=")
     
-    # 清理緩存文件（可選，避免Streamlit文件監控錯誤）
+    # 清理快取檔案（可選，避免Streamlit文件監控錯誤）
     clean_cache_files(force_clean=False)
     
     # 檢查依賴

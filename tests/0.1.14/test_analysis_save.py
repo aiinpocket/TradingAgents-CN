@@ -71,7 +71,7 @@ def test_save_analysis_result():
     print("=" * 40)
     
     try:
-        # 導入保存函數
+        # 匯入保存函數
         from web.components.analysis_results import save_analysis_result
         
         # 創建模擬數據
@@ -104,15 +104,15 @@ def test_save_analysis_result():
             # 檢查文件是否創建
             print(f"\n 檢查保存的文件:")
             
-            # 檢查JSON文件
+            # 檢查JSON 檔案
             from web.components.analysis_results import get_analysis_results_dir
             results_dir = get_analysis_results_dir()
             json_file = results_dir / f"analysis_{analysis_id}.json"
             
             if json_file.exists():
-                print(f" JSON文件已創建: {json_file}")
+                print(f" JSON 檔案已創建: {json_file}")
             else:
-                print(f" JSON文件未找到: {json_file}")
+                print(f" JSON 檔案未找到: {json_file}")
             
             # 檢查詳細報告目錄
             import os

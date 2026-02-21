@@ -11,7 +11,7 @@ from pathlib import Path
 from datetime import datetime
 
 def get_log_files():
-    """獲取所有日誌文件"""
+    """獲取所有日誌檔案"""
     logs_dir = Path("logs")
     if not logs_dir.exists():
         return []
@@ -23,14 +23,14 @@ def get_log_files():
     return sorted(log_files, key=lambda x: x.stat().st_mtime, reverse=True)
 
 def show_log_files():
-    """顯示所有日誌文件"""
+    """顯示所有日誌檔案"""
     log_files = get_log_files()
     
     if not log_files:
-        print(" 未找到日誌文件")
+        print(" 未找到日誌檔案")
         return []
     
-    print(f" 找到 {len(log_files)} 個日誌文件:")
+    print(f" 找到 {len(log_files)} 個日誌檔案:")
     print("-" * 60)
     
     for i, log_file in enumerate(log_files, 1):
@@ -38,7 +38,7 @@ def show_log_files():
         size = stat.st_size
         mtime = datetime.fromtimestamp(stat.st_mtime)
         
-        # 格式化文件大小
+        # 格式化檔案大小
         if size < 1024:
             size_str = f"{size} B"
         elif size < 1024 * 1024:
@@ -54,8 +54,8 @@ def show_log_files():
     return log_files
 
 def view_log_file(log_file, lines=50):
-    """查看日誌文件內容"""
-    print(f" 查看日誌文件: {log_file.name}")
+    """查看日誌檔案內容"""
+    print(f" 查看日誌檔案: {log_file.name}")
     print("=" * 80)
     
     try:
@@ -63,7 +63,7 @@ def view_log_file(log_file, lines=50):
             content = f.readlines()
         
         if not content:
-            print(" 日誌文件為空")
+            print(" 日誌檔案為空")
             return
         
         total_lines = len(content)
@@ -92,8 +92,8 @@ def view_log_file(log_file, lines=50):
         print(f" 讀取文件失敗: {e}")
 
 def tail_log_file(log_file):
-    """實時跟蹤日誌文件"""
-    print(f" 實時跟蹤日誌文件: {log_file.name}")
+    """實時跟蹤日誌檔案"""
+    print(f" 實時跟蹤日誌檔案: {log_file.name}")
     print(" 按 Ctrl+C 停止跟蹤")
     print("=" * 80)
     
@@ -121,7 +121,7 @@ def search_logs(keyword, log_files=None):
         log_files = get_log_files()
     
     if not log_files:
-        print(" 未找到日誌文件")
+        print(" 未找到日誌檔案")
         return
     
     print(f" 搜索關鍵詞: '{keyword}'")
@@ -164,8 +164,8 @@ def main():
     
     while True:
         print("\n 選擇操作:")
-        print("1.  顯示所有日誌文件")
-        print("2.  查看日誌文件內容")
+        print("1.  顯示所有日誌檔案")
+        print("2.  查看日誌檔案內容")
         print("3.  實時跟蹤日誌")
         print("4.  搜索日誌內容")
         print("5.  查看Docker日誌")

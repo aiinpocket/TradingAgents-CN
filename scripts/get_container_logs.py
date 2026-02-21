@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-獲取Docker容器內部日誌文件的腳本
-用於從運行中的TradingAgents容器獲取實際的日誌文件
+獲取Docker容器內部日誌檔案的腳本
+用於從運行中的TradingAgents容器獲取實際的日誌檔案
 """
 
 import os
@@ -53,8 +53,8 @@ def find_container():
     return None
 
 def explore_container_filesystem(container_name):
-    """探索容器文件系統，查找日誌文件"""
-    print(f" 探索容器 {container_name} 的文件系統...")
+    """探索容器檔案系統，查找日誌檔案"""
+    print(f" 探索容器 {container_name} 的檔案系統...")
     
     # 檢查常見的日誌位置
     log_locations = [
@@ -88,15 +88,15 @@ def explore_container_filesystem(container_name):
                 for log_file in log_files:
                     if log_file.strip():
                         found_logs.append(log_file.strip())
-                        print(f"    找到日誌文件: {log_file.strip()}")
+                        print(f"    找到日誌檔案: {log_file.strip()}")
     
     return found_logs
 
 def get_log_file_info(container_name, log_file):
-    """獲取日誌文件資訊"""
-    print(f"\n 日誌文件資訊: {log_file}")
+    """獲取日誌檔案資訊"""
+    print(f"\n 日誌檔案資訊: {log_file}")
     
-    # 文件大小和修改時間
+    # 檔案大小和修改時間
     success, output, error = run_command(f"docker exec {container_name} ls -lh {log_file}")
     if success:
         print(f"   文件詳情: {output.strip()}")
@@ -113,35 +113,35 @@ def get_log_file_info(container_name, log_file):
         print(f"   最後修改: {output.strip()}")
 
 def preview_log_file(container_name, log_file, lines=20):
-    """預覽日誌文件內容"""
-    print(f"\n 預覽日誌文件 {log_file} (最後{lines}行):")
+    """預覽日誌檔案內容"""
+    print(f"\n 預覽日誌檔案 {log_file} (最後{lines}行):")
     print("=" * 80)
     
     success, output, error = run_command(f"docker exec {container_name} tail -{lines} {log_file}")
     if success:
         print(output)
     else:
-        print(f" 無法讀取日誌文件: {error}")
+        print(f" 無法讀取日誌檔案: {error}")
     
     print("=" * 80)
 
 def copy_log_file(container_name, log_file, local_path=None):
-    """複制日誌文件到本地"""
+    """複制日誌檔案到本地"""
     if not local_path:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = os.path.basename(log_file)
         local_path = f"{filename}_{timestamp}"
     
-    print(f"\n 複制日誌文件到本地: {local_path}")
+    print(f"\n 複制日誌檔案到本地: {local_path}")
     
     success, output, error = run_command(f"docker cp {container_name}:{log_file} {local_path}")
     if success:
-        print(f" 日誌文件已複制到: {local_path}")
+        print(f" 日誌檔案已複制到: {local_path}")
         
-        # 檢查本地文件大小
+        # 檢查本地檔案大小
         if os.path.exists(local_path):
             size = os.path.getsize(local_path)
-            print(f"   文件大小: {size:,} 字節")
+            print(f"   檔案大小: {size:,} 字節")
             
             # 顯示文件的最後幾行
             print(f"\n 文件內容預覽 (最後10行):")
@@ -187,7 +187,7 @@ def main():
         print(" 未找到容器，請確保TradingAgents容器正在運行")
         return
     
-    # 2. 探索文件系統
+    # 2. 探索檔案系統
     log_files = explore_container_filesystem(container_name)
     
     # 3. 獲取Docker標準日誌
@@ -197,25 +197,25 @@ def main():
         print("\n 未在容器中找到.log文件")
         print(" 可能的原因:")
         print("   - 日誌配置為輸出到stdout/stderr (被Docker捕獲)")
-        print("   - 日誌文件在其他位置")
-        print("   - 應用尚未生成日誌文件")
+        print("   - 日誌檔案在其他位置")
+        print("   - 應用尚未生成日誌檔案")
         
         if docker_log_file:
             print(f"\n 但已獲取到Docker標準日誌: {docker_log_file}")
         return
     
-    # 4. 處理找到的日誌文件
-    print(f"\n 找到 {len(log_files)} 個日誌文件:")
+    # 4. 處理找到的日誌檔案
+    print(f"\n 找到 {len(log_files)} 個日誌檔案:")
     for i, log_file in enumerate(log_files, 1):
         print(f"   {i}. {log_file}")
     
-    # 5. 讓用戶選擇要處理的日誌文件
+    # 5. 讓用戶選擇要處理的日誌檔案
     if len(log_files) == 1:
         selected_log = log_files[0]
-        print(f"\n 自動選擇唯一的日誌文件: {selected_log}")
+        print(f"\n 自動選擇唯一的日誌檔案: {selected_log}")
     else:
         try:
-            choice = input(f"\n請選擇要獲取的日誌文件 (1-{len(log_files)}, 或按Enter獲取所有): ").strip()
+            choice = input(f"\n請選擇要獲取的日誌檔案 (1-{len(log_files)}, 或按Enter獲取所有): ").strip()
             if not choice:
                 selected_logs = log_files
             else:
@@ -234,21 +234,21 @@ def main():
         else:
             selected_log = None
     
-    # 6. 處理選中的日誌文件
+    # 6. 處理選中的日誌檔案
     if selected_log:
         # 單個文件處理
         get_log_file_info(container_name, selected_log)
         preview_log_file(container_name, selected_log)
         
-        copy_choice = input("\n是否複制此日誌文件到本地? (y/N): ").strip().lower()
+        copy_choice = input("\n是否複制此日誌檔案到本地? (y/N): ").strip().lower()
         if copy_choice in ['y', 'yes']:
             local_file = copy_log_file(container_name, selected_log)
             if local_file:
-                print(f"\n 日誌文件獲取完成!")
+                print(f"\n 日誌檔案獲取完成!")
                 print(f" 本地文件: {local_file}")
     else:
         # 多個文件處理
-        print(f"\n 複制所有 {len(selected_logs)} 個日誌文件...")
+        print(f"\n 複制所有 {len(selected_logs)} 個日誌檔案...")
         copied_files = []
         for log_file in selected_logs:
             local_file = copy_log_file(container_name, log_file)
@@ -256,13 +256,13 @@ def main():
                 copied_files.append(local_file)
         
         if copied_files:
-            print(f"\n 成功複制 {len(copied_files)} 個日誌文件:")
+            print(f"\n 成功複制 {len(copied_files)} 個日誌檔案:")
             for file in copied_files:
                 print(f"    {file}")
     
     print(f"\n 總結:")
     print(f"   容器名稱: {container_name}")
-    print(f"   找到日誌文件: {len(log_files)} 個")
+    print(f"   找到日誌檔案: {len(log_files)} 個")
     if docker_log_file:
         print(f"   Docker日誌: {docker_log_file}")
     print(f"   完成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

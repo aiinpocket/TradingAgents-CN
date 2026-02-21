@@ -16,7 +16,7 @@ try:
     from tradingagents.agents.utils.agent_utils import Toolkit
     from tradingagents.default_config import DEFAULT_CONFIG
 except ImportError:
-    print(" 無法導入Toolkit，請檢查項目結構")
+    print(" 無法匯入Toolkit，請檢查項目結構")
     sys.exit(1)
 
 def test_us_stock_data_independence():

@@ -34,7 +34,7 @@ class DatabaseManager:
         self.logger.info(f"數據庫管理器初始化完成 - MongoDB: {self.mongodb_available}, Redis: {self.redis_available}")
     
     def _load_env_config(self):
-        """從.env文件載入配置"""
+        """從.env 檔案載入配置"""
         # 嘗試載入python-dotenv
         try:
             from dotenv import load_dotenv

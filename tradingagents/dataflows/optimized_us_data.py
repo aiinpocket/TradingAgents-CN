@@ -14,7 +14,7 @@ import pandas as pd
 from .cache_manager import get_cache
 from .config import get_config
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 

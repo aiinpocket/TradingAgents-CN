@@ -11,7 +11,7 @@ from typing import Dict, Any, Optional, List
 import threading
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('async_progress')
 
@@ -732,7 +732,7 @@ def get_latest_analysis_id() -> Optional[str]:
             if progress_files:
                 # 按修改時間排序，獲取最新的
                 latest_file = max(progress_files, key=lambda f: f.stat().st_mtime)
-                # 從文件名提取analysis_id
+                # 從檔案名稱提取analysis_id
                 filename = latest_file.name
                 if filename.startswith("progress_") and filename.endswith(".json"):
                     analysis_id = filename[9:-5]  # 去掉前綴和後綴

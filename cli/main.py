@@ -1,4 +1,4 @@
-# 標準庫導入
+# 標準庫匯入
 import datetime
 import os
 import re
@@ -11,7 +11,7 @@ from functools import wraps
 from pathlib import Path
 from typing import Optional
 
-# 第三方庫導入
+# 第三方庫匯入
 import typer
 from dotenv import load_dotenv
 from rich import box
@@ -26,7 +26,7 @@ from rich.spinner import Spinner
 from rich.table import Table
 from rich.text import Text
 
-# 項目內部導入
+# 項目內部匯入
 from cli.utils import (
     select_analysts,
     select_deep_thinking_agent,
@@ -105,7 +105,7 @@ class CLIUserInterface:
     def show_progress(self, message: str):
         """顯示進度資訊"""
         self.console.print(f"{message}")
-        # 同時記錄到日誌文件
+        # 同時記錄到日誌檔案
         self.logger.info(f"進度: {message}")
 
     def show_success(self, message: str):
@@ -1016,7 +1016,7 @@ def run_analysis():
         )
         ui.show_success("分析系統初始化完成")
     except ImportError as e:
-        ui.show_error(f"模塊導入失敗 | Module import failed: {str(e)}")
+        ui.show_error(f"模塊匯入失敗 | Module import failed: {str(e)}")
         ui.show_warning("請檢查依賴安裝 | Please check dependencies installation")
         return
     except ValueError as e:
@@ -1214,10 +1214,10 @@ def run_analysis():
                     if "market_report" not in completed_analysts:
                         ui.show_success("市場分析完成")
                         completed_analysts.add("market_report")
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.info(f"首次顯示市場分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.debug(f"跳過重複的市場分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1235,10 +1235,10 @@ def run_analysis():
                     if "sentiment_report" not in completed_analysts:
                         ui.show_success("情感分析完成")
                         completed_analysts.add("sentiment_report")
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.info(f"首次顯示情感分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.debug(f"跳過重複的情感分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1256,10 +1256,10 @@ def run_analysis():
                     if "news_report" not in completed_analysts:
                         ui.show_success("新聞分析完成")
                         completed_analysts.add("news_report")
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.info(f"首次顯示新聞分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.debug(f"跳過重複的新聞分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1277,10 +1277,10 @@ def run_analysis():
                     if "fundamentals_report" not in completed_analysts:
                         ui.show_success("基本面分析完成")
                         completed_analysts.add("fundamentals_report")
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.info(f"首次顯示基本面分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 除錯資訊（寫入日誌文件）
+                        # 除錯資訊（寫入日誌檔案）
                         logger.debug(f"跳過重複的基本面分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1758,7 +1758,7 @@ def examples():
 
     examples_table = Table(show_header=True, header_style="bold magenta")
     examples_table.add_column("類型 | Type", style="cyan")
-    examples_table.add_column("文件名 | Filename", style="green")
+    examples_table.add_column("檔案名稱 | Filename", style="green")
     examples_table.add_column("說明 | Description")
 
     examples_table.add_row(

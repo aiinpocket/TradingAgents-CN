@@ -1,6 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-# 導入統一日誌系統和分析模塊日誌裝飾器
+# 匯入統一日誌系統和分析模塊日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
 logger = get_logger("analysts.social_media")

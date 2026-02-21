@@ -10,7 +10,7 @@ import subprocess
 import platform
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -192,7 +192,7 @@ def test_pdf_generation():
         
         if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
             file_size = os.path.getsize(output_file)
-            logger.info(f" PDF生成測試成功！文件大小: {file_size} 字節")
+            logger.info(f" PDF生成測試成功！檔案大小: {file_size} 字節")
             
             # 清理測試文件
             os.unlink(output_file)

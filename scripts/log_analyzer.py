@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 日誌分析工具
-分析TradingAgents-CN的日誌文件，提供統計和洞察
+分析TradingAgents-CN的日誌檔案，提供統計和洞察
 """
 
 import json
@@ -13,7 +13,7 @@ from typing import Dict, List, Any, Optional
 from collections import defaultdict, Counter
 import argparse
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -28,12 +28,12 @@ class LogAnalyzer:
         self.structured_entries = []
         
     def parse_logs(self):
-        """解析日誌文件"""
+        """解析日誌檔案"""
         if not self.log_file.exists():
-            logger.error(f" 日誌文件不存在: {self.log_file}")
+            logger.error(f" 日誌檔案不存在: {self.log_file}")
             return
             
-        logger.info(f" 解析日誌文件: {self.log_file}")
+        logger.info(f" 解析日誌檔案: {self.log_file}")
         
         with open(self.log_file, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
@@ -176,7 +176,7 @@ class LogAnalyzer:
             elif '數據庫' in message or 'database' in message or 'mongodb' in message:
                 error_patterns['數據庫錯誤'] += 1
             elif 'PDF' in message or 'pdf' in message:
-                error_patterns['PDF導出錯誤'] += 1
+                error_patterns['PDF匯出錯誤'] += 1
             else:
                 error_patterns['其他錯誤'] += 1
         
@@ -308,7 +308,7 @@ class LogAnalyzer:
 # TradingAgents-CN 日誌分析報告
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-日誌文件: {self.log_file}
+日誌檔案: {self.log_file}
 
 ## 概覽
 - 普通日誌條目: {len(self.entries)}
@@ -343,8 +343,8 @@ class LogAnalyzer:
 
 def main():
     parser = argparse.ArgumentParser(description='TradingAgents-CN 日誌分析工具')
-    parser.add_argument('log_file', help='日誌文件路徑')
-    parser.add_argument('--output', '-o', help='輸出報告文件路徑')
+    parser.add_argument('log_file', help='日誌檔案路徑')
+    parser.add_argument('--output', '-o', help='輸出報告檔案路徑')
     parser.add_argument('--format', choices=['text', 'json'], default='text', help='輸出格式')
     
     args = parser.parse_args()

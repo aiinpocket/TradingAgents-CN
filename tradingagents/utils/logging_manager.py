@@ -14,7 +14,7 @@ from typing import Dict, Any, Optional, Union
 import json
 import toml
 
-# 註意：這裡不能導入自己，會造成循環導入
+# 註意：這裡不能匯入自己，會造成循環匯入
 # 在日誌系統初始化前，使用標準庫自舉日誌器，避免未定義引用
 _bootstrap_logger = logging.getLogger("tradingagents.logging_manager")
 
@@ -79,7 +79,7 @@ class TradingAgentsLogger:
     
     def _load_default_config(self) -> Dict[str, Any]:
         """載入預設日誌配置"""
-        # 嘗試從配置文件載入
+        # 嘗試從配置檔載入
         config = self._load_config_file()
         if config:
             return config
@@ -129,8 +129,8 @@ class TradingAgentsLogger:
         }
 
     def _load_config_file(self) -> Optional[Dict[str, Any]]:
-        """從配置文件載入日誌配置"""
-        # 確定配置文件路徑
+        """從配置檔載入日誌配置"""
+        # 確定配置檔案路徑
         config_paths = [
             'config/logging_docker.toml' if os.getenv('DOCKER_CONTAINER') == 'true' else None,
             'config/logging.toml',
@@ -146,7 +146,7 @@ class TradingAgentsLogger:
                     # 轉換配置格式
                     return self._convert_toml_config(config_data)
                 except Exception as e:
-                    _bootstrap_logger.warning(f"警告: 無法載入配置文件 {config_path}: {e}")
+                    _bootstrap_logger.warning(f"警告: 無法載入配置檔 {config_path}: {e}")
                     continue
 
         return None
@@ -183,7 +183,7 @@ class TradingAgentsLogger:
             try:
                 log_dir.mkdir(parents=True, exist_ok=True)
             except (OSError, PermissionError) as e:
-                # 如果無法創建日誌目錄（例如只讀文件系統），禁用文件日誌
+                # 如果無法創建日誌目錄（例如只讀檔案系統），禁用文件日誌
                 import warnings
                 warnings.warn(f"無法創建日誌目錄 {log_dir}: {e}，禁用文件日誌")
                 self.config['handlers']['file']['enabled'] = False
@@ -272,7 +272,7 @@ class TradingAgentsLogger:
         except (OSError, PermissionError, FileNotFoundError) as e:
             # 如果無法創建structured日誌，只輸出警告但不中斷
             import warnings
-            warnings.warn(f"無法創建結構化日誌文件: {e}，跳過structured handler")
+            warnings.warn(f"無法創建結構化日誌檔案: {e}，跳過structured handler")
     
     def _configure_specific_loggers(self):
         """配置特定的日誌器"""

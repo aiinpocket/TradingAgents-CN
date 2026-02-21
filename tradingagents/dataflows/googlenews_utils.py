@@ -11,7 +11,7 @@ from tenacity import (
     retry_if_result,
 )
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 

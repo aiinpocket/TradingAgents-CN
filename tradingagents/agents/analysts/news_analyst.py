@@ -1,12 +1,12 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from datetime import datetime
 
-# 導入統一日誌系統和分析模塊日誌裝飾器
+# 匯入統一日誌系統和分析模塊日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
-# 導入統一新聞工具
+# 匯入統一新聞工具
 from tradingagents.tools.unified_news_tool import create_unified_news_tool
-# 導入股票市場資訊工具
+# 匯入股票市場資訊工具
 from tradingagents.utils.stock_utils import get_stock_market_info
 logger = get_logger("analysts.news")
 

@@ -90,9 +90,9 @@ def test_cli_basic_functionality():
     print("\n 測試CLI基本功能...")
     
     try:
-        # 測試導入是否正常
+        # 測試匯入是否正常
         from cli.main import main
-        print("   CLI模塊導入成功")
+        print("   CLI模塊匯入成功")
         
         # 測試配置檢查功能
         import sys
@@ -102,7 +102,7 @@ def test_cli_basic_functionality():
             # 模擬配置檢查命令
             sys.argv = ['main.py', 'config']
             
-            # 這裡我們不實際運行main()，只是測試導入和基本結構
+            # 這裡我們不實際運行main()，只是測試匯入和基本結構
             print("   CLI配置檢查功能可用")
             return True
             

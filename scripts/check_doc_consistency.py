@@ -53,7 +53,7 @@ class DocumentationChecker:
         project_version = version_file.read_text().strip()
         print(f"   項目版本: {project_version}")
         
-        # 檢查文件中的版本資訊
+        # 檢查檔案中的版本資訊
         doc_files = list(self.docs_dir.rglob("*.md"))
         for doc_file in doc_files:
             try:
@@ -107,7 +107,7 @@ class DocumentationChecker:
         
         print(f"   發現的智能體: {actual_agents}")
         
-        # 檢查文件中的智能體描述
+        # 檢查檔案中的智能體描述
         agents_doc_dir = self.docs_dir / "agents"
         if agents_doc_dir.exists():
             for doc_file in agents_doc_dir.glob("*.md"):
@@ -129,7 +129,7 @@ class DocumentationChecker:
         return issues
     
     def check_code_examples(self) -> List[str]:
-        """檢查文件中的代碼示例"""
+        """檢查檔案中的代碼示例"""
         print(" 檢查代碼示例...")
         issues = []
         
@@ -153,12 +153,12 @@ class DocumentationChecker:
                     if "BaseAnalyst" in code_block:
                         issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 使用了已廢棄的BaseAnalyst類")
                     
-                    # 檢查導入語句的正確性
+                    # 檢查匯入語句的正確性
                     import_lines = [line.strip() for line in code_block.split('\n') if line.strip().startswith('from tradingagents')]
                     for import_line in import_lines:
                         # 簡單檢查模塊路徑是否存在
                         if 'from tradingagents.agents.analysts.base_analyst' in import_line:
-                            issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 導入不存在的base_analyst模塊")
+                            issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 匯入不存在的base_analyst模塊")
                 
             except Exception as e:
                 issues.append(f" 檢查代碼示例失敗 {doc_file}: {e}")
@@ -184,7 +184,7 @@ class DocumentationChecker:
         return issues
     
     def check_file_existence(self) -> List[str]:
-        """檢查文件中引用的檔案是否存在"""
+        """檢查檔案中引用的檔案是否存在"""
         print(" 檢查文件引用...")
         issues = []
         

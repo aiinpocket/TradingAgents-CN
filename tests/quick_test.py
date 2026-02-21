@@ -39,13 +39,13 @@ for file_path in files_to_check:
         except Exception as e:
             print(f" {file_path} 檢查失敗: {e}")
 
-# 測試3：嘗試導入模塊
-print("\n 測試模塊導入...")
+# 測試3：嘗試匯入模塊
+print("\n 測試模塊匯入...")
 
 # 測試緩存管理器
 try:
     from tradingagents.dataflows.cache_manager import get_cache, StockDataCache
-    print(" cache_manager 導入成功")
+    print(" cache_manager 匯入成功")
     
     # 創建緩存實例
     cache = get_cache()
@@ -60,33 +60,33 @@ try:
             print(" 緩存目錄不存在")
     
 except Exception as e:
-    print(f" cache_manager 導入失敗: {e}")
+    print(f" cache_manager 匯入失敗: {e}")
     traceback.print_exc()
 
 # 測試優化美股數據
 try:
     from tradingagents.dataflows.optimized_us_data import get_optimized_us_data_provider
-    print(" optimized_us_data 導入成功")
+    print(" optimized_us_data 匯入成功")
     
     # 創建數據提供器
     provider = get_optimized_us_data_provider()
     print(f" 數據提供器創建成功: {type(provider).__name__}")
     
 except Exception as e:
-    print(f" optimized_us_data 導入失敗: {e}")
+    print(f" optimized_us_data 匯入失敗: {e}")
     traceback.print_exc()
 
 # 測試配置模塊
 try:
     from tradingagents.dataflows.config import get_config
-    print(" config 導入成功")
+    print(" config 匯入成功")
     
     # 獲取配置
     config = get_config()
     print(f" 配置獲取成功: {type(config).__name__}")
     
 except Exception as e:
-    print(f" config 導入失敗: {e}")
+    print(f" config 匯入失敗: {e}")
     traceback.print_exc()
 
 # 測試4：基本功能測試
@@ -186,7 +186,7 @@ print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 print("\n 測試總結:")
 print("1. 文件複制: 檢查文件是否正確複制")
 print("2. 語法檢查: 驗證Python語法正確性")
-print("3. 模塊導入: 測試模塊是否可以正常導入")
+print("3. 模塊匯入: 測試模塊是否可以正常匯入")
 print("4. 功能測試: 驗證緩存基本功能")
 print("5. 性能測試: 檢查緩存性能")
 print("6. 統計資訊: 獲取緩存使用統計")

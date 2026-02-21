@@ -10,10 +10,10 @@ from tradingagents.dataflows.finnhub_extra import (
 )
 from tradingagents.default_config import DEFAULT_CONFIG
 
-# 導入工具日誌裝飾器
+# 匯入工具日誌裝飾器
 from tradingagents.utils.tool_logging import log_tool_call
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 

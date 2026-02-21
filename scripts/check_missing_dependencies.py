@@ -69,7 +69,7 @@ PACKAGE_NAME_MAPPING = {
 
 
 def extract_imports_from_file(file_path: Path) -> Set[str]:
-    """從 Python 文件中提取導入的包名"""
+    """從 Python 檔案中提取匯入的包名"""
     imports = set()
     
     try:
@@ -91,7 +91,7 @@ def extract_imports_from_file(file_path: Path) -> Set[str]:
 
 
 def scan_directory(directory: Path) -> Set[str]:
-    """掃描目錄中所有 Python 文件的導入"""
+    """掃描目錄中所有 Python 文件的匯入"""
     all_imports = set()
     
     for py_file in directory.rglob('*.py'):
@@ -150,7 +150,7 @@ def main():
     print(" 檢查 pyproject.toml 中缺失的依賴包")
     print("=" * 80)
     
-    # 掃描代碼中的導入
+    # 掃描代碼中的匯入
     print("\n 掃描代碼目錄...")
     directories_to_scan = [
         project_root / 'tradingagents',
@@ -171,7 +171,7 @@ def main():
         if imp not in STDLIB_MODULES and imp not in INTERNAL_MODULES
     }
     
-    print(f"\n 發現 {len(third_party_imports)} 個第三方包導入")
+    print(f"\n 發現 {len(third_party_imports)} 個第三方包匯入")
     
     # 獲取已聲明的依賴
     print("\n 讀取 pyproject.toml 中的依賴...")
@@ -205,8 +205,8 @@ def main():
     else:
         print("\n 所有第三方包都已在 pyproject.toml 中聲明！")
     
-    # 顯示所有發現的第三方導入
-    print("\n 所有第三方包導入列表:")
+    # 顯示所有發現的第三方匯入
+    print("\n 所有第三方包匯入列表:")
     print("-" * 80)
     for imp in sorted(third_party_imports):
         status = "" if normalize_package_name(imp) in declared_deps or imp.lower() in declared_deps else ""

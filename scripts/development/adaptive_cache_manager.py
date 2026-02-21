@@ -13,11 +13,11 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 import pandas as pd
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
-# 導入智能配置
+# 匯入智能配置
 try:
     from smart_config import get_smart_config, get_config
     SMART_CONFIG_AVAILABLE = True

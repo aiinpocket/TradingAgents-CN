@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('web')
 
@@ -208,7 +208,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     update_progress("環境變量驗證通過")
 
     try:
-        # 導入必要的模塊
+        # 匯入必要的模塊
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
 

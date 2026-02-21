@@ -37,7 +37,7 @@ def main():
     print("=" * 50)
     
     try:
-        # 導入MongoDB管理器
+        # 匯入MongoDB管理器
         from web.utils.mongodb_report_manager import MongoDBReportManager
         
         # 創建MongoDB管理器實例
@@ -113,7 +113,7 @@ def main():
             return False
             
     except ImportError as e:
-        print(f" 導入錯誤: {e}")
+        print(f" 匯入錯誤: {e}")
         print("請確保MongoDB相關依賴已安裝")
         return False
     except Exception as e:

@@ -4,10 +4,10 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain import hub
 
-# 導入分析模塊日誌裝飾器
+# 匯入分析模塊日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
 
-# 導入統一日誌系統
+# 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 

@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any, Union, List
 import hashlib
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -148,7 +148,7 @@ class StockDataCache:
         return f"{symbol}_{data_type}_{cache_key}"
     
     def _get_cache_path(self, data_type: str, cache_key: str, file_format: str = "json", symbol: str = None) -> Path:
-        """獲取緩存文件路徑 - 支持市場分類"""
+        """獲取緩存檔案路徑 - 支持市場分類"""
         # 統一使用美股市場類型
         market_type = 'us'
 
@@ -165,7 +165,7 @@ class StockDataCache:
         return base_dir / f"{cache_key}.{file_format}"
     
     def _get_metadata_path(self, cache_key: str) -> Path:
-        """獲取中繼資料文件路徑"""
+        """獲取中繼資料檔路徑"""
         return self.metadata_dir / f"{cache_key}_meta.json"
     
     def _save_metadata(self, cache_key: str, metadata: Dict[str, Any]):
@@ -523,19 +523,19 @@ class StockDataCache:
                 
                 cached_at = datetime.fromisoformat(metadata['cached_at'])
                 if cached_at < cutoff_time:
-                    # 刪除數據文件
+                    # 刪除資料檔案
                     data_file = Path(metadata['file_path'])
                     if data_file.exists():
                         data_file.unlink()
                     
-                    # 刪除中繼資料文件
+                    # 刪除中繼資料檔
                     metadata_file.unlink()
                     cleared_count += 1
                     
             except Exception as e:
                 logger.warning(f"清理緩存時出錯: {e}")
         
-        logger.info(f"已清理 {cleared_count} 個過期緩存文件")
+        logger.info(f"已清理 {cleared_count} 個過期快取檔案")
     
     def get_cache_stats(self) -> Dict[str, Any]:
         """獲取緩存統計資訊"""
@@ -566,7 +566,7 @@ class StockDataCache:
                 if not data_file.exists():
                     stats['skipped_count'] += 1
                 else:
-                    # 計算文件大小
+                    # 計算檔案大小
                     stats['total_size_mb'] += data_file.stat().st_size / (1024 * 1024)
                 
                 stats['total_files'] += 1

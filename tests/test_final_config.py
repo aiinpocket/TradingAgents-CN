@@ -11,12 +11,12 @@ def test_final_config():
     print(" 測試最終的.env配置系統")
     print("=" * 40)
     
-    # 1. 檢查.env文件
-    print("\n 檢查.env文件...")
+    # 1. 檢查.env 檔案
+    print("\n 檢查.env 檔案...")
     if os.path.exists('.env'):
-        print(" .env文件存在")
+        print(" .env 檔案存在")
     else:
-        print(" .env文件不存在")
+        print(" .env 檔案不存在")
         return False
     
     # 2. 讀取啟用開關
@@ -113,11 +113,11 @@ def test_final_config():
     
     # 6. 總結
     print("\n 配置總結:")
-    print(" 使用.env文件進行配置")
+    print(" 使用.env 檔案進行配置")
     print(" 通過MONGODB_ENABLED和REDIS_ENABLED控制啟用狀態")
     print(" 預設情況下數據庫都是禁用的")
     print(" 系統使用文件緩存，性能良好")
-    print(" 可以通過修改.env文件啟用數據庫")
+    print(" 可以通過修改.env 檔案啟用數據庫")
     
     print("\n 使用說明:")
     print("1. 預設配置：MONGODB_ENABLED=false, REDIS_ENABLED=false")
@@ -136,7 +136,7 @@ def main():
         if success:
             print("\n 最終配置測試完成!")
             print("\n 系統特性:")
-            print(" 簡化配置：只需要.env文件")
+            print(" 簡化配置：只需要.env 檔案")
             print(" 明確控制：通過啟用開關控制數據庫")
             print(" 預設安全：預設不啟用數據庫")
             print(" 智能降級：數據庫不可用時自動使用文件緩存")

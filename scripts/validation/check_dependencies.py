@@ -9,7 +9,7 @@ import os
 import traceback
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -126,7 +126,7 @@ def test_cache_without_database():
     logger.info(f"\n 測試文件緩存功能...")
     
     try:
-        # 導入緩存管理器
+        # 匯入緩存管理器
         from tradingagents.dataflows.cache_manager import get_cache
 
         
@@ -205,7 +205,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 ## 配置說明
 
 ### 文件緩存模式（預設）
-- 緩存存儲在本地文件系統
+- 緩存存儲在本地檔案系統
 - 性能良好，適合單機使用
 - 無需額外服務
 

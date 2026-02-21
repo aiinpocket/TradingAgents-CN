@@ -11,7 +11,7 @@ from datetime import datetime
 
 from tradingagents.utils.logging_init import get_logger
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('agents')
 

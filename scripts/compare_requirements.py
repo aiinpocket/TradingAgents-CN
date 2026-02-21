@@ -1,7 +1,7 @@
 """
 比較 requirements.txt 和 pyproject.toml 中的依賴是否一致
 
-確保兩個文件中聲明的依賴包保持同步
+確保兩個檔案中聲明的依賴包保持同步
 """
 
 import re

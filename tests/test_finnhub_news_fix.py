@@ -5,7 +5,7 @@
 
 這個腳本用於驗證:
 1. 數據目錄路徑配置是否正確
-2. 新聞數據文件路徑是否存在
+2. 新聞數據檔案路徑是否存在
 3. 錯誤處理是否正常工作
 """
 
@@ -57,7 +57,7 @@ def test_finnhub_news_path():
     ticker = "AAPL"
     news_data_path = os.path.join(data_dir, "finnhub_data", "news_data", f"{ticker}_data_formatted.json")
     
-    print(f"新聞數據文件路徑: {news_data_path}")
+    print(f"新聞數據檔案路徑: {news_data_path}")
     print(f"文件是否存在: {os.path.exists(news_data_path)}")
     
     # 檢查目錄結構
@@ -130,7 +130,7 @@ def create_sample_data_structure():
         os.makedirs(news_dir, exist_ok=True)
         print(f" 創建目錄結構: {news_dir}")
         
-        # 創建示例數據文件
+        # 創建示例資料檔案
         sample_file = os.path.join(news_dir, "AAPL_data_formatted.json")
         sample_data = {
             "2025-01-01": [
@@ -145,7 +145,7 @@ def create_sample_data_structure():
         with open(sample_file, 'w', encoding='utf-8') as f:
             json.dump(sample_data, f, ensure_ascii=False, indent=2)
         
-        print(f" 創建示例數據文件: {sample_file}")
+        print(f" 創建示例資料檔案: {sample_file}")
         
     except Exception as e:
         print(f" 創建目錄結構失敗: {e}")
@@ -174,7 +174,7 @@ def main():
     print("\n=== 測試總結 ===")
     print("1. 數據目錄路徑已修複為跨平台兼容")
     print("2. 添加了詳細的錯誤處理和除錯資訊")
-    print("3. 當數據文件不存在時會提供清晰的錯誤提示")
+    print("3. 當資料檔案不存在時會提供清晰的錯誤提示")
     print("4. 建議下載或配置正確的Finnhub數據")
     
     print("\n=== 解決方案建議 ===")

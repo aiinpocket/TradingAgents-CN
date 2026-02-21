@@ -18,7 +18,7 @@ def test_cli_logging_setup():
     print("=" * 60)
     
     try:
-        # 導入CLI模塊，觸發日誌設置
+        # 匯入CLI模塊，觸發日誌設置
         from cli.main import setup_cli_logging, logger
         from tradingagents.utils.logging_manager import get_logger_manager
         
@@ -84,8 +84,8 @@ def test_console_output():
         return False
 
 def test_log_file_writing():
-    """測試日誌文件寫入"""
-    print("\n 測試日誌文件寫入")
+    """測試日誌檔案寫入"""
+    print("\n 測試日誌檔案寫入")
     print("=" * 60)
     
     try:
@@ -93,33 +93,33 @@ def test_log_file_writing():
         import glob
         
         # 寫入測試日誌
-        test_message = "CLI日誌修複測試消息 - 這應該只出現在日誌文件中"
+        test_message = "CLI日誌修複測試消息 - 這應該只出現在日誌檔案中"
         logger.info(test_message)
         
-        # 查找日誌文件
+        # 查找日誌檔案
         log_files = glob.glob("logs/*.log") + glob.glob("*.log")
         
         if log_files:
-            print(f" 找到日誌文件: {log_files}")
+            print(f" 找到日誌檔案: {log_files}")
             
-            # 檢查最新的日誌文件
+            # 檢查最新的日誌檔案
             latest_log = max(log_files, key=os.path.getmtime)
-            print(f" 檢查最新日誌文件: {latest_log}")
+            print(f" 檢查最新日誌檔案: {latest_log}")
             
             try:
                 with open(latest_log, 'r', encoding='utf-8') as f:
                     content = f.read()
                     if test_message in content:
-                        print(" 測試消息已寫入日誌文件")
+                        print(" 測試消息已寫入日誌檔案")
                         return True
                     else:
-                        print(" 測試消息未在日誌文件中找到")
+                        print(" 測試消息未在日誌檔案中找到")
                         return False
             except Exception as e:
-                print(f" 讀取日誌文件失敗: {e}")
+                print(f" 讀取日誌檔案失敗: {e}")
                 return False
         else:
-            print(" 未找到日誌文件")
+            print(" 未找到日誌檔案")
             return False
         
     except Exception as e:
@@ -176,7 +176,7 @@ def main():
     # 測試2: Console輸出
     results.append(test_console_output())
     
-    # 測試3: 日誌文件寫入
+    # 測試3: 日誌檔案寫入
     results.append(test_log_file_writing())
     
     # 測試4: CLI界面預覽
@@ -193,7 +193,7 @@ def main():
     test_names = [
         "CLI日誌設置",
         "Console輸出測試",
-        "日誌文件寫入",
+        "日誌檔案寫入",
         "CLI界面預覽"
     ]
     
@@ -215,7 +215,7 @@ def main():
         print("- 界面簡潔，沒有時間戳干擾")
         print("- 彩色輸出更加美觀")
         print("- 技術資訊和用戶資訊分離")
-        print("- 除錯資訊仍然記錄在日誌文件中")
+        print("- 除錯資訊仍然記錄在日誌檔案中")
     else:
         print(" 部分測試失敗，需要進一步優化")
     

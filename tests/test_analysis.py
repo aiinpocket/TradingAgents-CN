@@ -17,14 +17,14 @@ sys.path.insert(0, str(project_root))
 load_dotenv(project_root / ".env", override=True)
 
 def test_basic_imports():
-    """測試基本導入"""
+    """測試基本匯入"""
     try:
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
-        print(" 基本導入成功")
+        print(" 基本匯入成功")
         return True
     except Exception as e:
-        print(f" 基本導入失敗: {e}")
+        print(f" 基本匯入失敗: {e}")
         return False
 
 def test_environment_variables():
@@ -92,8 +92,8 @@ def main():
     print(" TradingAgents 功能測試")
     print("=" * 50)
     
-    # 測試基本導入
-    print("\n1. 測試基本導入...")
+    # 測試基本匯入
+    print("\n1. 測試基本匯入...")
     if not test_basic_imports():
         return
     

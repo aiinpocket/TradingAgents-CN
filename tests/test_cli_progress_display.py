@@ -161,7 +161,7 @@ def test_progress_vs_logging():
         print("\n 系統日誌（只寫入文件）:")
         logger.info("這是系統日誌消息，應該只寫入文件")
         logger.debug("這是除錯資訊，用戶看不到")
-        logger.error("這是錯誤日誌，只記錄在文件中")
+        logger.error("這是錯誤日誌，只記錄在檔案中")
         
         print(" 如果上面沒有顯示時間戳和模塊名，說明日誌分離成功")
         

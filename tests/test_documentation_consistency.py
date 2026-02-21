@@ -4,7 +4,7 @@
 文件一致性測試
 Documentation Consistency Test
 
-測試文件中的配置和說明是否一致
+測試檔案中的配置和說明是否一致
 Test if configurations and descriptions in documentation are consistent
 """
 

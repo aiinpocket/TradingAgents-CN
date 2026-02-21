@@ -23,7 +23,7 @@ def test_signal_processing_logging():
         
         print(" 創建信號處理器...")
         
-        # 導入信號處理器
+        # 匯入信號處理器
         from tradingagents.graph.signal_processing import SignalProcessor
         
         processor = SignalProcessor()

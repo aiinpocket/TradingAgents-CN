@@ -183,13 +183,13 @@ class DataDirectoryMigrator:
                 shutil.copy2(item, target_file)
     
     def update_env_file(self) -> bool:
-        """更新.env文件"""
+        """更新.env 檔案"""
         try:
-            logger.info(" 更新.env文件...")
+            logger.info(" 更新.env 檔案...")
             
             env_file = self.project_root / '.env'
             if not env_file.exists():
-                logger.warning(" .env文件不存在，跳過更新")
+                logger.warning(" .env 檔案不存在，跳過更新")
                 return True
             
             # 讀取現有內容
@@ -220,14 +220,14 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
                 with open(env_file, 'w', encoding='utf-8') as f:
                     f.write(content)
                 
-                logger.info(" .env文件更新完成")
+                logger.info(" .env 檔案更新完成")
             else:
-                logger.info("[INFO].env文件已包含數據目錄配置")
+                logger.info("[INFO].env 檔案已包含數據目錄配置")
             
             return True
             
         except Exception as e:
-            logger.error(f" 更新.env文件失敗: {e}")
+            logger.error(f" 更新.env 檔案失敗: {e}")
             return False
     
     def create_migration_report(self) -> bool:

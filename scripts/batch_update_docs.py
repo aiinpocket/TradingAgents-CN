@@ -86,7 +86,7 @@ status: {status}
         return updated_files
     
     def fix_code_blocks(self) -> List[str]:
-        """修復文件中的代碼塊問題"""
+        """修復檔案中的代碼塊問題"""
         print(" 修復代碼塊問題...")
         fixed_files = []
         

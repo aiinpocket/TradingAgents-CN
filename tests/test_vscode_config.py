@@ -111,8 +111,8 @@ def test_virtual_env_path():
     return True
 
 def test_package_imports():
-    """測試關鍵包導入"""
-    print("\n 關鍵包導入驗證")
+    """測試關鍵包匯入"""
+    print("\n 關鍵包匯入驗證")
     print("=" * 50)
     
     packages = [
@@ -134,9 +134,9 @@ def test_package_imports():
         except ImportError:
             print(f" {name}: 未安裝")
         except Exception as e:
-            print(f" {name}: 導入錯誤 - {e}")
+            print(f" {name}: 匯入錯誤 - {e}")
     
-    print(f"\n 包導入結果: {success_count}/{len(packages)} 成功")
+    print(f"\n 包匯入結果: {success_count}/{len(packages)} 成功")
     return success_count >= len(packages) * 0.8  # 80%成功率
 
 def test_project_structure():
@@ -180,13 +180,13 @@ def test_environment_variables():
     print("\n 環境變量驗證")
     print("=" * 50)
     
-    # 讀取.env文件
+    # 讀取.env 檔案
     env_file = Path('.env')
     if not env_file.exists():
-        print(" .env文件不存在")
+        print(" .env 檔案不存在")
         return False
     
-    print(" .env文件存在")
+    print(" .env 檔案存在")
     
     # 檢查關鍵環境變量
     key_vars = [
@@ -209,16 +209,16 @@ def test_simple_functionality():
     print("=" * 50)
     
     try:
-        # 測試TradingAgents導入
-        print(" TradingAgents LLM適配器導入成功")
+        # 測試TradingAgents匯入
+        print(" TradingAgents LLM適配器匯入成功")
         
-        # 測試數據流導入
+        # 測試數據流匯入
         from tradingagents.dataflows import interface
-        print("TradingAgents數據流導入成功")
+        print("TradingAgents數據流匯入成功")
         
-        # 測試圖形導入
+        # 測試圖形匯入
         from tradingagents.graph.trading_graph import TradingAgentsGraph
-        print(" TradingAgents圖形導入成功")
+        print(" TradingAgents圖形匯入成功")
         
         return True
         
@@ -234,7 +234,7 @@ def main():
     print("   - Python虛擬環境配置")
     print("   - VSCode設置文件")
     print("   - 項目結構完整性")
-    print("   - 關鍵包導入")
+    print("   - 關鍵包匯入")
     print("   - 環境變量配置")
     print("=" * 70)
     
@@ -243,7 +243,7 @@ def main():
         ("Python環境", test_python_environment),
         ("VSCode設置", test_vscode_settings),
         ("虛擬環境路徑", test_virtual_env_path),
-        ("包導入", test_package_imports),
+        ("包匯入", test_package_imports),
         ("項目結構", test_project_structure),
         ("環境變量", test_environment_variables),
         ("基本功能", test_simple_functionality)

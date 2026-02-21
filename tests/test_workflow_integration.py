@@ -53,18 +53,18 @@ def test_news_analyst_integration():
         news_analyst = create_news_analyst(mock_llm, mock_toolkit)
         print(f"   新聞分析師創建成功")
         
-        # 2. 檢查統一新聞工具的導入和使用
+        # 2. 檢查統一新聞工具的匯入和使用
         print(f"\n 第二步：檢查統一新聞工具的集成...")
         
-        # 檢查統一新聞工具是否能正常導入
+        # 檢查統一新聞工具是否能正常匯入
         try:
             from tradingagents.tools.unified_news_tool import create_unified_news_tool
             test_tool = create_unified_news_tool(mock_toolkit)
-            print(f"   統一新聞工具導入成功")
+            print(f"   統一新聞工具匯入成功")
             print(f"   工具名稱: {getattr(test_tool, 'name', '未設置')}")
             print(f"   工具描述: {test_tool.description[:100]}...")
         except Exception as e:
-            print(f"   統一新聞工具導入失敗: {e}")
+            print(f"   統一新聞工具匯入失敗: {e}")
         
         # 3. 檢查新聞分析師源碼中的集成情況
         print(f"\n 第三步：檢查新聞分析師源碼集成...")
@@ -77,7 +77,7 @@ def test_news_analyst_integration():
             
             # 檢查關鍵集成點
             integration_checks = [
-                ("統一新聞工具導入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
+                ("統一新聞工具匯入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
                 ("工具創建", "unified_news_tool = create_unified_news_tool(toolkit)"),
                 ("工具名稱設置", 'unified_news_tool.name = "get_stock_news_unified"'),
                 ("工具列表", "tools = [unified_news_tool]"),
@@ -106,7 +106,7 @@ def test_news_analyst_integration():
                 setup_code = f.read()
             
             workflow_checks = [
-                ("新聞分析師導入", "from tradingagents.agents.analysts.news_analyst import create_news_analyst"),
+                ("新聞分析師匯入", "from tradingagents.agents.analysts.news_analyst import create_news_analyst"),
                 ("新聞分析師節點創建", 'analyst_nodes["news"] = create_news_analyst'),
                 ("工作流程節點添加", "workflow.add_node")
             ]

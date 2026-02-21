@@ -11,28 +11,28 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_config_page_import():
-    """測試配置頁面導入"""
-    print(" 測試配置管理頁面導入")
+    """測試配置頁面匯入"""
+    print(" 測試配置管理頁面匯入")
     print("=" * 50)
     
     try:
         from web.pages.config_management import render_config_management
-        print(" 配置管理頁面導入成功")
+        print(" 配置管理頁面匯入成功")
         return True
     except Exception as e:
-        print(f" 配置管理頁面導入失敗: {e}")
+        print(f" 配置管理頁面匯入失敗: {e}")
         import traceback
         print(f"錯誤詳情: {traceback.format_exc()}")
         return False
 
 def test_config_manager_import():
-    """測試配置管理器導入"""
-    print("\n 測試配置管理器導入")
+    """測試配置管理器匯入"""
+    print("\n 測試配置管理器匯入")
     print("=" * 50)
     
     try:
         from tradingagents.config.config_manager import config_manager, token_tracker
-        print(" 配置管理器導入成功")
+        print(" 配置管理器匯入成功")
         
         # 測試基本功能
         models = config_manager.load_models()
@@ -46,7 +46,7 @@ def test_config_manager_import():
         
         return True
     except Exception as e:
-        print(f" 配置管理器導入失敗: {e}")
+        print(f" 配置管理器匯入失敗: {e}")
         import traceback
         print(f"錯誤詳情: {traceback.format_exc()}")
         return False
@@ -62,13 +62,13 @@ def test_streamlit_components():
         import plotly.express as px
         import plotly.graph_objects as go
         
-        print(" Streamlit導入成功")
-        print(" Pandas導入成功")
-        print(" Plotly導入成功")
+        print(" Streamlit匯入成功")
+        print(" Pandas匯入成功")
+        print(" Plotly匯入成功")
         
         return True
     except Exception as e:
-        print(f" Streamlit組件導入失敗: {e}")
+        print(f" Streamlit組件匯入失敗: {e}")
         return False
 
 def main():

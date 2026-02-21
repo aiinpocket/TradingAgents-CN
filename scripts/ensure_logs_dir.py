@@ -45,24 +45,24 @@ def ensure_logs_directory():
     if not readme_file.exists():
         readme_content = """# TradingAgents 日誌目錄
 
-此目錄用於存儲 TradingAgents 應用的日誌文件。
+此目錄用於存儲 TradingAgents 應用的日誌檔案。
 
-## 日誌文件說明
+## 日誌檔案說明
 
-- `tradingagents.log` - 主應用日誌文件
-- `tradingagents_error.log` - 錯誤日誌文件（如果有錯誤）
-- `*.log.*` - 輪轉的歷史日誌文件
+- `tradingagents.log` - 主應用日誌檔案
+- `tradingagents_error.log` - 錯誤日誌檔案（如果有錯誤）
+- `*.log.*` - 輪轉的歷史日誌檔案
 
 ## Docker映射
 
 在Docker環境中，此目錄映射到容器內的 `/app/logs` 目錄。
-容器內生成的所有日誌文件都會出現在這裡。
+容器內生成的所有日誌檔案都會出現在這裡。
 
 ## 獲取日誌
 
 如果遇到問題需要發送日誌給開發者，請發送：
-1. `tradingagents.log` - 主日誌文件
-2. `tradingagents_error.log` - 錯誤日誌文件（如果存在）
+1. `tradingagents.log` - 主日誌檔案
+2. `tradingagents_error.log` - 錯誤日誌檔案（如果存在）
 
 ## 實時查看日誌
 
@@ -77,15 +77,15 @@ Get-Content logs/tradingagents.log -Wait
         readme_file.write_text(readme_content, encoding='utf-8')
         print(" 創建README.md文件")
     
-    # 檢查現有日誌文件
+    # 檢查現有日誌檔案
     log_files = list(logs_dir.glob("*.log*"))
     if log_files:
-        print(f"\n 現有日誌文件 ({len(log_files)} 個):")
+        print(f"\n 現有日誌檔案 ({len(log_files)} 個):")
         for log_file in sorted(log_files):
             size = log_file.stat().st_size
             print(f"    {log_file.name} ({size:,} 字節)")
     else:
-        print("\n 暫無日誌文件")
+        print("\n 暫無日誌檔案")
     
     print(f"\n 日誌目錄準備完成！")
     print(f" 日誌將保存到: {logs_dir.absolute()}")

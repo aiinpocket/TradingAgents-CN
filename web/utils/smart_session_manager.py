@@ -31,7 +31,7 @@ class SmartSessionManager:
             return False
     
     def _init_file_manager(self):
-        """初始化文件管理器"""
+        """初始化檔案管理器"""
         try:
             from .file_session_manager import file_session_manager
             self.file_manager = file_session_manager
@@ -96,7 +96,7 @@ class SmartSessionManager:
             except Exception:
                 pass
 
-        # 清除文件中的數據
+        # 清除檔案中的數據
         if self.file_manager:
             try:
                 self.file_manager.clear_analysis_state()

@@ -19,7 +19,7 @@ from .managers.risk_manager import create_risk_manager
 
 from .trader.trader import create_trader
 
-# 導入統一日誌系統
+# 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 

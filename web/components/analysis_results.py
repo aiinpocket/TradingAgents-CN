@@ -20,7 +20,7 @@ except ImportError:
     import logging
     logger = logging.getLogger(__name__)
 
-# MongoDB相關導入
+# MongoDB相關匯入
 try:
     from web.utils.mongodb_report_manager import MongoDBReportManager
     MONGODB_AVAILABLE = True
@@ -33,7 +33,7 @@ def safe_timestamp_to_datetime(timestamp_value):
         # 如果已經是datetime對象（來自MongoDB）
         return timestamp_value
     elif isinstance(timestamp_value, (int, float)):
-        # 如果是時間戳數字（來自文件系統）
+        # 如果是時間戳數字（來自檔案系統）
         try:
             return datetime.fromtimestamp(timestamp_value)
         except (ValueError, OSError):
@@ -50,11 +50,11 @@ def get_analysis_results_dir():
     return results_dir
 
 def get_favorites_file():
-    """獲取收藏文件路徑"""
+    """獲取收藏檔案路徑"""
     return get_analysis_results_dir() / "favorites.json"
 
 def get_tags_file():
-    """獲取標籤文件路徑"""
+    """獲取標籤檔案路徑"""
     return get_analysis_results_dir() / "tags.json"
 
 def load_favorites():
@@ -164,11 +164,11 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
             logger.error(f"MongoDB載入失敗: {e}")
             mongodb_loaded = False
     else:
-        logger.info("MongoDB不可用，將使用文件系統數據")
+        logger.info("MongoDB不可用，將使用檔案系統數據")
 
-    # 只有在MongoDB載入失敗或不可用時才從文件系統載入
+    # 只有在MongoDB載入失敗或不可用時才從檔案系統載入
     if not mongodb_loaded:
-        logger.debug("[備用數據源] 從文件系統載入分析結果")
+        logger.debug("[備用數據源] 從檔案系統載入分析結果")
 
         # 首先嘗試從Web界面的保存位置讀取
         web_results_dir = get_analysis_results_dir()
@@ -187,7 +187,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                     all_results.append(result)
             except Exception as e:
-                st.warning(f"讀取分析結果文件 {result_file.name} 失敗: {e}")
+                st.warning(f"讀取分析結果檔案 {result_file.name} 失敗: {e}")
 
         # 然後從實際的分析結果保存位置讀取
         project_results_dir = Path(__file__).parent.parent.parent / "data"/ "analysis_results"/ "detailed"
@@ -243,7 +243,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                         # 創建分析結果條目
                         analysis_id = f"{stock_code}_{date_str}_{int(timestamp)}"
 
-                        # 嘗試從中繼資料文件中讀取真實的研究深度和分析師資訊
+                        # 嘗試從中繼資料檔中讀取真實的研究深度和分析師資訊
                         research_depth = 1
                         analysts = ['market', 'fundamentals', 'trader'] # 預設值
 
@@ -261,7 +261,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                                 elif len(reports) >= 3:
                                     research_depth = 2
                         else:
-                            # 如果沒有中繼資料文件，使用推斷邏輯
+                            # 如果沒有中繼資料檔，使用推斷邏輯
                             if len(reports) >= 5:
                                 research_depth = 3
                             elif len(reports) >= 3:
@@ -284,7 +284,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                         all_results.append(result)
 
-        logger.debug(f"[備用數據源] 從文件系統載入了 {len(all_results)} 個分析結果")
+        logger.debug(f"[備用數據源] 從檔案系統載入了 {len(all_results)} 個分析結果")
     
     # 過濾結果
     filtered_results = []
@@ -778,22 +778,22 @@ def render_tags_management(results: List[Dict[str, Any]]):
                         st.rerun()
 
 def render_results_export(results: List[Dict[str, Any]]):
-    """渲染分析結果導出功能"""
+    """渲染分析結果匯出功能"""
     
-    st.subheader("導出分析結果")
+    st.subheader("匯出分析結果")
     
     if not results:
-        st.warning("沒有可導出的分析結果")
+        st.warning("沒有可匯出的分析結果")
         return
     
-    # 導出選項
-    export_type = st.selectbox("選擇導出內容", ["摘要資訊", "完整數據"])
-    export_format = st.selectbox("選擇導出格式", ["CSV", "JSON", "Excel"])
+    # 匯出選項
+    export_type = st.selectbox("選擇匯出內容", ["摘要資訊", "完整數據"])
+    export_format = st.selectbox("選擇匯出格式", ["CSV", "JSON", "Excel"])
     
-    if st.button("導出結果"):
+    if st.button("匯出結果"):
         try:
             if export_type == "摘要資訊":
-                # 導出摘要資訊
+                # 匯出摘要資訊
                 summary_data = []
                 for result in results:
                     summary_data.append({
@@ -820,7 +820,7 @@ def render_results_export(results: List[Dict[str, Any]]):
                     json_data = json.dumps(summary_data, ensure_ascii=False, indent=2)
                     
                     st.download_button(
-                        label="下載 JSON 文件",
+                        label="下載 JSON 檔案",
                         data=json_data,
                         file_name=f"analysis_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                         mime="application/json"
@@ -848,18 +848,18 @@ def render_results_export(results: List[Dict[str, Any]]):
                     json_data = json.dumps(results, ensure_ascii=False, indent=2)
                     
                     st.download_button(
-                        label="下載完整數據 JSON 文件",
+                        label="下載完整數據 JSON 檔案",
                         data=json_data,
                         file_name=f"analysis_full_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                         mime="application/json"
                     )
                 else:
-                    st.warning("完整數據只支持 JSON 格式導出")
+                    st.warning("完整數據只支持 JSON 格式匯出")
             
             st.success(f"{export_format} 文件準備完成，請點擊下載按鈕")
             
         except Exception as e:
-            st.error(f"導出失敗: {e}")
+            st.error(f"匯出失敗: {e}")
 
 def render_results_comparison(results: List[Dict[str, Any]]):
     """渲染分析結果對比"""
@@ -1131,9 +1131,9 @@ def render_detailed_analysis_content(selected_result):
     """渲染詳細分析結果內容"""
     st.subheader("完整分析數據")
 
-    # 檢查是否有報告數據（支持文件系統和MongoDB）
+    # 檢查是否有報告數據（支持檔案系統和MongoDB）
     if 'reports'in selected_result and selected_result['reports']:
-        # 顯示文件系統中的報告
+        # 顯示檔案系統中的報告
         reports = selected_result['reports']
         
         if not reports:
@@ -1433,7 +1433,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
             'full_data': safe_serialize(result_data)
         }
 
-        # 1. 保存到文件系統（保持兼容性）
+        # 1. 保存到檔案系統（保持兼容性）
         results_dir = get_analysis_results_dir()
         result_file = results_dir / f"analysis_{analysis_id}.json"
 
@@ -1454,7 +1454,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                     'summary': result_entry.get('summary', '')
                 }
 
-                # 嘗試從文件系統讀取報告內容
+                # 嘗試從檔案系統讀取報告內容
                 reports = {}
                 try:
                     # 構建報告目錄路徑

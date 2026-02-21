@@ -155,7 +155,7 @@ def test_cache_management():
         print(f"\n 基本面數據緩存配置:")
         for cache_type, config in cache.cache_config.items():
             if 'fundamentals' in cache_type:
-                print(f"  - {cache_type}: TTL={config['ttl_hours']}小時, 最大文件數={config['max_files']}, 描述={config['description']}")
+                print(f"  - {cache_type}: TTL={config['ttl_hours']}小時, 最大檔案數={config['max_files']}, 描述={config['description']}")
         
         return True
         

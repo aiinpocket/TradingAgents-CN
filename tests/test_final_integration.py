@@ -79,18 +79,18 @@ def test_final_integration():
         print(f"\n 第二步：測試新聞分析師工具載入...")
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         
-        # 檢查新聞分析師是否正確導入了統一新聞工具
-        print(f"   新聞分析師模塊導入成功")
+        # 檢查新聞分析師是否正確匯入了統一新聞工具
+        print(f"   新聞分析師模塊匯入成功")
         
         # 3. 驗證工具集成
         print(f"\n 第三步：驗證工具集成...")
         
-        # 檢查新聞分析師文件中的統一新聞工具導入
+        # 檢查新聞分析師檔案中的統一新聞工具匯入
         with open("tradingagents/agents/analysts/news_analyst.py", "r", encoding="utf-8") as f:
             content = f.read()
             
         checks = [
-            ("統一新聞工具導入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
+            ("統一新聞工具匯入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
             ("統一工具創建", "unified_news_tool = create_unified_news_tool(toolkit)"),
             ("工具名稱設置", "unified_news_tool.name = \"get_stock_news_unified\""),
             ("系統提示詞更新", "get_stock_news_unified"),

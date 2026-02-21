@@ -67,10 +67,10 @@ try:
     
     print(' 日誌寫入完成')
     
-    # 檢查日誌文件
+    # 檢查日誌檔案
     import glob
     log_files = glob.glob('/app/logs/*.log*')
-    print(f' 找到日誌文件: {len(log_files)} 個')
+    print(f' 找到日誌檔案: {len(log_files)} 個')
     for log_file in log_files:
         size = os.path.getsize(log_file)
         print(f'    {log_file}: {size} 字節')
@@ -95,8 +95,8 @@ except Exception as e:
         return False
 
 def check_local_logs():
-    """檢查本地日誌文件"""
-    print("\n 檢查本地日誌文件...")
+    """檢查本地日誌檔案"""
+    print("\n 檢查本地日誌檔案...")
     
     logs_dir = Path("logs")
     if not logs_dir.exists():
@@ -106,10 +106,10 @@ def check_local_logs():
     log_files = list(logs_dir.glob("*.log*"))
     
     if not log_files:
-        print(" 未找到日誌文件")
+        print(" 未找到日誌檔案")
         return False
     
-    print(f" 找到 {len(log_files)} 個日誌文件:")
+    print(f" 找到 {len(log_files)} 個日誌檔案:")
     
     for log_file in log_files:
         stat = log_file.stat()
@@ -136,8 +136,8 @@ def check_local_logs():
     return True
 
 def check_container_logs():
-    """檢查容器內日誌文件"""
-    print("\n 檢查容器內日誌文件...")
+    """檢查容器內日誌檔案"""
+    print("\n 檢查容器內日誌檔案...")
     
     success, output, error = run_command("docker exec TradingAgents-web ls -la /app/logs/")
     
@@ -145,24 +145,24 @@ def check_container_logs():
         print(" 容器內日誌目錄:")
         print(output)
         
-        # 檢查具體的日誌文件
+        # 檢查具體的日誌檔案
         success2, output2, error2 = run_command([
             "docker", "exec", "TradingAgents-web",
             "find", "/app/logs", "-name", "*.log*", "-type", "f"
         ])
         if success2 and output2.strip():
-            print(" 容器內日誌文件:")
+            print(" 容器內日誌檔案:")
             for log_file in output2.strip().split('\n'):
                 if log_file.strip():
                     print(f"   {log_file}")
                     
-                    # 獲取文件大小
+                    # 獲取檔案大小
                     success3, output3, error3 = run_command(f"docker exec TradingAgents-web wc -c {log_file}")
                     if success3:
                         size = output3.strip().split()[0]
                         print(f"      大小: {size} 字節")
         else:
-            print(" 容器內未找到日誌文件")
+            print(" 容器內未找到日誌檔案")
         
         return True
     else:

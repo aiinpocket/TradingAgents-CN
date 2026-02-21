@@ -13,10 +13,10 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 導入統一日誌系統
+# 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -75,7 +75,7 @@ class ConfigManager:
         self.usage_file = self.config_dir / "usage.json"
         self.settings_file = self.config_dir / "settings.json"
 
-        # 載入.env文件（保持向後兼容）
+        # 載入.env 檔案（保持向後兼容）
         self._load_env_file()
 
         # 初始化MongoDB存儲（如果可用）
@@ -85,8 +85,8 @@ class ConfigManager:
         self._init_default_configs()
 
     def _load_env_file(self):
-        """載入.env文件（保持向後兼容）"""
-        # 嘗試從項目根目錄載入.env文件
+        """載入.env 檔案（保持向後兼容）"""
+        # 嘗試從項目根目錄載入.env 檔案
         project_root = Path(__file__).parent.parent.parent
         env_file = project_root / ".env"
 
@@ -167,7 +167,7 @@ class ConfigManager:
                 logger.info("MongoDB存儲已啟用")
             else:
                 self.mongodb_storage = None
-                logger.warning("MongoDB連接失敗，將使用JSON文件存儲")
+                logger.warning("MongoDB連接失敗，將使用JSON 檔案存儲")
 
         except Exception as e:
             logger.error(f"MongoDB初始化失敗: {e}", exc_info=True)
@@ -245,7 +245,7 @@ class ConfigManager:
         
         # 預設設置
         if not self.settings_file.exists():
-            # 導入預設數據目錄配置
+            # 匯入預設數據目錄配置
             import os
             default_data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
             
@@ -373,9 +373,9 @@ class ConfigManager:
             if success:
                 return record
             else:
-                logger.error("MongoDB保存失敗，回退到JSON文件存儲")
+                logger.error("MongoDB保存失敗，回退到JSON 檔案存儲")
 
-        # 回退到JSON文件存儲
+        # 回退到JSON 檔案存儲
         records = self.load_usage_records()
         records.append(record)
         
@@ -510,9 +510,9 @@ class ConfigManager:
                     stats["records_count"] = stats.get("total_requests", 0)
                     return stats
             except Exception as e:
-                logger.error(f"MongoDB統計獲取失敗，回退到JSON文件: {e}")
+                logger.error(f"MongoDB統計獲取失敗，回退到JSON 檔案: {e}")
         
-        # 回退到JSON文件統計
+        # 回退到JSON 檔案統計
         records = self.load_usage_records()
         
         # 過濾最近N天的記錄

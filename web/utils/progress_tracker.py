@@ -7,7 +7,7 @@ import time
 from typing import Optional, Callable, Dict, List
 import streamlit as st
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('progress')
 

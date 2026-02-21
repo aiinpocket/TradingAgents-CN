@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 緩存清理工具
-清理過期的緩存文件和數據庫記錄
+清理過期的快取檔案和數據庫記錄
 """
 
 import os
@@ -9,7 +9,7 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -72,8 +72,8 @@ def cleanup_database_cache(max_age_days: int = 7):
         return 0
 
 def cleanup_python_cache():
-    """清理Python緩存文件"""
-    logger.info(f" 清理Python緩存文件...")
+    """清理Python快取檔案"""
+    logger.info(f" 清理Python快取檔案...")
     
     cache_patterns = ["__pycache__", "*.pyc", "*.pyo"]
     total_cleaned = 0

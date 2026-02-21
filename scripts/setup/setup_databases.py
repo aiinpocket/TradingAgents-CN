@@ -10,7 +10,7 @@ import subprocess
 import platform
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -187,7 +187,7 @@ def setup_docker_option():
 
 def create_env_template():
     """創建環境變量模板"""
-    logger.info(f" 數據庫配置已整合到主要的 .env 文件中")
+    logger.info(f" 數據庫配置已整合到主要的 .env 檔案中")
     logger.info(f"請參考 .env.example 文件進行配置")
 
 def test_connections():
@@ -218,7 +218,7 @@ def test_connections():
         db_manager.close()
         
     except ImportError as e:
-        logger.error(f" 導入失敗: {e}")
+        logger.error(f" 匯入失敗: {e}")
         logger.info(f"請先安裝依賴包: pip install -r requirements_db.txt")
     except Exception as e:
         logger.error(f" 連接測試失敗: {e}")
@@ -248,7 +248,7 @@ def main():
     # Docker選項
     setup_docker_option()
     
-    # 創建配置文件
+    # 創建配置檔
     create_env_template()
     
     logger.info(f"\n")

@@ -12,24 +12,24 @@ def test_basic_system():
     print(" TradingAgents 基本系統測試")
     print("=" * 40)
     
-    # 1. 檢查配置文件
-    print("\n 檢查配置文件...")
+    # 1. 檢查配置檔
+    print("\n 檢查配置檔...")
     config_file = Path("config/database_config.json")
     if config_file.exists():
-        print(f" 配置文件存在: {config_file}")
+        print(f" 配置檔存在: {config_file}")
         
         try:
             import json
             with open(config_file, 'r', encoding='utf-8') as f:
                 config = json.load(f)
-            print(" 配置文件格式正確")
+            print(" 配置檔格式正確")
             print(f"  主要緩存後端: {config['cache']['primary_backend']}")
             print(f"  MongoDB啟用: {config['database']['mongodb']['enabled']}")
             print(f"  Redis啟用: {config['database']['redis']['enabled']}")
         except Exception as e:
-            print(f" 配置文件解析失敗: {e}")
+            print(f" 配置檔解析失敗: {e}")
     else:
-        print(f" 配置文件不存在: {config_file}")
+        print(f" 配置檔不存在: {config_file}")
     
     # 2. 檢查數據庫包
     print("\n 檢查數據庫包...")

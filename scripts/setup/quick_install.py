@@ -108,19 +108,19 @@ def docker_install():
         print_colored("請確保在項目根目錄運行此腳本", Colors.YELLOW)
         return False
     
-    # 檢查.env文件
+    # 檢查.env 檔案
     if not Path('.env').exists():
-        print_colored(" 創建環境配置文件...", Colors.BLUE)
+        print_colored(" 創建環境配置檔...", Colors.BLUE)
         if Path('.env.example').exists():
             shutil.copy('.env.example', '.env')
-            print_colored(" 已創建.env文件", Colors.GREEN)
+            print_colored(" 已創建.env 檔案", Colors.GREEN)
         else:
             print_colored(" 未找到.env.example文件", Colors.RED)
             return False
     
     # 提示配置API密鑰
     print_colored("\n  重要提醒:", Colors.YELLOW)
-    print_colored("請編輯.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
+    print_colored("請編輯.env 檔案，配置至少一個AI模型的API密鑰", Colors.YELLOW)
     print_colored("推薦配置 OpenAI 或 Anthropic API 密鑰", Colors.YELLOW)
     
     input("\n按回車鍵繼續...")
@@ -189,19 +189,19 @@ def local_install():
         print_colored(f" 依賴安裝異常: {e}", Colors.RED)
         return False
     
-    # 創建.env文件
+    # 創建.env 檔案
     if not Path('.env').exists():
-        print_colored(" 創建環境配置文件...", Colors.BLUE)
+        print_colored(" 創建環境配置檔...", Colors.BLUE)
         if Path('.env.example').exists():
             shutil.copy('.env.example', '.env')
-            print_colored(" 已創建.env文件", Colors.GREEN)
+            print_colored(" 已創建.env 檔案", Colors.GREEN)
         else:
             print_colored(" 未找到.env.example文件", Colors.RED)
             return False
     
     # 提示配置API密鑰
     print_colored("\n  重要提醒:", Colors.YELLOW)
-    print_colored("請編輯.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
+    print_colored("請編輯.env 檔案，配置至少一個AI模型的API密鑰", Colors.YELLOW)
     print_colored("推薦配置 OpenAI 或 Anthropic API 密鑰", Colors.YELLOW)
     
     input("\n按回車鍵繼續...")

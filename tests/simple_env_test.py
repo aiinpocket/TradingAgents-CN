@@ -6,15 +6,15 @@
 import os
 
 def test_env_reading():
-    """測試.env文件讀取"""
+    """測試.env 檔案讀取"""
     print(" 測試.env配置讀取")
     print("=" * 30)
     
-    # 檢查.env文件
+    # 檢查.env 檔案
     if os.path.exists('.env'):
-        print(" .env文件存在")
+        print(" .env 檔案存在")
     else:
-        print(" .env文件不存在")
+        print(" .env 檔案不存在")
         return False
     
     # 讀取環境變量

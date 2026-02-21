@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -149,7 +149,7 @@ def main():
     logger.info(f"   docker run tradingagents-cn:latest python scripts/test_docker_pdf.py")
     
     logger.info(f"\n 提示:")
-    logger.info(f"- PDF導出功能已在Docker環境中優化")
+    logger.info(f"- PDF匯出功能已在Docker環境中優化")
     logger.info(f"- 支持中文字體和虛擬顯示器")
     logger.info(f"- 如遇問題請查看容器日誌")
     

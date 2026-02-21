@@ -9,7 +9,7 @@ import os
 import json
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -34,12 +34,12 @@ def initialize_system():
     cache_dir.mkdir(parents=True, exist_ok=True)
     logger.info(f" 緩存目錄: {cache_dir}")
     
-    # 3. 檢查並創建數據庫配置文件
+    # 3. 檢查並創建數據庫配置檔
     logger.info(f"\n 配置數據庫設置...")
     config_file = config_dir / "database_config.json"
     
     if config_file.exists():
-        logger.info(f"[INFO]配置文件已存在: {config_file}")
+        logger.info(f"[INFO]配置檔已存在: {config_file}")
         
         # 讀取現有配置
         try:
@@ -150,7 +150,7 @@ def initialize_system():
     }
     
     # 6. 保存配置
-    logger.info(f"\n 保存配置文件...")
+    logger.info(f"\n 保存配置檔...")
     try:
         with open(config_file, 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=2, ensure_ascii=False)
@@ -289,7 +289,7 @@ python scripts/validation/check_system_status.py
     logger.info(f"\n")
     logger.info(f" 系統初始化完成!")
     logger.info(f"\n 初始化結果:")
-    logger.info(f"  配置文件:  已創建")
+    logger.info(f"  配置檔:  已創建")
     logger.info(f"  緩存目錄:  已創建")
     logger.info(f"  數據庫檢測:  已完成")
     logger.info(f"  系統測試:  已通過")

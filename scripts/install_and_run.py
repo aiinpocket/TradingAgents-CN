@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 TradingAgents-CN 安裝和啟動腳本
-解決模塊導入問題，提供一鍵安裝和啟動
+解決模塊匯入問題，提供一鍵安裝和啟動
 """
 
 import os
@@ -70,7 +70,7 @@ def install_web_dependencies():
         return False
 
 def check_env_file():
-    """檢查.env文件"""
+    """檢查.env 檔案"""
     print("\n 檢查環境配置...")
     
     project_root = Path(__file__).parent.parent
@@ -79,20 +79,20 @@ def check_env_file():
     
     if not env_file.exists():
         if env_example.exists():
-            print(" .env文件不存在，正在從.env_example創建...")
+            print(" .env 檔案不存在，正在從.env_example創建...")
             try:
                 import shutil
                 shutil.copy(env_example, env_file)
-                print(" .env文件已創建")
-                print(" 請編輯.env文件，配置您的API密鑰")
+                print(" .env 檔案已創建")
+                print(" 請編輯.env 檔案，配置您的API密鑰")
             except Exception as e:
-                print(f" 創建.env文件失敗: {e}")
+                print(f" 創建.env 檔案失敗: {e}")
                 return False
         else:
             print(" 找不到.env_example文件")
             return False
     else:
-        print(" .env文件存在")
+        print(" .env 檔案存在")
     
     return True
 

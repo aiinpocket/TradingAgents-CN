@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-報告導出工具
-支持將分析結果導出為多種格式
+報告匯出工具
+支持將分析結果匯出為多種格式
 """
 
 import streamlit as st
@@ -12,11 +12,11 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 import tempfile
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('web')
 
-# 導入MongoDB報告管理器
+# 匯入MongoDB報告管理器
 try:
     from web.utils.mongodb_report_manager import mongodb_report_manager
     MONGODB_REPORT_AVAILABLE = True
@@ -25,7 +25,7 @@ except ImportError:
     mongodb_report_manager = None
 
 
-# 導入Docker適配器
+# 匯入Docker適配器
 try:
     from .docker_pdf_adapter import (
         is_docker_environment,
@@ -37,9 +37,9 @@ except ImportError:
     DOCKER_ADAPTER_AVAILABLE = False
     logger.warning("Docker適配器不可用")
 
-# 導入導出相關庫
+# 匯入匯出相關庫
 try:
-    # 導入pypandoc（用於markdown轉docx和pdf）
+    # 匯入pypandoc（用於markdown轉docx和pdf）
     import pypandoc
 
     # 檢查pandoc是否可用，如果不可用則嘗試下載
@@ -61,12 +61,12 @@ try:
 except ImportError as e:
     EXPORT_AVAILABLE = False
     PANDOC_AVAILABLE = False
-    logger.info(f"導出功能依賴包缺失: {e}")
+    logger.info(f"匯出功能依賴包缺失: {e}")
     logger.info("請安裝: pip install pypandoc markdown")
 
 
 class ReportExporter:
-    """報告導出器"""
+    """報告匯出器"""
 
     def __init__(self):
         self.export_available = EXPORT_AVAILABLE
@@ -356,7 +356,7 @@ class ReportExporter:
 
         if not self.pandoc_available:
             logger.error("Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成Word文檔。請安裝pandoc或使用Markdown格式導出。")
+            raise Exception("Pandoc不可用，無法生成Word文檔。請安裝pandoc或使用Markdown格式匯出。")
 
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
@@ -368,7 +368,7 @@ class ReportExporter:
             # 創建臨時文件用於docx輸出
             with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as tmp_file:
                 output_file = tmp_file.name
-            logger.info(f"臨時文件路徑: {output_file}")
+            logger.info(f"臨時檔案路徑: {output_file}")
 
             # 使用強制禁用YAML的參數
             extra_args = ['--from=markdown-yaml_metadata_block'] # 禁用YAML解析
@@ -410,7 +410,7 @@ class ReportExporter:
             # 讀取生成的docx文件
             with open(output_file, 'rb') as f:
                 docx_content = f.read()
-            logger.info(f"文件讀取完成，大小: {len(docx_content)} 字節")
+            logger.info(f"檔案讀取完成，大小: {len(docx_content)} 字節")
 
             logger.info("清理臨時文件...")
             # 清理臨時文件
@@ -430,7 +430,7 @@ class ReportExporter:
 
         if not self.pandoc_available:
             logger.error("Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成PDF文檔。請安裝pandoc或使用Markdown格式導出。")
+            raise Exception("Pandoc不可用，無法生成PDF文檔。請安裝pandoc或使用Markdown格式匯出。")
 
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
@@ -453,7 +453,7 @@ class ReportExporter:
                 with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
                     output_file = tmp_file.name
 
-                # 使用禁用YAML解析的參數（與Word導出一致）
+                # 使用禁用YAML解析的參數（與Word匯出一致）
                 extra_args = ['--from=markdown-yaml_metadata_block']
 
                 # 如果指定了引擎，添加引擎參數
@@ -465,7 +465,7 @@ class ReportExporter:
 
                 logger.info(f"PDF參數: {extra_args}")
 
-                # 清理內容避免YAML解析問題（與Word導出一致）
+                # 清理內容避免YAML解析問題（與Word匯出一致）
                 cleaned_content = self._clean_markdown_for_pandoc(md_content)
 
                 # 使用pypandoc將markdown轉換為PDF - 禁用YAML解析
@@ -518,22 +518,22 @@ class ReportExporter:
    macOS: brew install mactex
    Linux: sudo apt-get install texlive-full
 
-3. 使用Markdown或Word格式導出作為替代方案
+3. 使用Markdown或Word格式匯出作為替代方案
 """
         raise Exception(error_msg)
     
     def export_report(self, results: Dict[str, Any], format_type: str) -> Optional[bytes]:
-        """導出報告為指定格式"""
+        """匯出報告為指定格式"""
 
-        logger.info(f"開始導出報告: format={format_type}")
-        logger.info("導出狀態檢查:")
+        logger.info(f"開始匯出報告: format={format_type}")
+        logger.info("匯出狀態檢查:")
         logger.info(f"- export_available: {self.export_available}")
         logger.info(f"- pandoc_available: {self.pandoc_available}")
         logger.info(f"- is_docker: {self.is_docker}")
 
         if not self.export_available:
-            logger.error("導出功能不可用")
-            st.error("導出功能不可用，請安裝必要的依賴包")
+            logger.error("匯出功能不可用")
+            st.error("匯出功能不可用，請安裝必要的依賴包")
             return None
 
         try:
@@ -566,17 +566,17 @@ class ReportExporter:
                 return content
 
             else:
-                logger.error(f"不支持的導出格式: {format_type}")
-                st.error(f"不支持的導出格式: {format_type}")
+                logger.error(f"不支持的匯出格式: {format_type}")
+                st.error(f"不支持的匯出格式: {format_type}")
                 return None
 
         except Exception as e:
-            logger.error(f"導出失敗: {str(e)}", exc_info=True)
-            st.error(f"導出失敗: {str(e)}")
+            logger.error(f"匯出失敗: {str(e)}", exc_info=True)
+            st.error(f"匯出失敗: {str(e)}")
             return None
 
 
-# 創建全局導出器實例
+# 創建全局匯出器實例
 report_exporter = ReportExporter()
 
 
@@ -755,7 +755,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             saved_files['final_trade_decision'] = str(decision_file)
             logger.info(f"保存最終決策: {decision_file}")
 
-        # 保存分析中繼資料文件，包含研究深度等資訊
+        # 保存分析中繼資料檔，包含研究深度等資訊
         metadata = {
             'stock_symbol': stock_symbol,
             'analysis_date': analysis_date,
@@ -879,24 +879,24 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
 
 
 def render_export_buttons(results: Dict[str, Any]):
-    """渲染導出按鈕"""
+    """渲染匯出按鈕"""
 
     if not results:
         return
 
     st.markdown("---")
-    st.subheader("導出報告")
+    st.subheader("匯出報告")
 
-    # 檢查導出功能是否可用
+    # 檢查匯出功能是否可用
     if not report_exporter.export_available:
-        st.warning("導出功能需要安裝額外依賴包")
+        st.warning("匯出功能需要安裝額外依賴包")
         st.code("pip install pypandoc markdown")
         return
 
     # 檢查pandoc是否可用
     if not report_exporter.pandoc_available:
-        st.warning("Word和PDF導出需要pandoc工具")
-        st.info("您仍可以使用Markdown格式導出")
+        st.warning("Word和PDF匯出需要pandoc工具")
+        st.info("您仍可以使用Markdown格式匯出")
 
     # 顯示Docker環境狀態
     if report_exporter.is_docker:
@@ -931,15 +931,15 @@ def render_export_buttons(results: Dict[str, Any]):
         # 在Docker環境下，即使pandoc有問題也顯示所有按鈕，讓用戶嘗試
         pass
     
-    # 生成文件名
+    # 生成檔案名稱
     stock_symbol = results.get('stock_symbol', 'analysis')
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("導出 Markdown", help="導出為Markdown格式"):
-            logger.info(f"用戶點擊Markdown導出按鈕 - 股票: {stock_symbol}")
+        if st.button("匯出 Markdown", help="匯出為Markdown格式"):
+            logger.info(f"用戶點擊Markdown匯出按鈕 - 股票: {stock_symbol}")
             # 1. 保存分模塊報告（CLI格式）
             logger.info("開始保存分模塊報告（CLI格式）...")
             modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
@@ -948,7 +948,7 @@ def render_export_buttons(results: Dict[str, Any]):
             content = report_exporter.export_report(results, 'markdown')
             if content:
                 filename = f"{stock_symbol}_analysis_{timestamp}.md"
-                logger.info(f"Markdown導出成功，文件名: {filename}")
+                logger.info(f"Markdown匯出成功，檔案名稱: {filename}")
 
                 # 3. 保存彙總報告到results目錄
                 saved_path = save_report_to_results_dir(content, filename, stock_symbol)
@@ -972,14 +972,14 @@ def render_export_buttons(results: Dict[str, Any]):
                     mime="text/markdown"
                 )
             else:
-                logger.error("Markdown導出失敗，content為空")
+                logger.error("Markdown匯出失敗，content為空")
     
     with col2:
-        if st.button("導出 Word", help="導出為Word文檔格式"):
-            logger.info(f"用戶點擊Word導出按鈕 - 股票: {stock_symbol}")
+        if st.button("匯出 Word", help="匯出為Word文檔格式"):
+            logger.info(f"用戶點擊Word匯出按鈕 - 股票: {stock_symbol}")
             with st.spinner("正在生成Word文檔，請稍候..."):
                 try:
-                    logger.info("開始Word導出流程...")
+                    logger.info("開始Word匯出流程...")
 
                     # 1. 保存分模塊報告（CLI格式）
                     logger.info("開始保存分模塊報告（CLI格式）...")
@@ -989,7 +989,7 @@ def render_export_buttons(results: Dict[str, Any]):
                     content = report_exporter.export_report(results, 'docx')
                     if content:
                         filename = f"{stock_symbol}_analysis_{timestamp}.docx"
-                        logger.info(f"Word導出成功，文件名: {filename}, 大小: {len(content)} 字節")
+                        logger.info(f"Word匯出成功，檔案名稱: {filename}, 大小: {len(content)} 字節")
 
                         # 3. 保存Word彙總報告到results目錄
                         saved_path = save_report_to_results_dir(content, filename, stock_symbol)
@@ -1015,10 +1015,10 @@ def render_export_buttons(results: Dict[str, Any]):
                             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         )
                     else:
-                        logger.error("Word導出失敗，content為空")
+                        logger.error("Word匯出失敗，content為空")
                         st.error("Word文檔生成失敗")
                 except Exception as e:
-                    logger.error(f"Word導出異常: {str(e)}", exc_info=True)
+                    logger.error(f"Word匯出異常: {str(e)}", exc_info=True)
                     st.error(f"Word文檔生成失敗: {str(e)}")
 
                     # 顯示詳細錯誤訊息
@@ -1028,7 +1028,7 @@ def render_export_buttons(results: Dict[str, Any]):
                     # 提供解決方案
                     with st.expander("解決方案"):
                         st.markdown("""
-                        **Word導出需要pandoc工具，請檢查:**
+                        **Word匯出需要pandoc工具，請檢查:**
 
                         1. **Docker環境**: 重新構建鏡像確保包含pandoc
                         2. **本地環境**: 安裝pandoc
@@ -1043,15 +1043,15 @@ def render_export_buttons(results: Dict[str, Any]):
                         sudo apt-get install pandoc
                         ```
 
-                        3. **替代方案**: 使用Markdown格式導出
+                        3. **替代方案**: 使用Markdown格式匯出
                         """)
     
     with col3:
-        if st.button("導出 PDF", help="導出為PDF格式 (需要額外工具)"):
-            logger.info(f"用戶點擊PDF導出按鈕 - 股票: {stock_symbol}")
+        if st.button("匯出 PDF", help="匯出為PDF格式 (需要額外工具)"):
+            logger.info(f"用戶點擊PDF匯出按鈕 - 股票: {stock_symbol}")
             with st.spinner("正在生成PDF，請稍候..."):
                 try:
-                    logger.info("開始PDF導出流程...")
+                    logger.info("開始PDF匯出流程...")
 
                     # 1. 保存分模塊報告（CLI格式）
                     logger.info("開始保存分模塊報告（CLI格式）...")
@@ -1061,7 +1061,7 @@ def render_export_buttons(results: Dict[str, Any]):
                     content = report_exporter.export_report(results, 'pdf')
                     if content:
                         filename = f"{stock_symbol}_analysis_{timestamp}.pdf"
-                        logger.info(f"PDF導出成功，文件名: {filename}, 大小: {len(content)} 字節")
+                        logger.info(f"PDF匯出成功，檔案名稱: {filename}, 大小: {len(content)} 字節")
 
                         # 3. 保存PDF彙總報告到results目錄
                         saved_path = save_report_to_results_dir(content, filename, stock_symbol)
@@ -1087,10 +1087,10 @@ def render_export_buttons(results: Dict[str, Any]):
                             mime="application/pdf"
                         )
                     else:
-                        logger.error("PDF導出失敗，content為空")
+                        logger.error("PDF匯出失敗，content為空")
                         st.error("PDF生成失敗")
                 except Exception as e:
-                    logger.error(f"PDF導出異常: {str(e)}", exc_info=True)
+                    logger.error(f"PDF匯出異常: {str(e)}", exc_info=True)
                     st.error(f"PDF生成失敗")
 
                     # 顯示詳細錯誤訊息
@@ -1100,7 +1100,7 @@ def render_export_buttons(results: Dict[str, Any]):
                     # 提供解決方案
                     with st.expander("解決方案"):
                         st.markdown("""
-                        **PDF導出需要額外的工具，請選擇以下方案之一:**
+                        **PDF匯出需要額外的工具，請選擇以下方案之一:**
 
                         **方案1: 安裝wkhtmltopdf (推薦)**
                         ```bash
@@ -1132,7 +1132,7 @@ def render_export_buttons(results: Dict[str, Any]):
                         """)
 
                     # 建議使用其他格式
-                    st.info("建議：您可以先使用Markdown或Word格式導出，然後使用其他工具轉換為PDF")
+                    st.info("建議：您可以先使用Markdown或Word格式匯出，然後使用其他工具轉換為PDF")
 
 
 def save_analysis_report(stock_symbol: str, analysis_results: Dict[str, Any], 

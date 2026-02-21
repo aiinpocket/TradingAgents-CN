@@ -8,11 +8,11 @@ from functools import wraps
 
 from .utils import save_output, SavePathType, decorate_all_methods
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
-# 導入緩存管理器
+# 匯入緩存管理器
 try:
     from .cache_manager import get_cache
 

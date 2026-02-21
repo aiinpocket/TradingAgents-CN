@@ -9,12 +9,12 @@ __version__ = "0.1.19"
 __author__ = "TradingAgents-CN Team"
 __description__ = "Multi-agent stock analysis system for US markets"
 
-# 導入核心模塊
+# 匯入核心模塊
 try:
     from .config import config_manager
     from .utils import logging_manager
 except ImportError:
-    # 如果導入失敗，不影響模塊的基本功能
+    # 如果匯入失敗，不影響模塊的基本功能
     pass
 
 __all__ = [

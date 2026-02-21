@@ -24,7 +24,7 @@ def test_function_exists():
     """測試函數是否存在"""
     logger.info("========== 測試1: 函數存在性檢查 ==========")
     
-    # 檢查直接導入的函數
+    # 檢查直接匯入的函數
     logger.info(f"get_realtime_stock_news 函數: {get_realtime_stock_news}")
     logger.info(f"函數類型: {type(get_realtime_stock_news)}")
     

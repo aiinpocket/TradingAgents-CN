@@ -11,13 +11,13 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 import pandas as pd
 
-# 導入統一日誌系統
+# 匯入統一日誌系統
 from tradingagents.utils.logging_init import setup_dataflow_logging
 
-# 導入原有緩存系統
+# 匯入原有緩存系統
 from .cache_manager import StockDataCache
 
-# 導入自適應緩存系統
+# 匯入自適應緩存系統
 try:
     from .adaptive_cache import get_cache_system
     from ..config.database_manager import get_database_manager

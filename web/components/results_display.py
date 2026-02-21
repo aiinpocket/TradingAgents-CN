@@ -46,7 +46,7 @@ def render_results(results):
     # 風險提示
     render_risk_warning()
 
-    # 導出報告
+    # 匯出報告
     render_export_buttons(results)
 
 

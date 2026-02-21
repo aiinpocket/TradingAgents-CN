@@ -404,7 +404,7 @@ class AdaptiveCacheSystem:
                     cleared_files += 1
 
             except Exception as e:
-                self.logger.error(f"清理緩存文件失敗 {cache_file}: {e}")
+                self.logger.error(f"清理快取檔案失敗 {cache_file}: {e}")
 
         # 同時清理舊的 .pkl 檔案（不安全格式，直接刪除）
         for pkl_file in self.cache_dir.glob("*.pkl"):

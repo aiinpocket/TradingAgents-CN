@@ -105,7 +105,7 @@ def explore_log_locations(container_name):
                 if line.strip():
                     print(f"      {line}")
         
-        # 查找日誌文件
+        # 查找日誌檔案
         success, output, error = run_command([
             "docker", "exec", container_name,
             "find", location, "-maxdepth", "2", "-name", "*.log", "-type", "f"
@@ -114,7 +114,7 @@ def explore_log_locations(container_name):
             log_files = [f.strip() for f in output.strip().split('\n') if f.strip()]
             for log_file in log_files:
                 found_logs.append(log_file)
-                print(f"    找到日誌文件: {log_file}")
+                print(f"    找到日誌檔案: {log_file}")
                 
                 # 獲取文件資訊
                 success2, output2, error2 = run_command(f"docker exec {container_name} ls -lh {log_file}")
@@ -142,7 +142,7 @@ def get_docker_logs(container_name):
         
         print(f" Docker日誌已保存到: {docker_log_file}")
         print(f"    日誌行數: {lines:,}")
-        print(f"    文件大小: {size:,} 字節")
+        print(f"    檔案大小: {size:,} 字節")
         
         # 顯示最後幾行
         print(f"\n 最後10行日誌預覽:")
@@ -159,12 +159,12 @@ def get_docker_logs(container_name):
         return None
 
 def copy_log_files(container_name, log_files):
-    """複制容器內的日誌文件"""
+    """複制容器內的日誌檔案"""
     if not log_files:
-        print("\n 未找到容器內的日誌文件")
+        print("\n 未找到容器內的日誌檔案")
         return []
     
-    print(f"\n 複制容器內的日誌文件...")
+    print(f"\n 複制容器內的日誌檔案...")
     print("-" * 50)
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -183,7 +183,7 @@ def copy_log_files(container_name, log_files):
             # 檢查本地文件
             if os.path.exists(local_file):
                 size = os.path.getsize(local_file)
-                print(f"    文件大小: {size:,} 字節")
+                print(f"    檔案大小: {size:,} 字節")
                 
                 # 預覽文件內容
                 try:
@@ -290,7 +290,7 @@ def main():
     # 5. 獲取Docker標準日誌
     docker_log_file = get_docker_logs(container_name)
     
-    # 6. 複制容器內日誌文件
+    # 6. 複制容器內日誌檔案
     copied_files = copy_log_files(container_name, log_files)
     
     # 7. 獲取最近活動
@@ -302,14 +302,14 @@ def main():
     print("=" * 60)
     
     print(f" 容器名稱: {container_name}")
-    print(f" 找到容器內日誌文件: {len(log_files)} 個")
+    print(f" 找到容器內日誌檔案: {len(log_files)} 個")
     print(f" 成功複制文件: {len(copied_files)} 個")
     
     if docker_log_file:
         print(f" Docker標準日誌: {docker_log_file}")
     
     if copied_files:
-        print(f" 複制的日誌文件:")
+        print(f" 複制的日誌檔案:")
         for file in copied_files:
             print(f"   - {file}")
     
@@ -319,7 +319,7 @@ def main():
         print("   - 檢查應用的日誌配置，確保寫入到文件")
         print("   - 考慮在docker-compose.yml中添加日誌目錄掛載")
     
-    print("   - 將獲取到的日誌文件發送給開發者進行問題診斷")
+    print("   - 將獲取到的日誌檔案發送給開發者進行問題診斷")
     
     if docker_log_file:
         print(f"\n 主要發送文件: {docker_log_file}")

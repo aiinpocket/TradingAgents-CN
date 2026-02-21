@@ -3,11 +3,11 @@ import os
 from .googlenews_utils import getNewsData
 from .finnhub_utils import get_data_in_range
 
-# 導入日誌模組
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('dataflows')
 
-# 嘗試導入 yfinance 相關模組，如果失敗則跳過
+# 嘗試匯入 yfinance 相關模組，如果失敗則跳過
 try:
     from .yfin_utils import YFinanceUtils
 except ImportError as e:
@@ -24,7 +24,7 @@ from datetime import datetime
 import pandas as pd
 from openai import OpenAI
 
-# 嘗試導入yfinance，如果失敗則設定為None
+# 嘗試匯入yfinance，如果失敗則設定為None
 try:
     import yfinance as yf
     YF_AVAILABLE = True
@@ -64,7 +64,7 @@ def get_finnhub_news(
     if len(result) == 0:
         error_msg = f"無法獲取{ticker}的新聞數據 ({before} 到 {curr_date})\n"
         error_msg += f"可能的原因：\n"
-        error_msg += f"1. 數據文件不存在或路徑配置錯誤\n"
+        error_msg += f"1. 資料檔案不存在或路徑配置錯誤\n"
         error_msg += f"2. 指定日期範圍內沒有新聞數據\n"
         error_msg += f"3. 需要先下載或更新Finnhub新聞數據\n"
         error_msg += f"建議：檢查數據目錄配置或重新獲取新聞數據"

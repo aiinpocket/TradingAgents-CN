@@ -232,7 +232,7 @@ def get_str_env(env_var: str, default: str = "") -> str:
     return parse_str_env(env_var, default)
 
 
-# 導出主要函數
+# 匯出主要函數
 __all__ = [
     'parse_bool_env',
     'parse_int_env', 

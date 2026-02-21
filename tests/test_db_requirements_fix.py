@@ -99,7 +99,7 @@ def test_requirements_file_syntax():
         return True
         
     except Exception as e:
-        print(f"   文件讀取失敗: {e}")
+        print(f"   檔案讀取失敗: {e}")
         return False
 
 
@@ -199,10 +199,10 @@ def test_documentation_completeness():
         if os.path.exists(full_path):
             print(f"   {doc_path}: 存在")
             
-            # 檢查文件大小
+            # 檢查檔案大小
             size = os.path.getsize(full_path)
             if size > 1000:  # 至少1KB
-                print(f"    文件大小: {size} 字節")
+                print(f"    檔案大小: {size} 字節")
             else:
                 print(f"     文件較小: {size} 字節")
         else:

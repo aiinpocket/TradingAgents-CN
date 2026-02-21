@@ -14,7 +14,7 @@ import sys
 import shutil
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -66,33 +66,33 @@ def clean_pycache_files():
                 logger.error(f"   刪除失敗: {pyo_file.relative_to(project_root)} - {e}")
     
     if total_cleaned == 0:
-        logger.info(f"\n 沒有發現需要清理的緩存文件")
+        logger.info(f"\n 沒有發現需要清理的快取檔案")
     else:
         logger.info(f"\n 總共清理了 {total_cleaned} 個文件/目錄")
 
 def check_streamlit_config():
-    """檢查Streamlit配置文件"""
+    """檢查Streamlit配置檔"""
     
     project_root = Path(__file__).parent.parent
     config_file = project_root / ".streamlit" / "config.toml"
     
-    logger.debug(f"\n 檢查Streamlit配置文件: {config_file}")
+    logger.debug(f"\n 檢查Streamlit配置檔: {config_file}")
     
     if config_file.exists():
-        logger.info(f"   配置文件存在")
+        logger.info(f"   配置檔存在")
         
         # 檢查配置內容
         try:
             content = config_file.read_text(encoding='utf-8')
             if "excludePatterns" in content and "__pycache__" in content:
-                logger.info(f"   配置文件包含__pycache__排除規則")
+                logger.info(f"   配置檔包含__pycache__排除規則")
             else:
-                logger.warning(f"   配置文件可能缺少__pycache__排除規則")
+                logger.warning(f"   配置檔可能缺少__pycache__排除規則")
         except Exception as e:
-            logger.error(f"   讀取配置文件失敗: {e}")
+            logger.error(f"   讀取配置檔失敗: {e}")
     else:
-        logger.error(f"   配置文件不存在")
-        logger.info(f"   建議運行: python web/run_web.py 來創建配置文件")
+        logger.error(f"   配置檔不存在")
+        logger.info(f"   建議運行: python web/run_web.py 來創建配置檔")
 
 def set_environment_variables():
     """設置環境變量禁用字節碼生成"""
@@ -103,18 +103,18 @@ def set_environment_variables():
     os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
     logger.info(f"   已設置 PYTHONDONTWRITEBYTECODE=1")
     
-    # 檢查.env文件
+    # 檢查.env 檔案
     project_root = Path(__file__).parent.parent
     env_file = project_root / ".env"
     
     if env_file.exists():
         content = env_file.read_text(encoding='utf-8')
         if 'PYTHONDONTWRITEBYTECODE' not in content:
-            logger.info(f"   建議在.env文件中添加: PYTHONDONTWRITEBYTECODE=1")
+            logger.info(f"   建議在.env 檔案中添加: PYTHONDONTWRITEBYTECODE=1")
         else:
-            logger.info(f"   .env文件已包含PYTHONDONTWRITEBYTECODE設置")
+            logger.info(f"   .env 檔案已包含PYTHONDONTWRITEBYTECODE設置")
     else:
-        logger.info(f"   建議創建.env文件並添加: PYTHONDONTWRITEBYTECODE=1")
+        logger.info(f"   建議創建.env 檔案並添加: PYTHONDONTWRITEBYTECODE=1")
 
 def main():
     """主函數"""
@@ -123,8 +123,8 @@ def main():
     logger.info(f"=")
     
     logger.info(f"\n 此工具將執行以下操作:")
-    logger.info(f"  1. 清理所有Python緩存文件(__pycache__, *.pyc, *.pyo)")
-    logger.info(f"  2. 檢查Streamlit配置文件")
+    logger.info(f"  1. 清理所有Python快取檔案(__pycache__, *.pyc, *.pyo)")
+    logger.info(f"  2. 檢查Streamlit配置檔")
     logger.info(f"  3. 設置環境變量禁用字節碼生成")
     
     response = input("\n是否繼續? (y/n): ").lower().strip()
@@ -133,13 +133,13 @@ def main():
         return
     
     try:
-        # 步驟1: 清理緩存文件
+        # 步驟1: 清理快取檔案
         logger.info(f"\n")
-        logger.info(f"步驟1: 清理Python緩存文件")
+        logger.info(f"步驟1: 清理Python快取檔案")
         logger.info(f"=")
         clean_pycache_files()
         
-        # 步驟2: 檢查配置文件
+        # 步驟2: 檢查配置檔
         logger.info(f"\n")
         logger.info(f"步驟2: 檢查Streamlit配置")
         logger.info(f"=")
@@ -163,7 +163,7 @@ def main():
         logger.error(f"\n 修復過程中出現錯誤: {e}")
         logger.info(f"請手動執行以下操作:")
         logger.info(f"  1. 刪除所有__pycache__目錄")
-        logger.info(f"  2. 檢查.streamlit/config.toml配置文件")
+        logger.info(f"  2. 檢查.streamlit/config.toml配置檔")
         logger.info(f"  3. 設置環境變量 PYTHONDONTWRITEBYTECODE=1")
 
 if __name__ == "__main__":

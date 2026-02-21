@@ -13,7 +13,7 @@ from typing import Dict, List, Any, Optional
 from collections import defaultdict, Counter
 import argparse
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -29,9 +29,9 @@ class DataCallAnalyzer:
         self.data_source_calls = []
         
     def parse_logs(self):
-        """解析日誌文件"""
+        """解析日誌檔案"""
         if not self.log_file.exists():
-            logger.error(f" 日誌文件不存在: {self.log_file}")
+            logger.error(f" 日誌檔案不存在: {self.log_file}")
             return
             
         logger.info(f" 解析數據獲取日誌: {self.log_file}")
@@ -317,7 +317,7 @@ class DataCallAnalyzer:
 # 數據獲取調用分析報告
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-日誌文件: {self.log_file}
+日誌檔案: {self.log_file}
 
 ## 概覽
 - 數據獲取調用: {data_analysis['total_calls']}
@@ -352,8 +352,8 @@ class DataCallAnalyzer:
 
 def main():
     parser = argparse.ArgumentParser(description='數據獲取調用分析工具')
-    parser.add_argument('log_file', help='日誌文件路徑')
-    parser.add_argument('--output', '-o', help='輸出報告文件路徑')
+    parser.add_argument('log_file', help='日誌檔案路徑')
+    parser.add_argument('--output', '-o', help='輸出報告檔案路徑')
     parser.add_argument('--format', choices=['text', 'json'], default='text', help='輸出格式')
     
     args = parser.parse_args()

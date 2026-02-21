@@ -8,7 +8,7 @@ import sys
 import os
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -21,13 +21,13 @@ def check_system_status():
     logger.debug(f" TradingAgents 系統狀態檢查")
     logger.info(f"=")
     
-    # 檢查環境配置文件
+    # 檢查環境配置檔
     logger.info(f"\n 檢查環境配置...")
     env_file = project_root / ".env"
     env_example_file = project_root / ".env.example"
 
     if env_file.exists():
-        logger.info(f" 環境配置文件存在: {env_file}")
+        logger.info(f" 環境配置檔存在: {env_file}")
 
         try:
             import os
@@ -64,11 +64,11 @@ def check_system_status():
                     logger.error(f"  {name}:  未配置")
 
         except ImportError:
-            logger.warning(f" python-dotenv未安裝，無法解析.env文件")
+            logger.warning(f" python-dotenv未安裝，無法解析.env 檔案")
         except Exception as e:
             logger.error(f" 環境配置解析失敗: {e}")
     else:
-        logger.error(f" 環境配置文件不存在: {env_file}")
+        logger.error(f" 環境配置檔不存在: {env_file}")
         if env_example_file.exists():
             logger.info(f" 請複制 {env_example_file} 為 {env_file} 並配置API密鑰")
     

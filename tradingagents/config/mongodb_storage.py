@@ -10,7 +10,7 @@ from typing import Dict, List, Optional, Any
 from dataclasses import asdict
 from .config_manager import UsageRecord
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -72,7 +72,7 @@ class MongoDBStorage:
             
         except (ConnectionFailure, ServerSelectionTimeoutError) as e:
             logger.error(f"MongoDB連接失敗: {e}")
-            logger.info("將使用本地JSON文件儲存")
+            logger.info("將使用本地JSON 檔案儲存")
             self._connected = False
         except Exception as e:
             logger.error(f"MongoDB初始化失敗: {e}")

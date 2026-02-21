@@ -26,13 +26,13 @@ from typing import List, Dict, Any
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 導入項目模塊
+# 匯入項目模塊
 try:
     from tradingagents.utils.logging_manager import get_logger
     from tradingagents.config.config_manager import config_manager
     logger = get_logger('finnhub_downloader')
 except ImportError as e:
-    print(f" 導入模塊失敗: {e}")
+    print(f" 匯入模塊失敗: {e}")
     print("請確保在項目根目錄運行此腳本")
     sys.exit(1)
 
@@ -130,11 +130,11 @@ class FinnhubDataDownloader:
                 # 檢查文件是否有內容
                 try:
                     file_size = file_path.stat().st_size
-                    if file_size > 10:  # 文件大小大於10字節才認為有效
-                        logger.info(f" {symbol} 數據文件已存在且有效 (大小: {file_size} 字節)，跳過下載")
+                    if file_size > 10:  # 檔案大小大於10字節才認為有效
+                        logger.info(f" {symbol} 資料檔案已存在且有效 (大小: {file_size} 字節)，跳過下載")
                         continue
                     else:
-                        logger.warning(f" {symbol} 數據文件存在但為空 (大小: {file_size} 字節)，重新下載")
+                        logger.warning(f" {symbol} 資料檔案存在但為空 (大小: {file_size} 字節)，重新下載")
                 except Exception as e:
                     logger.warning(f" 檢查 {symbol} 文件狀態失敗: {e}，重新下載")
 
@@ -174,7 +174,7 @@ class FinnhubDataDownloader:
                     # 驗證文件保存
                     if file_path.exists():
                         file_size = file_path.stat().st_size
-                        logger.info(f" {symbol} 新聞數據已保存: {len(formatted_data)} 條, 文件大小: {file_size} 字節")
+                        logger.info(f" {symbol} 新聞數據已保存: {len(formatted_data)} 條, 檔案大小: {file_size} 字節")
                     else:
                         logger.error(f" {symbol} 文件保存失敗，文件不存在")
 
@@ -209,7 +209,7 @@ class FinnhubDataDownloader:
             # 檢查文件是否存在
             file_path = sentiment_dir / f"{symbol}_data_formatted.json"
             if file_path.exists() and not force_refresh:
-                logger.info(f" {symbol} 情緒數據文件已存在，跳過下載")
+                logger.info(f" {symbol} 情緒資料檔案已存在，跳過下載")
                 continue
             
             # 下載情緒數據
@@ -248,7 +248,7 @@ class FinnhubDataDownloader:
             # 檢查文件是否存在
             file_path = trans_dir / f"{symbol}_data_formatted.json"
             if file_path.exists() and not force_refresh:
-                logger.info(f" {symbol} 交易數據文件已存在，跳過下載")
+                logger.info(f" {symbol} 交易資料檔案已存在，跳過下載")
                 continue
             
             # 下載交易數據

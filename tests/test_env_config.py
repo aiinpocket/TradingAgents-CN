@@ -12,11 +12,11 @@ def test_env_config():
     print(" 測試使用.env配置的數據庫管理器")
     print("=" * 50)
     
-    # 1. 檢查.env文件
-    print("\n 檢查.env文件...")
+    # 1. 檢查.env 檔案
+    print("\n 檢查.env 檔案...")
     env_file = Path(".env")
     if env_file.exists():
-        print(f" .env文件存在: {env_file}")
+        print(f" .env 檔案存在: {env_file}")
         
         # 讀取並顯示相關配置
         with open(env_file, 'r', encoding='utf-8') as f:
@@ -34,7 +34,7 @@ def test_env_config():
                     else:
                         print(f"  {line}")
     else:
-        print(f" .env文件不存在: {env_file}")
+        print(f" .env 檔案不存在: {env_file}")
         return False
     
     # 2. 測試數據庫管理器
@@ -127,14 +127,14 @@ def test_env_config():
     
     # 5. 總結
     print("\n 測試總結:")
-    print(" 系統已正確使用.env配置文件")
+    print(" 系統已正確使用.env配置檔")
     print(" 數據庫管理器正常工作")
     print(" 緩存系統正常工作")
     print(" 支持MongoDB和Redis的完整配置")
     print(" 在數據庫不可用時自動降級到文件緩存")
     
     print("\n 配置說明:")
-    print("1. 系統讀取.env文件中的數據庫配置")
+    print("1. 系統讀取.env 檔案中的數據庫配置")
     print("2. 自動檢測MongoDB和Redis是否可用")
     print("3. 根據可用性選擇最佳緩存後端")
     print("4. 支持用戶名密碼認證")

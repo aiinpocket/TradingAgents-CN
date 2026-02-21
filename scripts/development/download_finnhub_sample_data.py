@@ -3,7 +3,7 @@
 """
 Finnhub示例數據下載腳本
 
-這個腳本用於創建示例的Finnhub數據文件，以便測試新聞數據功能。
+這個腳本用於創建示例的Finnhub資料檔案，以便測試新聞數據功能。
 在沒有真實API密鑰或數據的情況下，可以使用此腳本創建測試數據。
 """
 
@@ -14,7 +14,7 @@ import random
 from pathlib import Path
 from datetime import datetime, timedelta
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -116,7 +116,7 @@ def create_sample_news_data(ticker, data_dir, days=7):
         
         data[date_str] = daily_news
     
-    # 保存數據文件
+    # 保存資料檔案
     file_path = os.path.join(news_dir, f"{ticker}_data_formatted.json")
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -177,7 +177,7 @@ def create_sample_insider_data(ticker, data_dir, data_type):
                 }]
                 data[date_str] = transaction_data
     
-    # 保存數據文件
+    # 保存資料檔案
     file_path = os.path.join(insider_dir, f"{ticker}_data_formatted.json")
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)

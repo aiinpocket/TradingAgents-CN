@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from typing import List, Tuple
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('default')
 
@@ -69,7 +69,7 @@ def main():
     logger.error(f" 語法錯誤: {len(error_files)} 個文件")
     
     if error_files:
-        logger.error(f"\n 有語法錯誤的文件列表:")
+        logger.error(f"\n 有語法錯誤的檔案列表:")
         logger.info(f"-")
         for i, (file_path, _) in enumerate(error_files, 1):
             logger.info(f"{i:2d}. {file_path}")

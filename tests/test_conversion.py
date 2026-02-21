@@ -131,7 +131,7 @@ def test_word_conversion(md_content):
                 # 檢查文件
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
-                    print(f" 轉換成功! 文件大小: {file_size} 字節")
+                    print(f" 轉換成功! 檔案大小: {file_size} 字節")
                     
                     # 保存成功的文件
                     success_file = f"test_output_{i}.docx"
@@ -194,7 +194,7 @@ def test_pdf_conversion(md_content):
                 # 檢查文件
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
-                    print(f" 轉換成功! 文件大小: {file_size} 字節")
+                    print(f" 轉換成功! 檔案大小: {file_size} 字節")
                     
                     # 保存成功的文件
                     success_file = f"test_output_{i}.pdf"

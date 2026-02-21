@@ -106,8 +106,8 @@ def test_chart_functions():
         df = pd.DataFrame(mock_data)
         print(f" 創建模擬數據: {len(df)} 條記錄")
         
-        # 注意：這裡只是測試函數是否可以導入，實際渲染需要Streamlit環境
-        print(" 圖表函數導入成功")
+        # 注意：這裡只是測試函數是否可以匯入，實際渲染需要Streamlit環境
+        print(" 圖表函數匯入成功")
         
         return True
         

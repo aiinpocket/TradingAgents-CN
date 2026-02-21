@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Pandoc安裝腳本
-自動安裝pandoc工具，用於報告導出功能
+自動安裝pandoc工具，用於報告匯出功能
 """
 
 import os
@@ -10,7 +10,7 @@ import subprocess
 import platform
 from pathlib import Path
 
-# 導入日誌模塊
+# 匯入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 

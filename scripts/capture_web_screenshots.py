@@ -211,7 +211,7 @@ docker-compose up -d
 ####  分析結果 (web-interface-results.png)
 - 完整的分析報告展示
 - 投資建議和風險評估
-- 導出按鈕區域
+- 匯出按鈕區域
 
 ####  模型配置 (web-interface-models.png)
 - 側邊欄的模型配置界面

@@ -17,10 +17,10 @@ def test_news_analyst_integration():
     print(" 開始測試新聞分析師集成...")
     
     try:
-        # 導入必要的模塊
+        # 匯入必要的模塊
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         from tradingagents.tools.unified_news_tool import create_unified_news_tool
-        print(" 成功導入必要模塊")
+        print(" 成功匯入必要模塊")
         
         # 創建模擬工具包
         class MockToolkit:
