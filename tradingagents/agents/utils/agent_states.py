@@ -1,14 +1,6 @@
-from typing import Annotated, Sequence
-from datetime import date, timedelta, datetime
-from typing_extensions import TypedDict, Optional
-from langchain_openai import ChatOpenAI
-from tradingagents.agents import *
-from langgraph.prebuilt import ToolNode
-from langgraph.graph import END, StateGraph, START, MessagesState
-
-# 導入統一日誌系統
-from tradingagents.utils.logging_init import get_logger
-logger = get_logger("default")
+from typing import Annotated
+from typing_extensions import TypedDict
+from langgraph.graph import MessagesState
 
 
 # Researcher team state
