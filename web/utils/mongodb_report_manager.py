@@ -48,8 +48,8 @@ class MongoDBReportManager:
             mongodb_database = os.getenv("MONGODB_DATABASE", "tradingagents")
             mongodb_auth_source = os.getenv("MONGODB_AUTH_SOURCE", "admin")
 
-            logger.info(f"🔧 MongoDB配置: host={mongodb_host}, port={mongodb_port}, db={mongodb_database}")
-            logger.info(f"🔧 認證信息: username={mongodb_username}, auth_source={mongodb_auth_source}")
+            logger.info(f"MongoDB配置: host={mongodb_host}, port={mongodb_port}, db={mongodb_database}")
+            logger.info(f"認證信息: username={mongodb_username}, auth_source={mongodb_auth_source}")
 
             # 構建連接參數
             connect_kwargs = {
@@ -81,10 +81,10 @@ class MongoDBReportManager:
             self._create_indexes()
             
             self.connected = True
-            logger.info(f"✅ MongoDB連接成功: {mongodb_database}.analysis_reports")
+            logger.info(f"MongoDB連接成功: {mongodb_database}.analysis_reports")
             
         except Exception as e:
-            logger.error(f"❌ MongoDB連接失敗: {e}")
+            logger.error(f"MongoDB連接失敗: {e}")
             self.connected = False
     
     def _create_indexes(self):
@@ -101,10 +101,10 @@ class MongoDBReportManager:
             self.collection.create_index("analysis_id")
             self.collection.create_index("status")
             
-            logger.info("✅ MongoDB索引創建成功")
+            logger.info("MongoDB索引創建成功")
             
         except Exception as e:
-            logger.error(f"❌ MongoDB索引創建失敗: {e}")
+            logger.error(f"MongoDB索引創建失敗: {e}")
     
     def save_analysis_report(self, stock_symbol: str, analysis_results: Dict[str, Any],
                            reports: Dict[str, str]) -> bool:
@@ -144,14 +144,14 @@ class MongoDBReportManager:
             result = self.collection.insert_one(document)
             
             if result.inserted_id:
-                logger.info(f"✅ 分析報告已保存到MongoDB: {analysis_id}")
+                logger.info(f"分析報告已保存到MongoDB: {analysis_id}")
                 return True
             else:
-                logger.error("❌ MongoDB插入失敗")
+                logger.error("MongoDB插入失敗")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ 保存分析報告到MongoDB失敗: {e}")
+            logger.error(f"保存分析報告到MongoDB失敗: {e}")
             return False
     
     def get_analysis_reports(self, limit: int = 100, stock_symbol: str = None,
@@ -210,11 +210,11 @@ class MongoDBReportManager:
                 }
                 results.append(result)
             
-            logger.info(f"✅ 從MongoDB獲取到 {len(results)} 個分析報告")
+            logger.info(f"從MongoDB獲取到 {len(results)} 個分析報告")
             return results
             
         except Exception as e:
-            logger.error(f"❌ 從MongoDB獲取分析報告失敗: {e}")
+            logger.error(f"從MongoDB獲取分析報告失敗: {e}")
             return []
     
     def get_report_by_id(self, analysis_id: str) -> Optional[Dict[str, Any]]:
@@ -246,7 +246,7 @@ class MongoDBReportManager:
             return None
             
         except Exception as e:
-            logger.error(f"❌ 從MongoDB獲取報告失敗: {e}")
+            logger.error(f"從MongoDB獲取報告失敗: {e}")
             return None
     
     def delete_report(self, analysis_id: str) -> bool:
@@ -258,14 +258,14 @@ class MongoDBReportManager:
             result = self.collection.delete_one({"analysis_id": analysis_id})
             
             if result.deleted_count > 0:
-                logger.info(f"✅ 已刪除分析報告: {analysis_id}")
+                logger.info(f"已刪除分析報告: {analysis_id}")
                 return True
             else:
-                logger.warning(f"⚠️ 未找到要刪除的報告: {analysis_id}")
+                logger.warning(f"未找到要刪除的報告: {analysis_id}")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ 刪除分析報告失敗: {e}")
+            logger.error(f"刪除分析報告失敗: {e}")
             return False
 
     def get_all_reports(self, limit: int = 1000) -> List[Dict[str, Any]]:
@@ -283,11 +283,11 @@ class MongoDBReportManager:
                 if '_id' in report:
                     report['_id'] = str(report['_id'])
 
-            logger.info(f"✅ 從MongoDB獲取了 {len(reports)} 個分析報告")
+            logger.info(f"從MongoDB獲取了 {len(reports)} 個分析報告")
             return reports
 
         except Exception as e:
-            logger.error(f"❌ 從MongoDB獲取所有報告失敗: {e}")
+            logger.error(f"從MongoDB獲取所有報告失敗: {e}")
             return []
 
     def fix_inconsistent_reports(self) -> bool:
@@ -310,10 +310,10 @@ class MongoDBReportManager:
             inconsistent_docs = list(cursor)
 
             if not inconsistent_docs:
-                logger.info("✅ 所有報告數據結構一致，無需修複")
+                logger.info("所有報告數據結構一致，無需修複")
                 return True
 
-            logger.info(f"🔧 發現 {len(inconsistent_docs)} 個不一致的報告，開始修複...")
+            logger.info(f"發現 {len(inconsistent_docs)} 個不一致的報告，開始修複...")
 
             fixed_count = 0
             for doc in inconsistent_docs:
@@ -333,16 +333,16 @@ class MongoDBReportManager:
 
                     if result.modified_count > 0:
                         fixed_count += 1
-                        logger.info(f"✅ 修複報告: {doc.get('analysis_id', 'unknown')}")
+                        logger.info(f"修複報告: {doc.get('analysis_id', 'unknown')}")
 
                 except Exception as e:
-                    logger.error(f"❌ 修複報告失敗 {doc.get('analysis_id', 'unknown')}: {e}")
+                    logger.error(f"修複報告失敗 {doc.get('analysis_id', 'unknown')}: {e}")
 
-            logger.info(f"✅ 修複完成，共修複 {fixed_count} 個報告")
+            logger.info(f"修複完成，共修複 {fixed_count} 個報告")
             return True
 
         except Exception as e:
-            logger.error(f"❌ 修複不一致報告失敗: {e}")
+            logger.error(f"修複不一致報告失敗: {e}")
             return False
 
     def save_report(self, report_data: Dict[str, Any]) -> bool:
@@ -368,14 +368,14 @@ class MongoDBReportManager:
             )
 
             if result.upserted_id or result.modified_count > 0:
-                logger.info(f"✅ 報告保存成功: {report_data['analysis_id']}")
+                logger.info(f"報告保存成功: {report_data['analysis_id']}")
                 return True
             else:
-                logger.warning(f"⚠️ 報告保存無變化: {report_data['analysis_id']}")
+                logger.warning(f"報告保存無變化: {report_data['analysis_id']}")
                 return True
 
         except Exception as e:
-            logger.error(f"❌ 保存報告到MongoDB失敗: {e}")
+            logger.error(f"保存報告到MongoDB失敗: {e}")
             return False
 
 

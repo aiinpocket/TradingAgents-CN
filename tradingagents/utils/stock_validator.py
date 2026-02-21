@@ -78,7 +78,7 @@ class StockDataPreparer:
         if analysis_date is None:
             analysis_date = datetime.now().strftime('%Y-%m-%d')
 
-        logger.info(f"📊 [數據準備] 開始準備股票數據: {stock_code} (市場: {market_type}, 時長: {period_days}天)")
+        logger.info(f"[數據準備] 開始準備股票數據: {stock_code} (市場: {market_type}, 時長: {period_days}天)")
 
         # 1. 基本格式驗證
         format_result = self._validate_format(stock_code, market_type)
@@ -88,7 +88,7 @@ class StockDataPreparer:
         # 2. 自動檢測市場類型
         if market_type == "auto":
             market_type = self._detect_market_type(stock_code)
-            logger.debug(f"📊 [數據準備] 自動檢測市場類型: {market_type}")
+            logger.debug(f"[數據準備] 自動檢測市場類型: {market_type}")
 
         # 3. 預獲取數據並驗證
         return self._prepare_data_by_market(stock_code, market_type, period_days, analysis_date)
@@ -169,7 +169,7 @@ class StockDataPreparer:
     def _prepare_us_stock_data(self, stock_code: str, period_days: int,
                               analysis_date: str) -> StockDataPreparationResult:
         """預獲取美股數據"""
-        logger.info(f"📊 [美股數據] 開始準備{stock_code}的數據 (時長: {period_days}天)")
+        logger.info(f"[美股數據] 開始準備{stock_code}的數據 (時長: {period_days}天)")
 
         # 標準化美股代碼格式
         formatted_code = stock_code.upper()
@@ -187,7 +187,7 @@ class StockDataPreparer:
 
         try:
             # 1. 獲取歷史數據（美股通常直接通過歷史數據驗證股票是否存在）
-            logger.debug(f"📊 [美股數據] 獲取{formatted_code}歷史數據 ({start_date_str} 到 {end_date_str})...")
+            logger.debug(f"[美股數據] 獲取{formatted_code}歷史數據 ({start_date_str} 到 {end_date_str})...")
             from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
 
             historical_data = get_us_stock_data_cached(
@@ -196,7 +196,7 @@ class StockDataPreparer:
                 end_date_str
             )
 
-            if historical_data and "❌" not in historical_data and "錯誤" not in historical_data and "無法獲取" not in historical_data:
+            if historical_data and "錯誤" not in historical_data and "無法獲取" not in historical_data:
                 # 更寬鬆的數據有效性檢查
                 data_indicators = [
                     "開盤價", "收盤價", "最高價", "最低價", "成交量",
@@ -212,11 +212,11 @@ class StockDataPreparer:
                 if has_valid_data:
                     has_historical_data = True
                     has_basic_info = True  # 美股通常不單獨獲取基本信息
-                    logger.info(f"✅ [美股數據] 歷史數據獲取成功: {formatted_code} ({period_days}天)")
+                    logger.info(f"[美股數據] 歷史數據獲取成功: {formatted_code} ({period_days}天)")
                     cache_status = f"歷史數據已緩存({period_days}天)"
 
                     # 數據準備成功
-                    logger.info(f"🎉 [美股數據] 數據準備完成: {formatted_code}")
+                    logger.info(f"[美股數據] 數據準備完成: {formatted_code}")
                     return StockDataPreparationResult(
                         is_valid=True,
                         stock_code=formatted_code,
@@ -228,8 +228,8 @@ class StockDataPreparer:
                         cache_status=cache_status
                     )
                 else:
-                    logger.warning(f"⚠️ [美股數據] 歷史數據無效: {formatted_code}")
-                    logger.debug(f"🔍 [美股數據] 數據內容預覽: {historical_data[:200]}...")
+                    logger.warning(f"[美股數據] 歷史數據無效: {formatted_code}")
+                    logger.debug(f"[美股數據] 數據內容預覽: {historical_data[:200]}...")
                     return StockDataPreparationResult(
                         is_valid=False,
                         stock_code=formatted_code,
@@ -238,7 +238,7 @@ class StockDataPreparer:
                         suggestion="該股票可能為新上市股票或數據源暫時不可用，請稍後重試"
                     )
             else:
-                logger.warning(f"⚠️ [美股數據] 無法獲取歷史數據: {formatted_code}")
+                logger.warning(f"[美股數據] 無法獲取歷史數據: {formatted_code}")
                 return StockDataPreparationResult(
                     is_valid=False,
                     stock_code=formatted_code,
@@ -248,7 +248,7 @@ class StockDataPreparer:
                 )
 
         except Exception as e:
-            logger.error(f"❌ [美股數據] 數據準備失敗: {e}")
+            logger.error(f"[美股數據] 數據準備失敗: {e}")
             return StockDataPreparationResult(
                 is_valid=False,
                 stock_code=formatted_code,
@@ -324,9 +324,9 @@ def get_stock_preparation_message(stock_code: str, market_type: str = "auto",
     result = prepare_stock_data(stock_code, market_type, period_days, analysis_date)
 
     if result.is_valid:
-        return f"✅ 數據準備成功: {result.stock_code} ({result.market_type}) - {result.stock_name}\n📊 {result.cache_status}"
+        return f"數據準備成功: {result.stock_code} ({result.market_type}) - {result.stock_name}\n{result.cache_status}"
     else:
-        return f"❌ 數據準備失敗: {result.error_message}\n💡 建議: {result.suggestion}"
+        return f"數據準備失敗: {result.error_message}\n建議: {result.suggestion}"
 
 
 # 保持向後兼容的別名

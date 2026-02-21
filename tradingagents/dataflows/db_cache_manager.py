@@ -23,7 +23,7 @@ try:
     MONGODB_AVAILABLE = True
 except ImportError:
     MONGODB_AVAILABLE = False
-    logger.warning(f"⚠️ pymongo 未安裝，MongoDB功能不可用")
+    logger.warning(f"pymongo 未安裝，MongoDB功能不可用")
 
 # Redis
 try:
@@ -32,7 +32,7 @@ try:
     REDIS_AVAILABLE = True
 except ImportError:
     REDIS_AVAILABLE = False
-    logger.warning(f"⚠️ redis 未安裝，Redis功能不可用")
+    logger.warning(f"redis 未安裝，Redis功能不可用")
 
 
 class DatabaseCacheManager:
@@ -71,9 +71,9 @@ class DatabaseCacheManager:
         self._init_mongodb()
         self._init_redis()
         
-        logger.info(f"🗄️ 數據庫緩存管理器初始化完成")
-        logger.error(f"   MongoDB: {'✅ 已連接' if self.mongodb_client else '❌ 未連接'}")
-        logger.error(f"   Redis: {'✅ 已連接' if self.redis_client else '❌ 未連接'}")
+        logger.info(f"數據庫緩存管理器初始化完成")
+        logger.error(f"   MongoDB: {'已連接' if self.mongodb_client else '未連接'}")
+        logger.error(f"   Redis: {'已連接' if self.redis_client else '未連接'}")
     
     def _init_mongodb(self):
         """初始化MongoDB連接"""
@@ -93,10 +93,10 @@ class DatabaseCacheManager:
             # 創建索引
             self._create_mongodb_indexes()
             
-            logger.info(f"✅ MongoDB連接成功: {self.mongodb_url}")
+            logger.info(f"MongoDB連接成功: {self.mongodb_url}")
             
         except Exception as e:
-            logger.error(f"❌ MongoDB連接失敗: {e}")
+            logger.error(f"MongoDB連接失敗: {e}")
             self.mongodb_client = None
             self.mongodb_db = None
     
@@ -116,10 +116,10 @@ class DatabaseCacheManager:
             # 測試連接
             self.redis_client.ping()
             
-            logger.info(f"✅ Redis連接成功: {self.redis_url}")
+            logger.info(f"Redis連接成功: {self.redis_url}")
             
         except Exception as e:
-            logger.error(f"❌ Redis連接失敗: {e}")
+            logger.error(f"Redis連接失敗: {e}")
             self.redis_client = None
     
     def _create_mongodb_indexes(self):
@@ -156,10 +156,10 @@ class DatabaseCacheManager:
             ])
             fundamentals_collection.create_index([("created_at", 1)])
             
-            logger.info(f"✅ MongoDB索引創建完成")
+            logger.info(f"MongoDB索引創建完成")
             
         except Exception as e:
-            logger.error(f"⚠️ MongoDB索引創建失敗: {e}")
+            logger.error(f"MongoDB索引創建失敗: {e}")
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
         """生成緩存鍵"""
@@ -226,9 +226,9 @@ class DatabaseCacheManager:
             try:
                 collection = self.mongodb_db.stock_data
                 collection.replace_one({"_id": cache_key}, doc, upsert=True)
-                logger.info(f"💾 股票數據已保存到MongoDB: {symbol} -> {cache_key}")
+                logger.info(f"股票數據已保存到MongoDB: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"⚠️ MongoDB保存失敗: {e}")
+                logger.error(f"MongoDB保存失敗: {e}")
         
         # 保存到Redis（快速緩存，6小時過期）
         if self.redis_client:
@@ -245,9 +245,9 @@ class DatabaseCacheManager:
                     6 * 3600,  # 6小時過期
                     json.dumps(redis_data, ensure_ascii=False)
                 )
-                logger.info(f"⚡ 股票數據已緩存到Redis: {symbol} -> {cache_key}")
+                logger.info(f"股票數據已緩存到Redis: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"⚠️ Redis緩存失敗: {e}")
+                logger.error(f"Redis緩存失敗: {e}")
         
         return cache_key
     
@@ -260,14 +260,14 @@ class DatabaseCacheManager:
                 redis_data = self.redis_client.get(cache_key)
                 if redis_data:
                     data_dict = json.loads(redis_data)
-                    logger.info(f"⚡ 從Redis加載數據: {cache_key}")
+                    logger.info(f"從Redis加載數據: {cache_key}")
                     
                     if data_dict["data_format"] == "dataframe_json":
                         return pd.read_json(data_dict["data"], orient='records')
                     else:
                         return data_dict["data"]
             except Exception as e:
-                logger.error(f"⚠️ Redis加載失敗: {e}")
+                logger.error(f"Redis加載失敗: {e}")
         
         # 如果Redis沒有，從MongoDB加載
         if self.mongodb_db is not None:
@@ -276,7 +276,7 @@ class DatabaseCacheManager:
                 doc = collection.find_one({"_id": cache_key})
                 
                 if doc:
-                    logger.info(f"💾 從MongoDB加載數據: {cache_key}")
+                    logger.info(f"從MongoDB加載數據: {cache_key}")
                     
                     # 同時更新到Redis緩存
                     if self.redis_client:
@@ -293,9 +293,9 @@ class DatabaseCacheManager:
                                 6 * 3600,
                                 json.dumps(redis_data, ensure_ascii=False)
                             )
-                            logger.info(f"⚡ 數據已同步到Redis緩存")
+                            logger.info(f"數據已同步到Redis緩存")
                         except Exception as e:
-                            logger.error(f"⚠️ Redis同步失敗: {e}")
+                            logger.error(f"Redis同步失敗: {e}")
                     
                     if doc["data_format"] == "dataframe_json":
                         return pd.read_json(doc["data"], orient='records')
@@ -303,7 +303,7 @@ class DatabaseCacheManager:
                         return doc["data"]
                         
             except Exception as e:
-                logger.error(f"⚠️ MongoDB加載失敗: {e}")
+                logger.error(f"MongoDB加載失敗: {e}")
         
         return None
     
@@ -320,7 +320,7 @@ class DatabaseCacheManager:
         
         # 檢查Redis中是否有精確匹配
         if self.redis_client and self.redis_client.exists(exact_key):
-            logger.info(f"⚡ Redis中找到精確匹配: {symbol} -> {exact_key}")
+            logger.info(f"Redis中找到精確匹配: {symbol} -> {exact_key}")
             return exact_key
         
         # 檢查MongoDB中的匹配項
@@ -345,13 +345,13 @@ class DatabaseCacheManager:
                 
                 if doc:
                     cache_key = doc["_id"]
-                    logger.info(f"💾 MongoDB中找到匹配: {symbol} -> {cache_key}")
+                    logger.info(f"MongoDB中找到匹配: {symbol} -> {cache_key}")
                     return cache_key
                     
             except Exception as e:
-                logger.error(f"⚠️ MongoDB查詢失敗: {e}")
+                logger.error(f"MongoDB查詢失敗: {e}")
         
-        logger.error(f"❌ 未找到有效緩存: {symbol}")
+        logger.error(f"未找到有效緩存: {symbol}")
         return None
 
     def save_news_data(self, symbol: str, news_data: str,
@@ -381,9 +381,9 @@ class DatabaseCacheManager:
             try:
                 collection = self.mongodb_db.news_data
                 collection.replace_one({"_id": cache_key}, doc, upsert=True)
-                logger.info(f"📰 新聞數據已保存到MongoDB: {symbol} -> {cache_key}")
+                logger.info(f"新聞數據已保存到MongoDB: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"⚠️ MongoDB保存失敗: {e}")
+                logger.error(f"MongoDB保存失敗: {e}")
 
         # 保存到Redis（24小時過期）
         if self.redis_client:
@@ -399,9 +399,9 @@ class DatabaseCacheManager:
                     24 * 3600,  # 24小時過期
                     json.dumps(redis_data, ensure_ascii=False)
                 )
-                logger.info(f"⚡ 新聞數據已緩存到Redis: {symbol} -> {cache_key}")
+                logger.info(f"新聞數據已緩存到Redis: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"⚠️ Redis緩存失敗: {e}")
+                logger.error(f"Redis緩存失敗: {e}")
 
         return cache_key
 
@@ -432,9 +432,9 @@ class DatabaseCacheManager:
             try:
                 collection = self.mongodb_db.fundamentals_data
                 collection.replace_one({"_id": cache_key}, doc, upsert=True)
-                logger.info(f"💼 基本面數據已保存到MongoDB: {symbol} -> {cache_key}")
+                logger.info(f"基本面數據已保存到MongoDB: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"⚠️ MongoDB保存失敗: {e}")
+                logger.error(f"MongoDB保存失敗: {e}")
 
         # 保存到Redis（24小時過期）
         if self.redis_client:
@@ -451,9 +451,9 @@ class DatabaseCacheManager:
                     24 * 3600,  # 24小時過期
                     json.dumps(redis_data, ensure_ascii=False)
                 )
-                logger.info(f"⚡ 基本面數據已緩存到Redis: {symbol} -> {cache_key}")
+                logger.info(f"基本面數據已緩存到Redis: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"⚠️ Redis緩存失敗: {e}")
+                logger.error(f"Redis緩存失敗: {e}")
 
         return cache_key
 
@@ -476,7 +476,7 @@ class DatabaseCacheManager:
                         "size_mb": round(size / (1024 * 1024), 2)
                     }
             except Exception as e:
-                logger.error(f"⚠️ MongoDB統計獲取失敗: {e}")
+                logger.error(f"MongoDB統計獲取失敗: {e}")
 
         # Redis統計
         if self.redis_client:
@@ -485,7 +485,7 @@ class DatabaseCacheManager:
                 stats["redis"]["keys"] = info.get("db0", {}).get("keys", 0)
                 stats["redis"]["memory_usage"] = f"{info.get('used_memory_human', 'N/A')}"
             except Exception as e:
-                logger.error(f"⚠️ Redis統計獲取失敗: {e}")
+                logger.error(f"Redis統計獲取失敗: {e}")
 
         return stats
 
@@ -501,23 +501,23 @@ class DatabaseCacheManager:
                     collection = self.mongodb_db[collection_name]
                     result = collection.delete_many({"created_at": {"$lt": cutoff_time}})
                     cleared_count += result.deleted_count
-                    logger.info(f"🧹 MongoDB {collection_name} 清理了 {result.deleted_count} 條記錄")
+                    logger.info(f"MongoDB {collection_name} 清理了 {result.deleted_count} 條記錄")
             except Exception as e:
-                logger.error(f"⚠️ MongoDB清理失敗: {e}")
+                logger.error(f"MongoDB清理失敗: {e}")
 
         # Redis會自動過期，不需要手動清理
-        logger.info(f"🧹 總共清理了 {cleared_count} 條過期記錄")
+        logger.info(f"總共清理了 {cleared_count} 條過期記錄")
         return cleared_count
 
     def close(self):
         """關閉數據庫連接"""
         if self.mongodb_client:
             self.mongodb_client.close()
-            logger.info(f"🔒 MongoDB連接已關閉")
+            logger.info(f"MongoDB連接已關閉")
 
         if self.redis_client:
             self.redis_client.close()
-            logger.info(f"🔒 Redis連接已關閉")
+            logger.info(f"Redis連接已關閉")
 
 
 # 全局數據庫緩存實例

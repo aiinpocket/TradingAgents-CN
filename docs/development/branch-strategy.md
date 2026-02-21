@@ -119,10 +119,10 @@ git push -u origin feature/portfolio-analysis
 # 從develop創建增強分支
 git checkout develop
 git pull origin develop
-git checkout -b enhancement/tushare-integration
+git checkout -b enhancement/finnhub-enhancement
 
 # 推送分支
-git push -u origin enhancement/tushare-integration
+git push -u origin enhancement/finnhub-enhancement
 ```
 
 ### 創建緊急修複分支

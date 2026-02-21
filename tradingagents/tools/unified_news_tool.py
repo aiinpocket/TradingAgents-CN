@@ -42,13 +42,13 @@ class UnifiedNewsAnalyzer:
             str: 格式化的新聞內容
         """
         logger.info(f"[統一新聞工具] 開始獲取 {stock_code} 的新聞，模型: {model_info}")
-        logger.info(f"[統一新聞工具] 🤖 當前模型信息: {model_info}")
+        logger.info(f"[統一新聞工具] 當前模型信息: {model_info}")
 
         if self.cache_enabled:
             cache_key = self._generate_cache_key(stock_code, max_news)
             cached_result = self._get_from_cache(cache_key)
             if cached_result:
-                logger.info(f"[統一新聞工具] ✅ 從快取返回結果，股票: {stock_code}")
+                logger.info(f"[統一新聞工具] 從快取返回結果，股票: {stock_code}")
                 return cached_result
 
         stock_type = self._identify_stock_type(stock_code)
@@ -57,17 +57,17 @@ class UnifiedNewsAnalyzer:
         # 統一使用美股新聞獲取方法
         result = self._get_us_share_news(stock_code, max_news, model_info)
         
-        logger.info(f"[統一新聞工具] 📊 新聞獲取完成，結果長度: {len(result)} 字符")
-        logger.info(f"[統一新聞工具] 📋 返回結果預覽 (前1000字符): {result[:1000]}")
+        logger.info(f"[統一新聞工具] 新聞獲取完成，結果長度: {len(result)} 字符")
+        logger.info(f"[統一新聞工具] 返回結果預覽 (前1000字符): {result[:1000]}")
 
         if not result or len(result.strip()) < 50:
-            logger.warning(f"[統一新聞工具] ⚠️ 返回結果異常短或為空！")
-            logger.warning(f"[統一新聞工具] 📝 完整結果內容: '{result}'")
+            logger.warning(f"[統一新聞工具] 返回結果異常短或為空！")
+            logger.warning(f"[統一新聞工具] 完整結果內容: '{result}'")
 
         if self.cache_enabled and result and len(result.strip()) >= 50:
             cache_key = self._generate_cache_key(stock_code, max_news)
             self._save_to_cache(cache_key, result)
-            logger.info(f"[統一新聞工具] 💾 結果已保存到快取，股票: {stock_code}")
+            logger.info(f"[統一新聞工具] 結果已保存到快取，股票: {stock_code}")
 
         return result
 
@@ -109,7 +109,7 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] ✅ OpenAI美股新聞獲取成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] OpenAI美股新聞獲取成功: {len(result)} 字符")
                     return self._format_news_result(result, "OpenAI美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] OpenAI美股新聞獲取失敗: {e}")
@@ -122,7 +122,7 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] ✅ Google美股新聞獲取成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] Google美股新聞獲取成功: {len(result)} 字符")
                     return self._format_news_result(result, "Google美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] Google美股新聞獲取失敗: {e}")
@@ -134,33 +134,33 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_finnhub_news.invoke({"symbol": stock_code, "max_results": min(max_news, 50)})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] ✅ FinnHub美股新聞獲取成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] FinnHub美股新聞獲取成功: {len(result)} 字符")
                     return self._format_news_result(result, "FinnHub美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] FinnHub美股新聞獲取失敗: {e}")
         
-        return "❌ 無法獲取美股新聞數據，所有新聞源均不可用"
+        return "無法獲取美股新聞數據，所有新聞源均不可用"
     
     def _format_news_result(self, news_content: str, source: str, model_info: str = "") -> str:
         """格式化新聞結果"""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # 🔍 添加調試日誌：打印原始新聞內容
-        logger.info(f"[統一新聞工具] 📋 原始新聞內容預覽 (前500字符): {news_content[:500]}")
-        logger.info(f"[統一新聞工具] 📊 原始內容長度: {len(news_content)} 字符")
+        # 添加調試日誌：打印原始新聞內容
+        logger.info(f"[統一新聞工具] 原始新聞內容預覽 (前500字符): {news_content[:500]}")
+        logger.info(f"[統一新聞工具] 原始內容長度: {len(news_content)} 字符")
         
         # 檢測是否為Google/Gemini模型
         is_google_model = any(keyword in model_info.lower() for keyword in ['google', 'gemini', 'gemma'])
         original_length = len(news_content)
         google_control_applied = False
         
-        # 🔍 添加Google模型檢測日誌
+        # 添加Google模型檢測日誌
         if is_google_model:
-            logger.info(f"[統一新聞工具] 🤖 檢測到Google模型，啟用特殊處理")
+            logger.info(f"[統一新聞工具] 檢測到Google模型，啟用特殊處理")
         
         # 對Google模型進行特殊的長度控制
         if is_google_model and len(news_content) > 5000:  # 降低閾值到5000字符
-            logger.warning(f"[統一新聞工具] 🔧 檢測到Google模型，新聞內容過長({len(news_content)}字符)，進行長度控制...")
+            logger.warning(f"[統一新聞工具] 檢測到Google模型，新聞內容過長({len(news_content)}字符)，進行長度控制...")
             
             # 更嚴格的長度控制策略
             lines = news_content.split('\n')
@@ -199,12 +199,12 @@ class UnifiedNewsAnalyzer:
                 
                 news_content = processed_content
                 google_control_applied = True
-                logger.info(f"[統一新聞工具] ✅ Google模型智能長度控制完成，從{original_length}字符壓縮至{len(news_content)}字符")
+                logger.info(f"[統一新聞工具] Google模型智能長度控制完成，從{original_length}字符壓縮至{len(news_content)}字符")
             else:
                 # 如果沒有重要行，直接截斷到目標長度
                 news_content = news_content[:target_length] + "...(內容已強制截斷)"
                 google_control_applied = True
-                logger.info(f"[統一新聞工具] ⚠️ Google模型強制截斷至{target_length}字符")
+                logger.info(f"[統一新聞工具] Google模型強制截斷至{target_length}字符")
         
         # 計算最終的格式化結果長度，確保總長度合理
         base_format_length = 300  # 格式化模板的大概長度
@@ -214,19 +214,19 @@ class UnifiedNewsAnalyzer:
             if len(news_content) > max_content_length:
                 news_content = news_content[:max_content_length] + "...(已優化長度)"
                 google_control_applied = True
-                logger.info(f"[統一新聞工具] 🔧 Google模型最終長度優化，內容長度: {len(news_content)}字符")
+                logger.info(f"[統一新聞工具] Google模型最終長度優化，內容長度: {len(news_content)}字符")
         
         formatted_result = f"""
-=== 📰 新聞數據來源: {source} ===
+=== 新聞數據來源: {source} ===
 獲取時間: {timestamp}
 數據長度: {len(news_content)} 字符
 {f"模型類型: {model_info}" if model_info else ""}
-{f"🔧 Google模型長度控制已應用 (原長度: {original_length} 字符)" if google_control_applied else ""}
+{f"Google模型長度控制已應用 (原長度: {original_length} 字符)" if google_control_applied else ""}
 
-=== 📋 新聞內容 ===
+=== 新聞內容 ===
 {news_content}
 
-=== ✅ 數據狀態 ===
+=== 數據狀態 ===
 狀態: 成功獲取
 來源: {source}
 時間戳: {timestamp}
@@ -251,7 +251,7 @@ def create_unified_news_tool(toolkit):
             str: 格式化的新聞內容
         """
         if not stock_code:
-            return "❌ 錯誤: 未提供股票代碼"
+            return "錯誤: 未提供股票代碼"
         
         return analyzer.get_stock_news_unified(stock_code, max_news, model_info)
     

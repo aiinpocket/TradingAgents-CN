@@ -154,22 +154,22 @@ def render_operation_logs():
         from utils.auth_manager import auth_manager
         
         if not auth_manager or not auth_manager.check_permission("admin"):
-            st.error("❌ 您沒有權限訪問操作日誌")
-            st.info("💡 提示：操作日誌功能需要 'admin' 權限")
+            st.error("您沒有權限訪問操作日誌")
+            st.info("提示：操作日誌功能需要 'admin' 權限")
             return
     except Exception as e:
-        st.error(f"❌ 權限檢查失敗: {e}")
+        st.error(f"權限檢查失敗: {e}")
         return
     
-    st.title("📋 操作日誌管理")
+    st.title("操作日誌管理")
     
     # 側邊欄過濾選項
     with st.sidebar:
-        st.header("🔍 過濾選項")
+        st.header("過濾選項")
         
         # 日期範圍選擇
         date_range = st.selectbox(
-            "📅 時間範圍",
+            "時間範圍",
             ["最近1天", "最近3天", "最近7天", "最近30天", "自定義"],
             index=2
         )
@@ -184,11 +184,11 @@ def render_operation_logs():
             start_date = (datetime.now() - timedelta(days=days)).date()
         
         # 用戶過濾
-        username_filter = st.text_input("👤 用戶名過濾", placeholder="留空顯示所有用戶")
+        username_filter = st.text_input("用戶名過濾", placeholder="留空顯示所有用戶")
         
         # 操作類型過濾
         action_type_filter = st.selectbox(
-            "🔧 操作類型",
+            "操作類型",
             ["全部", "auth", "analysis", "navigation", "config", "data_export", "user_management", "system", "login", "logout", "export", "admin"]
         )
         
@@ -205,23 +205,23 @@ def render_operation_logs():
     )
     
     if not logs:
-        st.warning("📭 未找到符合條件的操作日誌")
+        st.warning("未找到符合條件的操作日誌")
         return
     
     # 顯示統計概覽
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📊 總操作數", len(logs))
-    
+        st.metric("總操作數", len(logs))
+
     with col2:
         unique_users = len(set(log.get('username', 'unknown') for log in logs))
-        st.metric("👥 活躍用戶", unique_users)
-    
+        st.metric("活躍用戶", unique_users)
+
     with col3:
         successful_ops = sum(1 for log in logs if log.get('success', True))
         success_rate = (successful_ops / len(logs) * 100) if logs else 0
-        st.metric("✅ 成功率", f"{success_rate:.1f}%")
+        st.metric("成功率", f"{success_rate:.1f}%")
     
     with col4:
         # 安全處理近1小時的日誌統計
@@ -242,10 +242,10 @@ def render_operation_logs():
                     recent_logs.append(log)
             except:
                 continue
-        st.metric("🕐 近1小時", len(recent_logs))
+        st.metric("近1小時", len(recent_logs))
     
     # 標簽页
-    tab1, tab2, tab3 = st.tabs(["📈 統計圖表", "📋 日誌列表", "📤 導出數據"])
+    tab1, tab2, tab3 = st.tabs(["統計圖表", "日誌列表", "導出數據"])
     
     with tab1:
         render_logs_charts(logs)
@@ -260,7 +260,7 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
     """渲染日誌統計圖表"""
     
     # 按操作類型統計
-    st.subheader("📊 按操作類型統計")
+    st.subheader("按操作類型統計")
     action_types = {}
     for log in logs:
         action_type = log.get('action_type', 'unknown')
@@ -275,7 +275,7 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
         st.plotly_chart(fig_pie, use_container_width=True)
     
     # 按時間統計
-    st.subheader("📅 按時間統計")
+    st.subheader("按時間統計")
     daily_logs = {}
     for log in logs:
         # 安全處理時間戳
@@ -318,7 +318,7 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
         st.plotly_chart(fig_line, use_container_width=True)
     
     # 按用戶統計
-    st.subheader("👥 按用戶統計")
+    st.subheader("按用戶統計")
     user_logs = {}
     for log in logs:
         username = log.get('username', 'unknown')
@@ -342,7 +342,7 @@ def render_logs_charts(logs: List[Dict[str, Any]]):
 def render_logs_list(logs: List[Dict[str, Any]]):
     """渲染日誌列表"""
     
-    st.subheader("📋 操作日誌列表")
+    st.subheader("操作日誌列表")
     
     # 分页設置
     page_size = st.selectbox("每页顯示", [10, 25, 50, 100], index=1)
@@ -388,7 +388,7 @@ def render_logs_list(logs: List[Dict[str, Any]]):
                 '角色': log.get('user_role', 'unknown'),
                 '操作類型': log.get('action_type', 'unknown'),
                 '操作描述': action_desc,
-                '狀態': '✅ 成功' if log.get('success', True) else '❌ 失敗',
+                '狀態': '成功' if log.get('success', True) else '失敗',
                 '詳情': str(log.get('details', ''))[:50] + '...' if len(str(log.get('details', ''))) > 50 else str(log.get('details', ''))
             })
         
@@ -404,7 +404,7 @@ def render_logs_list(logs: List[Dict[str, Any]]):
 def render_logs_export(logs: List[Dict[str, Any]]):
     """渲染日誌導出功能"""
     
-    st.subheader("📤 導出操作日誌")
+    st.subheader("導出操作日誌")
     
     if not logs:
         st.warning("沒有可導出的日誌數據")
@@ -413,7 +413,7 @@ def render_logs_export(logs: List[Dict[str, Any]]):
     # 導出格式選擇
     export_format = st.selectbox("選擇導出格式", ["CSV", "JSON", "Excel"])
     
-    if st.button("📥 導出日誌"):
+    if st.button("導出日誌"):
         try:
             if export_format == "CSV":
                 # 轉換為DataFrame
@@ -520,10 +520,10 @@ def render_logs_export(logs: List[Dict[str, Any]]):
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
             
-            st.success(f"✅ {export_format} 文件準備完成，請點擊下載按鈕")
+            st.success(f"{export_format} 文件準備完成，請點擊下載按鈕")
             
         except Exception as e:
-            st.error(f"❌ 導出失敗: {e}")
+            st.error(f"導出失敗: {e}")
 
 def log_operation(username: str, action_type: str, action: str, details: Dict = None, success: bool = True):
     """記錄操作日誌"""

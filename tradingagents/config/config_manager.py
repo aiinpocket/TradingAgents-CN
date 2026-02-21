@@ -107,7 +107,7 @@ class ConfigManager:
             # 對OpenAI密鑰進行格式驗證（始終啟用）
             if provider.lower() == "openai" and api_key:
                 if not self.validate_openai_api_key_format(api_key):
-                    logger.warning(f"⚠️ OpenAI API密鑰格式不正確，將被忽略: {api_key[:10]}...")
+                    logger.warning(f"OpenAI API密鑰格式不正確，將被忽略: {api_key[:10]}...")
                     return ""
             return api_key
         return ""
@@ -165,13 +165,13 @@ class ConfigManager:
             )
             
             if self.mongodb_storage.is_connected():
-                logger.info("✅ MongoDB存儲已啟用")
+                logger.info("MongoDB存儲已啟用")
             else:
                 self.mongodb_storage = None
-                logger.warning("⚠️ MongoDB連接失敗，將使用JSON文件存儲")
+                logger.warning("MongoDB連接失敗，將使用JSON文件存儲")
 
         except Exception as e:
-            logger.error(f"❌ MongoDB初始化失敗: {e}", exc_info=True)
+            logger.error(f"MongoDB初始化失敗: {e}", exc_info=True)
             self.mongodb_storage = None
 
     def _init_default_configs(self):
@@ -312,11 +312,11 @@ class ConfigManager:
                         # 檢查OpenAI是否在配置中啟用
                         if not openai_enabled:
                             model.enabled = False
-                            logger.info(f"🔒 OpenAI模型已禁用: {model.model_name}")
+                            logger.info(f"OpenAI模型已禁用: {model.model_name}")
                         # 如果有API密鑰但格式不正確，禁用模型（驗證始終啟用）
                         elif model.api_key and not self.validate_openai_api_key_format(model.api_key):
                             model.enabled = False
-                            logger.warning(f"⚠️ OpenAI模型因密鑰格式不正確而禁用: {model.model_name}")
+                            logger.warning(f"OpenAI模型因密鑰格式不正確而禁用: {model.model_name}")
 
                 return models
         except Exception as e:
@@ -395,7 +395,7 @@ class ConfigManager:
             if success:
                 return record
             else:
-                logger.error(f"⚠️ MongoDB保存失敗，回退到JSON文件存儲")
+                logger.error(f"MongoDB保存失敗，回退到JSON文件存儲")
 
         # 回退到JSON文件存儲
         records = self.load_usage_records()
@@ -422,10 +422,10 @@ class ConfigManager:
                 return round(total_cost, 6)
 
         # 只在找不到配置時輸出調試信息
-        logger.warning(f"⚠️ [calculate_cost] 未找到匹配的定價配置: {provider}/{model_name}")
-        logger.debug(f"⚠️ [calculate_cost] 可用的配置:")
+        logger.warning(f"[calculate_cost] 未找到匹配的定價配置: {provider}/{model_name}")
+        logger.debug(f"[calculate_cost] 可用的配置:")
         for pricing in pricing_configs:
-            logger.debug(f"⚠️ [calculate_cost]   - {pricing.provider}/{pricing.model_name}")
+            logger.debug(f"[calculate_cost]   - {pricing.provider}/{pricing.model_name}")
 
         return 0.0
     
@@ -537,7 +537,7 @@ class ConfigManager:
                     stats["records_count"] = stats.get("total_requests", 0)
                     return stats
             except Exception as e:
-                logger.error(f"⚠️ MongoDB統計獲取失敗，回退到JSON文件: {e}")
+                logger.error(f"MongoDB統計獲取失敗，回退到JSON文件: {e}")
         
         # 回退到JSON文件統計
         records = self.load_usage_records()
@@ -625,16 +625,16 @@ class ConfigManager:
             if directory and not os.path.exists(directory):
                 try:
                     os.makedirs(directory, exist_ok=True)
-                    logger.info(f"✅ 創建目錄: {directory}")
+                    logger.info(f"創建目錄: {directory}")
                 except Exception as e:
-                    logger.error(f"❌ 創建目錄失敗 {directory}: {e}")
+                    logger.error(f"創建目錄失敗 {directory}: {e}")
     
     def set_openai_enabled(self, enabled: bool):
         """設置OpenAI模型啟用狀態"""
         settings = self.load_settings()
         settings["openai_enabled"] = enabled
         self.save_settings(settings)
-        logger.info(f"🔧 OpenAI模型啟用狀態已設置為: {enabled}")
+        logger.info(f"OpenAI模型啟用狀態已設置為: {enabled}")
     
     def is_openai_enabled(self) -> bool:
         """檢查OpenAI模型是否啟用"""
@@ -700,7 +700,7 @@ class TokenTracker:
         total_today = today_stats["total_cost"]
 
         if total_today >= threshold:
-            logger.warning(f"⚠️ 成本警告: 今日成本已達到 ${total_today:.4f}，超過閾值 ${threshold}",
+            logger.warning(f"成本警告: 今日成本已達到 ${total_today:.4f}，超過閾值 ${threshold}",
                           extra={'cost': total_today, 'threshold': threshold, 'event_type': 'cost_alert'})
 
     def get_session_cost(self, session_id: str) -> float:

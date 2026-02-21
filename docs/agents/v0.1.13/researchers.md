@@ -63,8 +63,8 @@ def create_bull_researcher(llm, memory=None):
         debate_state = state.get("debate_state", "")
         
         # 獲取股票市場資訊
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(company_name)
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(company_name)
         
         # 安全檢查
         if memory is None:
@@ -106,8 +106,8 @@ def create_bear_researcher(llm, memory=None):
         debate_state = state.get("debate_state", "")
         
         # 獲取股票市場資訊
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(company_name)
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(company_name)
         
         # 安全檢查
         if memory is None:
@@ -193,49 +193,30 @@ else:
 
 ## 股票類型支持
 
-### 多市場分析能力
+### 美股市場分析能力
 
-研究員團隊支持全球主要股票市場的分析：
+研究員團隊專注於美國股票市場的分析：
 
 ```python
 # 市場資訊獲取
-from tradingagents.utils.stock_utils import StockUtils
-market_info = StockUtils.get_market_info(ticker)
+from tradingagents.utils.stock_utils import get_stock_market_info
+market_info = get_stock_market_info(ticker)
 
-# 根據市場類型調整分析策略
-if market_info.get("is_china"):
-    # 美股市場特有的分析邏輯
-    analysis_context = "中國美股市場"
-    currency = "美元"
-elif market_info.get("is_hk"):
-    # 美股市場特有的分析邏輯
-    analysis_context = "香美股市場"
-    currency = "美元"
-elif market_info.get("is_us"):
-    # 美股特有的分析邏輯
+# 美股市場分析策略
+if market_info.get("is_us"):
     analysis_context = "美國股市"
     currency = "美元"
 ```
 
-### 本土化分析
+### 分析重點
 
-1. **美股市場**:
-   - 政策影響分析
-   - 監管環境評估
-   - 國內經濟周期考量
-   - 投資者結構特點
-
-2. **美股市場**:
-   - 中港兩地聯動
-   - 匯率風險評估
-   - 國際資本流動
-   - 估值差異分析
-
-3. **美股市場**:
-   - 美聯儲政策影響
-   - 全球經濟環境
-   - 行業競爭格局
-   - 技術創新趨勢
+**美股市場**:
+- 美聯儲政策影響
+- 全球經濟環境
+- 行業競爭格局
+- 技術創新趨勢
+- 監管環境評估
+- 投資者結構特點
 
 ## 分析維度
 

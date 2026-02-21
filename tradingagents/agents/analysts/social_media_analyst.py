@@ -60,9 +60,9 @@ def create_social_media_analyst(llm, toolkit):
         if toolkit.config["online_tools"]:
             tools = [toolkit.get_stock_news_openai]
         else:
-            # 優先使用中國社交媒體數據，如果不可用則回退到Reddit
+            # 使用 Reddit 和統一情緒分析工具
             tools = [
-                toolkit.get_chinese_social_sentiment,
+                toolkit.get_stock_sentiment_unified,
                 toolkit.get_reddit_stock_info,
             ]
 

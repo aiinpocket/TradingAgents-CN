@@ -73,8 +73,8 @@ class StockDataCache:
             'enable_length_check': os.getenv('ENABLE_CACHE_LENGTH_CHECK', 'false').lower() == 'true'  # 文件緩存默認不限制
         }
 
-        logger.info(f"📁 緩存管理器初始化完成，緩存目錄: {self.cache_dir}")
-        logger.info(f"🗄️ 數據庫緩存管理器初始化完成")
+        logger.info(f"緩存管理器初始化完成，緩存目錄: {self.cache_dir}")
+        logger.info(f"數據庫緩存管理器初始化完成")
         logger.info(f"   美股數據: 已配置")
 
     def _determine_market_type(self, symbol: str) -> str:
@@ -134,12 +134,12 @@ class StockDataCache:
         available_long_providers = [p for p in available_providers if p in long_text_providers]
         
         if not available_long_providers:
-            logger.warning(f"⚠️ 內容過長({content_length:,}字符 > {max_length:,}字符)且無可用長文本提供商，跳過{data_type}緩存")
-            logger.info(f"💡 可用提供商: {available_providers}")
-            logger.info(f"💡 長文本提供商: {long_text_providers}")
+            logger.warning(f"內容過長({content_length:,}字符 > {max_length:,}字符)且無可用長文本提供商，跳過{data_type}緩存")
+            logger.info(f"可用提供商: {available_providers}")
+            logger.info(f"長文本提供商: {long_text_providers}")
             return True
         else:
-            logger.info(f"✅ 內容較長({content_length:,}字符)但有可用長文本提供商({available_long_providers})，繼續緩存")
+            logger.info(f"內容較長({content_length:,}字符)但有可用長文本提供商({available_long_providers})，繼續緩存")
             return False
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
@@ -193,7 +193,7 @@ class StockDataCache:
             with open(metadata_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
-            logger.error(f"⚠️ 加載元數據失敗: {e}")
+            logger.error(f"加載元數據失敗: {e}")
             return None
     
     def is_cache_valid(self, cache_key: str, max_age_hours: int = None, symbol: str = None, data_type: str = None) -> bool:
@@ -225,7 +225,7 @@ class StockDataCache:
             market_type = self._determine_market_type(metadata.get('symbol', ''))
             cache_type = f"{market_type}_{metadata.get('data_type', 'stock_data')}"
             desc = self.cache_config.get(cache_type, {}).get('description', '數據')
-            logger.info(f"✅ 緩存有效: {desc} - {metadata.get('symbol')} (剩餘 {max_age_hours - age.total_seconds()/3600:.1f}h)")
+            logger.info(f"緩存有效: {desc} - {metadata.get('symbol')} (剩餘 {max_age_hours - age.total_seconds()/3600:.1f}h)")
 
         return is_valid
     
@@ -256,7 +256,7 @@ class StockDataCache:
                                                source=data_source,
                                                market=market_type,
                                                skipped=True)
-            logger.info(f"🚫 股票數據因內容過長被跳過緩存: {symbol} -> {cache_key}")
+            logger.info(f"股票數據因內容過長被跳過緩存: {symbol} -> {cache_key}")
             return cache_key
 
         market_type = self._determine_market_type(symbol)
@@ -294,7 +294,7 @@ class StockDataCache:
         # 獲取描述信息
         cache_type = f"{market_type}_stock_data"
         desc = self.cache_config.get(cache_type, {}).get('description', '股票數據')
-        logger.info(f"💾 {desc}已緩存: {symbol} ({data_source}) -> {cache_key}")
+        logger.info(f"{desc}已緩存: {symbol} ({data_source}) -> {cache_key}")
         return cache_key
     
     def load_stock_data(self, cache_key: str) -> Optional[Union[pd.DataFrame, str]]:
@@ -314,7 +314,7 @@ class StockDataCache:
                 with open(cache_path, 'r', encoding='utf-8') as f:
                     return f.read()
         except Exception as e:
-            logger.error(f"⚠️ 加載緩存數據失敗: {e}")
+            logger.error(f"加載緩存數據失敗: {e}")
             return None
     
     def find_cached_stock_data(self, symbol: str, start_date: str = None,
@@ -350,7 +350,7 @@ class StockDataCache:
         # 檢查精確匹配
         if self.is_cache_valid(search_key, max_age_hours, symbol, 'stock_data'):
             desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '數據')
-            logger.info(f"🎯 找到精確匹配的{desc}: {symbol} -> {search_key}")
+            logger.info(f"找到精確匹配的{desc}: {symbol} -> {search_key}")
             return search_key
 
         # 如果沒有精確匹配，查找部分匹配（相同股票代碼的其他緩存）
@@ -367,15 +367,15 @@ class StockDataCache:
                     cache_key = metadata_file.stem.replace('_meta', '')
                     if self.is_cache_valid(cache_key, max_age_hours, symbol, 'stock_data'):
                         desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '數據')
-                        logger.info(f"📋 找到部分匹配的{desc}: {symbol} -> {cache_key}")
+                        logger.info(f"找到部分匹配的{desc}: {symbol} -> {cache_key}")
                         return cache_key
             except Exception:
                 continue
 
         desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '數據')
-        logger.error(f"❌ 未找到有效的{desc}緩存: {symbol}")
+        logger.error(f"未找到有效的{desc}緩存: {symbol}")
         return None
-    
+
     def save_news_data(self, symbol: str, news_data: str, 
                       start_date: str = None, end_date: str = None,
                       data_source: str = "unknown") -> str:
@@ -388,7 +388,7 @@ class StockDataCache:
                                                end_date=end_date,
                                                source=data_source,
                                                skipped=True)
-            logger.info(f"🚫 新聞數據因內容過長被跳過緩存: {symbol} -> {cache_key}")
+            logger.info(f"新聞數據因內容過長被跳過緩存: {symbol} -> {cache_key}")
             return cache_key
 
         cache_key = self._generate_cache_key("news", symbol,
@@ -413,7 +413,7 @@ class StockDataCache:
         }
         self._save_metadata(cache_key, metadata)
         
-        logger.info(f"📰 新聞數據已緩存: {symbol} ({data_source}) -> {cache_key}")
+        logger.info(f"新聞數據已緩存: {symbol} ({data_source}) -> {cache_key}")
         return cache_key
     
     def save_fundamentals_data(self, symbol: str, fundamentals_data: str,
@@ -428,7 +428,7 @@ class StockDataCache:
                                                market=market_type,
                                                date=datetime.now().strftime("%Y-%m-%d"),
                                                skipped=True)
-            logger.info(f"🚫 基本面數據因內容過長被跳過緩存: {symbol} -> {cache_key}")
+            logger.info(f"基本面數據因內容過長被跳過緩存: {symbol} -> {cache_key}")
             return cache_key
 
         market_type = self._determine_market_type(symbol)
@@ -454,7 +454,7 @@ class StockDataCache:
         self._save_metadata(cache_key, metadata)
         
         desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面數據')
-        logger.info(f"💼 {desc}已緩存: {symbol} ({data_source}) -> {cache_key}")
+        logger.info(f"{desc}已緩存: {symbol} ({data_source}) -> {cache_key}")
         return cache_key
     
     def load_fundamentals_data(self, cache_key: str) -> Optional[str]:
@@ -471,7 +471,7 @@ class StockDataCache:
             with open(cache_path, 'r', encoding='utf-8') as f:
                 return f.read()
         except Exception as e:
-            logger.error(f"⚠️ 加載基本面緩存數據失敗: {e}")
+            logger.error(f"加載基本面緩存數據失敗: {e}")
             return None
     
     def find_cached_fundamentals_data(self, symbol: str, data_source: str = None,
@@ -508,13 +508,13 @@ class StockDataCache:
                     cache_key = metadata_file.stem.replace('_meta', '')
                     if self.is_cache_valid(cache_key, max_age_hours, symbol, 'fundamentals'):
                         desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面數據')
-                        logger.info(f"🎯 找到匹配的{desc}緩存: {symbol} ({data_source}) -> {cache_key}")
+                        logger.info(f"找到匹配的{desc}緩存: {symbol} ({data_source}) -> {cache_key}")
                         return cache_key
             except Exception:
                 continue
         
         desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面數據')
-        logger.error(f"❌ 未找到有效的{desc}緩存: {symbol} ({data_source})")
+        logger.error(f"未找到有效的{desc}緩存: {symbol} ({data_source})")
         return None
     
     def clear_old_cache(self, max_age_days: int = 7):
@@ -539,9 +539,9 @@ class StockDataCache:
                     cleared_count += 1
                     
             except Exception as e:
-                logger.warning(f"⚠️ 清理緩存時出錯: {e}")
+                logger.warning(f"清理緩存時出錯: {e}")
         
-        logger.info(f"🧹 已清理 {cleared_count} 個過期緩存文件")
+        logger.info(f"已清理 {cleared_count} 個過期緩存文件")
     
     def get_cache_stats(self) -> Dict[str, Any]:
         """獲取緩存統計信息"""

@@ -43,7 +43,7 @@ class IntegratedCacheManager:
                 self.adaptive_cache = get_cache_system()
                 self.db_manager = get_database_manager()
                 self.use_adaptive = True
-                self.logger.info("✅ 自適應緩存系統已啟用")
+                self.logger.info("自適應緩存系統已啟用")
             except Exception as e:
                 self.logger.warning(f"自適應緩存系統初始化失敗，使用傳統緩存: {e}")
                 self.use_adaptive = False
@@ -60,13 +60,13 @@ class IntegratedCacheManager:
             mongodb_available = self.db_manager.is_mongodb_available()
             redis_available = self.db_manager.is_redis_available()
             
-            self.logger.info(f"📊 緩存配置:")
+            self.logger.info(f"緩存配置:")
             self.logger.info(f"  主要後端: {backend}")
-            self.logger.info(f"  MongoDB: {'✅ 可用' if mongodb_available else '❌ 不可用'}")
-            self.logger.info(f"  Redis: {'✅ 可用' if redis_available else '❌ 不可用'}")
-            self.logger.info(f"  降級支持: {'✅ 啟用' if self.adaptive_cache.fallback_enabled else '❌ 禁用'}")
+            self.logger.info(f"  MongoDB: {'可用' if mongodb_available else '不可用'}")
+            self.logger.info(f"  Redis: {'可用' if redis_available else '不可用'}")
+            self.logger.info(f"  降級支持: {'啟用' if self.adaptive_cache.fallback_enabled else '禁用'}")
         else:
-            self.logger.info("📁 使用傳統文件緩存系統")
+            self.logger.info("使用傳統文件緩存系統")
     
     def save_stock_data(self, symbol: str, data: Any, start_date: str = None, 
                        end_date: str = None, data_source: str = "default") -> str:

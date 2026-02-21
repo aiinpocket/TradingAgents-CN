@@ -33,7 +33,7 @@ class AsyncProgressDisplay:
         self.last_update = 0
         self.is_completed = False
         
-        logger.info(f"📊 [異步顯示] 初始化: {analysis_id}, 刷新間隔: {refresh_interval}s")
+        logger.info(f"[異步顯示] 初始化: {analysis_id}, 刷新間隔: {refresh_interval}s")
     
     def update_display(self) -> bool:
         """更新顯示，返回是否需要繼續刷新"""
@@ -47,7 +47,7 @@ class AsyncProgressDisplay:
         progress_data = get_progress_by_id(self.analysis_id)
         
         if not progress_data:
-            self.status_text.error("❌ 無法獲取分析進度，請檢查分析是否正在運行")
+            self.status_text.error("無法獲取分析進度，請檢查分析是否正在運行")
             return False
         
         # 更新顯示
@@ -79,23 +79,23 @@ class AsyncProgressDisplay:
             
             # 狀態圖標
             status_icon = {
-                'running': '🔄',
-                'completed': '✅',
-                'failed': '❌'
-            }.get(status, '🔄')
+                'running': '[進行中]',
+                'completed': '[完成]',
+                'failed': '[失敗]'
+            }.get(status, '[進行中]')
             
             # 顯示當前狀態
             self.status_text.info(f"{status_icon} **當前狀態**: {last_message}")
             
             # 顯示步驟信息
             if status == 'failed':
-                self.step_info.error(f"❌ **分析失敗**: {last_message}")
+                self.step_info.error(f"**分析失敗**: {last_message}")
             elif status == 'completed':
-                self.step_info.success(f"🎉 **分析完成**: 所有步驟已完成")
+                self.step_info.success(f"**分析完成**: 所有步驟已完成")
 
                 # 添加查看報告按鈕
                 with self.step_info:
-                    if st.button("📊 查看分析報告", key=f"view_report_{progress_data.get('analysis_id', 'unknown')}", type="primary"):
+                    if st.button("查看分析報告", key=f"view_report_{progress_data.get('analysis_id', 'unknown')}", type="primary"):
                         analysis_id = progress_data.get('analysis_id')
                         # 嘗試恢複分析結果（如果還沒有的話）
                         if not st.session_state.get('analysis_results'):
@@ -115,7 +115,7 @@ class AsyncProgressDisplay:
                         st.session_state.current_analysis_id = analysis_id
                         st.rerun()
             else:
-                self.step_info.info(f"📊 **進度**: 第 {current_step + 1} 步，共 {total_steps} 步 ({progress_percentage:.1f}%)\n\n"
+                self.step_info.info(f"**進度**: 第 {current_step + 1} 步，共 {total_steps} 步 ({progress_percentage:.1f}%)\n\n"
                                   f"**當前步驟**: {step_name}\n\n"
                                   f"**步驟說明**: {step_description}")
             
@@ -139,25 +139,25 @@ class AsyncProgressDisplay:
             remaining_time = max(estimated_total_time - real_elapsed_time, 0)
             
             if status == 'completed':
-                self.time_info.success(f"⏱️ **已用時間**: {format_time(real_elapsed_time)} | **總耗時**: {format_time(real_elapsed_time)}")
+                self.time_info.success(f"**已用時間**: {format_time(real_elapsed_time)} | **總耗時**: {format_time(real_elapsed_time)}")
             elif status == 'failed':
-                self.time_info.error(f"⏱️ **已用時間**: {format_time(real_elapsed_time)} | **分析中斷**")
+                self.time_info.error(f"**已用時間**: {format_time(real_elapsed_time)} | **分析中斷**")
             else:
-                self.time_info.info(f"⏱️ **已用時間**: {format_time(real_elapsed_time)} | **預計剩餘**: {format_time(remaining_time)}")
+                self.time_info.info(f"**已用時間**: {format_time(real_elapsed_time)} | **預計剩餘**: {format_time(remaining_time)}")
             
             # 刷新按鈕（僅在運行時顯示）
             if status == 'running':
                 with self.refresh_button:
                     col1, col2, col3 = st.columns([1, 1, 1])
                     with col2:
-                        if st.button("🔄 手動刷新", key=f"refresh_{self.analysis_id}"):
+                        if st.button("手動刷新", key=f"refresh_{self.analysis_id}"):
                             st.rerun()
             else:
                 self.refresh_button.empty()
                 
         except Exception as e:
-            logger.error(f"📊 [異步顯示] 渲染失敗: {e}")
-            self.status_text.error(f"❌ 顯示更新失敗: {str(e)}")
+            logger.error(f"[異步顯示] 渲染失敗: {e}")
+            self.status_text.error(f"顯示更新失敗: {str(e)}")
 
 def create_async_progress_display(container, analysis_id: str, refresh_interval: float = 1.0) -> AsyncProgressDisplay:
     """創建異步進度顯示組件"""
@@ -174,7 +174,7 @@ def auto_refresh_progress(display: AsyncProgressDisplay, max_duration: float = 1
         # 檢查超時
         if time.time() - start_time > max_duration:
             with placeholder:
-                st.warning("⚠️ 分析時間過長，已停止自動刷新。請手動刷新頁面查看最新狀態。")
+                st.warning("分析時間過長，已停止自動刷新。請手動刷新頁面查看最新狀態。")
             break
         
         # 更新顯示
@@ -187,7 +187,7 @@ def auto_refresh_progress(display: AsyncProgressDisplay, max_duration: float = 1
         # 等待刷新間隔
         time.sleep(display.refresh_interval)
     
-    logger.info(f"📊 [異步顯示] 自動刷新結束: {display.analysis_id}")
+    logger.info(f"[異步顯示] 自動刷新結束: {display.analysis_id}")
 
 # Streamlit專用的自動刷新組件
 def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2):
@@ -197,7 +197,7 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
     progress_data = get_progress_by_id(analysis_id)
 
     if not progress_data:
-        st.error("❌ 無法獲取分析進度，請檢查分析是否正在運行")
+        st.error("無法獲取分析進度，請檢查分析是否正在運行")
         return False
 
     status = progress_data.get('status', 'running')
@@ -217,21 +217,21 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
 
     # 狀態圖標
     status_icon = {
-        'running': '🔄',
-        'completed': '✅',
-        'failed': '❌'
-    }.get(status, '🔄')
+        'running': '[進行中]',
+        'completed': '[完成]',
+        'failed': '[失敗]'
+    }.get(status, '[進行中]')
 
     # 顯示信息
     st.info(f"{status_icon} **當前狀態**: {last_message}")
 
     if status == 'failed':
-        st.error(f"❌ **分析失敗**: {last_message}")
+        st.error(f"**分析失敗**: {last_message}")
     elif status == 'completed':
-        st.success(f"🎉 **分析完成**: 所有步驟已完成")
+        st.success(f"**分析完成**: 所有步驟已完成")
 
         # 添加查看報告按鈕
-        if st.button("📊 查看分析報告", key=f"view_report_streamlit_{progress_data.get('analysis_id', 'unknown')}", type="primary"):
+        if st.button("查看分析報告", key=f"view_report_streamlit_{progress_data.get('analysis_id', 'unknown')}", type="primary"):
             analysis_id = progress_data.get('analysis_id')
             # 嘗試恢複分析結果（如果還沒有的話）
             if not st.session_state.get('analysis_results'):
@@ -251,7 +251,7 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
             st.session_state.current_analysis_id = analysis_id
             st.rerun()
     else:
-        st.info(f"📊 **進度**: 第 {current_step + 1} 步，共 {total_steps} 步 ({progress_percentage:.1f}%)\n\n"
+        st.info(f"**進度**: 第 {current_step + 1} 步，共 {total_steps} 步 ({progress_percentage:.1f}%)\n\n"
                f"**當前步驟**: {step_name}\n\n"
                f"**步驟說明**: {step_description}")
 
@@ -275,26 +275,26 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
     remaining_time = max(estimated_total_time - elapsed_time, 0)
 
     if status == 'completed':
-        st.success(f"⏱️ **總耗時**: {format_time(elapsed_time)}")
+        st.success(f"**總耗時**: {format_time(elapsed_time)}")
     elif status == 'failed':
-        st.error(f"⏱️ **已用時間**: {format_time(elapsed_time)} | **分析中斷**")
+        st.error(f"**已用時間**: {format_time(elapsed_time)} | **分析中斷**")
     else:
-        st.info(f"⏱️ **已用時間**: {format_time(elapsed_time)} | **預計剩餘**: {format_time(remaining_time)}")
+        st.info(f"**已用時間**: {format_time(elapsed_time)} | **預計剩餘**: {format_time(remaining_time)}")
 
     # 添加刷新控制（僅在運行時顯示）
     if status == 'running':
         col1, col2 = st.columns([1, 1])
         with col1:
-            if st.button("🔄 刷新進度", key=f"refresh_streamlit_{analysis_id}"):
+            if st.button("刷新進度", key=f"refresh_streamlit_{analysis_id}"):
                 st.rerun()
         with col2:
             auto_refresh_key = f"auto_refresh_streamlit_{analysis_id}"
             # 獲取默認值，如果是新分析則默認為True
-            default_value = st.session_state.get(auto_refresh_key, True)  # 默認為True
-            auto_refresh = st.checkbox("🔄 自動刷新", value=default_value, key=auto_refresh_key)
-            if auto_refresh and status == 'running':  # 只在運行時自動刷新
+            default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
+            auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
+            if auto_refresh and status == 'running': # 只在運行時自動刷新
                 import time
-                time.sleep(3)  # 等待3秒
+                time.sleep(3) # 等待3秒
                 st.rerun()
             elif auto_refresh and status in ['completed', 'failed']:
                 # 分析完成後自動關閉自動刷新
@@ -319,7 +319,7 @@ def display_static_progress(analysis_id: str) -> bool:
     progress_data = get_progress_by_id(analysis_id)
 
     if not progress_data:
-        st.error("❌ 無法獲取分析進度，請檢查分析是否正在運行")
+        st.error("無法獲取分析進度，請檢查分析是否正在運行")
         return False
 
     status = progress_data.get('status', 'running')
@@ -327,7 +327,7 @@ def display_static_progress(analysis_id: str) -> bool:
     # 調試信息（可以在生產環境中移除）
     import datetime
     current_time = datetime.datetime.now().strftime('%H:%M:%S')
-    logger.debug(f"📊 [進度顯示] {current_time} - 狀態: {status}, 進度: {progress_data.get('progress_percentage', 0):.1f}%")
+    logger.debug(f"[進度顯示] {current_time} - 狀態: {status}, 進度: {progress_data.get('progress_percentage', 0):.1f}%")
 
     # 顯示基本信息（移除分析ID顯示）
     col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
@@ -378,19 +378,19 @@ def display_static_progress(analysis_id: str) -> bool:
 
     # 狀態圖標
     status_icon = {
-        'running': '🔄',
-        'completed': '✅',
-        'failed': '❌'
-    }.get(status, '🔄')
+        'running': '[進行中]',
+        'completed': '[完成]',
+        'failed': '[失敗]'
+    }.get(status, '[進行中]')
 
     # 顯示狀態
     if status == 'failed':
-        st.error(f"❌ **分析失敗**: {last_message}")
+        st.error(f"**分析失敗**: {last_message}")
     elif status == 'completed':
-        st.success(f"🎉 **分析完成**: {last_message}")
+        st.success(f"**分析完成**: {last_message}")
 
         # 添加查看報告按鈕
-        if st.button("📊 查看分析報告", key=f"view_report_static_{analysis_id}", type="primary"):
+        if st.button("查看分析報告", key=f"view_report_static_{analysis_id}", type="primary"):
             # 嘗試恢複分析結果（如果還沒有的話）
             if not st.session_state.get('analysis_results'):
                 try:
@@ -421,16 +421,16 @@ def display_static_progress(analysis_id: str) -> bool:
 
             col1, col2 = st.columns([1, 1])
             with col1:
-                if st.button("🔄 刷新進度", key=f"refresh_static_{analysis_id}"):
+                if st.button("刷新進度", key=f"refresh_static_{analysis_id}"):
                     st.rerun()
             with col2:
                 auto_refresh_key = f"auto_refresh_static_{analysis_id}"
                 # 獲取默認值，如果是新分析則默認為True
-                default_value = st.session_state.get(auto_refresh_key, True)  # 默認為True
-                auto_refresh = st.checkbox("🔄 自動刷新", value=default_value, key=auto_refresh_key)
-                if auto_refresh and status == 'running':  # 只在運行時自動刷新
+                default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
+                auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
+                if auto_refresh and status == 'running': # 只在運行時自動刷新
                     import time
-                    time.sleep(3)  # 等待3秒
+                    time.sleep(3) # 等待3秒
                     st.rerun()
                 elif auto_refresh and status in ['completed', 'failed']:
                     # 分析完成後自動關閉自動刷新
@@ -472,7 +472,7 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
 
     if not progress_data:
         # 如果沒有進度數據，顯示默認的準備狀態
-        st.info("🔄 **當前狀態**: 準備開始分析...")
+        st.info("**當前狀態**: 準備開始分析...")
         
         # 設置默認狀態為initializing
         status = 'initializing'
@@ -481,22 +481,22 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
         if show_refresh_controls:
             col1, col2 = st.columns([1, 1])
             with col1:
-                if st.button("🔄 刷新進度", key=f"refresh_unified_default_{analysis_id}"):
+                if st.button("刷新進度", key=f"refresh_unified_default_{analysis_id}"):
                     st.rerun()
             with col2:
                 auto_refresh_key = f"auto_refresh_unified_default_{analysis_id}"
                 # 獲取默認值，如果是新分析則默認為True
-                default_value = st.session_state.get(auto_refresh_key, True)  # 默認為True
-                auto_refresh = st.checkbox("🔄 自動刷新", value=default_value, key=auto_refresh_key)
-                if auto_refresh and status == 'running':  # 只在運行時自動刷新
+                default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
+                auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
+                if auto_refresh and status == 'running': # 只在運行時自動刷新
                     import time
-                    time.sleep(3)  # 等待3秒
+                    time.sleep(3) # 等待3秒
                     st.rerun()
                 elif auto_refresh and status in ['completed', 'failed']:
                     # 分析完成後自動關閉自動刷新
                     st.session_state[auto_refresh_key] = False
 
-        return False  # 返回False表示還未完成
+        return False # 返回False表示還未完成
 
     # 解析進度數據（修複字段名稱匹配）
     status = progress_data.get('status', 'running')
@@ -551,16 +551,16 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
 
     # 顯示當前狀態
     status_icon = {
-        'running': '🔄',
-        'completed': '✅',
-        'failed': '❌'
-    }.get(status, '🔄')
+        'running': '[進行中]',
+        'completed': '[完成]',
+        'failed': '[失敗]'
+    }.get(status, '[進行中]')
 
     if status == 'completed':
         st.success(f"{status_icon} **當前狀態**: {last_message}")
 
         # 添加查看報告按鈕
-        if st.button("📊 查看分析報告", key=f"view_report_unified_{analysis_id}", type="primary"):
+        if st.button("查看分析報告", key=f"view_report_unified_{analysis_id}", type="primary"):
             # 嘗試恢複分析結果（如果還沒有的話）
             if not st.session_state.get('analysis_results'):
                 try:
@@ -587,19 +587,19 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
     # 顯示刷新控制的條件：
     # 1. 需要顯示刷新控件 AND
     # 2. (分析正在運行 OR 分析剛開始還沒有狀態)
-    if show_refresh_controls and (status == 'running' or status == 'initializing'):
+    if show_refresh_controls and (status == 'running'or status == 'initializing'):
         col1, col2 = st.columns([1, 1])
         with col1:
-            if st.button("🔄 刷新進度", key=f"refresh_unified_{analysis_id}"):
+            if st.button("刷新進度", key=f"refresh_unified_{analysis_id}"):
                 st.rerun()
         with col2:
             auto_refresh_key = f"auto_refresh_unified_{analysis_id}"
             # 獲取默認值，如果是新分析則默認為True
-            default_value = st.session_state.get(auto_refresh_key, True)  # 默認為True
-            auto_refresh = st.checkbox("🔄 自動刷新", value=default_value, key=auto_refresh_key)
-            if auto_refresh and status == 'running':  # 只在運行時自動刷新
+            default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
+            auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
+            if auto_refresh and status == 'running': # 只在運行時自動刷新
                 import time
-                time.sleep(3)  # 等待3秒
+                time.sleep(3) # 等待3秒
                 st.rerun()
             elif auto_refresh and status in ['completed', 'failed']:
                 # 分析完成後自動關閉自動刷新

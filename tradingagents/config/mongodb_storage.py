@@ -68,14 +68,14 @@ class MongoDBStorage:
             self._create_indexes()
             
             self._connected = True
-            logger.info(f"✅ MongoDB連接成功: {self.database_name}.{self.collection_name}")
+            logger.info(f"MongoDB連接成功: {self.database_name}.{self.collection_name}")
             
         except (ConnectionFailure, ServerSelectionTimeoutError) as e:
-            logger.error(f"❌ MongoDB連接失敗: {e}")
+            logger.error(f"MongoDB連接失敗: {e}")
             logger.info(f"將使用本地JSON文件儲存")
             self._connected = False
         except Exception as e:
-            logger.error(f"❌ MongoDB初始化失敗: {e}")
+            logger.error(f"MongoDB初始化失敗: {e}")
             self._connected = False
     
     def _create_indexes(self):

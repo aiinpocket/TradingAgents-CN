@@ -19,7 +19,7 @@ try:
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False
-    logger.warning(f"⚠️ 緩存管理器不可用，將直接從API獲取數據")
+    logger.warning(f"緩存管理器不可用，將直接從API獲取數據")
 
 
 def init_ticker(func: Callable) -> Callable:

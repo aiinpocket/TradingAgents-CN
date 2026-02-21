@@ -53,7 +53,7 @@ class RedisSessionManager:
             # 只有在Redis啟用時才顯示連接失敗警告
             redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower()
             if redis_enabled == 'true':
-                st.warning(f"⚠️ Redis連接失敗，使用文件儲存: {e}")
+                st.warning(f"Redis連接失敗，使用文件儲存: {e}")
             return False
     
     def _get_session_key(self) -> str:
@@ -123,7 +123,7 @@ class RedisSessionManager:
             return True
             
         except Exception as e:
-            st.warning(f"⚠️ 保存會話狀態失敗: {e}")
+            st.warning(f"保存會話狀態失敗: {e}")
             return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
@@ -143,7 +143,7 @@ class RedisSessionManager:
             return None
             
         except Exception as e:
-            st.warning(f"⚠️ 加載會話狀態失敗: {e}")
+            st.warning(f"加載會話狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -165,7 +165,7 @@ class RedisSessionManager:
                     del st.session_state[key]
             
         except Exception as e:
-            st.warning(f"⚠️ 清除會話狀態失敗: {e}")
+            st.warning(f"清除會話狀態失敗: {e}")
     
     def _save_to_file(self, session_key: str, session_data: Dict[str, Any]):
         """保存到文件（fallback方案）"""
@@ -178,7 +178,7 @@ class RedisSessionManager:
                 json.dump(session_data, f, ensure_ascii=False, indent=2)
                 
         except Exception as e:
-            st.warning(f"⚠️ 文件保存失敗: {e}")
+            st.warning(f"文件保存失敗: {e}")
     
     def _load_from_file(self, session_key: str) -> Optional[Dict[str, Any]]:
         """從文件加載（fallback方案）"""
@@ -199,7 +199,7 @@ class RedisSessionManager:
             return None
             
         except Exception as e:
-            st.warning(f"⚠️ 文件加載失敗: {e}")
+            st.warning(f"文件加載失敗: {e}")
             return None
     
     def _delete_file(self, session_key: str):
@@ -210,7 +210,7 @@ class RedisSessionManager:
                 os.remove(filename)
                 
         except Exception as e:
-            st.warning(f"⚠️ 文件刪除失敗: {e}")
+            st.warning(f"文件刪除失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取調試信息"""
@@ -281,7 +281,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 獲取持久化分析ID失敗: {e}")
+        st.warning(f"獲取持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running", 
@@ -298,4 +298,4 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         redis_session_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type)
         
     except Exception as e:
-        st.warning(f"⚠️ 設置持久化分析ID失敗: {e}")
+        st.warning(f"設置持久化分析ID失敗: {e}")

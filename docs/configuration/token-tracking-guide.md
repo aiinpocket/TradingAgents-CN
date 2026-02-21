@@ -108,14 +108,14 @@ from tradingagents.config.config_manager import config_manager
 # 獲取最近30天的統計
 stats = config_manager.get_usage_statistics(30)
 
-print(f"總成本: ¥{stats['total_cost']:.4f}")
+print(f"總成本: ${stats['total_cost']:.4f}")
 print(f"總請求數: {stats['total_requests']}")
 print(f"輸入tokens: {stats['total_input_tokens']}")
 print(f"輸出tokens: {stats['total_output_tokens']}")
 
 # 按供應商查看統計
 for provider, provider_stats in stats['provider_stats'].items():
-    print(f"{provider}: ¥{provider_stats['cost']:.4f}")
+    print(f"{provider}: ${provider_stats['cost']:.4f}")
 ```
 
 ### 3. 查看會話成本
@@ -125,7 +125,7 @@ from tradingagents.config.config_manager import token_tracker
 
 # 查看特定會話的成本
 session_cost = token_tracker.get_session_cost("my_session")
-print(f"會話成本: ¥{session_cost:.4f}")
+print(f"會話成本: ${session_cost:.4f}")
 ```
 
 ### 4. 估算成本
@@ -138,7 +138,7 @@ estimated_cost = token_tracker.estimate_cost(
     estimated_input_tokens=1000,
     estimated_output_tokens=500
 )
-print(f"估算成本: ¥{estimated_cost:.4f}")
+print(f"估算成本: ${estimated_cost:.4f}")
 ```
 
 ## 定價配置
@@ -152,9 +152,9 @@ from tradingagents.config.config_manager import config_manager, PricingConfig
 custom_pricing = PricingConfig(
     provider="
     model_name="gpt-4o",
-    input_price_per_1k=0.02,   # 每1000個輸入token的價格（人民幣）
-    output_price_per_1k=0.06,  # 每1000個輸出token的價格（人民幣）
-    currency="CNY"
+    input_price_per_1k=0.02,   # 每1000個輸入token的價格（美元）
+    output_price_per_1k=0.06,  # 每1000個輸出token的價格（美元）
+    currency="USD"
 )
 
 pricing_list = config_manager.load_pricing()
@@ -164,18 +164,12 @@ config_manager.save_pricing(pricing_list)
 
 ## 內置定價表
 
-### 
-
-| 模型 | 輸入價格 (¥/1K tokens) | 輸出價格 (¥/1K tokens) |
-|------|----------------------|----------------------|
-| gpt-4o-mini | 0.002 | 0.006 |
-| gpt-4o | 0.004 | 0.012 |
-| gpt-4o | 0.02 | 0.06 |
-
 ### OpenAI
 
 | 模型 | 輸入價格 ($/1K tokens) | 輸出價格 ($/1K tokens) |
 |------|----------------------|----------------------|
+| gpt-4o-mini | 0.002 | 0.006 |
+| gpt-4o | 0.004 | 0.012 |
 | gpt-3.5-turbo | 0.0015 | 0.002 |
 | gpt-4 | 0.03 | 0.06 |
 | gpt-4-turbo | 0.01 | 0.03 |

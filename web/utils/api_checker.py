@@ -72,12 +72,12 @@ def get_api_key_status_message():
     status = check_api_keys()
     
     if status["all_configured"]:
-        return "✅ 所有必需的API密鑰已配置完成"
+        return "所有必需的API密鑰已配置完成"
     elif status["required_configured"]:
-        return "✅ 必需的API密鑰已配置，可選API密鑰未配置"
+        return "必需的API密鑰已配置，可選API密鑰未配置"
     else:
         missing = ", ".join(status["missing_required"])
-        return f"❌ 缺少必需的API密鑰: {missing}"
+        return f"缺少必需的API密鑰: {missing}"
 
 def validate_api_key_format(key_type, api_key):
     """驗證API密鑰格式"""

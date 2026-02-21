@@ -24,22 +24,22 @@ def render_user_activity_dashboard():
     
     # 檢查權限
     if not auth_manager or not auth_manager.check_permission("admin"):
-        st.error("❌ 您沒有權限訪問用戶活動記錄")
+        st.error("您沒有權限訪問用戶活動記錄")
         return
     
     if not user_activity_logger:
-        st.error("❌ 用戶活動記錄器未初始化")
+        st.error("用戶活動記錄器未初始化")
         return
     
-    st.title("📊 用戶活動記錄儀表板")
+    st.title("用戶活動記錄儀表板")
     
     # 側邊欄過濾選項
     with st.sidebar:
-        st.header("🔍 過濾選項")
+        st.header("過濾選項")
         
         # 日期範圍選擇
         date_range = st.selectbox(
-            "📅 時間範圍",
+            "時間範圍",
             ["最近1天", "最近3天", "最近7天", "最近30天", "自定義"],
             index=2
         )
@@ -54,11 +54,11 @@ def render_user_activity_dashboard():
             start_date = end_date - timedelta(days=days)
         
         # 用戶過濾
-        username_filter = st.text_input("👤 用戶名過濾", placeholder="留空顯示所有用戶")
+        username_filter = st.text_input("用戶名過濾", placeholder="留空顯示所有用戶")
         
         # 活動類型過濾
         action_type_filter = st.selectbox(
-            "🔧 活動類型",
+            "活動類型",
             ["全部", "auth", "analysis", "config", "navigation", "data_export", "user_management", "system"]
         )
         
@@ -75,31 +75,31 @@ def render_user_activity_dashboard():
     )
     
     if not activities:
-        st.warning("📭 未找到符合條件的活動記錄")
+        st.warning("未找到符合條件的活動記錄")
         return
     
     # 顯示統計概覽
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📊 總活動數", len(activities))
-    
+        st.metric("總活動數", len(activities))
+
     with col2:
         unique_users = len(set(a['username'] for a in activities))
-        st.metric("👥 活躍用戶", unique_users)
-    
+        st.metric("活躍用戶", unique_users)
+
     with col3:
         successful_activities = sum(1 for a in activities if a.get('success', True))
         success_rate = (successful_activities / len(activities) * 100) if activities else 0
-        st.metric("✅ 成功率", f"{success_rate:.1f}%")
-    
+        st.metric("成功率", f"{success_rate:.1f}%")
+
     with col4:
         durations = [a.get('duration_ms', 0) for a in activities if a.get('duration_ms')]
         avg_duration = sum(durations) / len(durations) if durations else 0
-        st.metric("⏱️ 平均耗時", f"{avg_duration:.0f}ms")
+        st.metric("平均耗時", f"{avg_duration:.0f}ms")
     
     # 標簽页
-    tab1, tab2, tab3, tab4 = st.tabs(["📈 統計圖表", "📋 活動列表", "👥 用戶分析", "📤 導出數據"])
+    tab1, tab2, tab3, tab4 = st.tabs(["統計圖表", "活動列表", "用戶分析", "導出數據"])
     
     with tab1:
         render_activity_charts(activities)
@@ -117,7 +117,7 @@ def render_activity_charts(activities: List[Dict[str, Any]]):
     """渲染活動統計圖表"""
     
     # 按活動類型統計
-    st.subheader("📊 按活動類型統計")
+    st.subheader("按活動類型統計")
     activity_types = {}
     for activity in activities:
         action_type = activity.get('action_type', 'unknown')
@@ -132,7 +132,7 @@ def render_activity_charts(activities: List[Dict[str, Any]]):
         st.plotly_chart(fig_pie, use_container_width=True)
     
     # 按時間統計
-    st.subheader("📅 按時間統計")
+    st.subheader("按時間統計")
     daily_activities = {}
     for activity in activities:
         date_str = datetime.fromtimestamp(activity['timestamp']).strftime('%Y-%m-%d')
@@ -159,7 +159,7 @@ def render_activity_charts(activities: List[Dict[str, Any]]):
         st.plotly_chart(fig_line, use_container_width=True)
     
     # 按用戶統計
-    st.subheader("👥 按用戶統計")
+    st.subheader("按用戶統計")
     user_activities = {}
     for activity in activities:
         username = activity.get('username', 'unknown')
@@ -183,7 +183,7 @@ def render_activity_charts(activities: List[Dict[str, Any]]):
 def render_activity_list(activities: List[Dict[str, Any]]):
     """渲染活動列表"""
     
-    st.subheader("📋 活動記錄列表")
+    st.subheader("活動記錄列表")
     
     # 分页設置
     page_size = st.selectbox("每页顯示", [10, 25, 50, 100], index=1)
@@ -209,7 +209,7 @@ def render_activity_list(activities: List[Dict[str, Any]]):
             "角色": activity.get('user_role', 'unknown'),
             "活動類型": activity.get('action_type', 'unknown'),
             "活動名稱": activity.get('action_name', 'unknown'),
-            "成功": "✅" if activity.get('success', True) else "❌",
+            "成功": "是" if activity.get('success', True) else "否",
             "耗時(ms)": activity.get('duration_ms', ''),
             "詳情": json.dumps(activity.get('details', {}), ensure_ascii=False)[:100] + "..." if activity.get('details') else ""
         })
@@ -220,14 +220,14 @@ def render_activity_list(activities: List[Dict[str, Any]]):
         
         # 顯示分页信息
         if total_pages > 1:
-            st.info(f"📄 第 {page + 1} 页，共 {total_pages} 页 | 顯示 {start_idx + 1}-{end_idx} 條，共 {len(activities)} 條記錄")
+            st.info(f"第 {page + 1} 页，共 {total_pages} 页 | 顯示 {start_idx + 1}-{end_idx} 條，共 {len(activities)} 條記錄")
     else:
-        st.info("📭 當前页沒有數據")
+        st.info("當前页沒有數據")
 
 def render_user_analysis(activities: List[Dict[str, Any]]):
     """渲染用戶分析"""
     
-    st.subheader("👥 用戶行為分析")
+    st.subheader("用戶行為分析")
     
     # 用戶選擇
     usernames = sorted(set(a['username'] for a in activities))
@@ -239,12 +239,12 @@ def render_user_analysis(activities: List[Dict[str, Any]]):
         col1, col2 = st.columns(2)
         
         with col1:
-            st.metric("📊 總活動數", len(user_activities))
-            
+            st.metric("總活動數", len(user_activities))
+
             # 成功率
             successful = sum(1 for a in user_activities if a.get('success', True))
             success_rate = (successful / len(user_activities) * 100) if user_activities else 0
-            st.metric("✅ 成功率", f"{success_rate:.1f}%")
+            st.metric("成功率", f"{success_rate:.1f}%")
         
         with col2:
             # 最常用功能
@@ -255,11 +255,11 @@ def render_user_analysis(activities: List[Dict[str, Any]]):
             
             if action_counts:
                 most_used = max(action_counts.items(), key=lambda x: x[1])
-                st.metric("🔥 最常用功能", most_used[0])
-                st.metric("📈 使用次數", most_used[1])
+                st.metric("最常用功能", most_used[0])
+                st.metric("使用次數", most_used[1])
         
         # 用戶活動時間線
-        st.subheader(f"📅 {selected_user} 的活動時間線")
+        st.subheader(f"{selected_user} 的活動時間線")
         
         timeline_data = []
         for activity in user_activities[-20:]:  # 顯示最近20條
@@ -267,7 +267,7 @@ def render_user_analysis(activities: List[Dict[str, Any]]):
             timeline_data.append({
                 "時間": timestamp.strftime('%m-%d %H:%M'),
                 "活動": f"{activity.get('action_type', 'unknown')} - {activity.get('action_name', 'unknown')}",
-                "狀態": "✅" if activity.get('success', True) else "❌"
+                "狀態": "成功" if activity.get('success', True) else "失敗"
             })
         
         if timeline_data:
@@ -277,7 +277,7 @@ def render_user_analysis(activities: List[Dict[str, Any]]):
 def render_export_options(activities: List[Dict[str, Any]]):
     """渲染導出選項"""
     
-    st.subheader("📤 導出數據")
+    st.subheader("導出數據")
     
     col1, col2 = st.columns(2)
     
@@ -287,7 +287,7 @@ def render_export_options(activities: List[Dict[str, Any]]):
     with col2:
         include_details = st.checkbox("包含詳細信息", value=True)
     
-    if st.button("📥 導出數據", type="primary"):
+    if st.button("導出數據", type="primary"):
         try:
             # 準備導出數據
             export_data = []
@@ -320,7 +320,7 @@ def render_export_options(activities: List[Dict[str, Any]]):
                 df = pd.DataFrame(export_data)
                 csv_data = df.to_csv(index=False, encoding='utf-8-sig')
                 st.download_button(
-                    label="📥 下載 CSV 文件",
+                    label="下載 CSV 文件",
                     data=csv_data,
                     file_name=f"user_activities_{timestamp}.csv",
                     mime="text/csv"
@@ -329,7 +329,7 @@ def render_export_options(activities: List[Dict[str, Any]]):
             elif export_format == "JSON":
                 json_data = json.dumps(export_data, ensure_ascii=False, indent=2)
                 st.download_button(
-                    label="📥 下載 JSON 文件",
+                    label="下載 JSON 文件",
                     data=json_data,
                     file_name=f"user_activities_{timestamp}.json",
                     mime="application/json"
@@ -340,16 +340,16 @@ def render_export_options(activities: List[Dict[str, Any]]):
                 # 註意：這裡需要安裝 openpyxl 庫
                 excel_buffer = df.to_excel(index=False, engine='openpyxl')
                 st.download_button(
-                    label="📥 下載 Excel 文件",
+                    label="下載 Excel 文件",
                     data=excel_buffer,
                     file_name=f"user_activities_{timestamp}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
             
-            st.success(f"✅ 成功準備 {len(activities)} 條記錄的導出文件")
+            st.success(f"成功準備 {len(activities)} 條記錄的導出文件")
             
         except Exception as e:
-            st.error(f"❌ 導出失敗: {e}")
+            st.error(f"導出失敗: {e}")
 
 def render_activity_summary_widget():
     """渲染活動摘要小部件（用於主頁面）"""
@@ -361,7 +361,7 @@ def render_activity_summary_widget():
     if not auth_manager.check_permission("admin"):
         return
     
-    st.subheader("📊 用戶活動概覽")
+    st.subheader("用戶活動概覽")
     
     # 獲取最近24小時的活動
     end_date = datetime.now()
@@ -377,23 +377,23 @@ def render_activity_summary_widget():
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.metric("📊 24小時活動", len(activities))
-        
+            st.metric("24小時活動", len(activities))
+
         with col2:
             unique_users = len(set(a['username'] for a in activities))
-            st.metric("👥 活躍用戶", unique_users)
-        
+            st.metric("活躍用戶", unique_users)
+
         with col3:
             successful = sum(1 for a in activities if a.get('success', True))
             success_rate = (successful / len(activities) * 100) if activities else 0
-            st.metric("✅ 成功率", f"{success_rate:.1f}%")
+            st.metric("成功率", f"{success_rate:.1f}%")
         
         # 顯示最近的几條活動
-        st.write("🕐 最近活動:")
+        st.write("最近活動:")
         recent_activities = activities[:5]
         for activity in recent_activities:
             timestamp = datetime.fromtimestamp(activity['timestamp'])
-            success_icon = "✅" if activity.get('success', True) else "❌"
+            success_icon = "[OK]" if activity.get('success', True) else "[FAIL]"
             st.write(f"{success_icon} {timestamp.strftime('%H:%M')} - {activity.get('username', 'unknown')}: {activity.get('action_name', 'unknown')}")
     else:
-        st.info("📭 最近24小時無活動記錄")
+        st.info("最近24小時無活動記錄")

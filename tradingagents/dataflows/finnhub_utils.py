@@ -32,20 +32,20 @@ def get_data_in_range(ticker, start_date, end_date, data_type, data_dir, period=
 
     try:
         if not os.path.exists(data_path):
-            logger.warning(f"⚠️ [DEBUG] 數據文件不存在: {data_path}")
-            logger.warning(f"⚠️ [DEBUG] 請確保已下載相關數據或檢查數據目錄配置")
+            logger.warning(f"[DEBUG] 數據文件不存在: {data_path}")
+            logger.warning(f"[DEBUG] 請確保已下載相關數據或檢查數據目錄配置")
             return {}
         
         with open(data_path, "r", encoding="utf-8") as f:
             data = json.load(f)
     except FileNotFoundError:
-        logger.error(f"❌ [ERROR] 文件未找到: {data_path}")
+        logger.error(f"[ERROR] 文件未找到: {data_path}")
         return {}
     except json.JSONDecodeError as e:
-        logger.error(f"❌ [ERROR] JSON解析錯誤: {e}")
+        logger.error(f"[ERROR] JSON解析錯誤: {e}")
         return {}
     except Exception as e:
-        logger.error(f"❌ [ERROR] 讀取數據文件時發生錯誤: {e}")
+        logger.error(f"[ERROR] 讀取數據文件時發生錯誤: {e}")
         return {}
 
     # filter keys (date, str in format YYYY-MM-DD) by the date range (str, str in format YYYY-MM-DD)

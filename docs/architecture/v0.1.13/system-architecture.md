@@ -301,8 +301,8 @@ class Toolkit:
 
     def get_stock_fundamentals_unified(self, ticker: str):
         """統一基本面分析工具，自動識別股票類型"""
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(ticker)
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(ticker)
 
         return self.dataflow.get_us_stock_fundamentals(ticker)
 

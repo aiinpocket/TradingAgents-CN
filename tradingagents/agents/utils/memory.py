@@ -41,12 +41,12 @@ class ChromaDBManager:
                         # Windows 11 或更新版本，使用優化配置
                         from .chromadb_win11_config import get_win11_chromadb_client
                         self._client = get_win11_chromadb_client()
-                        logger.info(f"📚 [ChromaDB] Windows 11優化配置初始化完成 (構建號: {platform.version()})")
+                        logger.info(f"[ChromaDB] Windows 11優化配置初始化完成 (構建號: {platform.version()})")
                     else:
                         # Windows 10 或更老版本，使用兼容配置
                         from .chromadb_win10_config import get_win10_chromadb_client
                         self._client = get_win10_chromadb_client()
-                        logger.info(f"📚 [ChromaDB] Windows 10兼容配置初始化完成")
+                        logger.info(f"[ChromaDB] Windows 10兼容配置初始化完成")
                 else:
                     # 非Windows系統，使用標準配置
                     settings = Settings(
@@ -55,11 +55,11 @@ class ChromaDBManager:
                         is_persistent=False
                     )
                     self._client = chromadb.Client(settings)
-                    logger.info(f"📚 [ChromaDB] {system}標準配置初始化完成")
+                    logger.info(f"[ChromaDB] {system}標準配置初始化完成")
                 
                 self._initialized = True
             except Exception as e:
-                logger.error(f"❌ [ChromaDB] 初始化失敗: {e}")
+                logger.error(f"[ChromaDB] 初始化失敗: {e}")
                 # 使用最簡單的配置作為備用
                 try:
                     settings = Settings(
@@ -68,36 +68,36 @@ class ChromaDBManager:
                         is_persistent=False
                     )
                     self._client = chromadb.Client(settings)
-                    logger.info(f"📚 [ChromaDB] 使用備用配置初始化完成")
+                    logger.info(f"[ChromaDB] 使用備用配置初始化完成")
                 except Exception as backup_error:
                     # 最後的備用方案
                     self._client = chromadb.Client()
-                    logger.warning(f"⚠️ [ChromaDB] 使用最簡配置初始化: {backup_error}")
+                    logger.warning(f"[ChromaDB] 使用最簡配置初始化: {backup_error}")
                 self._initialized = True
 
     def get_or_create_collection(self, name: str):
         """線程安全地獲取或創建集合"""
         with self._lock:
             if name in self._collections:
-                logger.info(f"📚 [ChromaDB] 使用緩存集合: {name}")
+                logger.info(f"[ChromaDB] 使用緩存集合: {name}")
                 return self._collections[name]
 
             try:
                 # 嘗試獲取現有集合
                 collection = self._client.get_collection(name=name)
-                logger.info(f"📚 [ChromaDB] 獲取現有集合: {name}")
+                logger.info(f"[ChromaDB] 獲取現有集合: {name}")
             except Exception:
                 try:
                     # 創建新集合
                     collection = self._client.create_collection(name=name)
-                    logger.info(f"📚 [ChromaDB] 創建新集合: {name}")
+                    logger.info(f"[ChromaDB] 創建新集合: {name}")
                 except Exception as e:
                     # 可能是並發創建，再次嘗試獲取
                     try:
                         collection = self._client.get_collection(name=name)
-                        logger.info(f"📚 [ChromaDB] 並發創建後獲取集合: {name}")
+                        logger.info(f"[ChromaDB] 並發創建後獲取集合: {name}")
                     except Exception as final_error:
-                        logger.error(f"❌ [ChromaDB] 集合操作失敗: {name}, 錯誤: {final_error}")
+                        logger.error(f"[ChromaDB] 集合操作失敗: {name}, 錯誤: {final_error}")
                         raise final_error
 
             # 緩存集合
@@ -133,7 +133,7 @@ class FinancialSituationMemory:
                 )
             else:
                 self.client = "DISABLED"
-                logger.warning(f"⚠️ 未找到OPENAI_API_KEY，記憶功能已禁用")
+                logger.warning(f"未找到OPENAI_API_KEY，記憶功能已禁用")
 
         # 使用單例ChromaDB管理器
         self.chroma_manager = ChromaDBManager()
@@ -154,7 +154,7 @@ class FinancialSituationMemory:
                 else:
                     break
             if len(truncated) > max_length // 2:  # 至少保留一半內容
-                logger.info(f"📝 智能截斷：在句子邊界截斷，保留{len(truncated)}/{len(text)}字符")
+                logger.info(f"智能截斷：在句子邊界截斷，保留{len(truncated)}/{len(text)}字符")
                 return truncated, True
         
         # 嘗試在段落邊界截斷
@@ -167,14 +167,14 @@ class FinancialSituationMemory:
                 else:
                     break
             if len(truncated) > max_length // 2:
-                logger.info(f"📝 智能截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字符")
+                logger.info(f"智能截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字符")
                 return truncated, True
         
         # 最後選擇：保留前半部分和後半部分的關鍵信息
         front_part = text[:max_length//2]
         back_part = text[-(max_length//2-100):]  # 留100字符給連接符
         truncated = front_part + "\n...[內容截斷]...\n" + back_part
-        logger.warning(f"⚠️ 強制截斷：保留首尾關鍵信息，{len(text)}字符截斷為{len(truncated)}字符")
+        logger.warning(f"強制截斷：保留首尾關鍵信息，{len(text)}字符截斷為{len(truncated)}字符")
         return truncated, True
 
     def get_embedding(self, text):
@@ -183,22 +183,22 @@ class FinancialSituationMemory:
         # 檢查記憶功能是否被禁用
         if self.client == "DISABLED":
             # 內存功能已禁用，返回空向量
-            logger.debug(f"⚠️ 記憶功能已禁用，返回空向量")
+            logger.debug(f"記憶功能已禁用，返回空向量")
             return [0.0] * 1024  # 返回1024維的零向量
 
         # 驗證輸入文本
         if not text or not isinstance(text, str):
-            logger.warning(f"⚠️ 輸入文本為空或無效，返回空向量")
+            logger.warning(f"輸入文本為空或無效，返回空向量")
             return [0.0] * 1024
 
         text_length = len(text)
         if text_length == 0:
-            logger.warning(f"⚠️ 輸入文本長度為0，返回空向量")
+            logger.warning(f"輸入文本長度為0，返回空向量")
             return [0.0] * 1024
         
         # 檢查是否啟用長度限制
         if self.enable_embedding_length_check and text_length > self.max_embedding_length:
-            logger.warning(f"⚠️ 文本過長({text_length:,}字符 > {self.max_embedding_length:,}字符)，跳過向量化")
+            logger.warning(f"文本過長({text_length:,}字符 > {self.max_embedding_length:,}字符)，跳過向量化")
             # 儲存跳過信息
             self._last_text_info = {
                 'original_length': text_length,
@@ -213,7 +213,7 @@ class FinancialSituationMemory:
         
         # 記錄文本信息（不進行任何截斷）
         if text_length > 8192:
-            logger.info(f"📝 處理長文本: {text_length}字符，提供商: {self.llm_provider}")
+            logger.info(f"處理長文本: {text_length}字符，提供商: {self.llm_provider}")
         
         # 儲存文本處理信息
         self._last_text_info = {
@@ -228,11 +228,11 @@ class FinancialSituationMemory:
         if True:
             # 使用OpenAI兼容的嵌入模型
             if self.client is None:
-                logger.warning(f"⚠️ 嵌入客戶端未初始化，返回空向量")
+                logger.warning(f"嵌入客戶端未初始化，返回空向量")
                 return [0.0] * 1024  # 返回空向量
             elif self.client == "DISABLED":
                 # 內存功能已禁用，返回空向量
-                logger.debug(f"⚠️ 內存功能已禁用，返回空向量")
+                logger.debug(f"內存功能已禁用，返回空向量")
                 return [0.0] * 1024  # 返回1024維的零向量
 
             # 嘗試調用OpenAI兼容的embedding API
@@ -242,7 +242,7 @@ class FinancialSituationMemory:
                     input=text
                 )
                 embedding = response.data[0].embedding
-                logger.debug(f"✅ {self.llm_provider} embedding成功，維度: {len(embedding)}")
+                logger.debug(f"{self.llm_provider} embedding成功，維度: {len(embedding)}")
                 return embedding
 
             except Exception as e:
@@ -258,22 +258,22 @@ class FinancialSituationMemory:
                 
                 if is_length_error:
                     # 長度限制錯誤：直接降級，不截斷重試
-                    logger.warning(f"⚠️ {self.llm_provider}長度限制: {str(e)}")
-                    logger.info(f"💡 為保證分析準確性，不截斷文本，記憶功能降級")
+                    logger.warning(f"{self.llm_provider}長度限制: {str(e)}")
+                    logger.info(f"為保證分析準確性，不截斷文本，記憶功能降級")
                 else:
                     # 其他類型的錯誤
                     if 'attributeerror' in error_str:
-                        logger.error(f"❌ {self.llm_provider} API調用錯誤: {str(e)}")
+                        logger.error(f"{self.llm_provider} API調用錯誤: {str(e)}")
                     elif 'connectionerror' in error_str or 'connection' in error_str:
-                        logger.error(f"❌ {self.llm_provider}網絡連接錯誤: {str(e)}")
+                        logger.error(f"{self.llm_provider}網絡連接錯誤: {str(e)}")
                     elif 'timeout' in error_str:
-                        logger.error(f"❌ {self.llm_provider}請求超時: {str(e)}")
+                        logger.error(f"{self.llm_provider}請求超時: {str(e)}")
                     elif 'keyerror' in error_str:
-                        logger.error(f"❌ {self.llm_provider}響應格式錯誤: {str(e)}")
+                        logger.error(f"{self.llm_provider}響應格式錯誤: {str(e)}")
                     else:
-                        logger.error(f"❌ {self.llm_provider} embedding異常: {str(e)}")
+                        logger.error(f"{self.llm_provider} embedding異常: {str(e)}")
                 
-                logger.warning(f"⚠️ 記憶功能降級，返回空向量")
+                logger.warning(f"記憶功能降級，返回空向量")
                 return [0.0] * 1024
 
     def get_embedding_config_status(self):
@@ -321,13 +321,13 @@ class FinancialSituationMemory:
         
         # 檢查是否為空向量（記憶功能被禁用或出錯）
         if all(x == 0.0 for x in query_embedding):
-            logger.debug(f"⚠️ 查詢embedding為空向量，返回空結果")
+            logger.debug(f"查詢embedding為空向量，返回空結果")
             return []
         
         # 檢查是否有足夠的數據進行查詢
         collection_count = self.situation_collection.count()
         if collection_count == 0:
-            logger.debug(f"📭 記憶庫為空，返回空結果")
+            logger.debug(f"記憶庫為空，返回空結果")
             return []
         
         # 調整查詢數量，不能超過集合中的文檔數量
@@ -361,16 +361,16 @@ class FinancialSituationMemory:
                 
                 # 記錄查詢信息
                 if hasattr(self, '_last_text_info') and self._last_text_info.get('was_truncated'):
-                    logger.info(f"🔍 截斷文本查詢完成，找到{len(memories)}個相關記憶")
-                    logger.debug(f"📊 原文長度: {self._last_text_info['original_length']}, "
+                    logger.info(f"截斷文本查詢完成，找到{len(memories)}個相關記憶")
+                    logger.debug(f"原文長度: {self._last_text_info['original_length']}, "
                                f"處理後長度: {self._last_text_info['processed_length']}")
                 else:
-                    logger.debug(f"🔍 記憶查詢完成，找到{len(memories)}個相關記憶")
+                    logger.debug(f"記憶查詢完成，找到{len(memories)}個相關記憶")
             
             return memories
             
         except Exception as e:
-            logger.error(f"❌ 記憶查詢失敗: {str(e)}")
+            logger.error(f"記憶查詢失敗: {str(e)}")
             return []
 
     def get_cache_info(self):

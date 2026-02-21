@@ -119,18 +119,18 @@ class SmartAnalysisProgressTracker:
                 # 分析師完成，推進到下一步
                 next_step = min(step + 1, len(self.analysis_steps) - 1)
                 self.current_step = next_step
-                logger.info(f"📊 [進度更新] 分析師完成，推進到步驟 {self.current_step + 1}/{len(self.analysis_steps)}")
+                logger.info(f"[進度更新] 分析師完成，推進到步驟 {self.current_step + 1}/{len(self.analysis_steps)}")
             # 防止步驟倒退：只有當檢測到的步驟大於等於當前步驟時才更新
             elif step >= self.current_step:
                 self.current_step = step
-                logger.debug(f"📊 [進度更新] 步驟推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
+                logger.debug(f"[進度更新] 步驟推進到 {self.current_step + 1}/{len(self.analysis_steps)}")
             else:
-                logger.debug(f"📊 [進度更新] 忽略倒退步驟：檢測到步驟{step + 1}，當前步驟{self.current_step + 1}")
+                logger.debug(f"[進度更新] 忽略倒退步驟：檢測到步驟{step + 1}，當前步驟{self.current_step + 1}")
 
         # 如果是完成訊息，確保進度為100%
-        if "分析完成" in message or "分析成功" in message or "✅ 分析完成" in message:
+        if "分析完成" in message or "分析成功" in message:
             self.current_step = len(self.analysis_steps) - 1
-            logger.info(f"📊 [進度更新] 分析完成，設置為最終步驟 {self.current_step + 1}/{len(self.analysis_steps)}")
+            logger.info(f"[進度更新] 分析完成，設置為最終步驟 {self.current_step + 1}/{len(self.analysis_steps)}")
 
         # 調用回調函數
         if self.callback:
@@ -170,7 +170,7 @@ class SmartAnalysisProgressTracker:
         message_lower = message.lower()
 
         # 開始分析階段 - 只匹配最初的開始訊息
-        if "🚀 開始股票分析" in message:
+        if "開始股票分析" in message:
             return 0
         # 數據驗證階段
         elif "驗證" in message or "預獲取" in message or "數據準備" in message:
@@ -287,7 +287,7 @@ class SmartStreamlitProgressDisplay:
     def setup_display(self):
         """設置顯示組件"""
         with self.container:
-            st.markdown("### 📊 分析進度")
+            st.markdown("### 分析進度")
             self.progress_bar = st.progress(0)
             self.status_text = st.empty()
             self.step_info = st.empty()
@@ -299,7 +299,7 @@ class SmartStreamlitProgressDisplay:
         self.progress_bar.progress(progress)
 
         # 更新狀態文本
-        self.status_text.markdown(f"**當前狀態:** 📋 {message}")
+        self.status_text.markdown(f"**當前狀態:** {message}")
 
         # 更新步驟信息
         step_text = f"**進度:** 第 {current_step + 1} 步，共 {total_steps} 步 ({progress:.1%})"

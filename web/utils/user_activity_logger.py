@@ -55,8 +55,8 @@ class UserActivityLogger:
             "system": "系統操作"
         }
         
-        logger.info(f"✅ 用戶活動記錄器初始化完成")
-        logger.info(f"📁 活動記錄目錄: {self.activity_dir}")
+        logger.info(f"用戶活動記錄器初始化完成")
+        logger.info(f"活動記錄目錄: {self.activity_dir}")
     
     def _get_activity_file_path(self, date: str = None) -> Path:
         """獲取活動記錄文件路徑"""
@@ -138,7 +138,7 @@ class UserActivityLogger:
             self._write_activity(activity)
             
         except Exception as e:
-            logger.error(f"❌ 記錄用戶活動失敗: {e}")
+            logger.error(f"記錄用戶活動失敗: {e}")
     
     def _write_activity(self, activity: UserActivity) -> None:
         """寫入活動記錄到文件"""
@@ -155,7 +155,7 @@ class UserActivityLogger:
                     f.write(json.dumps(activity_dict, ensure_ascii=False) + '\n')
                 
             except Exception as e:
-                logger.error(f"❌ 寫入活動記錄失敗: {e}")
+                logger.error(f"寫入活動記錄失敗: {e}")
     
     def log_login(self, username: str, success: bool, error_message: str = None) -> None:
         """記錄登錄活動"""
@@ -286,7 +286,7 @@ class UserActivityLogger:
             return activities[:limit]
             
         except Exception as e:
-            logger.error(f"❌ 獲取用戶活動記錄失敗: {e}")
+            logger.error(f"獲取用戶活動記錄失敗: {e}")
             return []
     
     def _read_activities_from_file(self, file_path: Path, username: str = None,
@@ -317,7 +317,7 @@ class UserActivityLogger:
                         activities.append(activity)
                         
         except Exception as e:
-            logger.error(f"❌ 讀取活動文件失敗 {file_path}: {e}")
+            logger.error(f"讀取活動文件失敗 {file_path}: {e}")
         
         return activities
     
@@ -399,14 +399,14 @@ class UserActivityLogger:
                     if file_date < cutoff_date:
                         activity_file.unlink()
                         deleted_count += 1
-                        logger.info(f"🗑️ 刪除舊活動記錄: {activity_file.name}")
+                        logger.info(f"刪除舊活動記錄: {activity_file.name}")
                         
                 except ValueError:
                     # 文件名格式不正確，跳過
                     continue
                     
         except Exception as e:
-            logger.error(f"❌ 清理舊活動記錄失敗: {e}")
+            logger.error(f"清理舊活動記錄失敗: {e}")
         
         return deleted_count
 

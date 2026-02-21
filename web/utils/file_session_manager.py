@@ -122,7 +122,7 @@ class FileSessionManager:
             return True
             
         except Exception as e:
-            st.warning(f"⚠️ 保存會話狀態失敗: {e}")
+            st.warning(f"保存會話狀態失敗: {e}")
             return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
@@ -149,7 +149,7 @@ class FileSessionManager:
             return session_data
             
         except Exception as e:
-            st.warning(f"⚠️ 加載會話狀態失敗: {e}")
+            st.warning(f"加載會話狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -169,7 +169,7 @@ class FileSessionManager:
                     del st.session_state[key]
             
         except Exception as e:
-            st.warning(f"⚠️ 清除會話狀態失敗: {e}")
+            st.warning(f"清除會話狀態失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取調試信息"""
@@ -245,7 +245,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 獲取持久化分析ID失敗: {e}")
+        st.warning(f"獲取持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running",
@@ -267,4 +267,4 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         file_session_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type, form_config)
         
     except Exception as e:
-        st.warning(f"⚠️ 設置持久化分析ID失敗: {e}")
+        st.warning(f"設置持久化分析ID失敗: {e}")

@@ -21,14 +21,14 @@ class ThreadTracker:
         """註冊分析線程"""
         with self._lock:
             self._threads[analysis_id] = thread
-            logger.info(f"📊 [線程跟蹤] 註冊分析線程: {analysis_id}")
+            logger.info(f"[線程跟蹤] 註冊分析線程: {analysis_id}")
     
     def unregister_thread(self, analysis_id: str):
         """註銷分析線程"""
         with self._lock:
             if analysis_id in self._threads:
                 del self._threads[analysis_id]
-                logger.info(f"📊 [線程跟蹤] 註銷分析線程: {analysis_id}")
+                logger.info(f"[線程跟蹤] 註銷分析線程: {analysis_id}")
     
     def is_thread_alive(self, analysis_id: str) -> bool:
         """檢查分析線程是否存活"""
@@ -41,7 +41,7 @@ class ThreadTracker:
             if not is_alive:
                 # 線程已死亡，自動清理
                 del self._threads[analysis_id]
-                logger.info(f"📊 [線程跟蹤] 線程已死亡，自動清理: {analysis_id}")
+                logger.info(f"[線程跟蹤] 線程已死亡，自動清理: {analysis_id}")
             
             return is_alive
     
@@ -60,7 +60,7 @@ class ThreadTracker:
             # 清理死亡線程
             for analysis_id in dead_threads:
                 del self._threads[analysis_id]
-                logger.info(f"📊 [線程跟蹤] 清理死亡線程: {analysis_id}")
+                logger.info(f"[線程跟蹤] 清理死亡線程: {analysis_id}")
             
             return alive_threads
     
@@ -148,5 +148,5 @@ def check_analysis_status(analysis_id: str) -> str:
         else:
             return 'not_found'
     except Exception as e:
-        logger.error(f"📊 [狀態檢查] 檢查進度數據失敗: {e}")
+        logger.error(f"[狀態檢查] 檢查進度數據失敗: {e}")
         return 'not_found'

@@ -28,7 +28,7 @@ class OptimizedUSDataProvider:
         self.last_api_call = 0
         self.min_api_interval = 1.0  # 最小API調用間隔（秒）
         
-        logger.info(f"📊 優化美股數據提供器初始化完成")
+        logger.info(f"優化美股數據提供器初始化完成")
     
     def _wait_for_rate_limit(self):
         """等待API限制"""
@@ -37,7 +37,7 @@ class OptimizedUSDataProvider:
         
         if time_since_last_call < self.min_api_interval:
             wait_time = self.min_api_interval - time_since_last_call
-            logger.info(f"⏳ API限制等待 {wait_time:.1f}s...")
+            logger.info(f"API限制等待 {wait_time:.1f}s...")
             time.sleep(wait_time)
         
         self.last_api_call = time.time()
@@ -56,7 +56,7 @@ class OptimizedUSDataProvider:
         Returns:
             格式化的股票數據字符串
         """
-        logger.info(f"📈 獲取美股數據: {symbol} ({start_date} 到 {end_date})")
+        logger.info(f"獲取美股數據: {symbol} ({start_date} 到 {end_date})")
         
         # 檢查緩存（除非強制刷新）
         if not force_refresh:
@@ -80,7 +80,7 @@ class OptimizedUSDataProvider:
             if cache_key:
                 cached_data = self.cache.load_stock_data(cache_key)
                 if cached_data:
-                    logger.info(f"⚡ 從緩存加載美股數據: {symbol}")
+                    logger.info(f"從緩存加載美股數據: {symbol}")
                     return cached_data
         
         # 緩存未命中，從API獲取 - 優先使用FINNHUB
@@ -89,19 +89,19 @@ class OptimizedUSDataProvider:
 
         # 嘗試FINNHUB API（優先）
         try:
-            logger.info(f"🌐 從FINNHUB API獲取數據: {symbol}")
+            logger.info(f"從FINNHUB API獲取數據: {symbol}")
             self._wait_for_rate_limit()
 
             formatted_data = self._get_data_from_finnhub(symbol, start_date, end_date)
-            if formatted_data and "❌" not in formatted_data:
+            if formatted_data and "錯誤信息" not in formatted_data:
                 data_source = "finnhub"
-                logger.info(f"✅ FINNHUB數據獲取成功: {symbol}")
+                logger.info(f"FINNHUB數據獲取成功: {symbol}")
             else:
-                logger.error(f"⚠️ FINNHUB數據獲取失敗，嘗試備用方案")
+                logger.error(f"FINNHUB數據獲取失敗，嘗試備用方案")
                 formatted_data = None
 
         except Exception as e:
-            logger.error(f"❌ FINNHUB API調用失敗: {e}")
+            logger.error(f"FINNHUB API調用失敗: {e}")
             formatted_data = None
 
         # 備用方案：使用 Yahoo Finance 獲取數據
@@ -128,7 +128,7 @@ class OptimizedUSDataProvider:
         # 如果所有API都失敗，生成備用數據
         if not formatted_data:
             error_msg = "所有美股數據源都不可用"
-            logger.error(f"❌ {error_msg}")
+            logger.error(f"{error_msg}")
             return self._generate_fallback_data(symbol, start_date, end_date, error_msg)
 
         # 保存到緩存
@@ -176,25 +176,25 @@ class OptimizedUSDataProvider:
         # 格式化輸出
         result = f"""# {symbol} 美股數據分析
 
-## 📊 基本信息
+## 基本信息
 - 股票代碼: {symbol}
 - 數據期間: {start_date} 至 {end_date}
 - 數據條數: {len(data)}條
 - 最新價格: ${latest_price:.2f}
 - 期間漲跌: ${price_change:+.2f} ({price_change_pct:+.2f}%)
 
-## 📈 價格統計
+## 價格統計
 - 期間最高: ${data['High'].max():.2f}
 - 期間最低: ${data['Low'].min():.2f}
 - 平均成交量: {data['Volume'].mean():,.0f}
 
-## 🔍 技術指標
+## 技術指標
 - MA5: ${data['MA5'].iloc[-1]:.2f}
 - MA10: ${data['MA10'].iloc[-1]:.2f}
 - MA20: ${data['MA20'].iloc[-1]:.2f}
 - RSI: {rsi.iloc[-1]:.2f}
 
-## 📋 最近5日數據
+## 最近5日數據
 {data.tail().to_string()}
 
 數據來源: Yahoo Finance API
@@ -220,7 +220,7 @@ class OptimizedUSDataProvider:
                         cache_key = metadata_file.stem.replace('_meta', '')
                         cached_data = self.cache.load_stock_data(cache_key)
                         if cached_data:
-                            return cached_data + "\n\n⚠️ 註意: 使用的是過期緩存數據"
+                            return cached_data + "\n\n註意: 使用的是過期緩存數據"
                 except Exception:
                     continue
         except Exception:
@@ -259,7 +259,7 @@ class OptimizedUSDataProvider:
 
             formatted_data = f"""# {symbol.upper()} 美股數據分析
 
-## 📊 實時行情
+## 實時行情
 - 股票名稱: {company_name}
 - 當前價格: ${current_price:.2f}
 - 漲跌額: ${change:+.2f}
@@ -270,7 +270,7 @@ class OptimizedUSDataProvider:
 - 前收盤: ${quote.get('pc', 0):.2f}
 - 更新時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## 📈 數據概覽
+## 數據概覽
 - 數據期間: {start_date} 至 {end_date}
 - 數據來源: FINNHUB API (實時數據)
 - 當前價位相對位置: {((current_price - quote.get('l', current_price)) / max(quote.get('h', current_price) - quote.get('l', current_price), 0.01) * 100):.1f}%
@@ -282,23 +282,23 @@ class OptimizedUSDataProvider:
             return formatted_data
 
         except Exception as e:
-            logger.error(f"❌ FINNHUB數據獲取失敗: {e}")
+            logger.error(f"FINNHUB數據獲取失敗: {e}")
             return None
 
     def _generate_fallback_data(self, symbol: str, start_date: str, end_date: str, error_msg: str) -> str:
         """生成備用數據"""
         return f"""# {symbol} 美股數據獲取失敗
 
-## ❌ 錯誤信息
+## 錯誤信息
 {error_msg}
 
-## 📊 模擬數據（僅供演示）
+## 模擬數據（僅供演示）
 - 股票代碼: {symbol}
 - 數據期間: {start_date} 至 {end_date}
 - 最新價格: ${random.uniform(100, 300):.2f}
 - 模擬漲跌: {random.uniform(-5, 5):+.2f}%
 
-## ⚠️ 重要提示
+## 重要提示
 由於API限制或網絡問題，無法獲取實時數據。
 建議稍後重試或檢查網絡連接。
 

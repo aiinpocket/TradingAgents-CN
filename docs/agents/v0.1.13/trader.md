@@ -64,8 +64,8 @@ def create_trader(llm):
         investment_plan = state.get("investment_plan", "")
         
         # 獲取股票市場資訊
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(company_name)
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(company_name)
         
         # 確定股票類型和貨幣資訊
         if market_info.get("is_us"):
@@ -156,57 +156,32 @@ info_weights = {
 
 ## 股票類型支持
 
-### 多市場交易能力
+### 美股交易能力
 
-交易員支持全球主要股票市場的交易決策：
+交易員專注於美國股票市場的交易決策：
 
 ```python
 # 市場資訊獲取和處理
-from tradingagents.utils.stock_utils import StockUtils
-market_info = StockUtils.get_market_info(company_name)
+from tradingagents.utils.stock_utils import get_stock_market_info
+market_info = get_stock_market_info(company_name)
 
-# 根據市場類型調整交易策略
-if market_info.get("is_china"):
-    # 美股市場交易特點
-    trading_hours = "09:30-15:00 (北京時間)"
-    price_limit = "±10% (ST股票±5%)"
-    settlement = "T+1"
-    currency = "美元(美元)"
-    
-elif market_info.get("is_hk"):
-    # 美股市場交易特點
-    trading_hours = "09:30-16:00 (香港時間)"
-    price_limit = "無漲跌停限制"
-    settlement = "T+2"
-    currency = "美元(美元)"
-    
-elif market_info.get("is_us"):
-    # 美股交易特點
+# 美股交易策略
+if market_info.get("is_us"):
     trading_hours = "09:30-16:00 (EST)"
     price_limit = "無漲跌停限制"
     settlement = "T+2"
     currency = "美元(USD)"
 ```
 
-### 本土化交易策略
+### 美股交易策略特色
 
-1. **美股市場特色**:
-   - 漲跌停板制度考慮
-   - T+1交易制度影響
-   - 政策敏感性分析
-   - 散戶投資者行為特點
-
-2. **美股市場特色**:
-   - 中港資金流動
-   - 匯率風險管理
-   - 國際投資者參與
-   - 估值差異套利
-
-3. **美股市場特色**:
-   - 盤前盤後交易
-   - 期權策略考慮
-   - 機構投資者主導
-   - 全球經濟影響
+**美股市場特色**:
+- 盤前盤後交易
+- 期權策略考慮
+- 機構投資者主導
+- 全球經濟影響
+- 美聯儲政策敏感性
+- 行業輪動分析
 
 ## 決策輸出規範
 
@@ -390,18 +365,12 @@ trader_config = {
 ```python
 market_config = {
     "trading_hours": {
-        "china": "09:30-15:00",
-        "hk": "09:30-16:00",
         "us": "09:30-16:00"
     },
     "settlement_days": {
-        "china": 1,
-        "hk": 2,
         "us": 2
     },
     "commission_rates": {
-        "china": 0.0003,
-        "hk": 0.0025,
         "us": 0.0005
     }
 }

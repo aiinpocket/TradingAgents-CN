@@ -45,7 +45,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
         # 調用父類初始化
         super().__init__(**kwargs)
 
-        logger.info(f"✅ Google AI OpenAI 兼容適配器初始化成功")
+        logger.info(f"Google AI OpenAI 兼容適配器初始化成功")
         logger.info(f"   模型: {kwargs.get('model', 'gemini-pro')}")
         logger.info(f"   溫度: {kwargs.get('temperature', 0.1)}")
         logger.info(f"   最大Token: {kwargs.get('max_tokens', 2000)}")
@@ -70,7 +70,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
             return result
             
         except Exception as e:
-            logger.error(f"❌ Google AI 生成失敗: {e}")
+            logger.error(f"Google AI 生成失敗: {e}")
             # 返回一個包含錯誤信息的結果，而不是拋出異常
             from langchain_core.outputs import ChatGeneration
             error_message = AIMessage(content=f"Google AI 調用失敗: {str(e)}")
@@ -91,7 +91,7 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
             optimized_content = self._enhance_news_content(content)
             message.content = optimized_content
             
-            logger.debug(f"🔧 [Google適配器] 優化新聞內容格式")
+            logger.debug(f"[Google適配器] 優化新聞內容格式")
             logger.debug(f"   原始長度: {len(content)} 字符")
             logger.debug(f"   優化後長度: {len(optimized_content)} 字符")
     
@@ -160,11 +160,11 @@ class ChatGoogleOpenAI(ChatGoogleGenerativeAI):
                         analysis_type=analysis_type
                     )
                     
-                    logger.debug(f"📊 [Google適配器] Token使用量: 輸入={input_tokens}, 輸出={output_tokens}")
+                    logger.debug(f"[Google適配器] Token使用量: 輸入={input_tokens}, 輸出={output_tokens}")
                     
         except Exception as track_error:
             # token 追蹤失敗不應該影響主要功能
-            logger.error(f"⚠️ Google適配器 Token 追蹤失敗: {track_error}")
+            logger.error(f"Google適配器 Token 追蹤失敗: {track_error}")
 
 
 # 支持的模型列表
@@ -254,7 +254,7 @@ def test_google_openai_connection(
     """測試 Google AI OpenAI 兼容接口連接"""
     
     try:
-        logger.info(f"🧪 測試 Google AI OpenAI 兼容接口連接")
+        logger.info(f"測試 Google AI OpenAI 兼容接口連接")
         logger.info(f"   模型: {model}")
         
         # 創建客戶端
@@ -268,15 +268,15 @@ def test_google_openai_connection(
         response = llm.invoke("你好，請簡單介紹一下你自己。")
         
         if response and hasattr(response, 'content') and response.content:
-            logger.info(f"✅ Google AI OpenAI 兼容接口連接成功")
+            logger.info(f"Google AI OpenAI 兼容接口連接成功")
             logger.info(f"   響應: {response.content[:100]}...")
             return True
         else:
-            logger.error(f"❌ Google AI OpenAI 兼容接口響應為空")
+            logger.error(f"Google AI OpenAI 兼容接口響應為空")
             return False
             
     except Exception as e:
-        logger.error(f"❌ Google AI OpenAI 兼容接口連接失敗: {e}")
+        logger.error(f"Google AI OpenAI 兼容接口連接失敗: {e}")
         return False
 
 
@@ -287,7 +287,7 @@ def test_google_openai_function_calling(
     """測試 Google AI OpenAI 兼容接口的 Function Calling"""
     
     try:
-        logger.info(f"🧪 測試 Google AI Function Calling")
+        logger.info(f"測試 Google AI Function Calling")
         logger.info(f"   模型: {model}")
         
         # 創建客戶端
@@ -316,7 +316,7 @@ def test_google_openai_function_calling(
         # 測試工具調用
         response = llm_with_tools.invoke("請使用test_news_tool查詢'蘋果公司'的新聞")
         
-        logger.info(f"✅ Google AI Function Calling 測試完成")
+        logger.info(f"Google AI Function Calling 測試完成")
         logger.info(f"   響應類型: {type(response)}")
         
         if hasattr(response, 'tool_calls') and response.tool_calls:
@@ -327,13 +327,13 @@ def test_google_openai_function_calling(
             return True  # 即使沒有工具調用也算成功，因為模型可能選擇不調用工具
             
     except Exception as e:
-        logger.error(f"❌ Google AI Function Calling 測試失敗: {e}")
+        logger.error(f"Google AI Function Calling 測試失敗: {e}")
         return False
 
 
 if __name__ == "__main__":
     """測試腳本"""
-    logger.info(f"🧪 Google AI OpenAI 兼容適配器測試")
+    logger.info(f"Google AI OpenAI 兼容適配器測試")
     logger.info(f"=" * 50)
     
     # 測試連接
@@ -344,8 +344,8 @@ if __name__ == "__main__":
         function_calling_ok = test_google_openai_function_calling()
         
         if function_calling_ok:
-            logger.info(f"\n🎉 所有測試通過！Google AI OpenAI 兼容適配器工作正常")
+            logger.info(f"\n所有測試通過！Google AI OpenAI 兼容適配器工作正常")
         else:
-            logger.error(f"\n⚠️ Function Calling 測試失敗")
+            logger.error(f"\nFunction Calling 測試失敗")
     else:
-        logger.error(f"\n❌ 連接測試失敗")
+        logger.error(f"\n連接測試失敗")

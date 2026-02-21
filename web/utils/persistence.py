@@ -34,9 +34,9 @@ class ModelPersistence:
                 'category': category,
                 'model': model
             })
-            logger.debug(f"💾 [Persistence] 配置已保存: {config}")
+            logger.debug(f"[Persistence] 配置已保存: {config}")
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] URL參數保存失敗: {e}")
+            logger.warning(f"[Persistence] URL參數保存失敗: {e}")
     
     def load_config(self):
         """從session state或URL加載配置"""
@@ -49,15 +49,15 @@ class ModelPersistence:
                     'category': query_params.get('category', 'openai'),
                     'model': query_params.get('model', '')
                 }
-                logger.debug(f"📥 [Persistence] 從URL加載配置: {config}")
+                logger.debug(f"[Persistence] 從URL加載配置: {config}")
                 return config
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] URL參數加載失敗: {e}")
+            logger.warning(f"[Persistence] URL參數加載失敗: {e}")
         
         # 然後嘗試從session state加載
         if self.storage_key in st.session_state:
             config = st.session_state[self.storage_key]
-            logger.debug(f"📥 [Persistence] 從Session State加載配置: {config}")
+            logger.debug(f"[Persistence] 從Session State加載配置: {config}")
             return config
         
         # 返回默認配置
@@ -66,7 +66,7 @@ class ModelPersistence:
             'category': 'openai',
             'model': ''
         }
-        logger.debug(f"📥 [Persistence] 使用默認配置: {default_config}")
+        logger.debug(f"[Persistence] 使用默認配置: {default_config}")
         return default_config
     
     def clear_config(self):
@@ -76,9 +76,9 @@ class ModelPersistence:
         
         try:
             st.query_params.clear()
-            logger.info("🗑️ [Persistence] 配置已清除")
+            logger.info("[Persistence] 配置已清除")
         except Exception as e:
-            logger.warning(f"⚠️ [Persistence] 清除失敗: {e}")
+            logger.warning(f"[Persistence] 清除失敗: {e}")
 
 # 全局實例
 persistence = ModelPersistence()

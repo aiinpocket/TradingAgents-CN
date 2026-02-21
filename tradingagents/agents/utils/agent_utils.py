@@ -15,7 +15,7 @@ from tradingagents.default_config import DEFAULT_CONFIG
 from langchain_core.messages import HumanMessage
 
 # 導入統一日誌系統和工具日誌裝飾器
-from tradingagents.utils.logging_init import get_logger
+from tradingagents.utils.logging_init import get_logger as _get_init_logger
 from tradingagents.utils.tool_logging import log_tool_call, log_analysis_step
 
 # 導入日誌模塊

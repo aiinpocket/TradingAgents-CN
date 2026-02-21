@@ -63,8 +63,8 @@ def create_fundamentals_analyst(llm, toolkit):
         ticker = state["company_of_interest"]
 
         # 獲取股票市場資訊
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(ticker)
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(ticker)
 
         # 獲取公司名稱
         company_name = _get_company_name_for_fundamentals(ticker, market_info)
@@ -164,8 +164,8 @@ tools = [toolkit.get_stock_fundamentals_unified]
 ### 市場識別機制
 
 ```python
-from tradingagents.utils.stock_utils import StockUtils
-market_info = StockUtils.get_market_info(ticker)
+from tradingagents.utils.stock_utils import get_stock_market_info
+market_info = get_stock_market_info(ticker)
 
 # 回傳資訊包括：
 # - is_us: 是否為美股

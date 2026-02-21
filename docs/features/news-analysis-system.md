@@ -236,7 +236,7 @@ def create_news_analyst(llm, toolkit):
         session_id = state.get("session_id", "未知會話")
         
         # 2. 股票類型識別
-        market_info = StockUtils.get_market_info(ticker)
+        market_info = get_stock_market_info(ticker)
         is_china = market_info['is_china']
         
         # 3. 工具選擇

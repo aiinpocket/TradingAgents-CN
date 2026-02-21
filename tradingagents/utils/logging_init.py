@@ -30,18 +30,18 @@ def init_logging(config_override: Optional[dict] = None) -> None:
     logger = get_logger('tradingagents.init')
     
     # 記錄初始化信息
-    logger.info("🚀 TradingAgents-CN 日誌系統初始化完成")
-    logger.info(f"📁 日誌目錄: {logger_manager.config.get('handlers', {}).get('file', {}).get('directory', 'N/A')}")
-    logger.info(f"📊 日誌級別: {logger_manager.config.get('level', 'INFO')}")
+    logger.info("TradingAgents-CN 日誌系統初始化完成")
+    logger.info(f"日誌目錄: {logger_manager.config.get('handlers', {}).get('file', {}).get('directory', 'N/A')}")
+    logger.info(f"日誌級別: {logger_manager.config.get('level', 'INFO')}")
     
     # Docker環境特殊處理
     if logger_manager.config.get('docker', {}).get('enabled', False):
-        logger.info("🐳 Docker環境檢測到，使用容器優化配置")
+        logger.info("Docker環境檢測到，使用容器優化配置")
     
     # 記錄環境信息
-    logger.debug(f"🔧 Python版本: {sys.version}")
-    logger.debug(f"📂 工作目錄: {os.getcwd()}")
-    logger.debug(f"🌍 環境變量: DOCKER_CONTAINER={os.getenv('DOCKER_CONTAINER', 'false')}")
+    logger.debug(f"Python版本: {sys.version}")
+    logger.debug(f"工作目錄: {os.getcwd()}")
+    logger.debug(f"環境變量: DOCKER_CONTAINER={os.getenv('DOCKER_CONTAINER', 'false')}")
 
 
 def get_session_logger(session_id: str, module_name: str = 'session') -> 'logging.Logger':
@@ -91,13 +91,13 @@ def log_startup_info():
     logger = get_logger('tradingagents.startup')
     
     logger.info("=" * 60)
-    logger.info("🎯 TradingAgents-CN 啟動")
+    logger.info("TradingAgents-CN 啟動")
     logger.info("=" * 60)
     
     # 系統信息
     import platform
-    logger.info(f"🖥️  系統: {platform.system()} {platform.release()}")
-    logger.info(f"🐍 Python: {platform.python_version()}")
+    logger.info(f"系統: {platform.system()} {platform.release()}")
+    logger.info(f"Python: {platform.python_version()}")
     
     # 環境信息
     env_info = {
@@ -107,7 +107,7 @@ def log_startup_info():
     }
     
     for key, value in env_info.items():
-        logger.info(f"🔧 {key}: {value}")
+        logger.info(f"{key}: {value}")
     
     logger.info("=" * 60)
 
@@ -117,7 +117,7 @@ def log_shutdown_info():
     logger = get_logger('tradingagents.shutdown')
     
     logger.info("=" * 60)
-    logger.info("🛑 TradingAgents-CN 關閉")
+    logger.info("TradingAgents-CN 關閉")
     logger.info("=" * 60)
 
 

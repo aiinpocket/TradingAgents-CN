@@ -49,7 +49,7 @@
 # 統一市場數據工具 (推薦)
 get_stock_market_data_unified(ticker, start_date, end_date)
 # 自動識別股票類型，調用最佳數據源
-# 美股: Yahoo + FinnHub | 港股: Yahoo Finance | 其他: Yahoo Finance
+# 美股: Yahoo + FinnHub
 
 # 備用工具
 get_YFin_data_online(symbol, start_date, end_date)           # Yahoo Finance
@@ -61,7 +61,7 @@ get_stockstats_indicators_report_online(symbol, period)     # 技術指標
 # 統一基本面工具 (推薦)
 get_stock_fundamentals_unified(ticker, start_date, end_date, curr_date)
 # 自動識別股票類型，調用最佳數據源
-# 美股: FinnHub + SimFin | 港股: Yahoo Finance | 其他: Yahoo Finance
+# 美股: FinnHub + SimFin
 
 # 補充工具
 get_finnhub_company_insider_sentiment(symbol)               # 內部人士情緒
@@ -93,8 +93,6 @@ get_reddit_stock_info(symbol, limit)                       # Reddit 討論
 | 股票類型 | 識別規則 | 市場數據源 | 基本面數據源 | 新聞數據源 |
 |---------|---------|-----------|-------------|-----------|
 | **美股** | 字母代碼 (AAPL) | Yahoo + FinnHub | FinnHub + SimFin | FinnHub + Google |
-| **港股** | .HK後綴 (0700.HK) | Yahoo Finance | Yahoo Finance | Google News |
-| **其他** | 其他格式 | Yahoo Finance | Yahoo Finance | Google News |
 
 ## ⚙️ 配置速查
 

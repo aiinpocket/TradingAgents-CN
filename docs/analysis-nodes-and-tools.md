@@ -82,8 +82,6 @@ graph TD
 
 **數據源映射**:
 - **美股**: Yahoo Finance + FinnHub
-- **港股**: Yahoo Finance
-- **其他市場**: Yahoo Finance 通用支援
 
 #### 📊 基本面分析師 (Fundamentals Analyst)
 **職責**: 財務分析、估值模型、基本面指標
@@ -110,8 +108,6 @@ graph TD
 
 **數據源映射**:
 - **美股**: FinnHub + SimFin 財務數據
-- **港股**: Yahoo Finance 基本面數據
-- **其他市場**: Yahoo Finance 通用支援
 
 #### 📰 新聞分析師 (News Analyst)
 **職責**: 新聞事件分析、宏觀經濟影響評估
@@ -279,8 +275,6 @@ get_stock_fundamentals_unified(ticker, start_date, end_date)
 | 股票類型 | 市場數據 | 基本面數據 | 新聞數據 |
 |---------|---------|-----------|---------|
 | **美股** | Yahoo + FinnHub | FinnHub + SimFin | FinnHub + Google |
-| **港股** | Yahoo Finance | Yahoo Finance | Google News |
-| **其他** | Yahoo Finance | Yahoo Finance | Google News |
 
 ### 🔄 工具調用機制
 
@@ -604,8 +598,6 @@ A:
 ### Q: 統一工具如何選擇數據源？
 A: 系統自動識別股票代碼格式：
 - 字母代碼 (AAPL, GOOGL等) → 美股 → Yahoo/FinnHub
-- .HK後綴 → 港股 → Yahoo Finance
-- 其他格式 → Yahoo Finance 通用支援
 
 ### Q: 分析時間過長怎麼辦？
 A:

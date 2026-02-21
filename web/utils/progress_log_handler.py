@@ -24,9 +24,9 @@ class ProgressLogHandler(logging.Handler):
             with cls._lock:
                 cls._trackers[analysis_id] = tracker
             # 在鎖外面打印，避免死鎖
-            print(f"📊 [進度集成] 註冊跟蹤器: {analysis_id}")
+            print(f"[進度集成] 註冊跟蹤器: {analysis_id}")
         except Exception as e:
-            print(f"❌ [進度集成] 註冊跟蹤器失敗: {e}")
+            print(f"[進度集成] 註冊跟蹤器失敗: {e}")
 
     @classmethod
     def unregister_tracker(cls, analysis_id: str):
@@ -39,9 +39,9 @@ class ProgressLogHandler(logging.Handler):
                     removed = True
             # 在鎖外面打印，避免死鎖
             if removed:
-                print(f"📊 [進度集成] 註銷跟蹤器: {analysis_id}")
+                print(f"[進度集成] 註銷跟蹤器: {analysis_id}")
         except Exception as e:
-            print(f"❌ [進度集成] 註銷跟蹤器失敗: {e}")
+            print(f"[進度集成] 註銷跟蹤器失敗: {e}")
     
     def emit(self, record):
         """處理日誌記錄"""
@@ -64,14 +64,14 @@ class ProgressLogHandler(logging.Handler):
                     if hasattr(tracker, 'progress_data') and tracker.progress_data.get('status') == 'running':
                         try:
                             tracker.update_progress(message)
-                            print(f"📊 [進度集成] 轉發訊息到 {analysis_id}: {message[:50]}...")
+                            print(f"[進度集成] 轉發訊息到 {analysis_id}: {message[:50]}...")
                             break  # 只更新第一個匹配的跟蹤器
                         except Exception as e:
-                            print(f"❌ [進度集成] 更新失敗: {e}")
+                            print(f"[進度集成] 更新失敗: {e}")
                         
         except Exception as e:
             # 不要讓日誌處理器的錯誤影響主程序
-            print(f"❌ [進度集成] 日誌處理錯誤: {e}")
+            print(f"[進度集成] 日誌處理錯誤: {e}")
     
     def _extract_stock_symbol(self, message: str) -> Optional[str]:
         """從訊息中提取股票代碼"""
@@ -99,7 +99,7 @@ def setup_progress_log_integration():
         tools_logger = logging.getLogger('tools')
         tools_logger.addHandler(_progress_handler)
         
-        print("✅ [進度集成] 日誌處理器已設置")
+        print("[進度集成] 日誌處理器已設置")
     
     return _progress_handler
 

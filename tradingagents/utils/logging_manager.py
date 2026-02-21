@@ -300,7 +300,7 @@ class TradingAgentsLogger:
     def log_analysis_start(self, logger: logging.Logger, stock_symbol: str, analysis_type: str, session_id: str):
         """記錄分析開始"""
         logger.info(
-            f"🚀 開始分析 - 股票: {stock_symbol}, 類型: {analysis_type}",
+            f"開始分析 - 股票: {stock_symbol}, 類型: {analysis_type}",
             extra={
                 'stock_symbol': stock_symbol,
                 'analysis_type': analysis_type,
@@ -314,7 +314,7 @@ class TradingAgentsLogger:
                             session_id: str, duration: float, cost: float = 0):
         """記錄分析完成"""
         logger.info(
-            f"✅ 分析完成 - 股票: {stock_symbol}, 耗時: {duration:.2f}s, 成本: ¥{cost:.4f}",
+            f"分析完成 - 股票: {stock_symbol}, 耗時: {duration:.2f}s, 成本: ¥{cost:.4f}",
             extra={
                 'stock_symbol': stock_symbol,
                 'analysis_type': analysis_type,
@@ -330,7 +330,7 @@ class TradingAgentsLogger:
                         session_id: str, **extra_data):
         """記錄模塊開始分析"""
         logger.info(
-            f"📊 [模塊開始] {module_name} - 股票: {stock_symbol}",
+            f"[模塊開始] {module_name} - 股票: {stock_symbol}",
             extra={
                 'module_name': module_name,
                 'stock_symbol': stock_symbol,
@@ -345,9 +345,9 @@ class TradingAgentsLogger:
                            session_id: str, duration: float, success: bool = True,
                            result_length: int = 0, **extra_data):
         """記錄模塊完成分析"""
-        status = "✅ 成功" if success else "❌ 失敗"
+        status = "成功" if success else "失敗"
         logger.info(
-            f"📊 [模塊完成] {module_name} - {status} - 股票: {stock_symbol}, 耗時: {duration:.2f}s",
+            f"[模塊完成] {module_name} - {status} - 股票: {stock_symbol}, 耗時: {duration:.2f}s",
             extra={
                 'module_name': module_name,
                 'stock_symbol': stock_symbol,
@@ -365,7 +365,7 @@ class TradingAgentsLogger:
                         session_id: str, duration: float, error: str, **extra_data):
         """記錄模塊分析錯誤"""
         logger.error(
-            f"❌ [模塊錯誤] {module_name} - 股票: {stock_symbol}, 耗時: {duration:.2f}s, 錯誤: {error}",
+            f"[模塊錯誤] {module_name} - 股票: {stock_symbol}, 耗時: {duration:.2f}s, 錯誤: {error}",
             extra={
                 'module_name': module_name,
                 'stock_symbol': stock_symbol,
@@ -383,7 +383,7 @@ class TradingAgentsLogger:
                        input_tokens: int, output_tokens: int, cost: float, session_id: str):
         """記錄Token使用"""
         logger.info(
-            f"📊 Token使用 - {provider}/{model}: 輸入={input_tokens}, 輸出={output_tokens}, 成本=¥{cost:.6f}",
+            f"Token使用 - {provider}/{model}: 輸入={input_tokens}, 輸出={output_tokens}, 成本=¥{cost:.6f}",
             extra={
                 'provider': provider,
                 'model': model,

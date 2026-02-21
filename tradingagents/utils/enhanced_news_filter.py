@@ -70,7 +70,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
                 ]
                 
                 self.company_embedding = self.sentence_model.encode(company_texts)
-                logger.info(f"[增強過濾器] ✅ 語義模型加載成功: {model_name}")
+                logger.info(f"[增強過濾器] 語義模型加載成功: {model_name}")
                 
             except ImportError:
                 logger.warning("[增強過濾器] sentence-transformers未安裝，跳過語義過濾")
@@ -96,7 +96,7 @@ class EnhancedNewsFilter(NewsRelevanceFilter):
                 self.tokenizer = AutoTokenizer.from_pretrained(model_name)
                 self.classification_model = AutoModelForSequenceClassification.from_pretrained(model_name)
                 
-                logger.info(f"[增強過濾器] ✅ 分類模型加載成功: {model_name}")
+                logger.info(f"[增強過濾器] 分類模型加載成功: {model_name}")
                 
             except ImportError:
                 logger.warning("[增強過濾器] transformers未安裝，跳過本地模型分類")

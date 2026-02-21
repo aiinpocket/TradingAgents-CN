@@ -29,18 +29,18 @@ except ImportError as e:
 def main():
     st.set_page_config(
         page_title="數據庫管理 - TradingAgents",
-        page_icon="🗄️",
+        page_icon="",
         layout="wide"
     )
     
     # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
-    st.title("🗄️ MongoDB + Redis 數據庫管理")
+    st.title("MongoDB + Redis 數據庫管理")
     st.markdown("---")
     
     if not DB_MANAGER_AVAILABLE:
-        st.error("❌ 數據庫管理器不可用")
+        st.error("數據庫管理器不可用")
         st.info("""
         請按以下步驟設置數據庫環境：
         
@@ -66,12 +66,12 @@ def main():
     
     # 側邊欄操作
     with st.sidebar:
-        st.header("🛠️ 數據庫操作")
+        st.header("數據庫操作")
         
         # 連接狀態
-        st.subheader("📡 連接狀態")
-        mongodb_status = "✅ 已連接" if db_manager.is_mongodb_available() else "❌ 未連接"
-        redis_status = "✅ 已連接" if db_manager.is_redis_available() else "❌ 未連接"
+        st.subheader("連接狀態")
+        mongodb_status = "已連接" if db_manager.is_mongodb_available() else "未連接"
+        redis_status = "已連接" if db_manager.is_redis_available() else "未連接"
         
         st.write(f"**MongoDB**: {mongodb_status}")
         st.write(f"**Redis**: {redis_status}")
@@ -79,13 +79,13 @@ def main():
         st.markdown("---")
         
         # 刷新按鈕
-        if st.button("🔄 刷新統計", type="primary"):
+        if st.button("刷新統計", type="primary"):
             st.rerun()
         
         st.markdown("---")
         
         # 清理操作
-        st.subheader("🧹 清理數據")
+        st.subheader("清理數據")
         
         max_age_days = st.slider(
             "清理多少天前的數據",
@@ -95,19 +95,19 @@ def main():
             help="刪除指定天數之前的緩存數據"
         )
         
-        if st.button("🗑️ 清理過期數據", type="secondary"):
+        if st.button("清理過期數據", type="secondary"):
             with st.spinner("正在清理過期數據..."):
                 # 使用database_manager的緩存清理功能
                 pattern = f"*:{max_age_days}d:*"  # 簡化的清理模式
                 cleared_count = db_manager.cache_clear_pattern(pattern)
-            st.success(f"✅ 已清理 {cleared_count} 條過期記錄")
+            st.success(f"已清理 {cleared_count} 條過期記錄")
             st.rerun()
     
     # 主要內容區域
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.subheader("📊 MongoDB 統計")
+        st.subheader("MongoDB 統計")
         
         try:
             stats = db_manager.get_cache_stats()
@@ -115,10 +115,10 @@ def main():
             if db_manager.is_mongodb_available():
                 # 獲取MongoDB集合統計
                 collections_info = {
-                    "stock_data": "📈 股票數據",
-                    "analysis_results": "📊 分析結果",
-                    "user_sessions": "👤 用戶會話",
-                    "configurations": "⚙️ 配置信息"
+                    "stock_data": "股票數據",
+                    "analysis_results": "分析結果",
+                    "user_sessions": "用戶會話",
+                    "configurations": "配置信息"
                 }
 
                 total_records = 0
@@ -148,7 +148,7 @@ def main():
             st.error(f"獲取MongoDB統計失敗: {e}")
     
     with col2:
-        st.subheader("⚡ Redis 統計")
+        st.subheader("Redis 統計")
         
         try:
             stats = db_manager.get_cache_stats()
@@ -162,11 +162,11 @@ def main():
                 
                 st.info("""
                 **Redis 緩存策略：**
-                
-                🔹 **股票數據**：6小時自動過期
-                🔹 **分析結果**：24小時自動過期  
-                🔹 **用戶會話**：1小時自動過期
-                
+
+                - **股票數據**：6小時自動過期
+                - **分析結果**：24小時自動過期
+                - **用戶會話**：1小時自動過期
+
                 Redis 主要用於熱點數據的快速訪問，
                 過期後會自動從 MongoDB 重新加載。
                 """)
@@ -179,7 +179,7 @@ def main():
     st.markdown("---")
     
     # 數據庫配置信息
-    st.subheader("⚙️ 數據庫配置")
+    st.subheader("數據庫配置")
     
     config_col1, config_col2 = st.columns([1, 1])
     
@@ -200,11 +200,11 @@ def main():
         if db_manager.is_mongodb_available():
             st.markdown("**集合結構：**")
             st.code("""
-    📁 tradingagents/
-    ├── 📊 stock_data        # 股票歷史數據
-    ├── 📈 analysis_results  # 分析結果
-    ├── 👤 user_sessions     # 用戶會話
-    └── ⚙️ configurations   # 系統配置
+    tradingagents/
+    ├── stock_data        # 股票歷史數據
+    ├── analysis_results  # 分析結果
+    ├── user_sessions     # 用戶會話
+    └── configurations    # 系統配置
                 """)
     
     with config_col2:
@@ -232,7 +232,7 @@ def main():
     st.markdown("---")
     
     # 性能對比
-    st.subheader("🚀 性能優勢")
+    st.subheader("性能優勢")
     
     perf_col1, perf_col2, perf_col3 = st.columns(3)
     
@@ -262,7 +262,7 @@ def main():
     
     # 架構說明
     st.markdown("---")
-    st.subheader("🏗️ 緩存架構")
+    st.subheader("緩存架構")
     
     st.info("""
     **三層緩存架構：**
@@ -289,7 +289,7 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666; font-size: 0.9em;'>
-        🗄️ 數據庫緩存管理系統 | TradingAgents v0.1.2 | 
+        數據庫緩存管理系統 | TradingAgents v0.1.2 |
         <a href='https://github.com/your-repo/TradingAgents' target='_blank'>GitHub</a>
     </div>
     """, unsafe_allow_html=True)

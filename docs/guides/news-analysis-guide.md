@@ -65,27 +65,24 @@ print(news_report)
 
 ### 3.2 使用統一新聞接口
 
-統一新聞接口能夠自動識別股票類型並選擇合適的新聞源：
+統一新聞接口能夠自動選擇合適的新聞源：
 
 ```python
 # 使用統一接口獲取新聞
-# A股示例
-cn_ticker = "000001"  # A股股票
-news_report = toolkit.get_stock_news_unified(cn_ticker, curr_date)
+# 美股示例
+ticker = "AAPL"  # 美股股票
+news_report = toolkit.get_stock_news_unified(ticker, curr_date)
 print(news_report)
 
-# 美股示例
-us_ticker = "AAPL"  # 美股股票
-us_news = toolkit.get_stock_news_unified(us_ticker, curr_date)
-print(us_news)
+# 更多美股範例
+tsla_news = toolkit.get_stock_news_unified("TSLA", curr_date)
+print(tsla_news)
 
-# 港股示例
-hk_ticker = "00700"  # 港股股票
-hk_news = toolkit.get_stock_news_unified(hk_ticker, curr_date)
-print(hk_news)
+nvda_news = toolkit.get_stock_news_unified("NVDA", curr_date)
+print(nvda_news)
 ```
 
-統一新聞接口會根據股票類型自動選擇合適的新聞源：
+統一新聞接口會自動選擇合適的新聞源：
 - **美股**：取得Finnhub新聞和Google News
 
 ## 4. 使用新聞分析師
@@ -144,7 +141,7 @@ aggregator = RealtimeNewsAggregator(
     finnhub_enabled=True,
     alpha_vantage_enabled=True,
     newsapi_enabled=False,  # 禁用NewsAPI
-    chinese_finance_enabled=True  # 啟用中文財經新聞
+    chinese_finance_enabled=False  # 中文財經新聞（本專案未使用）
 )
 
 # 獲取新聞
@@ -185,7 +182,7 @@ print(report)
 
 1. **優先使用實時新聞聚合器**：對於需要最新市場動態的場景，優先使用 `get_realtime_stock_news` 方法。
 
-2. **使用統一接口處理多市場**：當需要分析不同市場（A股、港股、美股）的股票時，使用 `get_stock_news_unified` 方法可以自動選擇合適的新聞源。
+2. **使用統一接口分析美股**：使用 `get_stock_news_unified` 方法可以自動選擇合適的新聞源。
 
 3. **結合全球宏觀新聞**：使用 `get_global_news_openai` 獲取全球宏觀經濟新聞，與股票特定新聞結合分析，獲得更全面的市場視角。
 

@@ -30,7 +30,7 @@ class SignalProcessor:
 
         # 驗證輸入參數
         if not full_signal or not isinstance(full_signal, str) or len(full_signal.strip()) == 0:
-            logger.error(f"❌ [SignalProcessor] 輸入信號為空或無效: {repr(full_signal)}")
+            logger.error(f" [SignalProcessor] 輸入信號為空或無效: {repr(full_signal)}")
             return {
                 'action': '持有',
                 'target_price': None,
@@ -42,7 +42,7 @@ class SignalProcessor:
         # 清理和驗證信號內容
         full_signal = full_signal.strip()
         if len(full_signal) == 0:
-            logger.error(f"❌ [SignalProcessor] 信號內容為空")
+            logger.error(f" [SignalProcessor] 信號內容為空")
             return {
                 'action': '持有',
                 'target_price': None,
@@ -58,7 +58,7 @@ class SignalProcessor:
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.info(f"🔍 [SignalProcessor] 處理信號: 股票={stock_symbol}, 市場={market_info['market_name']}, 貨幣={currency}",
+        logger.info(f"[SignalProcessor] 處理信號: 股票={stock_symbol}, 市場={market_info['market_name']}, 貨幣={currency}",
                    extra={'stock_symbol': stock_symbol, 'market': market_info['market_name'], 'currency': currency})
 
         messages = [
@@ -94,20 +94,20 @@ class SignalProcessor:
 
         # 驗證messages內容
         if not messages or len(messages) == 0:
-            logger.error(f"❌ [SignalProcessor] messages為空")
+            logger.error(f" [SignalProcessor] messages為空")
             return self._get_default_decision()
         
         # 驗證human訊息內容
         human_content = messages[1][1] if len(messages) > 1 else ""
         if not human_content or len(human_content.strip()) == 0:
-            logger.error(f"❌ [SignalProcessor] human訊息內容為空")
+            logger.error(f" [SignalProcessor] human訊息內容為空")
             return self._get_default_decision()
 
-        logger.debug(f"🔍 [SignalProcessor] 準備調用LLM，訊息數量: {len(messages)}, 信號長度: {len(full_signal)}")
+        logger.debug(f"[SignalProcessor] 準備調用LLM，訊息數量: {len(messages)}, 信號長度: {len(full_signal)}")
 
         try:
             response = self.quick_thinking_llm.invoke(messages).content
-            logger.debug(f"🔍 [SignalProcessor] LLM響應: {response[:200]}...")
+            logger.debug(f"[SignalProcessor] LLM響應: {response[:200]}...")
 
             # 嘗試解析JSON響應
             import json
@@ -117,7 +117,7 @@ class SignalProcessor:
             json_match = re.search(r'\{.*\}', response, re.DOTALL)
             if json_match:
                 json_text = json_match.group()
-                logger.debug(f"🔍 [SignalProcessor] 提取的JSON: {json_text}")
+                logger.debug(f"[SignalProcessor] 提取的JSON: {json_text}")
                 decision_data = json.loads(json_text)
 
                 # 驗證和標準化數據
@@ -132,7 +132,7 @@ class SignalProcessor:
                     }
                     action = action_map.get(action, '持有')
                     if action != decision_data.get('action', '持有'):
-                        logger.debug(f"🔍 [SignalProcessor] 投資建議映射: {decision_data.get('action')} -> {action}")
+                        logger.debug(f"[SignalProcessor] 投資建議映射: {decision_data.get('action')} -> {action}")
 
                 # 處理目標價格，確保正確提取
                 target_price = decision_data.get('target_price')
@@ -164,7 +164,7 @@ class SignalProcessor:
                         if price_match:
                             try:
                                 target_price = float(price_match.group(1))
-                                logger.debug(f"🔍 [SignalProcessor] 從文本中提取到目標價格: {target_price} (模式: {pattern})")
+                                logger.debug(f"[SignalProcessor] 從文本中提取到目標價格: {target_price} (模式: {pattern})")
                                 break
                             except (ValueError, IndexError):
                                 continue
@@ -173,10 +173,10 @@ class SignalProcessor:
                     if target_price is None or target_price == "null" or target_price == "":
                         target_price = self._smart_price_estimation(full_text, action)
                         if target_price:
-                            logger.debug(f"🔍 [SignalProcessor] 智能推算目標價格: {target_price}")
+                            logger.debug(f"[SignalProcessor] 智能推算目標價格: {target_price}")
                         else:
                             target_price = None
-                            logger.warning(f"🔍 [SignalProcessor] 未能提取到目標價格，設置為None")
+                            logger.warning(f"[SignalProcessor] 未能提取到目標價格，設置為None")
                 else:
                     # 確保價格是數值類型
                     try:
@@ -186,10 +186,10 @@ class SignalProcessor:
                             target_price = float(clean_price) if clean_price and clean_price.lower() not in ['none', 'null', ''] else None
                         elif isinstance(target_price, (int, float)):
                             target_price = float(target_price)
-                        logger.debug(f"🔍 [SignalProcessor] 處理後的目標價格: {target_price}")
+                        logger.debug(f"[SignalProcessor] 處理後的目標價格: {target_price}")
                     except (ValueError, TypeError):
                         target_price = None
-                        logger.warning(f"🔍 [SignalProcessor] 價格轉換失敗，設置為None")
+                        logger.warning(f"[SignalProcessor] 價格轉換失敗，設置為None")
 
                 result = {
                     'action': action,
@@ -198,7 +198,7 @@ class SignalProcessor:
                     'risk_score': float(decision_data.get('risk_score', 0.5)),
                     'reasoning': decision_data.get('reasoning', '基於綜合分析的投資建議')
                 }
-                logger.info(f"🔍 [SignalProcessor] 處理結果: {result}",
+                logger.info(f"[SignalProcessor] 處理結果: {result}",
                            extra={'action': result['action'], 'target_price': result['target_price'],
                                  'confidence': result['confidence'], 'stock_symbol': stock_symbol})
                 return result

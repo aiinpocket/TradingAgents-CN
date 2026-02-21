@@ -72,7 +72,7 @@ class TradingAgentsGraph:
             if not openrouter_api_key:
                 raise ValueError("使用OpenRouter需要設置OPENROUTER_API_KEY或OPENAI_API_KEY環境變量")
 
-            logger.info(f"🌐 [OpenRouter] 使用API密鑰: {openrouter_api_key[:20]}...")
+            logger.info(f"[OpenRouter] 使用API密鑰: {openrouter_api_key[:20]}...")
 
             self.deep_thinking_llm = ChatOpenAI(
                 model=self.config["deep_think_llm"],
@@ -92,7 +92,7 @@ class TradingAgentsGraph:
             self.quick_thinking_llm = ChatAnthropic(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
         elif self.config["llm_provider"].lower() == "google":
             # 使用 Google OpenAI 兼容適配器，解決工具調用格式不匹配問題
-            logger.info(f"🔧 使用Google AI OpenAI 兼容適配器 (解決工具調用問題)")
+            logger.info(f"使用Google AI OpenAI 兼容適配器 (解決工具調用問題)")
             google_api_key = os.getenv('GOOGLE_API_KEY')
             if not google_api_key:
                 raise ValueError("使用Google AI需要設置GOOGLE_API_KEY環境變量")
@@ -110,7 +110,7 @@ class TradingAgentsGraph:
                 max_tokens=2000
             )
             
-            logger.info(f"✅ [Google AI] 已啟用優化的工具調用和內容格式處理")
+            logger.info(f"[Google AI] 已啟用優化的工具調用和內容格式處理")
         elif self.config["llm_provider"].lower() == "custom_openai":
             # 自定義OpenAI端點配置
             from tradingagents.llm_adapters.openai_compatible_base import create_openai_compatible_llm
@@ -121,7 +121,7 @@ class TradingAgentsGraph:
             
             custom_base_url = self.config.get("custom_openai_base_url", "https://api.openai.com/v1")
             
-            logger.info(f"🔧 [自定義OpenAI] 使用端點: {custom_base_url}")
+            logger.info(f"[自定義OpenAI] 使用端點: {custom_base_url}")
             
             # 使用OpenAI兼容適配器創建LLM實例
             self.deep_thinking_llm = create_openai_compatible_llm(
@@ -139,7 +139,7 @@ class TradingAgentsGraph:
                 max_tokens=2000
             )
             
-            logger.info(f"✅ [自定義OpenAI] 已配置自定義端點: {custom_base_url}")
+            logger.info(f"[自定義OpenAI] 已配置自定義端點: {custom_base_url}")
         else:
             raise ValueError(f"Unsupported LLM provider: {self.config['llm_provider']}")
         
@@ -245,20 +245,20 @@ class TradingAgentsGraph:
         """Run the trading agents graph for a company on a specific date."""
 
         # 添加詳細的接收日誌
-        logger.debug(f"🔍 [GRAPH DEBUG] ===== TradingAgentsGraph.propagate 接收參數 =====")
-        logger.debug(f"🔍 [GRAPH DEBUG] 接收到的company_name: '{company_name}' (類型: {type(company_name)})")
-        logger.debug(f"🔍 [GRAPH DEBUG] 接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")
+        logger.debug(f"[GRAPH DEBUG] ===== TradingAgentsGraph.propagate 接收參數 =====")
+        logger.debug(f"[GRAPH DEBUG] 接收到的company_name: '{company_name}' (類型: {type(company_name)})")
+        logger.debug(f"[GRAPH DEBUG] 接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")
 
         self.ticker = company_name
-        logger.debug(f"🔍 [GRAPH DEBUG] 設置self.ticker: '{self.ticker}'")
+        logger.debug(f"[GRAPH DEBUG] 設置self.ticker: '{self.ticker}'")
 
         # Initialize state
-        logger.debug(f"🔍 [GRAPH DEBUG] 創建初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")
+        logger.debug(f"[GRAPH DEBUG] 創建初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")
         init_agent_state = self.propagator.create_initial_state(
             company_name, trade_date
         )
-        logger.debug(f"🔍 [GRAPH DEBUG] 初始狀態中的company_of_interest: '{init_agent_state.get('company_of_interest', 'NOT_FOUND')}'")
-        logger.debug(f"🔍 [GRAPH DEBUG] 初始狀態中的trade_date: '{init_agent_state.get('trade_date', 'NOT_FOUND')}'")
+        logger.debug(f"[GRAPH DEBUG] 初始狀態中的company_of_interest: '{init_agent_state.get('company_of_interest', 'NOT_FOUND')}'")
+        logger.debug(f"[GRAPH DEBUG] 初始狀態中的trade_date: '{init_agent_state.get('trade_date', 'NOT_FOUND')}'")
         args = self.propagator.get_graph_args()
 
         if self.debug:

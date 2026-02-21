@@ -62,8 +62,8 @@ def create_safe_debator(llm):
         trader_recommendation = state.get("trader_recommendation", "")
         
         # 獲取股票市場資訊
-        from tradingagents.utils.stock_utils import StockUtils
-        market_info = StockUtils.get_market_info(company_name)
+        from tradingagents.utils.stock_utils import get_stock_market_info
+        market_info = get_stock_market_info(company_name)
         
         # 確定股票類型和貨幣資訊
         if market_info.get("is_us"):

@@ -41,7 +41,7 @@ def setup_xvfb_display():
         try:
             result = subprocess.run(['pgrep', 'Xvfb'], capture_output=True, timeout=2)
             if result.returncode == 0:
-                logger.info(f"✅ Xvfb已在運行")
+                logger.info(f"Xvfb已在運行")
                 os.environ['DISPLAY'] = ':99'
                 return True
         except:
@@ -58,10 +58,10 @@ def setup_xvfb_display():
 
         # 設置DISPLAY環境變量
         os.environ['DISPLAY'] = ':99'
-        logger.info(f"✅ Docker虛擬顯示器設置成功")
+        logger.info(f"Docker虛擬顯示器設置成功")
         return True
     except Exception as e:
-        logger.error(f"⚠️ 虛擬顯示器設置失敗: {e}")
+        logger.error(f"虛擬顯示器設置失敗: {e}")
         # 即使Xvfb失敗，也嘗試繼續，某些情況下wkhtmltopdf可以無頭運行
         return False
 
@@ -127,14 +127,14 @@ def test_docker_pdf_generation() -> bool:
         # 檢查文件是否生成
         if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
             os.unlink(output_file)  # 清理測試文件
-            logger.info(f"✅ Docker PDF生成測試成功")
+            logger.info(f"Docker PDF生成測試成功")
             return True
         else:
-            logger.error(f"❌ Docker PDF生成測試失敗")
+            logger.error(f"Docker PDF生成測試失敗")
             return False
             
     except Exception as e:
-        logger.error(f"❌ Docker PDF測試失敗: {e}")
+        logger.error(f"Docker PDF測試失敗: {e}")
         return False
 
 def get_docker_pdf_extra_args():
@@ -221,20 +221,20 @@ def get_docker_status_info():
     return info
 
 if __name__ == "__main__":
-    logger.info(f"🐳 Docker PDF適配器測試")
+    logger.info(f"Docker PDF適配器測試")
     logger.info(f"=")
     
     status = get_docker_status_info()
     
     logger.info(f"Docker環境: {'是' if status['is_docker'] else '否'}")
-    logger.error(f"依賴檢查: {'✅' if status['dependencies_ok'] else '❌'} {status['dependency_message']}")
-    logger.error(f"PDF測試: {'✅' if status['pdf_test_ok'] else '❌'}")
+    logger.error(f"依賴檢查: {'通過' if status['dependencies_ok'] else '失敗'} {status['dependency_message']}")
+    logger.error(f"PDF測試: {'通過' if status['pdf_test_ok'] else '失敗'}")
     
     if status['is_docker'] and status['dependencies_ok'] and status['pdf_test_ok']:
-        logger.info(f"\n🎉 Docker PDF功能完全正常！")
+        logger.info(f"\nDocker PDF功能完全正常！")
     elif status['is_docker'] and not status['dependencies_ok']:
-        logger.warning(f"\n⚠️ Docker環境缺少PDF依賴，請重新構建鏡像")
+        logger.warning(f"\nDocker環境缺少PDF依賴，請重新構建鏡像")
     elif status['is_docker'] and not status['pdf_test_ok']:
-        logger.error(f"\n⚠️ Docker PDF測試失敗，可能需要調整配置")
+        logger.error(f"\nDocker PDF測試失敗，可能需要調整配置")
     else:
-        logger.info(f"\n✅ 非Docker環境，使用標準PDF配置")
+        logger.info(f"\n非Docker環境，使用標準PDF配置")

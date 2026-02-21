@@ -69,7 +69,7 @@ class GraphSetup:
         tool_nodes = {}
 
         if "market" in selected_analysts:
-            logger.debug(f"📈 [DEBUG] 使用標準市場分析師")
+            logger.debug(f"[DEBUG] 使用標準市場分析師")
             analyst_nodes["market"] = create_market_analyst(
                 self.quick_thinking_llm, self.toolkit
             )
@@ -91,7 +91,7 @@ class GraphSetup:
             tool_nodes["news"] = self.tool_nodes["news"]
 
         if "fundamentals" in selected_analysts:
-            logger.debug(f"📊 [DEBUG] 使用標準基本面分析師")
+            logger.debug(f"[DEBUG] 使用標準基本面分析師")
             analyst_nodes["fundamentals"] = create_fundamentals_analyst(
                 self.quick_thinking_llm, self.toolkit
             )

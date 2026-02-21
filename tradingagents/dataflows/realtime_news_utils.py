@@ -131,7 +131,7 @@ class RealtimeNewsAggregator:
         if len(sorted_news) > max_news:
             original_count = len(sorted_news)
             sorted_news = sorted_news[:max_news]
-            logger.info(f"[新聞聚合器] 📰 新聞數量限制: 從{original_count}條限制為{max_news}條最新新聞")
+            logger.info(f"[新聞聚合器] 新聞數量限制: 從{original_count}條限制為{max_news}條最新新聞")
         
         # 記錄一些新聞標題示例
         if sorted_news:
@@ -553,18 +553,18 @@ class RealtimeNewsAggregator:
         logger.info(f"[新聞報告] {ticker} 新聞來源分布: {sources_info}")
         
         report = f"# {ticker} 實時新聞分析報告\n\n"
-        report += f"📅 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-        report += f"📊 新聞總數: {len(news_items)}條\n\n"
+        report += f"生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        report += f"新聞總數: {len(news_items)}條\n\n"
         
         if high_urgency:
-            report += "## 🚨 緊急新聞\n\n"
+            report += "## 緊急新聞\n\n"
             for news in high_urgency[:3]:  # 最多顯示3條
                 report += f"### {news.title}\n"
                 report += f"**來源**: {news.source} | **時間**: {news.publish_time.strftime('%H:%M')}\n"
                 report += f"{news.content}\n\n"
         
         if medium_urgency:
-            report += "## 📢 重要新聞\n\n"
+            report += "## 重要新聞\n\n"
             for news in medium_urgency[:5]:  # 最多顯示5條
                 report += f"### {news.title}\n"
                 report += f"**來源**: {news.source} | **時間**: {news.publish_time.strftime('%H:%M')}\n"
@@ -574,15 +574,15 @@ class RealtimeNewsAggregator:
         latest_news = max(news_items, key=lambda x: x.publish_time)
         time_diff = datetime.now() - latest_news.publish_time
         
-        report += f"\n## ⏰ 數據時效性\n"
+        report += f"\n## 數據時效性\n"
         report += f"最新新聞發布於: {time_diff.total_seconds() / 60:.0f}分鐘前\n"
         
         if time_diff.total_seconds() < 1800:  # 30分鐘內
-            report += "🟢 數據時效性: 優秀 (30分鐘內)\n"
+            report += "數據時效性: 優秀 (30分鐘內)\n"
         elif time_diff.total_seconds() < 3600:  # 1小時內
-            report += "🟡 數據時效性: 良好 (1小時內)\n"
+            report += "數據時效性: 良好 (1小時內)\n"
         else:
-            report += "🔴 數據時效性: 一般 (超過1小時)\n"
+            report += "數據時效性: 一般 (超過1小時)\n"
         
         # 記錄報告生成完成信息
         end_time = datetime.now()
@@ -712,9 +712,9 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
 實時新聞獲取失敗 - {ticker}
 分析日期: {curr_date}
 
-❌ 錯誤信息: 所有可用的新聞源都未能獲取到相關新聞
+錯誤信息: 所有可用的新聞源都未能獲取到相關新聞
 
-💡 備用建議:
+備用建議:
 1. 檢查網絡連接和API密鑰配置
 2. 使用基礎新聞分析作為備選
 3. 關註官方財經媒體的最新報道
