@@ -17,7 +17,6 @@ from tradingagents.agents.utils.memory import FinancialSituationMemory
 # 導入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
-from tradingagents.agents.utils.agent_states import AgentState
 from tradingagents.dataflows.interface import set_config
 
 from .conditional_logic import ConditionalLogic
@@ -188,10 +187,10 @@ class TradingAgentsGraph:
             # Debug mode with tracing
             trace = []
             for chunk in self.graph.stream(init_agent_state, **args):
-                if len(chunk["messages"]) == 0:
-                    pass
-                else:
-                    chunk["messages"][-1].pretty_print()
+                if chunk["messages"]:
+                    last_msg = chunk["messages"][-1]
+                    msg_content = getattr(last_msg, 'content', str(last_msg))
+                    logger.debug(f"[Debug] {msg_content[:200]}")
                     trace.append(chunk)
 
             final_state = trace[-1]
