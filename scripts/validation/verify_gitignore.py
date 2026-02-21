@@ -94,7 +94,7 @@ def main():
     test_file = contribution_path / "test_ignore.txt"
     try:
         # 創建測試文件
-        with open(test_file, 'w') as f:
+        with open(test_file, 'w', encoding='utf-8') as f:
             f.write("測試文件")
         
         # 檢查Git是否忽略了這個文件

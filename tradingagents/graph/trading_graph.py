@@ -247,6 +247,7 @@ class TradingAgentsGraph:
         with open(
             f"eval_results/{self.ticker}/TradingAgentsStrategy_logs/full_states_log.json",
             "w",
+            encoding="utf-8",
         ) as f:
             json.dump(self.log_states_dict, f, indent=4)
 

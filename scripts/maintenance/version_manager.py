@@ -25,14 +25,14 @@ class VersionManager:
     def get_current_version(self):
         """獲取當前版本號"""
         try:
-            with open(self.version_file, 'r') as f:
+            with open(self.version_file, 'r', encoding='utf-8') as f:
                 return f.read().strip()
         except FileNotFoundError:
             return "cn-0.0.0"
     
     def set_version(self, version):
         """設置版本號"""
-        with open(self.version_file, 'w') as f:
+        with open(self.version_file, 'w', encoding='utf-8') as f:
             f.write(version)
         logger.info(f" 版本號已更新為: {version}")
     

@@ -124,7 +124,6 @@ class AsyncProgressDisplay:
             estimated_total_time = progress_data.get('estimated_total_time', 0)
 
             # 計算已用時間
-            import time
             if status == 'completed':
                 # 已完成的分析使用儲存的最終耗時
                 real_elapsed_time = progress_data.get('elapsed_time', 0)
@@ -260,7 +259,6 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
     estimated_total_time = progress_data.get('estimated_total_time', 0)
 
     # 計算已用時間
-    import time
     if status == 'completed':
         # 已完成的分析使用儲存的最終耗時
         elapsed_time = progress_data.get('elapsed_time', 0)
@@ -293,8 +291,7 @@ def streamlit_auto_refresh_progress(analysis_id: str, refresh_interval: int = 2)
             default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
             auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
             if auto_refresh and status == 'running': # 只在運行時自動刷新
-                import time
-                time.sleep(3) # 等待3秒
+                time.sleep(3)
                 st.rerun()
             elif auto_refresh and status in ['completed', 'failed']:
                 # 分析完成後自動關閉自動刷新
@@ -343,7 +340,6 @@ def display_static_progress(analysis_id: str) -> bool:
     with col3:
         # 計算已用時間
         start_time = progress_data.get('start_time', 0)
-        import time
         if status == 'completed':
             # 已完成的分析使用儲存的最終耗時
             elapsed_time = progress_data.get('elapsed_time', 0)
@@ -428,9 +424,8 @@ def display_static_progress(analysis_id: str) -> bool:
                 # 獲取默認值，如果是新分析則默認為True
                 default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
                 auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
-                if auto_refresh and status == 'running': # 只在運行時自動刷新
-                    import time
-                    time.sleep(3) # 等待3秒
+                if auto_refresh and status == 'running':
+                    time.sleep(3)
                     st.rerun()
                 elif auto_refresh and status in ['completed', 'failed']:
                     # 分析完成後自動關閉自動刷新
@@ -488,9 +483,8 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
                 # 獲取默認值，如果是新分析則默認為True
                 default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
                 auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
-                if auto_refresh and status == 'running': # 只在運行時自動刷新
-                    import time
-                    time.sleep(3) # 等待3秒
+                if auto_refresh and status == 'running':
+                    time.sleep(3)
                     st.rerun()
                 elif auto_refresh and status in ['completed', 'failed']:
                     # 分析完成後自動關閉自動刷新
@@ -507,7 +501,6 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
     # 計算已用時間
     start_time = progress_data.get('start_time', 0)
     estimated_total_time = progress_data.get('estimated_total_time', 0)
-    import time
     if status == 'completed':
         # 已完成的分析使用儲存的最終耗時
         elapsed_time = progress_data.get('elapsed_time', 0)
@@ -598,8 +591,7 @@ def display_static_progress_with_controls(analysis_id: str, show_refresh_control
             default_value = st.session_state.get(auto_refresh_key, True) # 默認為True
             auto_refresh = st.checkbox("自動刷新", value=default_value, key=auto_refresh_key)
             if auto_refresh and status == 'running': # 只在運行時自動刷新
-                import time
-                time.sleep(3) # 等待3秒
+                time.sleep(3)
                 st.rerun()
             elif auto_refresh and status in ['completed', 'failed']:
                 # 分析完成後自動關閉自動刷新

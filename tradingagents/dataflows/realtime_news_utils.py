@@ -146,12 +146,12 @@ class RealtimeNewsAggregator:
                 'token': self.finnhub_key
             }
             
-            response = requests.get(url, params=params, headers=self.headers)
+            response = requests.get(url, params=params, headers=self.headers, timeout=(10, 30))
             response.raise_for_status()
-            
+
             news_data = response.json()
             news_items = []
-            
+
             for item in news_data:
                 # 檢查新聞時效性
                 publish_time = datetime.fromtimestamp(item.get('datetime', 0))
@@ -191,12 +191,12 @@ class RealtimeNewsAggregator:
                 'limit': 50
             }
             
-            response = requests.get(url, params=params, headers=self.headers)
+            response = requests.get(url, params=params, headers=self.headers, timeout=(10, 30))
             response.raise_for_status()
-            
+
             data = response.json()
             news_items = []
-            
+
             if 'feed' in data:
                 for item in data['feed']:
                     # 解析時間
@@ -251,12 +251,12 @@ class RealtimeNewsAggregator:
                 'apiKey': self.newsapi_key
             }
             
-            response = requests.get(url, params=params, headers=self.headers)
+            response = requests.get(url, params=params, headers=self.headers, timeout=(10, 30))
             response.raise_for_status()
-            
+
             data = response.json()
             news_items = []
-            
+
             for item in data.get('articles', []):
                 # 解析時間
                 time_str = item.get('publishedAt', '')

@@ -51,8 +51,6 @@ st.set_page_config(
 # 全域樣式 - 專業金融介面
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
     /* 隱藏 Streamlit 預設元素 */
     .stAppToolbar,
     header[data-testid="stHeader"],
