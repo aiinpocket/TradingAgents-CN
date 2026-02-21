@@ -11,7 +11,6 @@ TradingAgents 整合了多種金融資料源，為智慧代理提供全面、準
 | **FinnHub** | 美股 | ✅ 完整支援 | 即時資料、基本面、新聞 |
 | **Yahoo Finance** | 全球 | ✅ 完整支援 | 歷史資料、財務資訊 |
 | **Google News** | 全球 | ✅ 完整支援 | 財經新聞、市場資訊 |
-| **Reddit** | 全球 | ✅ 完整支援 | 社交媒體情緒分析 |
 | **MongoDB** | 快取 | ✅ 完整支援 | 資料持久化儲存 |
 | **Redis** | 快取 | ✅ 完整支援 | 高速資料快取 |
 
@@ -219,94 +218,7 @@ class YahooFinanceProvider:
         }
 ```
 
-### 3. Reddit API
-
-#### 簡介
-Reddit API 提供社交媒體討論資料，用於分析投資者情緒和市場熱點。
-
-#### 資料類型
-```python
-reddit_data_types = {
-    "討論資料": [
-        "熱門貼文",
-        "評論內容",
-        "用戶互動",
-        "話題趨勢"
-    ],
-    "情感資料": [
-        "情感極性",
-        "情感強度",
-        "情感分布",
-        "情感變化"
-    ],
-    "熱度指標": [
-        "提及頻率",
-        "討論熱度",
-        "用戶參與度",
-        "傳播速度"
-    ]
-}
-```
-
-#### API 整合
-```python
-# reddit_utils.py
-import praw
-from textblob import TextBlob
-
-class RedditDataProvider:
-    """Reddit 資料提供器"""
-
-    def __init__(self, client_id: str, client_secret: str, user_agent: str):
-        self.reddit = praw.Reddit(
-            client_id=client_id,
-            client_secret=client_secret,
-            user_agent=user_agent
-        )
-        self.sentiment_analyzer = SentimentAnalyzer()
-
-    def get_stock_discussions(self, symbol: str, subreddit: str = "stocks", limit: int = 100) -> List[Dict]:
-        """獲取股票討論"""
-        discussions = []
-
-        for submission in self.reddit.subreddit(subreddit).search(symbol, limit=limit):
-            sentiment = self.sentiment_analyzer.analyze(submission.title + " " + submission.selftext)
-
-            discussions.append({
-                "id": submission.id,
-                "title": submission.title,
-                "content": submission.selftext,
-                "score": submission.score,
-                "num_comments": submission.num_comments,
-                "created_utc": submission.created_utc,
-                "author": str(submission.author),
-                "url": submission.url,
-                "sentiment": sentiment
-            })
-
-        return discussions
-
-    def analyze_sentiment_trends(self, discussions: List[Dict]) -> Dict:
-        """分析情感趨勢"""
-        if not discussions:
-            return {"error": "No discussions found"}
-
-        sentiments = [d["sentiment"]["polarity"] for d in discussions]
-        avg_sentiment = sum(sentiments) / len(sentiments)
-
-        time_series = self._create_sentiment_time_series(discussions)
-        engagement_metrics = self._calculate_engagement_metrics(discussions)
-
-        return {
-            "overall_sentiment": avg_sentiment,
-            "sentiment_distribution": self._calculate_sentiment_distribution(sentiments),
-            "time_series": time_series,
-            "engagement_metrics": engagement_metrics,
-            "trending_topics": self._extract_trending_topics(discussions)
-        }
-```
-
-### 4. Google News
+### 3. Google News
 
 #### 簡介
 Google News API 提供即時新聞資料，用於分析市場事件和新聞對股價的影響。
@@ -428,9 +340,6 @@ class DataInterface:
             providers["finnhub"] = FinnHubDataProvider(self.config["finnhub_api_key"])
 
         providers["yahoo"] = YahooFinanceProvider()
-
-        if self.config.get("reddit_credentials"):
-            providers["reddit"] = RedditDataProvider(**self.config["reddit_credentials"])
 
         providers["google_news"] = GoogleNewsProvider()
 

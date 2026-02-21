@@ -116,8 +116,8 @@ research_depth = 3    # 深度: 增加辯論輪次，深度模型
 
 ### LLM提供商
 ```python
-llm_provider = "google"       # Google Gemini (品質高)
-llm_provider = "openai"       # OpenAI GPT (速度快)
+llm_provider = "openai"       # OpenAI GPT-4 系列
+llm_provider = "anthropic"    # Anthropic Claude 系列
 ```
 
 ## 🔄 工具調用循環
@@ -154,7 +154,7 @@ from tradingagents.graph.trading_graph import TradingAgentsGraph
 # 創建分析圖
 graph = TradingAgentsGraph(
     selected_analysts=["market", "fundamentals"],
-    config={"llm_provider": "google", "research_depth": 2}
+    config={"llm_provider": "openai", "research_depth": 2}
 )
 
 # 執行分析
