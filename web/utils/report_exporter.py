@@ -164,7 +164,7 @@ class ReportExporter:
         md_content = f"""# {stock_symbol} 股票分析報告
 
 **生成時間**: {timestamp}
-**分析狀態**: {'演示模式'if is_demo else '正式分析'}
+**分析狀態**: {'演示模式' if is_demo else '正式分析'}
 
 ## 投資決策摘要
 

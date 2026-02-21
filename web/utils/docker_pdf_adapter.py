@@ -20,7 +20,7 @@ def is_docker_environment() -> bool:
             return True
         
         # 檢查cgroup信息
-        with open('/proc/1/cgroup', 'r') as f:
+        with open('/proc/1/cgroup', 'r', encoding='utf-8') as f:
             content = f.read()
             if 'docker' in content or 'containerd' in content:
                 return True

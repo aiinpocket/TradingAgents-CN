@@ -449,7 +449,7 @@ def render_results_list(results: List[Dict[str, Any]]):
     elif sort_by == "股票代碼":
         results.sort(key=lambda x: x.get('stock_symbol', ''))
     elif sort_by == "成功率":
-        results.sort(key=lambda x: 1 if x.get('status') == 'completed'else 0, reverse=True)
+        results.sort(key=lambda x: 1 if x.get('status') == 'completed' else 0, reverse=True)
     
     if view_mode == "表格視圖":
         render_results_table(results)
@@ -465,10 +465,10 @@ def render_results_table(results: List[Dict[str, Any]]):
         table_data.append({
             '時間': safe_timestamp_to_datetime(result.get('timestamp', 0)).strftime('%m-%d %H:%M'),
             '股票': result.get('stock_symbol', 'unknown'),
-            '分析師': ', '.join(result.get('analysts', [])[:2]) + ('...'if len(result.get('analysts', [])) > 2 else ''),
+            '分析師': ', '.join(result.get('analysts', [])[:2]) + ('...' if len(result.get('analysts', [])) > 2 else ''),
             '狀態': '成功' if result.get('status') == 'completed' else '失敗',
             '收藏': '是' if result.get('is_favorite', False) else '',
-            '標籤': ', '.join(result.get('tags', [])[:2]) + ('...'if len(result.get('tags', [])) > 2 else ''),
+            '標籤': ', '.join(result.get('tags', [])[:2]) + ('...' if len(result.get('tags', [])) > 2 else ''),
             '摘要': (result.get('summary', '')[:50] + '...') if len(result.get('summary', '')) > 50 else result.get('summary', '')
         })
     
@@ -542,7 +542,7 @@ def render_results_cards(results: List[Dict[str, Any]]):
 
                 # 顯示分析摘要
                 if result.get('summary'):
-                    summary = result['summary'][:150] + "..."if len(result['summary']) > 150 else result['summary']
+                    summary = result['summary'][:150] + "..." if len(result['summary']) > 150 else result['summary']
                     st.write(f"**摘要**: {summary}")
             
             with col2:
@@ -799,7 +799,7 @@ def render_results_export(results: List[Dict[str, Any]]):
                         '分析師': ', '.join(result.get('analysts', [])),
                         '研究深度': result.get('research_depth', 'unknown'),
                         '狀態': result.get('status', 'unknown'),
-                        '摘要': result.get('summary', '')[:100] + '...'if len(result.get('summary', '')) > 100 else result.get('summary', '')
+                        '摘要': (result.get('summary', '')[:100] + '...') if len(result.get('summary', '')) > 100 else result.get('summary', '')
                     })
                 
                 if export_format == "CSV":
@@ -1118,7 +1118,7 @@ def render_detailed_analysis(results: List[Dict[str, Any]]):
             perf_cols = st.columns(len(performance))
             for i, (key, value) in enumerate(performance.items()):
                 with perf_cols[i]:
-                    st.metric(key.replace('_', '').title(), f"{value:.2f}"if isinstance(value, (int, float)) else str(value))
+                    st.metric(key.replace('_', '').title(), f"{value:.2f}" if isinstance(value, (int, float)) else str(value))
         
         # 顯示完整分析結果
         if st.checkbox("顯示完整分析結果"):
