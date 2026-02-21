@@ -49,7 +49,9 @@ class MongoDBReportManager:
             mongodb_auth_source = os.getenv("MONGODB_AUTH_SOURCE", "admin")
 
             logger.info(f"MongoDB配置: host={mongodb_host}, port={mongodb_port}, db={mongodb_database}")
-            logger.info(f"認證信息: username={mongodb_username}, auth_source={mongodb_auth_source}")
+            # 不記錄認證詳細資訊以避免安全風險
+            if mongodb_username:
+                logger.debug(f"認證: auth_source={mongodb_auth_source}")
 
             # 構建連接參數
             connect_kwargs = {

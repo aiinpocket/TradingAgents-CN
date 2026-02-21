@@ -163,7 +163,7 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
 
         # 合併所有平台的社交媒體數據
         all_entries = []
-        for platform in ['twitter', 'reddit']:
+        for platform in ['twitter']:
             entries = social_data.get(platform, []) if social_data else []
             if entries:
                 all_entries.extend(entries)

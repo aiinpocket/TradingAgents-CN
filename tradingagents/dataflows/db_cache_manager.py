@@ -58,8 +58,24 @@ class DatabaseCacheManager:
         mongodb_password = os.getenv("MONGODB_PASSWORD", "")
         redis_password = os.getenv("REDIS_PASSWORD", "")
 
-        self.mongodb_url = mongodb_url or os.getenv("MONGODB_URL", f"mongodb://admin:{mongodb_password}@localhost:{mongodb_port}")
-        self.redis_url = redis_url or os.getenv("REDIS_URL", f"redis://:{redis_password}@localhost:{redis_port}")
+        # 優先使用完整 URL，其次組合環境變數（不在程式碼中嵌入預設密碼）
+        if mongodb_url:
+            self.mongodb_url = mongodb_url
+        elif os.getenv("MONGODB_URL"):
+            self.mongodb_url = os.getenv("MONGODB_URL")
+        elif mongodb_password:
+            self.mongodb_url = f"mongodb://admin:{mongodb_password}@localhost:{mongodb_port}"
+        else:
+            self.mongodb_url = f"mongodb://localhost:{mongodb_port}"
+
+        if redis_url:
+            self.redis_url = redis_url
+        elif os.getenv("REDIS_URL"):
+            self.redis_url = os.getenv("REDIS_URL")
+        elif redis_password:
+            self.redis_url = f"redis://:{redis_password}@localhost:{redis_port}"
+        else:
+            self.redis_url = f"redis://localhost:{redis_port}"
         self.mongodb_db_name = mongodb_db
         self.redis_db = redis_db
         
@@ -72,8 +88,8 @@ class DatabaseCacheManager:
         self._init_redis()
         
         logger.info(f"數據庫緩存管理器初始化完成")
-        logger.error(f"   MongoDB: {'已連接' if self.mongodb_client else '未連接'}")
-        logger.error(f"   Redis: {'已連接' if self.redis_client else '未連接'}")
+        logger.debug(f"   MongoDB: {'已連接' if self.mongodb_client else '未連接'}")
+        logger.debug(f"   Redis: {'已連接' if self.redis_client else '未連接'}")
     
     def _init_mongodb(self):
         """初始化MongoDB連接"""
@@ -93,7 +109,8 @@ class DatabaseCacheManager:
             # 創建索引
             self._create_mongodb_indexes()
             
-            logger.info(f"MongoDB連接成功: {self.mongodb_url}")
+            # 不記錄完整 URL 以避免洩露密碼
+            logger.info("MongoDB連接成功")
             
         except Exception as e:
             logger.error(f"MongoDB連接失敗: {e}")
@@ -116,7 +133,8 @@ class DatabaseCacheManager:
             # 測試連接
             self.redis_client.ping()
             
-            logger.info(f"Redis連接成功: {self.redis_url}")
+            # 不記錄完整 URL 以避免洩露密碼
+            logger.info("Redis連接成功")
             
         except Exception as e:
             logger.error(f"Redis連接失敗: {e}")

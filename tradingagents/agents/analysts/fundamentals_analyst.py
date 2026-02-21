@@ -203,16 +203,6 @@ def create_fundamentals_analyst(llm, toolkit):
         logger.info(f"[股票代碼追蹤] LLM調用前，ticker參數: '{ticker}'")
         logger.info(f"[股票代碼追蹤] 傳遞給LLM的訊息數量: {len(state['messages'])}")
 
-        # 檢查訊息內容中是否有其他股票代碼
-        for i, msg in enumerate(state["messages"]):
-            if hasattr(msg, 'content') and msg.content:
-                content = str(msg.content)
-                if "002021" in content:
-                    logger.warning(f"[股票代碼追蹤] 警告：訊息 {i} 中包含錯誤股票代碼 002021")
-                    logger.warning(f"[股票代碼追蹤] 訊息內容: {content[:200]}...")
-                if "002027" in content:
-                    logger.info(f"[股票代碼追蹤] 訊息 {i} 中包含正確股票代碼 002027")
-
         result = chain.invoke(state["messages"])
         logger.debug(f"[DEBUG] LLM調用完成")
 

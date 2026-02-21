@@ -118,7 +118,7 @@ def test_llm_tool_calling_simulation():
                         self.tool_calls = [{
                             'name': 'get_stock_fundamentals_unified',
                             'args': {
-                                'ticker': '0700.HK',
+                                'ticker': 'AAPL',
                                 'start_date': '2025-05-28',
                                 'end_date': '2025-07-14',
                                 'curr_date': '2025-07-14'
@@ -138,11 +138,11 @@ def test_llm_tool_calling_simulation():
         # 模擬狀態
         state = {
             "trade_date": "2025-07-14",
-            "company_of_interest": "0700.HK",
-            "messages": [("human", "分析0700.HK")]
+            "company_of_interest": "AAPL",
+            "messages": [("human", "分析AAPL")]
         }
         
-        print(f"  測試港股基本面分析: {state['company_of_interest']}")
+        print(f"  測試美股基本面分析: {state['company_of_interest']}")
         
         # 調用分析師
         result = analyst(state)

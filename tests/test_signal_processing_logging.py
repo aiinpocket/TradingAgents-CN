@@ -31,9 +31,9 @@ def test_signal_processing_logging():
         
         # 測試不同的股票代碼
         test_cases = [
-            ("000858", "五 糧 液"),
-            ("002027", "分眾傳媒"),
-            ("0700.HK", "騰訊控股"),
+            ("MSFT", "Microsoft"),
+            ("AAPL", "Apple Inc."),
+            ("TSLA", "Tesla Inc."),
         ]
         
         for stock_symbol, company_name in test_cases:
@@ -131,9 +131,9 @@ def test_logging_extraction():
         
         # 測試不同的調用方式
         test_cases = [
-            ("000858", "位置參數調用"),
-            ("002027", "關鍵字參數調用"),
-            ("0700.HK", "混合參數調用"),
+            ("MSFT", "位置參數調用"),
+            ("AAPL", "關鍵字參數調用"),
+            ("TSLA", "混合參數調用"),
         ]
         
         for stock_symbol, call_type in test_cases:

@@ -329,7 +329,7 @@ class AdaptiveCacheManager:
                 redis_info = self.redis_client.info()
                 stats['redis_memory_used'] = redis_info.get('used_memory_human', 'N/A')
                 stats['redis_keys'] = self.redis_client.dbsize()
-            except:
+            except Exception:
                 stats['redis_status'] = 'Error'
         
         return stats

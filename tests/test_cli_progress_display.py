@@ -47,7 +47,7 @@ def test_cli_ui_manager():
         ui.show_step_header(1, "測試步驟標題")
         
         # 測試數據信息
-        ui.show_data_info("股票信息", "002027", "分眾傳媒")
+        ui.show_data_info("股票信息", "AAPL", "Apple Inc.")
         
         print("\n CLI用戶界面管理器測試完成")
         return True
@@ -74,7 +74,7 @@ def test_analysis_flow_simulation():
         
         # 步驟1: 準備分析環境
         ui.show_step_header(1, "準備分析環境 | Preparing Analysis Environment")
-        ui.show_progress("正在分析股票: 002027")
+        ui.show_progress("正在分析股票: AAPL")
         time.sleep(0.3)
         ui.show_progress("分析日期: 2025-07-16")
         time.sleep(0.3)
@@ -88,11 +88,11 @@ def test_analysis_flow_simulation():
         ui.show_step_header(2, "數據獲取階段 | Data Collection Phase")
         ui.show_progress("正在獲取股票基本信息...")
         time.sleep(0.5)
-        ui.show_data_info("股票信息", "002027", "分眾傳媒")
+        ui.show_data_info("股票信息", "AAPL", "Apple Inc.")
         time.sleep(0.3)
         ui.show_progress("正在獲取市場數據...")
         time.sleep(0.5)
-        ui.show_data_info("市場數據", "002027", "32條記錄")
+        ui.show_data_info("市場數據", "AAPL", "32條記錄")
         time.sleep(0.3)
         ui.show_progress("正在獲取基本面數據...")
         time.sleep(0.5)
@@ -127,7 +127,7 @@ def test_analysis_flow_simulation():
         ui.show_progress("正在生成最終報告...")
         time.sleep(0.8)
         ui.show_success(" 分析報告生成完成")
-        ui.show_success(" 002027 股票分析全部完成！")
+        ui.show_success(" AAPL 股票分析全部完成！")
         
         print("\n 分析流程模擬完成")
         return True
@@ -201,7 +201,7 @@ def test_user_experience():
         print("    用戶知道出了什麼問題")
         
         # 重要信息突出
-        ui.show_data_info("重要數據", "002027", "關鍵信息突出顯示")
+        ui.show_data_info("重要數據", "AAPL", "關鍵信息突出顯示")
         print("    重要信息容易識別")
         
         print("\n 用戶體驗測試完成")

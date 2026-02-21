@@ -136,7 +136,7 @@ def capture_screenshots():
                 stock_input.clear()
                 stock_input.send_keys("AAPL")
                 time.sleep(2)
-            except:
+            except Exception:
                 logger.warning(" 無法找到股票輸入框")
             
             # 截圖2: 配置界面
@@ -153,7 +153,7 @@ def capture_screenshots():
                 logger.info(" 捕獲進度界面截圖...")
                 driver.save_screenshot(str(screenshots_dir / "web-interface-progress.png"))
                 
-            except:
+            except Exception:
                 logger.warning(" 無法找到分析按鈕或觸發分析")
             
             # 截圖4: 側邊欄

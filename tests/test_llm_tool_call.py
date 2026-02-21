@@ -41,10 +41,10 @@ def test_direct_call():
     logger.info("========== 測試2: 直接函數調用 ==========")
     try:
         curr_date = datetime.now().strftime('%Y-%m-%d')
-        logger.info(f"調用參數: ticker='000858', date='{curr_date}'")
+        logger.info(f"調用參數: ticker='AAPL', date='{curr_date}'")
         
         start_time = datetime.now()
-        result = get_realtime_stock_news('000858', curr_date)
+        result = get_realtime_stock_news('AAPL', curr_date)
         end_time = datetime.now()
         
         logger.info(f"調用成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
@@ -63,10 +63,10 @@ def test_toolkit_call():
     logger.info("========== 測試3: Toolkit調用 ==========")
     try:
         curr_date = datetime.now().strftime('%Y-%m-%d')
-        logger.info(f"調用參數: ticker='000858', date='{curr_date}'")
+        logger.info(f"調用參數: ticker='AAPL', date='{curr_date}'")
         
         start_time = datetime.now()
-        result = Toolkit.get_realtime_stock_news('000858', curr_date)
+        result = Toolkit.get_realtime_stock_news('AAPL', curr_date)
         end_time = datetime.now()
         
         logger.info(f"Toolkit調用成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
@@ -106,7 +106,7 @@ def simulate_llm_tool_call():
     tool_call_params = {
         "name": "get_realtime_stock_news",
         "arguments": {
-            "ticker": "000858",
+            "ticker": "AAPL",
             "date": datetime.now().strftime('%Y-%m-%d')
         }
     }

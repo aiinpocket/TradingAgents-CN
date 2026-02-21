@@ -89,11 +89,11 @@ def test_market_analyst_unified():
         # 模擬狀態
         state = {
             "trade_date": "2025-07-14",
-            "company_of_interest": "0700.HK",
+            "company_of_interest": "AAPL",
             "messages": []
         }
         
-        print(f"  測試港股市場分析: {state['company_of_interest']}")
+        print(f"  測試美股市場分析: {state['company_of_interest']}")
         
         # 調用分析師（這會觸發工具選擇邏輯）
         result = analyst(state)
@@ -152,11 +152,11 @@ def test_fundamentals_analyst_unified():
         # 模擬狀態
         state = {
             "trade_date": "2025-07-14",
-            "company_of_interest": "0700.HK",
+            "company_of_interest": "AAPL",
             "messages": []
         }
         
-        print(f"  測試港股基本面分析: {state['company_of_interest']}")
+        print(f"  測試美股基本面分析: {state['company_of_interest']}")
         
         # 調用分析師（這會觸發工具選擇邏輯）
         result = analyst(state)
