@@ -265,7 +265,7 @@ class FinancialSituationMemory:
                     if 'attributeerror' in error_str:
                         logger.error(f"{self.llm_provider} API調用錯誤: {str(e)}")
                     elif 'connectionerror' in error_str or 'connection' in error_str:
-                        logger.error(f"{self.llm_provider}網絡連接錯誤: {str(e)}")
+                        logger.error(f"{self.llm_provider}網路連接錯誤: {str(e)}")
                     elif 'timeout' in error_str:
                         logger.error(f"{self.llm_provider}請求超時: {str(e)}")
                     elif 'keyerror' in error_str:

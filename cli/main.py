@@ -82,7 +82,7 @@ def setup_cli_logging():
     # 記錄CLI啟動日誌（只寫入檔案）
     logger.debug("CLI模式啟動，控制台日誌已禁用，保持界面清爽")
 
-# 設置CLI日誌配置
+# 設定CLI日誌配置
 setup_cli_logging()
 
 console = Console()
@@ -914,14 +914,14 @@ def update_research_team_status(status):
 
 def extract_content_string(content):
     """
-    從各種訊息格式中提取字符串內容
+    從各種訊息格式中提取字串內容
     Extract string content from various message formats
     
     Args:
-        content: 訊息內容，可能是字符串、列表或其他格式
+        content: 訊息內容，可能是字串、列表或其他格式
     
     Returns:
-        str: 提取的字符串內容
+        str: 提取的字串內容
     """
     if isinstance(content, str):
         return content
@@ -1145,7 +1145,7 @@ def run_analysis():
 
         except Exception as e:
             ui.show_error(f"資料預取得過程中發生錯誤: {str(e)}")
-            ui.show_warning("請檢查網絡連接或稍後重試")
+            ui.show_warning("請檢查網路連接或稍後重試")
             logger.error(f"資料預取得異常: {str(e)}")
             return
 
@@ -1534,11 +1534,11 @@ def analyze():
 
 @app.command(
     name="config",
-    help="配置設置 | Configuration settings"
+    help="配置設定 | Configuration settings"
 )
 def config():
     """
-    顯示和配置系統設置
+    顯示和配置系統設定
     Display and configure system settings
     """
     logger.info(f"\n[bold blue]TradingAgents 配置 | Configuration[/bold blue]")
@@ -1657,7 +1657,7 @@ def version():
 )
 def data_config(
     show: bool = typer.Option(False, "--show", "-s", help="顯示當前配置 | Show current configuration"),
-    set_dir: Optional[str] = typer.Option(None, "--set", "-d", help="設置資料目錄 | Set data directory"),
+    set_dir: Optional[str] = typer.Option(None, "--set", "-d", help="設定資料目錄 | Set data directory"),
     reset: bool = typer.Option(False, "--reset", "-r", help="重置為預設配置 | Reset to default configuration")
 ):
     """
@@ -1677,10 +1677,10 @@ def data_config(
         return
     
     if set_dir:
-        # 設置新的資料目錄
+        # 設定新的資料目錄
         try:
             set_data_dir(set_dir)
-            logger.info(f"[green]資料目錄已設置為: {set_dir}[/green]")
+            logger.info(f"[green]資料目錄已設定為: {set_dir}[/green]")
             
             # 顯示創建的目錄結構
             if os.path.exists(set_dir):
@@ -1692,7 +1692,7 @@ def data_config(
                     indent = '  ' * level
                     logger.info(f"{indent}{os.path.basename(root)}/")
         except Exception as e:
-            logger.error(f"[red]設置資料目錄失敗: {e}[/red]")
+            logger.error(f"[red]設定資料目錄失敗: {e}[/red]")
         return
     
     # 顯示當前配置（預設行為或使用--show）
@@ -1727,9 +1727,9 @@ def data_config(
     env_table.add_column("值 | Value", style="green")
     
     env_vars = {
-        "TRADINGAGENTS_DATA_DIR": os.getenv("TRADINGAGENTS_DATA_DIR", "未設置"),
-        "TRADINGAGENTS_CACHE_DIR": os.getenv("TRADINGAGENTS_CACHE_DIR", "未設置"),
-        "TRADINGAGENTS_RESULTS_DIR": os.getenv("TRADINGAGENTS_RESULTS_DIR", "未設置")
+        "TRADINGAGENTS_DATA_DIR": os.getenv("TRADINGAGENTS_DATA_DIR", "未設定"),
+        "TRADINGAGENTS_CACHE_DIR": os.getenv("TRADINGAGENTS_CACHE_DIR", "未設定"),
+        "TRADINGAGENTS_RESULTS_DIR": os.getenv("TRADINGAGENTS_RESULTS_DIR", "未設定")
     }
     
     for var, value in env_vars.items():
@@ -1739,7 +1739,7 @@ def data_config(
     
     # 使用說明
     logger.info(f"\n[yellow]使用說明 | Usage:[/yellow]")
-    logger.info(f"- 設置資料目錄: tradingagents data-config --set /path/to/data")
+    logger.info(f"- 設定資料目錄: tradingagents data-config --set /path/to/data")
     logger.info(f"- 重置為預設: tradingagents data-config --reset")
     logger.info(f"- 查看當前配置: tradingagents data-config --show")
     logger.info(f"- 環境變量優先級最高 | Environment variables have highest priority")
@@ -1747,14 +1747,14 @@ def data_config(
 
 @app.command(
     name="examples",
-    help="示例程序 | Example programs"
+    help="範例程式 | Example programs"
 )
 def examples():
     """
-    顯示可用的示例程序
+    顯示可用的範例程式
     Display available example programs
     """
-    logger.info(f"\n[bold blue]TradingAgents 示例程序 | Example Programs[/bold blue]")
+    logger.info(f"\n[bold blue]TradingAgents 範例程式 | Example Programs[/bold blue]")
 
     examples_table = Table(show_header=True, header_style="bold magenta")
     examples_table.add_column("類型 | Type", style="cyan")
@@ -1823,7 +1823,7 @@ def help_chinese():
 
     logger.info(f"\n[bold yellow]快速開始 | Quick Start:[/bold yellow]")
     logger.info(f"1. [cyan]python -m cli.main config[/cyan]     # 查看配置資訊")
-    logger.info(f"2. [cyan]python -m cli.main examples[/cyan]   # 查看示例程序")
+    logger.info(f"2. [cyan]python -m cli.main examples[/cyan]   # 查看範例程式")
     logger.info(f"3. [cyan]python -m cli.main test[/cyan]       # 運行測試")
     logger.info(f"4. [cyan]python -m cli.main analyze[/cyan]    # 開始股票分析")
 
@@ -1841,13 +1841,13 @@ def help_chinese():
     )
     commands_table.add_row(
         "config",
-        "配置設置 | Configuration",
-        "查看和配置LLM提供商、API密鑰等設置"
+        "配置設定 | Configuration",
+        "查看和配置LLM提供商、API密鑰等設定"
     )
     commands_table.add_row(
         "examples",
-        "示例程序 | Examples",
-        "查看可用的演示程序和使用說明"
+        "範例程式 | Examples",
+        "查看可用的示範程式和使用說明"
     )
     commands_table.add_row(
         "test",

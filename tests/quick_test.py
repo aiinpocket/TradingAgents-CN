@@ -22,7 +22,7 @@ files_to_check = [
 for file_path in files_to_check:
     if os.path.exists(file_path):
         size = os.path.getsize(file_path)
-        print(f" {file_path} (大小: {size:,} 字節)")
+        print(f" {file_path} (大小: {size:,} 位元組)")
     else:
         print(f" {file_path} (檔案不存在)")
 

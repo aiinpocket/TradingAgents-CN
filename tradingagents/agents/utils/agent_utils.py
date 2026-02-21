@@ -408,7 +408,7 @@ class Toolkit:
         try:
             from datetime import datetime, timedelta
 
-            # 設置預設日期
+            # 設定預設日期
             if not curr_date:
                 curr_date = datetime.now().strftime('%Y-%m-%d')
             if not start_date:

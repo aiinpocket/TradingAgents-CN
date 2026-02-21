@@ -14,7 +14,7 @@ from typing import Dict, List, Tuple
 import logging
 from datetime import datetime
 
-# 設置日誌
+# 設定日誌
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -338,7 +338,7 @@ def main():
         logger.info("\n 遷移成功完成！")
         logger.info("\n 後續步驟:")
         logger.info("1. 驗證新目錄結構是否正確")
-        logger.info("2. 測試應用程序功能")
+        logger.info("2. 測試應用程式功能")
         logger.info("3. 確認無誤後可刪除備份目錄")
     else:
         logger.error("\n 遷移失敗！請檢查日誌並從備份恢復")

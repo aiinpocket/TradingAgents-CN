@@ -13,12 +13,12 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 def test_cli_logging_setup():
-    """測試CLI日誌設置"""
-    print(" 測試CLI日誌設置")
+    """測試CLI日誌設定"""
+    print(" 測試CLI日誌設定")
     print("=" * 60)
     
     try:
-        # 匯入CLI模塊，觸發日誌設置
+        # 匯入CLI模塊，觸發日誌設定
         from cli.main import setup_cli_logging, logger
         from tradingagents.utils.logging_manager import get_logger_manager
         
@@ -30,7 +30,7 @@ def test_cli_logging_setup():
         print(f"   總處理器數量: {handlers_before}")
         print(f"   控制台處理器數量: {console_handlers_before}")
         
-        # 執行CLI日誌設置
+        # 執行CLI日誌設定
         setup_cli_logging()
         
         print("\n 測試後的日誌處理器:")
@@ -170,7 +170,7 @@ def main():
     
     results = []
     
-    # 測試1: CLI日誌設置
+    # 測試1: CLI日誌設定
     results.append(test_cli_logging_setup())
     
     # 測試2: Console輸出
@@ -191,7 +191,7 @@ def main():
     total = len(results)
     
     test_names = [
-        "CLI日誌設置",
+        "CLI日誌設定",
         "Console輸出測試",
         "日誌檔案寫入",
         "CLI界面預覽"

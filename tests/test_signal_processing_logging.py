@@ -16,7 +16,7 @@ def test_signal_processing_logging():
     print("=" * 80)
     
     try:
-        # 設置日誌級別
+        # 設定日誌級別
         from tradingagents.utils.logging_init import get_logger
         logger = get_logger("default")
         logger.setLevel("INFO")

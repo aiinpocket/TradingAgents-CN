@@ -163,7 +163,7 @@ class StockDataPreparer:
                 stock_code=stock_code,
                 market_type=market_type,
                 error_message=f"資料準備過程中發生錯誤: {str(e)}",
-                suggestion="請檢查網絡連接或稍後重試"
+                suggestion="請檢查網路連接或稍後重試"
             )
 
     def _prepare_us_stock_data(self, stock_code: str, period_days: int,
@@ -254,7 +254,7 @@ class StockDataPreparer:
                 stock_code=formatted_code,
                 market_type="美股",
                 error_message=f"資料準備失敗: {str(e)}",
-                suggestion="請檢查網絡連接或資料來源配置"
+                suggestion="請檢查網路連接或資料來源配置"
             )
 
 

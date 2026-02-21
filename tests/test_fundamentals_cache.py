@@ -142,7 +142,7 @@ def test_cache_ttl():
             if 'fundamentals' in cache_type:
                 print(f"  - {cache_type}: TTL={config['ttl_hours']}小時, 描述={config['description']}")
         
-        # 測試美股的TTL設置
+        # 測試美股的TTL設定
         us_symbol_1 = "GOOGL"
         us_symbol_2 = "MSFT"
 

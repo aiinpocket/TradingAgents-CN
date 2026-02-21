@@ -121,8 +121,8 @@ def test_final_config():
     
     print("\n 使用說明:")
     print("1. 預設配置：MONGODB_ENABLED=false, REDIS_ENABLED=false")
-    print("2. 啟用MongoDB：將MONGODB_ENABLED設置為true")
-    print("3. 啟用Redis：將REDIS_ENABLED設置為true")
+    print("2. 啟用MongoDB：將MONGODB_ENABLED設定為true")
+    print("3. 啟用Redis：將REDIS_ENABLED設定為true")
     print("4. 系統會自動檢測並使用啟用的資料庫")
     print("5. 如果資料庫不可用，自動降級到檔案快取")
     

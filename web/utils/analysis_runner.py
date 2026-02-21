@@ -103,7 +103,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         research_depth: 研究深度
         llm_provider: LLM 提供商 (openai/anthropic)
         llm_model: 大模型名稱
-        progress_callback: 進度回調函數，用於更新UI狀態
+        progress_callback: 進度回呼函數，用於更新UI狀態
     """
 
     def update_progress(message, step=None, total_steps=None):
@@ -157,7 +157,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         return {
             'success': False,
             'error': error_msg,
-            'suggestion': "請檢查網絡連接或稍後重試",
+            'suggestion': "請檢查網路連接或稍後重試",
             'stock_symbol': stock_symbol,
             'analysis_date': analysis_date,
             'session_id': session_id
@@ -200,10 +200,10 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     finnhub_key = os.getenv("FINNHUB_API_KEY")
 
     logger.info("環境變量檢查:")
-    logger.info(f"  FINNHUB_API_KEY: {'已設置' if finnhub_key else '未設置'}")
+    logger.info(f"  FINNHUB_API_KEY: {'已設定' if finnhub_key else '未設定'}")
 
     if not finnhub_key:
-        logger.warning("FINNHUB_API_KEY 未設置，部分美股資料功能可能受限")
+        logger.warning("FINNHUB_API_KEY 未設定，部分美股資料功能可能受限")
 
     update_progress("環境變量驗證通過")
 
@@ -304,7 +304,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.info(f"  - 資料目錄: {config['data_dir']}")
         logger.info(f"  - 結果目錄: {config['results_dir']}")
         logger.info(f"  - 快取目錄: {config['data_cache_dir']}")
-        logger.info(f"  - 環境變量 TRADINGAGENTS_RESULTS_DIR: {os.getenv('TRADINGAGENTS_RESULTS_DIR', '未設置')}")
+        logger.info(f"  - 環境變量 TRADINGAGENTS_RESULTS_DIR: {os.getenv('TRADINGAGENTS_RESULTS_DIR', '未設定')}")
 
         logger.info(f"使用配置: {config}")
         logger.info(f"分析師列表: {analysts}")
@@ -498,7 +498,7 @@ def format_analysis_results(results):
     decision = results['decision']
 
     # 提取關鍵資訊
-    # decision 可能是字符串（如 "BUY", "SELL", "HOLD"）或字典
+    # decision 可能是字串（如 "BUY", "SELL", "HOLD"）或字典
     if isinstance(decision, str):
         # 將英文投資建議轉換為中文
         action_translation = {
@@ -513,9 +513,9 @@ def format_analysis_results(results):
 
         formatted_decision = {
             'action': action,
-            'confidence': 0.7,  # 預設置信度
+            'confidence': 0.7,  # 預設定信度
             'risk_score': 0.3,  # 預設風險分數
-            'target_price': None,  # 字符串格式沒有目標價格
+            'target_price': None,  # 字串格式沒有目標價格
             'reasoning': f'基於多維度分析，建議{decision.strip().upper()}'
         }
     elif isinstance(decision, dict):

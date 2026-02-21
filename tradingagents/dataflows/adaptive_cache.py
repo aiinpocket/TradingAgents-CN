@@ -24,7 +24,7 @@ class AdaptiveCacheSystem:
         # 獲取資料庫管理器
         self.db_manager = get_database_manager()
         
-        # 設置快取目錄
+        # 設定快取目錄
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         

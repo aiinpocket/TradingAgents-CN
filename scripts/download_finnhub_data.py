@@ -50,7 +50,7 @@ class FinnhubDataDownloader:
         # 獲取API密鑰
         self.api_key = api_key or os.getenv('FINNHUB_API_KEY')
         if not self.api_key:
-            raise ValueError(" 未找到Finnhub API密鑰，請設置FINNHUB_API_KEY環境變量")
+            raise ValueError(" 未找到Finnhub API密鑰，請設定FINNHUB_API_KEY環境變量")
         
         # 獲取資料目錄
         if data_dir:
@@ -130,11 +130,11 @@ class FinnhubDataDownloader:
                 # 檢查檔案是否有內容
                 try:
                     file_size = file_path.stat().st_size
-                    if file_size > 10:  # 檔案大小大於10字節才認為有效
-                        logger.info(f" {symbol} 資料檔案已存在且有效 (大小: {file_size} 字節)，跳過下載")
+                    if file_size > 10:  # 檔案大小大於10位元組才認為有效
+                        logger.info(f" {symbol} 資料檔案已存在且有效 (大小: {file_size} 位元組)，跳過下載")
                         continue
                     else:
-                        logger.warning(f" {symbol} 資料檔案存在但為空 (大小: {file_size} 字節)，重新下載")
+                        logger.warning(f" {symbol} 資料檔案存在但為空 (大小: {file_size} 位元組)，重新下載")
                 except Exception as e:
                     logger.warning(f" 檢查 {symbol} 檔案狀態失敗: {e}，重新下載")
 
@@ -174,7 +174,7 @@ class FinnhubDataDownloader:
                     # 驗證檔案保存
                     if file_path.exists():
                         file_size = file_path.stat().st_size
-                        logger.info(f" {symbol} 新聞資料已保存: {len(formatted_data)} 條, 檔案大小: {file_size} 字節")
+                        logger.info(f" {symbol} 新聞資料已保存: {len(formatted_data)} 條, 檔案大小: {file_size} 位元組")
                     else:
                         logger.error(f" {symbol} 檔案保存失敗，檔案不存在")
 

@@ -123,7 +123,7 @@ def test_env_config():
             else:
                 print(f"  {var}={value}")
         else:
-            print(f"  {var}=未設置")
+            print(f"  {var}=未設定")
     
     # 5. 總結
     print("\n 測試總結:")

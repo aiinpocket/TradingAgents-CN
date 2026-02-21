@@ -61,7 +61,7 @@ def test_news_analyst_integration():
             from tradingagents.tools.unified_news_tool import create_unified_news_tool
             test_tool = create_unified_news_tool(mock_toolkit)
             print(f"   統一新聞工具匯入成功")
-            print(f"   工具名稱: {getattr(test_tool, 'name', '未設置')}")
+            print(f"   工具名稱: {getattr(test_tool, 'name', '未設定')}")
             print(f"   工具描述: {test_tool.description[:100]}...")
         except Exception as e:
             print(f"   統一新聞工具匯入失敗: {e}")
@@ -79,7 +79,7 @@ def test_news_analyst_integration():
             integration_checks = [
                 ("統一新聞工具匯入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
                 ("工具創建", "unified_news_tool = create_unified_news_tool(toolkit)"),
-                ("工具名稱設置", 'unified_news_tool.name = "get_stock_news_unified"'),
+                ("工具名稱設定", 'unified_news_tool.name = "get_stock_news_unified"'),
                 ("工具列表", "tools = [unified_news_tool]"),
                 ("系統提示詞包含工具", "get_stock_news_unified"),
                 ("強制工具調用", "您的第一個動作必須是調用 get_stock_news_unified 工具"),
@@ -99,7 +99,7 @@ def test_news_analyst_integration():
         # 4. 驗證工作流程中的使用
         print(f"\n 第四步：驗證工作流程中的使用...")
         
-        # 檢查工作流程設置檔案
+        # 檢查工作流程設定檔案
         setup_file = "tradingagents/graph/setup.py"
         try:
             with open(setup_file, "r", encoding="utf-8") as f:
@@ -118,7 +118,7 @@ def test_news_analyst_integration():
                     print(f"   {check_name}: 未在工作流程中找到")
                     
         except Exception as e:
-            print(f"   無法讀取工作流程設置檔案: {e}")
+            print(f"   無法讀取工作流程設定檔案: {e}")
         
         # 5. 測試工具調用
         print(f"\n 第五步：測試工具調用...")

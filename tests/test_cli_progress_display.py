@@ -155,7 +155,7 @@ def test_progress_vs_logging():
         print("\n 用戶界面消息:")
         ui.show_progress("正在獲取資料...")
         ui.show_success("資料取得完成")
-        ui.show_warning("網絡延遲較高")
+        ui.show_warning("網路延遲較高")
         
         # 系統日誌（只寫入檔案，不在控制台顯示）
         print("\n 系統日誌（只寫入檔案）:")

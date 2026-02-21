@@ -171,8 +171,8 @@ class LogAnalyzer:
             # 簡單的錯誤分類
             if 'API' in message or 'api' in message:
                 error_patterns['API錯誤'] += 1
-            elif '網絡' in message or 'network' in message or 'connection' in message:
-                error_patterns['網絡錯誤'] += 1
+            elif '網路' in message or 'network' in message or 'connection' in message:
+                error_patterns['網路錯誤'] += 1
             elif '資料庫' in message or 'database' in message or 'mongodb' in message:
                 error_patterns['資料庫錯誤'] += 1
             elif 'PDF' in message or 'pdf' in message:

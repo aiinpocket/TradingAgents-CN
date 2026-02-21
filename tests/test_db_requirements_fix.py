@@ -202,9 +202,9 @@ def test_documentation_completeness():
             # 檢查檔案大小
             size = os.path.getsize(full_path)
             if size > 1000:  # 至少1KB
-                print(f"    檔案大小: {size} 字節")
+                print(f"    檔案大小: {size} 位元組")
             else:
-                print(f"     檔案較小: {size} 字節")
+                print(f"     檔案較小: {size} 位元組")
         else:
             print(f"   {doc_path}: 不存在")
             all_exist = False

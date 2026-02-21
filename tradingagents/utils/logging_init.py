@@ -23,7 +23,7 @@ def init_logging(config_override: Optional[dict] = None) -> None:
     Args:
         config_override: 可選的配置覆蓋
     """
-    # 設置日誌系統
+    # 設定日誌系統
     logger_manager = setup_logging(config_override)
     
     # 獲取初始化日誌器
@@ -123,24 +123,24 @@ def log_shutdown_info():
 
 # 便捷函數
 def setup_web_logging():
-    """設置Web應用專用日誌"""
+    """設定Web應用專用日誌"""
     init_logging()
     log_startup_info()
     return get_logger('web')
 
 
 def setup_analysis_logging(session_id: str):
-    """設置分析專用日誌"""
+    """設定分析專用日誌"""
     return get_session_logger(session_id, 'analysis')
 
 
 def setup_dataflow_logging():
-    """設置資料流專用日誌"""
+    """設定資料流專用日誌"""
     return get_logger('dataflows')
 
 
 def setup_llm_logging():
-    """設置LLM相關模組專用日誌"""
+    """設定LLM相關模組專用日誌"""
     return get_logger('llm')
 
 

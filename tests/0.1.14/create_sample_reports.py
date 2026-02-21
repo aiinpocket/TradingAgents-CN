@@ -42,7 +42,7 @@ def create_sample_report(stock_symbol: str, stock_name: str):
 ##  風險提示
 - 市場整體波動風險
 - 行業政策變化風險
-- 建議設置止損位
+- 建議設定止損位
 """,
 
         "fundamentals_report": f"""# {stock_name}({stock_symbol}) 基本面分析報告
@@ -128,7 +128,7 @@ def create_sample_report(stock_symbol: str, stock_name: str):
 ##  風險提示
 - 注意大盤整體走勢
 - 關注成交量變化
-- 設置合理止損位
+- 設定合理止損位
 """
     }
     

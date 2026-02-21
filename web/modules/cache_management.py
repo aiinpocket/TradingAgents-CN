@@ -157,7 +157,7 @@ def main():
     with col2:
         st.subheader("快取配置")
         
-        # 快取設置
+        # 快取設定
         st.info("""
         **快取機制說明：**
         

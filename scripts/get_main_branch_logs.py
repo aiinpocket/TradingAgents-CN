@@ -142,7 +142,7 @@ def get_docker_logs(container_name):
         
         print(f" Docker日誌已保存到: {docker_log_file}")
         print(f"    日誌行數: {lines:,}")
-        print(f"    檔案大小: {size:,} 字節")
+        print(f"    檔案大小: {size:,} 位元組")
         
         # 顯示最後幾行
         print(f"\n 最後10行日誌預覽:")
@@ -183,7 +183,7 @@ def copy_log_files(container_name, log_files):
             # 檢查本地檔案
             if os.path.exists(local_file):
                 size = os.path.getsize(local_file)
-                print(f"    檔案大小: {size:,} 字節")
+                print(f"    檔案大小: {size:,} 位元組")
                 
                 # 預覽檔案內容
                 try:

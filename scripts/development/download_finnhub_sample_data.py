@@ -70,7 +70,7 @@ def create_sample_news_data(ticker, data_dir, days=7):
         "AMZN": [
             "亞馬遜AWS云服務市場份額擴大",
             "亞馬遜Prime會員數量持續增長",
-            "亞馬遜物流網絡進一步優化",
+            "亞馬遜物流網路進一步優化",
             "亞馬遜廣告業務快速發展",
             "亞馬遜在AI領域投資加大"
         ]

@@ -131,7 +131,7 @@ def test_word_conversion(md_content):
                 # 檢查檔案
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
-                    print(f" 轉換成功! 檔案大小: {file_size} 字節")
+                    print(f" 轉換成功! 檔案大小: {file_size} 位元組")
                     
                     # 保存成功的檔案
                     success_file = f"test_output_{i}.docx"
@@ -169,7 +169,7 @@ def test_pdf_conversion(md_content):
         test_engines = [
             ('wkhtmltopdf', 'HTML轉PDF引擎'),
             ('weasyprint', '現代HTML轉PDF引擎'),
-            (None, '默認引擎')
+            (None, '預設引擎')
         ]
         
         for i, (engine, description) in enumerate(test_engines, 1):
@@ -181,7 +181,7 @@ def test_pdf_conversion(md_content):
                     extra_args.append(f'--pdf-engine={engine}')
                     print(f" 使用引擎: {engine}")
                 else:
-                    print(f" 使用默認引擎")
+                    print(f" 使用預設引擎")
                 
                 pypandoc.convert_text(
                     md_content,
@@ -194,7 +194,7 @@ def test_pdf_conversion(md_content):
                 # 檢查檔案
                 if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                     file_size = os.path.getsize(output_file)
-                    print(f" 轉換成功! 檔案大小: {file_size} 字節")
+                    print(f" 轉換成功! 檔案大小: {file_size} 位元組")
                     
                     # 保存成功的檔案
                     success_file = f"test_output_{i}.pdf"
@@ -242,7 +242,7 @@ def main():
     
     if word_success or pdf_success:
         print("\n 至少有一種格式轉換成功!")
-        print(" 可以將成功的參數應用到主程序中")
+        print(" 可以將成功的參數應用到主程式中")
     else:
         print("\n 所有轉換都失敗了")
         print(" 需要檢查pandoc安裝和配置")

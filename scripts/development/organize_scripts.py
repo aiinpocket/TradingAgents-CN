@@ -156,10 +156,10 @@ python scripts/{category}/script_name.py
 ## 目錄結構
 
 ###  setup/ - 安裝和配置腳本
-- 環境設置
+- 環境設定
 - 依賴安裝  
 - API配置
-- 資料庫設置
+- 資料庫設定
 
 ###  validation/ - 驗證腳本
 - Git配置驗證
@@ -199,7 +199,7 @@ python scripts/{category}/script_name.py
 ### 腳本分類
 - **tests/** - 單元測試和集成測試（pytest運行）
 - **scripts/** - 工具腳本和驗證腳本（獨立運行）
-- **tools/** - 複雜的獨立工具程序
+- **tools/** - 複雜的獨立工具程式
 
 ### 運行方式
 ```bash

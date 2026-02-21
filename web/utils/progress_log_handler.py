@@ -73,7 +73,7 @@ class ProgressLogHandler(logging.Handler):
                             _internal_logger.debug(f"[進度集成] 更新失敗: {e}")
                         
         except Exception as e:
-            # 不要讓日誌處理器的錯誤影響主程序
+            # 不要讓日誌處理器的錯誤影響主程式
             _internal_logger.debug(f"[進度集成] 日誌處理錯誤: {e}")
     
     def _extract_stock_symbol(self, message: str) -> Optional[str]:
@@ -91,7 +91,7 @@ class ProgressLogHandler(logging.Handler):
 _progress_handler = None
 
 def setup_progress_log_integration():
-    """設置進度日誌集成"""
+    """設定進度日誌集成"""
     global _progress_handler
     
     if _progress_handler is None:
@@ -102,7 +102,7 @@ def setup_progress_log_integration():
         tools_logger = logging.getLogger('tools')
         tools_logger.addHandler(_progress_handler)
         
-        _internal_logger.debug("[進度集成] 日誌處理器已設置")
+        _internal_logger.debug("[進度集成] 日誌處理器已設定")
     
     return _progress_handler
 

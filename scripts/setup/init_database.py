@@ -148,8 +148,8 @@ def init_redis():
         logger.info(f" 清理現有快取...")
         redis_client.flushdb()
         
-        # 設置初始快取配置
-        logger.info(f" 設置快取配置...")
+        # 設定初始快取配置
+        logger.info(f" 設定快取配置...")
         cache_config = {
             "version": "1.0",
             "initialized_at": datetime.utcnow().isoformat(),
@@ -162,7 +162,7 @@ def init_redis():
         
         db_manager.cache_set("system:cache_config", cache_config, ttl=86400*30)  # 30天
         
-        # 設置快取統計初始值
+        # 設定快取統計初始值
         logger.info(f" 初始化快取統計...")
         stats = {
             "cache_hits": 0,

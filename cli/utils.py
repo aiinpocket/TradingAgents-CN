@@ -31,7 +31,7 @@ def get_ticker() -> str:
     ).ask()
 
     if not ticker:
-        logger.info(f"\n[red]未提供股票代碼，退出程序... | No ticker symbol provided. Exiting...[/red]")
+        logger.info(f"\n[red]未提供股票代碼，退出程式... | No ticker symbol provided. Exiting...[/red]")
         exit(1)
 
     return ticker.strip().upper()
@@ -64,7 +64,7 @@ def get_analysis_date() -> str:
     ).ask()
 
     if not date:
-        logger.info(f"\n[red]未提供日期，退出程序... | No date provided. Exiting...[/red]")
+        logger.info(f"\n[red]未提供日期，退出程式... | No date provided. Exiting...[/red]")
         exit(1)
 
     return date.strip()
@@ -93,7 +93,7 @@ def select_analysts(ticker: str = None) -> List[AnalystType]:
     ).ask()
 
     if not choices:
-        logger.info(f"\n[red]未選擇分析師，退出程序... | No analysts selected. Exiting...[/red]")
+        logger.info(f"\n[red]未選擇分析師，退出程式... | No analysts selected. Exiting...[/red]")
         exit(1)
 
     return choices
@@ -125,7 +125,7 @@ def select_research_depth() -> int:
     ).ask()
 
     if choice is None:
-        logger.info(f"\n[red]未選擇研究深度，退出程序... | No research depth selected. Exiting...[/red]")
+        logger.info(f"\n[red]未選擇研究深度，退出程式... | No research depth selected. Exiting...[/red]")
         exit(1)
 
     return choice
@@ -174,7 +174,7 @@ def select_shallow_thinking_agent(provider) -> str:
 
     if choice is None:
         console.print(
-            "\n[red]未選擇快速思考LLM引擎，退出程序... | No shallow thinking llm engine selected. Exiting...[/red]"
+            "\n[red]未選擇快速思考LLM引擎，退出程式... | No shallow thinking llm engine selected. Exiting...[/red]"
         )
         exit(1)
 
@@ -227,7 +227,7 @@ def select_deep_thinking_agent(provider) -> str:
     ).ask()
 
     if choice is None:
-        logger.info(f"\n[red]未選擇深度思考LLM引擎，退出程序... | No deep thinking llm engine selected. Exiting...[/red]")
+        logger.info(f"\n[red]未選擇深度思考LLM引擎，退出程式... | No deep thinking llm engine selected. Exiting...[/red]")
         exit(1)
 
     return choice

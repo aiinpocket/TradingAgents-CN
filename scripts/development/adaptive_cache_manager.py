@@ -31,7 +31,7 @@ class AdaptiveCacheManager:
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         
-        # 設置日誌
+        # 設定日誌
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         

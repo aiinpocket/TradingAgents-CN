@@ -38,8 +38,8 @@ def test_python_environment():
     return True
 
 def test_vscode_settings():
-    """測試VSCode設置檔案"""
-    print("\n VSCode設置驗證")
+    """測試VSCode設定檔案"""
+    print("\n VSCode設定驗證")
     print("=" * 50)
     
     settings_path = Path('.vscode/settings.json')
@@ -199,7 +199,7 @@ def test_environment_variables():
         if value:
             print(f" {var}: {'*' * 10}{value[-4:] if len(value) > 4 else '****'}")
         else:
-            print(f" {var}: 未設置")
+            print(f" {var}: 未設定")
     
     return True
 
@@ -232,7 +232,7 @@ def main():
     print("=" * 70)
     print(" 驗證目標:")
     print("   - Python虛擬環境配置")
-    print("   - VSCode設置檔案")
+    print("   - VSCode設定檔案")
     print("   - 項目結構完整性")
     print("   - 關鍵包匯入")
     print("   - 環境變量配置")
@@ -241,7 +241,7 @@ def main():
     # 運行所有測試
     tests = [
         ("Python環境", test_python_environment),
-        ("VSCode設置", test_vscode_settings),
+        ("VSCode設定", test_vscode_settings),
         ("虛擬環境路徑", test_virtual_env_path),
         ("包匯入", test_package_imports),
         ("項目結構", test_project_structure),

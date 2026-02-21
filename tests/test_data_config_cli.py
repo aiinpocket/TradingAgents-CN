@@ -31,11 +31,11 @@ def test_data_dir_configuration():
     default_data_dir = get_data_dir()
     print(f"預設資料目錄 | Default data directory: {default_data_dir}")
     
-    # 2. 測試設置自定義資料目錄
-    print("\n2. 測試設置自定義資料目錄 | Testing Custom Data Directory")
+    # 2. 測試設定自定義資料目錄
+    print("\n2. 測試設定自定義資料目錄 | Testing Custom Data Directory")
     with tempfile.TemporaryDirectory() as temp_dir:
         custom_data_dir = os.path.join(temp_dir, "custom_trading_data")
-        print(f"設置自定義資料目錄 | Setting custom data directory: {custom_data_dir}")
+        print(f"設定自定義資料目錄 | Setting custom data directory: {custom_data_dir}")
         
         set_data_dir(custom_data_dir)
         current_data_dir = get_data_dir()
@@ -67,9 +67,9 @@ def test_data_dir_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         env_data_dir = os.path.join(temp_dir, "env_trading_data")
         
-        # 設置環境變量
+        # 設定環境變量
         os.environ["TRADINGAGENTS_DATA_DIR"] = env_data_dir
-        print(f"設置環境變量 | Setting environment variable: TRADINGAGENTS_DATA_DIR={env_data_dir}")
+        print(f"設定環境變量 | Setting environment variable: TRADINGAGENTS_DATA_DIR={env_data_dir}")
         
         # 重新初始化配置以讀取環境變量
         initialize_config()
@@ -87,7 +87,7 @@ def test_data_dir_configuration():
     # 4. 測試配置管理器集成
     print("\n4. 測試配置管理器集成 | Testing Configuration Manager Integration")
     settings = config_manager.load_settings()
-    print(f"配置管理器設置 | Configuration manager settings:")
+    print(f"配置管理器設定 | Configuration manager settings:")
     for key, value in settings.items():
         if 'dir' in key.lower():
             print(f"  {key}: {value}")
@@ -112,7 +112,7 @@ def test_cli_commands():
     print("   python -m cli.main data-config")
     print("   python -m cli.main data-config --show")
     print()
-    print("2. 設置自定義資料目錄 | Set custom data directory:")
+    print("2. 設定自定義資料目錄 | Set custom data directory:")
     print("   python -m cli.main data-config --set C:\\custom\\trading\\data")
     print()
     print("3. 重置為預設配置 | Reset to default configuration:")
@@ -142,7 +142,7 @@ def main():
         print("\n 所有測試完成！| All tests completed!")
         print("\n 總結 | Summary:")
         print(" 資料目錄配置功能已實現 | Data directory configuration feature implemented")
-        print(" 支持自定義路徑設置 | Custom path setting supported")
+        print(" 支持自定義路徑設定 | Custom path setting supported")
         print(" 支持環境變量配置 | Environment variable configuration supported")
         print(" 集成配置管理器 | Configuration manager integrated")
         print(" CLI命令界面完整 | CLI command interface complete")

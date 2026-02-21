@@ -31,7 +31,7 @@ class VersionManager:
             return "cn-0.0.0"
     
     def set_version(self, version):
-        """設置版本號"""
+        """設定版本號"""
         with open(self.version_file, 'w', encoding='utf-8') as f:
             f.write(version)
         logger.info(f" 版本號已更新為: {version}")
@@ -189,8 +189,8 @@ def main():
     # 顯示資訊命令
     subparsers.add_parser('info', help='顯示版本資訊')
     
-    # 設置版本命令
-    set_parser = subparsers.add_parser('set', help='設置版本號')
+    # 設定版本命令
+    set_parser = subparsers.add_parser('set', help='設定版本號')
     set_parser.add_argument('version', help='版本號 (例如: 1.2.3)')
     
     # 遞增版本命令

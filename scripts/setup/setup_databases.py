@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-資料庫環境設置腳本
+資料庫環境設定腳本
 自動安裝和配置MongoDB + Redis
 """
 
@@ -50,8 +50,8 @@ def install_python_packages():
             logger.error(f" {package} 安裝失敗，請手動安裝")
 
 def setup_mongodb_windows():
-    """Windows環境MongoDB設置"""
-    logger.info(f"\n Windows MongoDB 設置指南:")
+    """Windows環境MongoDB設定"""
+    logger.info(f"\n Windows MongoDB 設定指南:")
     print("""
     請按以下步驟手動安裝MongoDB:
     
@@ -75,8 +75,8 @@ def setup_mongodb_windows():
     """)
 
 def setup_redis_windows():
-    """Windows環境Redis設置"""
-    logger.info(f"\n Windows Redis 設置指南:")
+    """Windows環境Redis設定"""
+    logger.info(f"\n Windows Redis 設定指南:")
     print("""
     請按以下步驟手動安裝Redis:
     
@@ -102,8 +102,8 @@ def setup_redis_windows():
     """)
 
 def setup_mongodb_linux():
-    """Linux環境MongoDB設置"""
-    logger.info(f"\n Linux MongoDB 設置...")
+    """Linux環境MongoDB設定"""
+    logger.info(f"\n Linux MongoDB 設定...")
     
     # 檢測Linux發行版
     if os.path.exists("/etc/ubuntu-release") or os.path.exists("/etc/debian_version"):
@@ -129,8 +129,8 @@ def setup_mongodb_linux():
         run_command(cmd, f"執行: {cmd}")
 
 def setup_redis_linux():
-    """Linux環境Redis設置"""
-    logger.info(f"\n Linux Redis 設置...")
+    """Linux環境Redis設定"""
+    logger.info(f"\n Linux Redis 設定...")
     
     # 檢測Linux發行版
     if os.path.exists("/etc/ubuntu-release") or os.path.exists("/etc/debian_version"):
@@ -156,8 +156,8 @@ def setup_redis_linux():
         run_command(cmd, f"執行: {cmd}")
 
 def setup_docker_option():
-    """Docker方式設置"""
-    logger.info(f"\n Docker 方式設置 (推薦):")
+    """Docker方式設定"""
+    logger.info(f"\n Docker 方式設定 (推薦):")
     print("""
     如果您已安裝Docker，可以使用以下命令快速啟動:
     
@@ -225,7 +225,7 @@ def test_connections():
 
 def main():
     """主函數"""
-    logger.info(f" TradingAgents 資料庫環境設置")
+    logger.info(f" TradingAgents 資料庫環境設定")
     logger.info(f"=")
     
     # 檢測作業系統
@@ -235,7 +235,7 @@ def main():
     # 安裝Python依賴
     install_python_packages()
     
-    # 根據作業系統提供設置指南
+    # 根據作業系統提供設定指南
     if system == "windows":
         setup_mongodb_windows()
         setup_redis_windows()
@@ -252,7 +252,7 @@ def main():
     create_env_template()
     
     logger.info(f"\n")
-    logger.info(f" 設置完成後，請運行以下命令測試連接:")
+    logger.info(f" 設定完成後，請運行以下命令測試連接:")
     logger.info(f"python scripts/setup_databases.py --test")
     
     # 如果指定了測試參數

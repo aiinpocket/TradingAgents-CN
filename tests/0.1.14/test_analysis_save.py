@@ -30,7 +30,7 @@ def create_mock_analysis_results():
 - 成交量: 放量上漲
 
 ##  操作建議
-建議在回調時買入，目標價位上漲15%。
+建議在回呼時買入，目標價位上漲15%。
 """,
             'fundamentals_report': """# TEST123 基本面分析報告
 

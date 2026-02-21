@@ -35,7 +35,7 @@ def initialize_system():
     logger.info(f" 快取目錄: {cache_dir}")
     
     # 3. 檢查並創建資料庫配置檔
-    logger.info(f"\n 配置資料庫設置...")
+    logger.info(f"\n 配置資料庫設定...")
     config_file = config_dir / "database_config.json"
     
     if config_file.exists():

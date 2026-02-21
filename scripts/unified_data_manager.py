@@ -167,7 +167,7 @@ class UnifiedDataDirectoryManager:
         # 添加環境變量狀態
         for key, env_key in self._env_mapping.items():
             env_value = os.getenv(env_key)
-            summary[f'env_{key}'] = env_value if env_value else '未設置'
+            summary[f'env_{key}'] = env_value if env_value else '未設定'
         
         return summary
     
@@ -264,7 +264,7 @@ def main():
     
     args = parser.parse_args()
     
-    # 設置日誌
+    # 設定日誌
     logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
     
     manager = UnifiedDataDirectoryManager(args.project_root)

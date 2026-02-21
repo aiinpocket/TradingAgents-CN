@@ -192,7 +192,7 @@ def test_pdf_generation():
         
         if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
             file_size = os.path.getsize(output_file)
-            logger.info(f" PDF生成測試成功！檔案大小: {file_size} 字節")
+            logger.info(f" PDF生成測試成功！檔案大小: {file_size} 位元組")
             
             # 清理測試檔案
             os.unlink(output_file)

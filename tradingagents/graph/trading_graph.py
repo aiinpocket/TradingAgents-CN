@@ -193,7 +193,7 @@ class TradingAgentsGraph:
         logger.debug(f"接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")
 
         self.ticker = company_name
-        logger.debug(f"設置self.ticker: '{self.ticker}'")
+        logger.debug(f"設定self.ticker: '{self.ticker}'")
 
         # Initialize state
         logger.debug(f"創建初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")

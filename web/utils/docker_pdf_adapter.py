@@ -31,7 +31,7 @@ def is_docker_environment() -> bool:
     return os.environ.get('DOCKER_CONTAINER', '').lower() == 'true'
 
 def setup_xvfb_display():
-    """設置虛擬顯示器 (Docker環境需要)"""
+    """設定虛擬顯示器 (Docker環境需要)"""
     if not is_docker_environment():
         return True
 
@@ -55,12 +55,12 @@ def setup_xvfb_display():
         import time
         time.sleep(2)
 
-        # 設置DISPLAY環境變量
+        # 設定DISPLAY環境變量
         os.environ['DISPLAY'] = ':99'
-        logger.info("Docker虛擬顯示器設置成功")
+        logger.info("Docker虛擬顯示器設定成功")
         return True
     except Exception as e:
-        logger.error(f"虛擬顯示器設置失敗: {e}")
+        logger.error(f"虛擬顯示器設定失敗: {e}")
         # 即使Xvfb失敗，也嘗試繼續，某些情況下wkhtmltopdf可以無頭運行
         return False
 
@@ -87,7 +87,7 @@ def test_docker_pdf_generation() -> bool:
         import pypandoc
 
         
-        # 設置虛擬顯示器
+        # 設定虛擬顯示器
         setup_xvfb_display()
         
         # 測試內容

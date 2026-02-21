@@ -170,9 +170,9 @@ def get_persistent_analysis_id() -> Optional[str]:
 def set_persistent_analysis_id(analysis_id: str, status: str = "running",
                               stock_symbol: str = "", market_type: str = "",
                               form_config: Dict[str, Any] = None):
-    """設置持久化的分析ID和表單配置"""
+    """設定持久化的分析ID和表單配置"""
     try:
-        # 設置到session state
+        # 設定到session state
         st.session_state.current_analysis_id = analysis_id
         st.session_state.analysis_running = (status == 'running')
         st.session_state.last_stock_symbol = stock_symbol
@@ -186,7 +186,7 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         smart_session_manager.save_analysis_state(analysis_id, status, stock_symbol, market_type, form_config)
 
     except Exception as e:
-        st.warning(f"設置持久化分析ID失敗: {e}")
+        st.warning(f"設定持久化分析ID失敗: {e}")
 
 def get_session_debug_info() -> Dict[str, Any]:
     """獲取會話管理器除錯資訊"""

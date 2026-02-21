@@ -23,7 +23,7 @@ def test_safe_dataframe():
         # 測試混合資料類型
         mixed_data = {
             '項目': ['股票代碼', '分析時間', '分析師數量', '研究深度'],
-            '結果A': ['AAPL', '2025-07-31 12:00', 3, 5],  # 混合字符串和整數
+            '結果A': ['AAPL', '2025-07-31 12:00', 3, 5],  # 混合字串和整數
             '結果B': ['MSFT', '2025-07-31 13:00', 2, 4]
         }
         
@@ -37,9 +37,9 @@ def test_safe_dataframe():
             dtype = df[col].dtype
             print(f"   {col}: {dtype}")
             if dtype == 'object':
-                print(f"    {col} 是字符串類型")
+                print(f"    {col} 是字串類型")
             else:
-                print(f"    {col} 不是字符串類型")
+                print(f"    {col} 不是字串類型")
         
         # 測試列表資料
         list_data = [
@@ -88,12 +88,12 @@ def test_comparison_data():
         df = safe_dataframe(comparison_data)
         print(f" 對比資料DataFrame創建成功")
         
-        # 驗證所有資料都是字符串
+        # 驗證所有資料都是字串
         all_string = all(df[col].dtype == 'object' for col in df.columns)
         if all_string:
-            print(" 所有列都是字符串類型")
+            print(" 所有列都是字串類型")
         else:
-            print(" 存在非字符串類型的列")
+            print(" 存在非字串類型的列")
             
         return True
         
@@ -123,9 +123,9 @@ def test_timeline_data():
         df = safe_dataframe(timeline_data)
         print(f" 時間線資料DataFrame創建成功，行數: {len(df)}")
         
-        # 檢查序號列是否為字符串
+        # 檢查序號列是否為字串
         if df['序號'].dtype == 'object':
-            print(" 序號列已轉換為字符串類型")
+            print(" 序號列已轉換為字串類型")
         else:
             print(f" 序號列類型: {df['序號'].dtype}")
             

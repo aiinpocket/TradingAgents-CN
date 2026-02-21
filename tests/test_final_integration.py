@@ -92,7 +92,7 @@ def test_final_integration():
         checks = [
             ("統一新聞工具匯入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
             ("統一工具創建", "unified_news_tool = create_unified_news_tool(toolkit)"),
-            ("工具名稱設置", "unified_news_tool.name = \"get_stock_news_unified\""),
+            ("工具名稱設定", "unified_news_tool.name = \"get_stock_news_unified\""),
             ("系統提示詞更新", "get_stock_news_unified"),
             ("補救機制更新", "unified_news_tool")
         ]

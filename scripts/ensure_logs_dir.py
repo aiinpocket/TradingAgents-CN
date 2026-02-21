@@ -26,13 +26,13 @@ def ensure_logs_directory():
     else:
         print(" logs目錄已存在")
     
-    # 設置目錄權限（Linux/macOS）
+    # 設定目錄權限（Linux/macOS）
     if os.name != 'nt':  # 不是Windows
         try:
             os.chmod(logs_dir, 0o755)
-            print(" 設置目錄權限: 755")
+            print(" 設定目錄權限: 755")
         except Exception as e:
-            print(f" 設置權限失敗: {e}")
+            print(f" 設定權限失敗: {e}")
     
     # 創建.gitkeep檔案
     gitkeep_file = logs_dir / ".gitkeep"
@@ -83,7 +83,7 @@ Get-Content logs/tradingagents.log -Wait
         print(f"\n 現有日誌檔案 ({len(log_files)} 個):")
         for log_file in sorted(log_files):
             size = log_file.stat().st_size
-            print(f"    {log_file.name} ({size:,} 字節)")
+            print(f"    {log_file.name} ({size:,} 位元組)")
     else:
         print("\n 暫無日誌檔案")
     

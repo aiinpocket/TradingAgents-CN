@@ -42,7 +42,7 @@ def test_config_manager_import():
         print(f" 載入了 {len(pricing)} 個定價配置")
         
         settings = config_manager.load_settings()
-        print(f" 載入了 {len(settings)} 個系統設置")
+        print(f" 載入了 {len(settings)} 個系統設定")
         
         return True
     except Exception as e:
@@ -102,7 +102,7 @@ def main():
         print("\n 使用方法:")
         print("1. 啟動Web應用: python -m streamlit run web/app.py")
         print("2. 在側邊欄選擇 ' 配置管理'")
-        print("3. 配置API密鑰、模型參數和費率設置")
+        print("3. 配置API密鑰、模型參數和費率設定")
         print("4. 查看使用統計和成本分析")
         return True
     else:

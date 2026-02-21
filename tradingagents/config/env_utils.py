@@ -36,7 +36,7 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     if value is None:
         return default
     
-    # 轉換為字符串並去除空白
+    # 轉換為字串並去除空白
     value_str = str(value).strip()
     
     if not value_str:
@@ -115,14 +115,14 @@ def parse_float_env(env_var: str, default: float = 0.0) -> float:
 
 def parse_str_env(env_var: str, default: str = "") -> str:
     """
-    解析字符串類型環境變量
+    解析字串類型環境變量
     
     Args:
         env_var: 環境變量名
         default: 預設值
         
     Returns:
-        str: 解析後的字符串值
+        str: 解析後的字串值
     """
     value = os.getenv(env_var)
     
@@ -155,7 +155,7 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
     try:
         # 分割並去除空白
         items = [item.strip() for item in value.split(separator)]
-        # 過濾空字符串
+        # 過濾空字串
         return [item for item in items if item]
     except AttributeError:
         logger.warning(f"無法解析環境變量 {env_var}='{value}' 為列表，使用預設值 {default}")
@@ -186,7 +186,7 @@ def get_env_info(env_var: str) -> dict:
 
 def validate_required_env_vars(required_vars: list) -> dict:
     """
-    驗證必需的環境變量是否已設置
+    驗證必需的環境變量是否已設定
     
     Args:
         required_vars: 必需的環境變量列表
@@ -228,7 +228,7 @@ def get_int_env(env_var: str, default: int = 0) -> int:
 
 
 def get_str_env(env_var: str, default: str = "") -> str:
-    """向後兼容的字符串解析函數"""
+    """向後兼容的字串解析函數"""
     return parse_str_env(env_var, default)
 
 

@@ -47,7 +47,7 @@ import os
 import sys
 sys.path.insert(0, '/app')
 
-# 設置環境變量
+# 設定環境變量
 os.environ['DOCKER_CONTAINER'] = 'true'
 os.environ['TRADINGAGENTS_LOG_DIR'] = '/app/logs'
 
@@ -73,7 +73,7 @@ try:
     print(f' 找到日誌檔案: {len(log_files)} 個')
     for log_file in log_files:
         size = os.path.getsize(log_file)
-        print(f'    {log_file}: {size} 字節')
+        print(f'    {log_file}: {size} 位元組')
         
 except Exception as e:
     print(f' 日誌測試失敗: {e}')
@@ -117,7 +117,7 @@ def check_local_logs():
         mtime = stat.st_mtime
         
         print(f"    {log_file.name}")
-        print(f"      大小: {size:,} 字節")
+        print(f"      大小: {size:,} 位元組")
         print(f"      修改時間: {time.ctime(mtime)}")
         
         # 顯示最後幾行內容
@@ -160,7 +160,7 @@ def check_container_logs():
                     success3, output3, error3 = run_command(f"docker exec TradingAgents-web wc -c {log_file}")
                     if success3:
                         size = output3.strip().split()[0]
-                        print(f"      大小: {size} 字節")
+                        print(f"      大小: {size} 位元組")
         else:
             print(" 容器內未找到日誌檔案")
         

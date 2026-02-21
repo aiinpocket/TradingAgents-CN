@@ -176,12 +176,12 @@ class SignalProcessor:
                             logger.debug(f"[SignalProcessor] 智能推算目標價格: {target_price}")
                         else:
                             target_price = None
-                            logger.warning("[SignalProcessor] 未能提取到目標價格，設置為None")
+                            logger.warning("[SignalProcessor] 未能提取到目標價格，設定為None")
                 else:
                     # 確保價格是數值類型
                     try:
                         if isinstance(target_price, str):
-                            # 清理字符串格式的價格
+                            # 清理字串格式的價格
                             clean_price = target_price.replace('$', '').replace('¥', '').replace('￥', '').replace('元', '').replace('美元', '').strip()
                             target_price = float(clean_price) if clean_price and clean_price.lower() not in ['none', 'null', ''] else None
                         elif isinstance(target_price, (int, float)):
@@ -189,7 +189,7 @@ class SignalProcessor:
                         logger.debug(f"[SignalProcessor] 處理後的目標價格: {target_price}")
                     except (ValueError, TypeError):
                         target_price = None
-                        logger.warning("[SignalProcessor] 價格轉換失敗，設置為None")
+                        logger.warning("[SignalProcessor] 價格轉換失敗，設定為None")
 
                 result = {
                     'action': action,

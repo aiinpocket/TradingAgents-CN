@@ -96,18 +96,18 @@ def test_config_manager():
         
         print(" 使用記錄測試通過")
         
-        # 測試設置
-        print(" 測試系統設置...")
+        # 測試設定
+        print(" 測試系統設定...")
         settings = config_manager.load_settings()
-        assert "default_provider" in settings, "應該有預設設置"
+        assert "default_provider" in settings, "應該有預設設定"
         
         settings["test_setting"] = "test_value"
         config_manager.save_settings(settings)
         
         reloaded_settings = config_manager.load_settings()
-        assert reloaded_settings["test_setting"] == "test_value", "設置應該被保存"
+        assert reloaded_settings["test_setting"] == "test_value", "設定應該被保存"
         
-        print(" 系統設置測試通過")
+        print(" 系統設定測試通過")
 
 def test_token_tracker():
     """測試Token跟蹤器"""

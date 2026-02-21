@@ -25,16 +25,16 @@ def render_config_management():
     st.sidebar.title("配置選項")
     page = st.sidebar.selectbox(
         "選擇功能",
-        ["模型配置", "定價設置", "使用統計", "系統設置"]
+        ["模型配置", "定價設定", "使用統計", "系統設定"]
     )
     
     if page == "模型配置":
         render_model_config()
-    elif page == "定價設置":
+    elif page == "定價設定":
         render_pricing_config()
     elif page == "使用統計":
         render_usage_statistics()
-    elif page == "系統設置":
+    elif page == "系統設定":
         render_system_settings()
 
 
@@ -61,7 +61,7 @@ def render_model_config():
             elif model.api_key:
                 api_key_display = "已配置"
             else:
-                api_key_display = "未設置"
+                api_key_display = "未設定"
 
             model_data.append({
                 "序號": i,
@@ -98,7 +98,7 @@ def render_model_config():
             elif model.api_key:
                 st.warning(f"API密鑰: 使用舊配置（建議遷移到 `.env`）")
             else:
-                st.error(f"API密鑰: 未配置（請在 `.env` 檔案中設置）")
+                st.error(f"API密鑰: 未配置（請在 `.env` 檔案中設定）")
 
             col1, col2 = st.columns(2)
 
@@ -150,7 +150,7 @@ def render_model_config():
 
 def render_pricing_config():
     """渲染定價配置頁面"""
-    st.markdown("**定價設置**")
+    st.markdown("**定價設定**")
 
     # 載入現有定價
     pricing_configs = config_manager.load_pricing()
@@ -361,13 +361,13 @@ def render_usage_statistics():
 
 
 def render_system_settings():
-    """渲染系統設置頁面"""
-    st.markdown("**系統設置**")
+    """渲染系統設定頁面"""
+    st.markdown("**系統設定**")
 
-    # 載入當前設置
+    # 載入當前設定
     settings = config_manager.load_settings()
 
-    st.markdown("**基本設置**")
+    st.markdown("**基本設定**")
     
     col1, col2 = st.columns(2)
     
@@ -430,7 +430,7 @@ def render_system_settings():
         key="settings_auto_save_usage"
     )
     
-    if st.button("保存設置", type="primary", key="save_system_settings"):
+    if st.button("保存設定", type="primary", key="save_system_settings"):
         new_settings = {
             "default_provider": default_provider,
             "default_model": default_model,
@@ -442,7 +442,7 @@ def render_system_settings():
         }
         
         config_manager.save_settings(new_settings)
-        st.success("設置已保存！")
+        st.success("設定已保存！")
         st.rerun()
     
     # 資料管理

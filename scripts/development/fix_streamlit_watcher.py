@@ -95,13 +95,13 @@ def check_streamlit_config():
         logger.info(f"   建議運行: python web/run_web.py 來創建配置檔")
 
 def set_environment_variables():
-    """設置環境變量禁用字節碼生成"""
+    """設定環境變量禁用位元組碼生成"""
     
-    logger.info(f"\n 設置環境變量...")
+    logger.info(f"\n 設定環境變量...")
     
-    # 設置當前會話的環境變量
+    # 設定當前會話的環境變量
     os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
-    logger.info(f"   已設置 PYTHONDONTWRITEBYTECODE=1")
+    logger.info(f"   已設定 PYTHONDONTWRITEBYTECODE=1")
     
     # 檢查.env 檔案
     project_root = Path(__file__).parent.parent
@@ -112,7 +112,7 @@ def set_environment_variables():
         if 'PYTHONDONTWRITEBYTECODE' not in content:
             logger.info(f"   建議在.env 檔案中添加: PYTHONDONTWRITEBYTECODE=1")
         else:
-            logger.info(f"   .env 檔案已包含PYTHONDONTWRITEBYTECODE設置")
+            logger.info(f"   .env 檔案已包含PYTHONDONTWRITEBYTECODE設定")
     else:
         logger.info(f"   建議創建.env 檔案並添加: PYTHONDONTWRITEBYTECODE=1")
 
@@ -125,7 +125,7 @@ def main():
     logger.info(f"\n 此工具將執行以下操作:")
     logger.info(f"  1. 清理所有Python快取檔案(__pycache__, *.pyc, *.pyo)")
     logger.info(f"  2. 檢查Streamlit配置檔")
-    logger.info(f"  3. 設置環境變量禁用字節碼生成")
+    logger.info(f"  3. 設定環境變量禁用位元組碼生成")
     
     response = input("\n是否繼續? (y/n): ").lower().strip()
     if response != 'y':
@@ -145,9 +145,9 @@ def main():
         logger.info(f"=")
         check_streamlit_config()
         
-        # 步驟3: 設置環境變量
+        # 步驟3: 設定環境變量
         logger.info(f"\n")
-        logger.info(f"步驟3: 設置環境變量")
+        logger.info(f"步驟3: 設定環境變量")
         logger.info(f"=")
         set_environment_variables()
         
@@ -164,7 +164,7 @@ def main():
         logger.info(f"請手動執行以下操作:")
         logger.info(f"  1. 刪除所有__pycache__目錄")
         logger.info(f"  2. 檢查.streamlit/config.toml配置檔")
-        logger.info(f"  3. 設置環境變量 PYTHONDONTWRITEBYTECODE=1")
+        logger.info(f"  3. 設定環境變量 PYTHONDONTWRITEBYTECODE=1")
 
 if __name__ == "__main__":
     main()

@@ -24,7 +24,7 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Any
 
-# 設置日誌
+# 設定日誌
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'

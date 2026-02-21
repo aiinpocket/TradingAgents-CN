@@ -114,7 +114,7 @@ class DataCallAnalyzer:
         patterns = [
             (r'.*\[資料取得\].*symbol=(\w+).*start_date=([^,]+).*end_date=([^,]+)', 'data_fetch'),
             (r'.*\[工具調用\].*(\w+)', 'tool_call'),
-            (r'.*\[統一接口\].*獲取(\w+)股票資料', 'unified_call'),
+            (r'.*\[統一介面\].*獲取(\w+)股票資料', 'unified_call'),
             (r'.*\[(YFinance|FinnHub)\].*調用參數.*symbol=(\w+)', 'data_source_call')
         ]
         
@@ -345,7 +345,7 @@ class DataCallAnalyzer:
             report += f"-  發現 {data_analysis['success_rate']['error']} 個資料取得錯誤，建議檢查資料來源配置\n"
         
         if len(data_analysis['performance']['slow_calls']) > 5:
-            report += "-  慢調用較多，建議分析網絡連接和API限制\n"
+            report += "-  慢調用較多，建議分析網路連接和API限制\n"
         
         return report
 

@@ -16,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from tradingagents.dataflows.realtime_news_utils import get_realtime_stock_news
 from tradingagents.agents.utils.agent_utils import Toolkit
 
-# 設置日誌
+# 設定日誌
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
 logger = logging.getLogger(__name__)
 

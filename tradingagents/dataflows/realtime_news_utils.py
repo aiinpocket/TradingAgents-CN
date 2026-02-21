@@ -463,7 +463,7 @@ class RealtimeNewsAggregator:
 
 def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) -> str:
     """
-    獲取實時股票新聞的主要接口函數
+    獲取實時股票新聞的主要介面函數
     """
     logger.info("[新聞分析] ========== 函數入口 ==========")
     logger.info("[新聞分析] 函數: get_realtime_stock_news")
@@ -578,7 +578,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
 錯誤訊息: 所有可用的新聞源都未能獲取到相關新聞
 
 備用建議:
-1. 檢查網絡連接和API密鑰配置
+1. 檢查網路連接和API密鑰配置
 2. 使用基礎新聞分析作為備選
 3. 關注官方財經媒體的最新報道
 4. 考慮使用專業金融終端獲取實時新聞

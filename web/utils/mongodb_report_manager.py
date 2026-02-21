@@ -283,7 +283,7 @@ class MongoDBReportManager:
             cursor = self.collection.find().sort("timestamp", -1).limit(limit)
             reports = list(cursor)
 
-            # 轉換ObjectId為字符串
+            # 轉換ObjectId為字串
             for report in reports:
                 if '_id' in report:
                     report['_id'] = str(report['_id'])

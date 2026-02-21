@@ -94,7 +94,7 @@ def test_openai_fallback_with_cache():
         curr_date = datetime.now().strftime('%Y-%m-%d')
         test_ticker = "MSFT"
         
-        print(f"\n 第一次通過OpenAI接口獲取 {test_ticker} 資料（應fallback到Finnhub）...")
+        print(f"\n 第一次通過OpenAI介面獲取 {test_ticker} 資料（應fallback到Finnhub）...")
         start_time = time.time()
         result1 = get_fundamentals_openai(test_ticker, curr_date)
         first_time = time.time() - start_time
@@ -105,7 +105,7 @@ def test_openai_fallback_with_cache():
             print(f" 第一次獲取耗時: {first_time:.2f}秒")
             
             # 第二次獲取，應該從快取讀取
-            print(f"\n 第二次通過OpenAI接口獲取 {test_ticker} 資料（應從快取獲取）...")
+            print(f"\n 第二次通過OpenAI介面獲取 {test_ticker} 資料（應從快取獲取）...")
             start_time = time.time()
             result2 = get_fundamentals_openai(test_ticker, curr_date)
             second_time = time.time() - start_time

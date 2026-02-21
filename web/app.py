@@ -339,7 +339,7 @@ def initialize_session_state():
 
 
 def main():
-    """主應用程序"""
+    """主應用程式"""
 
     # 初始化會話狀態
     initialize_session_state()

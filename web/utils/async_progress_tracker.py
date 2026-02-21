@@ -34,7 +34,7 @@ def safe_serialize(obj):
                     'response_metadata': getattr(obj, 'response_metadata', {})
                 }
         except Exception as e:
-            # 如果所有方法都失敗，返回字符串表示
+            # 如果所有方法都失敗，返回字串表示
             return {
                 'type': obj.__class__.__name__,
                 'content': str(obj)
@@ -66,7 +66,7 @@ def safe_serialize(obj):
             json.dumps(obj)  # 測試是否可序列化
             return obj
         except (TypeError, ValueError):
-            return str(obj)  # 轉換為字符串
+            return str(obj)  # 轉換為字串
 
 class AsyncProgressTracker:
     """異步進度跟蹤器"""
@@ -192,7 +192,7 @@ class AsyncProgressTracker:
             {"name": "準備階段", "description": "驗證股票代碼，檢查資料來源可用性", "weight": 0.05},
             {"name": "環境檢查", "description": "檢查API密鑰配置，確保資料取得正常", "weight": 0.02},
             {"name": "成本估算", "description": "根據分析深度預估API調用成本", "weight": 0.01},
-            {"name": "參數設置", "description": "配置分析參數和AI模型選擇", "weight": 0.02},
+            {"name": "參數設定", "description": "配置分析參數和AI模型選擇", "weight": 0.02},
             {"name": "啟動引擎", "description": "初始化AI分析引擎，準備開始分析", "weight": 0.05},
         ]
 
@@ -276,7 +276,7 @@ class AsyncProgressTracker:
             },
             'social_media': {
                 "name": "社交媒體",
-                "description": "分析社交媒體討論、網絡熱度、散戶情緒等"
+                "description": "分析社交媒體討論、網路熱度、散戶情緒等"
             },
             'risk': {
                 "name": "風險分析",
@@ -336,7 +336,7 @@ class AsyncProgressTracker:
         # 如果是完成訊息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
-            logger.info("[異步進度] 分析完成，設置為最終步驟")
+            logger.info("[異步進度] 分析完成，設定為最終步驟")
 
         # 計算進度
         progress_percentage = self._calculate_weighted_progress() * 100
@@ -513,7 +513,7 @@ class AsyncProgressTracker:
                 self.redis_client.setex(key, 3600, data_json)  # 1小時過期
 
                 logger.info(f"[Redis寫入] {self.analysis_id} -> {status} | {current_step_name} | {progress_pct:.1f}%")
-                logger.debug(f"[Redis詳情] 鍵: {key}, 資料大小: {len(data_json)} 字節")
+                logger.debug(f"[Redis詳情] 鍵: {key}, 資料大小: {len(data_json)} 位元組")
             else:
                 # 保存到檔案（安全序列化）
                 safe_data = safe_serialize(self.progress_data)

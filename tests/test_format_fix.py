@@ -18,8 +18,8 @@ def test_format_analysis_results():
     print(" 測試分析結果格式化")
     print("=" * 50)
     
-    # 測試案例1: decision 是字符串
-    print("測試案例1: decision 是字符串")
+    # 測試案例1: decision 是字串
+    print("測試案例1: decision 是字串")
     results1 = {
         'stock_symbol': 'AAPL',
         'analysis_date': '2025-06-27',
@@ -30,18 +30,18 @@ def test_format_analysis_results():
             'market_report': '技術分析報告...',
             'fundamentals_report': '基本面分析報告...'
         },
-        'decision': 'BUY',  # 字符串格式
+        'decision': 'BUY',  # 字串格式
         'success': True,
         'error': None
     }
     
     try:
         formatted1 = format_analysis_results(results1)
-        print(" 字符串decision格式化成功")
+        print(" 字串decision格式化成功")
         print(f"  決策: {formatted1['decision']['action']}")
         print(f"  推理: {formatted1['decision']['reasoning']}")
     except Exception as e:
-        print(f" 字符串decision格式化失敗: {e}")
+        print(f" 字串decision格式化失敗: {e}")
     
     print()
     

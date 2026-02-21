@@ -54,7 +54,7 @@ class OptimizedUSDataProvider:
             force_refresh: 是否強制刷新快取
         
         Returns:
-            格式化的股票資料字符串
+            格式化的股票資料字串
         """
         logger.info(f"獲取美股資料: {symbol} ({start_date} 到 {end_date})")
         
@@ -144,7 +144,7 @@ class OptimizedUSDataProvider:
     
     def _format_stock_data(self, symbol: str, data: pd.DataFrame, 
                           start_date: str, end_date: str) -> str:
-        """格式化股票資料為字符串"""
+        """格式化股票資料為字串"""
         
         # 移除時區資訊
         if data.index.tz is not None:
@@ -299,8 +299,8 @@ class OptimizedUSDataProvider:
 - 模擬漲跌: {random.uniform(-5, 5):+.2f}%
 
 ## 重要提示
-由於API限制或網絡問題，無法獲取即時資料。
-建議稍後重試或檢查網絡連接。
+由於API限制或網路問題，無法獲取即時資料。
+建議稍後重試或檢查網路連接。
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
@@ -329,7 +329,7 @@ def get_us_stock_data_cached(symbol: str, start_date: str, end_date: str,
         force_refresh: 是否強制刷新快取
     
     Returns:
-        格式化的股票資料字符串
+        格式化的股票資料字串
     """
     provider = get_optimized_us_data_provider()
     return provider.get_stock_data(symbol, start_date, end_date, force_refresh)

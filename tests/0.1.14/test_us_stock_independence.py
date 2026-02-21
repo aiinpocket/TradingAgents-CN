@@ -28,7 +28,7 @@ def test_us_stock_data_independence():
     print("\n 場景1: OpenAI禁用 + 即時資料啟用")
     print("-" * 40)
     
-    # 設置環境變量
+    # 設定環境變量
     os.environ['OPENAI_ENABLED'] = 'false'
     os.environ['REALTIME_DATA_ENABLED'] = 'true'
     
@@ -68,7 +68,7 @@ def test_us_stock_data_independence():
     print("\n 場景2: OpenAI啟用 + 即時資料禁用")
     print("-" * 40)
     
-    # 設置環境變量
+    # 設定環境變量
     os.environ['OPENAI_ENABLED'] = 'true'
     os.environ['REALTIME_DATA_ENABLED'] = 'false'
     

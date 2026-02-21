@@ -24,7 +24,7 @@ class SmartConfigManager:
         self.redis_available = False
         self.detection_results = {}
         
-        # 設置日誌
+        # 設定日誌
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         
@@ -274,7 +274,7 @@ def main():
     # 保存配置
     config_manager.save_config()
     
-    # 生成環境變量設置腳本
+    # 生成環境變量設定腳本
     config = config_manager.get_config()
     
     env_script = f"""# 環境變量配置腳本
@@ -289,10 +289,10 @@ export FALLBACK_ENABLED="{str(config['cache']['fallback_enabled']).lower()}"
 export MONGODB_ENABLED="{str(config['database']['mongodb']['enabled']).lower()}"
 export REDIS_ENABLED="{str(config['database']['redis']['enabled']).lower()}"
 
-# TTL設置
+# TTL設定
 export US_STOCK_TTL="{config['cache']['ttl_settings']['us_stock_data']}"
 
-echo " 環境變量已設置"
+echo " 環境變量已設定"
 echo "快取後端: $CACHE_BACKEND"
 echo "MongoDB: $MONGODB_ENABLED"
 echo "Redis: $REDIS_ENABLED"
@@ -316,10 +316,10 @@ $env:FALLBACK_ENABLED = "{str(config['cache']['fallback_enabled']).lower()}"
 $env:MONGODB_ENABLED = "{str(config['database']['mongodb']['enabled']).lower()}"
 $env:REDIS_ENABLED = "{str(config['database']['redis']['enabled']).lower()}"
 
-# TTL設置
+# TTL設定
 $env:US_STOCK_TTL = "{config['cache']['ttl_settings']['us_stock_data']}"
 
-Write-Host " 環境變量已設置" -ForegroundColor Green
+Write-Host " 環境變量已設定" -ForegroundColor Green
 Write-Host "快取後端: $env:CACHE_BACKEND" -ForegroundColor Cyan
 Write-Host "MongoDB: $env:MONGODB_ENABLED" -ForegroundColor Cyan
 Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
@@ -332,7 +332,7 @@ Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
     
     logger.info(f"\n 下一步:")
     logger.info(f"1. 運行: python test_with_smart_config.py")
-    logger.info(f"2. 或者: .\set_env.ps1 (設置環境變量)")
+    logger.info(f"2. 或者: .\set_env.ps1 (設定環境變量)")
     logger.info(f"3. 然後: python quick_test.py")
 
 

@@ -30,8 +30,8 @@ def test_env_reading():
     print(f"MongoDB:")
     print(f"  Host: {mongodb_host}")
     print(f"  Port: {mongodb_port}")
-    print(f"  Username: {mongodb_username or '未設置'}")
-    print(f"  Password: {'***' if mongodb_password else '未設置'}")
+    print(f"  Username: {mongodb_username or '未設定'}")
+    print(f"  Password: {'***' if mongodb_password else '未設定'}")
     print(f"  Database: {mongodb_database}")
     
     # Redis配置
@@ -43,7 +43,7 @@ def test_env_reading():
     print(f"\nRedis:")
     print(f"  Host: {redis_host}")
     print(f"  Port: {redis_port}")
-    print(f"  Password: {'***' if redis_password else '未設置'}")
+    print(f"  Password: {'***' if redis_password else '未設定'}")
     print(f"  DB: {redis_db}")
     
     # 測試資料庫連接

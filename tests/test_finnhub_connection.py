@@ -14,7 +14,7 @@ def test_finnhub_api():
     # 檢查API密鑰
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     if not finnhub_key:
-        print(" 請設置 FINNHUB_API_KEY 環境變量")
+        print(" 請設定 FINNHUB_API_KEY 環境變量")
         return False
     
     print(f" FINNHUB API密鑰已配置: {finnhub_key[:10]}...")
@@ -106,4 +106,4 @@ if __name__ == "__main__":
     if result1:
         print("所有API連接正常，可以進行股票分析!")
     else:
-        print("API連接有問題，請檢查配置和網絡連接。")
+        print("API連接有問題，請檢查配置和網路連接。")

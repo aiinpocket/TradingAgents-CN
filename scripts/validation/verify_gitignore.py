@@ -33,7 +33,7 @@ def main():
     logger.info(f" 驗證docs/contribution目錄的Git配置")
     logger.info(f"=")
     
-    # 設置項目路徑
+    # 設定項目路徑
     project_path = Path("C:/code/TradingAgentsCN")
     contribution_path = project_path / "docs" / "contribution"
     gitignore_path = project_path / ".gitignore"

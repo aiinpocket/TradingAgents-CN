@@ -482,7 +482,7 @@ def render_results_table(results: List[Dict[str, Any]]):
 def render_results_cards(results: List[Dict[str, Any]]):
     """渲染卡片視圖"""
     
-    # 分頁設置
+    # 分頁設定
     page_size = st.selectbox("每頁顯示", [5, 10, 20, 50], index=1)
     total_pages = (len(results) + page_size - 1) // page_size
     
@@ -1260,7 +1260,7 @@ def render_detailed_analysis_content(selected_result):
                 if has_content:
                     available_modules.append(module)
             else:
-                # 對於字符串或其他類型，直接添加
+                # 對於字串或其他類型，直接添加
                 available_modules.append(module)
 
     if not available_modules:

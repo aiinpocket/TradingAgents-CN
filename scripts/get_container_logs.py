@@ -141,7 +141,7 @@ def copy_log_file(container_name, log_file, local_path=None):
         # 檢查本地檔案大小
         if os.path.exists(local_path):
             size = os.path.getsize(local_path)
-            print(f"   檔案大小: {size:,} 字節")
+            print(f"   檔案大小: {size:,} 位元組")
             
             # 顯示檔案的最後幾行
             print(f"\n 檔案內容預覽 (最後10行):")

@@ -31,7 +31,7 @@ def test_environment_variables():
     """測試環境變量"""
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     
-    print(f"FINNHUB_API_KEY: {'已設置' if finnhub_key else '未設置'}")
+    print(f"FINNHUB_API_KEY: {'已設定' if finnhub_key else '未設定'}")
     
     return bool(finnhub_key)
 

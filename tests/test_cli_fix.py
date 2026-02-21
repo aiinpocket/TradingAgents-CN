@@ -37,7 +37,7 @@ def test_selections_dictionary_keys():
              patch('cli.main.select_deep_thinking_agent') as mock_deep, \
              patch('cli.main.console.print'):
             
-            # 設置模擬返回值
+            # 設定模擬返回值
             mock_market.return_value = {
                 'name': '美股',
                 'name_en': 'US Stock',

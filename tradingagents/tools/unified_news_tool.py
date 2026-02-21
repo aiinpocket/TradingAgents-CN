@@ -30,7 +30,7 @@ class UnifiedNewsAnalyzer:
         
     def get_stock_news_unified(self, stock_code: str, max_news: int = 10, model_info: str = "") -> str:
         """
-        統一新聞獲取接口
+        統一新聞獲取介面
         根據股票代碼自動識別股票類型並獲取相應新聞
 
         Args:
@@ -184,7 +184,7 @@ def create_unified_news_tool(toolkit):
         
         return analyzer.get_stock_news_unified(stock_code, max_news, model_info)
     
-    # 設置工具屬性
+    # 設定工具屬性
     get_stock_news_unified.name = "get_stock_news_unified"
     get_stock_news_unified.description = """
 統一新聞獲取工具 - 獲取美股市場的新聞

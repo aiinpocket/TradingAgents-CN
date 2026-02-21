@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 配置管理器
-管理API密鑰、模型配置、費率設置等
+管理API密鑰、模型配置、費率設定等
 """
 
 import json
@@ -243,7 +243,7 @@ class ConfigManager:
             ]
             self.save_pricing(default_pricing)
         
-        # 預設設置
+        # 預設設定
         if not self.settings_file.exists():
             # 匯入預設資料目錄配置
             import os
@@ -272,7 +272,7 @@ class ConfigManager:
                 data = json.load(f)
                 models = [ModelConfig(**item) for item in data]
 
-                # 獲取設置
+                # 獲取設定
                 settings = self.load_settings()
                 openai_enabled = settings.get("openai_enabled", False)
 
@@ -408,13 +408,13 @@ class ConfigManager:
         return 0.0
     
     def load_settings(self) -> Dict[str, Any]:
-        """載入設置，合併.env中的配置"""
+        """載入設定，合併.env中的配置"""
         try:
             if self.settings_file.exists():
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
                     settings = json.load(f)
             else:
-                # 如果設置檔案不存在，創建預設設置
+                # 如果設定檔案不存在，創建預設設定
                 settings = {
                     "default_provider": "openai",
                     "default_model": "gpt-4o-mini",
@@ -431,7 +431,7 @@ class ConfigManager:
                 }
                 self.save_settings(settings)
         except Exception as e:
-            logger.error(f"載入設置失敗: {e}")
+            logger.error(f"載入設定失敗: {e}")
             settings = {}
 
         # 合併.env中的其他配置
@@ -453,7 +453,7 @@ class ConfigManager:
             # 對於布爾值，直接使用
             if isinstance(value, bool):
                 settings[key] = value
-            # 對於字符串，只有非空時才覆蓋
+            # 對於字串，只有非空時才覆蓋
             elif value != "" and value is not None:
                 settings[key] = value
 
@@ -475,12 +475,12 @@ class ConfigManager:
         }
 
     def save_settings(self, settings: Dict[str, Any]):
-        """保存設置"""
+        """保存設定"""
         try:
             with open(self.settings_file, 'w', encoding='utf-8') as f:
                 json.dump(settings, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            logger.error(f"保存設置失敗: {e}")
+            logger.error(f"保存設定失敗: {e}")
     
     def get_enabled_models(self) -> List[ModelConfig]:
         """獲取啟用的模型"""
@@ -569,7 +569,7 @@ class ConfigManager:
         return data_dir
 
     def set_data_dir(self, data_dir: str):
-        """設置資料目錄路徑"""
+        """設定資料目錄路徑"""
         settings = self.load_settings()
         settings["data_dir"] = data_dir
         # 同時更新快取目錄
@@ -603,11 +603,11 @@ class ConfigManager:
                     logger.error(f"創建目錄失敗 {directory}: {e}")
     
     def set_openai_enabled(self, enabled: bool):
-        """設置OpenAI模型啟用狀態"""
+        """設定OpenAI模型啟用狀態"""
         settings = self.load_settings()
         settings["openai_enabled"] = enabled
         self.save_settings(settings)
-        logger.info(f"OpenAI模型啟用狀態已設置為: {enabled}")
+        logger.info(f"OpenAI模型啟用狀態已設定為: {enabled}")
     
     def is_openai_enabled(self) -> bool:
         """檢查OpenAI模型是否啟用"""

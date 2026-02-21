@@ -107,7 +107,7 @@ class RedisPerformanceTester:
                         failed_count += 1
                         
             elif operation_type == 'get':
-                # 先設置一些測試資料
+                # 先設定一些測試資料
                 for i in range(min(100, operations)):
                     self.redis_client.set(f"test_key_{i}", f"test_value_{i}")
                 

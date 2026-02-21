@@ -134,7 +134,7 @@ def show_release_info():
     logger.info(f"  完整的測試體系")
     logger.info(f"  詳細的使用檔案")
     
-    logger.info(f"\n GitHub鏈接:")
+    logger.info(f"\n GitHub連結:")
     logger.info(f"   Release: https://github.com/aiinpocket/TradingAgents-CN/releases/tag/cn-v0.1.2")
     logger.info(f"   代碼: https://github.com/aiinpocket/TradingAgents-CN")
     

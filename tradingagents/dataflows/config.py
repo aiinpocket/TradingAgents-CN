@@ -11,11 +11,11 @@ def initialize_config():
     """Initialize the configuration with default values."""
     global _config, DATA_DIR
     if _config is None:
-        # 優先使用配置管理器的設置
+        # 優先使用配置管理器的設定
         settings = config_manager.load_settings()
         _config = default_config.DEFAULT_CONFIG.copy()
         
-        # 如果配置管理器中有資料目錄設置，使用它
+        # 如果配置管理器中有資料目錄設定，使用它
         if settings.get("data_dir"):
             _config["data_dir"] = settings["data_dir"]
         
@@ -34,7 +34,7 @@ def set_config(config: Dict):
     _config.update(config)
     DATA_DIR = _config["data_dir"]
     
-    # 如果設置了資料目錄，同時更新配置管理器
+    # 如果設定了資料目錄，同時更新配置管理器
     if "data_dir" in config:
         config_manager.set_data_dir(config["data_dir"])
 
@@ -64,7 +64,7 @@ def get_data_dir() -> str:
 
 
 def set_data_dir(data_dir: str):
-    """設置資料目錄路徑"""
+    """設定資料目錄路徑"""
     config_manager.set_data_dir(data_dir)
     # 更新全局變量
     global _config, DATA_DIR

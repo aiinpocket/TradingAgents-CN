@@ -120,7 +120,7 @@ def test_markdown_conversion():
             if os.path.exists(output_file):
                 file_size = os.path.getsize(output_file)
                 print(f" Markdown → DOCX 轉換成功")
-                print(f"   檔案大小: {file_size} 字節")
+                print(f"   檔案大小: {file_size} 位元組")
                 
                 # 清理暫存檔案
                 os.unlink(output_file)
@@ -148,7 +148,7 @@ def test_markdown_conversion():
             if os.path.exists(output_file):
                 file_size = os.path.getsize(output_file)
                 print(f" Markdown → PDF 轉換成功")
-                print(f"   檔案大小: {file_size} 字節")
+                print(f"   檔案大小: {file_size} 位元組")
                 
                 # 清理暫存檔案
                 os.unlink(output_file)
@@ -212,7 +212,7 @@ def test_report_exporter():
             try:
                 docx_content = exporter.generate_docx_report(test_results)
                 print(" DOCX報告生成成功")
-                print(f"   內容大小: {len(docx_content)} 字節")
+                print(f"   內容大小: {len(docx_content)} 位元組")
             except Exception as e:
                 print(f" DOCX報告生成失敗: {e}")
                 return False

@@ -90,7 +90,7 @@ class ReportExporter:
         if not text:
             return "N/A"
 
-        # 轉換為字符串並清理特殊字符
+        # 轉換為字串並清理特殊字符
         text = str(text)
 
         # 移除可能導致YAML解析問題的字符
@@ -356,7 +356,7 @@ class ReportExporter:
             # 讀取生成的docx 檔案
             with open(output_file, 'rb') as f:
                 docx_content = f.read()
-            logger.info(f"檔案讀取完成，大小: {len(docx_content)} 字節")
+            logger.info(f"檔案讀取完成，大小: {len(docx_content)} 位元組")
 
             logger.info("清理暫存檔案...")
             # 清理暫存檔案
@@ -498,7 +498,7 @@ class ReportExporter:
                     st.error("pandoc不可用，無法生成Word文檔")
                     return None
                 content = self.generate_docx_report(results)
-                logger.info(f"Word文檔生成成功，大小: {len(content)} 字節")
+                logger.info(f"Word文檔生成成功，大小: {len(content)} 位元組")
                 return content
 
             elif format_type == 'pdf':
@@ -508,7 +508,7 @@ class ReportExporter:
                     st.error("pandoc不可用，無法生成PDF文檔")
                     return None
                 content = self.generate_pdf_report(results)
-                logger.info(f"PDF文檔生成成功，大小: {len(content)} 字節")
+                logger.info(f"PDF文檔生成成功，大小: {len(content)} 位元組")
                 return content
 
             else:
@@ -935,7 +935,7 @@ def render_export_buttons(results: Dict[str, Any]):
                     content = report_exporter.export_report(results, 'docx')
                     if content:
                         filename = f"{stock_symbol}_analysis_{timestamp}.docx"
-                        logger.info(f"Word匯出成功，檔案名稱: {filename}, 大小: {len(content)} 字節")
+                        logger.info(f"Word匯出成功，檔案名稱: {filename}, 大小: {len(content)} 位元組")
 
                         # 3. 保存Word彙總報告到results目錄
                         saved_path = save_report_to_results_dir(content, filename, stock_symbol)
@@ -1007,7 +1007,7 @@ def render_export_buttons(results: Dict[str, Any]):
                     content = report_exporter.export_report(results, 'pdf')
                     if content:
                         filename = f"{stock_symbol}_analysis_{timestamp}.pdf"
-                        logger.info(f"PDF匯出成功，檔案名稱: {filename}, 大小: {len(content)} 字節")
+                        logger.info(f"PDF匯出成功，檔案名稱: {filename}, 大小: {len(content)} 位元組")
 
                         # 3. 保存PDF彙總報告到results目錄
                         saved_path = save_report_to_results_dir(content, filename, stock_symbol)

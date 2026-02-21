@@ -138,7 +138,7 @@ class StockDataCache:
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
         """生成快取鍵"""
-        # 創建一個包含所有參數的字符串
+        # 創建一個包含所有參數的字串
         params_str = f"{data_type}_{symbol}"
         for key, value in sorted(kwargs.items()):
             params_str += f"_{key}_{value}"
@@ -231,7 +231,7 @@ class StockDataCache:
 
         Args:
             symbol: 股票代碼
-            data: 股票資料（DataFrame或字符串）
+            data: 股票資料（DataFrame或字串）
             start_date: 開始日期
             end_date: 結束日期
             data_source: 資料來源（如 "tdx", "yfinance", "finnhub"）

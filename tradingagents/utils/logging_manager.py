@@ -176,7 +176,7 @@ class TradingAgentsLogger:
         }
     
     def _setup_logging(self):
-        """設置日誌系統"""
+        """設定日誌系統"""
         # 創建日誌目錄
         if self.config['handlers']['file']['enabled']:
             log_dir = Path(self.config['handlers']['file']['directory'])
@@ -188,7 +188,7 @@ class TradingAgentsLogger:
                 warnings.warn(f"無法創建日誌目錄 {log_dir}: {e}，禁用檔案日誌")
                 self.config['handlers']['file']['enabled'] = False
         
-        # 設置根日誌級別
+        # 設定根日誌級別
         root_logger = logging.getLogger()
         root_logger.setLevel(getattr(logging, self.config['level']))
         
@@ -282,7 +282,7 @@ class TradingAgentsLogger:
             logger.setLevel(level)
     
     def _parse_size(self, size_str: str) -> int:
-        """解析大小字符串（如'10MB'）為字節數"""
+        """解析大小字串（如'10MB'）為位元組數"""
         size_str = size_str.upper()
         if size_str.endswith('KB'):
             return int(size_str[:-2]) * 1024
@@ -415,7 +415,7 @@ def get_logger(name: str) -> logging.Logger:
 
 
 def setup_logging(config: Optional[Dict[str, Any]] = None):
-    """設置項目日誌系統（便捷函數）"""
+    """設定項目日誌系統（便捷函數）"""
     global _logger_manager
     _logger_manager = TradingAgentsLogger(config)
     return _logger_manager

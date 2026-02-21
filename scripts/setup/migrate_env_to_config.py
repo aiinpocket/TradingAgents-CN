@@ -65,12 +65,12 @@ def migrate_model_configs(env_config):
         logger.info(f"[INFO]模型配置無需更新")
 
 def migrate_system_settings(env_config):
-    """遷移系統設置"""
-    logger.info(f"\n 遷移系統設置...")
+    """遷移系統設定"""
+    logger.info(f"\n 遷移系統設定...")
     
     settings = config_manager.load_settings()
     
-    # 更新設置
+    # 更新設定
     updated = False
     if env_config['results_dir'] and settings.get('results_dir') != env_config['results_dir']:
         settings['results_dir'] = env_config['results_dir']
@@ -90,9 +90,9 @@ def migrate_system_settings(env_config):
     
     if updated:
         config_manager.save_settings(settings)
-        logger.info(f" 系統設置已保存")
+        logger.info(f" 系統設定已保存")
     else:
-        logger.info(f"[INFO]系統設置無需更新")
+        logger.info(f"[INFO]系統設定無需更新")
 
 def main():
     """主函數"""
@@ -108,9 +108,9 @@ def main():
     for key, value in env_config.items():
         if 'api_key' in key or 'secret' in key:
             # 隱藏敏感資訊
-            display_value = f"***{value[-4:]}" if value else "未設置"
+            display_value = f"***{value[-4:]}" if value else "未設定"
         else:
-            display_value = value if value else "未設置"
+            display_value = value if value else "未設定"
         logger.info(f"  {key}: {display_value}")
     
     logger.info(f"\n 開始遷移配置...")
@@ -119,7 +119,7 @@ def main():
         # 遷移模型配置
         migrate_model_configs(env_config)
         
-        # 遷移系統設置
+        # 遷移系統設定
         migrate_system_settings(env_config)
         
         logger.info(f"\n 配置遷移完成！")

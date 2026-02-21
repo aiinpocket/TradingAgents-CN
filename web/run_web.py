@@ -157,7 +157,7 @@ def check_api_keys():
         return False
 
     if not finnhub_key:
-        logger.warning("FINNHUB_API_KEY 未設置，部分美股資料功能可能受限")
+        logger.warning("FINNHUB_API_KEY 未設定，部分美股資料功能可能受限")
 
     logger.info("API密鑰配置完成")
     return True
