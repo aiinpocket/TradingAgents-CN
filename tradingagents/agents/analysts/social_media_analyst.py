@@ -58,12 +58,13 @@ def create_social_media_analyst(llm, toolkit):
         logger.info(f"[社交媒體分析師] 公司名稱: {company_name}")
 
         if toolkit.config["online_tools"]:
-            tools = [toolkit.get_stock_news_openai]
+            tools = [toolkit.get_stock_news_openai, toolkit.get_finnhub_sentiment_data]
         else:
-            # 使用 Reddit 和統一情緒分析工具
+            # 使用 Reddit、統一情緒分析工具和 FinnHub 情緒量化數據
             tools = [
                 toolkit.get_stock_sentiment_unified,
                 toolkit.get_reddit_stock_info,
+                toolkit.get_finnhub_sentiment_data,
             ]
 
         system_message = (
@@ -71,14 +72,17 @@ def create_social_media_analyst(llm, toolkit):
 
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 
+**優先使用 FinnHub 情緒量化數據**（新聞看多/看空比例、社交媒體評分），這些數據提供客觀的量化指標。
+Reddit 等社群數據作為補充，用來理解市場討論的具體內容和熱度。
 
 您的主要職責包括：
-1. 分析主要投資社群平台的投資者情緒（如 Reddit、StockTwits 等）
-2. 監控財經媒體和新聞對股票的報導傾向
-3. 識別影響股價的熱點事件和市場傳言
-4. 評估散戶與機構投資者的觀點差異
-5. 分析政策變化對投資者情緒的影響
-6. 評估情緒變化對股價的潛在影響
+1. 使用 FinnHub 情緒量化數據獲取客觀的看多/看空比例和行業比較
+2. 分析主要投資社群平台的投資者情緒（如 Reddit、StockTwits 等）
+3. 監控財經媒體和新聞對股票的報導傾向
+4. 識別影響股價的熱點事件和市場傳言
+5. 評估散戶與機構投資者的觀點差異
+6. 分析政策變化對投資者情緒的影響
+7. 評估情緒變化對股價的潛在影響
 
 重點關注平台：
 - 投資社群：Reddit (r/wallstreetbets, r/stocks)、StockTwits
@@ -87,10 +91,11 @@ def create_social_media_analyst(llm, toolkit):
 - 專業分析：各大券商研報、Seeking Alpha
 
 分析要點：
+- FinnHub 新聞情緒量化指標（bullish/bearish 比例、與行業平均的比較）
+- FinnHub 社交媒體提及次數和正負面比例
 - 投資者情緒的變化趨勢和原因
 - 關鍵意見領袖(KOL)的觀點和影響力
 - 熱點事件對股價預期的影響
-- 政策解讀和市場預期變化
 - 散戶情緒與機構觀點的差異
 
 情緒價格影響分析要求：

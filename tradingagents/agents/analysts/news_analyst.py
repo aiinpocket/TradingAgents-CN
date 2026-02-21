@@ -62,9 +62,10 @@ def create_news_analyst(llm, toolkit):
    # 創建統一新聞工具
         unified_news_tool = create_unified_news_tool(toolkit)
         unified_news_tool.name = "get_stock_news_unified"
-        
-        tools = [unified_news_tool]
-        logger.info(f"[新聞分析師] 已加載統一新聞工具: get_stock_news_unified")
+
+        # 新增 FinnHub 情緒量化工具，提供客觀的新聞情緒評分
+        tools = [unified_news_tool, toolkit.get_finnhub_sentiment_data]
+        logger.info(f"[新聞分析師] 已加載統一新聞工具和 FinnHub 情緒工具")
 
         system_message = (
             """您是一位專業的財經新聞分析師，負責分析最新的市場新聞和事件對股票價格的潛在影響。
@@ -103,6 +104,7 @@ def create_news_analyst(llm, toolkit):
 - 不允許回覆'無法評估價格影響'或'需要更多信息'
 
 請特別注意：
+- 使用 FinnHub 新聞情緒量化評分（bullish/bearish 比例、行業平均比較）來佐證你的分析判斷
 - 如果新聞數據存在滯後（超過2小時），請在分析中明確說明時效性限制
 - 優先分析最新的、高相關性的新聞事件
 - 提供新聞對股價影響的量化評估和具體價格預期

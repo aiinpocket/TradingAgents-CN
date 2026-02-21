@@ -82,9 +82,9 @@ def create_fundamentals_analyst(llm, toolkit):
 
         # 選擇工具
         if toolkit.config["online_tools"]:
-            # 使用統一的基本面分析工具，工具內部會自動識別股票類型
-            logger.info(f"[基本面分析師] 使用統一基本面分析工具，自動識別股票類型")
-            tools = [toolkit.get_stock_fundamentals_unified]
+            # 使用統一的基本面分析工具和華爾街分析師共識數據
+            logger.info(f"[基本面分析師] 使用統一基本面分析工具和分析師共識數據")
+            tools = [toolkit.get_stock_fundamentals_unified, toolkit.get_finnhub_analyst_consensus]
             # 安全地獲取工具名稱用於調試
             tool_names_debug = []
             for tool in tools:
@@ -97,13 +97,14 @@ def create_fundamentals_analyst(llm, toolkit):
             logger.debug(f"[DEBUG] 選擇的工具: {tool_names_debug}")
             logger.debug(f"[DEBUG] 統一工具將自動處理: {market_info['market_name']}")
         else:
-            # 離線模式：使用 FinnHub 和 SimFin 數據
+            # 離線模式：使用 FinnHub 和 SimFin 數據，加上分析師共識
             tools = [
                 toolkit.get_finnhub_company_insider_sentiment,
                 toolkit.get_finnhub_company_insider_transactions,
                 toolkit.get_simfin_balance_sheet,
                 toolkit.get_simfin_cashflow,
                 toolkit.get_simfin_income_stmt,
+                toolkit.get_finnhub_analyst_consensus,
             ]
 
         # 統一的系統提示，適用於所有股票類型
@@ -115,6 +116,7 @@ def create_fundamentals_analyst(llm, toolkit):
             f"[重要] 立即調用 get_stock_fundamentals_unified 工具"
             f"參數：ticker='{ticker}', start_date='{start_date}', end_date='{current_date}', curr_date='{current_date}'"
             "分析要求："
+            "- 整合華爾街分析師共識數據（評級分布、目標價、EPS/營收預測）到你的估值分析中"
             "- 基於真實數據進行深度基本面分析"
             f"- 計算並提供合理價位區間（使用{market_info['currency_name']}{market_info['currency_symbol']}）"
             "- 分析當前股價是否被低估或高估"

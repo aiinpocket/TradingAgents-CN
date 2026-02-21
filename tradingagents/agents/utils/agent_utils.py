@@ -11,6 +11,11 @@ import os
 from dateutil.relativedelta import relativedelta
 from langchain_openai import ChatOpenAI
 import tradingagents.dataflows.interface as interface
+from tradingagents.dataflows.finnhub_extra import (
+    get_finnhub_sentiment_report,
+    get_finnhub_analyst_report,
+    get_finnhub_technical_report,
+)
 from tradingagents.default_config import DEFAULT_CONFIG
 from langchain_core.messages import HumanMessage
 
@@ -653,3 +658,62 @@ class Toolkit:
             error_msg = f"統一情緒分析工具執行失敗: {str(e)}"
             logger.error(f"[統一情緒工具] {error_msg}")
             return error_msg
+
+    @staticmethod
+    @tool
+    def get_finnhub_sentiment_data(
+        ticker: Annotated[str, "股票代碼（美股），如 AAPL、TSLA"],
+        curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"]
+    ) -> str:
+        """
+        取得 FinnHub 情緒量化數據，包含新聞情緒評分和社交媒體情緒分析。
+        整合 News Sentiment（看多/看空比例、行業比較）和
+        Social Sentiment（Twitter/Reddit 提及次數、正負面比例）。
+
+        Args:
+            ticker: 股票代碼（如 AAPL、TSLA）
+            curr_date: 當前日期（格式：YYYY-MM-DD）
+
+        Returns:
+            str: 情緒量化數據報告
+        """
+        logger.info(f"[FinnHub情緒工具] 取得 {ticker} 的情緒數據")
+        return get_finnhub_sentiment_report(ticker, curr_date)
+
+    @staticmethod
+    @tool
+    def get_finnhub_analyst_consensus(
+        ticker: Annotated[str, "股票代碼（美股），如 AAPL、TSLA"],
+        curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"]
+    ) -> str:
+        """
+        取得華爾街分析師共識數據，包含評級分布、目標價、評級變動、
+        盈利預測（EPS/營收）、下次財報日期和同業公司列表。
+
+        Args:
+            ticker: 股票代碼（如 AAPL、TSLA）
+            curr_date: 當前日期（格式：YYYY-MM-DD）
+
+        Returns:
+            str: 分析師共識數據報告
+        """
+        logger.info(f"[FinnHub分析師工具] 取得 {ticker} 的分析師共識數據")
+        return get_finnhub_analyst_report(ticker, curr_date)
+
+    @staticmethod
+    @tool
+    def get_finnhub_technical_signals(
+        ticker: Annotated[str, "股票代碼（美股），如 AAPL、TSLA"],
+    ) -> str:
+        """
+        取得 FinnHub 技術分析綜合訊號，包含買入/賣出/中性訊號統計、
+        ADX 趨勢強度和支撐壓力位。
+
+        Args:
+            ticker: 股票代碼（如 AAPL、TSLA）
+
+        Returns:
+            str: 技術訊號分析報告
+        """
+        logger.info(f"[FinnHub技術工具] 取得 {ticker} 的技術訊號")
+        return get_finnhub_technical_report(ticker)

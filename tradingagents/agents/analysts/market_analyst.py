@@ -190,9 +190,9 @@ def create_market_analyst(llm, toolkit):
         logger.debug(f"[DEBUG] 公司名稱: {ticker} -> {company_name}")
 
         if toolkit.config["online_tools"]:
-            # 使用統一的市場數據工具，工具內部會自動識別股票類型
-            logger.info(f"[市場分析師] 使用統一市場數據工具，自動識別股票類型")
-            tools = [toolkit.get_stock_market_data_unified]
+            # 使用統一的市場數據工具和 FinnHub 技術訊號
+            logger.info(f"[市場分析師] 使用統一市場數據工具和 FinnHub 技術訊號")
+            tools = [toolkit.get_stock_market_data_unified, toolkit.get_finnhub_technical_signals]
             # 安全地獲取工具名稱用於調試
             tool_names_debug = []
             for tool in tools:
@@ -208,6 +208,7 @@ def create_market_analyst(llm, toolkit):
             tools = [
                 toolkit.get_YFin_data,
                 toolkit.get_stockstats_indicators_report,
+                toolkit.get_finnhub_technical_signals,
             ]
 
         # 統一的系統提示，適用於所有股票類型
@@ -231,10 +232,11 @@ def create_market_analyst(llm, toolkit):
 **分析要求：**
 1. 調用工具後，基於獲取的真實數據進行技術分析
 2. 分析移動平均線、MACD、RSI、布林帶等技術指標
-3. 考慮{market_info['market_name']}市場特點進行分析
-4. 提供具體的數值和專業分析
-5. 給出明確的投資建議
-6. 所有價格數據使用{market_info['currency_name']}（{market_info['currency_symbol']}）表示
+3. 參考 FinnHub 技術分析綜合訊號（買入/賣出信號統計、ADX趨勢強度）和支撐壓力位補充你的技術分析
+4. 考慮{market_info['market_name']}市場特點進行分析
+5. 提供具體的數值和專業分析
+6. 給出明確的投資建議
+7. 所有價格數據使用{market_info['currency_name']}（{market_info['currency_symbol']}）表示
 
 **輸出格式：**
 ## 股票基本信息
