@@ -184,7 +184,8 @@ class TradingAgentsLogger:
                 log_dir.mkdir(parents=True, exist_ok=True)
             except (OSError, PermissionError) as e:
                 # 如果無法創建日誌目錄（例如只讀文件系統），禁用文件日誌
-                print(f"警告：無法創建日誌目錄 {log_dir}: {e}，禁用文件日誌")
+                import warnings
+                warnings.warn(f"無法創建日誌目錄 {log_dir}: {e}，禁用文件日誌")
                 self.config['handlers']['file']['enabled'] = False
         
         # 設置根日誌級別
@@ -270,7 +271,8 @@ class TradingAgentsLogger:
             logger.addHandler(structured_handler)
         except (OSError, PermissionError, FileNotFoundError) as e:
             # 如果無法創建structured日誌，只輸出警告但不中斷
-            print(f"警告：無法創建結構化日誌文件: {e}，跳過structured handler")
+            import warnings
+            warnings.warn(f"無法創建結構化日誌文件: {e}，跳過structured handler")
     
     def _configure_specific_loggers(self):
         """配置特定的日誌器"""

@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain import hub
@@ -8,6 +10,15 @@ from tradingagents.utils.tool_logging import log_analyst_module
 # 導入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
+
+
+def _calc_start_date(trade_date: str, days_back: int = 90) -> str:
+    """根據交易日期動態計算資料起始日期"""
+    try:
+        dt = datetime.strptime(trade_date, "%Y-%m-%d")
+        return (dt - timedelta(days=days_back)).strftime("%Y-%m-%d")
+    except Exception:
+        return (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
 
 
 
@@ -72,7 +83,7 @@ def create_market_analyst_react(llm, toolkit):
                         from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
                         return get_us_stock_data_cached(
                             symbol=ticker,
-                            start_date='2025-05-28',
+                            start_date=_calc_start_date(current_date),
                             end_date=current_date,
                             force_refresh=False
                         )
@@ -81,7 +92,7 @@ def create_market_analyst_react(llm, toolkit):
                         try:
                             return toolkit.get_YFin_data_online.invoke({
                                 'symbol': ticker,
-                                'start_date': '2025-05-28',
+                                'start_date': _calc_start_date(current_date),
                                 'end_date': current_date
                             })
                         except Exception as e2:
@@ -96,7 +107,7 @@ def create_market_analyst_react(llm, toolkit):
                         logger.debug(f"FinnhubNewsTool 調用，股票代碼: {ticker}")
                         return toolkit.get_finnhub_news.invoke({
                             'ticker': ticker,
-                            'start_date': '2025-05-28',
+                            'start_date': _calc_start_date(current_date),
                             'end_date': current_date
                         })
                     except Exception as e:

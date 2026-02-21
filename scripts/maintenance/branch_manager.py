@@ -216,11 +216,11 @@ class BranchManager:
         
         logger.info(f"  刪除分支: {branch_name}")
         
-        # 檢查分支是否已合並
+        # 檢查分支是否已合併
         merged = self.run_git_command(f'git branch --merged develop | grep {branch_name}')
         
         if not merged and not force:
-            logger.warning(f"  分支尚未合並到develop")
+            logger.warning(f"  分支尚未合併到develop")
             response = input("確定要刪除嗎？(y/N): ")
             if response.lower() != 'y':
                 return False
@@ -240,13 +240,13 @@ class BranchManager:
         return True
     
     def cleanup_branches(self):
-        """清理已合並的分支"""
-        logger.info(f" 清理已合並的分支...")
+        """清理已合併的分支"""
+        logger.info(f" 清理已合併的分支...")
         
-        # 獲取已合並到develop的分支
+        # 獲取已合併到develop的分支
         merged_branches = self.run_git_command('git branch --merged develop')
         if not merged_branches:
-            logger.error(f" 獲取已合並分支失敗")
+            logger.error(f" 獲取已合併分支失敗")
             return
         
         branches_to_delete = []
@@ -259,7 +259,7 @@ class BranchManager:
             logger.info(f" 沒有需要清理的分支")
             return
         
-        logger.info(f" 以下分支已合並到develop:")
+        logger.info(f" 以下分支已合併到develop:")
         for branch in branches_to_delete:
             logger.info(f"  - {branch}")
         
@@ -296,7 +296,7 @@ def main():
     delete_parser.add_argument('-f', '--force', action='store_true', help='強制刪除')
     
     # 清理分支
-    subparsers.add_parser('cleanup', help='清理已合並的分支')
+    subparsers.add_parser('cleanup', help='清理已合併的分支')
     
     args = parser.parse_args()
     

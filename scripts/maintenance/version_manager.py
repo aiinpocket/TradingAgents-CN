@@ -71,23 +71,23 @@ class VersionManager:
         return new_version
     
     def create_git_tag(self, version, message=None):
-        """創建Git標簽"""
+        """創建Git標籤"""
         if message is None:
             message = f"Release version {version}"
         
         try:
-            # 創建標簽
+            # 創建標籤
             subprocess.run(['git', 'tag', '-a', f'v{version}', '-m', message], 
                          check=True, cwd=self.project_root)
-            logger.info(f" Git標簽 v{version} 已創建")
+            logger.info(f" Git標籤 v{version} 已創建")
             
-            # 推送標簽
+            # 推送標籤
             subprocess.run(['git', 'push', 'origin', f'v{version}'], 
                          check=True, cwd=self.project_root)
-            logger.info(f" Git標簽 v{version} 已推送到遠程倉庫")
+            logger.info(f" Git標籤 v{version} 已推送到遠程倉庫")
             
         except subprocess.CalledProcessError as e:
-            logger.error(f" 創建Git標簽失敗: {e}")
+            logger.error(f" 創建Git標籤失敗: {e}")
     
     def update_changelog(self, version, changes=None):
         """更新CHANGELOG文件"""
@@ -159,7 +159,7 @@ class VersionManager:
             logger.error(f" 提交失敗: {e}")
             return False
         
-        # 創建Git標簽
+        # 創建Git標籤
         self.create_git_tag(new_version, message)
         
         logger.info(f" 版本 {new_version} 發布完成！")
@@ -173,14 +173,14 @@ class VersionManager:
         logger.info(f"版本文件: {self.version_file}")
         logger.info(f"更新日誌: {self.changelog_file}")
         
-        # 顯示Git標簽
+        # 顯示Git標籤
         try:
             result = subprocess.run(['git', 'tag', '--list', 'v*'], 
                                   capture_output=True, text=True, cwd=self.project_root)
             tags = result.stdout.strip().split('\n') if result.stdout.strip() else []
-            logger.info(f"Git標簽: {', '.join(tags) if tags else '無'}")
+            logger.info(f"Git標籤: {', '.join(tags) if tags else '無'}")
         except subprocess.CalledProcessError:
-            logger.info(f"Git標簽: 無法獲取")
+            logger.info(f"Git標籤: 無法獲取")
 
 def main():
     parser = argparse.ArgumentParser(description='TradingAgents 版本管理工具')
@@ -205,9 +205,9 @@ def main():
     release_parser.add_argument('-m', '--message', help='發布訊息')
     release_parser.add_argument('-c', '--changes', help='更改說明')
     
-    # 創建標簽命令
-    tag_parser = subparsers.add_parser('tag', help='為當前版本創建Git標簽')
-    tag_parser.add_argument('-m', '--message', help='標簽訊息')
+    # 創建標籤命令
+    tag_parser = subparsers.add_parser('tag', help='為當前版本創建Git標籤')
+    tag_parser.add_argument('-m', '--message', help='標籤訊息')
     
     args = parser.parse_args()
     

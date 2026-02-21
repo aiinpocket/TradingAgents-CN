@@ -276,7 +276,7 @@ class ConfigManager:
                 settings = self.load_settings()
                 openai_enabled = settings.get("openai_enabled", False)
 
-                # 合並.env中的API密鑰（優先級更高）
+                # 合併.env中的API密鑰（優先級更高）
                 for model in models:
                     env_api_key = self._get_env_api_key(model.provider)
                     if env_api_key:
@@ -408,7 +408,7 @@ class ConfigManager:
         return 0.0
     
     def load_settings(self) -> Dict[str, Any]:
-        """加載設置，合並.env中的配置"""
+        """加載設置，合併.env中的配置"""
         try:
             if self.settings_file.exists():
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
@@ -434,7 +434,7 @@ class ConfigManager:
             logger.error(f"加載設置失敗: {e}")
             settings = {}
 
-        # 合並.env中的其他配置
+        # 合併.env中的其他配置
         env_settings = {
             "finnhub_api_key": os.getenv("FINNHUB_API_KEY", ""),
             "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", ""),

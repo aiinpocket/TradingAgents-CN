@@ -174,13 +174,13 @@ def main():
     
     logger.info(f" Git狀態檢查通過")
     
-    # 檢查標簽是否存在
+    # 檢查標籤是否存在
     success, stdout, stderr = run_command("git tag -l cn-v0.1.2")
     if not success or "cn-v0.1.2" not in stdout:
-        logger.error(f" 標簽 cn-v0.1.2 不存在")
+        logger.error(f" 標籤 cn-v0.1.2 不存在")
         return False
     
-    logger.info(f" 版本標簽檢查通過")
+    logger.info(f" 版本標籤檢查通過")
     
     # 生成發布說明
     release_notes = create_release_notes()
@@ -195,7 +195,7 @@ def main():
     logger.info(f"\n GitHub Release創建指南:")
     logger.info(f"=")
     logger.info(f"1. 訪問: https://github.com/hsliuping/TradingAgents-CN/releases/new")
-    logger.info(f"2. 選擇標簽: cn-v0.1.2")
+    logger.info(f"2. 選擇標籤: cn-v0.1.2")
     logger.info(f"3. 發布標題: TradingAgents-CN v0.1.2 - Web管理界面")
     logger.info(f"4. 複制 RELEASE_NOTES_v0.1.2.md 的內容到描述框")
     logger.info(f"5. 勾選 'Set as the latest release'")

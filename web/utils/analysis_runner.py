@@ -34,7 +34,7 @@ except ImportError:
     logger.warning("Token跟蹤功能未啟用")
 
 def translate_analyst_labels(text):
-    """將分析師的英文標簽轉換為中文"""
+    """將分析師的英文標籤轉換為中文"""
     if not text:
         return text
 
@@ -51,7 +51,7 @@ def translate_analyst_labels(text):
         'Trader:': '交易員:'
     }
 
-    # 替換所有英文標簽
+    # 替換所有英文標籤
     for english, chinese in translations.items():
         text = text.replace(english, chinese)
 

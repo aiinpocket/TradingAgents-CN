@@ -52,7 +52,7 @@ def get_favorites_file():
     return get_analysis_results_dir() / "favorites.json"
 
 def get_tags_file():
-    """獲取標簽文件路徑"""
+    """獲取標籤文件路徑"""
     return get_analysis_results_dir() / "tags.json"
 
 def load_favorites():
@@ -77,7 +77,7 @@ def save_favorites(favorites):
         return False
 
 def load_tags():
-    """加載標簽數據"""
+    """加載標籤數據"""
     tags_file = get_tags_file()
     if tags_file.exists():
         try:
@@ -88,7 +88,7 @@ def load_tags():
     return {}
 
 def save_tags(tags):
-    """保存標簽數據"""
+    """保存標籤數據"""
     tags_file = get_tags_file()
     try:
         with open(tags_file, 'w', encoding='utf-8') as f:
@@ -98,7 +98,7 @@ def save_tags(tags):
         return False
 
 def add_tag_to_analysis(analysis_id, tag):
-    """為分析結果添加標簽"""
+    """為分析結果添加標籤"""
     tags = load_tags()
     if analysis_id not in tags:
         tags[analysis_id] = []
@@ -107,7 +107,7 @@ def add_tag_to_analysis(analysis_id, tag):
         save_tags(tags)
 
 def remove_tag_from_analysis(analysis_id, tag):
-    """從分析結果移除標簽"""
+    """從分析結果移除標籤"""
     tags = load_tags()
     if analysis_id in tags and tag in tags[analysis_id]:
         tags[analysis_id].remove(tag)
@@ -116,7 +116,7 @@ def remove_tag_from_analysis(analysis_id, tag):
         save_tags(tags)
 
 def get_analysis_tags(analysis_id):
-    """獲取分析結果的標簽"""
+    """獲取分析結果的標籤"""
     tags = load_tags()
     return tags.get(analysis_id, [])
 
@@ -178,7 +178,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                 with open(result_file, 'r', encoding='utf-8') as f:
                     result = json.load(f)
 
-                    # 添加標簽信息
+                    # 添加標籤信息
                     result['tags'] = tags_data.get(result.get('analysis_id', ''), [])
                     result['is_favorite'] = result.get('analysis_id', '') in favorites
                     result['source'] = 'file_system'# 標記數據來源
@@ -314,7 +314,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
             if search_text not in searchable_text:
                 continue
                 
-        # 標簽過濾
+        # 標籤過濾
         if tags_filter:
             result_tags = result.get('tags', [])
             if not any(tag in result_tags for tag in tags_filter):
@@ -372,14 +372,14 @@ def render_analysis_results():
         if analyst_filter == "全部":
             analyst_filter = None
             
-        # 標簽過濾
+        # 標籤過濾
         all_tags = set()
         tags_data = load_tags()
         for tag_list in tags_data.values():
             all_tags.update(tag_list)
         
         if all_tags:
-            selected_tags = st.multiselect("標簽過濾", sorted(all_tags))
+            selected_tags = st.multiselect("標籤過濾", sorted(all_tags))
         else:
             selected_tags = []
     
@@ -469,7 +469,7 @@ def render_results_table(results: List[Dict[str, Any]]):
             '分析師': ', '.join(result.get('analysts', [])[:2]) + ('...'if len(result.get('analysts', [])) > 2 else ''),
             '狀態': '成功' if result.get('status') == 'completed' else '失敗',
             '收藏': '是' if result.get('is_favorite', False) else '',
-            '標簽': ', '.join(result.get('tags', [])[:2]) + ('...'if len(result.get('tags', [])) > 2 else ''),
+            '標籤': ', '.join(result.get('tags', [])[:2]) + ('...'if len(result.get('tags', [])) > 2 else ''),
             '摘要': (result.get('summary', '')[:50] + '...') if len(result.get('summary', '')) > 50 else result.get('summary', '')
         })
     
@@ -547,14 +547,14 @@ def render_results_cards(results: List[Dict[str, Any]]):
                     st.write(f"**摘要**: {summary}")
             
             with col2:
-                # 顯示標簽
+                # 顯示標籤
                 tags = result.get('tags', [])
                 if tags:
-                    st.write("**標簽**:")
-                    for tag in tags[:3]: # 最多顯示3個標簽
+                    st.write("**標籤**:")
+                    for tag in tags[:3]: # 最多顯示3個標籤
                         st.markdown(f"`{tag}`")
                     if len(tags) > 3:
-                        st.caption(f"還有 {len(tags) - 3} 個標簽...")
+                        st.caption(f"還有 {len(tags) - 3} 個標籤...")
 
             # 顯示折叠詳情
             result_id = result.get('_id') or result.get('analysis_id') or f"result_{start_idx + i}"
@@ -767,17 +767,17 @@ def render_results_charts(results: List[Dict[str, Any]]):
         )
         st.plotly_chart(fig_success, use_container_width=True)
     
-    # 標簽使用統計
+    # 標籤使用統計
     tags_data = load_tags()
     if tags_data:
-        st.subheader("標簽使用統計")
+        st.subheader("標籤使用統計")
         tag_counts = {}
         for tag_list in tags_data.values():
             for tag in tag_list:
                 tag_counts[tag] = tag_counts.get(tag, 0) + 1
         
         if tag_counts:
-            # 只顯示前10個最常用的標簽
+            # 只顯示前10個最常用的標籤
             top_tags = sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[:10]
             tags = [item[0] for item in top_tags]
             counts = [item[1] for item in top_tags]
@@ -785,8 +785,8 @@ def render_results_charts(results: List[Dict[str, Any]]):
             fig_tags = px.bar(
                 x=tags,
                 y=counts,
-                title="最常用標簽 (前10名)",
-                labels={'x': '標簽', 'y': '使用次數'},
+                title="最常用標籤 (前10名)",
+                labels={'x': '標籤', 'y': '使用次數'},
                 color=counts,
                 color_continuous_scale='plasma'
             )
@@ -794,46 +794,46 @@ def render_results_charts(results: List[Dict[str, Any]]):
             st.plotly_chart(fig_tags, use_container_width=True)
 
 def render_tags_management(results: List[Dict[str, Any]]):
-    """渲染標簽管理功能"""
+    """渲染標籤管理功能"""
     
-    st.subheader("標簽管理")
+    st.subheader("標籤管理")
     
-    # 獲取所有標簽
+    # 獲取所有標籤
     all_tags = set()
     tags_data = load_tags()
     for tag_list in tags_data.values():
         all_tags.update(tag_list)
     
-    # 標簽統計
+    # 標籤統計
     if all_tags:
-        st.write("**現有標簽統計**")
+        st.write("**現有標籤統計**")
         tag_counts = {}
         for tag_list in tags_data.values():
             for tag in tag_list:
                 tag_counts[tag] = tag_counts.get(tag, 0) + 1
         
-        # 顯示標簽云
+        # 顯示標籤云
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            # 創建標簽云可視化
+            # 創建標籤云可視化
             if tag_counts:
                 fig = px.bar(
                     x=list(tag_counts.keys()),
                     y=list(tag_counts.values()),
-                    title="標簽使用頻率",
-                    labels={'x': '標簽', 'y': '使用次數'}
+                    title="標籤使用頻率",
+                    labels={'x': '標籤', 'y': '使用次數'}
                 )
                 st.plotly_chart(fig, use_container_width=True)
         
         with col2:
-            st.write("**標簽列表**")
+            st.write("**標籤列表**")
             for tag, count in sorted(tag_counts.items(), key=lambda x: x[1], reverse=True):
                 st.write(f"• {tag} ({count})")
     
-    # 批量標簽操作
+    # 批量標籤操作
     st.markdown("---")
-    st.write("**批量標簽操作**")
+    st.write("**批量標籤操作**")
     
     # 選擇要操作的結果
     if results:
@@ -848,26 +848,26 @@ def render_tags_management(results: List[Dict[str, Any]]):
             col1, col2 = st.columns(2)
             
             with col1:
-                # 添加標簽
-                new_tag = st.text_input("新標簽名稱", placeholder="輸入標簽名稱")
-                if st.button("添加標簽") and new_tag:
+                # 添加標籤
+                new_tag = st.text_input("新標籤名稱", placeholder="輸入標籤名稱")
+                if st.button("添加標籤") and new_tag:
                     for idx in selected_results:
                         analysis_id = results[idx].get('analysis_id', '')
                         if analysis_id:
                             add_tag_to_analysis(analysis_id, new_tag)
-                    st.success(f"已為 {len(selected_results)} 個結果添加標簽: {new_tag}")
+                    st.success(f"已為 {len(selected_results)} 個結果添加標籤: {new_tag}")
                     st.rerun()
             
             with col2:
-                # 移除標簽
+                # 移除標籤
                 if all_tags:
-                    remove_tag = st.selectbox("選擇要移除的標簽", sorted(all_tags))
-                    if st.button("移除標簽") and remove_tag:
+                    remove_tag = st.selectbox("選擇要移除的標籤", sorted(all_tags))
+                    if st.button("移除標籤") and remove_tag:
                         for idx in selected_results:
                             analysis_id = results[idx].get('analysis_id', '')
                             if analysis_id:
                                 remove_tag_from_analysis(analysis_id, remove_tag)
-                        st.success(f"已從 {len(selected_results)} 個結果移除標簽: {remove_tag}")
+                        st.success(f"已從 {len(selected_results)} 個結果移除標籤: {remove_tag}")
                         st.rerun()
 
 def render_results_export(results: List[Dict[str, Any]]):
@@ -1002,7 +1002,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
     st.subheader("基本信息對比")
     
     comparison_data = {
-        "項目": ["股票代碼", "分析時間", "分析師數量", "研究深度", "狀態", "標簽數量"],
+        "項目": ["股票代碼", "分析時間", "分析師數量", "研究深度", "狀態", "標籤數量"],
         "分析結果 A": [
             result_a.get('stock_symbol', 'unknown'),
             safe_timestamp_to_datetime(result_a.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M'),
@@ -1032,7 +1032,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
     if perf_a or perf_b:
         st.subheader("性能指標對比")
         
-        # 合並所有性能指標鍵
+        # 合併所有性能指標鍵
         all_perf_keys = set(perf_a.keys()) | set(perf_b.keys())
         
         if all_perf_keys:
@@ -1045,23 +1045,23 @@ def render_results_comparison(results: List[Dict[str, Any]]):
             df_perf = pd.DataFrame(perf_comparison)
             st.dataframe(df_perf, use_container_width=True)
     
-    # 標簽對比
+    # 標籤對比
     tags_a = set(result_a.get('tags', []))
     tags_b = set(result_b.get('tags', []))
     
     if tags_a or tags_b:
-        st.subheader("標簽對比")
+        st.subheader("標籤對比")
         
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.write("**共同標簽**")
+            st.write("**共同標籤**")
             common_tags = tags_a & tags_b
             if common_tags:
                 for tag in common_tags:
                     st.markdown(f"`{tag}`")
             else:
-                st.write("無共同標簽")
+                st.write("無共同標籤")
         
         with col2:
             st.write("**僅在結果A中**")
@@ -1070,7 +1070,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
                 for tag in only_a:
                     st.markdown(f"`{tag}`")
             else:
-                st.write("無獨有標簽")
+                st.write("無獨有標籤")
         
         with col3:
             st.write("**僅在結果B中**")
@@ -1079,7 +1079,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
                 for tag in only_b:
                     st.markdown(f"`{tag}`")
             else:
-                st.write("無獨有標簽")
+                st.write("無獨有標籤")
     
     # 摘要對比
     summary_a = result_a.get('summary', '')
@@ -1192,11 +1192,11 @@ def render_detailed_analysis(results: List[Dict[str, Any]]):
         with col3:
             st.metric("研究深度", selected_result.get('research_depth', 'unknown'))
             tags = selected_result.get('tags', [])
-            st.metric("標簽數量", len(tags))
+            st.metric("標籤數量", len(tags))
         
-        # 顯示標簽
+        # 顯示標籤
         if tags:
-            st.write("**標簽**:")
+            st.write("**標籤**:")
             tag_cols = st.columns(min(len(tags), 5))
             for i, tag in enumerate(tags):
                 with tag_cols[i % 5]:
@@ -1259,9 +1259,9 @@ def render_detailed_analysis_content(selected_result):
         for report_key in report_tabs:
             display_name = report_display_names.get(report_key, f"{report_key.replace('_', '').title()}")
             tab_names.append(display_name)
-            logger.debug(f"[彈窗調試] 添加標簽: {display_name}")
+            logger.debug(f"[彈窗調試] 添加標籤: {display_name}")
 
-        logger.debug(f"[彈窗調試] 總標簽數: {len(tab_names)}")
+        logger.debug(f"[彈窗調試] 總標籤數: {len(tab_names)}")
         
         if len(tab_names) == 1:
             # 只有一個報告，直接顯示

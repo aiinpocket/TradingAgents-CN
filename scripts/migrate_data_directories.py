@@ -147,7 +147,7 @@ class DataDirectoryMigrator:
                 
                 try:
                     if source.is_dir():
-                        # 如果目標已存在，合並內容
+                        # 如果目標已存在，合併內容
                         if target.exists():
                             self._merge_directories(source, target)
                         else:
@@ -168,7 +168,7 @@ class DataDirectoryMigrator:
             return False
     
     def _merge_directories(self, source: Path, target: Path):
-        """合並目錄內容"""
+        """合併目錄內容"""
         for item in source.rglob('*'):
             if item.is_file():
                 relative_path = item.relative_to(source)

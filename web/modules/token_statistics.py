@@ -287,7 +287,7 @@ def render_cost_trends(records: List[UsageRecord]):
         'tokens': 'sum'
     }).reset_index()
     
-    # 創建雙轴圖表
+    # 創建雙軸圖表
     fig = make_subplots(
         specs=[[{"secondary_y": True}]],
         subplot_titles=["每日成本和Token使用趨勢"]
@@ -317,7 +317,7 @@ def render_cost_trends(records: List[UsageRecord]):
         secondary_y=True,
     )
     
-    # 設置轴標簽
+    # 設置軸標籤
     fig.update_xaxes(title_text="日期")
     fig.update_yaxes(title_text="成本($)", secondary_y=False)
     fig.update_yaxes(title_text="Token數量", secondary_y=True)

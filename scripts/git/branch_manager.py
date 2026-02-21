@@ -59,7 +59,7 @@ class BranchManager:
         return branches
     
     def get_merged_branches(self, target_branch: str = 'main') -> List[str]:
-        """獲取已合並到目標分支的分支"""
+        """獲取已合併到目標分支的分支"""
         success, stdout, _ = self.run_git_command(['branch', '--merged', target_branch])
         if not success:
             return []
@@ -73,7 +73,7 @@ class BranchManager:
         return merged
     
     def get_unmerged_branches(self, target_branch: str = 'main') -> List[str]:
-        """獲取未合並到目標分支的分支"""
+        """獲取未合併到目標分支的分支"""
         success, stdout, _ = self.run_git_command(['branch', '--no-merged', target_branch])
         if not success:
             return []
@@ -121,15 +121,15 @@ class BranchManager:
         if len(branches['remote']) > 10:
             logger.info(f"   ... 還有 {len(branches['remote']) - 10} 個遠程分支")
         
-        # 合並狀態
+        # 合併狀態
         merged = self.get_merged_branches()
         unmerged = self.get_unmerged_branches()
         
-        logger.info(f"\n 已合並到main ({len(merged)}個):")
+        logger.info(f"\n 已合併到main ({len(merged)}個):")
         for branch in merged:
             logger.info(f"   {branch}")
         
-        logger.warning(f"\n 未合並到main ({len(unmerged)}個):")
+        logger.warning(f"\n 未合併到main ({len(unmerged)}個):")
         for branch in unmerged:
             logger.info(f"   {branch}")
     
@@ -158,19 +158,19 @@ class BranchManager:
             logger.error(f" 拉取代碼失敗: {stderr}")
             return False
         
-        # 合並當前功能分支（如果不是main）
+        # 合併當前功能分支（如果不是main）
         if self.current_branch != 'main':
-            logger.info(f" 合並分支 {self.current_branch}...")
+            logger.info(f" 合併分支 {self.current_branch}...")
             success, _, stderr = self.run_git_command(['merge', self.current_branch])
             if not success:
-                logger.error(f" 合並失敗: {stderr}")
+                logger.error(f" 合併失敗: {stderr}")
                 return False
         
-        # 創建標簽
-        logger.info(f" 創建版本標簽 {version}...")
+        # 創建標籤
+        logger.info(f" 創建版本標籤 {version}...")
         success, _, stderr = self.run_git_command(['tag', '-a', version, '-m', f'Release {version}'])
         if not success:
-            logger.error(f" 創建標簽失敗: {stderr}")
+            logger.error(f" 創建標籤失敗: {stderr}")
             return False
         
         # 推送到遠程
@@ -184,8 +184,8 @@ class BranchManager:
         return True
     
     def cleanup_branches(self, dry_run: bool = True):
-        """清理已合並的分支"""
-        logger.info(f" 清理已合並的分支")
+        """清理已合併的分支"""
+        logger.info(f" 清理已合併的分支")
         logger.info(f"=")
         
         merged = self.get_merged_branches()
@@ -195,7 +195,7 @@ class BranchManager:
             logger.info(f" 沒有需要清理的功能分支")
             return
         
-        logger.info(f" 發現 {len(feature_branches)} 個已合並的功能分支:")
+        logger.info(f" 發現 {len(feature_branches)} 個已合併的功能分支:")
         for branch in feature_branches:
             logger.info(f"   {branch}")
         
@@ -264,7 +264,7 @@ def main():
     release_parser.add_argument('version', help='版本號 (如: v0.1.6)')
     
     # 分支清理
-    cleanup_parser = subparsers.add_parser('cleanup', help='清理已合並的分支')
+    cleanup_parser = subparsers.add_parser('cleanup', help='清理已合併的分支')
     cleanup_parser.add_argument('--no-dry-run', action='store_true', help='執行實際刪除')
     
     # 創建功能分支

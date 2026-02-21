@@ -1,15 +1,7 @@
-from langchain_core.messages import BaseMessage, HumanMessage, ToolMessage, AIMessage
-from typing import List
+from langchain_core.messages import HumanMessage, RemoveMessage
 from typing import Annotated
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import RemoveMessage
 from langchain_core.tools import tool
-from datetime import date, timedelta, datetime
-import functools
-import pandas as pd
-import os
-from dateutil.relativedelta import relativedelta
-from langchain_openai import ChatOpenAI
+from datetime import datetime
 import tradingagents.dataflows.interface as interface
 from tradingagents.dataflows.finnhub_extra import (
     get_finnhub_sentiment_report,
@@ -17,11 +9,9 @@ from tradingagents.dataflows.finnhub_extra import (
     get_finnhub_technical_report,
 )
 from tradingagents.default_config import DEFAULT_CONFIG
-from langchain_core.messages import HumanMessage
 
-# 導入統一日誌系統和工具日誌裝飾器
-from tradingagents.utils.logging_init import get_logger as _get_init_logger
-from tradingagents.utils.tool_logging import log_tool_call, log_analysis_step
+# 導入工具日誌裝飾器
+from tradingagents.utils.tool_logging import log_tool_call
 
 # 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger

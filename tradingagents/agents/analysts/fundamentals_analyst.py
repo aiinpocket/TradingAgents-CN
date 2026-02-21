@@ -53,7 +53,12 @@ def create_fundamentals_analyst(llm, toolkit):
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
-        start_date = '2025-05-28'
+        from datetime import datetime, timedelta
+        try:
+            dt = datetime.strptime(current_date, "%Y-%m-%d")
+            start_date = (dt - timedelta(days=90)).strftime("%Y-%m-%d")
+        except Exception:
+            start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
 
         logger.debug(f"輸入參數: ticker={ticker}, date={current_date}")
         logger.debug(f"當前狀態中的訊息數量: {len(state.get('messages', []))}")
