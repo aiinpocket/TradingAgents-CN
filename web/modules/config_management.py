@@ -54,11 +54,14 @@ def render_model_config():
         env_status = config_manager.get_env_config_status()
 
         for i, model in enumerate(models):
-            # 檢查API密鑰來源
+            # 檢查API密鑰來源（只顯示狀態，不洩露密鑰內容）
             env_has_key = env_status["api_keys"].get(model.provider.lower(), False)
-            api_key_display = "***" + model.api_key[-4:] if model.api_key else "未設置"
             if env_has_key:
-                api_key_display += " (.env)"
+                api_key_display = "已配置 (.env)"
+            elif model.api_key:
+                api_key_display = "已配置"
+            else:
+                api_key_display = "未設置"
 
             model_data.append({
                 "序號": i,

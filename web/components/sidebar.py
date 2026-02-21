@@ -166,16 +166,16 @@ def render_sidebar():
         st.markdown("**API 狀態**")
 
         def _show_key_status(label: str, env_name: str, prefix: str = "", min_len: int = 20):
-            """顯示 API 密鑰配置狀態"""
+            """顯示 API 密鑰配置狀態（只顯示狀態，不洩露密鑰內容）"""
             key_val = os.getenv(env_name, "")
             if not key_val or key_val.startswith("your_") or key_val == "CHANGE_ME":
                 st.error(f"{label}: 未配置")
             elif prefix and not key_val.startswith(prefix):
-                st.warning(f"{label}: {key_val[:8]}... (格式異常)")
+                st.warning(f"{label}: 已配置 (格式異常)")
             elif len(key_val) >= min_len:
-                st.success(f"{label}: {key_val[:8]}...")
+                st.success(f"{label}: 已配置")
             else:
-                st.warning(f"{label}: {key_val[:8]}... (格式異常)")
+                st.warning(f"{label}: 已配置 (格式異常)")
 
         _show_key_status("OpenAI", "OPENAI_API_KEY", "sk-")
         _show_key_status("Anthropic", "ANTHROPIC_API_KEY", "sk-")
