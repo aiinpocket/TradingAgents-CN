@@ -128,7 +128,6 @@ graph TD
 
 # 離線工具
 - get_finnhub_news              # FinnHub 新聞
-- get_reddit_news               # Reddit 新聞
 ```
 
 #### 💬 社交媒體分析師 (Social Media Analyst)
@@ -147,7 +146,7 @@ graph TD
 - get_stock_news_openai          # 股票新聞情緒 (OpenAI)
 
 # 離線工具
-- get_reddit_stock_info          # Reddit 股票討論
+- get_finnhub_social_sentiment   # FinnHub 情緒數據
 ```
 
 ### 🎯 2. 研究員團隊 (Researchers)

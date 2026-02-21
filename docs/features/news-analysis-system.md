@@ -71,7 +71,6 @@ if not online_tools:
     tools = [
         toolkit.get_realtime_stock_news,  # 嘗試實時新聞
         toolkit.get_finnhub_news,
-        toolkit.get_reddit_news,
         toolkit.get_google_news,
     ]
 ```

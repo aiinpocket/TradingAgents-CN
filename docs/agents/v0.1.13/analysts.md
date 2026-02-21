@@ -128,8 +128,7 @@ def create_fundamentals_analyst(llm, toolkit):
 - 熱點話題追蹤
 
 **數據來源**:
-- Reddit討論數據
-- Twitter情感數據
+- FinnHub 社交情緒數據
 - 金融論壇討論
 - 社交媒體熱度指標
 

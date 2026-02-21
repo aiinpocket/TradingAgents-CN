@@ -78,14 +78,13 @@ get_google_news(query, lang, country)                      # Google 新聞
 
 # 歷史新聞
 get_finnhub_news(symbol, start_date, end_date)             # FinnHub 新聞
-get_reddit_news(subreddit, limit)                          # Reddit 新聞
 ```
 
-### 💬 社交媒體工具
+### 社交媒體工具
 ```python
 # 情緒分析
 get_stock_news_openai(symbol, sentiment_focus)             # 股票新聞情緒
-get_reddit_stock_info(symbol, limit)                       # Reddit 討論
+get_finnhub_social_sentiment(symbol)                       # FinnHub 情緒數據
 ```
 
 ## 🎯 數據源映射

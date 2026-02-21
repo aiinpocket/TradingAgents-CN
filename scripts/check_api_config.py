@@ -34,10 +34,7 @@ def check_api_keys():
     apis = {
         'FINNHUB_API_KEY': 'FinnHub (Financial Data)',
         'OPENAI_API_KEY': 'OpenAI',
-        'GOOGLE_API_KEY': 'Google AI',
         'ANTHROPIC_API_KEY': 'Anthropic',
-        'OPENROUTER_API_KEY': 'OpenRouter',
-        'CUSTOM_OPENAI_API_KEY': 'Custom OpenAI Endpoint',
     }
 
     configured_apis = []
@@ -95,14 +92,14 @@ def provide_recommendations(configured_apis, missing_apis):
         print()
 
     print("  Minimum configuration:")
-    print("    1. At least one LLM API key (OPENAI_API_KEY or GOOGLE_API_KEY)")
+    print("    1. At least one LLM API key (OPENAI_API_KEY or ANTHROPIC_API_KEY)")
     print("    2. FINNHUB_API_KEY for financial data")
     print()
 
     print("  Recommended configuration:")
-    print("    - GOOGLE_API_KEY: Google AI (free tier available)")
+    print("    - OPENAI_API_KEY: OpenAI (recommended)")
     print("    - FINNHUB_API_KEY: Financial data (free tier available)")
-    print("    - OPENAI_API_KEY: OpenAI (for memory & embedding)")
+    print("    - ANTHROPIC_API_KEY: Anthropic (optional)")
 
 
 def main():

@@ -18,7 +18,7 @@ graph TB
         end
 
         subgraph "新聞情緒資料"
-            REDDIT[Reddit社群媒體]
+            FINNHUB_SENT[FinnHub 情緒數據]
             GOOGLENEWS[Google新聞]
         end
     end
@@ -65,7 +65,7 @@ graph TB
     YFINANCE --> ADAPTERS
     FINNHUB --> ADAPTERS
     SIMFIN --> ADAPTERS
-    REDDIT --> API_MGR
+    FINNHUB_SENT --> API_MGR
     GOOGLENEWS --> API_MGR
 
     ADAPTERS --> CLEANER
@@ -322,9 +322,6 @@ class CacheManager:
 
 # 資料來源設定
 FINNHUB_API_KEY=your_finnhub_api_key
-REDDIT_CLIENT_ID=your_reddit_client_id
-REDDIT_CLIENT_SECRET=your_reddit_client_secret
-
 # 資料目錄設定
 DATA_DIR=./data
 CACHE_DIR=./cache

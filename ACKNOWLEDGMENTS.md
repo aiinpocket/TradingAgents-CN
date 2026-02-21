@@ -60,7 +60,7 @@
 
 #### 技術增強
 - **多模型支援**: 整合 OpenAI、Google Gemini、Anthropic Claude、OpenRouter 等主流 LLM
-- **資料來源**: 支援 Yahoo Finance、FinnHub、Reddit、Google News 等資料來源
+- **資料來源**: 支援 Yahoo Finance、FinnHub、Google News 等資料來源
 - **快取最佳化**: Redis、MongoDB 多層快取降級策略
 
 #### 社群建設

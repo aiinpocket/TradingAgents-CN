@@ -60,7 +60,7 @@ graph TB
     subgraph "資料來源層 (Data Source Layer)"
         YFINANCE[yfinance]
         FINNHUB[FinnHub]
-        REDDIT[Reddit]
+        FINNHUB_SENT[FinnHub 情緒數據]
         NEWS[新聞來源]
     end
 
@@ -106,7 +106,7 @@ graph TB
 
     DATAFLOW --> YFINANCE
     DATAFLOW --> FINNHUB
-    DATAFLOW --> REDDIT
+    DATAFLOW --> FINNHUB_SENT
     DATAFLOW --> NEWS
 
     DATAFLOW --> CACHE
@@ -128,7 +128,7 @@ graph TB
     class GRAPH,SETUP,CONDITIONAL,PROPAGATOR,REFLECTOR,SIGNAL coreLayer
     class ANALYSTS,RESEARCHERS,TRADER,RISKMGMT,MANAGERS agentLayer
     class TOOLKIT,DATAFLOW,MEMORY,LOGGING toolLayer
-    class YFINANCE,FINNHUB,REDDIT,NEWS dataLayer
+    class YFINANCE,FINNHUB,FINNHUB_SENT,NEWS dataLayer
     class CACHE,FILES,MEMORY_DB,CONFIG storageLayer
 ```
 
@@ -327,8 +327,8 @@ from .yfin_utils import get_yahoo_finance_data
 # FinnHub - 新聞和基本面資料
 from .finnhub_utils import get_data_in_range
 
-# Reddit - 社群媒體情緒
-from .reddit_utils import fetch_top_from_category
+# FinnHub - 社群媒體情緒數據
+from .finnhub_utils import get_social_sentiment
 
 # Google新聞
 from .googlenews_utils import get_google_news
@@ -414,8 +414,6 @@ ANTHROPIC_API_KEY=your_anthropic_key
 
 # 資料來源API密鑰
 FINNHUB_API_KEY=your_finnhub_key
-REDDIT_CLIENT_ID=your_reddit_client_id
-REDDIT_CLIENT_SECRET=your_reddit_secret
 
 # 系統設定
 TRADINGAGENTS_RESULTS_DIR=./results

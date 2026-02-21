@@ -189,10 +189,8 @@ ANTHROPIC_API_KEY=your_anthropic_api_key
 # FinnHub API (optional, US stock data)
 FINNHUB_API_KEY=your_finnhub_key
 
-# Reddit API (optional, social media analysis)
-REDDIT_CLIENT_ID=your_reddit_client_id
-REDDIT_CLIENT_SECRET=your_reddit_client_secret
-REDDIT_USER_AGENT=TradingAgents-CN/1.0
+# FinnHub API (social media sentiment analysis)
+FINNHUB_API_KEY=your_finnhub_key
 ```
 
 ### 模型配置說明

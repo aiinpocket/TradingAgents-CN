@@ -41,15 +41,13 @@ TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理界�
 #### Streamlit Web管理界面
 - 完整的Web股票分析平台
 - 直觀的使用者界面和即時進度顯示
-- 支援多種LLM提供商選擇（OpenAI / Google AI / Anthropic）
+- 支援多種LLM提供商選擇（OpenAI / Anthropic）
 - 視覺化的分析結果展示
 - 響應式設計，支援行動裝置存取
 
 #### 多LLM提供商支援
 - OpenAI（GPT-4、GPT-4o-mini）
-- Google AI（Gemini 2.5 系列）
 - Anthropic（Claude 4 系列）
-- OpenRouter、Ollama、自訂 OpenAI 相容端點
 - Web界面支援LLM提供商無縫切換
 - 統一的配置管理界面
 
@@ -75,7 +73,6 @@ cp .env.example .env
 
 # 編輯 .env 檔案，添加您的API密鑰
 # OPENAI_API_KEY=your_openai_key        # OpenAI（推薦）
-# GOOGLE_API_KEY=your_google_key        # Google AI（可選）
 # ANTHROPIC_API_KEY=your_anthropic_key  # Anthropic（可選）
 ```
 
@@ -93,23 +90,22 @@ python start_web.py
 # 使用OpenAI模型
 python cli/main.py --stock AAPL --analysts market fundamentals
 
-# 使用Google AI模型
-python cli/main.py --llm-provider google --model gemini-2.0-flash --stock TSLA
+# 使用Anthropic模型
+python cli/main.py --llm-provider anthropic --model claude-sonnet-4 --stock TSLA
 ```
 
 ### 文件和支援
 
 - [完整文件](./docs/)
 - [Web界面指南](./web/README.md)
-- [Google AI配置指南](./docs/configuration/google-ai-setup.md)
 - [測試指南](./tests/README.md)
 - [範例代碼](./examples/)
 
 ### 推薦配置
 
 **最佳性能組合**：
-- **LLM提供商**: OpenAI 或 Google AI
-- **推薦模型**: gpt-4o-mini / gemini-2.0-flash
+- **LLM提供商**: OpenAI 或 Anthropic
+- **推薦模型**: gpt-4o-mini / claude-sonnet-4
 - **分析師**: 市場技術 + 基本面分析師
 
 ### 致謝

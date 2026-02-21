@@ -53,9 +53,7 @@ def check_system_status():
             api_keys = {
                 'FINNHUB_API_KEY': 'FinnHub',
                 'OPENAI_API_KEY': 'OpenAI',
-                'GOOGLE_API_KEY': 'Google AI',
                 'ANTHROPIC_API_KEY': 'Anthropic',
-                'OPENROUTER_API_KEY': 'OpenRouter'
             }
 
             for key, name in api_keys.items():

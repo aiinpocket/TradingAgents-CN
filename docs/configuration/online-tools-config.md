@@ -130,9 +130,7 @@ print(f"實時數據: {DEFAULT_CONFIG['realtime_data']}")
 
 ### 受 `ONLINE_NEWS_ENABLED` 控制的工具
 - `get_google_news` - Google新聞獲取
-- `get_reddit_news` - Reddit新聞獲取
-- `get_reddit_stock_info` - Reddit股票討論
-- `get_chinese_social_sentiment` - 中國社交媒體情緒
+- `get_finnhub_social_sentiment` - FinnHub 情緒數據
 
 ### 受 `REALTIME_DATA_ENABLED` 控制的工具
 - 實時股價數據

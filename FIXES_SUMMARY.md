@@ -16,8 +16,7 @@
 - 在 `default_config.py` 中將 `online_tools` 設置為 `False`
 - 確保 `.env` 文件中 `OPENAI_ENABLED=false`
 - 社交媒體分析師現在使用離線工具：
-  - `get_chinese_social_sentiment` (中文社交情緒分析)
-  - `get_reddit_stock_info` (Reddit股票信息)
+  - `get_finnhub_social_sentiment` (FinnHub 情緒數據分析)
 
 **修復文件：**
 - `c:\TradingAgentsCN\tradingagents\default_config.py`

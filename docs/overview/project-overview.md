@@ -42,7 +42,7 @@ TradingAgents 專案的核心理念是將這種人類專家團隊的協作模式
 ### 4. 豐富的資料整合
 - **美股數據**: FinnHub、Yahoo Finance即時數據 ✅
 - **新聞數據**: Google News、財經新聞整合 ✅
-- **社交數據**: Reddit情緒分析 ✅
+- **社交數據**: FinnHub 情緒數據分析 ✅
 - **資料庫支援**: MongoDB + Redis + 智慧快取 ✅
 
 ### 5. 現代化Web介面 ✅ **v0.1.2新增**

@@ -344,7 +344,7 @@ config = {
 ```python
 config = {
     "online_tools": True,
-    "data_sources": ["finnhub", "yahoo", "reddit", "google_news"]
+    "data_sources": ["finnhub", "yahoo", "google_news"]
 }
 ```
 

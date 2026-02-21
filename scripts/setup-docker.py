@@ -72,7 +72,7 @@ def setup_docker_env():
     # API密鑰配置提醒
     logger.info(f"\n API密鑰配置")
     logger.info(f"Please configure the following API keys in .env (at least one LLM key):")
-    logger.info(f"- OPENAI_API_KEY or GOOGLE_API_KEY (LLM provider)")
+    logger.info(f"- OPENAI_API_KEY or ANTHROPIC_API_KEY (LLM provider)")
     logger.info(f"- FINNHUB_API_KEY (financial data)")
     
     # 顯示下一步操作

@@ -121,7 +121,7 @@ def docker_install():
     # 提示配置API密鑰
     print_colored("\n  重要提醒:", Colors.YELLOW)
     print_colored("請編輯.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
-    print_colored("推薦配置 OpenAI 或 Google AI API 密鑰", Colors.YELLOW)
+    print_colored("推薦配置 OpenAI 或 Anthropic API 密鑰", Colors.YELLOW)
     
     input("\n按回車鍵繼續...")
     
@@ -202,7 +202,7 @@ def local_install():
     # 提示配置API密鑰
     print_colored("\n  重要提醒:", Colors.YELLOW)
     print_colored("請編輯.env文件，配置至少一個AI模型的API密鑰", Colors.YELLOW)
-    print_colored("推薦配置 OpenAI 或 Google AI API 密鑰", Colors.YELLOW)
+    print_colored("推薦配置 OpenAI 或 Anthropic API 密鑰", Colors.YELLOW)
     
     input("\n按回車鍵繼續...")
     

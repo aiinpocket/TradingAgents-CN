@@ -165,7 +165,7 @@ def test_pricing_accuracy():
         # 測試不同供應商的定價
         test_cases = [
             ("openai", "gpt-3.5-turbo", 1000, 500),
-            ("google", "gemini-pro", 1000, 500),
+            ("anthropic", "claude-haiku-4-5", 1000, 500),
         ]
         
         for provider, model, input_tokens, output_tokens in test_cases:
@@ -195,7 +195,7 @@ def test_usage_statistics():
         # 添加多條使用記錄
         test_records = [
             ("openai", "gpt-3.5-turbo", 1500, 750, "session3", "news_analysis"),
-            ("google", "gemini-pro", 1200, 600, "session4", "social_analysis"),
+            ("anthropic", "claude-haiku-4-5", 1200, 600, "session4", "social_analysis"),
         ]
         
         total_expected_cost = 0
