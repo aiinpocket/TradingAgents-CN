@@ -35,7 +35,7 @@ tradingagents/
 1. 適配器基類: <mcsymbol name="OpenAICompatibleBase" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="32" type="class"></mcsymbol> —— 為所有 OpenAI 兼容的 LLM 提供統一實現，是新增提供商最重要的擴展點 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile>
 2. 工廠方法: <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> —— 運行時根據提供商與模型創建對應的適配器實例（建議優先使用）
 3. 提供商註冊: 在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 中的 `OPENAI_COMPATIBLE_PROVIDERS` 字典 —— 統一管理 base_url、API Key 環境變量名、受支持模型等（單一信息源）
-4. 前端集成: <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> —— 模型選擇界面负责把用戶選擇的 llm_provider 和 llm_model 傳遞到後端
+4. 前端集成: <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> —— 模型選擇界面負责把用戶選擇的 llm_provider 和 llm_model 傳遞到後端
 5. 運行時入口: <mcfile name="trading_graph.py" path="tradingagents/graph/trading_graph.py"></mcfile> 中統一使用工廠方法創建 LLM；<mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile> 僅作為參數傳遞與流程編排，通常無需為新增提供商做修改
 
 ## 🚀 快速開始
@@ -70,7 +70,7 @@ tradingagents/
 
 適用於：支持 OpenAI API 格式的模型（如智谱、MiniMax、月之暗面等）
 
-**優势**：
+**優勢**：
 
 - 開發工作量最小
 - 複用現有的工具調用邏輯
@@ -197,21 +197,21 @@ elif llm_provider == "your_provider":
 
 在絕大多數情況下，新增一個 OpenAI 兼容提供商時，無需修改 <mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile>。原因：
 
-- 側邊栏 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 收集 `llm_provider` 與 `llm_model`
+- 側邊欄 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 收集 `llm_provider` 與 `llm_model`
 - 這些參數會被傳入 <mcfile name="trading_graph.py" path="tradingagents/graph/trading_graph.py"></mcfile>，由 <mcsymbol name="create_openai_compatible_llm" filename="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py" startline="329" type="function"></mcsymbol> 基於 `OPENAI_COMPATIBLE_PROVIDERS` 自動實例化正確的適配器
 - 因此，真正的“運行時配置”主要體現在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 的註冊表和工廠方法，而非 analysis_runner 本身
 
 推薦做法：
 
 - 在 <mcfile name="openai_compatible_base.py" path="tradingagents/llm_adapters/openai_compatible_base.py"></mcfile> 中完善 `OPENAI_COMPATIBLE_PROVIDERS`（base_url、api_key 環境變量、模型清單等）
-- 在 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 中新增该 `llm_provider` 的下拉選項與模型列表
+- 在 <mcfile name="sidebar.py" path="web/components/sidebar.py"></mcfile> 中新增該 `llm_provider` 的下拉選項與模型列表
 - 保持 <mcfile name="analysis_runner.py" path="web/utils/analysis_runner.py"></mcfile> 無需改動
 
 何時需要少量修改 analysis_runner：
 
-- 该提供商要求在分析階段動態切換不同模型（例如“快速/深度”分開）
+- 該提供商要求在分析階段動態切換不同模型（例如“快速/深度”分開）
 - 需要在任務執行流水線中註入特定的 header、代理或文件型鑒權
-- 需要為该提供商設置額外的日誌或成本估算邏輯
+- 需要為該提供商設置額外的日誌或成本估算邏輯
 
 即便如此，也請：
 
@@ -294,7 +294,7 @@ streamlit run app.py
 
 驗證：
 
-- [ ]  在側邊栏能正確選擇新提供商
+- [ ]  在側邊欄能正確選擇新提供商
 - [ ]  模型選擇下拉菜單工作正常
 - [ ]  API 密鑰檢查顯示正確狀態
 - [ ]  能成功進行股票分析
@@ -423,7 +423,7 @@ _SECRET_KEY=your_secret_key_here
 
 **價格說明**：
 - 價格單位為每1000個token的費用
-- 貨币單位為人民币（CNY）
+- 貨幣單位為人民幣（CNY）
 - 價格基於官方定價，可能會有調整
 
 #### 5. 前端界面集成
@@ -488,7 +488,7 @@ elif llm_provider == "":
 
 ### 3. 前端界面不顯示新模型
 
-**問題**: 側邊栏看不到新添加的提供商
+**問題**: 側邊欄看不到新添加的提供商
 
 **解決方案**:
 
@@ -506,7 +506,7 @@ elif llm_provider == "":
 - 調整 `timeout` 參數
 - 檢查網絡連接和 API 端點狀態
 - 考慮添加重試機制
-- **國產模型特殊情況**: 某些國產模型服務器在海外訪問較慢，建議增加超時時間
+- **模型特殊情況**: 某些模型服務器在海外訪問較慢，建議增加超時時間
 
 ### 5. 中文編碼問題
 
@@ -622,7 +622,7 @@ Closes #{issue_number}
 如果在開發過程中遇到問題：
 
 1. **查看現有實現**: 參考 `
-2. **阅讀基類文檔**: 查看 `openai_compatible_base.py` 的註釋
+2. **閱讀基類文檔**: 查看 `openai_compatible_base.py` 的註釋
 3. **提交 Issue**: 在 GitHub 上創建問題描述
 4. **加入討論**: 參與項目的 Discussion 板塊
 

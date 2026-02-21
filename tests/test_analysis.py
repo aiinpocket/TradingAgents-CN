@@ -43,8 +43,8 @@ def test_graph_initialization():
         
         # 創建配置
         config = DEFAULT_CONFIG.copy()
-        config["deep_think_llm"] = "qwen-plus"
-        config["quick_think_llm"] = "qwen-plus"
+        config["deep_think_llm"] = "gpt-4o"
+        config["quick_think_llm"] = "gpt-4o"
         config["memory_enabled"] = True
         config["online_tools"] = True
         

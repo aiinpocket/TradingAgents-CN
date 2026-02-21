@@ -104,7 +104,7 @@ def select_research_depth() -> int:
 
     # Define research depth options with their corresponding values
     DEPTH_OPTIONS = [
-        ("浅層 - 快速研究，少量辯論和策略討論 | Shallow - Quick research, few debate rounds", 1),
+        ("淺層 - 快速研究，少量辯論和策略討論 | Shallow - Quick research, few debate rounds", 1),
         ("中等 - 中等程度，適度的辯論和策略討論 | Medium - Moderate debate and strategy discussion", 3),
         ("深度 - 全面研究，深入的辯論和策略討論 | Deep - Comprehensive research, in-depth debate", 5),
     ]

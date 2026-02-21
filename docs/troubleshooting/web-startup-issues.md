@@ -178,7 +178,7 @@ python start_web.py
 ### 啟動後驗證
 - [ ] 瀏覽器自動打開 http://localhost:8501
 - [ ] 頁面正常加載，無錯誤信息
-- [ ] 側邊栏配置正常顯示
+- [ ] 側邊欄配置正常顯示
 - [ ] 可以選擇分析師和股票代碼
 
 ## 🆘 獲取幫助
@@ -208,7 +208,7 @@ python start_web.py
 
 ## 💡 最佳實踐
 
-1. **始终使用虛擬環境**
+1. **始終使用虛擬環境**
 2. **定期更新依賴**: `pip install -U -r requirements.txt`
 3. **保持項目結構完整**
 4. **定期清理緩存**: `python web/run_web.py --force-clean`

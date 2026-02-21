@@ -118,7 +118,7 @@ print(result["news_report"])
 - 新聞對股價短期影響的分析
 - 預期的波動幅度
 - 價格調整建議
-- 支撑位和阻力位分析
+- 支撐位和阻力位分析
 - 對長期投資價值的影響分析
 - 新聞時效性限制說明
 
@@ -164,7 +164,7 @@ from tradingagents.dataflows.realtime_news_utils import RealtimeNewsAggregator
 
 # 自定義緊急程度關鍵詞
 high_urgency_keywords = ["破產", "訴訟", "收購", "合並", "FDA批準", "盈利警告"]
-medium_urgency_keywords = ["財報", "業绩", "合作", "新產品", "市場份額"]
+medium_urgency_keywords = ["財報", "業績", "合作", "新產品", "市場份額"]
 
 # 創建自定義新聞聚合器
 aggregator = RealtimeNewsAggregator()
@@ -191,7 +191,7 @@ print(report)
 
 5. **註意API密鑰配置**：確保已正確配置 FinnHub、Alpha Vantage、NewsAPI 等服務的API密鑰，以獲取完整的新聞數據。
 
-6. **考慮時效性**：新聞的時效性對投資決策至關重要，始终關註新聞發布時間與當前時間的差距。
+6. **考慮時效性**：新聞的時效性對投資決策至關重要，始終關註新聞發布時間與當前時間的差距。
 
 7. **定期更新關鍵詞**：根據市場變化和投資策略，定期更新緊急程度評估的關鍵詞，以提高新聞分析的準確性。
 

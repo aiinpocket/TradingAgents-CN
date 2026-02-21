@@ -15,7 +15,7 @@ def test_us_stock_market_analysis():
         from tradingagents.agents.analysts.market_analyst import create_market_analyst_react
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
-        from langchain_community.llms import Tongyi
+        from langchain_openai import ChatOpenAI
 
         # 創建配置
         config = DEFAULT_CONFIG.copy()
@@ -30,9 +30,9 @@ def test_us_stock_market_analysis():
         print(f"  - get_YFin_data_online: {hasattr(toolkit, 'get_YFin_data_online')}")
         print(f"  - get_china_stock_data: {hasattr(toolkit, 'get_china_stock_data')}")
         
-        # 創建Tongyi LLM
-        llm = Tongyi()
-        llm.model_name = 'qwen-turbo'
+        # 創建 OpenAI LLM
+        llm = ChatOpenAI(model="gpt-4o-mini")
+        # 使用 OpenAI GPT-4o-mini 模型
 
         # 創建ReAct市場分析師
         analyst = create_market_analyst_react(llm, toolkit)
@@ -76,7 +76,7 @@ def test_us_stock_fundamentals_analysis():
         from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst_react
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
-        from langchain_community.llms import Tongyi
+        from langchain_openai import ChatOpenAI
 
         # 創建配置
         config = DEFAULT_CONFIG.copy()
@@ -91,9 +91,9 @@ def test_us_stock_fundamentals_analysis():
         print(f"  - get_YFin_data_online: {hasattr(toolkit, 'get_YFin_data_online')}")
         print(f"  - get_fundamentals_openai: {hasattr(toolkit, 'get_fundamentals_openai')}")
         
-        # 創建Tongyi LLM
-        llm = Tongyi()
-        llm.model_name = 'qwen-turbo'
+        # 創建 OpenAI LLM
+        llm = ChatOpenAI(model="gpt-4o-mini")
+        # 使用 OpenAI GPT-4o-mini 模型
 
         # 創建ReAct基本面分析師
         analyst = create_fundamentals_analyst_react(llm, toolkit)

@@ -32,8 +32,8 @@ def test_markdown_content():
 
 ## 📋 分析配置信息
 
-- **LLM提供商**: qwen
-- **LLM模型**: qwen-turbo  
+- **LLM提供商**: openai
+- **LLM模型**: gpt-4o-mini  
 - **分析師**: market, fundamentals
 - **研究深度**: 標準分析
 

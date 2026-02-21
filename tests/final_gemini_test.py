@@ -68,7 +68,7 @@ def test_recommended_model():
         
         # 測試分析
         print("📊 開始完整股票分析...")
-        print("   使用gemini-2.0-flash + 阿里百煉嵌入")
+        print("   使用gemini-2.0-flash + OpenAI嵌入")
         print("   這可能需要幾分鐘時間...")
         
         try:
@@ -168,7 +168,7 @@ def main():
         print("\n🎉 最終推薦配置:")
         print("   LLM提供商: Google")
         print("   模型名稱: gemini-2.0-flash")
-        print("   嵌入服務: 阿里百煉 (text-embedding-v3)")
+        print("   嵌入服務: OpenAI (text-embedding-v3)")
         print("   內存功能: 啟用")
         print("\n💡 優勢總結:")
         print("   🧠 優秀的推理能力")

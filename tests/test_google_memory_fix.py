@@ -196,7 +196,7 @@ def main():
         print("🎉 Google AI內存功能修複成功！")
         print("\n💡 現在可以使用的功能:")
         print("   ✅ Google Gemini作為主要LLM")
-        print("   ✅ 阿里百煉作為嵌入服務")
+        print("   ✅ OpenAI作為嵌入服務")
         print("   ✅ 完整的內存和學習功能")
         print("   ✅ 中文分析和推理")
         print("   ✅ 歷史經驗學習")

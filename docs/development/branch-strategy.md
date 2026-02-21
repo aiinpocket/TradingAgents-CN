@@ -20,7 +20,7 @@ main (生產分支)
 - **用途**: 穩定的生產版本
 - **保護**: 受保護，只能通過PR合並
 - **來源**: develop、hotfix、upstream-sync
-- **特點**: 始终保持可發布狀態
+- **特點**: 始終保持可發布狀態
 
 #### 🚀 **develop** - 開發主分支
 - **用途**: 集成所有功能開發
@@ -348,7 +348,7 @@ git push origin feature/portfolio-optimization
 # 填寫PR模板，包含功能描述、測試說明等
 
 # 步驟6: 代碼審查
-# 等待团隊成員審查，根據反饋修改代碼
+# 等待團隊成員審查，根據反饋修改代碼
 
 # 步驟7: 合並和清理
 # PR合並後，刪除本地和遠端分支
@@ -434,9 +434,9 @@ git push origin develop
 - [ ] 問題影響評估和優先級確認
 - [ ] 實施最小化修複方案
 - [ ] 通過了關鍵路徑測試
-- [ ] 有回滚計劃
+- [ ] 有回滾計劃
 - [ ] 同步到所有相關分支
-- [ ] 通知相關团隊成員
+- [ ] 通知相關團隊成員
 
 ### 4. 版本發布流程
 
@@ -455,7 +455,7 @@ git commit -m "bump: 版本號更新到v1.1.0-cn"
 git add CHANGELOG.md
 git commit -m "docs: 更新v1.1.0-cn變更日誌"
 
-# 最终測試
+# 最終測試
 python -m pytest tests/ --cov=tradingagents
 python examples/full_test.py
 

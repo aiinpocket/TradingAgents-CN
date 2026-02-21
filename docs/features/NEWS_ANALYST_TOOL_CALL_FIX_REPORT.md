@@ -85,7 +85,7 @@ backup_news = toolkit.get_google_news.invoke({
    ✅ get_google_news 調用成功
    📝 返回數據長度: 676 字符
 
-🚫 測試修複前的錯誤調用方式（應该失敗）...
+🚫 測試修複前的錯誤調用方式（應該失敗）...
    測試 get_realtime_stock_news 缺少 curr_date:
    ✅ 正確失敗: 1 validation error for get_realtime_stock_news
    測試 get_google_news 缺少 query 和 curr_date:
@@ -98,14 +98,14 @@ backup_news = toolkit.get_google_news.invoke({
 1. **get_realtime_stock_news** 現在正確傳遞 `ticker` 和 `curr_date` 參數
 2. **get_google_news** 現在正確傳遞 `query` 和 `curr_date` 參數
 3. **Pydantic 驗證錯誤** 已完全解決
-4. **新聞分析師** 應该能夠正常獲取新聞數據
+4. **新聞分析師** 應該能夠正常獲取新聞數據
 
 ### 📊 數據獲取驗證
 - `get_realtime_stock_news` 成功獲取 26,555 字符的新聞數據
 - `get_google_news` 成功獲取 676 字符的新聞數據
 - 兩個工具都能正常返回有效的新聞內容
 
-## 影響範围
+## 影響範圍
 
 ### 修改文件
 - `tradingagents/agents/analysts/news_analyst.py`

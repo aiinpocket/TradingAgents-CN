@@ -47,7 +47,7 @@ powershell -ExecutionPolicy Bypass -File scripts\fix_chromadb_win10.ps1
 ### 步驟1: 清理環境
 
 ```powershell
-# 1. 终止所有Python進程
+# 1. 終止所有Python進程
 Get-Process -Name "python*" | Stop-Process -Force
 
 # 2. 清理臨時文件

@@ -174,7 +174,7 @@ class StockDataPreparer:
         # 標準化美股代碼格式
         formatted_code = stock_code.upper()
 
-        # 計算日期範围
+        # 計算日期範圍
         end_date = datetime.strptime(analysis_date, '%Y-%m-%d')
         start_date = end_date - timedelta(days=period_days)
         start_date_str = start_date.strftime('%Y-%m-%d')

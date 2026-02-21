@@ -40,10 +40,10 @@
 popular_stocks = [
     {'symbol': 'AAPL', 'name': '苹果公司', 'sector': '科技'},
     {'symbol': 'MSFT', 'name': '微软', 'sector': '科技'},
-    {'symbol': 'AMZN', 'name': '亚馬逊', 'sector': '消費'},
+    {'symbol': 'AMZN', 'name': '亞馬逊', 'sector': '消費'},
     {'symbol': 'NVDA', 'name': '英伟達', 'sector': '科技'},
-    {'symbol': 'NFLX', 'name': '奈飞', 'sector': '媒體'},
-    {'symbol': 'QQQ', 'name': '纳斯達克100 ETF', 'sector': 'ETF'},
+    {'symbol': 'NFLX', 'name': '奈飛', 'sector': '媒體'},
+    {'symbol': 'QQQ', 'name': '納斯達克100 ETF', 'sector': 'ETF'},
 ]
 
 # 修復後（繁體中文）:
@@ -74,7 +74,7 @@ name_mapping = {
     'NVDA': '英伟達',
     'MSFT': '微软',
     'GOOGL': '谷歌',
-    'AMZN': '亚馬逊'
+    'AMZN': '亞馬逊'
 }
 
 # 修復後（繁體中文）:
@@ -122,9 +122,9 @@ response = llm_with_tools.invoke("請使用test_news_tool查詢'蘋果公司'的
 | 苹果 | 蘋果 | 4次 |
 | 微软 | 微軟 | 3次 |
 | 英伟達 | 輝達 | 2次 |
-| 亚馬逊 | 亞馬遜 | 2次 |
-| 奈飞 | Netflix | 1次 |
-| 纳斯達克 | 納斯達克 | 1次 |
+| 亞馬逊 | 亞馬遜 | 2次 |
+| 奈飛 | Netflix | 1次 |
+| 納斯達克 | 納斯達克 | 1次 |
 
 ## ✅ 修復後的驗證
 
@@ -132,7 +132,7 @@ response = llm_with_tools.invoke("請使用test_news_tool查詢'蘋果公司'的
 使用 JavaScript 掃描整個頁面：
 
 ```javascript
-const simplifiedChars = ['苹果', '微软', '亚马逊', '英伟达', '奈飞', '纳斯达克'];
+const simplifiedChars = ['苹果', '微软', '亞马逊', '英伟達', '奈飛', '納斯達克'];
 // 結果: 未找到簡體字 ✅
 ```
 
@@ -140,13 +140,13 @@ const simplifiedChars = ['苹果', '微软', '亚马逊', '英伟达', '奈飞',
 
 **tradingagents 目錄**:
 ```bash
-grep -r "苹果\|微软\|亚马逊\|英伟达\|奈飞\|纳斯达克" tradingagents/
+grep -r "苹果\|微软\|亞马逊\|英伟達\|奈飛\|納斯達克" tradingagents/
 # 結果: No files found ✅
 ```
 
 **web 目錄**:
 ```bash
-grep -r "苹果\|微软\|亚马逊\|英伟达\|奈飞\|纳斯达克" web/
+grep -r "苹果\|微软\|亞马逊\|英伟達\|奈飛\|納斯達克" web/
 # 結果: No files found ✅
 ```
 
@@ -213,7 +213,7 @@ pip install beautifulsoup4
 
 ```bash
 # 創建檢查腳本
-grep -r "苹果\|微软\|亚马逊\|英伟达\|奈飞\|纳斯达克" tradingagents/ web/ && exit 1 || exit 0
+grep -r "苹果\|微软\|亞马逊\|英伟達\|奈飛\|納斯達克" tradingagents/ web/ && exit 1 || exit 0
 ```
 
 ### 3. 文檔更新

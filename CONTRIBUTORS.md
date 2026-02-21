@@ -16,7 +16,7 @@
 - **[@baiyuxiong](https://github.com/baiyuxiong)** (baiyuxiong@163.com)
   - 貢獻內容：設計並實現了完整的多格式報告導出系統
   - 技術細節：包括Word、PDF、Markdown格式支持
-  - 影響：為用戶提供了灵活的分析報告輸出選項
+  - 影響：為用戶提供了靈活的分析報告輸出選項
   - 貢獻時間：2025年
 
 ### 🤖 AI模型集成與擴展
@@ -37,7 +37,7 @@
 
 - **[@YifanHere](https://github.com/YifanHere)**
   - **主要貢獻**：
-    - 🔧 **CLI代碼质量改進** ([PR #158](https://github.com/hsliuping/TradingAgents-CN/pull/158))
+    - 🔧 **CLI代碼質量改進** ([PR #158](https://github.com/hsliuping/TradingAgents-CN/pull/158))
       - 優化命令行界面的用戶體驗和錯誤處理機制
       - 提升了命令行工具的穩定性和用戶友好性
       - 貢獻時間：2025年
@@ -67,7 +67,7 @@
 
 ### 🥇 最佳持續貢獻獎
 
-- **[@YifanHere](https://github.com/YifanHere)** - 通過多個PR持續改善項目质量，包括CLI優化(#158)和關鍵Bug修複(#173)
+- **[@YifanHere](https://github.com/YifanHere)** - 通過多個PR持續改善項目質量，包括CLI優化(#158)和關鍵Bug修複(#173)
 
 ### 🥈 最佳功能貢獻獎
 
@@ -80,7 +80,7 @@
 ### 🏅 最佳AI集成貢獻獎
 
 - **[@charliecai](https://github.com/charliecai)** - 硅基流動(SiliconFlow) LLM提供商集成
-- **TradingAgents-CN团隊** - 百度千帆(Qianfan) ERNIE模型集成，提供OpenAI兼容接口
+- **TradingAgents-CN團隊** - 百度千帆(Qianfan) ERNIE模型集成，提供OpenAI兼容接口
 
 ### 🛠️ 最佳Bug修複貢獻獎
 
@@ -88,9 +88,9 @@
 
 ## 🌟 其他貢獻
 
-### 📝 問題反饋與建议
+### 📝 問題反饋與建議
 
-- **所有提交Issue的用戶** - 感謝您們的問題反饋和功能建议
+- **所有提交Issue的用戶** - 感謝您們的問題反饋和功能建議
 - **測試用戶** - 感謝您們在開發過程中的測試和反饋
 - **文檔貢獻者** - 感謝您們對項目文檔的完善和改進
 
@@ -98,7 +98,7 @@
 
 - **技術博客作者** - 感謝您們撰寫技術文章推廣項目
 - **社交媒體推廣者** - 感謝您們在各平台分享項目信息
-- **會议演講者** - 感謝您們在技術會议上介紹項目
+- **會議演講者** - 感謝您們在技術會議上介紹項目
 
 ## 🤝 如何成為貢獻者
 
@@ -112,9 +112,9 @@
 
 ### 💡 非技術貢獻
 
-- **用戶反饋**：使用體驗反饋、功能需求建议
+- **用戶反饋**：使用體驗反饋、功能需求建議
 - **社區建設**：回答問題、幫助新用戶、組織活動
-- **推廣宣傳**：撰寫文章、社交媒體分享、會议演講
+- **推廣宣傳**：撰寫文章、社交媒體分享、會議演講
 
 ### 📋 貢獻流程
 
@@ -129,14 +129,14 @@
 
 如果您想成為貢獻者或有任何問題，請通過以下方式聯系我們：
 
-- **GitHub Issues**: [提交問題或建议](https://github.com/hsliuping/TradingAgents-CN/issues)
+- **GitHub Issues**: [提交問題或建議](https://github.com/hsliuping/TradingAgents-CN/issues)
 - **GitHub Discussions**: [參與社區討論](https://github.com/hsliuping/TradingAgents-CN/discussions)
 - **Pull Requests**: [提交代碼貢獻](https://github.com/hsliuping/TradingAgents-CN/pulls)
 - 加入到ＱＱ群：782124367
 
-## 🙏 致谢
+## 🙏 致謝
 
-感謝每一位貢獻者的無私奉献！正是因為有了大家的支持和貢獻，TradingAgents-CN才能不斷發展壯大，為中文用戶提供更好的AI金融分析工具。
+感謝每一位貢獻者的無私奉獻！正是因為有了大家的支持和貢獻，TradingAgents-CN才能不斷發展壯大，為中文用戶提供更好的AI金融分析工具。
 
 ---
 

@@ -22,7 +22,7 @@
 
 ### 🎯 專項指南
 - **[_INTEGRATION_GUIDE.md](./_INTEGRATION_GUIDE.md)** - 模型專項接入指南
-  - 模型特點和優势
+  - 模型特點和優勢
   - 詳細接入步驟
   - 特殊問題解決方案
   - 性能優化建議
@@ -31,16 +31,16 @@
 ## 🚀 快速開始
 
 ### 新手入門
-如果您是第一次接入LLM，建議按以下顺序阅讀：
+如果您是第一次接入LLM，建議按以下顺序閱讀：
 
 1. **[LLM_INTEGRATION_GUIDE.md](./LLM_INTEGRATION_GUIDE.md)** - 了解整體架構和通用流程
-2. **[_INTEGRATION_GUIDE.md](./_INTEGRATION_GUIDE.md)** - 學习具體的接入案例
+2. **[_INTEGRATION_GUIDE.md](./_INTEGRATION_GUIDE.md)** - 學習具體的接入案例
 3. **[LLM_TESTING_VALIDATION_GUIDE.md](./LLM_TESTING_VALIDATION_GUIDE.md)** - 進行測試驗證
 
 ### 開發者指南
 如果您要添加新的LLM提供商：
 
-1. 📖 阅讀 **LLM_INTEGRATION_GUIDE.md** 了解開發規範
+1. 📖 閱讀 **LLM_INTEGRATION_GUIDE.md** 了解開發規範
 2. 🔍 參考 **_INTEGRATION_GUIDE.md** 中的實際案例
 3. 🧪 使用 **LLM_TESTING_VALIDATION_GUIDE.md** 進行全面測試
 4. 📝 提交PR時包含完整的測試報告

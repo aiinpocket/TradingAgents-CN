@@ -30,7 +30,7 @@ environment:
 
 ### 3. **Docker 日誌配置**
 
-添加了Docker級別的日誌轮轉：
+添加了Docker級別的日誌輪轉：
 
 ```yaml
 logging:
@@ -78,7 +78,7 @@ docker-compose ps
 - **位置**: `./logs/` 目錄
 - **主日誌**: `logs/tradingagents.log`
 - **錯誤日誌**: `logs/tradingagents_error.log` (如果有錯誤)
-- **轮轉日誌**: `logs/tradingagents.log.1`, `logs/tradingagents.log.2` 等
+- **輪轉日誌**: `logs/tradingagents.log.1`, `logs/tradingagents.log.2` 等
 
 ### **Docker 標準日誌**
 - **查看命令**: `docker-compose logs web`
@@ -192,7 +192,7 @@ chmod 755 logs/
 
 ### **問題3: 日誌文件過大**
 
-**自動轮轉**: 配置了自動轮轉，主日誌文件最大100MB
+**自動輪轉**: 配置了自動輪轉，主日誌文件最大100MB
 **手動清理**:
 ```bash
 # 備份並清空日誌
@@ -238,7 +238,7 @@ cp logs/tradingagents.log backups/tradingagents_$(date +%Y%m%d).log
 
 ### **4. 實時監控**
 ```bash
-# 在另一個终端實時監控日誌
+# 在另一個終端實時監控日誌
 tail -f logs/tradingagents.log | grep -i "error\|warning"
 ```
 

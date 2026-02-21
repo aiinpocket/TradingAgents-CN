@@ -152,11 +152,7 @@ def test_cli_interface_preview():
         # 選項
         console.print("\n[bold cyan]請選擇股票市場 | Please select stock market:[/bold cyan]")
         console.print("[cyan]1[/cyan]. 🌍 美股 | US Stock")
-        console.print("   示例 | Examples: SPY, AAPL, TSLA")
-        console.print("[cyan]2[/cyan]. 🌍 A股 | China A-Share")
-        console.print("   示例 | Examples: 000001 (平安銀行), 600036 (招商銀行)")
-        console.print("[cyan]3[/cyan]. 🌍 港股 | Hong Kong Stock")
-        console.print("   示例 | Examples: 0700.HK (騰訊), 09988.HK (阿里巴巴)")
+        console.print("   示例 | Examples: SPY, AAPL, TSLA, NVDA, MSFT")
         
         print("\n" + "-" * 40)
         print("✅ 界面清爽，沒有時間戳和技術日誌信息")

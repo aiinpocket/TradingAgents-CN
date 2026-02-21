@@ -90,7 +90,7 @@ from langchain_core.messages import HumanMessage
 
 # 初始化LLM
 llm = Chat
-    model="qwen-turbo",
+    model="gpt-4o-mini",
     temperature=0.7
 )
 
@@ -134,7 +134,7 @@ print(f"會話成本: ¥{session_cost:.4f}")
 # 估算成本（用於預算規劃）
 estimated_cost = token_tracker.estimate_cost(
     provider="
-    model_name="qwen-turbo",
+    model_name="gpt-4o-mini",
     estimated_input_tokens=1000,
     estimated_output_tokens=500
 )
@@ -151,9 +151,9 @@ from tradingagents.config.config_manager import config_manager, PricingConfig
 # 添加自定義定價
 custom_pricing = PricingConfig(
     provider="
-    model_name="qwen-max",
-    input_price_per_1k=0.02,   # 每1000個輸入token的價格（人民币）
-    output_price_per_1k=0.06,  # 每1000個輸出token的價格（人民币）
+    model_name="gpt-4o",
+    input_price_per_1k=0.02,   # 每1000個輸入token的價格（人民幣）
+    output_price_per_1k=0.06,  # 每1000個輸出token的價格（人民幣）
     currency="CNY"
 )
 
@@ -168,9 +168,9 @@ config_manager.save_pricing(pricing_list)
 
 | 模型 | 輸入價格 (¥/1K tokens) | 輸出價格 (¥/1K tokens) |
 |------|----------------------|----------------------|
-| qwen-turbo | 0.002 | 0.006 |
-| qwen-plus-latest | 0.004 | 0.012 |
-| qwen-max | 0.02 | 0.06 |
+| gpt-4o-mini | 0.002 | 0.006 |
+| gpt-4o | 0.004 | 0.012 |
+| gpt-4o | 0.02 | 0.06 |
 
 ### OpenAI
 
@@ -189,9 +189,9 @@ config_manager.save_pricing(pricing_list)
 python tests/test_
 ```
 
-## MongoDB存储優势
+## MongoDB存储優勢
 
-使用MongoDB存储相比JSON文件存储有以下優势：
+使用MongoDB存储相比JSON文件存储有以下優勢：
 
 1. **高性能**: 支持大量數據的高效查詢和聚合
 2. **可擴展性**: 支持分布式部署和水平擴展
@@ -212,7 +212,7 @@ python tests/test_
 2. **定期查看使用統計，優化使用模式**
 3. **根據需求選擇合適的模型（平衡成本和性能）**
 4. **使用會話ID跟蹤特定分析的成本**
-5. **定期清理旧的使用記錄（MongoDB支持自動清理）**
+5. **定期清理舊的使用記錄（MongoDB支持自動清理）**
 
 ## 故障排除
 
@@ -249,4 +249,4 @@ python tests/test_
 - [ ] 添加可視化儀表板
 - [ ] 支持成本預算和限制
 - [ ] 添加使用報告導出功能
-- [ ] 支持团隊和用戶級別的成本跟蹤
+- [ ] 支持團隊和用戶級別的成本跟蹤

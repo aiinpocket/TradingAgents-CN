@@ -121,7 +121,7 @@ def test_token_tracker():
         # 測試使用跟蹤
         print("📝 測試使用跟蹤...")
         record = token_tracker.track_usage(
-            model_name="qwen-turbo",
+            model_name="gpt-4o-mini",
             input_tokens=2000,
             output_tokens=1000,
             session_id="test_session_123",
@@ -138,7 +138,7 @@ def test_token_tracker():
         # 測試成本估算
         print("📝 測試成本估算...")
         estimated_cost = token_tracker.estimate_cost(
-            model_name="qwen-turbo",
+            model_name="gpt-4o-mini",
             estimated_input_tokens=1000,
             estimated_output_tokens=500
         )

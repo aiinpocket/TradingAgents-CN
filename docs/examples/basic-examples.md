@@ -26,7 +26,7 @@ print(f"推理: {decision['reasoning']}")
 ```
 推薦動作: buy
 置信度: 0.75
-推理: 基於强劲的基本面數據和積極的技術指標，建議买入AAPL股票...
+推理: 基於强劲的基本面數據和積極的技術指標，建議買入AAPL股票...
 ```
 
 ## 示例 2: 自定義配置分析
@@ -44,8 +44,8 @@ def analyze_with_custom_config(symbol, date):
     config.update({
         "deep_think_llm": "gpt-4o-mini",      # 使用經濟模型
         "quick_think_llm": "gpt-4o-mini",     # 使用經濟模型
-        "max_debate_rounds": 2,               # 增加辩論轮次
-        "max_risk_discuss_rounds": 1,         # 風險討論轮次
+        "max_debate_rounds": 2,               # 增加辩論輪次
+        "max_risk_discuss_rounds": 1,         # 風險討論輪次
         "online_tools": True,                 # 使用實時數據
     })
     
@@ -89,7 +89,7 @@ def batch_analysis(symbols, date):
     
     # 配置
     config = DEFAULT_CONFIG.copy()
-    config["max_debate_rounds"] = 1  # 減少辩論轮次以提高速度
+    config["max_debate_rounds"] = 1  # 減少辩論輪次以提高速度
     config["online_tools"] = True
     
     ta = TradingAgentsGraph(debug=False, config=config)
@@ -136,9 +136,9 @@ results_df = batch_analysis(tech_stocks, analysis_date)
 print("\n=== 批量分析結果 ===")
 print(results_df[["symbol", "action", "confidence", "risk_score"]])
 
-# 筛選买入建議
+# 筛選買入建議
 buy_recommendations = results_df[results_df["action"] == "buy"]
-print(f"\n买入建議 ({len(buy_recommendations)} 只):")
+print(f"\n買入建議 ({len(buy_recommendations)} 只):")
 for _, row in buy_recommendations.iterrows():
     print(f"  {row['symbol']}: 置信度 {row['confidence']:.1%}")
 ```
@@ -319,7 +319,7 @@ def real_time_monitor(symbols, check_interval=300):
                     status_emoji = "🟢" if action == "buy" else "🔴" if action == "sell" else "🟡"
                     print(f"{status_emoji} {symbol}: {action.upper()} (置信度: {confidence:.1%})")
                     
-                    # 高置信度买入/卖出提醒
+                    # 高置信度買入/賣出提醒
                     if confidence > 0.8 and action in ["buy", "sell"]:
                         print(f"  ⚠️  高置信度{action}信號!")
                 
@@ -339,7 +339,7 @@ def real_time_monitor(symbols, check_interval=300):
 
 ## 示例 7: 錯誤處理和重試
 
-### 健壮的分析函數
+### 健壯的分析函數
 ```python
 import time
 from typing import Optional, Tuple
@@ -380,7 +380,7 @@ result = robust_analysis("AAPL", "2024-01-15", max_retries=3)
 
 if result:
     state, decision = result
-    print(f"最终結果: {decision['action']}")
+    print(f"最終結果: {decision['action']}")
 else:
     print("分析失敗")
 ```

@@ -108,5 +108,5 @@ chmod +x scripts/debug_docker.sh && ./scripts/debug_docker.sh
 
 1. **開發環境**：使用智能啟動腳本
 2. **生產環境**：首次部署用 `--build`，後續用普通啟動
-3. **CI/CD**：始终使用 `--build` 確保最新代碼
+3. **CI/CD**：始終使用 `--build` 確保最新代碼
 4. **故障排除**：先嘗試普通重啟，再考慮重新構建

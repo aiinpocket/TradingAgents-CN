@@ -2,7 +2,7 @@
 
 ## 🎯 概述
 
-本文檔詳細說明 TradingAgents 中文增强版的標準開發工作流程，確保团隊協作的一致性和代碼品質。
+本文檔詳細說明 TradingAgents 中文增强版的標準開發工作流程，確保團隊協作的一致性和代碼品質。
 
 ## 🔄 核心工作流程
 
@@ -34,7 +34,7 @@ graph TD
 #### 1.1 需求分析階段
 ```bash
 # 確認開發需求
-# 1. 阅讀需求文檔或Issue描述
+# 1. 閱讀需求文檔或Issue描述
 # 2. 確認技術方案和實現路徑
 # 3. 評估開發時間和資源需求
 # 4. 與團隊討論技術細節
@@ -51,7 +51,7 @@ python scripts/branch_manager.py create feature risk-management-v2 -d "風險管
 
 # 驗證分支創建
 git branch --show-current
-# 應该顯示: feature/risk-management-v2
+# 應該顯示: feature/risk-management-v2
 ```
 
 #### 1.3 功能開發階段
@@ -162,7 +162,7 @@ git commit -m "docs: 添加中文功能常見問題"
 #### 3.1 問題識別和評估
 ```bash
 # 1. 確認問題嚴重程度
-# 2. 評估影響範围
+# 2. 評估影響範圍
 # 3. 制定修複方案
 # 4. 確定修複時間線
 ```
@@ -281,7 +281,7 @@ python scripts/branch_manager.py delete release/v1.2.0-cn
 - [ ] **版本標記**: 正確的版本號和標簽
 - [ ] **變更日誌**: 詳細的變更記錄
 - [ ] **發布說明**: 準備發布公告
-- [ ] **回滚計劃**: 有應急回滚方案
+- [ ] **回滾計劃**: 有應急回滾方案
 
 ## 🔧 工具和自動化
 

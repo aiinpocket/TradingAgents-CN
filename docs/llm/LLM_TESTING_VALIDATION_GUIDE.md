@@ -78,7 +78,7 @@ def test__api_key_config():
         return False
     
     if not api_key.startswith("bce-v3/"):
-        print("⚠️ API密鑰格式可能不正確，建議使用 bce-v3/ 開头的格式")
+        print("⚠️ API密鑰格式可能不正確，建議使用 bce-v3/ 開頭的格式")
         return False
     
     print(f"✅ API密鑰配置正確 (格式: {api_key[:10]}...)")
@@ -574,7 +574,7 @@ if __name__ == "__main__":
   - [ ] 分析結果格式正確
 
 - [ ] **高級功能**
-  - [ ] 多轮對話正常工作
+  - [ ] 多輪對話正常工作
   - [ ] 記忆功能正常（如果啟用）
   - [ ] 並發請求處理穩定
   - [ ] 長時間運行穩定
@@ -664,7 +664,7 @@ python -c "from tradingagents.llm_adapters import ChatYourProvider; print('導�
 # 檢查API密鑰配置（僅需一個密鑰）
 echo $_API_KEY
 
-# 驗證密鑰格式（應该以 bce-v3/ 開头）
+# 驗證密鑰格式（應該以 bce-v3/ 開頭）
 python -c "import os; print(f'API Key格式: {os.getenv("_API_KEY", "未設置")[:10]}...')"
 
 # 建議：使用 OpenAI 兼容路徑進行連通性驗證（無需 AK/SK 獲取 Token）

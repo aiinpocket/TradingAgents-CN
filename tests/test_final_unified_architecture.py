@@ -96,7 +96,7 @@ def test_llm_tool_calling_simulation():
         # 模擬LLM
         class MockLLM:
             def __init__(self):
-                self.model_name = "qwen-turbo"
+                self.model_name = "gpt-4o-mini"
                 self.temperature = 0.1
                 self.max_tokens = 2000
             

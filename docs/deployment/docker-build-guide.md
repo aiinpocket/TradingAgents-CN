@@ -221,7 +221,7 @@ docker images tradingagents-cn
 # 監控構建過程資源使用
 docker stats
 
-# 查看磁盘使用
+# 查看磁盤使用
 docker system df
 
 # 清理構建緩存
@@ -277,7 +277,7 @@ RUN apt-get update && apt-get install -y package && rm -rf /var/lib/apt/lists/*
 
 #### 多階段構建
 ```bash
-# 使用多階段構建減少最终鏡像大小
+# 使用多階段構建減少最終鏡像大小
 FROM python:3.10-slim as builder
 # 構建步驟...
 FROM python:3.10-slim

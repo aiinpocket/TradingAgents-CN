@@ -95,10 +95,10 @@ ls .env
 docker-compose config
 ```
 
-### 5. 磁盘空間檢查
+### 5. 磁盤空間檢查
 
 ```bash
-# 檢查Docker磁盘使用
+# 檢查Docker磁盤使用
 docker system df
 
 # 清理無用資源
@@ -179,7 +179,7 @@ docker-compose up -d
 
 1. **端口占用**: `bind: address already in use`
 2. **權限問題**: `permission denied`
-3. **磁盘空間**: `no space left on device`
+3. **磁盤空間**: `no space left on device`
 4. **內存不足**: `out of memory`
 5. **網絡問題**: `network not found`
 6. **鏡像問題**: `image not found`

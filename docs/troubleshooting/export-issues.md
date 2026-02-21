@@ -64,7 +64,7 @@ docker exec TradingAgents-web python test_conversion.py
    # 系統自帶中文字體支持
    ```
 
-### 問題3: Word文件損坏或無法打開
+### 問題3: Word文件損壞或無法打開
 
 **錯誤現象**:
 
@@ -307,7 +307,7 @@ docker exec TradingAgents-web python test_conversion.py
 | YAML解析錯誤 | 重啟Web服務    | 檢查代碼修復   |
 | PDF引擎缺失  | 使用Docker環境 | 手動安裝引擎   |
 | 中文顯示問題 | 使用Docker環境 | 安裝中文字體   |
-| 文件損坏     | 重新生成       | 重建Docker鏡像 |
+| 文件損壞     | 重新生成       | 重建Docker鏡像 |
 | 內存不足     | 重啟容器       | 增加內存限制   |
 | 網絡超時     | 檢查網絡       | 增加超時設置   |
 

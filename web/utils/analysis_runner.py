@@ -765,15 +765,15 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
     # 根據市場類型設置貨幣符號和價格範圍
     if market_type == "港股":
         currency_symbol = "HK$"
-        price_range = (50, 500)  # 港股價格範围
+        price_range = (50, 500)  # 港股價格範圍
         market_name = "港股"
     elif market_type == "A股":
         currency_symbol = "¥"
-        price_range = (5, 100)   # A股價格範围
+        price_range = (5, 100)   # A股價格範圍
         market_name = "A股"
     else:  # 美股
         currency_symbol = "$"
-        price_range = (50, 300)  # 美股價格範围
+        price_range = (50, 300)  # 美股價格範圍
         market_name = "美股"
 
     # 生成模擬決策

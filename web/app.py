@@ -457,14 +457,14 @@ def check_frontend_auth_cache():
             # 解碼認證數據
             auth_data = json.loads(base64.b64decode(restore_data).decode())
             
-            # 兼容旧格式（直接是用戶信息）和新格式（包含loginTime）
+            # 兼容舊格式（直接是用戶信息）和新格式（包含loginTime）
             if 'userInfo' in auth_data:
                 user_info = auth_data['userInfo']
                 # 使用當前時間作為新的登錄時間，避免超時問題
                 # 因為前端已經驗證了lastActivity沒有超時
                 login_time = time.time()
             else:
-                # 旧格式兼容
+                # 舊格式兼容
                 user_info = auth_data
                 login_time = time.time()
                 
@@ -490,7 +490,7 @@ def check_frontend_auth_cache():
             inject_frontend_cache_check()
     except Exception as e:
         logger.warning(f"⚠️ 處理前端緩存恢複失敗: {e}")
-        # 如果恢複失敗，清除可能損坏的URL參數
+        # 如果恢複失敗，清除可能損壞的URL參數
         if 'restore_auth' in st.query_params:
             del st.query_params['restore_auth']
 
@@ -1075,7 +1075,7 @@ def main():
     show_guide = st.sidebar.checkbox(
         "📖 顯示使用指南", 
         value=st.session_state.get('show_guide_preference', default_show_guide), 
-        help="顯示/隱藏右侧使用指南",
+        help="顯示/隱藏右側使用指南",
         key="guide_checkbox"
     )
     
@@ -1169,9 +1169,9 @@ def main():
                 # 執行分析
                 st.session_state.analysis_running = True
 
-                # 清空旧的分析結果
+                # 清空舊的分析結果
                 st.session_state.analysis_results = None
-                logger.info("🧹 [新分析] 清空旧的分析結果")
+                logger.info("🧹 [新分析] 清空舊的分析結果")
                 
                 # 自動隱藏使用指南（除非用戶明確設置要顯示）
                 if not st.session_state.get('user_set_guide_preference', False):
@@ -1374,7 +1374,7 @@ def main():
             if is_running:
                 st.info("⏱️ 分析正在進行中，可以使用下方的自動刷新功能查看進度更新...")
 
-            # 如果分析刚完成，嘗試恢複結果
+            # 如果分析剛完成，嘗試恢複結果
             if is_completed and not st.session_state.get('analysis_results') and progress_data:
                 if 'raw_results' in progress_data:
                     try:
@@ -1428,7 +1428,7 @@ def main():
                         logger.warning(f"⚠️ [結果同步] 恢複失敗: {e}")
 
             if is_completed and st.session_state.get('analysis_running', False):
-                # 分析刚完成，更新狀態
+                # 分析剛完成，更新狀態
                 st.session_state.analysis_running = False
                 st.success("🎉 分析完成！正在刷新頁面顯示報告...")
 
@@ -1472,7 +1472,7 @@ def main():
             if show_results_button_clicked:
                 st.session_state.show_analysis_results = False
     
-    # 只有在顯示指南時才渲染右侧內容
+    # 只有在顯示指南時才渲染右側內容
     if show_guide and col2 is not None:
         with col2:
             st.markdown("### ℹ️ 使用指南")
@@ -1543,24 +1543,22 @@ def main():
             # 模型選擇說明
             with st.expander("🧠 AI模型說明"):
                 st.markdown("""
-                ### 🤖 智能模型選擇
+                ### AI 模型選擇指南
 
-                - **qwen-turbo**:
-                  - 快速響應，適合快速查詢
-                  - 成本較低，適合頻繁使用
-                  - 響應時間: 2-5秒
+                **OpenAI 系列**:
+                - `gpt-4o-mini`: 快速響應，適合日常分析，成本較低
+                - `gpt-4o`: 平衡性能，推薦日常使用
+                - `o1-mini` / `o1`: 深度推理，適合複雜分析
 
-                - **qwen-plus**:
-                  - 平衡性能，推薦日常使用 ⭐
-                  - 準確性與速度兼顧
-                  - 響應時間: 5-10秒
+                **Google Gemini 系列**:
+                - `gemini-2.0-flash`: 快速響應，適合即時查詢
+                - `gemini-2.5-pro`: 強大的分析與推理能力
 
-                - **qwen-max**:
-                  - 最強性能，適合深度分析
-                  - 最高準確性和分析深度
-                  - 響應時間: 10-20秒
+                **Anthropic Claude 系列**:
+                - `claude-haiku-4-5`: 快速且經濟
+                - `claude-sonnet-4-6`: 平衡性能與成本
 
-                💡 **推薦**: 日常分析使用 `qwen-plus`，重要決策使用 `qwen-max`
+                請在側邊欄的配置中選擇適合的模型提供商和模型名稱。
                 """)
 
             # 常見問題

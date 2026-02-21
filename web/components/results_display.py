@@ -22,7 +22,7 @@ def render_results(results):
         st.warning("暫無分析結果")
         return
 
-    # 添加CSS確保結果內容不被右侧遮挡
+    # 添加CSS確保結果內容不被右側遮擋
     st.markdown("""
     <style>
     /* 確保分析結果內容有足夠的右邊距 */
@@ -101,14 +101,16 @@ def render_analysis_info(results):
             llm_model = results.get('llm_model', 'N/A')
             logger.debug(f"🔍 [DEBUG] llm_model from results: {llm_model}")
             model_display = {
-                'qwen-turbo': 'Qwen Turbo',
-                'qwen-plus': 'Qwen Plus',
-                'qwen-max': 'Qwen Max',
+                'gpt-4o': 'GPT-4o',
+                'gpt-4o-mini': 'GPT-4o Mini',
+                'o1-mini': 'o1 Mini',
+                'o1': 'o1',
                 'gemini-2.0-flash': 'Gemini 2.0 Flash',
+                'gemini-2.5-pro': 'Gemini 2.5 Pro',
                 'gemini-1.5-pro': 'Gemini 1.5 Pro',
                 'gemini-1.5-flash': 'Gemini 1.5 Flash',
-                'ERNIE-Speed-8K': 'ERNIE Speed 8K',
-                'ERNIE-Lite-8K': 'ERNIE Lite 8K'
+                'claude-sonnet-4-6': 'Claude Sonnet 4.6',
+                'claude-haiku-4-5': 'Claude Haiku 4.5',
             }.get(llm_model, llm_model)
 
             st.metric(

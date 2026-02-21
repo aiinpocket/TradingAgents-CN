@@ -74,7 +74,7 @@
 
 ### 測試文件
 - `tests/test_fundamentals_analysis.py`：基本面分析功能測試
-- `tests/test_deepseek_token_tracking.py`：DeepSeek Token統計測試
+- `tests/test_token_tracking.py`：Token 統計測試
 
 ### 測試內容
 1. **真實數據獲取**：驗證能否獲取真實股票數據

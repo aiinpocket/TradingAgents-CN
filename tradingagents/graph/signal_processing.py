@@ -129,7 +129,7 @@ class SignalProcessor:
                     action_map = {
                         'buy': '買入', 'hold': '持有', 'sell': '賣出',
                         'BUY': '買入', 'HOLD': '持有', 'SELL': '賣出',
-                        '購买': '買入', '保持': '持有', '出售': '賣出',
+                        '購買': '買入', '保持': '持有', '出售': '賣出',
                         'purchase': '買入', 'keep': '持有', 'dispose': '賣出'
                     }
                     action = action_map.get(action, '持有')
@@ -141,7 +141,7 @@ class SignalProcessor:
                 if target_price is None or target_price == "null" or target_price == "":
                     # 如果JSON中沒有目標價格，嘗試從reasoning和完整文本中提取
                     reasoning = decision_data.get('reasoning', '')
-                    full_text = f"{reasoning} {full_signal}"  # 擴大搜索範围
+                    full_text = f"{reasoning} {full_signal}"  # 擴大搜索範圍
                     
                     # 增強的價格匹配模式
                     price_patterns = [

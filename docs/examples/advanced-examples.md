@@ -535,7 +535,7 @@ class AdvancedBacktester:
         calmar_ratio = self._calculate_calmar_ratio(returns)
         max_drawdown = self._calculate_max_drawdown(returns)
 
-        # 胜率分析
+        # 勝率分析
         win_rate = self._calculate_win_rate(trading_history)
         profit_factor = self._calculate_profit_factor(trading_history)
 

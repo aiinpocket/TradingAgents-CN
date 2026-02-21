@@ -86,7 +86,7 @@ os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 
 2. **檢查配置生效**：
    - 確認`.streamlit/config.toml`文件存在
-   - 觀察是否还有文件監控錯誤
+   - 觀察是否還有文件監控錯誤
 
 3. **監控日誌**：
    - 查看控制台輸出

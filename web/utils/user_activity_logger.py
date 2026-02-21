@@ -258,13 +258,13 @@ class UserActivityLogger:
         activities = []
         
         try:
-            # 確定要查詢的日期範围
+            # 確定要查詢的日期範圍
             if start_date is None:
                 start_date = datetime.now() - timedelta(days=7)  # 默認查詢最近7天
             if end_date is None:
                 end_date = datetime.now()
             
-            # 遍歷日期範围內的所有文件
+            # 遍歷日期範圍內的所有文件
             current_date = start_date.date()
             end_date_only = end_date.date()
             
@@ -378,7 +378,7 @@ class UserActivityLogger:
     
     def cleanup_old_activities(self, days_to_keep: int = 90) -> int:
         """
-        清理旧的活動記錄
+        清理舊的活動記錄
         
         Args:
             days_to_keep: 保留天數
@@ -399,14 +399,14 @@ class UserActivityLogger:
                     if file_date < cutoff_date:
                         activity_file.unlink()
                         deleted_count += 1
-                        logger.info(f"🗑️ 刪除旧活動記錄: {activity_file.name}")
+                        logger.info(f"🗑️ 刪除舊活動記錄: {activity_file.name}")
                         
                 except ValueError:
                     # 文件名格式不正確，跳過
                     continue
                     
         except Exception as e:
-            logger.error(f"❌ 清理旧活動記錄失敗: {e}")
+            logger.error(f"❌ 清理舊活動記錄失敗: {e}")
         
         return deleted_count
 

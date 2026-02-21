@@ -59,7 +59,7 @@ REALTIME_DATA_ENABLED=true
 
 **特點:**
 - ✅ 獲取最新實時數據
-- ✅ 適合實盘交易
+- ✅ 適合實盤交易
 - ❌ API調用成本較高
 - ❌ 需要穩定網絡連接
 
@@ -121,7 +121,7 @@ print(f"在線新聞: {DEFAULT_CONFIG['online_news']}")
 print(f"實時數據: {DEFAULT_CONFIG['realtime_data']}")
 ```
 
-## 📊 工具影響範围
+## 📊 工具影響範圍
 
 ### 受 `ONLINE_TOOLS_ENABLED` 控制的工具
 - 所有需要API調用的數據獲取工具
@@ -156,10 +156,10 @@ print(f"實時數據: {DEFAULT_CONFIG['realtime_data']}")
 
 ## 🔄 遷移指南
 
-### 從旧配置遷移
+### 從舊配置遷移
 如果您之前使用的是基於 `OPENAI_ENABLED` 的配置：
 
-**旧方式:**
+**舊方式:**
 ```bash
 OPENAI_ENABLED=false  # 這會影響整個系統的在線狀態
 ```

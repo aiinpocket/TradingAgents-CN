@@ -1911,7 +1911,7 @@ def main():
         try:
             app()
         except SystemExit as e:
-            # 只在退出碼為2（typer的未知命令錯誤）時提供智能建议
+            # 只在退出碼為2（typer的未知命令錯誤）時提供智能建議
             if e.code == 2 and len(sys.argv) > 1:
                 unknown_command = sys.argv[1]
                 available_commands = ['analyze', 'config', 'version', 'data-config', 'examples', 'test', 'help']

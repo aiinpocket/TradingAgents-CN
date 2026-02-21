@@ -97,7 +97,7 @@ v1.0.0-preview 版本現已開放使用！詳細安裝和使用說明請參閱�
 - **TradingAgents論文**: 完整的中文翻譯版本和深度解讀
 - **技術博客**: 詳細的技術分析和實現原理解讀
 - **學術資料**: PDF論文和相關研究資料
-- **引用支持**: 標準的學術引用格式和參考文献
+- **引用支持**: 標準的學術引用格式和參考文獻
 
 ### 🛠️ 開發者體驗升級
 
@@ -173,7 +173,7 @@ v1.0.0-preview 版本現已開放使用！詳細安裝和使用說明請參閱�
 ### 🎨 Web界面智能優化
 
 - **智能模型選擇**: 根據可用性自動選擇最佳模型
-- **KeyError修複**: 彻底解決模型選擇中的KeyError問題
+- **KeyError修複**: 徹底解決模型選擇中的KeyError問題
 - **UI響應優化**: 改進模型切換的響應速度和用戶體驗
 - **錯誤提示**: 更友好的錯誤提示和解決建議
 
@@ -505,7 +505,7 @@ python scripts/user_password_manager.py reset  # 重置為默認配置
 
 ---
 
-## 🎯 核心優势
+## 🎯 核心優勢
 
 - **🧠 智能新聞分析**: v0.1.12新增AI驅動的新聞過濾和品質評估系統
 - **🔧 多層次過濾**: 基礎、增強、集成三級新聞過濾機制
@@ -1104,7 +1104,7 @@ python -m cli.main
 | **了解架構**    | [🏛️ 系統架構](docs/architecture/system-architecture.md) | 15分鐘           |
 | **看代碼示例**  | [📚 基礎示例](docs/examples/basic-examples.md)            | 20分鐘           |
 | **解決問題**    | [🆘 常見問題](docs/faq/faq.md)                            | 5分鐘            |
-| **深度學习**  | [📁 完整文檔目錄](#-詳細文檔目錄)                         | 2小時+           |
+| **深度學習**  | [📁 完整文檔目錄](#-詳細文檔目錄)                         | 2小時+           |
 
 > 💡 **提示**: 我們的 `docs/` 目錄包含了 **50,000+字** 的詳細中文文檔，這是與原版最大的區別！
 
@@ -1124,9 +1124,9 @@ python -m cli.main
 | **故障排除** | 無                 | **詳細FAQ + 解決方案**     |
 | **代碼示例** | 少量示例           | **100+ 實用示例**          |
 
-### 📖 文檔導航 - 按學习路徑組織
+### 📖 文檔導航 - 按學習路徑組織
 
-#### 🚀 **新手入門路徑** (推薦從這里開始)
+#### 🚀 **新手入門路徑** (推薦從這裡開始)
 
 1. [📋 項目概述](docs/overview/project-overview.md) - **了解項目背景和核心價值**
 2. [⚙️ 詳細安裝](docs/overview/installation.md) - **各平台詳細安裝指南**
@@ -1159,7 +1159,7 @@ python -m cli.main
 1. [📝 配置指南](docs/configuration/config-guide.md) - **詳細配置選項說明**
 2. [🧠 LLM配置](docs/configuration/llm-config.md) - **大語言模型優化**
 
-#### 💡 **高級應用** (擴展開發和實战)
+#### 💡 **高級應用** (擴展開發和實戰)
 
 1. [📚 基礎示例](docs/examples/basic-examples.md) - **8個實用基礎示例**
 2. [🚀 高級示例](docs/examples/advanced-examples.md) - **複雜場景和擴展開發**
@@ -1219,7 +1219,7 @@ docs/
 │   ├── config-guide.md      # 📝 詳細配置說明
 │   └── llm-config.md       # 🧠 LLM模型優化
 │
-├── 💡 examples/             # 示例教程 - 實战應用
+├── 💡 examples/             # 示例教程 - 實戰應用
 │   ├── basic-examples.md    # 📚 8個基礎示例
 │   └── advanced-examples.md # 🚀 高級開發示例
 │
@@ -1332,7 +1332,7 @@ docs/
 </details>
 
 <details>
-<summary><strong>💡 示例和教程</strong> - 實战應用指南</summary>
+<summary><strong>💡 示例和教程</strong> - 實戰應用指南</summary>
 
 - [📚 基礎示例](docs/examples/basic-examples.md) - 8個實用的基礎示例
 - [🚀 高級示例](docs/examples/advanced-examples.md) - 複雜場景和擴展開發
@@ -1409,7 +1409,7 @@ cost_optimized_config = {
 
 我們向 [Tauric Research](https://github.com/TauricResearch) 團隊表達最深的敬意和感謝：
 
-- **🎯 愿景領導者**: 感謝您們在AI金融領域的前瞻性思考和創新實踐
+- **🎯 願景領導者**: 感謝您們在AI金融領域的前瞻性思考和創新實踐
 - **💎 珍貴源碼**: 感謝您們開源的每一行代碼，它們凝聚着無數的智慧和心血
 - **🏗️ 架構大師**: 感謝您們設計了如此優雅、可擴展的多智能體框架
 - **💡 技術先驅**: 感謝您們將前沿AI技術與金融實務完美結合

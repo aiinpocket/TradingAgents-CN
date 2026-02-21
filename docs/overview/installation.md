@@ -9,7 +9,7 @@
 ### 硬件要求
 - **CPU**: 雙核 2.0GHz 或更高 (推薦四核)
 - **內存**: 最少 4GB RAM (推薦 8GB 或更高)
-- **存储**: 至少 5GB 可用磁盘空間
+- **存储**: 至少 5GB 可用磁盤空間
 - **網絡**: 穩定的互聯網連接 (用於API調用和數據獲取)
 
 ### 軟體要求
@@ -117,7 +117,7 @@ python3 -m venv tradingagents
 source tradingagents/bin/activate
 
 # 驗證虛擬環境
-which python  # 應该指向虛擬環境中的 Python
+which python  # 應該指向虛擬環境中的 Python
 ```
 
 #### 使用 conda
@@ -404,7 +404,7 @@ pip install -r requirements.txt
 
 # 或使用新的虛擬環境
 deactivate
-rm -rf tradingagents  # 刪除旧環境
+rm -rf tradingagents  # 刪除舊環境
 python -m venv tradingagents
 source tradingagents/bin/activate
 pip install -r requirements.txt
@@ -416,7 +416,7 @@ pip install -r requirements.txt
 # 解決方案:
 
 # 檢查密鑰格式
-echo $OPENAI_API_KEY | wc -c  # 應该是 51 字符 (sk-...)
+echo $OPENAI_API_KEY | wc -c  # 應該是 51 字符 (sk-...)
 
 # 重新設置密鑰
 unset OPENAI_API_KEY
@@ -500,4 +500,4 @@ unset OPENAI_API_KEY
 unset FINNHUB_API_KEY
 ```
 
-安裝完成後，您可以繼續阅讀 [快速開始指南](quick-start.md) 來開始使用 TradingAgents。
+安裝完成後，您可以繼續閱讀 [快速開始指南](quick-start.md) 來開始使用 TradingAgents。

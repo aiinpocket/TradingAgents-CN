@@ -60,7 +60,7 @@ TradingAgents-CN 提供了完整的Docker容器化部署方案，支持一鍵啟
 - Docker 20.0+
 - Docker Compose 2.0+
 - 4GB+ 可用內存
-- 10GB+ 可用磁盘空間
+- 10GB+ 可用磁盤空間
 
 ### 一鍵部署
 

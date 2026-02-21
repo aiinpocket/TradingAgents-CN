@@ -39,9 +39,9 @@ def render_token_statistics():
     with st.sidebar:
         st.subheader("📊 統計設置")
         
-        # 時間範围選擇
+        # 時間範圍選擇
         time_range = st.selectbox(
-            "統計時間範围",
+            "統計時間範圍",
             ["今天", "最近7天", "最近30天", "最近90天", "全部"],
             index=2
         )
@@ -369,7 +369,7 @@ def load_detailed_records(days: int) -> List[UsageRecord]:
     try:
         all_records = config_manager.load_usage_records()
         
-        # 過濾時間範围
+        # 過濾時間範圍
         cutoff_date = datetime.now() - timedelta(days=days)
         filtered_records = []
         
