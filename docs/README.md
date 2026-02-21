@@ -54,9 +54,7 @@
 - [配置說明](./configuration/config-guide.md) - 配置檔案詳解 (v0.1.11更新) ✨
 - [LLM配置](./configuration/llm-config.md) - 大語言模型配置 (v0.1.11更新) ✨
 - [多提供商配置](./configuration/multi-provider-config.md) - 多個LLM提供商配置指南 (v0.1.11新增) ✨
-- [OpenRouter配置](./configuration/openrouter-config.md) - OpenRouter 60+模型配置 (v0.1.11新增) ✨
 - [Docker配置](./configuration/docker-config.md) - Docker環境配置指南 (v0.1.7) ✨
-- [Google AI配置](./configuration/google-ai-setup.md) - Google AI (Gemini)模型配置指南 ✨
 - [Token追蹤指南](./configuration/token-tracking-guide.md) - Token使用監控 (v0.1.7更新) ✨
 - [資料目錄配置](./configuration/data-directory-configuration.md) - 資料儲存路徑配置
 - [Web界面配置](../web/README.md) - Web管理界面使用指南
@@ -87,7 +85,6 @@
 - [🧠 新聞過濾使用指南](./guides/NEWS_FILTERING_USER_GUIDE.md) - 智能新聞分析模組使用方法 (v0.1.12新增) ✨
 - [🤖 多LLM提供商使用指南](./guides/multi-llm-usage-guide.md) - 多個提供商使用方法 (v0.1.11) ✨
 - [💾 模型選擇持久化指南](./guides/model-persistence-guide.md) - 配置保存和分享方法 (v0.1.11) ✨
-- [🔗 OpenRouter使用指南](./guides/openrouter-usage-guide.md) - 60+模型使用指南 (v0.1.11) ✨
 - [🌐 Web界面指南](./usage/web-interface-guide.md) - Web界面詳細使用指南 (v0.1.11更新) ✨
 - [📊 投資分析指南](./usage/investment_analysis_guide.md) - 投資分析完整流程
 - [⚙️ 配置管理指南](./guides/config-management-guide.md) - 配置管理和成本統計使用方法 (v0.1.7) ✨

@@ -42,14 +42,13 @@ cd web && streamlit run app.py
 
 #### 選擇LLM提供商
 在左側邊欄選擇你已配置的LLM提供商：
-- **OpenAI** - GPT-4, GPT-3.5
-- **Google AI** - Gemini系列
+- **OpenAI** - GPT-4、GPT-4o-mini
+- **Anthropic** - Claude 4 系列
 
 #### 選擇模型
 根據你的需求選擇具體模型：
-- **高性能**: GPT-4, Gemini Pro
-- **平衡**: GPT-3.5, Gemini Flash
-- **經濟**: GPT-3.5 Turbo
+- **高性能**: GPT-4、Claude Sonnet
+- **經濟**: GPT-4o-mini
 
 ### 5. 第一次分析
 
@@ -124,14 +123,10 @@ cd web && streamlit run app.py
 
 #### 高品質分析 (成本較高)
 - **OpenAI GPT-4**: 最佳分析品質
-- **Google Gemini Pro**: 多模態理解優秀
+- **Anthropic Claude Sonnet**: 強大的推理分析
 
-#### 平衡選擇 (推薦)
-- **GPT-3.5 Turbo**: 性價比最佳
-- **Google Gemini Flash**: 快速回應
-
-#### 經濟選擇 (成本最低)
-- **GPT-3.5 Turbo**: 基礎分析
+#### 經濟選擇 (推薦)
+- **GPT-4o-mini**: 性價比最佳
 
 ### 資料來源配置
 

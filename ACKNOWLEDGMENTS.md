@@ -59,7 +59,7 @@
 - **本土化表達**: 使用符合繁體中文使用者習慣的術語和表達方式
 
 #### 技術增強
-- **多模型支援**: 整合 OpenAI、Google Gemini、Anthropic Claude、OpenRouter 等主流 LLM
+- **多模型支援**: 整合 OpenAI、Anthropic Claude 等主流 LLM
 - **資料來源**: 支援 Yahoo Finance、FinnHub、Google News 等資料來源
 - **快取最佳化**: Redis、MongoDB 多層快取降級策略
 
