@@ -59,23 +59,17 @@ class DatabaseCacheManager:
         redis_password = os.getenv("REDIS_PASSWORD", "")
 
         # 優先使用完整 URL，其次組合環境變數（不在程式碼中嵌入預設密碼）
-        if mongodb_url:
-            self.mongodb_url = mongodb_url
-        elif os.getenv("MONGODB_URL"):
-            self.mongodb_url = os.getenv("MONGODB_URL")
-        elif mongodb_password:
-            self.mongodb_url = f"mongodb://admin:{mongodb_password}@localhost:{mongodb_port}"
-        else:
-            self.mongodb_url = f"mongodb://localhost:{mongodb_port}"
+        # 使用關鍵字參數避免密碼出現在 URL 字串中
+        self.mongodb_url = mongodb_url or os.getenv("MONGODB_URL")
+        self.mongodb_host = "localhost"
+        self.mongodb_port_num = int(mongodb_port)
+        self.mongodb_username = "admin" if mongodb_password else None
+        self.mongodb_password = mongodb_password or None
 
-        if redis_url:
-            self.redis_url = redis_url
-        elif os.getenv("REDIS_URL"):
-            self.redis_url = os.getenv("REDIS_URL")
-        elif redis_password:
-            self.redis_url = f"redis://:{redis_password}@localhost:{redis_port}"
-        else:
-            self.redis_url = f"redis://localhost:{redis_port}"
+        self.redis_url = redis_url or os.getenv("REDIS_URL")
+        self.redis_host = "localhost"
+        self.redis_port_num = int(redis_port)
+        self.redis_password = redis_password or None
         self.mongodb_db_name = mongodb_db
         self.redis_db = redis_db
         
@@ -97,19 +91,32 @@ class DatabaseCacheManager:
             return
         
         try:
-            self.mongodb_client = MongoClient(
-                self.mongodb_url,
-                serverSelectionTimeoutMS=5000,  # 5秒超時
-                connectTimeoutMS=5000
-            )
+            # 使用關鍵字參數連接，避免密碼出現在 URL 字串中
+            if self.mongodb_url:
+                self.mongodb_client = MongoClient(
+                    self.mongodb_url,
+                    serverSelectionTimeoutMS=5000,
+                    connectTimeoutMS=5000
+                )
+            else:
+                kwargs = {
+                    "host": self.mongodb_host,
+                    "port": self.mongodb_port_num,
+                    "serverSelectionTimeoutMS": 5000,
+                    "connectTimeoutMS": 5000,
+                }
+                if self.mongodb_username:
+                    kwargs["username"] = self.mongodb_username
+                    kwargs["password"] = self.mongodb_password
+                self.mongodb_client = MongoClient(**kwargs)
+
             # 測試連接
             self.mongodb_client.admin.command('ping')
             self.mongodb_db = self.mongodb_client[self.mongodb_db_name]
-            
+
             # 創建索引
             self._create_mongodb_indexes()
-            
-            # 不記錄完整 URL 以避免洩露密碼
+
             logger.info("MongoDB連接成功")
             
         except Exception as e:
@@ -123,13 +130,25 @@ class DatabaseCacheManager:
             return
         
         try:
-            self.redis_client = redis.from_url(
-                self.redis_url,
-                db=self.redis_db,
-                socket_timeout=5,
-                socket_connect_timeout=5,
-                decode_responses=True
-            )
+            # 使用關鍵字參數連接，避免密碼出現在 URL 字串中
+            if self.redis_url:
+                self.redis_client = redis.from_url(
+                    self.redis_url,
+                    db=self.redis_db,
+                    socket_timeout=5,
+                    socket_connect_timeout=5,
+                    decode_responses=True
+                )
+            else:
+                self.redis_client = redis.Redis(
+                    host=self.redis_host,
+                    port=self.redis_port_num,
+                    db=self.redis_db,
+                    password=self.redis_password,
+                    socket_timeout=5,
+                    socket_connect_timeout=5,
+                    decode_responses=True
+                )
             # 測試連接
             self.redis_client.ping()
             
