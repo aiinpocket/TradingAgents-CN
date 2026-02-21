@@ -31,11 +31,11 @@ def test_data_dir_configuration():
     default_data_dir = get_data_dir()
     print(f"預設資料目錄 | Default data directory: {default_data_dir}")
     
-    # 2. 測試設定自定義資料目錄
-    print("\n2. 測試設定自定義資料目錄 | Testing Custom Data Directory")
+    # 2. 測試設定自訂資料目錄
+    print("\n2. 測試設定自訂資料目錄 | Testing Custom Data Directory")
     with tempfile.TemporaryDirectory() as temp_dir:
         custom_data_dir = os.path.join(temp_dir, "custom_trading_data")
-        print(f"設定自定義資料目錄 | Setting custom data directory: {custom_data_dir}")
+        print(f"設定自訂資料目錄 | Setting custom data directory: {custom_data_dir}")
         
         set_data_dir(custom_data_dir)
         current_data_dir = get_data_dir()
@@ -43,7 +43,7 @@ def test_data_dir_configuration():
         
         # 驗證目錄是否建立
         if os.path.exists(custom_data_dir):
-            print(" 自定義資料目錄建立成功 | Custom data directory created successfully")
+            print(" 自訂資料目錄建立成功 | Custom data directory created successfully")
             
             # 檢查子目錄結構
             expected_subdirs = [
@@ -60,7 +60,7 @@ def test_data_dir_configuration():
                 else:
                     print(f"   子目錄缺失 | Subdirectory missing: {subdir}")
         else:
-            print(" 自定義資料目錄建立失敗 | Custom data directory creation failed")
+            print(" 自訂資料目錄建立失敗 | Custom data directory creation failed")
     
     # 3. 測試環境變數配置
     print("\n3. 測試環境變數配置 | Testing Environment Variable Configuration")
@@ -112,7 +112,7 @@ def test_cli_commands():
     print("   python -m cli.main data-config")
     print("   python -m cli.main data-config --show")
     print()
-    print("2. 設定自定義資料目錄 | Set custom data directory:")
+    print("2. 設定自訂資料目錄 | Set custom data directory:")
     print("   python -m cli.main data-config --set C:\\custom\\trading\\data")
     print()
     print("3. 重置為預設配置 | Reset to default configuration:")
@@ -142,7 +142,7 @@ def main():
         print("\n 所有測試完成！| All tests completed!")
         print("\n 總結 | Summary:")
         print(" 資料目錄配置功能已實作 | Data directory configuration feature implemented")
-        print(" 支援自定義路徑設定 | Custom path setting supported")
+        print(" 支援自訂路徑設定 | Custom path setting supported")
         print(" 支援環境變數配置 | Environment variable configuration supported")
         print(" 整合配置管理器 | Configuration manager integrated")
         print(" CLI命令介面完整 | CLI command interface complete")

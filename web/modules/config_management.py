@@ -108,7 +108,7 @@ def render_model_config():
 
             with col2:
                 new_enabled = st.checkbox("啟用模型", value=model.enabled, key=f"edit_enabled_{selected_model_idx}")
-                new_base_url = st.text_input("自定義API地址 (可選)", value=model.base_url or "", key=f"edit_base_url_{selected_model_idx}")
+                new_base_url = st.text_input("自訂 API 位址 (可選)", value=model.base_url or "", key=f"edit_base_url_{selected_model_idx}")
 
             if st.button("保存配置", type="primary", key=f"save_model_config_{selected_model_idx}"):
                 # 更新模型配置（保留原API密鑰，不允許修改）
@@ -408,7 +408,7 @@ def render_system_settings():
         )
 
         cost_alert_threshold = st.number_input(
-            "成本警告閾值",
+            "成本警告門檻",
             value=settings.get("cost_alert_threshold", 100.0),
             min_value=0.0,
             step=10.0,
@@ -537,15 +537,10 @@ def render_env_status():
     st.divider()
 
 
-def main():
-    """主函式"""
+if __name__ == "__main__":
     st.set_page_config(
         page_title="配置管理 - TradingAgents",
         page_icon=None,
         layout="wide"
     )
-    
     render_config_management()
-
-if __name__ == "__main__":
-    main()

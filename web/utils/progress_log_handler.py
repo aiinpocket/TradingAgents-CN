@@ -13,7 +13,7 @@ _internal_logger = logging.getLogger('progress_integration')
 
 class ProgressLogHandler(logging.Handler):
     """
-    自定義日誌處理器，將模組開始/完成訊息轉發給進度追蹤器
+    自訂日誌處理器，將模組開始/完成訊息轉發給進度追蹤器
     """
     
     # 類別層級的追蹤器登記表

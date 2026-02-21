@@ -284,7 +284,7 @@ def main():
             def progress_callback(message: str, step: int = None, total_steps: int = None):
                 async_tracker.update_progress(message, step)
 
-            st.info(f"正在分析 {form_data['stock_symbol']}...")
+            st.info(f"正在啟動 {form_data['stock_symbol']} 分析...")
 
             st.session_state.current_analysis_id = analysis_id
             st.session_state.last_stock_symbol = form_data['stock_symbol']
@@ -362,12 +362,15 @@ def main():
 
         progress_data = get_progress_by_id(current_analysis_id)
 
+        # 取得股票代碼作為顯示名稱
+        display_symbol = st.session_state.get('last_stock_symbol', '')
+
         if is_running:
-            st.info(f"分析進行中: {current_analysis_id}")
+            st.info(f"正在分析 {display_symbol}..." if display_symbol else "分析進行中...")
         elif actual_status == 'completed':
-            st.success(f"分析完成: {current_analysis_id}")
+            st.success(f"{display_symbol} 分析完成" if display_symbol else "分析完成")
         elif actual_status == 'failed':
-            st.error(f"分析失敗: {current_analysis_id}")
+            st.error(f"{display_symbol} 分析失敗" if display_symbol else "分析失敗")
 
         is_completed = display_unified_progress(current_analysis_id, show_refresh_controls=is_running)
 

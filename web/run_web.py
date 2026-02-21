@@ -242,8 +242,8 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
     
     try:
-        # 啟動Streamlit行程
-        process = subprocess.Popen(cmd, cwd=web_dir)
+        # 啟動 Streamlit 行程（從專案根目錄執行，確保讀取 .streamlit/config.toml）
+        process = subprocess.Popen(cmd, cwd=web_dir.parent)
         process.wait() # 等待行程結束
     except KeyboardInterrupt:
         signal_handler(signal.SIGINT, None)

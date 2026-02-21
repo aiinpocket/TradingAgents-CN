@@ -20,10 +20,10 @@ level = "info"
 developmentMode = false
 
 [theme]
-# 主題配置 - 金融儀表板色系，與 app.py 全域樣式一致
+# 主題配置 - 與 web/styles/main.css 變數一致
 base = "light"
-primaryColor = "#1864AB"
-backgroundColor = "#F8F9FA"
-secondaryBackgroundColor = "#F1F3F5"
-textColor = "#212529"
+primaryColor = "#2563EB"
+backgroundColor = "#FAFAFA"
+secondaryBackgroundColor = "#F5F5F5"
+textColor = "#1A1A1A"
 font = "sans serif"

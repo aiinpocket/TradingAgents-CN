@@ -31,7 +31,7 @@ class ModelConfig:
     provider: str  # 供應商：openai, anthropic
     model_name: str  # 模型名稱
     api_key: str  # API密鑰
-    base_url: Optional[str] = None  # 自定義API地址
+    base_url: Optional[str] = None  # 自訂 API 位址
     max_tokens: int = 4000  # 最大token數
     temperature: float = 0.7  # 溫度參數
     enabled: bool = True  # 是否啟用
@@ -670,7 +670,7 @@ class TokenTracker:
         total_today = today_stats["total_cost"]
 
         if total_today >= threshold:
-            logger.warning(f"成本警告: 今日成本已達到 ${total_today:.4f}，超過閾值 ${threshold}",
+            logger.warning(f"成本警告: 今日成本已達到 ${total_today:.4f}，超過門檻 ${threshold}",
                           extra={'cost': total_today, 'threshold': threshold, 'event_type': 'cost_alert'})
 
     def get_session_cost(self, session_id: str) -> float:

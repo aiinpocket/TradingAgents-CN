@@ -412,15 +412,10 @@ def export_statistics_data(days: int):
     except Exception as e:
         st.error(f"匯出失敗: {str(e)}")
 
-def main():
-    """主函式"""
+if __name__ == "__main__":
     st.set_page_config(
         page_title="Token統計 - TradingAgents",
         page_icon=None,
         layout="wide"
     )
-    
     render_token_statistics()
-
-if __name__ == "__main__":
-    main()

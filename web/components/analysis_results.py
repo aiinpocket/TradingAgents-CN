@@ -342,11 +342,11 @@ def render_analysis_results():
         # 日期範圍選擇
         date_range = st.selectbox(
             "時間範圍",
-            ["最近1天", "最近3天", "最近7天", "最近30天", "自定義"],
+            ["最近1天", "最近3天", "最近7天", "最近30天", "自訂"],
             index=2
         )
         
-        if date_range == "自定義":
+        if date_range == "自訂":
             start_date = st.date_input("開始日期", datetime.now() - timedelta(days=7))
             end_date = st.date_input("結束日期", datetime.now())
         else:

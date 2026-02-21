@@ -1,22 +1,23 @@
-/* TradingAgents 專業金融終端介面 */
+/* TradingAgents 金融分析介面 */
 
-/* CSS 變數 - 金融儀表板色彩系統 */
+/* CSS 變數 - 色彩系統 */
 :root {
-    --bg-primary: #F8F9FA;
+    --bg-primary: #FAFAFA;
     --bg-card: #FFFFFF;
-    --bg-sidebar: #F1F3F5;
-    --text-primary: #212529;
-    --text-secondary: #6C757D;
-    --text-muted: #ADB5BD;
-    --border-color: #DEE2E6;
-    --border-light: #E9ECEF;
-    --accent-blue: #1864AB;
-    --accent-blue-hover: #1971C2;
-    --profit-green: #2B8A3E;
-    --loss-red: #C92A2A;
-    --progress-bar: #1864AB;
-    --tab-active: #212529;
-    --input-focus: rgba(24, 100, 171, 0.15);
+    --bg-sidebar: #F5F5F5;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-muted: #999999;
+    --border-color: #E0E0E0;
+    --border-light: #EEEEEE;
+    --accent-blue: #2563EB;
+    --accent-blue-hover: #1D4ED8;
+    --accent-blue-light: rgba(37, 99, 235, 0.08);
+    --profit-green: #16A34A;
+    --loss-red: #DC2626;
+    --progress-bar: #2563EB;
+    --tab-active: #1A1A1A;
+    --input-focus: rgba(37, 99, 235, 0.12);
 }
 
 /* 隱藏 Streamlit 預設元素 */
@@ -35,11 +36,13 @@ footer,
 
 /* 全域字型與背景 */
 .stApp {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* 主容器 - 緊湊的資料密集型布局 */
@@ -48,30 +51,39 @@ footer,
     max-width: 1280px;
 }
 
-/* 按鈕 - 沉穩的深藍色系 */
+/* 按鈕 */
 .stButton > button {
-    background-color: var(--accent-blue);
-    color: white;
-    border: none;
-    border-radius: 4px;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
     padding: 0.4rem 1rem;
     font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: 0.01em;
-    transition: background-color 0.12s ease;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .stButton > button:hover {
-    background-color: var(--accent-blue-hover);
+    background-color: var(--bg-primary);
+    border-color: var(--text-muted);
 }
 
 /* Primary 按鈕 */
-.stButton > button[kind="primary"] {
-    background-color: var(--accent-blue);
+.stButton > button[kind="primary"],
+.stButton > button[kind="primaryFormSubmit"],
+[data-testid="stFormSubmitButton"] button {
+    background-color: var(--accent-blue) !important;
+    color: white !important;
+    border-color: var(--accent-blue) !important;
 }
 
-.stButton > button[kind="primary"]:hover {
-    background-color: var(--accent-blue-hover);
+.stButton > button[kind="primary"]:hover,
+.stButton > button[kind="primaryFormSubmit"]:hover,
+[data-testid="stFormSubmitButton"] button:hover {
+    background-color: var(--accent-blue-hover) !important;
+    border-color: var(--accent-blue-hover) !important;
 }
 
 /* 輸入框 */
@@ -79,16 +91,19 @@ footer,
 .stSelectbox > div > div > select,
 .stTextArea > div > div > textarea {
     border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 0.4rem 0.625rem;
+    border-radius: 6px;
+    padding: 0.45rem 0.75rem;
     font-size: 0.8125rem;
     background: var(--bg-card);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .stTextInput > div > div > input:focus,
-.stSelectbox > div > div > select:focus {
+.stSelectbox > div > div > select:focus,
+.stTextArea > div > div > textarea:focus {
     border-color: var(--accent-blue);
-    box-shadow: 0 0 0 2px var(--input-focus);
+    box-shadow: 0 0 0 3px var(--input-focus);
+    outline: none;
 }
 
 /* 進度條 */
@@ -120,12 +135,103 @@ footer,
 /* 側邊欄 */
 section[data-testid="stSidebar"] {
     background-color: var(--bg-sidebar);
-    border-right: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-light);
     width: 240px !important;
 }
 
 section[data-testid="stSidebar"] > div {
     padding-top: 0.75rem;
+}
+
+/* 側邊欄內文字 */
+section[data-testid="stSidebar"] .stMarkdown p {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+section[data-testid="stSidebar"] .stSelectbox label,
+section[data-testid="stSidebar"] .stCheckbox label {
+    font-size: 0.8125rem;
+}
+
+/* 強制所有文字使用深色（覆蓋系統暗色模式的白色文字） */
+.stApp,
+.stApp p,
+.stApp span,
+.stApp label,
+.stApp div,
+.stApp li,
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+section[data-testid="stSidebar"],
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] div,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: var(--text-primary) !important;
+}
+
+/* 次要文字使用次要色 */
+.stCaption,
+.stCaption p,
+[data-testid="stCaptionContainer"] p {
+    color: var(--text-muted) !important;
+}
+
+/* 強制 base-web 元件使用淺色模式（覆蓋系統暗色偏好） */
+[data-baseweb="select"] > div,
+[data-baseweb="input"] > div,
+[data-baseweb="base-input"] {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-baseweb="select"] > div > div {
+    color: var(--text-primary) !important;
+}
+
+/* 下拉選單列表 */
+[data-baseweb="popover"] [role="listbox"],
+[data-baseweb="menu"] {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-baseweb="popover"] [role="option"],
+[data-baseweb="menu"] li {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-baseweb="popover"] [role="option"]:hover,
+[data-baseweb="menu"] li:hover,
+[data-baseweb="popover"] [aria-selected="true"] {
+    background-color: var(--accent-blue-light) !important;
+}
+
+/* 日期選擇器 */
+[data-baseweb="calendar"],
+[data-baseweb="datepicker"] {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* 日期輸入框 */
+[data-testid="stDateInput"] [data-baseweb="input"] {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-testid="stDateInput"] input {
+    color: var(--text-primary) !important;
+}
+
+/* Checkbox 強制淺色 */
+[data-baseweb="checkbox"] span {
+    color: var(--text-primary) !important;
 }
 
 /* 展開器 */
@@ -167,9 +273,74 @@ button[data-testid="collapsedControl"],
 
 /* 訊息區塊 - 降低視覺噪音 */
 .stAlert {
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.8125rem;
     padding: 0.5rem 0.75rem;
+    border-left: 3px solid;
+}
+
+/* Alert 內部文字保持對應顏色 */
+.stAlert p,
+.stAlert span,
+.stAlert div {
+    color: inherit !important;
+}
+
+/* 表單區塊 */
+[data-testid="stForm"] {
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 1.25rem;
+    background: var(--bg-card);
+}
+
+/* Checkbox 微調 */
+.stCheckbox label {
+    font-size: 0.8125rem;
+}
+
+/* 展開器容器 */
+[data-testid="stExpander"] {
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+/* Slider 軌道與拇指 */
+.stSlider [data-baseweb="slider"] [role="slider"] {
+    background-color: var(--accent-blue) !important;
+}
+
+/* Slider 填充軌道 */
+.stSlider [data-testid="stThumbValue"],
+.stSlider div[role="slider"] {
+    color: var(--accent-blue) !important;
+}
+
+/* Checkbox 選中狀態 */
+[data-baseweb="checkbox"] [data-testid="stCheckbox"] span[role="checkbox"],
+[data-baseweb="checkbox"] span[aria-checked="true"] {
+    background-color: var(--accent-blue) !important;
+    border-color: var(--accent-blue) !important;
+}
+
+/* 非 primary 按鈕強制淺色背景 */
+.stButton > button[kind="secondary"],
+.stButton > button[kind="header"],
+.stButton > button[kind="headerNoPadding"],
+section[data-testid="stSidebar"] .stButton > button {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+section[data-testid="stSidebar"] .stButton > button:hover {
+    background-color: var(--bg-primary) !important;
+}
+
+/* 展開器三角形圖示 */
+[data-testid="stExpander"] summary {
+    color: var(--text-primary) !important;
 }
 
 /* Markdown 標題微調 */
@@ -190,4 +361,28 @@ button[data-testid="collapsedControl"],
 .stCaption {
     color: var(--text-muted);
     font-size: 0.75rem;
+}
+
+/* 頁面標題列 */
+.ta-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.5rem 0 0.625rem 0;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ta-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.ta-header .ta-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
 }
