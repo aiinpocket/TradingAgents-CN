@@ -113,7 +113,7 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     with col1:
         st.metric(
             label="總成本",
-            value=f"¥{stats['total_cost']:.4f}",
+            value=f"${stats['total_cost']:.4f}",
             delta=None
         )
     
@@ -136,7 +136,7 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
         avg_cost = stats['total_cost'] / stats['total_requests'] if stats['total_requests'] > 0 else 0
         st.metric(
             label="平均每次成本",
-            value=f"¥{avg_cost:.4f}",
+            value=f"${avg_cost:.4f}",
             delta=None
         )
     
@@ -204,7 +204,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
                 color='provider',
                 hover_data=['model'],
                 title="成本與Token使用量關系",
-                labels={'total_tokens': 'Token總數', 'cost': '成本(¥)'}
+                labels={'total_tokens': 'Token總數', 'cost': '成本($)'}
             )
             st.plotly_chart(fig_scatter, use_container_width=True)
 
@@ -222,11 +222,11 @@ def render_provider_statistics(stats: Dict[str, Any]):
     provider_df = pd.DataFrame([
         {
             '供應商': provider,
-            '成本(¥)': f"{data['cost']:.4f}",
+            '成本($)': f"{data['cost']:.4f}",
             '調用次數': data['requests'],
             '輸入Token': f"{data['input_tokens']:,}",
             '輸出Token': f"{data['output_tokens']:,}",
-            '平均成本(¥)': f"{data['cost']/data['requests']:.4f}" if data['requests'] > 0 else "0.0000"
+            '平均成本($)': f"{data['cost']/data['requests']:.4f}" if data['requests'] > 0 else "0.0000"
         }
         for provider, data in provider_stats.items()
     ])
@@ -243,7 +243,7 @@ def render_provider_statistics(stats: Dict[str, Any]):
             x=list(cost_data.keys()),
             y=list(cost_data.values()),
             title="各供應商成本對比",
-            labels={'x': '供應商', 'y': '成本(¥)'},
+            labels={'x': '供應商', 'y': '成本($)'},
             color=list(cost_data.values()),
             color_continuous_scale='Viridis'
         )
@@ -299,7 +299,7 @@ def render_cost_trends(records: List[UsageRecord]):
             x=daily_stats['date'],
             y=daily_stats['cost'],
             mode='lines+markers',
-            name='每日成本(¥)',
+            name='每日成本($)',
             line=dict(color='#FF6B6B', width=3)
         ),
         secondary_y=False,
@@ -319,7 +319,7 @@ def render_cost_trends(records: List[UsageRecord]):
     
     # 設置轴標簽
     fig.update_xaxes(title_text="日期")
-    fig.update_yaxes(title_text="成本(¥)", secondary_y=False)
+    fig.update_yaxes(title_text="成本($)", secondary_y=False)
     fig.update_yaxes(title_text="Token數量", secondary_y=True)
     
     fig.update_layout(height=400)
@@ -342,7 +342,7 @@ def render_detailed_records_table(records: List[UsageRecord]):
             '輸入Token': record.input_tokens,
             '輸出Token': record.output_tokens,
             '總Token': record.input_tokens + record.output_tokens,
-            '成本(¥)': f"{record.cost:.4f}",
+            '成本($)': f"{record.cost:.4f}",
             '會話ID': record.session_id[:12] + '...' if len(record.session_id) > 12 else record.session_id,
             '分析類型': record.analysis_type
         }

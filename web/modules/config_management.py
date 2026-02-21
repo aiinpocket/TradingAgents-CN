@@ -383,7 +383,7 @@ def render_system_settings():
     col1, col2 = st.columns(2)
     
     with col1:
-        providers = ["openai", "google", "anthropic"]
+        providers = ["openai", "anthropic"]
         default_provider_value = settings.get("default_provider", "openai")
         # 確保預設值在選項中
         if default_provider_value not in providers:

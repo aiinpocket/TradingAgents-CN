@@ -90,27 +90,27 @@ def apply_common_styles():
     <style>
         /* 應用樣式 */
         .main-header {
-            background: linear-gradient(90deg, #1f77b4, #ff7f0e);
+            background-color: #0F172A;
             padding: 1rem;
-            border-radius: 10px;
+            border-radius: 6px;
             margin-bottom: 2rem;
             color: white;
             text-align: center;
         }
-        
+
         .metric-card {
-            background: #f0f2f6;
+            background: #F8FAFC;
             padding: 1rem;
-            border-radius: 10px;
-            border-left: 4px solid #1f77b4;
+            border-radius: 6px;
+            border-left: 3px solid #0369A1;
             margin: 0.5rem 0;
         }
-        
+
         .analysis-section {
             background: white;
             padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
             margin: 1rem 0;
         }
         

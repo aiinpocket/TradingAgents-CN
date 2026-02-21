@@ -282,14 +282,8 @@ def main():
     except Exception as e:
         st.error(f"讀取緩存詳情失敗: {e}")
     
-    # 頁腳資訊
     st.markdown("---")
-    st.markdown("""
-    <div style='text-align: center; color: #666; font-size: 0.9em;'>
-         緩存管理系統 | TradingAgents v0.1.2 | 
-        <a href='https://github.com/your-repo/TradingAgents'target='_blank'>GitHub</a>
-    </div>
-    """, unsafe_allow_html=True)
+    st.caption("TradingAgents - 緩存管理")
 
 if __name__ == "__main__":
     main()

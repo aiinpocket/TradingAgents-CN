@@ -1307,19 +1307,15 @@ def render_detailed_analysis_content(selected_result):
 
     /* 標籤頁懸停效果 */
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: #e3f2fd;
-        border-color: #2196f3;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(33,150,243,0.2);
+        background-color: #F0F9FF;
+        border-color: #0369A1;
     }
 
     /* 選中的標籤頁樣式 */
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background-color: #0369A1 !important;
         color: white !important;
-        border-color: #667eea !important;
-        box-shadow: 0 4px 12px rgba(102,126,234,0.3) !important;
-        transform: translateY(-2px);
+        border-color: #0369A1 !important;
     }
 
     /* 標籤頁內容區域 */
@@ -1341,7 +1337,6 @@ def render_detailed_analysis_content(selected_result):
     /* 選中標籤頁的文字樣式 */
     .stTabs [aria-selected="true"] p {
         color: white !important;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     </style>
     """, unsafe_allow_html=True)

@@ -197,7 +197,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         estimated_output = 1000 * len(analysts)  # 估算每個分析師1000個輸出token
         estimated_cost = token_tracker.estimate_cost(llm_provider, llm_model, estimated_input, estimated_output)
 
-        update_progress(f"預估分析成本: ¥{estimated_cost:.4f}")
+        update_progress(f"預估分析成本: ${estimated_cost:.4f}")
 
     # 驗證環境變量
     update_progress("檢查環境變量配置...")
@@ -370,7 +370,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             )
 
             if usage_record:
-                update_progress(f"記錄使用成本: ¥{usage_record.cost:.4f}")
+                update_progress(f"記錄使用成本: ${usage_record.cost:.4f}")
 
         results = {
             'stock_symbol': stock_symbol,
