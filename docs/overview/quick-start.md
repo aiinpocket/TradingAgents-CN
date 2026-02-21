@@ -46,7 +46,7 @@ API
 ### 1. 
 ```bash
 # 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 ```
 

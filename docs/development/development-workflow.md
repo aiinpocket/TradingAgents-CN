@@ -316,7 +316,7 @@ python -m pytest tests/ -v --cov=tradingagents
 - [](../maintenance/upstream-sync.md)
 
 ### 
-- **GitHub Issues**: [](https://github.com/hsliuping/TradingAgents-CN/issues)
+- **GitHub Issues**: [](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - ****: hsliup@163.com
 
 

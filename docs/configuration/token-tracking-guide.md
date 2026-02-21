@@ -85,11 +85,11 @@ pip install pymongo
 
 
 ```python
-from tradingagents.llm_adapters.
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 
 # LLM
-llm = Chat
+llm = ChatOpenAI(
  model="gpt-4o-mini",
  temperature=0.7
 )

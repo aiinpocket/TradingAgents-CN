@@ -410,8 +410,8 @@ tar -czf exports_archive_$(date +%Y%m).tar.gz exports/
 
 
 
-- [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
-- [GitHub Discussions](https://github.com/hsliuping/TradingAgents-CN/discussions)
+- [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
+- [GitHub Discussions](https://github.com/aiinpocket/TradingAgents-CN/discussions)
 - [Pandoc](https://pandoc.org/MANUAL.html)
 
 ---

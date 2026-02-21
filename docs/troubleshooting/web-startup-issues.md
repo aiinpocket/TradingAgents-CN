@@ -203,7 +203,7 @@ python start_web.py
  ```
 
 4. **Issue**: 
- - [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
+ - [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
  - 
 
 ## 

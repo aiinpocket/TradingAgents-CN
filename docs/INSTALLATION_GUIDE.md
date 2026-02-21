@@ -51,7 +51,7 @@
 
 ```bash
 # 1. 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 
@@ -72,7 +72,7 @@ docker-compose up -d
 
 ```bash
 # 1. 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 
@@ -159,7 +159,7 @@ docker run hello-world
 
 ```bash
 # 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 
 # 
 cd TradingAgents-CN
@@ -245,7 +245,7 @@ sudo ln -sf /usr/bin/pip3 /usr/bin/pip
 
 ```bash
 # 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 ```
 
@@ -701,9 +701,9 @@ pip install -r requirements.txt
 ## 
 
 ### 
-- ****: https://github.com/hsliuping/TradingAgents-CN
+- ****: https://github.com/aiinpocket/TradingAgents-CN
 - ****: https://www.tradingagents.cn/
-- ****: https://github.com/hsliuping/TradingAgents-CN/issues
+- ****: https://github.com/aiinpocket/TradingAgents-CN/issues
 
 ### 
 - **GitHub Issues**: 

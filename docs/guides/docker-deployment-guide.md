@@ -87,7 +87,7 @@ docker-compose --version
 
 ```bash
 # 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 
@@ -421,8 +421,8 @@ REDIS_PASSWORD=secure_redis_password
 
 Docker
 
-- [GitHub Issues](https://github.com/hsliuping/TradingAgents-CN/issues)
-- [GitHub Discussions](https://github.com/hsliuping/TradingAgents-CN/discussions)
+- [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
+- [GitHub Discussions](https://github.com/aiinpocket/TradingAgents-CN/discussions)
 - [Docker](https://docs.docker.com/)
 
 ---

@@ -66,7 +66,7 @@ TradingAgents-CN DockerWeb
 
 ```bash
 # 1. 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 

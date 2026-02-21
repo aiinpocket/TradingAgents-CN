@@ -10,7 +10,7 @@
 
 ```bash
 # 1. 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. API
@@ -30,7 +30,7 @@ docker-compose up -d
 
 ```bash
 # 1. 
-git clone https://github.com/hsliuping/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 2. 
@@ -137,7 +137,7 @@ tail -f logs/tradingagents.log
 ### Q: 
 **A**:
 - ****: [docs/INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)
-- ****: https://github.com/hsliuping/TradingAgents-CN/issues
+- ****: https://github.com/aiinpocket/TradingAgents-CN/issues
 - ****: GitHub Issues Discussions
 
 ## 

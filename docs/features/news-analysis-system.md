@@ -352,10 +352,10 @@ def format_news_report(news_items: List[NewsItem], ticker: str) -> str:
 ```python
 from tradingagents.agents.analysts.news_analyst import create_news_analyst
 from tradingagents.agents.utils.agent_utils import Toolkit
-from tradingagents.llm_adapters import Chat
+from langchain_openai import ChatOpenAI
 
 # LLM
-llm = Chat
+llm = ChatOpenAI(model="gpt-4o-mini")
 toolkit = Toolkit()
 
 # 

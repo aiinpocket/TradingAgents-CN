@@ -116,6 +116,6 @@
 
 ## 
 
-- **GitHub Issues**: [](https://github.com/hsliuping/TradingAgents-CN/issues)
+- **GitHub Issues**: [](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - **Email**: hsliup@163.com
 - ****: [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents)

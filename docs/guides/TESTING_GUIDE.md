@@ -62,8 +62,8 @@ python tests/test_
 ```bash
 # 
 python -c "
-from tradingagents.llm_adapters.
-llm = Chat
+from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(model='gpt-4o-mini')
 response = llm.invoke('')
 print(':', response.content[:100] + '...')
 "
@@ -298,9 +298,9 @@ print(':', data[:200] if data else '')
 
 ## 
 
-- **GitHub Issues**https://github.com/hsliuping/TradingAgents-CN/issues
+- **GitHub Issues**https://github.com/aiinpocket/TradingAgents-CN/issues
 - ****GitHub Discussions
-- ****Issue@hsliuping
+- ****Issue@aiinpocket
 
 ---
 
