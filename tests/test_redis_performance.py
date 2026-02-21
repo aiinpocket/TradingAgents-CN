@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Redis連接和性能測試腳本
+Redis連接和性能測試指令碼
 """
 
 import redis

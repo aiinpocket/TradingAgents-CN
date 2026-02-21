@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-建立GitHub Release的腳本
+建立GitHub Release的指令碼
 """
 
 import os
@@ -82,7 +82,7 @@ cp .env.example .env
 # 啟動Web管理界面
 python -m streamlit run web/app.py
 
-# 或使用啟動腳本
+# 或使用啟動指令碼
 python start_web.py
 ```
 

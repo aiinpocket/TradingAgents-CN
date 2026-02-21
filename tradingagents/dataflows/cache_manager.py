@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 股票資料快取管理器
-支持本地快取股票資料，減少API呼叫，提高回應速度
+支援本地快取股票資料，減少API呼叫，提高回應速度
 """
 
 import os
@@ -18,7 +18,7 @@ logger = get_logger('agents')
 
 
 class StockDataCache:
-    """股票資料快取管理器 - 支持美股資料快取優化"""
+    """股票資料快取管理器 - 支援美股資料快取優化"""
 
     def __init__(self, cache_dir: str = None):
         """
@@ -148,7 +148,7 @@ class StockDataCache:
         return f"{symbol}_{data_type}_{cache_key}"
     
     def _get_cache_path(self, data_type: str, cache_key: str, file_format: str = "json", symbol: str = None) -> Path:
-        """取得快取檔案路徑 - 支持市場分類"""
+        """取得快取檔案路徑 - 支援市場分類"""
         # 統一使用美股市場類型
         market_type = 'us'
 
@@ -191,7 +191,7 @@ class StockDataCache:
             return None
     
     def is_cache_valid(self, cache_key: str, max_age_hours: int = None, symbol: str = None, data_type: str = None) -> bool:
-        """檢查快取是否有效 - 支持智能TTL配置"""
+        """檢查快取是否有效 - 支援智能TTL配置"""
         metadata = self._load_metadata(cache_key)
         if not metadata:
             return False
@@ -227,7 +227,7 @@ class StockDataCache:
                        start_date: str = None, end_date: str = None,
                        data_source: str = "unknown") -> str:
         """
-        保存股票資料到快取 - 支持美股分類儲存
+        保存股票資料到快取 - 支援美股分類儲存
 
         Args:
             symbol: 股票代碼
@@ -315,7 +315,7 @@ class StockDataCache:
                               end_date: str = None, data_source: str = None,
                               max_age_hours: int = None) -> Optional[str]:
         """
-        查找匹配的快取資料 - 支持智能市場分類查找
+        查找匹配的快取資料 - 支援智能市場分類查找
 
         Args:
             symbol: 股票代碼

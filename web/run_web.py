@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TradingAgents-CN Web應用啟動腳本
+TradingAgents-CN Web應用啟動指令碼
 """
 
 import os
@@ -36,12 +36,12 @@ def check_dependencies():
             missing_packages.append(package)
 
     if missing_packages:
-        logger.error(f"缺少必要的依賴包: {', '.join(missing_packages)}")
+        logger.error(f"缺少必要的依賴套件: {', '.join(missing_packages)}")
         logger.info("請執行以下命令安裝:")
         logger.info(f"pip install {' '.join(missing_packages)}")
         return False
 
-    logger.info("依賴包檢查通過")
+    logger.info("依賴套件檢查通過")
     return True
 
 def clean_cache_files(force_clean=False):
@@ -172,7 +172,7 @@ def main():
     clean_cache_files(force_clean=False)
     
     # 檢查依賴
-    logger.debug("檢查依賴包...")
+    logger.debug("檢查依賴套件...")
     if not check_dependencies():
         return
     

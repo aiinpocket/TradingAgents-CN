@@ -192,7 +192,7 @@ def create_unified_news_tool(toolkit):
 - 專注於美股新聞取得
 - 優先OpenAI -> Google英文 -> FinnHub
 - 返回格式化的新聞內容
-- 支持Google模型的特殊長度控制
+- 支援Google模型的特殊長度控制
 """
     
     return get_stock_news_unified

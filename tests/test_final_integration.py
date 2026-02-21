@@ -107,7 +107,7 @@ def test_final_integration():
         print(f"\n 集成驗證總結")
         print("=" * 60)
         print(" 統一新聞工具建立成功")
-        print(" 支持美股自動識別")
+        print(" 支援美股自動識別")
         print(" 新聞分析師已集成統一工具")
         print(" 系統提示詞已更新")
         print(" 補救機制已優化")

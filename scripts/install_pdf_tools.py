@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PDF工具安裝腳本
+PDF工具安裝指令碼
 自動安裝PDF生成所需的工具
 """
 
@@ -158,7 +158,7 @@ def test_pdf_generation():
 ## 測試內容
 這是一個測試檔案，用於驗證PDF生成是否正常工作。
 
-### 中文支持測試
+### 中文支援測試
 - 中文字符顯示測試
 - **粗體中文**
 - *斜體中文*
@@ -207,7 +207,7 @@ def test_pdf_generation():
 
 def main():
     """主函數"""
-    logger.info(f" PDF工具安裝腳本")
+    logger.info(f" PDF工具安裝指令碼")
     logger.info(f"=")
     
     # 檢查當前狀態
@@ -241,7 +241,7 @@ def main():
     logger.info(f"2. 下載適合您系統的安裝包")
     logger.info(f"3. 按照說明安裝")
     logger.info(f"4. 確保wkhtmltopdf在系統PATH中")
-    logger.info(f"5. 重新執行此腳本測試")
+    logger.info(f"5. 重新執行此指令碼測試")
     
     return False
 

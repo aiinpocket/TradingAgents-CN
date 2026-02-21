@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試資料庫依賴包相容性修複
+測試資料庫依賴套件相容性修複
 驗證requirements_db.txt的相容性改進
 """
 
@@ -40,9 +40,9 @@ def test_pickle_compatibility():
         print(f"  當前pickle協議: {max_protocol}")
         
         if max_protocol >= 5:
-            print("   支持pickle協議5")
+            print("   支援pickle協議5")
         else:
-            print("   不支持pickle協議5")
+            print("   不支援pickle協議5")
             return False
         
         # 檢查是否錯誤安裝了pickle5
@@ -160,7 +160,7 @@ def test_compatibility_checker_tool():
         
         print(f"  返回碼: {result.returncode}")
         
-        if " TradingAgents 資料庫依賴包相容性檢查" in result.stdout:
+        if " TradingAgents 資料庫依賴套件相容性檢查" in result.stdout:
             print("   相容性檢查工具執行成功")
             
             # 檢查是否檢測到pickle5問題
@@ -214,7 +214,7 @@ def test_documentation_completeness():
 
 def main():
     """主測試函數"""
-    print(" 資料庫依賴包相容性修複測試")
+    print(" 資料庫依賴套件相容性修複測試")
     print("=" * 60)
     
     tests = [
@@ -244,7 +244,7 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有測試通過！資料庫依賴包相容性修複成功")
+        print(" 所有測試通過！資料庫依賴套件相容性修複成功")
         print("\n 修複內容:")
         print(" 移除pickle5依賴，解決Python 3.10+相容性問題")
         print(" 優化版本要求，提高環境相容性")
@@ -254,7 +254,7 @@ def main():
         print("\n 用戶體驗改進:")
         print(" 減少安裝錯誤")
         print(" 提供清晰的錯誤診斷")
-        print(" 支持更多Python環境")
+        print(" 支援更多Python環境")
         print(" 簡化故障排除流程")
         
         return True

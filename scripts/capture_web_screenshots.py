@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Web界面截圖捕獲腳本
+Web界面截圖捕獲指令碼
 用於自動化捕獲TradingAgents-CN Web界面的截圖
 """
 
@@ -176,7 +176,7 @@ def create_screenshot_guide():
 
 ##  自動截圖
 
-執行自動截圖腳本:
+執行自動截圖指令碼:
 ```bash
 python scripts/capture_web_screenshots.py
 ```

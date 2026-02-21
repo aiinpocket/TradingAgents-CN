@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-批量更新檔案腳本
+批量更新檔案指令碼
 為所有核心檔案添加版本資訊頭部，修復常見問題
 """
 
@@ -213,7 +213,7 @@ python scripts/check_doc_consistency.py
 ```
 
 ---
-*此報告由批量更新腳本自動生成*
+*此報告由批量更新指令碼自動生成*
 """
         return report
 

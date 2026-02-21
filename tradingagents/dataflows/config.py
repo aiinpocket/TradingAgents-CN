@@ -66,7 +66,7 @@ def get_data_dir() -> str:
 def set_data_dir(data_dir: str):
     """設定資料目錄路徑"""
     config_manager.set_data_dir(data_dir)
-    # 更新全局變量
+    # 更新全局變數
     global _config, DATA_DIR
     if _config is None:
         initialize_config()

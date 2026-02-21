@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Docker環境快速配置腳本
+Docker環境快速配置指令碼
 幫助用戶快速配置Docker部署環境
 """
 

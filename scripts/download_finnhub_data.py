@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Finnhub資料下載腳本
+Finnhub資料下載指令碼
 
-這個腳本用於從Finnhub API下載新聞資料、內部人情緒資料和內部人交易資料。
-支持批量下載和增量更新。
+這個指令碼用於從Finnhub API下載新聞資料、內部人情緒資料和內部人交易資料。
+支援批量下載和增量更新。
 
 使用方法:
     python scripts/download_finnhub_data.py --data-type news --symbols AAPL,TSLA,MSFT
@@ -33,7 +33,7 @@ try:
     logger = get_logger('finnhub_downloader')
 except ImportError as e:
     print(f" 匯入模組失敗: {e}")
-    print("請確保在項目根目錄執行此腳本")
+    print("請確保在項目根目錄執行此指令碼")
     sys.exit(1)
 
 class FinnhubDataDownloader:
@@ -269,7 +269,7 @@ class FinnhubDataDownloader:
 
 def main():
     """主函數"""
-    parser = argparse.ArgumentParser(description='Finnhub資料下載腳本')
+    parser = argparse.ArgumentParser(description='Finnhub資料下載指令碼')
     
     parser.add_argument('--data-type', 
                        choices=['news', 'sentiment', 'transactions', 'all'],

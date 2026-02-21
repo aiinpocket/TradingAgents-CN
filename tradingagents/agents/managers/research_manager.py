@@ -27,7 +27,7 @@ def create_research_manager(llm, memory):
         for i, rec in enumerate(past_memories, 1):
             past_memory_str += rec["recommendation"] + "\n\n"
 
-        prompt = f"""作為投資組合經理和辯論主持人，您的職責是批判性地評估這輪辯論並做出明確決策：支持看跌分析師、看漲分析師，或者僅在基於所提出論點有強有力理由時選擇持有。
+        prompt = f"""作為投資組合經理和辯論主持人，您的職責是批判性地評估這輪辯論並做出明確決策：支援看跌分析師、看漲分析師，或者僅在基於所提出論點有強有力理由時選擇持有。
 
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 

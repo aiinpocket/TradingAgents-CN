@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-資料庫初始化腳本
+資料庫初始化指令碼
 建立MongoDB集合和索引，初始化Redis快取結構
 """
 
@@ -254,7 +254,7 @@ def main():
     if not test_database_connection():
         logger.error(f"\n 資料庫連接失敗，請檢查:")
         logger.info(f"1. Docker服務是否啟動: docker ps")
-        logger.info(f"2. 執行啟動腳本: scripts/start_docker_services.bat")
+        logger.info(f"2. 執行啟動指令碼: scripts/start_docker_services.bat")
         logger.info(f"3. 檢查環境變數配置: .env 檔案")
         return False
     

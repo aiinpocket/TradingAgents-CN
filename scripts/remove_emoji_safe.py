@@ -1,5 +1,5 @@
 """
-安全移除 emoji 腳本 - 使用精確 Unicode 範圍，不影響 CJK 中文字元
+安全移除 emoji 指令碼 - 使用精確 Unicode 範圍，不影響 CJK 中文字元
 
 每個範圍都經過驗證，確保不會與 CJK Unified Ideographs (U+4E00-U+9FFF) 重疊
 """

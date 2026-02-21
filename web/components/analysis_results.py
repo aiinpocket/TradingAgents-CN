@@ -853,7 +853,7 @@ def render_results_export(results: List[Dict[str, Any]]):
                         mime="application/json"
                     )
                 else:
-                    st.warning("完整資料只支持 JSON 格式匯出")
+                    st.warning("完整資料只支援 JSON 格式匯出")
             
             st.success(f"{export_format} 檔案準備完成，請點擊下載按鈕")
             
@@ -1130,7 +1130,7 @@ def render_detailed_analysis_content(selected_result):
     """渲染詳細分析結果內容"""
     st.subheader("完整分析資料")
 
-    # 檢查是否有報告資料（支持檔案系統和MongoDB）
+    # 檢查是否有報告資料（支援檔案系統和MongoDB）
     if 'reports'in selected_result and selected_result['reports']:
         # 顯示檔案系統中的報告
         reports = selected_result['reports']

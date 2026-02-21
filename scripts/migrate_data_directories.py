@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-資料目錄重新組織遷移腳本
+資料目錄重新組織遷移指令碼
 Data Directory Reorganization Migration Script
 
-此腳本將項目中分散的資料目錄重新組織為統一的結構
+此指令碼將項目中分散的資料目錄重新組織為統一的結構
 """
 
 import os
@@ -313,7 +313,7 @@ def main():
     """主函數"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='資料目錄重新組織遷移腳本')
+    parser = argparse.ArgumentParser(description='資料目錄重新組織遷移指令碼')
     parser.add_argument('--project-root', help='項目根目錄路徑')
     parser.add_argument('--cleanup-old', action='store_true', help='遷移後清理舊目錄')
     parser.add_argument('--dry-run', action='store_true', help='僅顯示遷移計劃，不執行實際遷移')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-系統狀態檢查腳本
+系統狀態檢查指令碼
 檢查資料庫配置和快取系統狀態
 """
 
@@ -85,7 +85,7 @@ def check_system_status():
         logger.error(f"  MongoDB: {' 可用' if status['mongodb']['available'] else ' 不可用'}")
         logger.error(f"  Redis: {' 可用' if status['redis']['available'] else ' 不可用'}")
         logger.info(f"  快取後端: {status['cache_backend']}")
-        logger.error(f"  降級支持: {' 啟用' if status['fallback_enabled'] else ' 禁用'}")
+        logger.error(f"  降級支援: {' 啟用' if status['fallback_enabled'] else ' 禁用'}")
         
     except Exception as e:
         logger.error(f" 資料庫管理器檢查失敗: {e}")
@@ -103,7 +103,7 @@ def check_system_status():
         logger.info(f" 快取系統狀態:")
         logger.info(f"  快取系統: {backend_info['system']}")
         logger.info(f"  主要後端: {backend_info['primary_backend']}")
-        logger.error(f"  降級支持: {' 啟用' if backend_info['fallback_enabled'] else ' 禁用'}")
+        logger.error(f"  降級支援: {' 啟用' if backend_info['fallback_enabled'] else ' 禁用'}")
         logger.info(f"  性能模式: {cache.get_performance_mode()}")
         
         # 取得詳細統計

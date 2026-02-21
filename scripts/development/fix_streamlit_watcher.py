@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Streamlit檔案監控錯誤修復腳本
+Streamlit檔案監控錯誤修復指令碼
 
-這個腳本用於修復Streamlit應用中的檔案監控錯誤：
+這個指令碼用於修復Streamlit應用中的檔案監控錯誤：
 FileNotFoundError: [WinError 2] 系統找不到指定的檔案。: '__pycache__\\*.pyc.*'
 
 使用方法:

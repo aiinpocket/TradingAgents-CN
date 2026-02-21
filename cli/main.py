@@ -1540,7 +1540,7 @@ def config():
     Display and configure system settings
     """
     logger.info(f"\n[bold blue]TradingAgents 配置 | Configuration[/bold blue]")
-    logger.info(f"\n[yellow]當前支持的LLM提供商 | Supported LLM Providers:[/yellow]")
+    logger.info(f"\n[yellow]當前支援的LLM提供商 | Supported LLM Providers:[/yellow]")
 
     providers_table = Table(show_header=True, header_style="bold magenta")
     providers_table.add_column("提供商 | Provider", style="cyan")
@@ -1625,7 +1625,7 @@ def version():
     logger.info(f"[green]版本 | Version:[/green] {version} [yellow](預覽版 | Preview)[/yellow]")
     logger.info(f"[green]發布日期 | Release Date:[/green] 2025-06-26")
     logger.info(f"[green]框架 | Framework:[/green] 多智能體金融交易分析 | Multi-Agent Financial Trading Analysis")
-    logger.info(f"[green]支持的語言 | Languages:[/green] 中文 | English")
+    logger.info(f"[green]支援的語言 | Languages:[/green] 中文 | English")
     logger.info(f"[green]開發狀態 | Development Status:[/green] [yellow]早期預覽版，功能持續完善中[/yellow]")
     logger.info(f"[green]基於項目 | Based on:[/green] [blue]TauricResearch/TradingAgents[/blue]")
     logger.info(f"[green]Purpose:[/green] [cyan]Open-source multi-agent stock analysis platform[/cyan]")

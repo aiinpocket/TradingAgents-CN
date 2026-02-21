@@ -1,5 +1,5 @@
 """
-檢查 pyproject.toml 中缺失的依賴包
+檢查 pyproject.toml 中缺失的依賴套件
 
 掃描代碼中實際使用的第三方包，與 pyproject.toml 中聲明的依賴進行對比
 """
@@ -147,7 +147,7 @@ def normalize_package_name(import_name: str) -> str:
 def main():
     """主函數"""
     print("=" * 80)
-    print(" 檢查 pyproject.toml 中缺失的依賴包")
+    print(" 檢查 pyproject.toml 中缺失的依賴套件")
     print("=" * 80)
     
     # 掃描代碼中的匯入

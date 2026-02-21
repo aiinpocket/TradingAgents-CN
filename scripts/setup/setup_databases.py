@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-資料庫環境設定腳本
+資料庫環境設定指令碼
 自動安裝和配置MongoDB + Redis
 """
 
@@ -32,8 +32,8 @@ def run_command(command, description=""):
         return False
 
 def install_python_packages():
-    """安裝Python依賴包"""
-    logger.info(f"\n 安裝Python資料庫依賴包...")
+    """安裝Python依賴套件"""
+    logger.info(f"\n 安裝Python資料庫依賴套件...")
     
     packages = [
         "pymongo>=4.6.0",
@@ -219,7 +219,7 @@ def test_connections():
         
     except ImportError as e:
         logger.error(f" 匯入失敗: {e}")
-        logger.info(f"請先安裝依賴包: pip install -r requirements_db.txt")
+        logger.info(f"請先安裝依賴套件: pip install -r requirements_db.txt")
     except Exception as e:
         logger.error(f" 連接測試失敗: {e}")
 

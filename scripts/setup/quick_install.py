@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TradingAgents-CN 快速安裝腳本
+TradingAgents-CN 快速安裝指令碼
 自動檢測環境並引導用戶完成安裝配置
 """
 
@@ -105,7 +105,7 @@ def docker_install():
     # 檢查項目目錄
     if not Path('docker-compose.yml').exists():
         print_colored(" 未找到docker-compose.yml檔案", Colors.RED)
-        print_colored("請確保在項目根目錄執行此腳本", Colors.YELLOW)
+        print_colored("請確保在項目根目錄執行此指令碼", Colors.YELLOW)
         return False
     
     # 檢查.env 檔案

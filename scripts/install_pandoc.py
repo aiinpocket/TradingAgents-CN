@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pandoc安裝腳本
+Pandoc安裝指令碼
 自動安裝pandoc工具，用於報告匯出功能
 """
 
@@ -164,7 +164,7 @@ def install_pandoc_linux():
 
 def main():
     """主函數"""
-    logger.info(f" Pandoc安裝腳本")
+    logger.info(f" Pandoc安裝指令碼")
     logger.info(f"=")
     
     # 檢查是否已安裝

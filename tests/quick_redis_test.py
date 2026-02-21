@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Redis快速連接測試腳本
+Redis快速連接測試指令碼
 """
 
 import redis

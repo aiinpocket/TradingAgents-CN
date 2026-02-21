@@ -209,7 +209,7 @@ class SmartConfigManager:
         cache_info = self.get_cache_backend_info()
         logger.info(f"\n 快取配置:")
         logger.info(f"  主要後端: {cache_info['primary_backend']}")
-        logger.info(f"  降級支持: {'啟用' if cache_info['fallback_enabled'] else '禁用'}")
+        logger.info(f"  降級支援: {'啟用' if cache_info['fallback_enabled'] else '禁用'}")
         
         # 執行模式
         if self.mongodb_available and self.redis_available:
@@ -274,10 +274,10 @@ def main():
     # 保存配置
     config_manager.save_config()
     
-    # 生成環境變數設定腳本
+    # 生成環境變數設定指令碼
     config = config_manager.get_config()
     
-    env_script = f"""# 環境變數配置腳本
+    env_script = f"""# 環境變數配置指令碼
 # 根據檢測結果自動生成
 
 # 快取配置
@@ -301,10 +301,10 @@ echo "Redis: $REDIS_ENABLED"
     with open("set_env.sh", "w", encoding="utf-8") as f:
         f.write(env_script)
     
-    logger.info(f"\n 環境配置腳本已生成: set_env.sh")
+    logger.info(f"\n 環境配置指令碼已生成: set_env.sh")
     
     # 生成PowerShell版本
-    ps_script = f"""# PowerShell環境變數配置腳本
+    ps_script = f"""# PowerShell環境變數配置指令碼
 # 根據檢測結果自動生成
 
 # 快取配置
@@ -328,7 +328,7 @@ Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
     with open("set_env.ps1", "w", encoding="utf-8") as f:
         f.write(ps_script)
     
-    logger.info(f" PowerShell配置腳本已生成: set_env.ps1")
+    logger.info(f" PowerShell配置指令碼已生成: set_env.ps1")
     
     logger.info(f"\n 下一步:")
     logger.info(f"1. 執行: python test_with_smart_config.py")

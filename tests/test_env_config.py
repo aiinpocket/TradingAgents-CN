@@ -60,7 +60,7 @@ def test_env_config():
         print(f"    地址: {redis_info['host']}:{redis_info['port']}")
         
         print(f"  快取後端: {status['cache_backend']}")
-        print(f"  降級支持: {' 啟用' if status['fallback_enabled'] else ' 禁用'}")
+        print(f"  降級支援: {' 啟用' if status['fallback_enabled'] else ' 禁用'}")
         
     except Exception as e:
         print(f" 資料庫管理器測試失敗: {e}")
@@ -130,14 +130,14 @@ def test_env_config():
     print(" 系統已正確使用.env配置檔")
     print(" 資料庫管理器正常工作")
     print(" 快取系統正常工作")
-    print(" 支持MongoDB和Redis的完整配置")
+    print(" 支援MongoDB和Redis的完整配置")
     print(" 在資料庫不可用時自動降級到檔案快取")
     
     print("\n 配置說明:")
     print("1. 系統讀取.env 檔案中的資料庫配置")
     print("2. 自動檢測MongoDB和Redis是否可用")
     print("3. 根據可用性選擇最佳快取後端")
-    print("4. 支持用戶名密碼認證")
+    print("4. 支援用戶名密碼認證")
     print("5. 在資料庫不可用時自動使用檔案快取")
     
     return True
@@ -153,7 +153,7 @@ def main():
             print(" 使用項目現有的.env配置")
             print(" 預設不依賴資料庫，可以純檔案快取執行")
             print(" 自動檢測和使用可用的資料庫")
-            print(" 支持完整的MongoDB和Redis配置")
+            print(" 支援完整的MongoDB和Redis配置")
             print(" 智能降級，確保系統穩定性")
         
         return success

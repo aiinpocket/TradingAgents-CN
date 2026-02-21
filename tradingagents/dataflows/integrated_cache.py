@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 集成快取管理器
-結合原有快取系統和新的自適應資料庫支持
+結合原有快取系統和新的自適應資料庫支援
 提供向後相容的介面
 """
 
@@ -60,7 +60,7 @@ class IntegratedCacheManager:
             self.logger.info(f"  主要後端: {backend}")
             self.logger.info(f"  MongoDB: {'可用' if mongodb_available else '不可用'}")
             self.logger.info(f"  Redis: {'可用' if redis_available else '不可用'}")
-            self.logger.info(f"  降級支持: {'啟用' if self.adaptive_cache.fallback_enabled else '禁用'}")
+            self.logger.info(f"  降級支援: {'啟用' if self.adaptive_cache.fallback_enabled else '禁用'}")
         else:
             self.logger.info("使用傳統檔案快取系統")
     

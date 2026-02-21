@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 自適應快取管理器 - 根據可用服務自動選擇最佳快取策略
-支持檔案快取、Redis快取、MongoDB快取的智能切換
+支援檔案快取、Redis快取、MongoDB快取的智能切換
 """
 
 import os

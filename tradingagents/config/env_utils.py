@@ -15,7 +15,7 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     """
     解析布爾類型環境變數，相容多種格式
     
-    支持的格式：
+    支援的格式：
     - true/True/TRUE
     - false/False/FALSE  
     - 1/0

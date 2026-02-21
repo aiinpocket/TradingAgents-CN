@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試資料結構腳本
+測試資料結構指令碼
 """
 
 import sys

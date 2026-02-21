@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TradingAgents-CN 安裝和啟動腳本
+TradingAgents-CN 安裝和啟動指令碼
 解決模組匯入問題，提供一鍵安裝和啟動
 """
 

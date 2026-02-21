@@ -60,7 +60,7 @@ def create_mock_analysis_results():
             'action': 'buy',
             'confidence': 0.85,
             'target_price': 'up 15-20%',
-            'reasoning': '技術面和基本面都支持買入決策'
+            'reasoning': '技術面和基本面都支援買入決策'
         },
         'summary': 'TEST123股票綜合分析顯示具有良好投資潛力，建議買入。'
     }

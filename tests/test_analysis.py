@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-簡化的分析測試腳本
+簡化的分析測試指令碼
 用於驗證TradingAgents核心功能是否正常工作
 """
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 報告匯出工具
-支持將分析結果匯出為多種格式
+支援將分析結果匯出為多種格式
 """
 
 import streamlit as st
@@ -60,7 +60,7 @@ try:
 except ImportError as e:
     EXPORT_AVAILABLE = False
     PANDOC_AVAILABLE = False
-    logger.info(f"匯出功能依賴包缺失: {e}")
+    logger.info(f"匯出功能依賴套件缺失: {e}")
     logger.info("請安裝: pip install pypandoc markdown")
 
 
@@ -81,7 +81,7 @@ class ReportExporter:
 
         # Docker環境初始化
         if self.is_docker:
-            logger.info("檢測到Docker環境，初始化PDF支持...")
+            logger.info("檢測到Docker環境，初始化PDF支援...")
             setup_xvfb_display()
     
     def _clean_text_for_markdown(self, text: str) -> str:
@@ -478,7 +478,7 @@ class ReportExporter:
 
         if not self.export_available:
             logger.error("匯出功能不可用")
-            st.error("匯出功能不可用，請安裝必要的依賴包")
+            st.error("匯出功能不可用，請安裝必要的依賴套件")
             return None
 
         try:
@@ -834,7 +834,7 @@ def render_export_buttons(results: Dict[str, Any]):
 
     # 檢查匯出功能是否可用
     if not report_exporter.export_available:
-        st.warning("匯出功能需要安裝額外依賴包")
+        st.warning("匯出功能需要安裝額外依賴套件")
         st.code("pip install pypandoc markdown")
         return
 
@@ -848,9 +848,9 @@ def render_export_buttons(results: Dict[str, Any]):
         if DOCKER_ADAPTER_AVAILABLE:
             docker_status = get_docker_status_info()
             if docker_status['dependencies_ok'] and docker_status['pdf_test_ok']:
-                st.success("Docker環境PDF支持已啟用")
+                st.success("Docker環境PDF支援已啟用")
             else:
-                st.warning(f"Docker環境PDF支持異常: {docker_status['dependency_message']}")
+                st.warning(f"Docker環境PDF支援異常: {docker_status['dependency_message']}")
         else:
             st.warning("Docker環境檢測到，但適配器不可用")
 

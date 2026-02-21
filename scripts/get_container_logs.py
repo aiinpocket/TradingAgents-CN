@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-取得Docker容器內部日誌檔案的腳本
+取得Docker容器內部日誌檔案的指令碼
 用於從執行中的TradingAgents容器取得實際的日誌檔案
 """
 

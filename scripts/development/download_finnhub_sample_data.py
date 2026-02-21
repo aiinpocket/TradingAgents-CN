@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Finnhub示例資料下載腳本
+Finnhub示例資料下載指令碼
 
-這個腳本用於建立示例的Finnhub資料檔案，以便測試新聞資料功能。
-在沒有真實API密鑰或資料的情況下，可以使用此腳本建立測試資料。
+這個指令碼用於建立示例的Finnhub資料檔案，以便測試新聞資料功能。
+在沒有真實API密鑰或資料的情況下，可以使用此指令碼建立測試資料。
 """
 
 import os
@@ -189,7 +189,7 @@ def main():
     """
     主函數
     """
-    logger.info(f"Finnhub示例資料下載腳本")
+    logger.info(f"Finnhub示例資料下載指令碼")
     logger.info(f"=")
     
     # 取得配置

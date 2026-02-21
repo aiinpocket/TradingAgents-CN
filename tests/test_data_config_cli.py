@@ -121,7 +121,7 @@ def test_cli_commands():
     print("4. 查看所有可用命令 | View all available commands:")
     print("   python -m cli.main --help")
     print()
-    print("5. 執行配置演示腳本 | Run configuration demo script:")
+    print("5. 執行配置演示指令碼 | Run configuration demo script:")
     print("   python examples/data_dir_config_demo.py")
 
 def main():
@@ -142,8 +142,8 @@ def main():
         print("\n 所有測試完成！| All tests completed!")
         print("\n 總結 | Summary:")
         print(" 資料目錄配置功能已實現 | Data directory configuration feature implemented")
-        print(" 支持自定義路徑設定 | Custom path setting supported")
-        print(" 支持環境變數配置 | Environment variable configuration supported")
+        print(" 支援自定義路徑設定 | Custom path setting supported")
+        print(" 支援環境變數配置 | Environment variable configuration supported")
         print(" 集成配置管理器 | Configuration manager integrated")
         print(" CLI命令界面完整 | CLI command interface complete")
         print(" 自動目錄建立功能 | Auto directory creation feature")

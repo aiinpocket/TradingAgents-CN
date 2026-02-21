@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-構建包含PDF支持的Docker鏡像
+構建包含PDF支援的Docker鏡像
 """
 
 import subprocess
@@ -115,12 +115,12 @@ def test_docker_container():
 
 def main():
     """主函數"""
-    logger.info(f" 構建包含PDF支持的Docker鏡像")
+    logger.info(f" 構建包含PDF支援的Docker鏡像")
     logger.info(f"=")
     
     # 檢查當前目錄
     if not Path("Dockerfile").exists():
-        logger.error(f" 請在項目根目錄執行此腳本")
+        logger.error(f" 請在項目根目錄執行此指令碼")
         return False
     
     steps = [
@@ -150,7 +150,7 @@ def main():
     
     logger.info(f"\n 提示:")
     logger.info(f"- PDF匯出功能已在Docker環境中優化")
-    logger.info(f"- 支持中文字體和虛擬顯示器")
+    logger.info(f"- 支援中文字體和虛擬顯示器")
     logger.info(f"- 如遇問題請查看容器日誌")
     
     return True

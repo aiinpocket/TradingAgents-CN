@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 異步進度跟蹤器
-支持Redis和檔案兩種儲存方式，前端定時輪詢取得進度
+支援Redis和檔案兩種儲存方式，前端定時輪詢取得進度
 """
 
 import json

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-確保logs目錄存在的腳本
+確保logs目錄存在的指令碼
 在啟動Docker容器前執行，建立必要的logs目錄
 """
 

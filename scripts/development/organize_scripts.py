@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 整理TradingAgentsCN項目的scripts目錄結構
-將現有腳本按功能分類到子目錄中
+將現有指令碼按功能分類到子目錄中
 """
 
 import os
@@ -22,10 +22,10 @@ def create_scripts_structure():
     logger.info(f" 整理TradingAgentsCN項目的scripts目錄")
     logger.info(f"=")
     
-    # 定義目錄結構和腳本分類
+    # 定義目錄結構和指令碼分類
     script_categories = {
         "setup": {
-            "description": "安裝和配置腳本",
+            "description": "安裝和配置指令碼",
             "scripts": [
                 "setup_databases.py",
                 "init_database.py", 
@@ -34,13 +34,13 @@ def create_scripts_structure():
             ]
         },
         "validation": {
-            "description": "驗證和檢查腳本", 
+            "description": "驗證和檢查指令碼", 
             "scripts": [
-                # 這裡會放置驗證腳本
+                # 這裡會放置驗證指令碼
             ]
         },
         "maintenance": {
-            "description": "維護和管理腳本",
+            "description": "維護和管理指令碼",
             "scripts": [
                 "sync_upstream.py",
                 "branch_manager.py",
@@ -48,7 +48,7 @@ def create_scripts_structure():
             ]
         },
         "development": {
-            "description": "開發輔助腳本",
+            "description": "開發輔助指令碼",
             "scripts": [
                 "prepare_upstream_contribution.py",
                 "download_finnhub_sample_data.py",
@@ -56,7 +56,7 @@ def create_scripts_structure():
             ]
         },
         "deployment": {
-            "description": "部署和發布腳本",
+            "description": "部署和發布指令碼",
             "scripts": [
                 "create_github_release.py",
                 "release_v0.1.2.py", 
@@ -64,7 +64,7 @@ def create_scripts_structure():
             ]
         },
         "docker": {
-            "description": "Docker相關腳本",
+            "description": "Docker相關指令碼",
             "scripts": [
                 "docker-compose-start.bat",
                 "start_docker_services.bat",
@@ -77,7 +77,7 @@ def create_scripts_structure():
             ]
         },
         "git": {
-            "description": "Git相關腳本",
+            "description": "Git相關指令碼",
             "scripts": [
                 "upstream_git_workflow.sh"
             ]
@@ -99,11 +99,11 @@ def create_scripts_structure():
 
 {info['description']}
 
-## 腳本列表
+## 指令碼列表
 
 """
         for script in info['scripts']:
-            readme_content += f"- `{script}` - 腳本功能說明\n"
+            readme_content += f"- `{script}` - 指令碼功能說明\n"
         
         readme_content += f"""
 ## 使用方法
@@ -112,23 +112,23 @@ def create_scripts_structure():
 # 進入項目根目錄
 cd C:\\code\\TradingAgentsCN
 
-# 執行腳本
+# 執行指令碼
 python scripts/{category}/script_name.py
 ```
 
 ## 註意事項
 
-- 確保在項目根目錄下執行腳本
-- 檢查腳本的依賴要求
-- 某些腳本可能需要管理員權限
+- 確保在項目根目錄下執行指令碼
+- 檢查指令碼的依賴要求
+- 某些指令碼可能需要管理員權限
 """
         
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(readme_content)
         logger.info(f" 建立README: scripts/{category}/README.md")
     
-    # 移動現有腳本到對應目錄
-    logger.info(f"\n 移動現有腳本...")
+    # 移動現有指令碼到對應目錄
+    logger.info(f"\n 移動現有指令碼...")
     
     for category, info in script_categories.items():
         category_path = scripts_path / category
@@ -144,61 +144,61 @@ python scripts/{category}/script_name.py
                 except Exception as e:
                     logger.error(f" 移動失敗 {script_name}: {e}")
             else:
-                logger.info(f"[INFO]腳本不存在: {script_name}")
+                logger.info(f"[INFO]指令碼不存在: {script_name}")
     
     # 建立主README
     logger.info(f"\n 建立主README...")
     main_readme_path = scripts_path / "README.md"
     main_readme_content = """# Scripts Directory
 
-這個目錄包含TradingAgentsCN項目的各種腳本工具。
+這個目錄包含TradingAgentsCN項目的各種指令碼工具。
 
 ## 目錄結構
 
-###  setup/ - 安裝和配置腳本
+###  setup/ - 安裝和配置指令碼
 - 環境設定
 - 依賴安裝  
 - API配置
 - 資料庫設定
 
-###  validation/ - 驗證腳本
+###  validation/ - 驗證指令碼
 - Git配置驗證
 - 依賴檢查
 - 配置驗證
 - API連接測試
 
-###  maintenance/ - 維護腳本
+###  maintenance/ - 維護指令碼
 - 快取清理
 - 資料備份
 - 依賴更新
 - 上游同步
 
-###  development/ - 開發輔助腳本
+###  development/ - 開發輔助指令碼
 - 代碼分析
 - 性能基準測試
 - 檔案生成
 - 貢獻準備
 
-###  deployment/ - 部署腳本
+###  deployment/ - 部署指令碼
 - Web應用部署
 - 發布打包
 - GitHub發布
 
-###  docker/ - Docker腳本
+###  docker/ - Docker指令碼
 - Docker服務管理
 - 容器啟動停止
 - 資料庫初始化
 
-###  git/ - Git工具腳本
+###  git/ - Git工具指令碼
 - 上游同步
 - 分支管理
 - 貢獻工作流
 
 ## 使用原則
 
-### 腳本分類
+### 指令碼分類
 - **tests/** - 單元測試和集成測試（pytest執行）
-- **scripts/** - 工具腳本和驗證腳本（獨立執行）
+- **scripts/** - 工具指令碼和驗證指令碼（獨立執行）
 - **tools/** - 複雜的獨立工具程式
 
 ### 執行方式
@@ -206,27 +206,27 @@ python scripts/{category}/script_name.py
 # 從項目根目錄執行
 cd C:\\code\\TradingAgentsCN
 
-# Python腳本
+# Python指令碼
 python scripts/validation/verify_gitignore.py
 
-# PowerShell腳本  
+# PowerShell指令碼  
 powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
 ```
 
 ## 註意事項
 
-- 所有腳本應該從項目根目錄執行
-- 檢查腳本的依賴要求
-- 某些腳本可能需要特殊權限
-- 保持腳本的獨立性和可重用性
+- 所有指令碼應該從項目根目錄執行
+- 檢查指令碼的依賴要求
+- 某些指令碼可能需要特殊權限
+- 保持指令碼的獨立性和可重用性
 """
     
     with open(main_readme_path, 'w', encoding='utf-8') as f:
         f.write(main_readme_content)
     logger.info(f" 建立主README: scripts/README.md")
     
-    # 顯示剩餘的未分類腳本
-    logger.info(f"\n 檢查未分類的腳本...")
+    # 顯示剩餘的未分類指令碼
+    logger.info(f"\n 檢查未分類的指令碼...")
     remaining_scripts = []
     for item in scripts_path.iterdir():
         if item.is_file() and item.suffix in ['.py', '.sh', '.bat', '.js']:
@@ -234,12 +234,12 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
                 remaining_scripts.append(item.name)
     
     if remaining_scripts:
-        logger.warning(f" 未分類的腳本:")
+        logger.warning(f" 未分類的指令碼:")
         for script in remaining_scripts:
             logger.info(f"  - {script}")
-        logger.info(f"建議手動將這些腳本移動到合適的分類目錄中")
+        logger.info(f"建議手動將這些指令碼移動到合適的分類目錄中")
     else:
-        logger.info(f" 所有腳本都已分類")
+        logger.info(f" 所有指令碼都已分類")
     
     logger.info(f"\n Scripts目錄整理完成！")
     
@@ -253,12 +253,12 @@ def main():
         if success:
             logger.info(f"\n 整理結果:")
             logger.info(f" 建立了分類子目錄")
-            logger.info(f" 移動了現有腳本")
+            logger.info(f" 移動了現有指令碼")
             logger.info(f" 生成了README檔案")
             logger.info(f"\n 建議:")
-            logger.info(f"1. 驗證腳本放在 scripts/validation/")
+            logger.info(f"1. 驗證指令碼放在 scripts/validation/")
             logger.info(f"2. 測試代碼放在 tests/")
-            logger.info(f"3. 新腳本按功能放在對應分類目錄")
+            logger.info(f"3. 新指令碼按功能放在對應分類目錄")
         
         return success
         
