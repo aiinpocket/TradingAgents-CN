@@ -326,7 +326,7 @@ class AdaptiveCacheSystem:
                 redis_info = redis_client.info()
                 stats['redis_memory_used'] = redis_info.get('used_memory_human', 'N/A')
                 stats['redis_keys'] = redis_client.dbsize()
-            except Exception:
+            except Exception as e:
                 stats['redis_status'] = 'Error'
         
         # MongoDB統計
@@ -335,7 +335,7 @@ class AdaptiveCacheSystem:
             try:
                 db = mongodb_client.tradingagents
                 stats['mongodb_cache_count'] = db.cache.count_documents({})
-            except Exception:
+            except Exception as e:
                 stats['mongodb_status'] = 'Error'
         
         return stats

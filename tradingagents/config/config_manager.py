@@ -526,7 +526,7 @@ class ConfigManager:
                 record_date = datetime.fromisoformat(record.timestamp)
                 if record_date >= cutoff_date:
                     recent_records.append(record)
-            except Exception:
+            except Exception as e:
                 continue
         
         # 統計數據

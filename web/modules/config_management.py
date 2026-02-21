@@ -335,7 +335,7 @@ def render_usage_statistics():
                     daily_stats[date] = {"cost": 0, "requests": 0}
                 daily_stats[date]["cost"] += record.cost
                 daily_stats[date]["requests"] += 1
-            except Exception:
+            except Exception as e:
                 continue
         
         if daily_stats:

@@ -37,7 +37,7 @@ class FileSessionManager:
                     file_age = current_time - session_file.stat().st_mtime
                     if file_age < (24 * 3600):  # 24小時內的文件
                         recent_files.append((session_file, file_age))
-                except Exception:
+                except Exception as e:
                     continue
 
             if recent_files:
@@ -54,7 +54,7 @@ class FileSessionManager:
             st.session_state.file_session_fingerprint = fingerprint
             return fingerprint
 
-        except Exception:
+        except Exception as e:
             # 方法4：最後的fallback
             fingerprint = f"fallback_{uuid.uuid4().hex[:8]}"
             if hasattr(st, 'session_state'):
@@ -77,10 +77,10 @@ class FileSessionManager:
                     file_age = current_time - session_file.stat().st_mtime
                     if file_age > max_age_seconds:
                         session_file.unlink()
-                except Exception:
+                except Exception as e:
                     continue
                     
-        except Exception:
+        except Exception as e:
             pass  # 清理失敗不影響主要功能
     
     def save_analysis_state(self, analysis_id: str, status: str = "running",
@@ -239,7 +239,7 @@ def get_persistent_analysis_id() -> Optional[str]:
             if latest_id:
                 st.session_state.current_analysis_id = latest_id
                 return latest_id
-        except Exception:
+        except Exception as e:
             pass
         
         return None

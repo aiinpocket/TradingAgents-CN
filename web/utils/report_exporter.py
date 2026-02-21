@@ -26,7 +26,7 @@ except ImportError:
     MONGODB_REPORT_AVAILABLE = False
     mongodb_report_manager = None
 
-# 配置日誌 - 確保輸出到stdout以便Docker logs可见
+# 配置日誌 - 確保輸出到stdout以便Docker logs可見
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -518,7 +518,7 @@ class ReportExporter:
                 try:
                     if 'output_file'in locals() and os.path.exists(output_file):
                         os.unlink(output_file)
-                except Exception:
+                except Exception as e:
                     pass
 
                 continue

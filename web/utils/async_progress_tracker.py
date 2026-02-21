@@ -34,7 +34,7 @@ def safe_serialize(obj):
                     'additional_kwargs': getattr(obj, 'additional_kwargs', {}),
                     'response_metadata': getattr(obj, 'response_metadata', {})
                 }
-        except Exception:
+        except Exception as e:
             # 如果所有方法都失敗，返回字符串表示
             return {
                 'type': obj.__class__.__name__,
@@ -45,7 +45,7 @@ def safe_serialize(obj):
         # Pydantic對象
         try:
             return obj.dict()
-        except Exception:
+        except Exception as e:
             return str(obj)
     elif hasattr(obj, '__dict__'):
         # 普通對象，轉換為字典
@@ -716,7 +716,7 @@ def get_latest_analysis_id() -> Optional[str]:
                                 latest_time = last_update
                                 # 從鍵名中提取analysis_id (去掉"progress:"前綴)
                                 latest_id = key.replace('progress:', '')
-                    except Exception:
+                    except Exception as e:
                         continue
 
                 if latest_id:

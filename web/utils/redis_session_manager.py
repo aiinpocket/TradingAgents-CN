@@ -78,7 +78,7 @@ class RedisSessionManager:
             
             return f"{self.session_prefix}fallback_{session_hash}"
             
-        except Exception:
+        except Exception as e:
             # 最後的fallback：使用時間戳
             timestamp_hash = hashlib.md5(str(int(time.time() / 3600)).encode()).hexdigest()[:16]
             return f"{self.session_prefix}timestamp_{timestamp_hash}"

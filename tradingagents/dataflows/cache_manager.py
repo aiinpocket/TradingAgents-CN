@@ -364,7 +364,7 @@ class StockDataCache:
                         desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '數據')
                         logger.info(f"找到部分匹配的{desc}: {symbol} -> {cache_key}")
                         return cache_key
-            except Exception:
+            except Exception as e:
                 continue
 
         desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '數據')
@@ -505,7 +505,7 @@ class StockDataCache:
                         desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面數據')
                         logger.info(f"找到匹配的{desc}緩存: {symbol} ({data_source}) -> {cache_key}")
                         return cache_key
-            except Exception:
+            except Exception as e:
                 continue
         
         desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面數據')
@@ -572,7 +572,7 @@ class StockDataCache:
                 
                 stats['total_files'] += 1
                 
-            except Exception:
+            except Exception as e:
                 continue
         
         stats['total_size_mb'] = round(stats['total_size_mb'], 2)

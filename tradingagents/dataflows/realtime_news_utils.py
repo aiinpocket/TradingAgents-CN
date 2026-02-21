@@ -203,7 +203,7 @@ class RealtimeNewsAggregator:
                     time_str = item.get('time_published', '')
                     try:
                         publish_time = datetime.strptime(time_str, '%Y%m%dT%H%M%S')
-                    except Exception:
+                    except Exception as e:
                         continue
                     
                     # 檢查時效性
@@ -262,7 +262,7 @@ class RealtimeNewsAggregator:
                 time_str = item.get('publishedAt', '')
                 try:
                     publish_time = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
-                except Exception:
+                except Exception as e:
                     continue
                 
                 urgency = self._assess_news_urgency(item.get('title', ''), item.get('description', ''))

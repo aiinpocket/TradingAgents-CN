@@ -248,7 +248,7 @@ def main():
                             'end_date': metadata.get('end_date', 'N/A'),
                             'file_path': metadata.get('file_path', 'N/A')
                         })
-                except Exception:
+                except Exception as e:
                     continue
             
             if cache_items:

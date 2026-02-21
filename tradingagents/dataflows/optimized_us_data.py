@@ -221,9 +221,9 @@ class OptimizedUSDataProvider:
                         cached_data = self.cache.load_stock_data(cache_key)
                         if cached_data:
                             return cached_data + "\n\n註意: 使用的是過期緩存數據"
-                except Exception:
+                except Exception as e:
                     continue
-        except Exception:
+        except Exception as e:
             pass
         
         return None

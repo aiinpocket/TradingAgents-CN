@@ -157,7 +157,7 @@ def create_news_analyst(llm, toolkit):
                 model_info = f"{llm.__class__.__name__}:{llm.model_name}"
             else:
                 model_info = llm.__class__.__name__
-        except Exception:
+        except Exception as e:
             model_info = "Unknown"
         
         logger.info(f"[新聞分析師] 準備調用LLM進行新聞分析，模型: {model_info}")

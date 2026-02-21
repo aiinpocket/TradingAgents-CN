@@ -394,7 +394,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if TOKEN_TRACKING_ENABLED:
             try:
                 total_cost = token_tracker.get_session_cost(session_id)
-            except Exception:
+            except Exception as e:
                 pass
 
         logger_manager.log_analysis_complete(
@@ -999,7 +999,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         'judge_decision': f"""
 ## 投資組合經理最終風險決策
 
-綜合三位風險分析師的意见，最終風險管理決策如下：
+綜合三位風險分析師的意見，最終風險管理決策如下：
 
 ### 風險綜合評估
 - **激進觀點**: 高收益機會，建議積極參與
