@@ -14,7 +14,7 @@ import random
 from pathlib import Path
 from datetime import datetime, timedelta
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -192,7 +192,7 @@ def main():
     logger.info(f"Finnhub示例資料下載腳本")
     logger.info(f"=")
     
-    # 獲取配置
+    # 取得配置
     config = get_config()
     data_dir = config.get('data_dir')
     
@@ -236,7 +236,7 @@ def main():
             look_back_days=3
         )
         
-        if result and "無法獲取" not in result:
+        if result and "無法取得" not in result:
             logger.info(f" 新聞資料取得成功！")
             logger.info(f"示例內容: {result[:200]}...")
         else:

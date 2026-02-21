@@ -8,13 +8,13 @@ import sys
 import time
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 
 def run_command(command, description, timeout=300):
-    """運行命令並顯示進度"""
+    """執行命令並顯示進度"""
     logger.info(f"\n {description}...")
     logger.info(f"命令: {command}")
     
@@ -103,9 +103,9 @@ def test_docker_container():
     # 等待容器啟動
     time.sleep(5)
     
-    # 獲取測試結果
+    # 取得測試結果
     logs_cmd = "docker logs tradingagents-test"
-    result = run_command(logs_cmd, "獲取測試日誌", timeout=30)
+    result = run_command(logs_cmd, "取得測試日誌", timeout=30)
     
     # 清理測試容器
     cleanup_cmd = "docker rm -f tradingagents-test"
@@ -120,7 +120,7 @@ def main():
     
     # 檢查當前目錄
     if not Path("Dockerfile").exists():
-        logger.error(f" 請在項目根目錄運行此腳本")
+        logger.error(f" 請在項目根目錄執行此腳本")
         return False
     
     steps = [

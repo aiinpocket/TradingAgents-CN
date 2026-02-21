@@ -8,7 +8,7 @@ from functools import wraps
 
 from .utils import SavePathType, decorate_all_methods
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -19,7 +19,7 @@ try:
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False
-    logger.warning("快取管理器不可用，將直接從API獲取資料")
+    logger.warning("快取管理器不可用，將直接從API取得資料")
 
 
 def init_ticker(func: Callable) -> Callable:

@@ -45,7 +45,7 @@ class ThreadTracker:
             return is_alive
     
     def get_alive_threads(self) -> Dict[str, threading.Thread]:
-        """獲取所有存活的線程"""
+        """取得所有存活的線程"""
         with self._lock:
             alive_threads = {}
             dead_threads = []
@@ -68,7 +68,7 @@ class ThreadTracker:
         self.get_alive_threads()  # 這會自動清理死亡線程
     
     def get_thread_info(self, analysis_id: str) -> Optional[Dict]:
-        """獲取線程資訊"""
+        """取得線程資訊"""
         with self._lock:
             thread = self._threads.get(analysis_id)
             if thread is None:
@@ -83,7 +83,7 @@ class ThreadTracker:
             }
     
     def get_all_thread_info(self) -> Dict[str, Dict]:
-        """獲取所有線程資訊"""
+        """取得所有線程資訊"""
         with self._lock:
             info = {}
             for analysis_id, thread in self._threads.items():
@@ -112,7 +112,7 @@ def is_analysis_thread_alive(analysis_id: str) -> bool:
     return thread_tracker.is_thread_alive(analysis_id)
 
 def get_analysis_thread_info(analysis_id: str) -> Optional[Dict]:
-    """獲取分析線程資訊"""
+    """取得分析線程資訊"""
     return thread_tracker.get_thread_info(analysis_id)
 
 def cleanup_dead_analysis_threads():
@@ -120,7 +120,7 @@ def cleanup_dead_analysis_threads():
     thread_tracker.cleanup_dead_threads()
 
 def get_all_analysis_threads() -> Dict[str, Dict]:
-    """獲取所有分析線程資訊"""
+    """取得所有分析線程資訊"""
     return thread_tracker.get_all_thread_info()
 
 def check_analysis_status(analysis_id: str) -> str:
@@ -142,7 +142,7 @@ def check_analysis_status(analysis_id: str) -> str:
             if status in ['completed', 'failed']:
                 return status
             else:
-                # 狀態顯示運行中但線程已死亡，說明異常終止
+                # 狀態顯示執行中但線程已死亡，說明異常終止
                 return 'failed'
         else:
             return 'not_found'

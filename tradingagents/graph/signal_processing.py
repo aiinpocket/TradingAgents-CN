@@ -2,7 +2,7 @@
 
 from langchain_openai import ChatOpenAI
 
-# 匯入統一日誌系統和圖處理模塊日誌裝飾器
+# 匯入統一日誌系統和圖處理模組日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_graph_module
 logger = get_logger("graph.signal_processing")

@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 import tempfile
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('web')
 
@@ -195,7 +195,7 @@ class ReportExporter:
 
 """
         
-        # 添加各個分析模塊的內容 - 與CLI端保持一致的完整結構
+        # 添加各個分析模組的內容 - 與CLI端保持一致的完整結構
         analysis_modules = [
             ('market_report', '市場技術分析', '技術指標、價格趨勢、支撐阻力位分析'),
             ('fundamentals_report', '基本面分析', '財務資料、估值水平、盈利能力分析'),
@@ -565,16 +565,16 @@ def _format_team_decision_content(content: Dict[str, Any], module_key: str) -> s
 
 
 def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: str) -> Dict[str, str]:
-    """保存分模塊報告到results目錄（CLI版本格式）"""
+    """保存分模組報告到results目錄（CLI版本格式）"""
     try:
         import os
         from pathlib import Path
 
-        # 獲取項目根目錄
+        # 取得項目根目錄
         current_file = Path(__file__)
         project_root = current_file.parent.parent.parent
 
-        # 獲取results目錄配置
+        # 取得results目錄配置
         results_dir_env = os.getenv("TRADINGAGENTS_RESULTS_DIR")
         if results_dir_env:
             if not os.path.isabs(results_dir_env):
@@ -597,7 +597,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         state = results.get('state', {})
         saved_files = {}
 
-        # 定義報告模塊映射（與CLI版本保持一致）
+        # 定義報告模組映射（與CLI版本保持一致）
         report_modules = {
             'market_report': {
                 'filename': 'market_report.md',
@@ -634,7 +634,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 'title': f'{stock_symbol} 最終投資決策',
                 'state_key': 'final_trade_decision'
             },
-            # 添加團隊決策報告模塊
+            # 添加團隊決策報告模組
             'investment_debate_state': {
                 'filename': 'research_team_decision.md',
                 'title': f'{stock_symbol} 研究團隊決策報告',
@@ -647,12 +647,12 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             }
         }
 
-        # 生成各個模塊的報告檔案
+        # 生成各個模組的報告檔案
         for module_key, module_info in report_modules.items():
             content = state.get(module_info['state_key'])
 
             if content:
-                # 生成模塊報告內容
+                # 生成模組報告內容
                 if isinstance(content, str):
                     # 檢查內容是否已經包含標題，避免重複添加
                     if content.strip().startswith('#'):
@@ -676,7 +676,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                     f.write(report_content)
 
                 saved_files[module_key] = str(file_path)
-                logger.info(f"保存模塊報告: {file_path}")
+                logger.info(f"保存模組報告: {file_path}")
 
         # 如果有決策資訊，也保存最終決策報告
         decision = results.get('decision', {})
@@ -717,7 +717,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             json.dump(metadata, f, ensure_ascii=False, indent=2)
 
         logger.info(f"保存分析中繼資料: {metadata_file}")
-        logger.info(f"分模塊報告保存完成，共保存 {len(saved_files)} 個檔案")
+        logger.info(f"分模組報告保存完成，共保存 {len(saved_files)} 個檔案")
         logger.info(f"保存目錄: {os.path.normpath(str(reports_dir))}")
 
         # 同時保存到MongoDB
@@ -771,7 +771,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         return saved_files
 
     except Exception as e:
-        logger.error(f"保存分模塊報告失敗: {e}")
+        logger.error(f"保存分模組報告失敗: {e}")
         import traceback
         logger.error(f"詳細錯誤: {traceback.format_exc()}")
         return {}
@@ -783,11 +783,11 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
         import os
         from pathlib import Path
 
-        # 獲取項目根目錄（Web應用在web/子目錄中運行）
+        # 取得項目根目錄（Web應用在web/子目錄中執行）
         current_file = Path(__file__)
         project_root = current_file.parent.parent.parent # web/utils/report_exporter.py -> 項目根目錄
 
-        # 獲取results目錄配置
+        # 取得results目錄配置
         results_dir_env = os.getenv("TRADINGAGENTS_RESULTS_DIR")
         if results_dir_env:
             # 如果環境變量是相對路徑，相對於項目根目錄解析
@@ -884,8 +884,8 @@ def render_export_buttons(results: Dict[str, Any]):
     with col1:
         if st.button("匯出 Markdown", help="匯出為Markdown格式"):
             logger.info(f"用戶點擊Markdown匯出按鈕 - 股票: {stock_symbol}")
-            # 1. 保存分模塊報告（CLI格式）
-            logger.info("開始保存分模塊報告（CLI格式）...")
+            # 1. 保存分模組報告（CLI格式）
+            logger.info("開始保存分模組報告（CLI格式）...")
             modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
 
             # 2. 生成彙總報告（下載用）
@@ -899,9 +899,9 @@ def render_export_buttons(results: Dict[str, Any]):
 
                 # 4. 顯示保存結果
                 if modular_files and saved_path:
-                    st.success(f"已保存 {len(modular_files)} 個分模塊報告 + 1個彙總報告")
+                    st.success(f"已保存 {len(modular_files)} 個分模組報告 + 1個彙總報告")
                     with st.expander("查看保存的檔案"):
-                        st.write("**分模塊報告:**")
+                        st.write("**分模組報告:**")
                         for module, path in modular_files.items():
                             st.write(f"- {module}: `{path}`")
                         st.write("**彙總報告:**")
@@ -925,8 +925,8 @@ def render_export_buttons(results: Dict[str, Any]):
                 try:
                     logger.info("開始Word匯出流程...")
 
-                    # 1. 保存分模塊報告（CLI格式）
-                    logger.info("開始保存分模塊報告（CLI格式）...")
+                    # 1. 保存分模組報告（CLI格式）
+                    logger.info("開始保存分模組報告（CLI格式）...")
                     modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
 
                     # 2. 生成Word彙總報告
@@ -940,9 +940,9 @@ def render_export_buttons(results: Dict[str, Any]):
 
                         # 4. 顯示保存結果
                         if modular_files and saved_path:
-                            st.success(f"已保存 {len(modular_files)} 個分模塊報告 + 1個Word彙總報告")
+                            st.success(f"已保存 {len(modular_files)} 個分模組報告 + 1個Word彙總報告")
                             with st.expander("查看保存的檔案"):
-                                st.write("**分模塊報告:**")
+                                st.write("**分模組報告:**")
                                 for module, path in modular_files.items():
                                     st.write(f"- {module}: `{path}`")
                                 st.write("**Word彙總報告:**")
@@ -997,8 +997,8 @@ def render_export_buttons(results: Dict[str, Any]):
                 try:
                     logger.info("開始PDF匯出流程...")
 
-                    # 1. 保存分模塊報告（CLI格式）
-                    logger.info("開始保存分模塊報告（CLI格式）...")
+                    # 1. 保存分模組報告（CLI格式）
+                    logger.info("開始保存分模組報告（CLI格式）...")
                     modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
 
                     # 2. 生成PDF彙總報告
@@ -1012,9 +1012,9 @@ def render_export_buttons(results: Dict[str, Any]):
 
                         # 4. 顯示保存結果
                         if modular_files and saved_path:
-                            st.success(f"已保存 {len(modular_files)} 個分模塊報告 + 1個PDF彙總報告")
+                            st.success(f"已保存 {len(modular_files)} 個分模組報告 + 1個PDF彙總報告")
                             with st.expander("查看保存的檔案"):
-                                st.write("**分模塊報告:**")
+                                st.write("**分模組報告:**")
                                 for module, path in modular_files.items():
                                     st.write(f"- {module}: `{path}`")
                                 st.write("**PDF彙總報告:**")

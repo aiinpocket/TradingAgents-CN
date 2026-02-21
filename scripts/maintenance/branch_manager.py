@@ -9,7 +9,7 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -67,7 +67,7 @@ class BranchManager:
         return True
     
     def get_current_branch(self):
-        """獲取當前分支"""
+        """取得當前分支"""
         return self.run_git_command('git branch --show-current')
     
     def branch_exists(self, branch_name):
@@ -153,12 +153,12 @@ class BranchManager:
         """列出分支"""
         logger.info(f" 分支列表:")
         
-        # 獲取所有分支
+        # 取得所有分支
         local_branches = self.run_git_command('git branch --format="%(refname:short)"')
         remote_branches = self.run_git_command('git branch -r --format="%(refname:short)"')
         
         if not local_branches:
-            logger.error(f" 獲取分支列表失敗")
+            logger.error(f" 取得分支列表失敗")
             return
         
         current_branch = self.get_current_branch()
@@ -243,10 +243,10 @@ class BranchManager:
         """清理已合併的分支"""
         logger.info(f" 清理已合併的分支...")
         
-        # 獲取已合併到develop的分支
+        # 取得已合併到develop的分支
         merged_branches = self.run_git_command('git branch --merged develop')
         if not merged_branches:
-            logger.error(f" 獲取已合併分支失敗")
+            logger.error(f" 取得已合併分支失敗")
             return
         
         branches_to_delete = []

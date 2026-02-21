@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, Union
 import pandas as pd
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -49,7 +49,7 @@ class DatabaseCacheManager:
             mongodb_db: MongoDB資料庫名
             redis_db: Redis資料庫編號
         """
-        # 從配置檔獲取正確的端口
+        # 從配置檔取得正確的端口
         mongodb_port = os.getenv("MONGODB_PORT", "27018")
         redis_port = os.getenv("REDIS_PORT", "6380")
         mongodb_password = os.getenv("MONGODB_PASSWORD", "")
@@ -492,7 +492,7 @@ class DatabaseCacheManager:
         return cache_key
 
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取快取統計資訊"""
+        """取得快取統計資訊"""
         stats = {
             "mongodb": {"available": self.mongodb_db is not None, "collections": {}},
             "redis": {"available": self.redis_client is not None, "keys": 0, "memory_usage": "N/A"}
@@ -510,7 +510,7 @@ class DatabaseCacheManager:
                         "size_mb": round(size / (1024 * 1024), 2)
                     }
             except Exception as e:
-                logger.error(f"MongoDB統計獲取失敗: {e}")
+                logger.error(f"MongoDB統計取得失敗: {e}")
 
         # Redis統計
         if self.redis_client:
@@ -519,7 +519,7 @@ class DatabaseCacheManager:
                 stats["redis"]["keys"] = info.get("db0", {}).get("keys", 0)
                 stats["redis"]["memory_usage"] = f"{info.get('used_memory_human', 'N/A')}"
             except Exception as e:
-                logger.error(f"Redis統計獲取失敗: {e}")
+                logger.error(f"Redis統計取得失敗: {e}")
 
         return stats
 
@@ -558,7 +558,7 @@ class DatabaseCacheManager:
 _db_cache_instance = None
 
 def get_db_cache() -> DatabaseCacheManager:
-    """獲取全局資料庫快取實例"""
+    """取得全局資料庫快取實例"""
     global _db_cache_instance
     if _db_cache_instance is None:
         _db_cache_instance = DatabaseCacheManager()

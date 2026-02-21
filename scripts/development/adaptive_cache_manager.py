@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 import pandas as pd
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -35,7 +35,7 @@ class AdaptiveCacheManager:
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         
-        # 獲取智能配置
+        # 取得智能配置
         self._load_smart_config()
         
         # 初始化快取後端
@@ -272,7 +272,7 @@ class AdaptiveCacheManager:
             'data_type': 'stock_data'
         }
         
-        # 獲取TTL
+        # 取得TTL
         ttl_seconds = self._get_ttl_seconds(symbol, 'stock_data')
         
         # 根據主要後端保存
@@ -340,7 +340,7 @@ class AdaptiveCacheManager:
         return None
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取快取統計資訊"""
+        """取得快取統計資訊"""
         stats = {
             'primary_backend': self.primary_backend,
             'mongodb_enabled': self.mongodb_enabled,
@@ -366,7 +366,7 @@ class AdaptiveCacheManager:
 _cache_manager = None
 
 def get_cache() -> AdaptiveCacheManager:
-    """獲取全局自適應快取管理器"""
+    """取得全局自適應快取管理器"""
     global _cache_manager
     if _cache_manager is None:
         _cache_manager = AdaptiveCacheManager()

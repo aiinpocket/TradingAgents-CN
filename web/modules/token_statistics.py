@@ -49,7 +49,7 @@ def render_token_statistics():
         if st.button("匯出統計資料", use_container_width=True):
             export_statistics_data(days)
     
-    # 獲取統計資料
+    # 取得統計資料
     try:
         stats = config_manager.get_usage_statistics(days)
         records = load_detailed_records(days)
@@ -85,7 +85,7 @@ def render_token_statistics():
         render_detailed_records_table(records)
         
     except Exception as e:
-        st.error(f"獲取統計資料失敗: {str(e)}")
+        st.error(f"取得統計資料失敗: {str(e)}")
         st.info("請檢查配置檔和資料儲存是否正常")
 
 def render_overview_metrics(stats: Dict[str, Any], time_range: str):

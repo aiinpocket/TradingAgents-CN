@@ -109,7 +109,7 @@ def test_get_finnhub_news():
     )
     
     print(f"函數返回結果: {result[:200]}...")  # 只顯示前200個字符
-    print(f"是否包含錯誤訊息: {'無法獲取' in result}")
+    print(f"是否包含錯誤訊息: {'無法取得' in result}")
 
 def create_sample_data_structure():
     """創建示例資料目錄結構"""
@@ -180,7 +180,7 @@ def main():
     print("\n=== 解決方案建議 ===")
     print("如果仍然遇到新聞資料問題，請:")
     print("1. 確保已正確配置Finnhub API密鑰")
-    print("2. 運行資料下載腳本獲取新聞資料")
+    print("2. 執行資料下載腳本取得新聞資料")
     print("3. 檢查資料目錄權限")
     print(f"4. 確認資料目錄存在: {data_dir}")
 

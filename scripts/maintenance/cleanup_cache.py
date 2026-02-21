@@ -9,7 +9,7 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -103,8 +103,8 @@ def cleanup_python_cache():
     return total_cleaned
 
 def get_cache_statistics():
-    """獲取快取統計資訊"""
-    logger.info(f" 獲取快取統計資訊...")
+    """取得快取統計資訊"""
+    logger.info(f" 取得快取統計資訊...")
     
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
@@ -134,7 +134,7 @@ def get_cache_statistics():
         logger.info(f" 檔案快取: {total_files} 個檔案，{total_size / 1024 / 1024:.2f} MB")
         
     except Exception as e:
-        logger.error(f" 獲取快取統計失敗: {e}")
+        logger.error(f" 取得快取統計失敗: {e}")
 
 def main():
     """主函數"""

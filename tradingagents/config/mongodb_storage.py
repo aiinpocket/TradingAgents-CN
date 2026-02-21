@@ -10,7 +10,7 @@ from typing import Dict, List, Any
 from dataclasses import asdict
 from .config_manager import UsageRecord
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -163,7 +163,7 @@ class MongoDBStorage:
             return []
     
     def get_usage_statistics(self, days: int = 30) -> Dict[str, Any]:
-        """從MongoDB獲取使用統計"""
+        """從MongoDB取得使用統計"""
         if not self._connected:
             return {}
         
@@ -210,11 +210,11 @@ class MongoDBStorage:
                 }
                 
         except Exception as e:
-            logger.error(f"獲取MongoDB統計失敗: {e}")
+            logger.error(f"取得MongoDB統計失敗: {e}")
             return {}
     
     def get_provider_statistics(self, days: int = 30) -> Dict[str, Dict[str, Any]]:
-        """按供應商獲取統計資訊"""
+        """按供應商取得統計資訊"""
         if not self._connected:
             return {}
         
@@ -255,7 +255,7 @@ class MongoDBStorage:
             return provider_stats
             
         except Exception as e:
-            logger.error(f"獲取供應商統計失敗: {e}")
+            logger.error(f"取得供應商統計失敗: {e}")
             return {}
     
     def cleanup_old_records(self, days: int = 90) -> int:

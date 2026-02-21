@@ -9,7 +9,7 @@ import sys
 from typing import List, Dict
 import argparse
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -19,7 +19,7 @@ class BranchManager:
         self.current_branch = self.get_current_branch()
         
     def run_git_command(self, command: List[str]) -> tuple:
-        """運行Git命令"""
+        """執行Git命令"""
         try:
             result = subprocess.run(
                 ['git'] + command, 
@@ -32,12 +32,12 @@ class BranchManager:
             return False, e.stdout, e.stderr
     
     def get_current_branch(self) -> str:
-        """獲取當前分支"""
+        """取得當前分支"""
         success, stdout, _ = self.run_git_command(['branch', '--show-current'])
         return stdout if success else "unknown"
     
     def get_all_branches(self) -> Dict[str, List[str]]:
-        """獲取所有分支"""
+        """取得所有分支"""
         branches = {'local': [], 'remote': []}
         
         # 本地分支
@@ -59,7 +59,7 @@ class BranchManager:
         return branches
     
     def get_merged_branches(self, target_branch: str = 'main') -> List[str]:
-        """獲取已合併到目標分支的分支"""
+        """取得已合併到目標分支的分支"""
         success, stdout, _ = self.run_git_command(['branch', '--merged', target_branch])
         if not success:
             return []
@@ -73,7 +73,7 @@ class BranchManager:
         return merged
     
     def get_unmerged_branches(self, target_branch: str = 'main') -> List[str]:
-        """獲取未合併到目標分支的分支"""
+        """取得未合併到目標分支的分支"""
         success, stdout, _ = self.run_git_command(['branch', '--no-merged', target_branch])
         if not success:
             return []

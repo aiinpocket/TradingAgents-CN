@@ -18,7 +18,7 @@ def test_cli_logging_setup():
     print("=" * 60)
     
     try:
-        # 匯入CLI模塊，觸發日誌設定
+        # 匯入CLI模組，觸發日誌設定
         from cli.main import setup_cli_logging, logger
         from tradingagents.utils.logging_manager import get_logger_manager
         

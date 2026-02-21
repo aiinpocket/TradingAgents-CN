@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 檢查和配置MongoDB等依賴項
-確保系統可以在有或沒有MongoDB的情況下正常運行
+確保系統可以在有或沒有MongoDB的情況下正常執行
 """
 
 import sys
@@ -9,7 +9,7 @@ import os
 import traceback
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -26,18 +26,18 @@ def check_mongodb_availability():
         logger.error(f" pymongo 未安裝")
         pymongo_available = False
     
-    # 檢查MongoDB服務是否運行
+    # 檢查MongoDB服務是否執行
     mongodb_running = False
     if pymongo_available:
         try:
             from pymongo import MongoClient
             client = MongoClient('localhost', 27017, serverSelectionTimeoutMS=2000)
             client.server_info()  # 觸發連接
-            logger.info(f" MongoDB 服務正在運行")
+            logger.info(f" MongoDB 服務正在執行")
             mongodb_running = True
             client.close()
         except Exception as e:
-            logger.error(f" MongoDB 服務未運行: {e}")
+            logger.error(f" MongoDB 服務未執行: {e}")
             mongodb_running = False
     
     return pymongo_available, mongodb_running
@@ -55,17 +55,17 @@ def check_redis_availability():
         logger.error(f" redis 未安裝")
         redis_available = False
     
-    # 檢查Redis服務是否運行
+    # 檢查Redis服務是否執行
     redis_running = False
     if redis_available:
         try:
             import redis
             r = redis.Redis(host='localhost', port=6379, socket_timeout=2)
             r.ping()
-            logger.info(f" Redis 服務正在運行")
+            logger.info(f" Redis 服務正在執行")
             redis_running = True
         except Exception as e:
-            logger.error(f" Redis 服務未運行: {e}")
+            logger.error(f" Redis 服務未執行: {e}")
             redis_running = False
     
     return redis_available, redis_running
@@ -164,8 +164,8 @@ def generate_installation_guide():
     guide = """
 # 依賴安裝指南
 
-## 基本運行（無資料庫）
-系統可以在沒有MongoDB和Redis的情況下正常運行，使用檔案快取。
+## 基本執行（無資料庫）
+系統可以在沒有MongoDB和Redis的情況下正常執行，使用檔案快取。
 
 ### 必需依賴
 ```bash
@@ -214,7 +214,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 - Redis：高性能快取
 - 適合生產環境和多實例部署
 
-## 運行模式檢測
+## 執行模式檢測
 系統會自動檢測可用的服務：
 1. 如果MongoDB/Redis可用，自動使用資料庫快取
 2. 如果不可用，自動降級到檔案快取
@@ -240,16 +240,16 @@ def main():
     
     if missing_packages:
         logger.error(f" 缺少必需依賴: {', '.join(missing_packages)}")
-        logger.info(f"請運行: pip install ")
+        logger.info(f"請執行: pip install ")
         return False
     
     if not pymongo_available and not redis_available:
         logger.info(f"[INFO]資料庫依賴未安裝，將使用檔案快取模式")
-        logger.info(f" 系統可以正常運行，性能良好")
+        logger.info(f" 系統可以正常執行，性能良好")
         
     elif not mongodb_running and not redis_running:
-        logger.info(f"[INFO]資料庫服務未運行，將使用檔案快取模式")
-        logger.info(f" 系統可以正常運行")
+        logger.info(f"[INFO]資料庫服務未執行，將使用檔案快取模式")
+        logger.info(f" 系統可以正常執行")
         
     else:
         logger.info(f" 資料庫服務可用，將使用高性能快取模式")
@@ -276,12 +276,12 @@ def main():
     logger.error(f"  快取功能: {' 正常' if cache_works else ' 異常'}")
     
     if not missing_packages and cache_works:
-        logger.info(f"\n 系統可以正常運行！")
+        logger.info(f"\n 系統可以正常執行！")
         if not mongodb_running and not redis_running:
             logger.info(f" 提示: 安裝MongoDB和Redis可以獲得更好的性能")
         return True
     else:
-        logger.warning(f"\n 需要解決依賴問題才能正常運行")
+        logger.warning(f"\n 需要解決依賴問題才能正常執行")
         return False
 
 if __name__ == "__main__":

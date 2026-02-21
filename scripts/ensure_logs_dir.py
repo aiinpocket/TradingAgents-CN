@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 確保logs目錄存在的腳本
-在啟動Docker容器前運行，創建必要的logs目錄
+在啟動Docker容器前執行，創建必要的logs目錄
 """
 
 import os
@@ -10,7 +10,7 @@ from pathlib import Path
 
 def ensure_logs_directory():
     """確保logs目錄存在"""
-    # 獲取項目根目錄
+    # 取得項目根目錄
     project_root = Path(__file__).parent
     logs_dir = project_root / "logs"
     
@@ -58,7 +58,7 @@ def ensure_logs_directory():
 在Docker環境中，此目錄映射到容器內的 `/app/logs` 目錄。
 容器內生成的所有日誌檔案都會出現在這裡。
 
-## 獲取日誌
+## 取得日誌
 
 如果遇到問題需要發送日誌給開發者，請發送：
 1. `tradingagents.log` - 主日誌檔案

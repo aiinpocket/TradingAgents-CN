@@ -79,7 +79,7 @@ def test_basic_system():
         cache = get_cache()
         print(" 快取系統初始化成功")
         
-        # 獲取快取資訊
+        # 取得快取資訊
         backend_info = cache.get_cache_backend_info()
         print(f"  快取系統: {backend_info['system']}")
         print(f"  主要後端: {backend_info['primary_backend']}")
@@ -117,7 +117,7 @@ def test_basic_system():
         db_manager = get_database_manager()
         print(" 資料庫管理器創建成功")
         
-        # 獲取狀態報告
+        # 取得狀態報告
         status = db_manager.get_status_report()
         
         print(" 資料庫狀態:")
@@ -138,9 +138,9 @@ def test_basic_system():
     print(" 資料庫管理器正常工作")
     
     if mongodb_available or redis_available:
-        print(" 資料庫可用，系統運行在高性能模式")
+        print(" 資料庫可用，系統執行在高性能模式")
     else:
-        print(" 資料庫不可用，系統運行在檔案快取模式")
+        print(" 資料庫不可用，系統執行在檔案快取模式")
         print(" 這是正常的，系統可以完全使用檔案快取工作")
     
     print("\n 系統特性:")
@@ -160,7 +160,7 @@ def main():
             print("\n 系統測試完成!")
             print("\n 下一步:")
             print("1. 如需高性能，可以安裝並啟動MongoDB/Redis")
-            print("2. 運行完整的股票分析測試")
+            print("2. 執行完整的股票分析測試")
             print("3. 使用Web界面進行交互式分析")
         
         return success

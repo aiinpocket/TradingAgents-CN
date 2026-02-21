@@ -39,8 +39,8 @@ for file_path in files_to_check:
         except Exception as e:
             print(f" {file_path} 檢查失敗: {e}")
 
-# 測試3：嘗試匯入模塊
-print("\n 測試模塊匯入...")
+# 測試3：嘗試匯入模組
+print("\n 測試模組匯入...")
 
 # 測試快取管理器
 try:
@@ -76,14 +76,14 @@ except Exception as e:
     print(f" optimized_us_data 匯入失敗: {e}")
     traceback.print_exc()
 
-# 測試配置模塊
+# 測試配置模組
 try:
     from tradingagents.dataflows.config import get_config
     print(" config 匯入成功")
     
-    # 獲取配置
+    # 取得配置
     config = get_config()
-    print(f" 配置獲取成功: {type(config).__name__}")
+    print(f" 配置取得成功: {type(config).__name__}")
     
 except Exception as e:
     print(f" config 匯入失敗: {e}")
@@ -186,10 +186,10 @@ print(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 print("\n 測試總結:")
 print("1. 檔案複制: 檢查檔案是否正確複制")
 print("2. 語法檢查: 驗證Python語法正確性")
-print("3. 模塊匯入: 測試模塊是否可以正常匯入")
+print("3. 模組匯入: 測試模組是否可以正常匯入")
 print("4. 功能測試: 驗證快取基本功能")
 print("5. 性能測試: 檢查快取性能")
-print("6. 統計資訊: 獲取快取使用統計")
+print("6. 統計資訊: 取得快取使用統計")
 
 print("\n 下一步:")
 print("1. 如果測試通過，可以開始清理中文內容")

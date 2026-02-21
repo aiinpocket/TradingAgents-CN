@@ -13,7 +13,7 @@ from tradingagents.default_config import DEFAULT_CONFIG
 # 匯入工具日誌裝飾器
 from tradingagents.utils.tool_logging import log_tool_call
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -332,7 +332,7 @@ class Toolkit:
         curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
     ) -> str:
         """
-        獲取股票的實時新聞分析，解決傳統新聞源的滯後性問題。
+        取得股票的實時新聞分析，解決傳統新聞源的滯後性問題。
         整合多個專業財經API，提供15-30分鐘內的最新新聞。
         支持多種新聞源輪詢機制，優先使用實時新聞聚合器，失敗時自動嘗試備用新聞源。
         支持美股新聞的英文和中文雙語搜索。
@@ -418,7 +418,7 @@ class Toolkit:
 
             result_data = []
 
-            # 使用 OpenAI/Finnhub 資料來源獲取基本面資料
+            # 使用 OpenAI/Finnhub 資料來源取得基本面資料
             logger.info(f"[統一基本面工具] 處理美股資料: {ticker}")
 
             try:
@@ -426,7 +426,7 @@ class Toolkit:
                 us_data = get_fundamentals_openai(ticker, curr_date)
                 result_data.append(f"## 基本面資料\n{us_data}")
             except Exception as e:
-                result_data.append(f"## 基本面資料\n獲取失敗: {e}")
+                result_data.append(f"## 基本面資料\n取得失敗: {e}")
 
             # 組合所有資料
             combined_result = f"""# {ticker} 基本面分析資料
@@ -456,7 +456,7 @@ class Toolkit:
         end_date: Annotated[str, "結束日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        統一的股票市場資料工具，獲取價格和技術指標資料
+        統一的股票市場資料工具，取得價格和技術指標資料
 
         Args:
             ticker: 股票代碼（如：AAPL、TSLA）
@@ -479,7 +479,7 @@ class Toolkit:
                 us_data = get_us_stock_data_cached(ticker, start_date, end_date)
                 result_data.append(f"## 市場資料\n{us_data}")
             except Exception as e:
-                result_data.append(f"## 市場資料\n獲取失敗: {e}")
+                result_data.append(f"## 市場資料\n取得失敗: {e}")
 
             # 組合資料
             combined_result = f"""# {ticker} 市場資料分析
@@ -537,7 +537,7 @@ class Toolkit:
                 news_data = get_finnhub_news(ticker, start_date_str, curr_date)
                 result_data.append(f"## 新聞資料\n{news_data}")
             except Exception as e:
-                result_data.append(f"## 新聞資料\n獲取失敗: {e}")
+                result_data.append(f"## 新聞資料\n取得失敗: {e}")
 
             # 組合所有資料
             combined_result = f"""# {ticker} 新聞分析
@@ -580,7 +580,7 @@ class Toolkit:
 
         try:
             # 使用 FinnHub 情緒資料
-            logger.info(f"[統一情緒工具] 透過 FinnHub 獲取情緒資料: {ticker}")
+            logger.info(f"[統一情緒工具] 透過 FinnHub 取得情緒資料: {ticker}")
 
             try:
                 from tradingagents.dataflows.finnhub_extra import get_finnhub_sentiment_report

@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('web')
 
@@ -116,12 +116,12 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     session_id = f"analysis_{uuid.uuid4().hex[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     # 1. 資料預取得和驗證階段
-    update_progress("驗證股票代碼並預獲取資料...", 1, 10)
+    update_progress("驗證股票代碼並預取得資料...", 1, 10)
 
     try:
         from tradingagents.utils.stock_validator import prepare_stock_data
 
-        # 預獲取股票資料（預設30天歷史資料）
+        # 預取得股票資料（預設30天歷史資料）
         preparation_result = prepare_stock_data(
             stock_code=stock_symbol,
             market_type=market_type,
@@ -208,7 +208,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     update_progress("環境變量驗證通過")
 
     try:
-        # 匯入必要的模塊
+        # 匯入必要的模組
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
 
@@ -351,7 +351,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 記錄Token使用（實際使用量，這裡使用估算值）
         if TOKEN_TRACKING_ENABLED:
-            # 在實際應用中，這些值應該從LLM響應中獲取
+            # 在實際應用中，這些值應該從LLM響應中取得
             # 這裡使用基於分析師數量和研究深度的估算
             actual_input_tokens = len(analysts) * (1500 if research_depth == "快速" else 2500 if research_depth == "標準" else 4000)
             actual_output_tokens = len(analysts) * (800 if research_depth == "快速" else 1200 if research_depth == "標準" else 2000)
@@ -414,8 +414,8 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             update_progress("正在保存分析報告...")
             from .report_exporter import save_analysis_report, save_modular_reports_to_results_dir
             
-            # 1. 保存分模塊報告到本地目錄
-            logger.info(" [本地保存] 開始保存分模塊報告到本地目錄")
+            # 1. 保存分模組報告到本地目錄
+            logger.info(" [本地保存] 開始保存分模組報告到本地目錄")
             local_files = save_modular_reports_to_results_dir(results, stock_symbol)
             if local_files:
                 logger.info(f" [本地保存] 已保存 {len(local_files)} 個本地報告檔案")
@@ -569,7 +569,7 @@ def format_analysis_results(results):
     # 格式化狀態資訊
     formatted_state = {}
     
-    # 處理各個分析模塊的結果 - 包含完整的智能體團隊分析
+    # 處理各個分析模組的結果 - 包含完整的智能體團隊分析
     analysis_keys = [
         'market_report',
         'fundamentals_report',

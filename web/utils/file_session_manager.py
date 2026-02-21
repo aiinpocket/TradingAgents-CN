@@ -60,7 +60,7 @@ class FileSessionManager:
             return fingerprint
     
     def _get_session_file_path(self, fingerprint: str) -> Path:
-        """獲取會話檔案路徑"""
+        """取得會話檔案路徑"""
         return self.data_dir / f"{fingerprint}.json"
     
     def _cleanup_old_sessions(self):
@@ -171,7 +171,7 @@ class FileSessionManager:
             st.warning(f"清除會話狀態失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
-        """獲取除錯資訊"""
+        """取得除錯資訊"""
         try:
             fingerprint = self._get_browser_fingerprint()
             session_file = self._get_session_file_path(fingerprint)
@@ -207,7 +207,7 @@ class FileSessionManager:
 file_session_manager = FileSessionManager()
 
 def get_persistent_analysis_id() -> Optional[str]:
-    """獲取持久化的分析ID（優先級：session state > 檔案會話 > Redis/檔案）"""
+    """取得持久化的分析ID（優先級：session state > 檔案會話 > Redis/檔案）"""
     try:
         # 1. 首先檢查session state
         if st.session_state.get('current_analysis_id'):
@@ -240,12 +240,12 @@ def get_persistent_analysis_id() -> Optional[str]:
                 return latest_id
         except Exception as e:
             import logging
-            logging.getLogger(__name__).debug(f"從 async_progress_tracker 獲取分析 ID 失敗: {e}")
+            logging.getLogger(__name__).debug(f"從 async_progress_tracker 取得分析 ID 失敗: {e}")
 
         return None
         
     except Exception as e:
-        st.warning(f"獲取持久化分析ID失敗: {e}")
+        st.warning(f"取得持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running",

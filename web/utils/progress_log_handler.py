@@ -1,6 +1,6 @@
 """
 進度日誌處理器
-將日誌系統中的模塊完成訊息轉發給進度跟蹤器
+將日誌系統中的模組完成訊息轉發給進度跟蹤器
 """
 
 
@@ -13,7 +13,7 @@ _internal_logger = logging.getLogger('progress_integration')
 
 class ProgressLogHandler(logging.Handler):
     """
-    自定義日誌處理器，將模塊開始/完成訊息轉發給進度跟蹤器
+    自定義日誌處理器，將模組開始/完成訊息轉發給進度跟蹤器
     """
     
     # 類級別的跟蹤器註冊表
@@ -51,8 +51,8 @@ class ProgressLogHandler(logging.Handler):
         try:
             message = record.getMessage()
             
-            # 只處理模塊開始和完成的訊息
-            if "[模塊開始]" in message or "[模塊完成]" in message:
+            # 只處理模組開始和完成的訊息
+            if "[模組開始]" in message or "[模組完成]" in message:
                 # 嘗試從訊息中提取股票代碼來匹配分析
                 stock_symbol = self._extract_stock_symbol(message)
                 

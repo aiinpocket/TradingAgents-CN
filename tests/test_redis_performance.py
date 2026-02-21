@@ -14,7 +14,7 @@ class RedisPerformanceTester:
     """Redis性能測試器"""
     
     def __init__(self, host=None, port=None, password=None, db=None):
-        # 從環境變量獲取配置，如果沒有則使用預設值
+        # 從環境變量取得配置，如果沒有則使用預設值
         self.host = host or os.getenv('REDIS_HOST', 'localhost')
         self.port = port or int(os.getenv('REDIS_PORT', 6379))
         self.password = password or os.getenv('REDIS_PASSWORD')
@@ -261,11 +261,11 @@ class RedisPerformanceTester:
             }
             
         except Exception as e:
-            print(f" 獲取內存資訊失敗: {e}")
+            print(f" 取得內存資訊失敗: {e}")
             return None
     
     def run_full_test(self):
-        """運行完整的性能測試"""
+        """執行完整的性能測試"""
         print(" 開始Redis性能測試...")
         
         if not self.connect():

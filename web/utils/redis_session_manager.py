@@ -28,7 +28,7 @@ class RedisSessionManager:
 
             import redis
 
-            # 從環境變量獲取Redis配置
+            # 從環境變量取得Redis配置
             redis_host = os.getenv('REDIS_HOST', 'localhost')
             redis_port = int(os.getenv('REDIS_PORT', 6379))
             redis_password = os.getenv('REDIS_PASSWORD', None)
@@ -59,12 +59,12 @@ class RedisSessionManager:
     def _get_session_key(self) -> str:
         """生成會話鍵"""
         try:
-            # 嘗試獲取Streamlit的session資訊
+            # 嘗試取得Streamlit的session資訊
             if hasattr(st, 'session_state') and hasattr(st.session_state, '_get_session_id'):
                 session_id = st.session_state._get_session_id()
                 return f"{self.session_prefix}{session_id}"
             
-            # 如果無法獲取session_id，使用IP+UserAgent的hash
+            # 如果無法取得session_id，使用IP+UserAgent的hash
             # 註意：這是一個fallback方案，可能不夠精確
             import streamlit.web.server.websocket_headers as wsh
             headers = wsh.get_websocket_headers()
@@ -213,7 +213,7 @@ class RedisSessionManager:
             st.warning(f"檔案刪除失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
-        """獲取除錯資訊"""
+        """取得除錯資訊"""
         try:
             session_key = self._get_session_key()
             
@@ -253,7 +253,7 @@ class RedisSessionManager:
 redis_session_manager = RedisSessionManager()
 
 def get_persistent_analysis_id() -> Optional[str]:
-    """獲取持久化的分析ID（優先級：session state > Redis會話 > Redis分析資料）"""
+    """取得持久化的分析ID（優先級：session state > Redis會話 > Redis分析資料）"""
     try:
         # 1. 首先檢查session state
         if st.session_state.get('current_analysis_id'):
@@ -281,7 +281,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"獲取持久化分析ID失敗: {e}")
+        st.warning(f"取得持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running", 

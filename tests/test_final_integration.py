@@ -64,14 +64,14 @@ def test_final_integration():
             })
             
             if result and len(result) > 100:
-                print(f"   成功獲取新聞 ({len(result)} 字符)")
+                print(f"   成功取得新聞 ({len(result)} 字符)")
                 # 檢查是否包含預期內容
                 if case["code"] in result:
                     print(f"   包含股票代碼")
                 if "新聞資料來源" in result:
                     print(f"   包含資料來源資訊")
             else:
-                print(f"   獲取失敗")
+                print(f"   取得失敗")
         
         print(f"\n 統一新聞工具測試完成")
         
@@ -80,7 +80,7 @@ def test_final_integration():
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         
         # 檢查新聞分析師是否正確匯入了統一新聞工具
-        print(f"   新聞分析師模塊匯入成功")
+        print(f"   新聞分析師模組匯入成功")
         
         # 3. 驗證工具集成
         print(f"\n 第三步：驗證工具集成...")

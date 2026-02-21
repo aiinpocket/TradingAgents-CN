@@ -75,26 +75,26 @@ class ChromaDBManager:
                 self._initialized = True
 
     def get_or_create_collection(self, name: str):
-        """線程安全地獲取或創建集合"""
+        """線程安全地取得或創建集合"""
         with self._lock:
             if name in self._collections:
                 logger.info(f"[ChromaDB] 使用快取集合: {name}")
                 return self._collections[name]
 
             try:
-                # 嘗試獲取現有集合
+                # 嘗試取得現有集合
                 collection = self._client.get_collection(name=name)
-                logger.info(f"[ChromaDB] 獲取現有集合: {name}")
+                logger.info(f"[ChromaDB] 取得現有集合: {name}")
             except Exception as e:
                 try:
                     # 創建新集合
                     collection = self._client.create_collection(name=name)
                     logger.info(f"[ChromaDB] 創建新集合: {name}")
                 except Exception as e:
-                    # 可能是並發創建，再次嘗試獲取
+                    # 可能是並發創建，再次嘗試取得
                     try:
                         collection = self._client.get_collection(name=name)
-                        logger.info(f"[ChromaDB] 並發創建後獲取集合: {name}")
+                        logger.info(f"[ChromaDB] 並發創建後取得集合: {name}")
                     except Exception as final_error:
                         logger.error(f"[ChromaDB] 集合操作失敗: {name}, 錯誤: {final_error}")
                         raise final_error
@@ -276,7 +276,7 @@ class FinancialSituationMemory:
                 return [0.0] * 1024
 
     def get_embedding_config_status(self):
-        """獲取向量快取配置狀態"""
+        """取得向量快取配置狀態"""
         return {
             'enabled': self.enable_embedding_length_check,
             'max_embedding_length': self.max_embedding_length,
@@ -286,7 +286,7 @@ class FinancialSituationMemory:
         }
 
     def get_last_text_info(self):
-        """獲取最後處理的文本資訊"""
+        """取得最後處理的文本資訊"""
         return getattr(self, '_last_text_info', None)
 
     def add_situations(self, situations_and_advice):
@@ -315,7 +315,7 @@ class FinancialSituationMemory:
     def get_memories(self, current_situation, n_matches=1):
         """Find matching recommendations using embeddings with smart truncation handling"""
         
-        # 獲取當前情況的embedding
+        # 取得當前情況的embedding
         query_embedding = self.get_embedding(current_situation)
         
         # 檢查是否為空向量（記憶功能被禁用或出錯）
@@ -373,7 +373,7 @@ class FinancialSituationMemory:
             return []
 
     def get_cache_info(self):
-        """獲取快取相關資訊，用於調試和監控"""
+        """取得快取相關資訊，用於調試和監控"""
         info = {
             'collection_count': self.situation_collection.count(),
             'client_status': 'enabled' if self.client != "DISABLED" else 'disabled',

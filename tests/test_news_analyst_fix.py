@@ -88,7 +88,7 @@ def test_tool_parameters():
     print("   1.  get_realtime_stock_news 現在正確傳遞 ticker 和 curr_date")
     print("   2.  get_google_news 現在正確傳遞 query 和 curr_date")
     print("   3.  修複了 Pydantic 驗證錯誤")
-    print("   4.  新聞分析師應該能夠正常獲取新聞資料")
+    print("   4.  新聞分析師應該能夠正常取得新聞資料")
 
 if __name__ == "__main__":
     test_tool_parameters()

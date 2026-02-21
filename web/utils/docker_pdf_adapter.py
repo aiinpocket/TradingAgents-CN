@@ -8,12 +8,12 @@ import os
 import subprocess
 import tempfile
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('web')
 
 def is_docker_environment() -> bool:
-    """檢測是否在Docker環境中運行"""
+    """檢測是否在Docker環境中執行"""
     try:
         # 檢查/.dockerenv檔案
         if os.path.exists('/.dockerenv'):
@@ -36,17 +36,17 @@ def setup_xvfb_display():
         return True
 
     try:
-        # 檢查Xvfb是否已經在運行
+        # 檢查Xvfb是否已經在執行
         try:
             result = subprocess.run(['pgrep', 'Xvfb'], capture_output=True, timeout=2)
             if result.returncode == 0:
-                logger.info("Xvfb已在運行")
+                logger.info("Xvfb已在執行")
                 os.environ['DISPLAY'] = ':99'
                 return True
         except (FileNotFoundError, subprocess.TimeoutExpired):
             pass
 
-        # 啟動Xvfb虛擬顯示器 (後台運行)
+        # 啟動Xvfb虛擬顯示器 (後台執行)
         subprocess.Popen([
             'Xvfb', ':99', '-screen', '0', '1024x768x24', '-ac', '+extension', 'GLX'
         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -61,11 +61,11 @@ def setup_xvfb_display():
         return True
     except Exception as e:
         logger.error(f"虛擬顯示器設定失敗: {e}")
-        # 即使Xvfb失敗，也嘗試繼續，某些情況下wkhtmltopdf可以無頭運行
+        # 即使Xvfb失敗，也嘗試繼續，某些情況下wkhtmltopdf可以無頭執行
         return False
 
 def get_docker_wkhtmltopdf_args():
-    """獲取Docker環境下wkhtmltopdf的特殊參數"""
+    """取得Docker環境下wkhtmltopdf的特殊參數"""
     if not is_docker_environment():
         return []
 
@@ -137,7 +137,7 @@ def test_docker_pdf_generation() -> bool:
         return False
 
 def get_docker_pdf_extra_args():
-    """獲取Docker環境下PDF生成的額外參數"""
+    """取得Docker環境下PDF生成的額外參數"""
     base_args = [
         '--toc',
         '--number-sections',
@@ -200,7 +200,7 @@ def check_docker_pdf_dependencies():
     return True, "所有依賴已安裝"
 
 def get_docker_status_info():
-    """獲取Docker環境狀態資訊"""
+    """取得Docker環境狀態資訊"""
     info = {
         'is_docker': is_docker_environment(),
         'dependencies_ok': False,

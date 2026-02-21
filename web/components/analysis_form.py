@@ -1,5 +1,5 @@
 """
-分析表單組件
+分析表單元件
 """
 
 import streamlit as st

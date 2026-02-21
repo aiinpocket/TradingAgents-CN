@@ -95,7 +95,7 @@ class DocumentationChecker:
             issues.append(" 智能體代碼目錄不存在")
             return issues
         
-        # 獲取實際的智能體列表
+        # 取得實際的智能體列表
         actual_agents = {}
         for category in ["analysts", "researchers", "managers", "trader", "risk_mgmt"]:
             category_dir = agents_code_dir / category
@@ -156,9 +156,9 @@ class DocumentationChecker:
                     # 檢查匯入語句的正確性
                     import_lines = [line.strip() for line in code_block.split('\n') if line.strip().startswith('from tradingagents')]
                     for import_line in import_lines:
-                        # 簡單檢查模塊路徑是否存在
+                        # 簡單檢查模組路徑是否存在
                         if 'from tradingagents.agents.analysts.base_analyst' in import_line:
-                            issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 匯入不存在的base_analyst模塊")
+                            issues.append(f" {doc_file.relative_to(self.project_root)} 代碼塊 {i+1}: 匯入不存在的base_analyst模組")
                 
             except Exception as e:
                 issues.append(f" 檢查代碼示例失敗 {doc_file}: {e}")

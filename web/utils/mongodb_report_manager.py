@@ -43,7 +43,7 @@ class MongoDBReportManager:
             from dotenv import load_dotenv
             load_dotenv()
 
-            # 從環境變量獲取MongoDB配置
+            # 從環境變量取得MongoDB配置
             mongodb_host = os.getenv("MONGODB_HOST", "localhost")
             mongodb_port = int(os.getenv("MONGODB_PORT", "27017"))
             mongodb_username = os.getenv("MONGODB_USERNAME", "")
@@ -135,7 +135,7 @@ class MongoDBReportManager:
                 # 分析結果摘要
                 "summary": analysis_results.get("summary", ""),
                 "analysts": analysis_results.get("analysts", []),
-                "research_depth": analysis_results.get("research_depth", 1),  # 修正：從分析結果中獲取真實的研究深度
+                "research_depth": analysis_results.get("research_depth", 1),  # 修正：從分析結果中取得真實的研究深度
 
                 # 報告內容
                 "reports": reports,
@@ -161,7 +161,7 @@ class MongoDBReportManager:
     
     def get_analysis_reports(self, limit: int = 100, stock_symbol: str = None,
                            start_date: str = None, end_date: str = None) -> List[Dict[str, Any]]:
-        """從MongoDB獲取分析報告"""
+        """從MongoDB取得分析報告"""
         if not self.connected:
             return []
         
@@ -215,15 +215,15 @@ class MongoDBReportManager:
                 }
                 results.append(result)
             
-            logger.info(f"從MongoDB獲取到 {len(results)} 個分析報告")
+            logger.info(f"從MongoDB取得到 {len(results)} 個分析報告")
             return results
             
         except Exception as e:
-            logger.error(f"從MongoDB獲取分析報告失敗: {e}")
+            logger.error(f"從MongoDB取得分析報告失敗: {e}")
             return []
     
     def get_report_by_id(self, analysis_id: str) -> Optional[Dict[str, Any]]:
-        """根據ID獲取單個分析報告"""
+        """根據ID取得單個分析報告"""
         if not self.connected:
             return None
         
@@ -251,7 +251,7 @@ class MongoDBReportManager:
             return None
             
         except Exception as e:
-            logger.error(f"從MongoDB獲取報告失敗: {e}")
+            logger.error(f"從MongoDB取得報告失敗: {e}")
             return None
     
     def delete_report(self, analysis_id: str) -> bool:
@@ -274,12 +274,12 @@ class MongoDBReportManager:
             return False
 
     def get_all_reports(self, limit: int = 1000) -> List[Dict[str, Any]]:
-        """獲取所有分析報告"""
+        """取得所有分析報告"""
         if not self.connected:
             return []
 
         try:
-            # 獲取所有報告，按時間戳降序排列
+            # 取得所有報告，按時間戳降序排列
             cursor = self.collection.find().sort("timestamp", -1).limit(limit)
             reports = list(cursor)
 
@@ -288,11 +288,11 @@ class MongoDBReportManager:
                 if '_id' in report:
                     report['_id'] = str(report['_id'])
 
-            logger.info(f"從MongoDB獲取了 {len(reports)} 個分析報告")
+            logger.info(f"從MongoDB取得了 {len(reports)} 個分析報告")
             return reports
 
         except Exception as e:
-            logger.error(f"從MongoDB獲取所有報告失敗: {e}")
+            logger.error(f"從MongoDB取得所有報告失敗: {e}")
             return []
 
     def fix_inconsistent_reports(self) -> bool:

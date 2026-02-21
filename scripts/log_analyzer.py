@@ -13,7 +13,7 @@ from typing import Dict, List, Any, Optional
 from collections import defaultdict, Counter
 import argparse
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -226,7 +226,7 @@ class LogAnalyzer:
                 hour = timestamp.hour
                 analysis['hourly_usage'][hour] += 1
             
-            # 模塊使用統計
+            # 模組使用統計
             logger = entry.get('logger', '')
             if logger:
                 analysis['module_usage'][logger] += 1
@@ -244,7 +244,7 @@ class LogAnalyzer:
                 logger.info(f"  - {date}: {count}")
         
         if analysis['module_usage']:
-            logger.info(f"\n 模塊使用情況:")
+            logger.info(f"\n 模組使用情況:")
             for module, count in Counter(analysis['module_usage']).most_common(5):
                 logger.info(f"  - {module}: {count}")
         
@@ -322,7 +322,7 @@ class LogAnalyzer:
 - 總成本: ¥{performance['cost_summary']['total_cost']:.4f}
 
 ## 使用情況
-- 活躍模塊: {len(usage['module_usage'])}
+- 活躍模組: {len(usage['module_usage'])}
 - 分析類型: {len(usage['analysis_types'])}
 
 ## 建議

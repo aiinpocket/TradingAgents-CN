@@ -54,7 +54,7 @@ def test_final_config():
         db_manager = get_database_manager()
         print(" 資料庫管理器創建成功")
         
-        # 獲取狀態報告
+        # 取得狀態報告
         status = db_manager.get_status_report()
         
         print(" 檢測結果:")
@@ -82,7 +82,7 @@ def test_final_config():
         cache = get_cache()
         print(" 快取系統創建成功")
         
-        # 獲取性能模式
+        # 取得性能模式
         performance_mode = cache.get_performance_mode()
         print(f"  性能模式: {performance_mode}")
         

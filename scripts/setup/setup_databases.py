@@ -10,12 +10,12 @@ import subprocess
 import platform
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 def run_command(command, description=""):
-    """運行命令並處理錯誤（不使用 shell=True，避免命令注入風險）"""
+    """執行命令並處理錯誤（不使用 shell=True，避免命令注入風險）"""
     import shlex
     logger.info(f" {description}")
     logger.info(f"   執行: {command}")
@@ -68,7 +68,7 @@ def setup_mongodb_windows():
        - 找到 "MongoDB" 服務並啟動
        
     4. 驗證安裝:
-       - 打開命令行，運行: mongosh
+       - 打開命令行，執行: mongosh
        - 如果連接成功，說明安裝正確
     
     預設連接地址: mongodb://localhost:27017
@@ -87,11 +87,11 @@ def setup_redis_windows():
     
     3. 啟動Redis服務器:
        - 打開命令行，進入Redis目錄
-       - 運行: redis-server.exe
+       - 執行: redis-server.exe
        
     4. 測試Redis連接:
        - 新開命令行窗口
-       - 運行: redis-cli.exe
+       - 執行: redis-cli.exe
        - 輸入: ping
        - 應該返回: PONG
     
@@ -175,7 +175,7 @@ def setup_docker_option():
       -v redis_data:/data \\
       redis:latest
     
-    # 查看運行狀態
+    # 查看執行狀態
     docker ps
     
     # 停止服務
@@ -204,7 +204,7 @@ def test_connections():
         if db_manager.is_mongodb_available() and db_manager.is_redis_available():
             logger.info(f" MongoDB + Redis 連接成功！")
 
-            # 獲取統計資訊
+            # 取得統計資訊
             stats = db_manager.get_cache_stats()
             logger.info(f" 快取統計: {stats}")
 
@@ -252,7 +252,7 @@ def main():
     create_env_template()
     
     logger.info(f"\n")
-    logger.info(f" 設定完成後，請運行以下命令測試連接:")
+    logger.info(f" 設定完成後，請執行以下命令測試連接:")
     logger.info(f"python scripts/setup_databases.py --test")
     
     # 如果指定了測試參數

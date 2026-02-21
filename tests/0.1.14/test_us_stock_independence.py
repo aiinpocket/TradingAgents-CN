@@ -52,7 +52,7 @@ def test_us_stock_data_independence():
                 
         # 測試實際調用
         try:
-            # 測試獲取蘋果股票資料
+            # 測試取得蘋果股票資料
             result = toolkit.get_us_stock_data_cached("AAPL", "1d", "1mo")
             if result and "error" not in str(result).lower():
                 print("    美股資料取得成功")

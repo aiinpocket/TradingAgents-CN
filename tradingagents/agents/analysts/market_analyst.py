@@ -4,7 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain import hub
 
-# 匯入分析模塊日誌裝飾器
+# 匯入分析模組日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
 
 # 匯入統一日誌系統
@@ -24,7 +24,7 @@ def _calc_start_date(trade_date: str, days_back: int = 90) -> str:
 
 def _get_company_name(ticker: str, market_info: dict) -> str:
     """
-    根據股票代碼獲取公司名稱
+    根據股票代碼取得公司名稱
 
     Args:
         ticker: 股票代碼
@@ -51,7 +51,7 @@ def _get_company_name(ticker: str, market_info: dict) -> str:
         return company_name
 
     except Exception as e:
-        logger.error(f"獲取公司名稱失敗: {e}")
+        logger.error(f"取得公司名稱失敗: {e}")
         return ticker
 
 
@@ -75,7 +75,7 @@ def create_market_analyst_react(llm, toolkit):
 
             class USStockDataTool(BaseTool):
                 name: str = "get_us_stock_data"
-                description: str = f"獲取美股{ticker}的市場資料和技術指標。直接調用，無需參數。"
+                description: str = f"取得美股{ticker}的市場資料和技術指標。直接調用，無需參數。"
 
                 def _run(self, query: str = "") -> str:
                     try:
@@ -96,11 +96,11 @@ def create_market_analyst_react(llm, toolkit):
                                 'end_date': current_date
                             })
                         except Exception as e2:
-                            return f"獲取股票資料失敗: {str(e2)}"
+                            return f"取得股票資料失敗: {str(e2)}"
 
             class FinnhubNewsTool(BaseTool):
                 name: str = "get_finnhub_news"
-                description: str = f"獲取美股{ticker}的最新新聞和市場情緒（透過 FINNHUB API）。直接調用，無需參數。"
+                description: str = f"取得美股{ticker}的最新新聞和市場情緒（透過 FINNHUB API）。直接調用，無需參數。"
 
                 def _run(self, query: str = "") -> str:
                     try:
@@ -111,20 +111,20 @@ def create_market_analyst_react(llm, toolkit):
                             'end_date': current_date
                         })
                     except Exception as e:
-                        return f"獲取新聞資料失敗: {str(e)}"
+                        return f"取得新聞資料失敗: {str(e)}"
 
             tools = [USStockDataTool(), FinnhubNewsTool()]
             query = f"""請對美股{ticker}進行詳細的技術分析。
 
 執行步驟：
-1. 使用get_us_stock_data工具獲取股票市場資料和技術指標（通過FINNHUB API）
-2. 使用get_finnhub_news工具獲取最新新聞和市場情緒
-3. 基於獲取的真實資料進行深入的技術指標分析
+1. 使用get_us_stock_data工具取得股票市場資料和技術指標（通過FINNHUB API）
+2. 使用get_finnhub_news工具取得最新新聞和市場情緒
+3. 基於取得的真實資料進行深入的技術指標分析
 4. 直接輸出完整的技術分析報告內容
 
 重要要求：
 - 必須輸出完整的技術分析報告內容，不要只是描述報告已完成
-- 報告必須基於工具獲取的真實資料進行分析
+- 報告必須基於工具取得的真實資料進行分析
 - 報告長度不少於800字
 - 包含具體的資料、指標數值和專業分析
 - 結合新聞資訊分析市場情緒
@@ -191,7 +191,7 @@ def create_market_analyst(llm, toolkit):
 
         logger.debug(f"股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
 
-        # 獲取公司名稱
+        # 取得公司名稱
         company_name = _get_company_name(ticker, market_info)
         logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
@@ -199,7 +199,7 @@ def create_market_analyst(llm, toolkit):
             # 使用統一的市場資料工具和 FinnHub 技術訊號
             logger.info("[市場分析師] 使用統一市場資料工具和 FinnHub 技術訊號")
             tools = [toolkit.get_stock_market_data_unified, toolkit.get_finnhub_technical_signals]
-            # 安全地獲取工具名稱用於調試
+            # 安全地取得工具名稱用於調試
             tool_names_debug = []
             for tool in tools:
                 if hasattr(tool, 'name'):
@@ -232,11 +232,11 @@ def create_market_analyst(llm, toolkit):
 - 計價貨幣：{market_info['currency_name']}（{market_info['currency_symbol']}）
 
 **工具調用指令：**
-你有一個工具叫做get_stock_market_data_unified，你必須立即調用這個工具來獲取{company_name}（{ticker}）的市場資料。
+你有一個工具叫做get_stock_market_data_unified，你必須立即調用這個工具來取得{company_name}（{ticker}）的市場資料。
 不要說你將要調用工具，直接調用工具。
 
 **分析要求：**
-1. 調用工具後，基於獲取的真實資料進行技術分析
+1. 調用工具後，基於取得的真實資料進行技術分析
 2. 分析移動平均線、MACD、RSI、布林帶等技術指標
 3. 參考 FinnHub 技術分析綜合訊號（買入/賣出信號統計、ADX趨勢強度）和支撐壓力位補充你的技術分析
 4. 考慮{market_info['market_name']}市場特點進行分析
@@ -263,7 +263,7 @@ def create_market_analyst(llm, toolkit):
                 (
                     "system",
                     "你是一位專業的股票技術分析師，與其他分析師協作。"
-                    "使用提供的工具來獲取和分析股票資料。"
+                    "使用提供的工具來取得和分析股票資料。"
                     "如果你無法完全回答，沒關係；其他分析師會從不同角度繼續分析。"
                     "執行你能做的技術分析工作來取得進展。"
                     "如果你有明確的技術面投資建議：**買入/持有/賣出**，"
@@ -278,7 +278,7 @@ def create_market_analyst(llm, toolkit):
         )
 
         prompt = prompt.partial(system_message=system_message)
-        # 安全地獲取工具名稱，處理函數和工具對象
+        # 安全地取得工具名稱，處理函數和工具對象
         tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):
@@ -345,7 +345,7 @@ def create_market_analyst(llm, toolkit):
                     tool_messages.append(tool_message)
 
                 # 基於工具結果生成完整分析報告
-                analysis_prompt = f"""現在請基於上述工具獲取的資料，生成詳細的技術分析報告。
+                analysis_prompt = f"""現在請基於上述工具取得的資料，生成詳細的技術分析報告。
 
 要求：
 1. 報告必須基於工具返回的真實資料進行分析

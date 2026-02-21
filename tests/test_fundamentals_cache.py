@@ -93,31 +93,31 @@ def test_fundamentals_with_cache():
         test_symbol = "MSFT"
         curr_date = datetime.now().strftime('%Y-%m-%d')
         
-        print(f"\n 第一次獲取 {test_symbol} 基本面資料（應該從API獲取）...")
+        print(f"\n 第一次取得 {test_symbol} 基本面資料（應該從API取得）...")
         start_time = time.time()
         result1 = get_fundamentals_finnhub(test_symbol, curr_date)
         first_time = time.time() - start_time
-        print(f" 第一次獲取耗時: {first_time:.2f}秒")
+        print(f" 第一次取得耗時: {first_time:.2f}秒")
         print(f" 資料長度: {len(result1)}")
         
-        print(f"\n 第二次獲取 {test_symbol} 基本面資料（應該從快取獲取）...")
+        print(f"\n 第二次取得 {test_symbol} 基本面資料（應該從快取取得）...")
         start_time = time.time()
         result2 = get_fundamentals_finnhub(test_symbol, curr_date)
         second_time = time.time() - start_time
-        print(f" 第二次獲取耗時: {second_time:.2f}秒")
+        print(f" 第二次取得耗時: {second_time:.2f}秒")
         print(f" 資料長度: {len(result2)}")
         
         # 驗證快取效果
         if second_time < first_time:
-            print(f" 快取生效！第二次獲取速度提升了 {((first_time - second_time) / first_time * 100):.1f}%")
+            print(f" 快取生效！第二次取得速度提升了 {((first_time - second_time) / first_time * 100):.1f}%")
         else:
             print(f" 快取可能未生效，或者資料來源有變化")
         
         # 驗證資料一致性
         if result1 == result2:
-            print(f" 兩次獲取的資料完全一致")
+            print(f" 兩次取得的資料完全一致")
         else:
-            print(f" 兩次獲取的資料不一致，可能是快取問題")
+            print(f" 兩次取得的資料不一致，可能是快取問題")
         
         return True
         
@@ -177,7 +177,7 @@ def main():
     print(f" 當前工作目錄: {os.getcwd()}")
     print(f" Python路徑: {sys.path[0]}")
     
-    # 運行測試
+    # 執行測試
     tests = [
         ("快取管理器基本功能", test_cache_manager_fundamentals),
         ("基本面資料快取功能", test_fundamentals_with_cache),

@@ -1,5 +1,5 @@
 """
-配置管理模塊
+配置管理模組
 """
 
 from .config_manager import config_manager, token_tracker, ModelConfig, PricingConfig, UsageRecord

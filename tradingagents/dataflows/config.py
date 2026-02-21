@@ -44,7 +44,7 @@ def get_config() -> Dict:
     if _config is None:
         initialize_config()
 
-    # 動態獲取最新的資料目錄配置
+    # 動態取得最新的資料目錄配置
     current_data_dir = config_manager.get_data_dir()
     if _config["data_dir"] != current_data_dir:
         _config["data_dir"] = current_data_dir
@@ -59,7 +59,7 @@ def get_config() -> Dict:
 
 
 def get_data_dir() -> str:
-    """獲取資料目錄路徑"""
+    """取得資料目錄路徑"""
     return config_manager.get_data_dir()
 
 

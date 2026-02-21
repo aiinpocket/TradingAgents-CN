@@ -31,12 +31,12 @@ def check_dependencies():
         return False
 
 def check_web_service():
-    """檢查Web服務是否運行"""
+    """檢查Web服務是否執行"""
     try:
         import requests
         response = requests.get("http://localhost:8501", timeout=5)
         if response.status_code == 200:
-            logger.info(" Web服務正在運行")
+            logger.info(" Web服務正在執行")
             return True
         else:
             logger.warning(f" Web服務響應異常: {response.status_code}")
@@ -63,7 +63,7 @@ def start_web_service():
     # 嘗試本地啟動
     logger.info(" 嘗試本地啟動Web服務...")
     try:
-        # 啟動Web服務（後台運行）
+        # 啟動Web服務（後台執行）
         subprocess.Popen([
             sys.executable, "start_web.py"
         ], cwd=project_root)
@@ -88,7 +88,7 @@ def capture_screenshots():
         return False
     
     if not check_web_service():
-        logger.info(" Web服務未運行，嘗試啟動...")
+        logger.info(" Web服務未執行，嘗試啟動...")
         if not start_web_service():
             return False
     
@@ -176,7 +176,7 @@ def create_screenshot_guide():
 
 ##  自動截圖
 
-運行自動截圖腳本:
+執行自動截圖腳本:
 ```bash
 python scripts/capture_web_screenshots.py
 ```

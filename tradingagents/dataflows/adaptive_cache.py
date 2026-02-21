@@ -20,14 +20,14 @@ class AdaptiveCacheSystem:
     def __init__(self, cache_dir: str = "data/cache"):
         self.logger = logging.getLogger(__name__)
         
-        # 獲取資料庫管理器
+        # 取得資料庫管理器
         self.db_manager = get_database_manager()
         
         # 設定快取目錄
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         
-        # 獲取配置
+        # 取得配置
         self.config = self.db_manager.get_config()
         self.cache_config = self.config["cache"]
         
@@ -44,10 +44,10 @@ class AdaptiveCacheSystem:
         return hashlib.md5(key_data.encode()).hexdigest()
     
     def _get_ttl_seconds(self, symbol: str, data_type: str = "stock_data") -> int:
-        """獲取TTL秒數（僅支援美股）"""
+        """取得TTL秒數（僅支援美股）"""
         market = "us"
 
-        # 獲取TTL配置
+        # 取得TTL配置
         ttl_key = f"{market}_{data_type}"
         ttl_seconds = self.cache_config["ttl_settings"].get(ttl_key, 7200)
         return ttl_seconds
@@ -278,7 +278,7 @@ class AdaptiveCacheSystem:
             'data_type': data_type
         }
         
-        # 獲取TTL
+        # 取得TTL
         ttl_seconds = self._get_ttl_seconds(symbol, data_type)
         
         # 根據主要後端保存
@@ -347,7 +347,7 @@ class AdaptiveCacheSystem:
         return None
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取快取統計資訊"""
+        """取得快取統計資訊"""
         stats = {
             'primary_backend': self.primary_backend,
             'fallback_enabled': self.fallback_enabled,
@@ -424,7 +424,7 @@ class AdaptiveCacheSystem:
 _cache_system = None
 
 def get_cache_system() -> AdaptiveCacheSystem:
-    """獲取全局自適應快取系統實例"""
+    """取得全局自適應快取系統實例"""
     global _cache_system
     if _cache_system is None:
         _cache_system = AdaptiveCacheSystem()

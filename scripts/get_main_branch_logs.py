@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-獲取TradingAgents主分支Docker容器日誌
+取得TradingAgents主分支Docker容器日誌
 適用於當前main分支的單體應用架構
 """
 
@@ -42,7 +42,7 @@ def find_tradingagents_container():
             return output.strip()
     
     # 如果沒找到，列出所有容器
-    print(" 未找到預期的容器，列出所有運行中的容器:")
+    print(" 未找到預期的容器，列出所有執行中的容器:")
     success, output, error = run_command("docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'")
     if success:
         print(output)
@@ -53,7 +53,7 @@ def find_tradingagents_container():
     return None
 
 def get_container_info(container_name):
-    """獲取容器基本資訊"""
+    """取得容器基本資訊"""
     print(f"\n 容器資訊: {container_name}")
     print("-" * 50)
     
@@ -116,7 +116,7 @@ def explore_log_locations(container_name):
                 found_logs.append(log_file)
                 print(f"    找到日誌檔案: {log_file}")
                 
-                # 獲取檔案資訊
+                # 取得檔案資訊
                 success2, output2, error2 = run_command(f"docker exec {container_name} ls -lh {log_file}")
                 if success2:
                     print(f"      詳情: {output2.strip()}")
@@ -124,8 +124,8 @@ def explore_log_locations(container_name):
     return found_logs
 
 def get_docker_logs(container_name):
-    """獲取Docker標準日誌"""
-    print(f"\n 獲取Docker標準日誌...")
+    """取得Docker標準日誌"""
+    print(f"\n 取得Docker標準日誌...")
     print("-" * 50)
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -155,7 +155,7 @@ def get_docker_logs(container_name):
         
         return docker_log_file
     else:
-        print(f" 獲取Docker日誌失敗: {error}")
+        print(f" 取得Docker日誌失敗: {error}")
         return None
 
 def copy_log_files(container_name, log_files):
@@ -244,8 +244,8 @@ if os.path.exists('/app/logs'):
         print(f"    檢查失敗: {error}")
 
 def get_recent_activity(container_name):
-    """獲取最近的活動日誌"""
-    print(f"\n獲取最近的活動日誌...")
+    """取得最近的活動日誌"""
+    print(f"\n取得最近的活動日誌...")
     print("-" * 50)
     
     # 最近1小時的Docker日誌
@@ -262,23 +262,23 @@ def get_recent_activity(container_name):
         else:
             print("    最近1小時無日誌輸出")
     else:
-        print(f"    獲取失敗: {error}")
+        print(f"    取得失敗: {error}")
 
 def main():
     """主函數"""
-    print(" TradingAgents 主分支日誌獲取工具")
+    print(" TradingAgents 主分支日誌取得工具")
     print("=" * 60)
     print(f"執行時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     # 1. 查找容器
     container_name = find_tradingagents_container()
     if not container_name:
-        print(" 未找到TradingAgents容器，請確保容器正在運行")
+        print(" 未找到TradingAgents容器，請確保容器正在執行")
         print("\n 啟動容器的命令:")
         print("   docker-compose up -d")
         return False
     
-    # 2. 獲取容器資訊
+    # 2. 取得容器資訊
     get_container_info(container_name)
     
     # 3. 檢查日誌配置
@@ -287,18 +287,18 @@ def main():
     # 4. 探索日誌位置
     log_files = explore_log_locations(container_name)
     
-    # 5. 獲取Docker標準日誌
+    # 5. 取得Docker標準日誌
     docker_log_file = get_docker_logs(container_name)
     
     # 6. 複制容器內日誌檔案
     copied_files = copy_log_files(container_name, log_files)
     
-    # 7. 獲取最近活動
+    # 7. 取得最近活動
     get_recent_activity(container_name)
     
     # 8. 生成總結報告
     print("\n" + "=" * 60)
-    print(" 日誌獲取總結報告")
+    print(" 日誌取得總結報告")
     print("=" * 60)
     
     print(f" 容器名稱: {container_name}")
@@ -319,7 +319,7 @@ def main():
         print("   - 檢查應用的日誌配置，確保寫入到檔案")
         print("   - 考慮在docker-compose.yml中添加日誌目錄掛載")
     
-    print("   - 將獲取到的日誌檔案發送給開發者進行問題診斷")
+    print("   - 將取得到的日誌檔案發送給開發者進行問題診斷")
     
     if docker_log_file:
         print(f"\n 主要發送檔案: {docker_log_file}")

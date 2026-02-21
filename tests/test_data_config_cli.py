@@ -105,7 +105,7 @@ def test_cli_commands():
     Test CLI commands (simulation)
     """
     print("\n=== CLI命令測試指南 | CLI Commands Test Guide ===")
-    print("\n請手動運行以下命令來測試CLI功能:")
+    print("\n請手動執行以下命令來測試CLI功能:")
     print("Please manually run the following commands to test CLI functionality:")
     print()
     print("1. 查看當前配置 | View current configuration:")
@@ -121,7 +121,7 @@ def test_cli_commands():
     print("4. 查看所有可用命令 | View all available commands:")
     print("   python -m cli.main --help")
     print()
-    print("5. 運行配置演示腳本 | Run configuration demo script:")
+    print("5. 執行配置演示腳本 | Run configuration demo script:")
     print("   python examples/data_dir_config_demo.py")
 
 def main():
@@ -133,7 +133,7 @@ def main():
     print("=" * 70)
     
     try:
-        # 運行配置功能測試
+        # 執行配置功能測試
         test_data_dir_configuration()
         
         # 顯示CLI命令測試指南

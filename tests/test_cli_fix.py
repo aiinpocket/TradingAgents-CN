@@ -163,7 +163,7 @@ def test_code_consistency():
 
 def main():
     """
-    運行所有測試
+    執行所有測試
     Run all tests
     """
     print(" 開始CLI修複驗證測試...")

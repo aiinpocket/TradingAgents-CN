@@ -86,15 +86,15 @@ def test_analysis_flow_simulation():
         
         # 步驟2: 資料取得階段
         ui.show_step_header(2, "資料取得階段 | Data Collection Phase")
-        ui.show_progress("正在獲取股票基本資訊...")
+        ui.show_progress("正在取得股票基本資訊...")
         time.sleep(0.5)
         ui.show_data_info("股票資訊", "AAPL", "Apple Inc.")
         time.sleep(0.3)
-        ui.show_progress("正在獲取市場資料...")
+        ui.show_progress("正在取得市場資料...")
         time.sleep(0.5)
         ui.show_data_info("市場資料", "AAPL", "32條記錄")
         time.sleep(0.3)
-        ui.show_progress("正在獲取基本面資料...")
+        ui.show_progress("正在取得基本面資料...")
         time.sleep(0.5)
         ui.show_success("資料取得準備完成")
         
@@ -153,7 +153,7 @@ def test_progress_vs_logging():
         
         # 用戶界面消息（清爽顯示）
         print("\n 用戶界面消息:")
-        ui.show_progress("正在獲取資料...")
+        ui.show_progress("正在取得資料...")
         ui.show_success("資料取得完成")
         ui.show_warning("網路延遲較高")
         
@@ -163,7 +163,7 @@ def test_progress_vs_logging():
         logger.debug("這是除錯資訊，用戶看不到")
         logger.error("這是錯誤日誌，只記錄在檔案中")
         
-        print(" 如果上面沒有顯示時間戳和模塊名，說明日誌分離成功")
+        print(" 如果上面沒有顯示時間戳和模組名，說明日誌分離成功")
         
         return True
         

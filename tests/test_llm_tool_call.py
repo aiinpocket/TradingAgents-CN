@@ -34,7 +34,7 @@ def test_function_exists():
         logger.info(f"Toolkit.get_realtime_stock_news: {toolkit_func}")
         logger.info(f"Toolkit函數類型: {type(toolkit_func)}")
     except Exception as e:
-        logger.error(f"獲取Toolkit函數失敗: {e}")
+        logger.error(f"取得Toolkit函數失敗: {e}")
 
 def test_direct_call():
     """測試直接函數調用"""
@@ -96,7 +96,7 @@ def test_toolkit_attributes():
     
     # 檢查Toolkit類型
     logger.info(f"Toolkit類型: {type(Toolkit)}")
-    logger.info(f"Toolkit模塊: {Toolkit.__module__ if hasattr(Toolkit, '__module__') else 'N/A'}")
+    logger.info(f"Toolkit模組: {Toolkit.__module__ if hasattr(Toolkit, '__module__') else 'N/A'}")
 
 def simulate_llm_tool_call():
     """模擬LLM工具調用過程"""

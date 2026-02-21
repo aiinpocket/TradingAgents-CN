@@ -164,7 +164,7 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
 
 def get_env_info(env_var: str) -> dict:
     """
-    獲取環境變量的詳細資訊
+    取得環境變量的詳細資訊
     
     Args:
         env_var: 環境變量名

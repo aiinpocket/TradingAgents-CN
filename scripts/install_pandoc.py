@@ -10,7 +10,7 @@ import subprocess
 import platform
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -39,7 +39,7 @@ def install_pandoc_python():
         logger.info(f" Pandoc下載成功！")
         return True
     except ImportError:
-        logger.error(f" pypandoc未安裝，請先運行: pip install pypandoc")
+        logger.error(f" pypandoc未安裝，請先執行: pip install pypandoc")
         return False
     except Exception as e:
         logger.error(f" Pandoc下載失敗: {e}")

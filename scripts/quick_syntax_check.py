@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from typing import List, Tuple
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('default')
 

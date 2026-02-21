@@ -118,7 +118,7 @@ def test_save_analysis_result():
             import os
             from pathlib import Path
             
-            # 獲取項目根目錄
+            # 取得項目根目錄
             project_root = Path(__file__).parent
             results_dir_env = os.getenv("TRADINGAGENTS_RESULTS_DIR", "./data/analysis_results")
             
@@ -168,14 +168,14 @@ def test_mongodb_save():
             print(" MongoDB未連接")
             return False
         
-        # 獲取當前記錄數
+        # 取得當前記錄數
         before_count = len(mongodb_report_manager.get_analysis_reports(limit=1000))
         print(f" 保存前MongoDB記錄數: {before_count}")
         
         # 執行測試保存
         test_save_analysis_result()
         
-        # 獲取保存後記錄數
+        # 取得保存後記錄數
         after_count = len(mongodb_report_manager.get_analysis_reports(limit=1000))
         print(f" 保存後MongoDB記錄數: {after_count}")
         

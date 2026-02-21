@@ -13,7 +13,7 @@ from typing import Set
 # 項目根目錄
 project_root = Path(__file__).parent.parent
 
-# 標準庫模塊（Python 3.10）
+# 標準庫模組（Python 3.10）
 STDLIB_MODULES = {
     'abc', 'aifc', 'argparse', 'array', 'ast', 'asynchat', 'asyncio', 'asyncore',
     'atexit', 'audioop', 'base64', 'bdb', 'binascii', 'binhex', 'bisect', 'builtins',
@@ -45,10 +45,10 @@ STDLIB_MODULES = {
     'xmlrpc', 'zipapp', 'zipfile', 'zipimport', 'zlib', '__future__', '__main__',
 }
 
-# 項目內部模塊（包括子模塊和組件）
+# 項目內部模組（包括子模組和元件）
 INTERNAL_MODULES = {
     'tradingagents', 'web', 'cli', 'app', 'tests', 'scripts', 'examples',
-    'auth_manager', 'components', 'modules', 'utils',  # web/ 下的內部模塊
+    'auth_manager', 'components', 'modules', 'utils',  # web/ 下的內部模組
     'stock_data_service',  # 內部服務模組
 }
 
@@ -106,7 +106,7 @@ def scan_directory(directory: Path) -> Set[str]:
 
 
 def get_declared_dependencies() -> Set[str]:
-    """從 pyproject.toml 中獲取已聲明的依賴"""
+    """從 pyproject.toml 中取得已聲明的依賴"""
     pyproject_file = project_root / 'pyproject.toml'
     dependencies = set()
     
@@ -165,7 +165,7 @@ def main():
             imports = scan_directory(directory)
             all_imports.update(imports)
     
-    # 過濾掉標準庫和內部模塊
+    # 過濾掉標準庫和內部模組
     third_party_imports = {
         imp for imp in all_imports
         if imp not in STDLIB_MODULES and imp not in INTERNAL_MODULES
@@ -173,7 +173,7 @@ def main():
     
     print(f"\n 發現 {len(third_party_imports)} 個第三方包匯入")
     
-    # 獲取已聲明的依賴
+    # 取得已聲明的依賴
     print("\n 讀取 pyproject.toml 中的依賴...")
     declared_deps = get_declared_dependencies()
     print(f" pyproject.toml 中聲明了 {len(declared_deps)} 個依賴")

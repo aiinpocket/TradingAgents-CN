@@ -282,7 +282,7 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
             return False
     
     def run_migration(self, cleanup_old: bool = False) -> bool:
-        """運行完整的遷移流程"""
+        """執行完整的遷移流程"""
         logger.info(" 開始資料目錄重新組織遷移...")
         
         steps = [

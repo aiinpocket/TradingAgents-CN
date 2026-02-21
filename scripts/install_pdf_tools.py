@@ -10,7 +10,7 @@ import subprocess
 import platform
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -241,7 +241,7 @@ def main():
     logger.info(f"2. 下載適合您系統的安裝包")
     logger.info(f"3. 按照說明安裝")
     logger.info(f"4. 確保wkhtmltopdf在系統PATH中")
-    logger.info(f"5. 重新運行此腳本測試")
+    logger.info(f"5. 重新執行此腳本測試")
     
     return False
 

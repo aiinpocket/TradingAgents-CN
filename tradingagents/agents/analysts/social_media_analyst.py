@@ -1,6 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-# 匯入統一日誌系統和分析模塊日誌裝飾器
+# 匯入統一日誌系統和分析模組日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
 logger = get_logger("analysts.social_media")
@@ -9,7 +9,7 @@ logger = get_logger("analysts.social_media")
 
 def _get_company_name_for_social_media(ticker: str, market_info: dict) -> str:
     """
-    為社交媒體分析師獲取公司名稱
+    為社交媒體分析師取得公司名稱
 
     Args:
         ticker: 股票代碼
@@ -35,7 +35,7 @@ def _get_company_name_for_social_media(ticker: str, market_info: dict) -> str:
         return company_name
 
     except Exception as e:
-        logger.error(f"[社交媒體分析師] 獲取公司名稱失敗: {e}")
+        logger.error(f"[社交媒體分析師] 取得公司名稱失敗: {e}")
         return ticker
 
 
@@ -49,7 +49,7 @@ def create_social_media_analyst(llm, toolkit):
         from tradingagents.utils.stock_utils import get_stock_market_info
         market_info = get_stock_market_info(ticker)
         
-        # 獲取公司名稱
+        # 取得公司名稱
         company_name = _get_company_name_for_social_media(ticker, market_info)
         logger.info(f"[社交媒體分析師] 公司名稱: {company_name}")
 
@@ -125,7 +125,7 @@ def create_social_media_analyst(llm, toolkit):
         )
 
         prompt = prompt.partial(system_message=system_message)
-        # 安全地獲取工具名稱，處理函數和工具對象
+        # 安全地取得工具名稱，處理函數和工具對象
         tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):

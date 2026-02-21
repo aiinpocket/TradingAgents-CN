@@ -207,7 +207,7 @@ status: {status}
 
 ## 質量檢查
 
-建議運行以下命令驗證更新效果：
+建議執行以下命令驗證更新效果：
 ```bash
 python scripts/check_doc_consistency.py
 ```
@@ -242,7 +242,7 @@ def main():
     print(f"    修復代碼塊: {len(fixed_files)} 個檔案")
     print(f"    報告已保存到: {report_file}")
     
-    print(f"\n 建議運行以下命令驗證更新效果:")
+    print(f"\n 建議執行以下命令驗證更新效果:")
     print(f"   python scripts/check_doc_consistency.py")
     
     return 0

@@ -17,10 +17,10 @@ def test_news_analyst_integration():
     print(" 開始測試新聞分析師集成...")
     
     try:
-        # 匯入必要的模塊
+        # 匯入必要的模組
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         from tradingagents.tools.unified_news_tool import create_unified_news_tool
-        print(" 成功匯入必要模塊")
+        print(" 成功匯入必要模組")
         
         # 創建模擬工具包
         class MockToolkit:
@@ -74,7 +74,7 @@ def test_news_analyst_integration():
 # 股票新聞分析報告
 
 ##  核心要點
-基於最新獲取的新聞資料，該股票展現出強勁的業績增長態勢：
+基於最新取得的新聞資料，該股票展現出強勁的業績增長態勢：
 
 ###  業績亮點
 - Q2營收同比增長25%，超出市場預期
@@ -142,7 +142,7 @@ def test_news_analyst_integration():
                     final_message = result["messages"][-1]
                     if hasattr(final_message, 'content'):
                         report = final_message.content
-                        print(f" 成功獲取新聞分析報告")
+                        print(f" 成功取得新聞分析報告")
                         print(f" 報告長度: {len(report)} 字符")
                         
                         # 顯示報告摘要
@@ -163,7 +163,7 @@ def test_news_analyst_integration():
                     else:
                         print(" 消息內容為空")
                 else:
-                    print(" 未獲取到分析結果")
+                    print(" 未取得到分析結果")
                     
             except Exception as e:
                 print(f" 測試股票 {stock_code} 時出錯: {e}")

@@ -36,23 +36,23 @@ def test_finnhub_fundamentals_with_cache():
         test_ticker = "AAPL"
         curr_date = datetime.now().strftime('%Y-%m-%d')
         
-        print(f"\n 第一次獲取 {test_ticker} 的基本面資料（從API獲取）...")
+        print(f"\n 第一次取得 {test_ticker} 的基本面資料（從API取得）...")
         start_time = time.time()
         result1 = get_fundamentals_finnhub(test_ticker, curr_date)
         first_time = time.time() - start_time
         
         if result1 and len(result1) > 100:
             print(f" {test_ticker} 基本面資料取得成功，長度: {len(result1)}")
-            print(f" 第一次獲取耗時: {first_time:.2f}秒")
+            print(f" 第一次取得耗時: {first_time:.2f}秒")
             print(f" 資料預覽: {result1[:200]}...")
             
-            # 第二次獲取，應該從快取讀取
-            print(f"\n 第二次獲取 {test_ticker} 的基本面資料（從快取獲取）...")
+            # 第二次取得，應該從快取讀取
+            print(f"\n 第二次取得 {test_ticker} 的基本面資料（從快取取得）...")
             start_time = time.time()
             result2 = get_fundamentals_finnhub(test_ticker, curr_date)
             second_time = time.time() - start_time
             
-            print(f" 第二次獲取耗時: {second_time:.2f}秒")
+            print(f" 第二次取得耗時: {second_time:.2f}秒")
             
             # 驗證快取效果
             if second_time < first_time and result1 == result2:
@@ -94,7 +94,7 @@ def test_openai_fallback_with_cache():
         curr_date = datetime.now().strftime('%Y-%m-%d')
         test_ticker = "MSFT"
         
-        print(f"\n 第一次通過OpenAI介面獲取 {test_ticker} 資料（應fallback到Finnhub）...")
+        print(f"\n 第一次通過OpenAI介面取得 {test_ticker} 資料（應fallback到Finnhub）...")
         start_time = time.time()
         result1 = get_fundamentals_openai(test_ticker, curr_date)
         first_time = time.time() - start_time
@@ -102,15 +102,15 @@ def test_openai_fallback_with_cache():
         if result1 and "Finnhub" in result1:
             print(" OpenAI fallback機制工作正常，成功回退到Finnhub API")
             print(f" 資料長度: {len(result1)}")
-            print(f" 第一次獲取耗時: {first_time:.2f}秒")
+            print(f" 第一次取得耗時: {first_time:.2f}秒")
             
-            # 第二次獲取，應該從快取讀取
-            print(f"\n 第二次通過OpenAI介面獲取 {test_ticker} 資料（應從快取獲取）...")
+            # 第二次取得，應該從快取讀取
+            print(f"\n 第二次通過OpenAI介面取得 {test_ticker} 資料（應從快取取得）...")
             start_time = time.time()
             result2 = get_fundamentals_openai(test_ticker, curr_date)
             second_time = time.time() - start_time
             
-            print(f" 第二次獲取耗時: {second_time:.2f}秒")
+            print(f" 第二次取得耗時: {second_time:.2f}秒")
             
             # 驗證快取效果
             if second_time < first_time and result1 == result2:
@@ -147,7 +147,7 @@ def test_cache_management():
         
         cache = get_cache()
         
-        # 獲取快取統計
+        # 取得快取統計
         stats = cache.get_cache_stats()
         print(f" 當前快取統計: {stats}")
         
@@ -174,7 +174,7 @@ def main():
     print(f" 當前工作目錄: {os.getcwd()}")
     print(f" Python路徑: {sys.path[0]}")
     
-    # 運行測試
+    # 執行測試
     tests = [
         ("Finnhub API密鑰檢查", test_finnhub_api_key),
         ("Finnhub基本面資料取得和快取", test_finnhub_fundamentals_with_cache),
@@ -210,7 +210,7 @@ def main():
         print("3.  資料來源於公司財報和SEC檔案，具有較高的可靠性")
         print("4. 支持智能快取機制，美股基本面資料快取24小時")
         print("5.  快取按市場類型分類存儲，提高查找效率")
-        print("6.  自動檢測快取有效性，過期資料會重新獲取")
+        print("6.  自動檢測快取有效性，過期資料會重新取得")
     else:
         print(" 部分測試失敗，請檢查相關配置。")
 

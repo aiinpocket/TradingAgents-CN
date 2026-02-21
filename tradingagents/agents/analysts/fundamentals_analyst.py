@@ -5,7 +5,7 @@
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-# 匯入分析模塊日誌裝飾器
+# 匯入分析模組日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
 
 # 匯入統一日誌系統
@@ -16,7 +16,7 @@ logger = get_logger("default")
 
 def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
     """
-    為基本面分析師獲取公司名稱
+    為基本面分析師取得公司名稱
 
     Args:
         ticker: 股票代碼
@@ -42,7 +42,7 @@ def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
         return company_name
 
     except Exception as e:
-        logger.error(f"[基本面分析師] 獲取公司名稱失敗: {e}")
+        logger.error(f"[基本面分析師] 取得公司名稱失敗: {e}")
         return ticker
 
 
@@ -78,7 +78,7 @@ def create_fundamentals_analyst(llm, toolkit):
         logger.debug(f"市場資訊: is_us={market_info['is_us']}")
         logger.debug(f"工具配置檢查: online_tools={toolkit.config['online_tools']}")
 
-        # 獲取公司名稱
+        # 取得公司名稱
         company_name = _get_company_name_for_fundamentals(ticker, market_info)
         logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
@@ -87,7 +87,7 @@ def create_fundamentals_analyst(llm, toolkit):
             # 使用統一的基本面分析工具和華爾街分析師共識資料
             logger.info("[基本面分析師] 使用統一基本面分析工具和分析師共識資料")
             tools = [toolkit.get_stock_fundamentals_unified, toolkit.get_finnhub_analyst_consensus]
-            # 安全地獲取工具名稱用於調試
+            # 安全地取得工具名稱用於調試
             tool_names_debug = []
             for tool in tools:
                 if hasattr(tool, 'name'):
@@ -113,7 +113,7 @@ def create_fundamentals_analyst(llm, toolkit):
         system_message = (
             f"你是一位專業的股票基本面分析師。"
             f"\n\n**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**\n"
-            f"絕對強制要求：你必須調用工具獲取真實資料！不允許任何假設或編造！"
+            f"絕對強制要求：你必須調用工具取得真實資料！不允許任何假設或編造！"
             f"任務：分析{company_name}（股票代碼：{ticker}，{market_info['market_name']}）"
             f"[重要] 立即調用 get_stock_fundamentals_unified 工具"
             f"參數：ticker='{ticker}', start_date='{start_date}', end_date='{current_date}', curr_date='{current_date}'"
@@ -148,9 +148,9 @@ def create_fundamentals_analyst(llm, toolkit):
 
         # 系統提示模板
         system_prompt = (
-            "[強制要求] 你必須調用工具獲取真實資料！"
+            "[強制要求] 你必須調用工具取得真實資料！"
             "[禁止] 不允許假設、編造或直接回答任何問題！"
-            "[必須] 立即調用提供的工具獲取真實資料，然後基於真實資料進行分析。"
+            "[必須] 立即調用提供的工具取得真實資料，然後基於真實資料進行分析。"
             "可用工具：{tool_names}。\n{system_message}"
             "當前日期：{current_date}。"
             "分析目標：{company_name}（股票代碼：{ticker}）。"
@@ -164,7 +164,7 @@ def create_fundamentals_analyst(llm, toolkit):
         ])
 
         prompt = prompt.partial(system_message=system_message)
-        # 安全地獲取工具名稱，處理函數和工具對象
+        # 安全地取得工具名稱，處理函數和工具對象
         tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):
@@ -182,7 +182,7 @@ def create_fundamentals_analyst(llm, toolkit):
         fresh_llm = llm
 
         logger.debug(f"創建LLM鏈，工具數量: {len(tools)}")
-        # 安全地獲取工具名稱用於調試
+        # 安全地取得工具名稱用於調試
         debug_tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):

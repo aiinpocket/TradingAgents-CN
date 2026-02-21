@@ -61,7 +61,7 @@ def setup_cli_logging():
 
     logger_manager = get_logger_manager()
 
-    # 獲取根日誌器
+    # 取得根日誌器
     root_logger = logging.getLogger()
 
     # 移除所有控制台處理器，只保留檔案日誌
@@ -655,7 +655,7 @@ def select_market():
 
 
 def get_ticker(market):
-    """根據選定市場獲取股票代碼"""
+    """根據選定市場取得股票代碼"""
     console.print(f"\n[bold cyan]{market['name']}股票示例 | {market['name_en']} Examples:[/bold cyan]")
     for example in market['examples']:
         console.print(f"  • {example}")
@@ -1014,7 +1014,7 @@ def run_analysis():
         )
         ui.show_success("分析系統初始化完成")
     except ImportError as e:
-        ui.show_error(f"模塊匯入失敗 | Module import failed: {str(e)}")
+        ui.show_error(f"模組匯入失敗 | Module import failed: {str(e)}")
         ui.show_warning("請檢查依賴安裝 | Please check dependencies installation")
         return
     except ValueError as e:
@@ -1112,9 +1112,9 @@ def run_analysis():
         )
         update_display(layout, spinner_text)
 
-        # 顯示資料預獲取和驗證階段
+        # 顯示資料預取得和驗證階段
         ui.show_step_header(2, "資料驗證階段 | Data Validation Phase")
-        ui.show_progress("驗證股票代碼並預獲取資料...")
+        ui.show_progress("驗證股票代碼並預取得資料...")
 
         try:
             from tradingagents.utils.stock_validator import prepare_stock_data
@@ -1122,7 +1122,7 @@ def run_analysis():
             # 確定市場類型（僅支援美股）
             market_type = "美股"
 
-            # 預獲取股票資料（預設30天歷史資料）
+            # 預取得股票資料（預設30天歷史資料）
             preparation_result = prepare_stock_data(
                 stock_code=selections["ticker"],
                 market_type=market_type,
@@ -1139,7 +1139,7 @@ def run_analysis():
             # 資料預取得成功
             ui.show_success(f"資料準備完成: {preparation_result.stock_name} ({preparation_result.market_type})")
             ui.show_user_message(f"快取狀態: {preparation_result.cache_status}", "dim")
-            logger.info(f"股票資料預獲取成功: {preparation_result.stock_name}")
+            logger.info(f"股票資料預取得成功: {preparation_result.stock_name}")
 
         except Exception as e:
             ui.show_error(f"資料預取得過程中發生錯誤: {str(e)}")
@@ -1149,7 +1149,7 @@ def run_analysis():
 
         # 顯示資料取得階段
         ui.show_step_header(3, "資料取得階段 | Data Collection Phase")
-        ui.show_progress("正在獲取股票基本資訊...")
+        ui.show_progress("正在取得股票基本資訊...")
 
         # Initialize state and get graph args
         init_agent_state = graph.propagator.create_initial_state(
@@ -1779,16 +1779,16 @@ def examples():
 
 @app.command(
     name="test",
-    help="運行測試 | Run tests"
+    help="執行測試 | Run tests"
 )
 def test():
     """
-    運行系統測試
+    執行系統測試
     Run system tests
     """
     logger.info(f"\n[bold blue]TradingAgents 測試 | Tests[/bold blue]")
 
-    logger.info(f"[yellow]正在運行集成測試... | Running integration tests...[/yellow]")
+    logger.info(f"[yellow]正在執行集成測試... | Running integration tests...[/yellow]")
 
     try:
         result = subprocess.run([
@@ -1822,7 +1822,7 @@ def help_chinese():
     logger.info(f"\n[bold yellow]快速開始 | Quick Start:[/bold yellow]")
     logger.info(f"1. [cyan]python -m cli.main config[/cyan]     # 查看配置資訊")
     logger.info(f"2. [cyan]python -m cli.main examples[/cyan]   # 查看範例程式")
-    logger.info(f"3. [cyan]python -m cli.main test[/cyan]       # 運行測試")
+    logger.info(f"3. [cyan]python -m cli.main test[/cyan]       # 執行測試")
     logger.info(f"4. [cyan]python -m cli.main analyze[/cyan]    # 開始股票分析")
 
     logger.info(f"\n[bold yellow]主要命令 | Main Commands:[/bold yellow]")
@@ -1849,7 +1849,7 @@ def help_chinese():
     )
     commands_table.add_row(
         "test",
-        "運行測試 | Run Tests",
+        "執行測試 | Run Tests",
         "執行系統集成測試，驗證功能正常"
     )
     commands_table.add_row(

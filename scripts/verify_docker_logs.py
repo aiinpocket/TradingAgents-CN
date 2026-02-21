@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 
 def run_command(cmd):
-    """運行命令並返回結果（不使用 shell=True，避免命令注入風險）"""
+    """執行命令並返回結果（不使用 shell=True，避免命令注入風險）"""
     import shlex
     try:
         args = shlex.split(cmd) if isinstance(cmd, str) else cmd
@@ -27,14 +27,14 @@ def check_container_status():
         print(" 容器狀態:")
         print(output)
         
-        # 檢查web容器是否運行
+        # 檢查web容器是否執行
         if "TradingAgents-web" in output and "Up" in output:
             return True
         else:
-            print(" TradingAgents-web容器未正常運行")
+            print(" TradingAgents-web容器未正常執行")
             return False
     else:
-        print(f" 無法獲取容器狀態: {error}")
+        print(f" 無法取得容器狀態: {error}")
         return False
 
 def trigger_logs_in_container():
@@ -57,7 +57,7 @@ try:
     print(' 初始化日誌系統...')
     init_logging()
     
-    print(' 獲取日誌器...')
+    print(' 取得日誌器...')
     logger = get_logger('docker_test')
     
     print(' 寫入測試日誌...')
@@ -156,7 +156,7 @@ def check_container_logs():
                 if log_file.strip():
                     print(f"   {log_file}")
                     
-                    # 獲取檔案大小
+                    # 取得檔案大小
                     success3, output3, error3 = run_command(f"docker exec TradingAgents-web wc -c {log_file}")
                     if success3:
                         size = output3.strip().split()[0]
@@ -182,7 +182,7 @@ def check_docker_stdout_logs():
         print("-" * 60)
         return True
     else:
-        print(f" 無法獲取Docker日誌: {error}")
+        print(f" 無法取得Docker日誌: {error}")
         return False
 
 def main():

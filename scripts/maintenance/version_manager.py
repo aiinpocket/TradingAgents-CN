@@ -11,7 +11,7 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -23,7 +23,7 @@ class VersionManager:
         self.changelog_file = self.project_root / "CHANGELOG.md"
     
     def get_current_version(self):
-        """獲取當前版本號"""
+        """取得當前版本號"""
         try:
             with open(self.version_file, 'r', encoding='utf-8') as f:
                 return f.read().strip()
@@ -180,7 +180,7 @@ class VersionManager:
             tags = result.stdout.strip().split('\n') if result.stdout.strip() else []
             logger.info(f"Git標籤: {', '.join(tags) if tags else '無'}")
         except subprocess.CalledProcessError:
-            logger.info(f"Git標籤: 無法獲取")
+            logger.info(f"Git標籤: 無法取得")
 
 def main():
     parser = argparse.ArgumentParser(description='TradingAgents 版本管理工具')

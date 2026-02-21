@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import date, timedelta, datetime
 from typing import Annotated
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 

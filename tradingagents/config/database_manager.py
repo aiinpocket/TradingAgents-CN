@@ -238,13 +238,13 @@ class DatabaseManager:
                 self.redis_available = False
     
     def get_mongodb_client(self):
-        """獲取MongoDB客戶端"""
+        """取得MongoDB客戶端"""
         if self.mongodb_available and self.mongodb_client:
             return self.mongodb_client
         return None
     
     def get_redis_client(self):
-        """獲取Redis客戶端"""
+        """取得Redis客戶端"""
         if self.redis_available and self.redis_client:
             return self.redis_client
         return None
@@ -262,11 +262,11 @@ class DatabaseManager:
         return self.mongodb_available or self.redis_available
     
     def get_cache_backend(self) -> str:
-        """獲取當前快取後端"""
+        """取得當前快取後端"""
         return self.primary_backend
 
     def get_config(self) -> Dict[str, Any]:
-        """獲取配置資訊"""
+        """取得配置資訊"""
         return {
             "mongodb": self.mongodb_config,
             "redis": self.redis_config,
@@ -276,7 +276,7 @@ class DatabaseManager:
         }
 
     def get_status_report(self) -> Dict[str, Any]:
-        """獲取狀態報告"""
+        """取得狀態報告"""
         return {
             "database_available": self.is_database_available(),
             "mongodb": {
@@ -294,7 +294,7 @@ class DatabaseManager:
         }
 
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取快取統計資訊"""
+        """取得快取統計資訊"""
         stats = {
             "mongodb_available": self.mongodb_available,
             "redis_available": self.redis_available,
@@ -309,7 +309,7 @@ class DatabaseManager:
                 stats["redis_keys"] = self.redis_client.dbsize()
                 stats["redis_memory"] = info.get("used_memory_human", "N/A")
             except Exception as e:
-                self.logger.error(f"獲取Redis統計失敗: {e}")
+                self.logger.error(f"取得Redis統計失敗: {e}")
 
         return stats
 
@@ -332,7 +332,7 @@ class DatabaseManager:
 _database_manager = None
 
 def get_database_manager() -> DatabaseManager:
-    """獲取全局資料庫管理器實例"""
+    """取得全局資料庫管理器實例"""
     global _database_manager
     if _database_manager is None:
         _database_manager = DatabaseManager()
@@ -347,13 +347,13 @@ def is_redis_available() -> bool:
     return get_database_manager().is_redis_available()
 
 def get_cache_backend() -> str:
-    """獲取當前快取後端"""
+    """取得當前快取後端"""
     return get_database_manager().get_cache_backend()
 
 def get_mongodb_client():
-    """獲取MongoDB客戶端"""
+    """取得MongoDB客戶端"""
     return get_database_manager().get_mongodb_client()
 
 def get_redis_client():
-    """獲取Redis客戶端"""
+    """取得Redis客戶端"""
     return get_database_manager().get_redis_client()

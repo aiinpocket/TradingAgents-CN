@@ -10,7 +10,7 @@ from typing import List
 import os
 from dataclasses import dataclass
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -43,7 +43,7 @@ class RealtimeNewsAggregator:
         
     def get_realtime_stock_news(self, ticker: str, hours_back: int = 6, max_news: int = 10) -> List[NewsItem]:
         """
-        獲取實時股票新聞
+        取得實時股票新聞
         優先級：專業API > 新聞API > 搜索引擎
         
         Args:
@@ -51,31 +51,31 @@ class RealtimeNewsAggregator:
             hours_back: 回溯小時數
             max_news: 最大新聞數量，預設10條
         """
-        logger.info(f"[新聞聚合器] 開始獲取 {ticker} 的實時新聞，回溯時間: {hours_back}小時")
+        logger.info(f"[新聞聚合器] 開始取得 {ticker} 的實時新聞，回溯時間: {hours_back}小時")
         start_time = datetime.now()
         all_news = []
         
         # 1. FinnHub實時新聞 (最高優先級)
-        logger.info(f"[新聞聚合器] 嘗試從 FinnHub 獲取 {ticker} 的新聞")
+        logger.info(f"[新聞聚合器] 嘗試從 FinnHub 取得 {ticker} 的新聞")
         finnhub_start = datetime.now()
         finnhub_news = self._get_finnhub_realtime_news(ticker, hours_back)
         finnhub_time = (datetime.now() - finnhub_start).total_seconds()
         
         if finnhub_news:
-            logger.info(f"[新聞聚合器] 成功從 FinnHub 獲取 {len(finnhub_news)} 條新聞，耗時: {finnhub_time:.2f}秒")
+            logger.info(f"[新聞聚合器] 成功從 FinnHub 取得 {len(finnhub_news)} 條新聞，耗時: {finnhub_time:.2f}秒")
         else:
             logger.info(f"[新聞聚合器] FinnHub 未返回新聞，耗時: {finnhub_time:.2f}秒")
             
         all_news.extend(finnhub_news)
         
         # 2. Alpha Vantage新聞
-        logger.info(f"[新聞聚合器] 嘗試從 Alpha Vantage 獲取 {ticker} 的新聞")
+        logger.info(f"[新聞聚合器] 嘗試從 Alpha Vantage 取得 {ticker} 的新聞")
         av_start = datetime.now()
         av_news = self._get_alpha_vantage_news(ticker, hours_back)
         av_time = (datetime.now() - av_start).total_seconds()
         
         if av_news:
-            logger.info(f"[新聞聚合器] 成功從 Alpha Vantage 獲取 {len(av_news)} 條新聞，耗時: {av_time:.2f}秒")
+            logger.info(f"[新聞聚合器] 成功從 Alpha Vantage 取得 {len(av_news)} 條新聞，耗時: {av_time:.2f}秒")
         else:
             logger.info(f"[新聞聚合器] Alpha Vantage 未返回新聞，耗時: {av_time:.2f}秒")
             
@@ -83,13 +83,13 @@ class RealtimeNewsAggregator:
         
         # 3. NewsAPI (如果配置了)
         if self.newsapi_key:
-            logger.info(f"[新聞聚合器] 嘗試從 NewsAPI 獲取 {ticker} 的新聞")
+            logger.info(f"[新聞聚合器] 嘗試從 NewsAPI 取得 {ticker} 的新聞")
             newsapi_start = datetime.now()
             newsapi_news = self._get_newsapi_news(ticker, hours_back)
             newsapi_time = (datetime.now() - newsapi_start).total_seconds()
             
             if newsapi_news:
-                logger.info(f"[新聞聚合器] 成功從 NewsAPI 獲取 {len(newsapi_news)} 條新聞，耗時: {newsapi_time:.2f}秒")
+                logger.info(f"[新聞聚合器] 成功從 NewsAPI 取得 {len(newsapi_news)} 條新聞，耗時: {newsapi_time:.2f}秒")
             else:
                 logger.info(f"[新聞聚合器] NewsAPI 未返回新聞，耗時: {newsapi_time:.2f}秒")
                 
@@ -110,7 +110,7 @@ class RealtimeNewsAggregator:
         
         # 記錄總體情況
         total_time = (datetime.now() - start_time).total_seconds()
-        logger.info(f"[新聞聚合器] {ticker} 的新聞聚合完成，總共獲取 {len(sorted_news)} 條新聞，總耗時: {total_time:.2f}秒")
+        logger.info(f"[新聞聚合器] {ticker} 的新聞聚合完成，總共取得 {len(sorted_news)} 條新聞，總耗時: {total_time:.2f}秒")
         
         # 限制新聞數量為最新的max_news條
         if len(sorted_news) > max_news:
@@ -126,7 +126,7 @@ class RealtimeNewsAggregator:
         return sorted_news
     
     def _get_finnhub_realtime_news(self, ticker: str, hours_back: int) -> List[NewsItem]:
-        """獲取FinnHub實時新聞"""
+        """取得FinnHub實時新聞"""
         if not self.finnhub_key:
             return []
         
@@ -172,11 +172,11 @@ class RealtimeNewsAggregator:
             return news_items
             
         except Exception as e:
-            logger.error(f"FinnHub新聞獲取失敗: {e}")
+            logger.error(f"FinnHub新聞取得失敗: {e}")
             return []
     
     def _get_alpha_vantage_news(self, ticker: str, hours_back: int) -> List[NewsItem]:
-        """獲取Alpha Vantage新聞"""
+        """取得Alpha Vantage新聞"""
         if not self.alpha_vantage_key:
             return []
         
@@ -223,11 +223,11 @@ class RealtimeNewsAggregator:
             return news_items
             
         except Exception as e:
-            logger.error(f"Alpha Vantage新聞獲取失敗: {e}")
+            logger.error(f"Alpha Vantage新聞取得失敗: {e}")
             return []
     
     def _get_newsapi_news(self, ticker: str, hours_back: int) -> List[NewsItem]:
-        """獲取NewsAPI新聞"""
+        """取得NewsAPI新聞"""
         try:
             # 構建搜索查詢
             company_names = {
@@ -278,7 +278,7 @@ class RealtimeNewsAggregator:
             return news_items
             
         except Exception as e:
-            logger.error(f"NewsAPI新聞獲取失敗: {e}")
+            logger.error(f"NewsAPI新聞取得失敗: {e}")
             return []
     
     def _assess_news_urgency(self, title: str, content: str) -> str:
@@ -390,8 +390,8 @@ class RealtimeNewsAggregator:
         start_time = datetime.now()
         
         if not news_items:
-            logger.warning(f"[新聞報告] 未獲取到 {ticker} 的實時新聞資料")
-            return f"未獲取到{ticker}的實時新聞資料。"
+            logger.warning(f"[新聞報告] 未取得到 {ticker} 的實時新聞資料")
+            return f"未取得到{ticker}的實時新聞資料。"
         
         # 按緊急程度分組
         high_urgency = [n for n in news_items if n.urgency == 'high']
@@ -461,12 +461,12 @@ class RealtimeNewsAggregator:
 
 def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) -> str:
     """
-    獲取實時股票新聞的主要介面函數
+    取得實時股票新聞的主要介面函數
     """
     logger.info("[新聞分析] ========== 函數入口 ==========")
     logger.info("[新聞分析] 函數: get_realtime_stock_news")
     logger.info(f"[新聞分析] 參數: ticker={ticker}, curr_date={curr_date}, hours_back={hours_back}")
-    logger.info(f"[新聞分析] 開始獲取 {ticker} 的實時新聞，日期: {curr_date}, 回溯時間: {hours_back}小時")
+    logger.info(f"[新聞分析] 開始取得 {ticker} 的實時新聞，日期: {curr_date}, 回溯時間: {hours_back}小時")
     start_total_time = datetime.now()
     logger.info(f"[新聞分析] 開始時間: {start_total_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
     
@@ -481,11 +481,11 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
     aggregator = RealtimeNewsAggregator()
     logger.info("[新聞分析] 成功創建實時新聞聚合器實例")
     try:
-        logger.info(f"[新聞分析] 嘗試使用實時新聞聚合器獲取 {ticker} 的新聞")
+        logger.info(f"[新聞分析] 嘗試使用實時新聞聚合器取得 {ticker} 的新聞")
         start_time = datetime.now()
         logger.info(f"[新聞分析] 聚合器調用開始時間: {start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
         
-        # 獲取實時新聞
+        # 取得實時新聞
         news_items = aggregator.get_realtime_stock_news(ticker, hours_back, max_news=10)
         
         end_time = datetime.now()
@@ -495,10 +495,10 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
         logger.info(f"[新聞分析] 聚合器返回資料類型: {type(news_items)}")
         logger.info(f"[新聞分析] 聚合器傳回資料: {news_items}")
         
-        # 如果成功獲取到新聞
+        # 如果成功取得到新聞
         if news_items and len(news_items) > 0:
             news_count = len(news_items)
-            logger.info(f"[新聞分析] 實時新聞聚合器成功獲取 {news_count} 條 {ticker} 的新聞，耗時 {time_taken:.2f} 秒")
+            logger.info(f"[新聞分析] 實時新聞聚合器成功取得 {news_count} 條 {ticker} 的新聞，耗時 {time_taken:.2f} 秒")
             
             # 記錄一些新聞標題示例
             sample_titles = [item.title for item in news_items[:3]]
@@ -511,13 +511,13 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             
             total_time_taken = (datetime.now() - start_total_time).total_seconds()
             logger.info(f"[新聞分析] 成功生成 {ticker} 的新聞報告，總耗時 {total_time_taken:.2f} 秒，新聞來源: 實時新聞聚合器")
-            logger.info("[新聞分析] ========== 實時新聞聚合器獲取成功，函數即將返回 ==========")
+            logger.info("[新聞分析] ========== 實時新聞聚合器取得成功，函數即將返回 ==========")
             return report
         else:
-            logger.warning(f"[新聞分析] 實時新聞聚合器未獲取到 {ticker} 的新聞，耗時 {time_taken:.2f} 秒，嘗試使用備用新聞源")
-            # 如果沒有獲取到新聞，繼續嘗試備用方案
+            logger.warning(f"[新聞分析] 實時新聞聚合器未取得到 {ticker} 的新聞，耗時 {time_taken:.2f} 秒，嘗試使用備用新聞源")
+            # 如果沒有取得到新聞，繼續嘗試備用方案
     except Exception as e:
-        logger.error(f"[新聞分析] 實時新聞聚合器獲取失敗: {e}，將嘗試備用新聞源")
+        logger.error(f"[新聞分析] 實時新聞聚合器取得失敗: {e}，將嘗試備用新聞源")
         logger.error(f"[新聞分析] 異常詳情: {type(e).__name__}: {str(e)}")
         import traceback
         logger.error(f"[新聞分析] 異常堆棧: {traceback.format_exc()}")
@@ -529,7 +529,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
         
         # 美股使用英文關鍵詞進行搜索
         search_query = f"{ticker} stock news"
-        logger.info(f"[新聞分析] 開始從Google獲取 {ticker} 的新聞資料，查詢: {search_query}")
+        logger.info(f"[新聞分析] 開始從Google取得 {ticker} 的新聞資料，查詢: {search_query}")
         
         start_time = datetime.now()
         google_news = get_google_news(search_query, curr_date, 1)
@@ -537,11 +537,11 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
         time_taken = (end_time - start_time).total_seconds()
         
         if google_news and len(google_news.strip()) > 0:
-            # 估算獲取的新聞數量
+            # 估算取得的新聞數量
             news_lines = google_news.strip().split('\n')
             news_count = sum(1 for line in news_lines if line.startswith('###'))
             
-            logger.info(f"[新聞分析] 成功獲取 Google 新聞，估計 {news_count} 條新聞，耗時 {time_taken:.2f} 秒")
+            logger.info(f"[新聞分析] 成功取得 Google 新聞，估計 {news_count} 條新聞，耗時 {time_taken:.2f} 秒")
             
             # 記錄一些新聞標題示例
             sample_titles = [line.replace('### ', '') for line in news_lines if line.startswith('### ')][:3]
@@ -551,13 +551,13 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             logger.info("[新聞分析] 成功生成 Google 新聞報告，新聞來源: Google")
             return google_news
         else:
-            logger.warning(f"[新聞分析] Google 新聞未獲取到 {ticker} 的新聞資料，耗時 {time_taken:.2f} 秒")
+            logger.warning(f"[新聞分析] Google 新聞未取得到 {ticker} 的新聞資料，耗時 {time_taken:.2f} 秒")
     except Exception as e:
-        logger.error(f"[新聞分析] Google 新聞獲取失敗: {e}，所有備用方案均已嘗試")
+        logger.error(f"[新聞分析] Google 新聞取得失敗: {e}，所有備用方案均已嘗試")
     
     # 所有方法都失敗，返回錯誤訊息
     total_time_taken = (datetime.now() - start_total_time).total_seconds()
-    logger.error(f"[新聞分析] {ticker} 的所有新聞獲取方法均已失敗，總耗時 {total_time_taken:.2f} 秒")
+    logger.error(f"[新聞分析] {ticker} 的所有新聞取得方法均已失敗，總耗時 {total_time_taken:.2f} 秒")
     
     # 記錄詳細的失敗資訊
     failure_details = {
@@ -567,19 +567,19 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
         "回溯時間": f"{hours_back}小時",
         "總耗時": f"{total_time_taken:.2f}秒"
     }
-    logger.error(f"[新聞分析] 新聞獲取失敗詳情: {failure_details}")
+    logger.error(f"[新聞分析] 新聞取得失敗詳情: {failure_details}")
     
     return f"""
-實時新聞獲取失敗 - {ticker}
+實時新聞取得失敗 - {ticker}
 分析日期: {curr_date}
 
-錯誤訊息: 所有可用的新聞源都未能獲取到相關新聞
+錯誤訊息: 所有可用的新聞源都未能取得到相關新聞
 
 備用建議:
 1. 檢查網路連接和API密鑰配置
 2. 使用基礎新聞分析作為備選
 3. 關注官方財經媒體的最新報道
-4. 考慮使用專業金融終端獲取實時新聞
+4. 考慮使用專業金融終端取得實時新聞
 
-注: 實時新聞獲取依賴外部 API 服務的可用性。
+注: 實時新聞取得依賴外部 API 服務的可用性。
 """

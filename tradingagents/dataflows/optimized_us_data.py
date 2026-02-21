@@ -13,7 +13,7 @@ import pandas as pd
 from .cache_manager import get_cache
 from .config import get_config
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -44,7 +44,7 @@ class OptimizedUSDataProvider:
     def get_stock_data(self, symbol: str, start_date: str, end_date: str, 
                       force_refresh: bool = False) -> str:
         """
-        獲取美股資料 - 優先使用快取
+        取得美股資料 - 優先使用快取
         
         Args:
             symbol: 股票代碼
@@ -55,7 +55,7 @@ class OptimizedUSDataProvider:
         Returns:
             格式化的股票資料字串
         """
-        logger.info(f"獲取美股資料: {symbol} ({start_date} 到 {end_date})")
+        logger.info(f"取得美股資料: {symbol} ({start_date} 到 {end_date})")
         
         # 檢查快取（除非強制刷新）
         if not force_refresh:
@@ -82,13 +82,13 @@ class OptimizedUSDataProvider:
                     logger.info(f"從快取載入美股資料: {symbol}")
                     return cached_data
         
-        # 快取未命中，從API獲取 - 優先使用FINNHUB
+        # 快取未命中，從API取得 - 優先使用FINNHUB
         formatted_data = None
         data_source = None
 
         # 嘗試FINNHUB API（優先）
         try:
-            logger.info(f"從FINNHUB API獲取資料: {symbol}")
+            logger.info(f"從FINNHUB API取得資料: {symbol}")
             self._wait_for_rate_limit()
 
             formatted_data = self._get_data_from_finnhub(symbol, start_date, end_date)
@@ -103,10 +103,10 @@ class OptimizedUSDataProvider:
             logger.error(f"FINNHUB API調用失敗: {e}")
             formatted_data = None
 
-        # 備用方案：使用 Yahoo Finance 獲取資料
+        # 備用方案：使用 Yahoo Finance 取得資料
         if not formatted_data:
             try:
-                logger.info(f"從Yahoo Finance API獲取資料: {symbol}")
+                logger.info(f"從Yahoo Finance API取得資料: {symbol}")
                 self._wait_for_rate_limit()
 
                 ticker = yf.Ticker(symbol.upper())
@@ -155,7 +155,7 @@ class OptimizedUSDataProvider:
             if col in data.columns:
                 data[col] = data[col].round(2)
         
-        # 獲取最新價格和統計資訊
+        # 取得最新價格和統計資訊
         latest_price = data['Close'].iloc[-1]
         price_change = data['Close'].iloc[-1] - data['Close'].iloc[0]
         price_change_pct = (price_change / data['Close'].iloc[0]) * 100
@@ -203,7 +203,7 @@ class OptimizedUSDataProvider:
         return result
     
     def _try_get_old_cache(self, symbol: str, start_date: str, end_date: str) -> Optional[str]:
-        """嘗試獲取過期的快取資料作為備用"""
+        """嘗試取得過期的快取資料作為備用"""
         try:
             # 查找任何相關的快取，不考慮TTL
             for metadata_file in self.cache.metadata_dir.glob(f"*_meta.json"):
@@ -228,26 +228,26 @@ class OptimizedUSDataProvider:
         return None
 
     def _get_data_from_finnhub(self, symbol: str, start_date: str, end_date: str) -> str:
-        """從FINNHUB API獲取股票資料"""
+        """從FINNHUB API取得股票資料"""
         try:
             import finnhub
             import os
             from datetime import datetime
 
 
-            # 獲取API密鑰
+            # 取得API密鑰
             api_key = os.getenv('FINNHUB_API_KEY')
             if not api_key:
                 return None
 
             client = finnhub.Client(api_key=api_key)
 
-            # 獲取實時報價
+            # 取得實時報價
             quote = client.quote(symbol.upper())
             if not quote or 'c' not in quote:
                 return None
 
-            # 獲取公司資訊
+            # 取得公司資訊
             profile = client.company_profile2(symbol=symbol.upper())
             company_name = profile.get('name', symbol.upper()) if profile else symbol.upper()
 
@@ -298,7 +298,7 @@ class OptimizedUSDataProvider:
 - 模擬漲跌: {random.uniform(-5, 5):+.2f}%
 
 ## 重要提示
-由於API限制或網路問題，無法獲取即時資料。
+由於API限制或網路問題，無法取得即時資料。
 建議稍後重試或檢查網路連接。
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -309,7 +309,7 @@ class OptimizedUSDataProvider:
 _us_data_provider = None
 
 def get_optimized_us_data_provider() -> OptimizedUSDataProvider:
-    """獲取全局美股資料提供器實例"""
+    """取得全局美股資料提供器實例"""
     global _us_data_provider
     if _us_data_provider is None:
         _us_data_provider = OptimizedUSDataProvider()
@@ -319,7 +319,7 @@ def get_optimized_us_data_provider() -> OptimizedUSDataProvider:
 def get_us_stock_data_cached(symbol: str, start_date: str, end_date: str, 
                            force_refresh: bool = False) -> str:
     """
-    獲取美股資料的便捷函數
+    取得美股資料的便捷函數
     
     Args:
         symbol: 股票代碼

@@ -23,7 +23,7 @@ def is_windows_11():
     return False
 
 def get_win11_chromadb_client():
-    '''獲取Windows 11優化的ChromaDB客戶端'''
+    '''取得Windows 11優化的ChromaDB客戶端'''
     # Windows 11 對 ChromaDB 支持更好，可以使用更現代的配置
     settings = Settings(
         allow_reset=True,

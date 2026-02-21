@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -94,7 +94,7 @@ class ConfigManager:
             load_dotenv(env_file, override=True)
 
     def _get_env_api_key(self, provider: str) -> str:
-        """從環境變量獲取API密鑰"""
+        """從環境變量取得API密鑰"""
         env_key_map = {
             "openai": "OPENAI_API_KEY",
             "anthropic": "ANTHROPIC_API_KEY"
@@ -272,7 +272,7 @@ class ConfigManager:
                 data = json.load(f)
                 models = [ModelConfig(**item) for item in data]
 
-                # 獲取設定
+                # 取得設定
                 settings = self.load_settings()
                 openai_enabled = settings.get("openai_enabled", False)
 
@@ -460,7 +460,7 @@ class ConfigManager:
         return settings
 
     def get_env_config_status(self) -> Dict[str, Any]:
-        """獲取.env配置狀態"""
+        """取得.env配置狀態"""
         return {
             "env_file_exists": (Path(__file__).parent.parent.parent / ".env").exists(),
             "api_keys": {
@@ -483,12 +483,12 @@ class ConfigManager:
             logger.error(f"保存設定失敗: {e}")
     
     def get_enabled_models(self) -> List[ModelConfig]:
-        """獲取啟用的模型"""
+        """取得啟用的模型"""
         models = self.load_models()
         return [model for model in models if model.enabled and model.api_key]
     
     def get_model_by_name(self, provider: str, model_name: str) -> Optional[ModelConfig]:
-        """根據名稱獲取模型配置"""
+        """根據名稱取得模型配置"""
         models = self.load_models()
         for model in models:
             if model.provider == provider and model.model_name == model_name:
@@ -496,13 +496,13 @@ class ConfigManager:
         return None
     
     def get_usage_statistics(self, days: int = 30) -> Dict[str, Any]:
-        """獲取使用統計"""
-        # 優先使用MongoDB獲取統計
+        """取得使用統計"""
+        # 優先使用MongoDB取得統計
         if self.mongodb_storage and self.mongodb_storage.is_connected():
             try:
-                # 從MongoDB獲取基礎統計
+                # 從MongoDB取得基礎統計
                 stats = self.mongodb_storage.get_usage_statistics(days)
-                # 獲取供應商統計
+                # 取得供應商統計
                 provider_stats = self.mongodb_storage.get_provider_statistics(days)
                 
                 if stats:
@@ -510,7 +510,7 @@ class ConfigManager:
                     stats["records_count"] = stats.get("total_requests", 0)
                     return stats
             except Exception as e:
-                logger.error(f"MongoDB統計獲取失敗，回退到JSON 檔案: {e}")
+                logger.error(f"MongoDB統計取得失敗，回退到JSON 檔案: {e}")
         
         # 回退到JSON 檔案統計
         records = self.load_usage_records()
@@ -560,7 +560,7 @@ class ConfigManager:
         }
     
     def get_data_dir(self) -> str:
-        """獲取資料目錄路徑"""
+        """取得資料目錄路徑"""
         settings = self.load_settings()
         data_dir = settings.get("data_dir")
         if not data_dir:
@@ -615,7 +615,7 @@ class ConfigManager:
         return settings.get("openai_enabled", False)
     
     def get_openai_config_status(self) -> Dict[str, Any]:
-        """獲取OpenAI配置狀態"""
+        """取得OpenAI配置狀態"""
         openai_key = os.getenv("OPENAI_API_KEY", "")
         key_valid = self.validate_openai_api_key_format(openai_key) if openai_key else False
         
@@ -668,7 +668,7 @@ class TokenTracker:
         settings = self.config_manager.load_settings()
         threshold = settings.get("cost_alert_threshold", 100.0)
 
-        # 獲取今日總成本
+        # 取得今日總成本
         today_stats = self.config_manager.get_usage_statistics(1)
         total_today = today_stats["total_cost"]
 
@@ -677,7 +677,7 @@ class TokenTracker:
                           extra={'cost': total_today, 'threshold': threshold, 'event_type': 'cost_alert'})
 
     def get_session_cost(self, session_id: str) -> float:
-        """獲取會話成本"""
+        """取得會話成本"""
         records = self.config_manager.load_usage_records()
         session_cost = sum(record.cost for record in records if record.session_id == session_id)
         return session_cost
@@ -694,7 +694,7 @@ class TokenTracker:
 
 # 全局配置管理器實例 - 使用項目根目錄的配置
 def _get_project_config_dir():
-    """獲取項目根目錄的配置目錄"""
+    """取得項目根目錄的配置目錄"""
     # 從當前檔案位置推斷項目根目錄
     current_file = Path(__file__)  # tradingagents/config/config_manager.py
     project_root = current_file.parent.parent.parent  # 向上三級到項目根目錄

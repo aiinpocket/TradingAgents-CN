@@ -13,7 +13,7 @@ from typing import Dict, List, Any, Optional
 from collections import defaultdict, Counter
 import argparse
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -114,7 +114,7 @@ class DataCallAnalyzer:
         patterns = [
             (r'.*\[資料取得\].*symbol=(\w+).*start_date=([^,]+).*end_date=([^,]+)', 'data_fetch'),
             (r'.*\[工具調用\].*(\w+)', 'tool_call'),
-            (r'.*\[統一介面\].*獲取(\w+)股票資料', 'unified_call'),
+            (r'.*\[統一介面\].*取得(\w+)股票資料', 'unified_call'),
             (r'.*\[(YFinance|FinnHub)\].*調用參數.*symbol=(\w+)', 'data_source_call')
         ]
         

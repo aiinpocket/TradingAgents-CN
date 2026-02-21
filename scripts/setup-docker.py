@@ -8,7 +8,7 @@ import os
 import shutil
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -78,7 +78,7 @@ def setup_docker_env():
     # 顯示下一步操作
     logger.info(f"\n 下一步操作：")
     logger.info(f"1. 編輯.env 檔案，填入您的API密鑰")
-    logger.info(f"2. 運行: docker-compose up -d")
+    logger.info(f"2. 執行: docker-compose up -d")
     logger.info(f"3. 訪問: http://localhost:8501")
     
     return True
@@ -97,13 +97,13 @@ def check_docker():
         logger.error(f" 未找到docker-compose，請確保Docker Desktop已正確安裝")
         return False
     
-    # 檢查Docker是否運行
+    # 檢查Docker是否執行
     try:
         import subprocess
         result = subprocess.run(['docker', 'info'], 
                               capture_output=True, text=True, timeout=10)
         if result.returncode != 0:
-            logger.error(f" Docker未運行，請啟動Docker Desktop")
+            logger.error(f" Docker未執行，請啟動Docker Desktop")
             return False
     except Exception as e:
         logger.error(f" Docker檢查失敗: {e}")

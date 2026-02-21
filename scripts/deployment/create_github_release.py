@@ -9,13 +9,13 @@ import json
 import subprocess
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
 
 def run_command(command, cwd=None):
-    """運行命令並返回結果（不使用 shell=True，避免命令注入風險）"""
+    """執行命令並返回結果（不使用 shell=True，避免命令注入風險）"""
     import shlex
     try:
         args = shlex.split(command) if isinstance(command, str) else command

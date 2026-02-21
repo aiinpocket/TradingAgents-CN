@@ -52,8 +52,8 @@ def test_config_manager_import():
         return False
 
 def test_streamlit_components():
-    """測試Streamlit組件"""
-    print("\n 測試Streamlit組件")
+    """測試Streamlit元件"""
+    print("\n 測試Streamlit元件")
     print("=" * 50)
     
     try:
@@ -68,7 +68,7 @@ def test_streamlit_components():
         
         return True
     except Exception as e:
-        print(f" Streamlit組件匯入失敗: {e}")
+        print(f" Streamlit元件匯入失敗: {e}")
         return False
 
 def main():
@@ -77,7 +77,7 @@ def main():
     print("=" * 60)
     
     tests = [
-        ("Streamlit組件", test_streamlit_components),
+        ("Streamlit元件", test_streamlit_components),
         ("配置管理器", test_config_manager_import),
         ("配置頁面", test_config_page_import),
     ]

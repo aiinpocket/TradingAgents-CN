@@ -11,7 +11,7 @@ from pathlib import Path
 from datetime import datetime
 
 def get_log_files():
-    """獲取所有日誌檔案"""
+    """取得所有日誌檔案"""
     logs_dir = Path("logs")
     if not logs_dir.exists():
         return []
@@ -211,7 +211,7 @@ def main():
                     print(" 請輸入關鍵詞")
             elif choice == "5":
                 print(" 查看Docker容器日誌...")
-                print(" 運行以下命令查看Docker日誌:")
+                print(" 執行以下命令查看Docker日誌:")
                 print("   docker-compose logs -f web")
                 print("   docker logs TradingAgents-web")
             else:

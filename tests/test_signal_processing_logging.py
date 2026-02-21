@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試信號處理模塊的日誌記錄修複
+測試信號處理模組的日誌記錄修複
 """
 
 import os
@@ -11,8 +11,8 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 def test_signal_processing_logging():
-    """測試信號處理模塊的日誌記錄"""
-    print("\n 測試信號處理模塊日誌記錄")
+    """測試信號處理模組的日誌記錄"""
+    print("\n 測試信號處理模組日誌記錄")
     print("=" * 80)
     
     try:
@@ -107,7 +107,7 @@ def test_logging_extraction():
     print("=" * 80)
     
     try:
-        # 模擬信號處理模塊的調用
+        # 模擬信號處理模組的調用
         from tradingagents.utils.tool_logging import log_graph_module
         
         # 創建一個測試函數來驗證日誌裝飾器
@@ -176,7 +176,7 @@ def main():
     # 測試1: 日誌裝飾器股票代碼提取
     results.append(test_logging_extraction())
     
-    # 測試2: 信號處理模塊日誌記錄
+    # 測試2: 信號處理模組日誌記錄
     results.append(test_signal_processing_logging())
     
     # 總結結果
@@ -189,7 +189,7 @@ def main():
     
     test_names = [
         "日誌裝飾器股票代碼提取",
-        "信號處理模塊日誌記錄"
+        "信號處理模組日誌記錄"
     ]
     
     for i, (name, result) in enumerate(zip(test_names, results)):
@@ -201,15 +201,15 @@ def main():
     if passed == total:
         print(" 所有測試通過！信號處理日誌記錄修複成功")
         print("\n 修複效果:")
-        print("1.  正確提取信號處理模塊的股票代碼")
+        print("1.  正確提取信號處理模組的股票代碼")
         print("2.  日誌顯示準確的股票資訊")
         print("3.  避免顯示 'unknown' 股票代碼")
         print("4.  支持多種參數調用方式")
         
         print("\n 解決的問題:")
-        print("-  信號處理模塊日誌顯示股票代碼為 'unknown'")
-        print("-  日誌裝飾器無法正確解析信號處理模塊的參數")
-        print("-  股票代碼提取邏輯不適配信號處理模塊")
+        print("-  信號處理模組日誌顯示股票代碼為 'unknown'")
+        print("-  日誌裝飾器無法正確解析信號處理模組的參數")
+        print("-  股票代碼提取邏輯不適配信號處理模組")
     else:
         print(" 部分測試失敗，需要進一步優化")
     

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-日誌系統初始化模塊
+日誌系統初始化模組
 在應用啟動時初始化統一日誌系統
 """
 
@@ -26,7 +26,7 @@ def init_logging(config_override: Optional[dict] = None) -> None:
     # 設定日誌系統
     logger_manager = setup_logging(config_override)
     
-    # 獲取初始化日誌器
+    # 取得初始化日誌器
     logger = get_logger('tradingagents.init')
     
     # 記錄初始化資訊
@@ -46,11 +46,11 @@ def init_logging(config_override: Optional[dict] = None) -> None:
 
 def get_session_logger(session_id: str, module_name: str = 'session') -> 'logging.Logger':
     """
-    獲取會話專用日誌器
+    取得會話專用日誌器
     
     Args:
         session_id: 會話ID
-        module_name: 模塊名稱
+        module_name: 模組名稱
         
     Returns:
         配置好的日誌器
@@ -149,17 +149,17 @@ if __name__ == "__main__":
     init_logging()
     log_startup_info()
     
-    # 測試不同模塊的日誌
+    # 測試不同模組的日誌
     web_logger = setup_web_logging()
-    web_logger.info("Web模塊日誌測試")
+    web_logger.info("Web模組日誌測試")
     
     analysis_logger = setup_analysis_logging("test-session-123")
-    analysis_logger.info("分析模塊日誌測試")
+    analysis_logger.info("分析模組日誌測試")
     
     dataflow_logger = setup_dataflow_logging()
-    dataflow_logger.info("資料流模塊日誌測試")
+    dataflow_logger.info("資料流模組日誌測試")
     
     llm_logger = setup_llm_logging()
-    llm_logger.info("LLM適配器模塊日誌測試")
+    llm_logger.info("LLM適配器模組日誌測試")
     
     log_shutdown_info()

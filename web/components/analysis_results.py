@@ -1,5 +1,5 @@
 """
-分析結果管理組件
+分析結果管理元件
 提供股票分析歷史結果的查看和管理功能
 """
 
@@ -43,17 +43,17 @@ def safe_timestamp_to_datetime(timestamp_value):
         return datetime.now()
 
 def get_analysis_results_dir():
-    """獲取分析結果目錄"""
+    """取得分析結果目錄"""
     results_dir = Path(__file__).parent.parent / "data"/ "analysis_results"
     results_dir.mkdir(parents=True, exist_ok=True)
     return results_dir
 
 def get_favorites_file():
-    """獲取收藏檔案路徑"""
+    """取得收藏檔案路徑"""
     return get_analysis_results_dir() / "favorites.json"
 
 def get_tags_file():
-    """獲取標籤檔案路徑"""
+    """取得標籤檔案路徑"""
     return get_analysis_results_dir() / "tags.json"
 
 def load_favorites():
@@ -117,7 +117,7 @@ def remove_tag_from_analysis(analysis_id, tag):
         save_tags(tags)
 
 def get_analysis_tags(analysis_id):
-    """獲取分析結果的標籤"""
+    """取得分析結果的標籤"""
     tags = load_tags()
     return tags.get(analysis_id, [])
 
@@ -490,7 +490,7 @@ def render_results_cards(results: List[Dict[str, Any]]):
     else:
         page = 0
     
-    # 獲取當前頁資料
+    # 取得當前頁資料
     start_idx = page * page_size
     end_idx = min(start_idx + page_size, len(results))
     page_results = results[start_idx:end_idx]
@@ -704,7 +704,7 @@ def render_tags_management(results: List[Dict[str, Any]]):
     
     st.subheader("標籤管理")
     
-    # 獲取所有標籤
+    # 取得所有標籤
     all_tags = set()
     tags_data = load_tags()
     for tag_list in tags_data.values():
@@ -1184,7 +1184,7 @@ def render_detailed_analysis_content(selected_result):
         
         return
     
-    # 定義分析模塊
+    # 定義分析模組
     analysis_modules = [
         {
             'key': 'market_report',
@@ -1248,7 +1248,7 @@ def render_detailed_analysis_content(selected_result):
         }
     ]
     
-    # 過濾出有資料的模塊
+    # 過濾出有資料的模組
     available_modules = []
     for module in analysis_modules:
         if module['key'] in selected_result and selected_result[module['key']]:
@@ -1263,7 +1263,7 @@ def render_detailed_analysis_content(selected_result):
                 available_modules.append(module)
 
     if not available_modules:
-        # 如果沒有預定義模塊的資料，顯示所有可用的分析資料
+        # 如果沒有預定義模組的資料，顯示所有可用的分析資料
         st.info("顯示完整分析報告資料")
         
         # 排除一些基礎字段，只顯示分析相關的資料
@@ -1271,7 +1271,7 @@ def render_detailed_analysis_content(selected_result):
                         'research_depth', 'status', 'summary', 'performance', 
                         'is_favorite', 'tags', 'full_data'}
         
-        # 獲取所有分析相關的資料
+        # 取得所有分析相關的資料
         analysis_data = {}
         for key, value in selected_result.items():
             if key not in excluded_keys and value:
@@ -1349,7 +1349,7 @@ def render_detailed_analysis_content(selected_result):
                 st.json(selected_result)
         return
 
-    # 只為有資料的模塊創建標籤頁
+    # 只為有資料的模組創建標籤頁
     tabs = st.tabs([module['title'] for module in available_modules])
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
@@ -1460,7 +1460,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                     from pathlib import Path
                     import os
 
-                    # 獲取當前日期
+                    # 取得當前日期
                     current_date = datetime.now().strftime('%Y-%m-%d')
 
                     # 構建報告路徑
@@ -1573,7 +1573,7 @@ def show_expanded_detail(result):
                 st.info("暫無詳細分析報告")
             return
 
-        # 獲取報告資料
+        # 取得報告資料
         reports = result['reports']
 
         # 為報告名稱添加中文標題和圖標

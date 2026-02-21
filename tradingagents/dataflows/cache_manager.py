@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any, Union, List
 import hashlib
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -28,7 +28,7 @@ class StockDataCache:
             cache_dir: 快取目錄路徑，預設為 tradingagents/dataflows/data_cache
         """
         if cache_dir is None:
-            # 獲取當前檔案所在目錄
+            # 取得當前檔案所在目錄
             current_dir = Path(__file__).parent
             cache_dir = current_dir / "data_cache"
 
@@ -148,7 +148,7 @@ class StockDataCache:
         return f"{symbol}_{data_type}_{cache_key}"
     
     def _get_cache_path(self, data_type: str, cache_key: str, file_format: str = "json", symbol: str = None) -> Path:
-        """獲取快取檔案路徑 - 支持市場分類"""
+        """取得快取檔案路徑 - 支持市場分類"""
         # 統一使用美股市場類型
         market_type = 'us'
 
@@ -165,7 +165,7 @@ class StockDataCache:
         return base_dir / f"{cache_key}.{file_format}"
     
     def _get_metadata_path(self, cache_key: str) -> Path:
-        """獲取中繼資料檔路徑"""
+        """取得中繼資料檔路徑"""
         return self.metadata_dir / f"{cache_key}_meta.json"
     
     def _save_metadata(self, cache_key: str, metadata: Dict[str, Any]):
@@ -203,7 +203,7 @@ class StockDataCache:
                 cache_type = f"{market_type}_{data_type}"
                 max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
             else:
-                # 從中繼資料中獲取資訊
+                # 從中繼資料中取得資訊
                 symbol = metadata.get('symbol', '')
                 data_type = metadata.get('data_type', 'stock_data')
                 market_type = self._determine_market_type(symbol)
@@ -285,7 +285,7 @@ class StockDataCache:
         }
         self._save_metadata(cache_key, metadata)
 
-        # 獲取描述資訊
+        # 取得描述資訊
         cache_type = f"{market_type}_stock_data"
         desc = self.cache_config.get(cache_type, {}).get('description', '股票資料')
         logger.info(f"{desc}已快取: {symbol} ({data_source}) -> {cache_key}")
@@ -538,7 +538,7 @@ class StockDataCache:
         logger.info(f"已清理 {cleared_count} 個過期快取檔案")
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取快取統計資訊"""
+        """取得快取統計資訊"""
         stats = {
             'total_files': 0,
             'stock_data_count': 0,
@@ -578,7 +578,7 @@ class StockDataCache:
         return stats
 
     def get_content_length_config_status(self) -> Dict[str, Any]:
-        """獲取內容長度配置狀態"""
+        """取得內容長度配置狀態"""
         available_providers = self._check_provider_availability()
         long_text_providers = self.content_length_config['long_text_providers']
         available_long_providers = [p for p in available_providers if p in long_text_providers]
@@ -599,7 +599,7 @@ class StockDataCache:
 _cache_instance = None
 
 def get_cache() -> StockDataCache:
-    """獲取全局快取實例"""
+    """取得全局快取實例"""
     global _cache_instance
     if _cache_instance is None:
         _cache_instance = StockDataCache()

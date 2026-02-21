@@ -14,7 +14,7 @@ import sys
 import shutil
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -92,7 +92,7 @@ def check_streamlit_config():
             logger.error(f"   讀取配置檔失敗: {e}")
     else:
         logger.error(f"   配置檔不存在")
-        logger.info(f"   建議運行: python web/run_web.py 來創建配置檔")
+        logger.info(f"   建議執行: python web/run_web.py 來創建配置檔")
 
 def set_environment_variables():
     """設定環境變量禁用位元組碼生成"""

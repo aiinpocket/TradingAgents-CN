@@ -15,13 +15,13 @@ def test_smart_config():
     try:
         from smart_config import get_smart_config, get_config
         
-        # 獲取配置管理器
+        # 取得配置管理器
         config_manager = get_smart_config()
         config_manager.print_status()
         
-        # 獲取配置資訊
+        # 取得配置資訊
         config = get_config()
-        print(f"\n 配置獲取成功")
+        print(f"\n 配置取得成功")
         print(f"主要快取後端: {config['cache']['primary_backend']}")
         
         return True, config_manager
@@ -38,7 +38,7 @@ def test_adaptive_cache():
     try:
         from adaptive_cache_manager import get_cache
         
-        # 獲取快取管理器
+        # 取得快取管理器
         cache = get_cache()
         
         # 顯示快取狀態
@@ -214,7 +214,7 @@ def generate_test_report(results):
     print("\n 建議:")
     
     if all(results.values()):
-        print(" 所有測試通過！系統可以正常運行")
+        print(" 所有測試通過！系統可以正常執行")
         print(" 可以開始準備上游貢獻")
     else:
         print(" 部分測試失敗，需要檢查以下問題:")
@@ -284,6 +284,6 @@ if __name__ == "__main__":
         print("\n需要解決的問題:")
         print("1. 檢查依賴安裝")
         print("2. 修複配置問題")
-        print("3. 重新運行測試")
+        print("3. 重新執行測試")
     
     sys.exit(0 if success else 1)

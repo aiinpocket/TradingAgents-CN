@@ -238,7 +238,7 @@ def main():
     print("   - 環境變量配置")
     print("=" * 70)
     
-    # 運行所有測試
+    # 執行所有測試
     tests = [
         ("Python環境", test_python_environment),
         ("VSCode設定", test_vscode_settings),
@@ -276,8 +276,8 @@ def main():
         print("\n VSCode配置完全正確！")
         print("\n 現在您可以:")
         print("    在VSCode中正常開發和調試")
-        print("    使用集成終端運行Python代碼")
-        print("    運行測試和格式化代碼")
+        print("    使用集成終端執行Python代碼")
+        print("    執行測試和格式化代碼")
         print("    使用智能代碼補全和錯誤檢查")
     elif passed >= total * 0.8:
         print("\n VSCode配置基本正確！")

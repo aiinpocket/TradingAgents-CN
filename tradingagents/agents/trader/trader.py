@@ -32,7 +32,7 @@ def create_trader(llm, memory):
 
         # 檢查memory是否可用
         if memory is not None:
-            logger.debug("memory可用，獲取歷史記憶")
+            logger.debug("memory可用，取得歷史記憶")
             past_memories = memory.get_memories(curr_situation, n_matches=2)
             past_memory_str = ""
             for i, rec in enumerate(past_memories, 1):

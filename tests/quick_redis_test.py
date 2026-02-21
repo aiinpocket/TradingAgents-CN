@@ -10,7 +10,7 @@ import sys
 def quick_redis_test(host=None, port=None, password=None):
     """快速Redis連接和性能測試"""
     
-    # 從環境變量獲取配置
+    # 從環境變量取得配置
     host = host or os.getenv('REDIS_HOST', 'localhost')
     port = port or int(os.getenv('REDIS_PORT', 6379))
     password = password or os.getenv('REDIS_PASSWORD')
@@ -90,7 +90,7 @@ def quick_redis_test(host=None, port=None, password=None):
         print(f"\n Redis服務器資訊:")
         info = r.info()
         print(f"  Redis版本: {info.get('redis_version', 'N/A')}")
-        print(f"  運行模式: {info.get('redis_mode', 'N/A')}")
+        print(f"  執行模式: {info.get('redis_mode', 'N/A')}")
         print(f"  已連接客戶端: {info.get('connected_clients', 'N/A')}")
         print(f"  內存使用: {info.get('used_memory_human', 'N/A')}")
         

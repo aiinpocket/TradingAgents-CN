@@ -1,5 +1,5 @@
 """
-分析結果顯示組件
+分析結果顯示元件
 """
 
 import streamlit as st
@@ -40,7 +40,7 @@ def render_results(results):
         elif 'timeout' in error_str or 'connection' in error_str or 'network' in error_str:
             st.info("**解決方案**: 網路連線逾時，請確認網路連線正常後重試。")
         else:
-            st.info("**解決方案**: 請檢查日誌以獲取詳細錯誤資訊，並確認環境配置正確後重新執行分析。")
+            st.info("**解決方案**: 請檢查日誌以取得詳細錯誤資訊，並確認環境配置正確後重新執行分析。")
         return
 
     # 投資決策摘要
@@ -215,7 +215,7 @@ def render_detailed_analysis(state):
 
     st.subheader("詳細分析報告")
 
-    # 定義分析模塊
+    # 定義分析模組
     analysis_modules = [
         {
             'key': 'market_report',
@@ -269,7 +269,7 @@ def render_detailed_analysis(state):
         }
     ]
 
-    # 過濾出有資料的模塊
+    # 過濾出有資料的模組
     available_modules = []
     for module in analysis_modules:
         if module['key'] in state and state[module['key']]:

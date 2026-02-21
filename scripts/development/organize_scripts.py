@@ -8,7 +8,7 @@ import os
 import shutil
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -112,13 +112,13 @@ def create_scripts_structure():
 # 進入項目根目錄
 cd C:\\code\\TradingAgentsCN
 
-# 運行腳本
+# 執行腳本
 python scripts/{category}/script_name.py
 ```
 
 ## 註意事項
 
-- 確保在項目根目錄下運行腳本
+- 確保在項目根目錄下執行腳本
 - 檢查腳本的依賴要求
 - 某些腳本可能需要管理員權限
 """
@@ -197,13 +197,13 @@ python scripts/{category}/script_name.py
 ## 使用原則
 
 ### 腳本分類
-- **tests/** - 單元測試和集成測試（pytest運行）
-- **scripts/** - 工具腳本和驗證腳本（獨立運行）
+- **tests/** - 單元測試和集成測試（pytest執行）
+- **scripts/** - 工具腳本和驗證腳本（獨立執行）
 - **tools/** - 複雜的獨立工具程式
 
-### 運行方式
+### 執行方式
 ```bash
-# 從項目根目錄運行
+# 從項目根目錄執行
 cd C:\\code\\TradingAgentsCN
 
 # Python腳本
@@ -215,7 +215,7 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
 
 ## 註意事項
 
-- 所有腳本應該從項目根目錄運行
+- 所有腳本應該從項目根目錄執行
 - 檢查腳本的依賴要求
 - 某些腳本可能需要特殊權限
 - 保持腳本的獨立性和可重用性

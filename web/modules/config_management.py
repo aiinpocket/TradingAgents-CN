@@ -259,7 +259,7 @@ def render_usage_statistics():
     with col2:
         st.metric("統計週期", f"最近 {days} 天")
 
-    # 獲取統計資料
+    # 取得統計資料
     stats = config_manager.get_usage_statistics(days)
 
     if stats["total_requests"] == 0:
@@ -486,7 +486,7 @@ def render_env_status():
     """顯示.env配置狀態"""
     st.markdown("**配置狀態概覽**")
 
-    # 獲取.env配置狀態
+    # 取得.env配置狀態
     env_status = config_manager.get_env_config_status()
 
     # 顯示.env 檔案狀態

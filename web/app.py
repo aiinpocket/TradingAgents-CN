@@ -99,7 +99,7 @@ st.markdown("""
         line-height: 1.5;
     }
 
-    /* 主容器 - 緊湊的資料密集型佈局 */
+    /* 主容器 - 緊湊的資料密集型布局 */
     .main .block-container {
         padding: 1rem 1.5rem;
         max-width: 1280px;
@@ -330,7 +330,7 @@ def initialize_session_state():
 
         if session_data and 'form_config' in session_data:
             st.session_state.form_config = session_data['form_config']
-            # 只在沒有分析運行時記錄日誌，避免重複
+            # 只在沒有分析執行時記錄日誌，避免重複
             if not st.session_state.get('analysis_running', False):
                 logger.info("[配置恢複] 表單配置已恢複")
     except Exception as e:

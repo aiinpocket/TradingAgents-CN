@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 異步進度跟蹤器
-支持Redis和檔案兩種儲存方式，前端定時輪詢獲取進度
+支持Redis和檔案兩種儲存方式，前端定時輪詢取得進度
 """
 
 import json
@@ -10,7 +10,7 @@ import os
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('async_progress')
 
@@ -154,7 +154,7 @@ class AsyncProgressTracker:
 
             import redis
 
-            # 從環境變量獲取Redis配置
+            # 從環境變量取得Redis配置
             redis_host = os.getenv('REDIS_HOST', 'localhost')
             redis_port = int(os.getenv('REDIS_PORT', 6379))
             redis_password = os.getenv('REDIS_PASSWORD', None)
@@ -240,7 +240,7 @@ class AsyncProgressTracker:
         return steps
     
     def _get_analyst_display_name(self, analyst: str) -> str:
-        """獲取分析師顯示名稱（保留兼容性）"""
+        """取得分析師顯示名稱（保留兼容性）"""
         name_map = {
             'market': '市場分析師',
             'fundamentals': '基本面分析師',
@@ -251,7 +251,7 @@ class AsyncProgressTracker:
         return name_map.get(analyst, f'{analyst}分析師')
 
     def _get_analyst_step_info(self, analyst: str) -> Dict[str, str]:
-        """獲取分析師步驟資訊（名稱和描述）"""
+        """取得分析師步驟資訊（名稱和描述）"""
         analyst_info = {
             'market': {
                 "name": "市場分析",
@@ -349,18 +349,18 @@ class AsyncProgressTracker:
         if "工具調用" in message:
             # 提取工具名稱並更新描述
             if "get_stock_market_data_unified" in message:
-                step_description = "正在獲取市場資料和技術指標..."
+                step_description = "正在取得市場資料和技術指標..."
             elif "get_stock_fundamentals_unified" in message:
-                step_description = "正在獲取基本面資料和財務指標..."
+                step_description = "正在取得基本面資料和財務指標..."
             elif "get_us_stock_data" in message:
-                step_description = "正在獲取美股市場資料..."
+                step_description = "正在取得美股市場資料..."
             elif "get_us_fundamentals" in message:
-                step_description = "正在獲取美股基本面資料..."
+                step_description = "正在取得美股基本面資料..."
             else:
                 step_description = "正在調用分析工具..."
-        elif "模塊開始" in message:
+        elif "模組開始" in message:
             step_description = f"開始{current_step_info['name']}..."
-        elif "模塊完成" in message:
+        elif "模組完成" in message:
             step_description = f"{current_step_info['name']}已完成"
 
         self.progress_data.update({
@@ -391,7 +391,7 @@ class AsyncProgressTracker:
         if "開始股票分析" in message:
             return 0
         # 資料驗證階段
-        elif "驗證" in message or "預獲取" in message or "資料準備" in message:
+        elif "驗證" in message or "預取得" in message or "資料準備" in message:
             return 0
         # 環境準備階段
         elif "環境" in message or "api" in message_lower or "密鑰" in message:
@@ -405,8 +405,8 @@ class AsyncProgressTracker:
         # 引擎初始化階段
         elif "初始化" in message or "引擎" in message:
             return 4
-        # 模塊開始日誌 - 只在第一次開始時推進步驟
-        elif "模塊開始" in message:
+        # 模組開始日誌 - 只在第一次開始時推進步驟
+        elif "模組開始" in message:
             # 從日誌中提取分析師類型，匹配新的步驟名稱
             if "market_analyst" in message or "market" in message:
                 return self._find_step_by_keyword(["市場分析", "市場"])
@@ -438,12 +438,12 @@ class AsyncProgressTracker:
         elif "工具調用" in message:
             # 保持當前步驟，不推進
             return None
-        # 模塊完成日誌 - 推進到下一步
-        elif "模塊完成" in message:
-            # 模塊完成時，從當前步驟推進到下一步
-            # 不再依賴模塊名稱，而是基於當前進度推進
+        # 模組完成日誌 - 推進到下一步
+        elif "模組完成" in message:
+            # 模組完成時，從當前步驟推進到下一步
+            # 不再依賴模組名稱，而是基於當前進度推進
             next_step = min(self.current_step + 1, len(self.analysis_steps) - 1)
-            logger.debug(f"[步驟推進] 模塊完成，從步驟{self.current_step}推進到步驟{next_step}")
+            logger.debug(f"[步驟推進] 模組完成，從步驟{self.current_step}推進到步驟{next_step}")
             return next_step
 
         return None
@@ -460,7 +460,7 @@ class AsyncProgressTracker:
         return None
 
     def _get_next_step(self, keyword: str) -> Optional[int]:
-        """獲取指定步驟的下一步"""
+        """取得指定步驟的下一步"""
         current_step_index = self._find_step_by_keyword(keyword)
         if current_step_index is not None:
             return min(current_step_index + 1, len(self.analysis_steps) - 1)
@@ -553,7 +553,7 @@ class AsyncProgressTracker:
                 logger.error(f"[異步進度] 備用儲存也失敗: {backup_e}")
     
     def get_progress(self) -> Dict[str, Any]:
-        """獲取當前進度"""
+        """取得當前進度"""
         return self.progress_data.copy()
     
     def mark_completed(self, message: str = "分析完成", results: Any = None):
@@ -598,7 +598,7 @@ class AsyncProgressTracker:
             pass
 
 def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
-    """根據分析ID獲取進度"""
+    """根據分析ID取得進度"""
     try:
         # 檢查REDIS_ENABLED環境變量
         redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower() == 'true'
@@ -608,7 +608,7 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
             try:
                 import redis
 
-                # 從環境變量獲取Redis配置
+                # 從環境變量取得Redis配置
                 redis_host = os.getenv('REDIS_HOST', 'localhost')
                 redis_port = int(os.getenv('REDIS_PORT', 6379))
                 redis_password = os.getenv('REDIS_PASSWORD', None)
@@ -646,7 +646,7 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
 
         return None
     except Exception as e:
-        logger.error(f"[異步進度] 獲取進度失敗: {analysis_id}, 錯誤: {e}")
+        logger.error(f"[異步進度] 取得進度失敗: {analysis_id}, 錯誤: {e}")
         return None
 
 def format_time(seconds: float) -> str:
@@ -662,17 +662,17 @@ def format_time(seconds: float) -> str:
 
 
 def get_latest_analysis_id() -> Optional[str]:
-    """獲取最新的分析ID"""
+    """取得最新的分析ID"""
     try:
         # 檢查REDIS_ENABLED環境變量
         redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower() == 'true'
 
-        # 如果Redis啟用，先嘗試從Redis獲取
+        # 如果Redis啟用，先嘗試從Redis取得
         if redis_enabled:
             try:
                 import redis
 
-                # 從環境變量獲取Redis配置
+                # 從環境變量取得Redis配置
                 redis_host = os.getenv('REDIS_HOST', 'localhost')
                 redis_port = int(os.getenv('REDIS_PORT', 6379))
                 redis_password = os.getenv('REDIS_PASSWORD', None)
@@ -695,12 +695,12 @@ def get_latest_analysis_id() -> Optional[str]:
                         decode_responses=True
                     )
 
-                # 獲取所有progress鍵
+                # 取得所有progress鍵
                 keys = redis_client.keys("progress:*")
                 if not keys:
                     return None
 
-                # 獲取每個鍵的資料，找到最新的
+                # 取得每個鍵的資料，找到最新的
                 latest_time = 0
                 latest_id = None
 
@@ -729,7 +729,7 @@ def get_latest_analysis_id() -> Optional[str]:
         if data_dir.exists():
             progress_files = list(data_dir.glob("progress_*.json"))
             if progress_files:
-                # 按修改時間排序，獲取最新的
+                # 按修改時間排序，取得最新的
                 latest_file = max(progress_files, key=lambda f: f.stat().st_mtime)
                 # 從檔案名稱提取analysis_id
                 filename = latest_file.name
@@ -740,5 +740,5 @@ def get_latest_analysis_id() -> Optional[str]:
 
         return None
     except Exception as e:
-        logger.error(f"[恢複分析] 獲取最新分析ID失敗: {e}")
+        logger.error(f"[恢複分析] 取得最新分析ID失敗: {e}")
         return None

@@ -11,7 +11,7 @@ from datetime import datetime
 
 from tradingagents.utils.logging_init import get_logger
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('agents')
 
@@ -130,7 +130,7 @@ def log_data_source_call(source_name: str):
             
             # 記錄資料來源調用開始
             tool_logger.info(
-                f"[資料來源] {source_name} - 獲取 {symbol} 資料",
+                f"[資料來源] {source_name} - 取得 {symbol} 資料",
                 extra={
                     'data_source': source_name,
                     'symbol': symbol,
@@ -302,11 +302,11 @@ def log_analysis_step(step_name: str, symbol: str, **extra_data):
 
 def log_analysis_module(module_name: str, session_id: str = None):
     """
-    分析模塊日誌裝飾器
-    自動記錄模塊的開始和結束
+    分析模組日誌裝飾器
+    自動記錄模組的開始和結束
 
     Args:
-        module_name: 模塊名稱（如：market_analyst、fundamentals_analyst等）
+        module_name: 模組名稱（如：market_analyst、fundamentals_analyst等）
         session_id: 會話ID（可選）
     """
     def decorator(func: Callable) -> Callable:
@@ -315,9 +315,9 @@ def log_analysis_module(module_name: str, session_id: str = None):
             # 嘗試從參數中提取股票代碼
             symbol = None
 
-            # 特殊處理：信號處理模塊的參數結構
+            # 特殊處理：信號處理模組的參數結構
             if module_name == "graph_signal_processing":
-                # 信號處理模塊：process_signal(self, full_signal, stock_symbol=None)
+                # 信號處理模組：process_signal(self, full_signal, stock_symbol=None)
                 if len(args) >= 3:  # self, full_signal, stock_symbol
                     symbol = str(args[2]) if args[2] else None
                 elif 'stock_symbol' in kwargs:
@@ -346,7 +346,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
             # 生成會話ID
             actual_session_id = session_id or f"session_{int(time.time())}"
 
-            # 記錄模塊開始
+            # 記錄模組開始
             logger_manager = get_logger_manager()
 
             start_time = time.time()
@@ -365,7 +365,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
                 # 計算執行時間
                 duration = time.time() - start_time
 
-                # 記錄模塊完成
+                # 記錄模組完成
                 result_length = len(str(result)) if result else 0
                 logger_manager.log_module_complete(
                     tool_logger, module_name, symbol, actual_session_id,
@@ -379,7 +379,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
                 # 計算執行時間
                 duration = time.time() - start_time
 
-                # 記錄模塊錯誤
+                # 記錄模組錯誤
                 logger_manager.log_module_error(
                     tool_logger, module_name, symbol, actual_session_id,
                     duration, str(e),
@@ -395,7 +395,7 @@ def log_analysis_module(module_name: str, session_id: str = None):
 
 def log_analyst_module(analyst_type: str):
     """
-    分析師模塊專用裝飾器
+    分析師模組專用裝飾器
 
     Args:
         analyst_type: 分析師類型（如：market、fundamentals、technical、sentiment等）
@@ -405,7 +405,7 @@ def log_analyst_module(analyst_type: str):
 
 def log_graph_module(graph_type: str):
     """
-    圖處理模塊專用裝飾器
+    圖處理模組專用裝飾器
 
     Args:
         graph_type: 圖處理類型（如：signal_processing、workflow等）
@@ -415,7 +415,7 @@ def log_graph_module(graph_type: str):
 
 def log_dataflow_module(dataflow_type: str):
     """
-    資料流模塊專用裝飾器
+    資料流模組專用裝飾器
 
     Args:
         dataflow_type: 資料流類型（如：cache、interface、provider等）

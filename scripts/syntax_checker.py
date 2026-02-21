@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from typing import List, Tuple
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('default')
 
@@ -62,7 +62,7 @@ def main():
     logger.error(f" 開始檢查項目中的Python檔案語法錯誤...")
     logger.debug(f" Starting syntax check for Python files in the project...\n")
     
-    # 獲取當前目錄
+    # 取得當前目錄
     current_dir = os.getcwd()
     logger.info(f" 檢查目錄: {current_dir}")
     logger.info(f" Checking directory: {current_dir}\n")
@@ -107,7 +107,7 @@ def main():
             logger.error(f" 錯誤: {error_msg}")
             logger.error(f" Error: {error_msg}")
         
-        logger.error(f"\n 建議: 請修復上述語法錯誤後重新運行檢查")
+        logger.error(f"\n 建議: 請修復上述語法錯誤後重新執行檢查")
         logger.info(f" Suggestion: Please fix the above syntax errors and run the check again")
         sys.exit(1)
     else:

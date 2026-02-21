@@ -1,7 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from datetime import datetime
 
-# 匯入統一日誌系統和分析模塊日誌裝飾器
+# 匯入統一日誌系統和分析模組日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
 # 匯入統一新聞工具
@@ -26,9 +26,9 @@ def create_news_analyst(llm, toolkit):
         market_info = get_stock_market_info(ticker)
         logger.info(f"[新聞分析師] 股票類型: {market_info['market_name']}")
         
-        # 獲取公司名稱
+        # 取得公司名稱
         def _get_company_name(ticker: str, market_info: dict) -> str:
-            """根據股票代碼獲取公司名稱"""
+            """根據股票代碼取得公司名稱"""
             try:
                 us_stock_names = {
                     'AAPL': '蘋果公司',
@@ -46,14 +46,14 @@ def create_news_analyst(llm, toolkit):
                 return company_name
 
             except Exception as e:
-                logger.error(f"獲取公司名稱失敗: {e}")
+                logger.error(f"取得公司名稱失敗: {e}")
                 return ticker
         
         company_name = _get_company_name(ticker, market_info)
         logger.info(f"[新聞分析師] 公司名稱: {company_name}")
         
         # 使用統一新聞工具，簡化工具調用
-        logger.info("[新聞分析師] 使用統一新聞工具，自動識別股票類型並獲取相應新聞")
+        logger.info("[新聞分析師] 使用統一新聞工具，自動識別股票類型並取得相應新聞")
    # 創建統一新聞工具
         unified_news_tool = create_unified_news_tool(toolkit)
         unified_news_tool.name = "get_stock_news_unified"
@@ -69,7 +69,7 @@ def create_news_analyst(llm, toolkit):
 
 
 您的主要職責包括：
-1. 獲取和分析最新的實時新聞（優先15-30分鐘內的新聞）
+1. 取得和分析最新的實時新聞（優先15-30分鐘內的新聞）
 2. 評估新聞事件的緊急程度和市場影響
 3. 識別可能影響股價的關鍵資訊
 4. 分析新聞的時效性和可靠性
@@ -119,19 +119,19 @@ def create_news_analyst(llm, toolkit):
                     "\n- 絕對禁止在沒有調用工具的情況下直接回答"
                     "\n- 絕對禁止基於推測或假設生成任何分析內容"
                     "\n- 絕對禁止跳過工具調用步驟"
-                    "\n- 絕對禁止說'我無法獲取即時資料'等借口"
+                    "\n- 絕對禁止說'我無法取得即時資料'等借口"
                     "\n"
                     "\n[必須] 強制執行步驟："
                     "\n1. 您的第一個動作必須是調用 get_stock_news_unified 工具"
-                    "\n2. 該工具會自動獲取美股相關新聞"
-                    "\n3. 只有在成功獲取新聞資料後，才能開始分析"
+                    "\n2. 該工具會自動取得美股相關新聞"
+                    "\n3. 只有在成功取得新聞資料後，才能開始分析"
                     "\n4. 您的回答必須基於工具返回的真實資料"
                     "\n"
                     "\n[工具] 工具調用格式示例："
                     "\n調用: get_stock_news_unified(stock_code='{ticker}', max_news=10)"
                     "\n"
                     "\n注意：如果您不調用工具，您的回答將被視為無效並被拒絕。"
-                    "\n注意：您必須先調用工具獲取資料，然後基於資料進行分析。"
+                    "\n注意：您必須先調用工具取得資料，然後基於資料進行分析。"
                     "\n注意：沒有例外，沒有借口，必須調用工具。"
                     "\n"
                     "\n您可以訪問以下工具：{tool_names}。"
@@ -148,7 +148,7 @@ def create_news_analyst(llm, toolkit):
         prompt = prompt.partial(current_date=current_date)
         prompt = prompt.partial(ticker=ticker)
         
-        # 獲取模型資訊用於統一新聞工具的特殊處理
+        # 取得模型資訊用於統一新聞工具的特殊處理
         model_info = ""
         try:
             if hasattr(llm, 'model_name'):
@@ -178,16 +178,16 @@ def create_news_analyst(llm, toolkit):
                 logger.warning(f"[新聞分析師] {llm.__class__.__name__} 沒有調用任何工具，啟動補救機制...")
                 
                 try:
-                    # 強制獲取新聞資料
-                    logger.info("[新聞分析師] 強制調用統一新聞工具獲取新聞資料...")
+                    # 強制取得新聞資料
+                    logger.info("[新聞分析師] 強制調用統一新聞工具取得新聞資料...")
                     forced_news = unified_news_tool(stock_code=ticker, max_news=10, model_info="")
                     
                     if forced_news and len(forced_news.strip()) > 100:
-                        logger.info(f"[新聞分析師] 強制獲取新聞成功: {len(forced_news)} 字符")
+                        logger.info(f"[新聞分析師] 強制取得新聞成功: {len(forced_news)} 字符")
                         
                         # 基於真實新聞資料重新生成分析
                         forced_prompt = f"""
-您是一位專業的財經新聞分析師。請基於以下最新獲取的新聞資料，對股票 {ticker} 進行詳細的新聞分析：
+您是一位專業的財經新聞分析師。請基於以下最新取得的新聞資料，對股票 {ticker} 進行詳細的新聞分析：
 
 === 最新新聞資料 ===
 {forced_news}
@@ -198,7 +198,7 @@ def create_news_analyst(llm, toolkit):
 請基於上述真實新聞資料撰寫詳細的中文分析報告。
 """
                         
-                        logger.info("[新聞分析師] 基於強制獲取的新聞資料重新生成完整分析...")
+                        logger.info("[新聞分析師] 基於強制取得的新聞資料重新生成完整分析...")
                         forced_result = llm.invoke([{"role": "user", "content": forced_prompt}])
                         
                         if hasattr(forced_result, 'content') and forced_result.content:
@@ -208,7 +208,7 @@ def create_news_analyst(llm, toolkit):
                             logger.warning("[新聞分析師] 強制補救失敗，使用原始結果")
                             report = result.content
                     else:
-                        logger.warning("[新聞分析師] 統一新聞工具獲取失敗，使用原始結果")
+                        logger.warning("[新聞分析師] 統一新聞工具取得失敗，使用原始結果")
                         report = result.content
                         
                 except Exception as e:

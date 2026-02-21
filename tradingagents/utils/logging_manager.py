@@ -84,7 +84,7 @@ class TradingAgentsLogger:
         if config:
             return config
 
-        # 從環境變量獲取配置
+        # 從環境變量取得配置
         log_level = os.getenv('TRADINGAGENTS_LOG_LEVEL', 'INFO').upper()
         log_dir = os.getenv('TRADINGAGENTS_LOG_DIR', './logs')
 
@@ -294,7 +294,7 @@ class TradingAgentsLogger:
             return int(size_str)
     
     def get_logger(self, name: str) -> logging.Logger:
-        """獲取指定名稱的日誌器"""
+        """取得指定名稱的日誌器"""
         if name not in self.loggers:
             self.loggers[name] = logging.getLogger(name)
         return self.loggers[name]
@@ -330,9 +330,9 @@ class TradingAgentsLogger:
 
     def log_module_start(self, logger: logging.Logger, module_name: str, stock_symbol: str,
                         session_id: str, **extra_data):
-        """記錄模塊開始分析"""
+        """記錄模組開始分析"""
         logger.info(
-            f"[模塊開始] {module_name} - 股票: {stock_symbol}",
+            f"[模組開始] {module_name} - 股票: {stock_symbol}",
             extra={
                 'module_name': module_name,
                 'stock_symbol': stock_symbol,
@@ -346,10 +346,10 @@ class TradingAgentsLogger:
     def log_module_complete(self, logger: logging.Logger, module_name: str, stock_symbol: str,
                            session_id: str, duration: float, success: bool = True,
                            result_length: int = 0, **extra_data):
-        """記錄模塊完成分析"""
+        """記錄模組完成分析"""
         status = "成功" if success else "失敗"
         logger.info(
-            f"[模塊完成] {module_name} - {status} - 股票: {stock_symbol}, 耗時: {duration:.2f}s",
+            f"[模組完成] {module_name} - {status} - 股票: {stock_symbol}, 耗時: {duration:.2f}s",
             extra={
                 'module_name': module_name,
                 'stock_symbol': stock_symbol,
@@ -365,9 +365,9 @@ class TradingAgentsLogger:
 
     def log_module_error(self, logger: logging.Logger, module_name: str, stock_symbol: str,
                         session_id: str, duration: float, error: str, **extra_data):
-        """記錄模塊分析錯誤"""
+        """記錄模組分析錯誤"""
         logger.error(
-            f"[模塊錯誤] {module_name} - 股票: {stock_symbol}, 耗時: {duration:.2f}s, 錯誤: {error}",
+            f"[模組錯誤] {module_name} - 股票: {stock_symbol}, 耗時: {duration:.2f}s, 錯誤: {error}",
             extra={
                 'module_name': module_name,
                 'stock_symbol': stock_symbol,
@@ -402,7 +402,7 @@ _logger_manager: Optional[TradingAgentsLogger] = None
 
 
 def get_logger_manager() -> TradingAgentsLogger:
-    """獲取全局日誌管理器實例"""
+    """取得全局日誌管理器實例"""
     global _logger_manager
     if _logger_manager is None:
         _logger_manager = TradingAgentsLogger()
@@ -410,7 +410,7 @@ def get_logger_manager() -> TradingAgentsLogger:
 
 
 def get_logger(name: str) -> logging.Logger:
-    """獲取指定名稱的日誌器（便捷函數）"""
+    """取得指定名稱的日誌器（便捷函數）"""
     return get_logger_manager().get_logger(name)
 
 

@@ -58,7 +58,7 @@ def test_comparison_functions():
         similarity = calculate_text_similarity(text1, text2)
         print(f" 文本相似度計算: {similarity:.2f}")
         
-        # 測試報告內容獲取
+        # 測試報告內容取得
         mock_result = {
             'source': 'file_system',
             'reports': {
@@ -67,7 +67,7 @@ def test_comparison_functions():
         }
         
         content = get_report_content(mock_result, 'final_trade_decision')
-        print(f" 報告內容獲取: {content}")
+        print(f" 報告內容取得: {content}")
         
         return True
         

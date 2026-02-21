@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 統一新聞分析工具
-整合美股市場的新聞獲取邏輯到一個工具函數中
-讓大模型只需要調用一個工具就能獲取美股的新聞資料
+整合美股市場的新聞取得邏輯到一個工具函數中
+讓大模型只需要調用一個工具就能取得美股的新聞資料
 """
 
 import logging
@@ -13,13 +13,13 @@ import os
 logger = logging.getLogger(__name__)
 
 class UnifiedNewsAnalyzer:
-    """統一新聞分析器，整合所有新聞獲取邏輯"""
+    """統一新聞分析器，整合所有新聞取得邏輯"""
 
     def __init__(self, toolkit):
         """初始化統一新聞分析器
 
         Args:
-            toolkit: 包含各種新聞獲取工具的工具包
+            toolkit: 包含各種新聞取得工具的工具包
         """
         self.toolkit = toolkit
         self.news_cache = {}
@@ -29,8 +29,8 @@ class UnifiedNewsAnalyzer:
         
     def get_stock_news_unified(self, stock_code: str, max_news: int = 10, model_info: str = "") -> str:
         """
-        統一新聞獲取介面
-        根據股票代碼自動識別股票類型並獲取相應新聞
+        統一新聞取得介面
+        根據股票代碼自動識別股票類型並取得相應新聞
 
         Args:
             stock_code: 股票代碼
@@ -40,7 +40,7 @@ class UnifiedNewsAnalyzer:
         Returns:
             str: 格式化的新聞內容
         """
-        logger.info(f"[統一新聞工具] 開始獲取 {stock_code} 的新聞，模型: {model_info}")
+        logger.info(f"[統一新聞工具] 開始取得 {stock_code} 的新聞，模型: {model_info}")
         logger.info(f"[統一新聞工具] 當前模型資訊: {model_info}")
 
         if self.cache_enabled:
@@ -53,10 +53,10 @@ class UnifiedNewsAnalyzer:
         stock_type = self._identify_stock_type(stock_code)
         logger.info(f"[統一新聞工具] 股票類型: {stock_type}")
         
-        # 統一使用美股新聞獲取方法
+        # 統一使用美股新聞取得方法
         result = self._get_us_share_news(stock_code, max_news, model_info)
         
-        logger.info(f"[統一新聞工具] 新聞獲取完成，結果長度: {len(result)} 字符")
+        logger.info(f"[統一新聞工具] 新聞取得完成，結果長度: {len(result)} 字符")
         logger.info(f"[統一新聞工具] 返回結果預覽 (前1000字符): {result[:1000]}")
 
         if not result or len(result.strip()) < 50:
@@ -77,7 +77,7 @@ class UnifiedNewsAnalyzer:
         return hashlib.md5(key_str.encode()).hexdigest()
 
     def _get_from_cache(self, cache_key: str):
-        """從快取獲取資料"""
+        """從快取取得資料"""
         if cache_key in self.news_cache:
             cached_data, cached_time = self.news_cache[cache_key]
             if datetime.now() - cached_time < timedelta(hours=self.cache_hours):
@@ -95,10 +95,10 @@ class UnifiedNewsAnalyzer:
         return "美股"
     
     def _get_us_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
-        """獲取美股新聞"""
-        logger.info(f"[統一新聞工具] 獲取美股 {stock_code} 新聞")
+        """取得美股新聞"""
+        logger.info(f"[統一新聞工具] 取得美股 {stock_code} 新聞")
         
-        # 獲取當前日期
+        # 取得當前日期
         curr_date = datetime.now().strftime("%Y-%m-%d")
         
         # 優先級1: OpenAI全球新聞
@@ -108,10 +108,10 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] OpenAI美股新聞獲取成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] OpenAI美股新聞取得成功: {len(result)} 字符")
                     return self._format_news_result(result, "OpenAI美股新聞", model_info)
         except Exception as e:
-            logger.warning(f"[統一新聞工具] OpenAI美股新聞獲取失敗: {e}")
+            logger.warning(f"[統一新聞工具] OpenAI美股新聞取得失敗: {e}")
         
         # 優先級2: Google新聞（英文搜索）
         try:
@@ -121,10 +121,10 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] Google美股新聞獲取成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] Google美股新聞取得成功: {len(result)} 字符")
                     return self._format_news_result(result, "Google美股新聞", model_info)
         except Exception as e:
-            logger.warning(f"[統一新聞工具] Google美股新聞獲取失敗: {e}")
+            logger.warning(f"[統一新聞工具] Google美股新聞取得失敗: {e}")
         
         # 優先級3: FinnHub新聞（如果可用）
         try:
@@ -133,12 +133,12 @@ class UnifiedNewsAnalyzer:
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_finnhub_news.invoke({"symbol": stock_code, "max_results": min(max_news, 50)})
                 if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] FinnHub美股新聞獲取成功: {len(result)} 字符")
+                    logger.info(f"[統一新聞工具] FinnHub美股新聞取得成功: {len(result)} 字符")
                     return self._format_news_result(result, "FinnHub美股新聞", model_info)
         except Exception as e:
-            logger.warning(f"[統一新聞工具] FinnHub美股新聞獲取失敗: {e}")
+            logger.warning(f"[統一新聞工具] FinnHub美股新聞取得失敗: {e}")
         
-        return "無法獲取美股新聞資料，所有新聞源均不可用"
+        return "無法取得美股新聞資料，所有新聞源均不可用"
     
     def _format_news_result(self, news_content: str, source: str, model_info: str = "") -> str:
         """格式化新聞結果"""
@@ -148,14 +148,14 @@ class UnifiedNewsAnalyzer:
 
         formatted_result = f"""
 === 新聞資料來源: {source} ===
-獲取時間: {timestamp}
+取得時間: {timestamp}
 資料長度: {len(news_content)} 字符
 
 === 新聞內容 ===
 {news_content}
 
 === 資料狀態 ===
-狀態: 成功獲取
+狀態: 成功取得
 來源: {source}
 時間戳: {timestamp}
 """
@@ -168,7 +168,7 @@ def create_unified_news_tool(toolkit):
     
     def get_stock_news_unified(stock_code: str, max_news: int = 100, model_info: str = ""):
         """
-        統一新聞獲取工具
+        統一新聞取得工具
 
         Args:
             stock_code (str): 美股股票代碼 (如 AAPL、TSLA、NVDA)
@@ -186,10 +186,10 @@ def create_unified_news_tool(toolkit):
     # 設定工具屬性
     get_stock_news_unified.name = "get_stock_news_unified"
     get_stock_news_unified.description = """
-統一新聞獲取工具 - 獲取美股市場的新聞
+統一新聞取得工具 - 取得美股市場的新聞
 
 功能:
-- 專注於美股新聞獲取
+- 專注於美股新聞取得
 - 優先OpenAI -> Google英文 -> FinnHub
 - 返回格式化的新聞內容
 - 支持Google模型的特殊長度控制

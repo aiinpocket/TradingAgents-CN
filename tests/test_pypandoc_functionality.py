@@ -33,7 +33,7 @@ def test_pandoc_version():
         print(f" Pandoc版本: {version}")
         return True
     except Exception as e:
-        print(f" 獲取pandoc版本失敗: {e}")
+        print(f" 取得pandoc版本失敗: {e}")
         return False
 
 def test_pandoc_download():

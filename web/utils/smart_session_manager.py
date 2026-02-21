@@ -104,7 +104,7 @@ class SmartSessionManager:
                 pass
     
     def get_debug_info(self) -> Dict[str, Any]:
-        """獲取除錯資訊"""
+        """取得除錯資訊"""
         debug_info = {
             "storage_type": "Redis" if self.use_redis else "檔案儲存",
             "redis_available": self.redis_manager is not None,
@@ -112,7 +112,7 @@ class SmartSessionManager:
             "use_redis": self.use_redis
         }
         
-        # 獲取當前使用的管理器的除錯資訊
+        # 取得當前使用的管理器的除錯資訊
         if self.use_redis and self.redis_manager:
             try:
                 redis_debug = self.redis_manager.get_debug_info()
@@ -133,7 +133,7 @@ class SmartSessionManager:
 smart_session_manager = SmartSessionManager()
 
 def get_persistent_analysis_id() -> Optional[str]:
-    """獲取持久化的分析ID"""
+    """取得持久化的分析ID"""
     try:
         # 1. 首先檢查session state
         if st.session_state.get('current_analysis_id'):
@@ -164,7 +164,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"獲取持久化分析ID失敗: {e}")
+        st.warning(f"取得持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running",
@@ -189,5 +189,5 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         st.warning(f"設定持久化分析ID失敗: {e}")
 
 def get_session_debug_info() -> Dict[str, Any]:
-    """獲取會話管理器除錯資訊"""
+    """取得會話管理器除錯資訊"""
     return smart_session_manager.get_debug_info()

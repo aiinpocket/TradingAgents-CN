@@ -8,7 +8,7 @@ import sys
 import os
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -106,7 +106,7 @@ def check_system_status():
         logger.error(f"  降級支持: {' 啟用' if backend_info['fallback_enabled'] else ' 禁用'}")
         logger.info(f"  性能模式: {cache.get_performance_mode()}")
         
-        # 獲取詳細統計
+        # 取得詳細統計
         stats = cache.get_cache_stats()
         if 'adaptive_cache' in stats:
             adaptive_stats = stats['adaptive_cache']
@@ -215,7 +215,7 @@ def check_system_status():
         cache = get_cache()
         
         if cache.is_database_available():
-            logger.info(f" 資料庫可用，系統運行在最佳性能模式")
+            logger.info(f" 資料庫可用，系統執行在最佳性能模式")
         else:
             logger.info(f"[INFO]資料庫不可用，系統使用檔案快取模式")
             logger.info(f" 提升性能建議:")

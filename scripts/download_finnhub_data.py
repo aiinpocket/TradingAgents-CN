@@ -26,14 +26,14 @@ from typing import List, Dict, Any
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 匯入項目模塊
+# 匯入項目模組
 try:
     from tradingagents.utils.logging_manager import get_logger
     from tradingagents.config.config_manager import config_manager
     logger = get_logger('finnhub_downloader')
 except ImportError as e:
-    print(f" 匯入模塊失敗: {e}")
-    print("請確保在項目根目錄運行此腳本")
+    print(f" 匯入模組失敗: {e}")
+    print("請確保在項目根目錄執行此腳本")
     sys.exit(1)
 
 class FinnhubDataDownloader:
@@ -47,12 +47,12 @@ class FinnhubDataDownloader:
             api_key: Finnhub API密鑰
             data_dir: 資料儲存目錄
         """
-        # 獲取API密鑰
+        # 取得API密鑰
         self.api_key = api_key or os.getenv('FINNHUB_API_KEY')
         if not self.api_key:
             raise ValueError(" 未找到Finnhub API密鑰，請設定FINNHUB_API_KEY環境變量")
         
-        # 獲取資料目錄
+        # 取得資料目錄
         if data_dir:
             self.data_dir = data_dir
         else:

@@ -16,7 +16,7 @@ import psutil
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('web')
 
@@ -37,7 +37,7 @@ def check_dependencies():
 
     if missing_packages:
         logger.error(f"缺少必要的依賴包: {', '.join(missing_packages)}")
-        logger.info("請運行以下命令安裝:")
+        logger.info("請執行以下命令安裝:")
         logger.info(f"pip install {' '.join(missing_packages)}")
         return False
 
@@ -217,7 +217,7 @@ def main():
     logger.info("按 Ctrl+C 停止應用")
     logger.info("=")
     
-    # 創建進程對象而不是直接運行
+    # 創建進程對象而不是直接執行
     process = None
     
     def signal_handler(signum, frame):

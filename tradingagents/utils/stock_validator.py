@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-股票資料預獲取和驗證模塊
-用於在分析流程開始前驗證股票是否存在，並預先獲取和快取必要的資料
+股票資料預取得和驗證模組
+用於在分析流程開始前驗證股票是否存在，並預先取得和快取必要的資料
 """
 
 import re
 from typing import Dict
 from datetime import datetime, timedelta
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('stock_validator')
 
 
 class StockDataPreparationResult:
-    """股票資料預獲取結果類"""
+    """股票資料預取得結果類"""
 
     def __init__(self, is_valid: bool, stock_code: str, market_type: str = "",
                  stock_name: str = "", error_message: str = "", suggestion: str = "",
@@ -52,7 +52,7 @@ StockValidationResult = StockDataPreparationResult
 
 
 class StockDataPreparer:
-    """股票資料預獲取和驗證器"""
+    """股票資料預取得和驗證器"""
 
     def __init__(self, default_period_days: int = 30):
         self.timeout_seconds = 15  # 資料取得超時時間
@@ -61,7 +61,7 @@ class StockDataPreparer:
     def prepare_stock_data(self, stock_code: str, market_type: str = "auto",
                           period_days: int = None, analysis_date: str = None) -> StockDataPreparationResult:
         """
-        預獲取和驗證股票資料（僅支援美股）
+        預取得和驗證股票資料（僅支援美股）
 
         Args:
             stock_code: 股票代碼（美股，1-5位字母）
@@ -90,7 +90,7 @@ class StockDataPreparer:
             market_type = self._detect_market_type(stock_code)
             logger.debug(f"[資料準備] 自動檢測市場類型: {market_type}")
 
-        # 3. 預獲取資料並驗證
+        # 3. 預取得資料並驗證
         return self._prepare_data_by_market(stock_code, market_type, period_days, analysis_date)
     
     def _validate_format(self, stock_code: str, market_type: str) -> StockDataPreparationResult:
@@ -142,7 +142,7 @@ class StockDataPreparer:
 
     def _prepare_data_by_market(self, stock_code: str, market_type: str,
                                period_days: int, analysis_date: str) -> StockDataPreparationResult:
-        """根據市場類型預獲取資料（僅支援美股）"""
+        """根據市場類型預取得資料（僅支援美股）"""
         logger.debug(f"[資料準備] 開始為{market_type}股票{stock_code}準備資料")
 
         try:
@@ -168,7 +168,7 @@ class StockDataPreparer:
 
     def _prepare_us_stock_data(self, stock_code: str, period_days: int,
                               analysis_date: str) -> StockDataPreparationResult:
-        """預獲取美股資料"""
+        """預取得美股資料"""
         logger.info(f"[美股資料] 開始準備{stock_code}的資料 (時長: {period_days}天)")
 
         # 標準化美股代碼格式
@@ -186,8 +186,8 @@ class StockDataPreparer:
         cache_status = ""
 
         try:
-            # 1. 獲取歷史資料（美股通常直接通過歷史資料驗證股票是否存在）
-            logger.debug(f"[美股資料] 獲取{formatted_code}歷史資料 ({start_date_str} 到 {end_date_str})...")
+            # 1. 取得歷史資料（美股通常直接通過歷史資料驗證股票是否存在）
+            logger.debug(f"[美股資料] 取得{formatted_code}歷史資料 ({start_date_str} 到 {end_date_str})...")
             from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
 
             historical_data = get_us_stock_data_cached(
@@ -196,7 +196,7 @@ class StockDataPreparer:
                 end_date_str
             )
 
-            if historical_data and "錯誤" not in historical_data and "無法獲取" not in historical_data:
+            if historical_data and "錯誤" not in historical_data and "無法取得" not in historical_data:
                 # 更寬鬆的資料有效性檢查
                 data_indicators = [
                     "開盤價", "收盤價", "最高價", "最低價", "成交量",
@@ -211,7 +211,7 @@ class StockDataPreparer:
 
                 if has_valid_data:
                     has_historical_data = True
-                    has_basic_info = True  # 美股通常不單獨獲取基本資訊
+                    has_basic_info = True  # 美股通常不單獨取得基本資訊
                     logger.info(f"[美股資料] 歷史資料取得成功: {formatted_code} ({period_days}天)")
                     cache_status = f"歷史資料已快取({period_days}天)"
 
@@ -238,12 +238,12 @@ class StockDataPreparer:
                         suggestion="該股票可能為新上市股票或資料來源暫時不可用，請稍後重試"
                     )
             else:
-                logger.warning(f"[美股資料] 無法獲取歷史資料: {formatted_code}")
+                logger.warning(f"[美股資料] 無法取得歷史資料: {formatted_code}")
                 return StockDataPreparationResult(
                     is_valid=False,
                     stock_code=formatted_code,
                     market_type="美股",
-                    error_message=f"美股代碼 {formatted_code} 不存在或無法獲取資料",
+                    error_message=f"美股代碼 {formatted_code} 不存在或無法取得資料",
                     suggestion="請檢查美股代碼是否正確，如：AAPL、TSLA、MSFT"
                 )
 
@@ -264,7 +264,7 @@ class StockDataPreparer:
 _stock_preparer = None
 
 def get_stock_preparer(default_period_days: int = 30) -> StockDataPreparer:
-    """獲取股票資料準備器實例（單例模式）"""
+    """取得股票資料準備器實例（單例模式）"""
     global _stock_preparer
     if _stock_preparer is None:
         _stock_preparer = StockDataPreparer(default_period_days)
@@ -274,7 +274,7 @@ def get_stock_preparer(default_period_days: int = 30) -> StockDataPreparer:
 def prepare_stock_data(stock_code: str, market_type: str = "auto",
                       period_days: int = None, analysis_date: str = None) -> StockDataPreparationResult:
     """
-    便捷函數：預獲取和驗證股票資料（僅支援美股）
+    便捷函數：預取得和驗證股票資料（僅支援美股）
 
     Args:
         stock_code: 股票代碼（美股，1-5位字母）
@@ -310,7 +310,7 @@ def is_stock_data_ready(stock_code: str, market_type: str = "auto",
 def get_stock_preparation_message(stock_code: str, market_type: str = "auto",
                                  period_days: int = None, analysis_date: str = None) -> str:
     """
-    便捷函數：獲取股票資料準備訊息（僅支援美股）
+    便捷函數：取得股票資料準備訊息（僅支援美股）
 
     Args:
         stock_code: 股票代碼（美股，1-5位字母）

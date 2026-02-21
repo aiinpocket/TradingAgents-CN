@@ -45,7 +45,7 @@ def test_env_config():
         db_manager = get_database_manager()
         print(" 資料庫管理器創建成功")
         
-        # 獲取狀態報告
+        # 取得狀態報告
         status = db_manager.get_status_report()
         
         print(" 資料庫狀態:")
@@ -76,7 +76,7 @@ def test_env_config():
         cache = get_cache()
         print(" 快取系統創建成功")
         
-        # 獲取後端資訊
+        # 取得後端資訊
         backend_info = cache.get_cache_backend_info()
         print(f"  快取系統: {backend_info['system']}")
         print(f"  主要後端: {backend_info['primary_backend']}")
@@ -151,7 +151,7 @@ def main():
             print("\n .env配置測試完成!")
             print("\n 系統特性:")
             print(" 使用項目現有的.env配置")
-            print(" 預設不依賴資料庫，可以純檔案快取運行")
+            print(" 預設不依賴資料庫，可以純檔案快取執行")
             print(" 自動檢測和使用可用的資料庫")
             print(" 支持完整的MongoDB和Redis配置")
             print(" 智能降級，確保系統穩定性")

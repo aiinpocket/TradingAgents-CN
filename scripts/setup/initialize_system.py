@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 系統初始化腳本
-初始化資料庫配置，確保系統可以在有或沒有資料庫的情況下運行
+初始化資料庫配置，確保系統可以在有或沒有資料庫的情況下執行
 """
 
 import sys
@@ -9,7 +9,7 @@ import os
 import json
 from pathlib import Path
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -215,7 +215,7 @@ def initialize_system():
 ### 自動降級支持
 - 系統會自動檢測可用的資料庫服務
 - 如果資料庫不可用，自動使用檔案快取
-- 保證系統在任何環境下都能正常運行
+- 保證系統在任何環境下都能正常執行
 
 ### 性能優化
 - 智能快取策略，減少API調用
@@ -228,7 +228,7 @@ def initialize_system():
 ```python
 from tradingagents.dataflows.integrated_cache import get_cache
 
-# 獲取快取實例
+# 取得快取實例
 cache = get_cache()
 
 # 保存資料
@@ -274,7 +274,7 @@ python scripts/validation/check_system_status.py
     else:
         usage_guide += """
 ### 系統已優化
- 資料庫服務可用，系統運行在最佳性能模式
+ 資料庫服務可用，系統執行在最佳性能模式
 """
     
     usage_file = project_root / "SYSTEM_SETUP_GUIDE.md"
@@ -296,13 +296,13 @@ python scripts/validation/check_system_status.py
     logger.info(f"  使用指南:  已生成")
     
     if mongodb_available or redis_available:
-        logger.info(f"\n 系統運行在高性能模式!")
+        logger.info(f"\n 系統執行在高性能模式!")
     else:
-        logger.info(f"\n 系統運行在檔案快取模式")
+        logger.info(f"\n 系統執行在檔案快取模式")
         logger.info(f" 安裝MongoDB/Redis可獲得更好性能")
     
     logger.info(f"\n 下一步:")
-    logger.info(f"1. 運行系統狀態檢查: python scripts/validation/check_system_status.py")
+    logger.info(f"1. 執行系統狀態檢查: python scripts/validation/check_system_status.py")
     logger.info(f"2. 查看使用指南: {usage_file}")
     logger.info(f"3. 開始使用TradingAgents!")
     

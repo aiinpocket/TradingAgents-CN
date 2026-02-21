@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 智能配置系統 - 自動檢測和配置資料庫依賴
-確保系統在有或沒有MongoDB/Redis的情況下都能正常運行
+確保系統在有或沒有MongoDB/Redis的情況下都能正常執行
 """
 
 import os
@@ -11,7 +11,7 @@ import logging
 from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('scripts')
 
@@ -48,7 +48,7 @@ class SmartConfigManager:
             client.server_info()  # 觸發連接測試
             client.close()
             
-            return True, "MongoDB服務正在運行"
+            return True, "MongoDB服務正在執行"
             
         except ImportError:
             return False, "pymongo未安裝"
@@ -70,7 +70,7 @@ class SmartConfigManager:
             )
             r.ping()
             
-            return True, "Redis服務正在運行"
+            return True, "Redis服務正在執行"
             
         except ImportError:
             return False, "redis未安裝"
@@ -161,7 +161,7 @@ class SmartConfigManager:
             logger.info(f" 配置模式: 純檔案快取")
     
     def get_config(self) -> Dict[str, Any]:
-        """獲取配置"""
+        """取得配置"""
         return self.config.copy()
     
     def save_config(self, config_path: str = "smart_config.json"):
@@ -186,7 +186,7 @@ class SmartConfigManager:
         return False
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
-        """獲取快取後端資訊"""
+        """取得快取後端資訊"""
         return {
             "primary_backend": self.config["cache"]["primary_backend"],
             "mongodb_available": self.mongodb_available,
@@ -211,7 +211,7 @@ class SmartConfigManager:
         logger.info(f"  主要後端: {cache_info['primary_backend']}")
         logger.info(f"  降級支持: {'啟用' if cache_info['fallback_enabled'] else '禁用'}")
         
-        # 運行模式
+        # 執行模式
         if self.mongodb_available and self.redis_available:
             mode = " 高性能模式 (Redis + MongoDB + 檔案)"
         elif self.redis_available:
@@ -221,7 +221,7 @@ class SmartConfigManager:
         else:
             mode = " 基礎模式 (純檔案快取)"
         
-        logger.info(f"  運行模式: {mode}")
+        logger.info(f"  執行模式: {mode}")
         
         # 性能預期
         logger.info(f"\n 性能預期:")
@@ -236,14 +236,14 @@ class SmartConfigManager:
 _config_manager = None
 
 def get_smart_config() -> SmartConfigManager:
-    """獲取全局智能配置管理器"""
+    """取得全局智能配置管理器"""
     global _config_manager
     if _config_manager is None:
         _config_manager = SmartConfigManager()
     return _config_manager
 
 def get_config() -> Dict[str, Any]:
-    """獲取系統配置"""
+    """取得系統配置"""
     return get_smart_config().get_config()
 
 def is_mongodb_available() -> bool:
@@ -255,7 +255,7 @@ def is_redis_available() -> bool:
     return get_smart_config().redis_available
 
 def get_cache_backend() -> str:
-    """獲取當前快取後端"""
+    """取得當前快取後端"""
     config = get_config()
     return config["cache"]["primary_backend"]
 
@@ -331,7 +331,7 @@ Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
     logger.info(f" PowerShell配置腳本已生成: set_env.ps1")
     
     logger.info(f"\n 下一步:")
-    logger.info(f"1. 運行: python test_with_smart_config.py")
+    logger.info(f"1. 執行: python test_with_smart_config.py")
     logger.info(f"2. 或者: .\set_env.ps1 (設定環境變量)")
     logger.info(f"3. 然後: python quick_test.py")
 

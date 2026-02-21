@@ -12,7 +12,7 @@ from tenacity import (
     retry_if_result,
 )
 
-# 匯入日誌模塊
+# 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
@@ -113,7 +113,7 @@ def getNewsData(query, start_date, end_date):
             # 不立即中斷，記錄錯誤後繼續嘗試下一頁
             page += 1
             if page > 3:  # 如果連續多頁都超時，則退出循環
-                logger.error("多次連接超時，停止獲取Google新聞")
+                logger.error("多次連接超時，停止取得Google新聞")
                 break
             continue
         except requests.exceptions.ConnectionError as e:
@@ -121,11 +121,11 @@ def getNewsData(query, start_date, end_date):
             # 不立即中斷，記錄錯誤後繼續嘗試下一頁
             page += 1
             if page > 3:  # 如果連續多頁都連接錯誤，則退出循環
-                logger.error("多次連接錯誤，停止獲取Google新聞")
+                logger.error("多次連接錯誤，停止取得Google新聞")
                 break
             continue
         except Exception as e:
-            logger.error(f"獲取Google新聞失敗: {e}")
+            logger.error(f"取得Google新聞失敗: {e}")
             break
 
     return news_results

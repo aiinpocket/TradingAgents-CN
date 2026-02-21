@@ -80,7 +80,7 @@ class UnifiedDataDirectoryManager:
     
     def get_path(self, key: str, create: bool = True) -> Path:
         """
-        獲取指定資料目錄的路徑
+        取得指定資料目錄的路徑
         
         Args:
             key: 目錄鍵名
@@ -113,7 +113,7 @@ class UnifiedDataDirectoryManager:
     
     def get_all_paths(self, create: bool = True) -> Dict[str, Path]:
         """
-        獲取所有資料目錄路徑
+        取得所有資料目錄路徑
         
         Args:
             create: 是否自動創建目錄
@@ -126,7 +126,7 @@ class UnifiedDataDirectoryManager:
             try:
                 paths[key] = self.get_path(key, create=create)
             except Exception as e:
-                logger.warning(f"獲取路徑失敗 {key}: {e}")
+                logger.warning(f"取得路徑失敗 {key}: {e}")
         
         return paths
     
@@ -154,7 +154,7 @@ class UnifiedDataDirectoryManager:
     
     def get_config_summary(self) -> Dict[str, str]:
         """
-        獲取配置摘要
+        取得配置摘要
         
         Returns:
             Dict[str, str]: 配置摘要
@@ -225,7 +225,7 @@ _data_manager = None
 
 def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> UnifiedDataDirectoryManager:
     """
-    獲取全局資料目錄管理器實例
+    取得全局資料目錄管理器實例
     
     Args:
         project_root: 項目根目錄
@@ -240,7 +240,7 @@ def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> Unified
 
 def get_data_path(key: str, create: bool = True) -> Path:
     """
-    便捷函數：獲取資料目錄路徑
+    便捷函數：取得資料目錄路徑
     
     Args:
         key: 目錄鍵名

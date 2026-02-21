@@ -133,7 +133,7 @@ def test_package_installation_simulation():
     
     if missing_packages:
         print(f"  缺少包: {missing_packages}")
-        print("   運行以下命令安裝: pip install -r requirements_db.txt")
+        print("   執行以下命令安裝: pip install -r requirements_db.txt")
     
     return True  # 這個測試總是通過，只是資訊性的
 
@@ -149,7 +149,7 @@ def test_compatibility_checker_tool():
         return False
     
     try:
-        # 運行兼容性檢查工具
+        # 執行兼容性檢查工具
         result = subprocess.run(
             [sys.executable, checker_file],
             cwd=project_root,
@@ -161,7 +161,7 @@ def test_compatibility_checker_tool():
         print(f"  返回碼: {result.returncode}")
         
         if " TradingAgents 資料庫依賴包兼容性檢查" in result.stdout:
-            print("   兼容性檢查工具運行成功")
+            print("   兼容性檢查工具執行成功")
             
             # 檢查是否檢測到pickle5問題
             if "pickle5" in result.stdout and "建議卸載" in result.stdout:
@@ -176,10 +176,10 @@ def test_compatibility_checker_tool():
             return False
             
     except subprocess.TimeoutExpired:
-        print("   兼容性檢查工具運行超時")
+        print("   兼容性檢查工具執行超時")
         return False
     except Exception as e:
-        print(f"   兼容性檢查工具運行失敗: {e}")
+        print(f"   兼容性檢查工具執行失敗: {e}")
         return False
 
 

@@ -25,7 +25,7 @@ def main():
         st.error("快取管理器不可用，請檢查系統配置")
         return
     
-    # 獲取快取實例
+    # 取得快取實例
     cache = get_cache()
     
     # 側邊欄操作
@@ -61,7 +61,7 @@ def main():
     with col1:
         st.subheader("快取統計")
         
-        # 獲取快取統計
+        # 取得快取統計
         try:
             stats = cache.get_cache_stats()
             
@@ -102,7 +102,7 @@ def main():
             )
             
         except Exception as e:
-            st.error(f"獲取快取統計失敗: {e}")
+            st.error(f"取得快取統計失敗: {e}")
 
     with col2:
         st.subheader("快取配置")
@@ -167,7 +167,7 @@ def main():
         - 支持離線分析
         
          **新聞資料快取**：24小時有效期
-        - 避免重複獲取相同新聞
+        - 避免重複取得相同新聞
         - 節省API配額
         
          **基本面資料快取**：24小時有效期

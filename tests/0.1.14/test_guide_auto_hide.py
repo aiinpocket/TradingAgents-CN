@@ -176,7 +176,7 @@ def test_ui_behavior():
             if scenario['analysis_running'] and not scenario['user_set_preference']:
                 actual_show_guide = False
         
-        print(f"   分析運行中: {scenario['analysis_running']}")
+        print(f"   分析執行中: {scenario['analysis_running']}")
         print(f"   有分析結果: {bool(scenario['analysis_results'])}")
         print(f"   用戶設定偏好: {scenario['user_set_preference']}")
         print(f"   預設顯示指南: {default_show_guide}")

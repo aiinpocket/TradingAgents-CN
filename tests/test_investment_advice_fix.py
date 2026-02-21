@@ -12,13 +12,13 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 def test_web_components():
-    """測試Web組件的投資建議顯示"""
-    print(" 測試Web組件投資建議顯示")
+    """測試Web元件的投資建議顯示"""
+    print(" 測試Web元件投資建議顯示")
     print("=" * 50)
     
     try:
-        # 測試results_display組件
-        print(" 測試results_display組件...")
+        # 測試results_display元件
+        print(" 測試results_display元件...")
         
         # 模擬不同的投資建議輸入
         test_cases = [
@@ -30,7 +30,7 @@ def test_web_components():
             {'action': '持有', 'confidence': 0.6, 'risk_score': 0.4},
         ]
         
-        # 模擬Web組件的處理邏輯
+        # 模擬Web元件的處理邏輯
         for decision in test_cases:
             action = decision.get('action', 'N/A')
             
@@ -57,7 +57,7 @@ def test_web_components():
         return True
         
     except Exception as e:
-        print(f" Web組件測試失敗: {e}")
+        print(f" Web元件測試失敗: {e}")
         return False
 
 def test_analysis_runner():

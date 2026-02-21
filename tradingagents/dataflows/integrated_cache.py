@@ -187,9 +187,9 @@ class IntegratedCacheManager:
             return self.legacy_cache.load_fundamentals_data(cache_key)
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取快取統計資訊"""
+        """取得快取統計資訊"""
         if self.use_adaptive:
-            # 獲取自適應快取統計
+            # 取得自適應快取統計
             adaptive_stats = self.adaptive_cache.get_cache_stats()
             
             # 添加傳統快取統計
@@ -223,7 +223,7 @@ class IntegratedCacheManager:
         self.legacy_cache.clear_expired_cache()
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
-        """獲取快取後端資訊"""
+        """取得快取後端資訊"""
         if self.use_adaptive:
             return {
                 "system": "adaptive",
@@ -248,7 +248,7 @@ class IntegratedCacheManager:
         return False
     
     def get_performance_mode(self) -> str:
-        """獲取性能模式"""
+        """取得性能模式"""
         if not self.use_adaptive:
             return "基礎模式 (檔案快取)"
         
@@ -269,7 +269,7 @@ class IntegratedCacheManager:
 _integrated_cache = None
 
 def get_cache() -> IntegratedCacheManager:
-    """獲取全局集成快取管理器實例"""
+    """取得全局集成快取管理器實例"""
     global _integrated_cache
     if _integrated_cache is None:
         _integrated_cache = IntegratedCacheManager()
@@ -277,7 +277,7 @@ def get_cache() -> IntegratedCacheManager:
 
 # 向後兼容的函數
 def get_stock_cache():
-    """向後兼容：獲取股票快取"""
+    """向後兼容：取得股票快取"""
     return get_cache()
 
 def create_cache_manager(cache_dir: str = None):
