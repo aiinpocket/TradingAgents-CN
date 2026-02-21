@@ -6,6 +6,7 @@ import streamlit as st
 from datetime import datetime
 
 from utils.report_exporter import render_export_buttons
+from components.analysis_results import ANALYSIS_MODULES
 from tradingagents.utils.logging_manager import get_logger
 
 logger = get_logger('web')
@@ -214,63 +215,9 @@ def render_detailed_analysis(state):
 
     st.subheader("詳細分析報告")
 
-    # 定義分析模組
-    analysis_modules = [
-        {
-            'key': 'market_report',
-            'title': '市場技術分析',
-            'description': '技術指標、價格趨勢、支撐阻力位分析'
-        },
-        {
-            'key': 'fundamentals_report',
-            'title': '基本面分析',
-            'description': '財務資料、估值水平、盈利能力分析'
-        },
-        {
-            'key': 'sentiment_report',
-            'title': '市場情緒分析',
-            'description': '投資者情緒、社交媒體情緒指標'
-        },
-        {
-            'key': 'news_report',
-            'title': '新聞事件分析',
-            'description': '相關新聞事件、市場動態影響分析'
-        },
-        {
-            'key': 'risk_assessment',
-            'title': '風險評估',
-            'description': '風險因素識別、風險等級評估'
-        },
-        {
-            'key': 'investment_plan',
-            'title': '投資建議',
-            'description': '具體投資策略、倉位管理建議'
-        },
-        {
-            'key': 'investment_debate_state',
-            'title': '研究團隊決策',
-            'description': '多頭/空頭研究員辯論分析，研究經理綜合決策'
-        },
-        {
-            'key': 'trader_investment_plan',
-            'title': '交易團隊計劃',
-            'description': '專業交易員制定的具體交易執行計劃'
-        },
-        {
-            'key': 'risk_debate_state',
-            'title': '風險管理團隊',
-            'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'
-        },
-        {
-            'key': 'final_trade_decision',
-            'title': '最終交易決策',
-            'description': '綜合所有團隊分析後的最終投資決策'
-        }
-    ]
-
     # 過濾出有資料的模組
     available_modules = []
-    for module in analysis_modules:
+    for module in ANALYSIS_MODULES:
         if module['key'] in state and state[module['key']]:
             if isinstance(state[module['key']], dict):
                 has_content = any(v for v in state[module['key']].values() if v)

@@ -11,13 +11,65 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Any
 import json
 from pathlib import Path
-# 日誌模組
+
 try:
     from tradingagents.utils.logging_manager import get_logger
     logger = get_logger('web')
 except ImportError:
     import logging
     logger = logging.getLogger(__name__)
+
+# 報告名稱中英文對照（全域常數，避免多處重複定義）
+REPORT_DISPLAY_NAMES = {
+    'final_trade_decision': '最終交易決策',
+    'fundamentals_report': '基本面分析',
+    'technical_report': '技術面分析',
+    'market_sentiment_report': '市場情緒分析',
+    'risk_assessment_report': '風險評估',
+    'price_target_report': '目標價格分析',
+    'summary_report': '分析摘要',
+    'news_analysis_report': '新聞分析',
+    'news_report': '新聞分析',
+    'market_report': '市場分析',
+    'social_media_report': '社交媒體分析',
+    'bull_state': '多頭觀點',
+    'bear_state': '空頭觀點',
+    'trader_state': '交易員分析',
+    'invest_judge_state': '投資判斷',
+    'research_team_state': '研究團隊觀點',
+    'risk_debate_state': '風險管理討論',
+    'research_team_decision': '研究團隊決策',
+    'risk_management_decision': '風險管理決策',
+    'investment_plan': '投資計劃',
+    'trader_investment_plan': '交易員投資計劃',
+    'investment_debate_state': '投資討論狀態',
+    'sentiment_report': '市場情緒分析',
+    'risk_assessment': '風險評估',
+}
+
+# 分析模組定義（全域常數，供多處共用）
+ANALYSIS_MODULES = [
+    {'key': 'market_report', 'title': '市場技術分析',
+     'description': '技術指標、價格趨勢、支撐阻力位分析'},
+    {'key': 'fundamentals_report', 'title': '基本面分析',
+     'description': '財務資料、估值水平、盈利能力分析'},
+    {'key': 'sentiment_report', 'title': '市場情緒分析',
+     'description': '投資者情緒、社交媒體情緒指標'},
+    {'key': 'news_report', 'title': '新聞事件分析',
+     'description': '相關新聞事件、市場動態影響分析'},
+    {'key': 'risk_assessment', 'title': '風險評估',
+     'description': '風險因素識別、風險等級評估'},
+    {'key': 'investment_plan', 'title': '投資建議',
+     'description': '具體投資策略、倉位管理建議'},
+    {'key': 'investment_debate_state', 'title': '研究團隊決策',
+     'description': '多頭/空頭研究員辯論分析，研究經理綜合決策'},
+    {'key': 'trader_investment_plan', 'title': '交易團隊計劃',
+     'description': '專業交易員制定的具體交易執行計劃'},
+    {'key': 'risk_debate_state', 'title': '風險管理團隊',
+     'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'},
+    {'key': 'final_trade_decision', 'title': '最終交易決策',
+     'description': '綜合所有團隊分析後的最終投資決策'},
+]
 
 # MongoDB相關匯入
 try:
@@ -426,7 +478,12 @@ def render_analysis_results():
         render_results_charts(results)
     
     with tab3:
-        render_detailed_analysis(results)
+        # 讓使用者選擇要查看詳情的結果
+        selected = st.session_state.get('selected_result_for_detail')
+        if selected:
+            render_detailed_analysis_content(selected)
+        else:
+            st.info("請在「結果列表」中點擊「詳情」按鈕選擇要查看的分析結果。")
 
 def render_results_list(results: List[Dict[str, Any]]):
     """渲染分析結果列表"""
@@ -694,141 +751,56 @@ def render_results_charts(results: List[Dict[str, Any]]):
             fig_tags.update_layout(xaxis_tickangle=-45)
             st.plotly_chart(fig_tags, use_container_width=True)
 
+def _render_reports_as_tabs(reports: Dict[str, str]):
+    """將報告字典渲染為標籤頁（共用邏輯）"""
+    if not reports:
+        st.warning("該分析結果沒有可用的報告內容")
+        return
+
+    report_keys = list(reports.keys())
+    tab_names = [
+        REPORT_DISPLAY_NAMES.get(k, k.replace('_', ' ').title())
+        for k in report_keys
+    ]
+
+    if len(tab_names) == 1:
+        if not reports[report_keys[0]].strip().startswith('#'):
+            st.markdown(f"### {tab_names[0]}")
+            st.markdown("---")
+        st.markdown(reports[report_keys[0]])
+    else:
+        tabs = st.tabs(tab_names)
+        for tab, key in zip(tabs, report_keys):
+            with tab:
+                st.markdown(reports[key])
+
+
+def _filter_available_modules(data: Dict[str, Any]) -> List[Dict]:
+    """從資料中篩選出有內容的分析模組"""
+    available = []
+    for module in ANALYSIS_MODULES:
+        value = data.get(module['key'])
+        if not value:
+            continue
+        if isinstance(value, dict):
+            if any(v for v in value.values() if v):
+                available.append(module)
+        else:
+            available.append(module)
+    return available
+
+
 def render_detailed_analysis_content(selected_result):
     """渲染詳細分析結果內容"""
     st.subheader("完整分析資料")
 
     # 檢查是否有報告資料（支援檔案系統和MongoDB）
-    if 'reports'in selected_result and selected_result['reports']:
-        # 顯示檔案系統中的報告
-        reports = selected_result['reports']
-        
-        if not reports:
-            st.warning("該分析結果沒有可用的報告內容")
-            return
-        
-        # 除錯資訊：顯示所有可用的報告
-        logger.debug(f"[彈窗除錯] 資料來源: {selected_result.get('source', '未知')}")
-        logger.debug(f"[彈窗除錯] 可用報告數量: {len(reports)}")
-        logger.debug(f"[彈窗除錯] 報告類型: {list(reports.keys())}")
-
-        # 建立標籤頁顯示不同的報告
-        report_tabs = list(reports.keys())
-
-        # 為報告名稱新增中文標題和圖示
-        report_display_names = {
-            'final_trade_decision': '最終交易決策',
-            'fundamentals_report': '基本面分析',
-            'technical_report': '技術面分析',
-            'market_sentiment_report': '市場情緒分析',
-            'risk_assessment_report': '風險評估',
-            'price_target_report': '目標價格分析',
-            'summary_report': '分析摘要',
-            'news_analysis_report': '新聞分析',
-            'social_media_report': '社交媒體分析'
-        }
-        
-        # 建立顯示名稱列表
-        tab_names = []
-        for report_key in report_tabs:
-            display_name = report_display_names.get(report_key, f"{report_key.replace('_', '').title()}")
-            tab_names.append(display_name)
-            logger.debug(f"[彈窗除錯] 新增標籤: {display_name}")
-
-        logger.debug(f"[彈窗除錯] 總標籤數: {len(tab_names)}")
-        
-        if len(tab_names) == 1:
-            # 只有一個報告，直接顯示
-            st.markdown(f"### {tab_names[0]}")
-            st.markdown("---")
-            st.markdown(reports[report_tabs[0]])
-        else:
-            # 多個報告，使用標籤頁
-            tabs = st.tabs(tab_names)
-            
-            for i, (tab, report_key) in enumerate(zip(tabs, report_tabs)):
-                with tab:
-                    st.markdown(reports[report_key])
-        
+    if 'reports' in selected_result and selected_result['reports']:
+        _render_reports_as_tabs(selected_result['reports'])
         return
-    
-    # 定義分析模組
-    analysis_modules = [
-        {
-            'key': 'market_report',
-            'title': '市場技術分析',
-            'icon': '',
-            'description': '技術指標、價格趨勢、支撐阻力位分析'
-        },
-        {
-            'key': 'fundamentals_report',
-            'title': '基本面分析',
-            'icon': '',
-            'description': '財務資料、估值水平、盈利能力分析'
-        },
-        {
-            'key': 'sentiment_report',
-            'title': '市場情緒分析',
-            'icon': '',
-            'description': '投資者情緒、社交媒體情緒指標'
-        },
-        {
-            'key': 'news_report',
-            'title': '新聞事件分析',
-            'icon': '',
-            'description': '相關新聞事件、市場動態影響分析'
-        },
-        {
-            'key': 'risk_assessment',
-            'title': '風險評估',
-            'icon': '',
-            'description': '風險因素識別、風險等級評估'
-        },
-        {
-            'key': 'investment_plan',
-            'title': '投資建議',
-            'icon': '',
-            'description': '具體投資策略、倉位管理建議'
-        },
-        {
-            'key': 'investment_debate_state',
-            'title': '研究團隊決策',
-            'icon': '',
-            'description': '多頭/空頭研究員辯論分析，研究經理綜合決策'
-        },
-        {
-            'key': 'trader_investment_plan',
-            'title': '交易團隊計劃',
-            'icon': '',
-            'description': '專業交易員制定的具體交易執行計劃'
-        },
-        {
-            'key': 'risk_debate_state',
-            'title': '風險管理團隊',
-            'icon': '',
-            'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'
-        },
-        {
-            'key': 'final_trade_decision',
-            'title': '最終交易決策',
-            'icon': '',
-            'description': '綜合所有團隊分析後的最終投資決策'
-        }
-    ]
-    
+
     # 過濾出有資料的模組
-    available_modules = []
-    for module in analysis_modules:
-        if module['key'] in selected_result and selected_result[module['key']]:
-            # 檢查字典類型的資料是否有實際內容
-            if isinstance(selected_result[module['key']], dict):
-                # 對於字典，檢查是否有非空的值
-                has_content = any(v for v in selected_result[module['key']].values() if v)
-                if has_content:
-                    available_modules.append(module)
-            else:
-                # 對於字串或其他類型，直接新增
-                available_modules.append(module)
+    available_modules = _filter_available_modules(selected_result)
 
     if not available_modules:
         # 如果沒有預定義模組的資料，顯示所有可用的分析資料
@@ -922,8 +894,7 @@ def render_detailed_analysis_content(selected_result):
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
         with tab:
-            # 在內容區域顯示圖示和描述
-            st.markdown(f"## {module['icon']} {module['title']}")
+            st.markdown(f"## {module['title']}")
             st.markdown(f"*{module['description']}*")
             st.markdown("---")
 
@@ -1085,112 +1056,43 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
 def show_expanded_detail(result):
     """顯示展開的詳情內容"""
 
-    # 建立詳情容器
     with st.container():
         st.markdown("---")
         st.markdown("### 詳細分析報告")
 
-        # 檢查是否有報告資料
-        if 'reports'not in result or not result['reports']:
-            # 如果沒有reports欄位，檢查是否有其他分析資料
-            if result.get('summary'):
-                st.subheader("分析摘要")
-                st.markdown(result['summary'])
-
-            # 檢查是否有full_data中的報告
-            if 'full_data'in result and result['full_data']:
-                full_data = result['full_data']
-                if isinstance(full_data, dict):
-                    # 顯示full_data中的分析內容
-                    analysis_fields = [
-                        ('market_report', '市場分析'),
-                        ('fundamentals_report', '基本面分析'),
-                        ('sentiment_report', '情感分析'),
-                        ('news_report', '新聞分析'),
-                        ('risk_assessment', '風險評估'),
-                        ('investment_plan', '投資建議'),
-                        ('final_trade_decision', '最終決策')
-                    ]
-
-                    available_reports = []
-                    for field_key, field_name in analysis_fields:
-                        if field_key in full_data and full_data[field_key]:
-                            available_reports.append((field_key, field_name, full_data[field_key]))
-
-                    if available_reports:
-                        # 建立標籤頁顯示分析內容
-                        tab_names = [name for _, name, _ in available_reports]
-                        tabs = st.tabs(tab_names)
-
-                        for i, (tab, (field_key, field_name, content)) in enumerate(zip(tabs, available_reports)):
-                            with tab:
-                                if isinstance(content, str):
-                                    st.markdown(content)
-                                elif isinstance(content, dict):
-                                    for key, value in content.items():
-                                        if value:
-                                            st.subheader(key.replace('_', '').title())
-                                            st.markdown(str(value))
-                                else:
-                                    st.write(content)
-                    else:
-                        st.info("暫無詳細分析報告")
-                else:
-                    st.info("暫無詳細分析報告")
-            else:
-                st.info("暫無詳細分析報告")
+        # 有 reports 欄位時直接渲染
+        if result.get('reports'):
+            _render_reports_as_tabs(result['reports'])
+            st.markdown("---")
             return
 
-        # 取得報告資料
-        reports = result['reports']
+        # 顯示摘要
+        if result.get('summary'):
+            st.subheader("分析摘要")
+            st.markdown(result['summary'])
 
-        # 為報告名稱新增中文標題和圖示
-        report_display_names = {
-            'final_trade_decision': '最終交易決策',
-            'fundamentals_report': '基本面分析',
-            'technical_report': '技術面分析',
-            'market_sentiment_report': '市場情緒分析',
-            'risk_assessment_report': '風險評估',
-            'price_target_report': '目標價格分析',
-            'summary_report': '分析摘要',
-            'news_analysis_report': '新聞分析',
-            'news_report': '新聞分析',
-            'market_report': '市場分析',
-            'social_media_report': '社交媒體分析',
-            'bull_state': '多頭觀點',
-            'bear_state': '空頭觀點',
-            'trader_state': '交易員分析',
-            'invest_judge_state': '投資判斷',
-            'research_team_state': '研究團隊觀點',
-            'risk_debate_state': '風險管理討論',
-            'research_team_decision': '研究團隊決策',
-            'risk_management_decision': '風險管理決策',
-            'investment_plan': '投資計劃',
-            'trader_investment_plan': '交易員投資計劃',
-            'investment_debate_state': '投資討論狀態'
-        }
+        # 嘗試從 full_data 中提取報告
+        full_data = result.get('full_data')
+        if isinstance(full_data, dict):
+            # 用 REPORT_DISPLAY_NAMES 對照，篩出有內容的欄位作為報告
+            reports_from_data = {}
+            for key, value in full_data.items():
+                if key in REPORT_DISPLAY_NAMES and value:
+                    name = REPORT_DISPLAY_NAMES[key]
+                    if isinstance(value, str):
+                        reports_from_data[key] = value
+                    elif isinstance(value, dict):
+                        parts = []
+                        for sub_key, sub_val in value.items():
+                            if sub_val:
+                                parts.append(f"## {sub_key.replace('_', ' ').title()}\n\n{sub_val}")
+                        if parts:
+                            reports_from_data[key] = "\n\n".join(parts)
 
-        # 建立標籤頁顯示不同的報告
-        report_tabs = list(reports.keys())
-        tab_names = []
-        for report_key in report_tabs:
-            display_name = report_display_names.get(report_key, f"{report_key.replace('_', '').title()}")
-            tab_names.append(display_name)
-
-        if len(tab_names) == 1:
-            # 只有一個報告，直接顯示內容（不新增額外標題，避免重複）
-            report_content = reports[report_tabs[0]]
-            # 如果報告內容已經包含標題，直接顯示；否則新增標題
-            if not report_content.strip().startswith('#'):
-                st.markdown(f"### {tab_names[0]}")
+            if reports_from_data:
+                _render_reports_as_tabs(reports_from_data)
                 st.markdown("---")
-            st.markdown(report_content)
-        else:
-            # 多個報告，使用標籤頁
-            tabs = st.tabs(tab_names)
+                return
 
-            for i, (tab, report_key) in enumerate(zip(tabs, report_tabs)):
-                with tab:
-                    st.markdown(reports[report_key])
-
+        st.info("暫無詳細分析報告")
         st.markdown("---")
