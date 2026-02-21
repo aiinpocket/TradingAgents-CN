@@ -5,16 +5,6 @@
 """
 
 import streamlit as st
-import sys
-from pathlib import Path
-
-# 添加項目根目錄到路徑
-project_root = Path(__file__).parent.parent.parent
-sys.path.append(str(project_root))
-
-# 導入UI工具函數
-sys.path.append(str(Path(__file__).parent.parent))
-from utils.ui_utils import apply_hide_deploy_button_css
 
 try:
     from tradingagents.dataflows.cache_manager import get_cache
@@ -27,15 +17,7 @@ except ImportError as e:
     st.error(f"緩存管理器不可用: {e}")
 
 def main():
-    st.set_page_config(
-        page_title="緩存管理 - TradingAgents",
-        page_icon=None,
-        layout="wide"
-    )
-    
-    # 應用隱藏Deploy按鈕的CSS樣式
-    apply_hide_deploy_button_css()
-    
+    """快取管理主函式，由 app.py 路由呼叫"""
     st.title("股票數據緩存管理")
     st.markdown("---")
     

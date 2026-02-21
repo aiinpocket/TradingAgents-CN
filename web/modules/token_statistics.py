@@ -12,27 +12,12 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datetime import datetime, timedelta
 import json
-import os
 from typing import Dict, List, Any
-
-# 添加項目根目錄到路徑
-import sys
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-# 導入UI工具函數
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
-from utils.ui_utils import apply_hide_deploy_button_css
 
 from tradingagents.config.config_manager import config_manager, UsageRecord
 
 def render_token_statistics():
     """渲染Token統計頁面"""
-    # 應用隱藏Deploy按鈕的CSS樣式
-    apply_hide_deploy_button_css()
-    
     st.markdown("**Token使用統計與成本分析**")
     
     # 側邊欄控制
