@@ -9,7 +9,6 @@ import os
 import sys
 from pathlib import Path
 import datetime
-import time
 from dotenv import load_dotenv
 
 # 專案根目錄
@@ -551,7 +550,6 @@ def main():
 
             logger.info(f"分析執行緒已啟動: {analysis_id}")
 
-            time.sleep(2)
             st.rerun()
 
     # 分析進度顯示
@@ -608,14 +606,12 @@ def main():
                         refresh_key = f"results_refreshed_{current_analysis_id}"
                         if not st.session_state.get(refresh_key, False):
                             st.session_state[refresh_key] = True
-                            time.sleep(1)
                             st.rerun()
                 except Exception as e:
                     logger.warning(f"恢復結果失敗: {e}")
 
         if is_completed and st.session_state.get('analysis_running', False):
             st.session_state.analysis_running = False
-            time.sleep(1)
             st.rerun()
 
     # 分析報告
