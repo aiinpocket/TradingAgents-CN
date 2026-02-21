@@ -1,5 +1,5 @@
 """
-側邊欄元件 - AI 模型配置與系統資訊
+側邊欄元件 - 模型配置與系統資訊
 模型列表透過 API 動態取得，避免寫死
 """
 
@@ -99,7 +99,7 @@ def render_sidebar():
             options=providers,
             index=providers.index(current_provider),
             format_func=lambda x: provider_labels.get(x, x),
-            help="選擇 AI 模型提供商",
+            help="選擇模型提供商",
             key="llm_provider_select"
         )
 
@@ -139,7 +139,7 @@ def render_sidebar():
             enable_memory = st.checkbox(
                 "啟用記憶功能",
                 value=False,
-                help="啟用智慧體記憶功能（可能影響效能）"
+                help="啟用記憶功能（可能影響效能）"
             )
 
             enable_debug = st.checkbox(
@@ -154,7 +154,7 @@ def render_sidebar():
                 max_value=8000,
                 value=4000,
                 step=500,
-                help="AI 模型的最大輸出 token 數量"
+                help="模型的最大輸出 token 數量"
             )
 
         st.markdown("---")

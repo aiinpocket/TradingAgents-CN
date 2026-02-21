@@ -1278,67 +1278,6 @@ def render_detailed_analysis_content(selected_result):
         
         return
     
-    # 添加自定義CSS樣式美化標籤頁
-    st.markdown("""
-    <style>
-    /* 標籤頁容器樣式 */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #f8f9fa;
-        padding: 8px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
-
-    /* 單個標籤頁樣式 */
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        padding: 8px 16px;
-        background-color: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #e1e5e9;
-        color: #495057;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    /* 標籤頁懸停效果 */
-    .stTabs [data-baseweb="tab"]:hover {
-        background-color: #F0F9FF;
-        border-color: #0369A1;
-    }
-
-    /* 選中的標籤頁樣式 */
-    .stTabs [aria-selected="true"] {
-        background-color: #0369A1 !important;
-        color: white !important;
-        border-color: #0369A1 !important;
-    }
-
-    /* 標籤頁內容區域 */
-    .stTabs [data-baseweb="tab-panel"] {
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 10px;
-        border: 1px solid #e1e5e9;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    /* 標籤頁文字樣式 */
-    .stTabs [data-baseweb="tab"] p {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    /* 選中標籤頁的文字樣式 */
-    .stTabs [aria-selected="true"] p {
-        color: white !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
     # 定義分析模塊
     analysis_modules = [
         {

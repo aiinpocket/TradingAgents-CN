@@ -15,7 +15,7 @@ def render_header():
         justify-content: space-between;
         padding: 0.75rem 0;
         margin-bottom: 1rem;
-        border-bottom: 1px solid #E2E8F0;
+        border-bottom: 1px solid #E5E7EB;
     ">
         <div>
             <h1 style="
@@ -29,7 +29,7 @@ def render_header():
                 font-size: 0.813rem;
                 color: #64748B;
                 margin: 0.125rem 0 0 0;
-            ">多智慧體股票分析系統</p>
+            ">美股研究平台</p>
         </div>
     </div>
     """, unsafe_allow_html=True)

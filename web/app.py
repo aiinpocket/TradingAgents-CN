@@ -48,7 +48,7 @@ st.set_page_config(
     menu_items=None
 )
 
-# 全域樣式 - 專業極簡設計
+# 全域樣式 - 專業金融介面
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
@@ -66,11 +66,12 @@ st.markdown("""
     .viewerBadge_container__1QSob {
         display: none !important;
     }
-    
+
     /* 全域字型與背景 */
     .stApp {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        background-color: #F8FAFC;
+        background-color: #F9FAFB;
+        color: #1F2937;
     }
 
     /* 主容器 */
@@ -79,9 +80,9 @@ st.markdown("""
         max-width: 1200px;
     }
 
-    /* 按鈕 */
+    /* 按鈕 - 沉穩的深色調 */
     .stButton > button {
-        background-color: #0369A1;
+        background-color: #1E293B;
         color: white;
         border: none;
         border-radius: 6px;
@@ -92,14 +93,23 @@ st.markdown("""
     }
 
     .stButton > button:hover {
-        background-color: #0284C7;
+        background-color: #334155;
+    }
+
+    /* Primary 按鈕保持強調色 */
+    .stButton > button[kind="primary"] {
+        background-color: #0F766E;
+    }
+
+    .stButton > button[kind="primary"]:hover {
+        background-color: #115E59;
     }
 
     /* 輸入框 */
     .stTextInput > div > div > input,
     .stSelectbox > div > div > select,
     .stTextArea > div > div > textarea {
-        border: 1px solid #CBD5E1;
+        border: 1px solid #D1D5DB;
         border-radius: 6px;
         padding: 0.5rem 0.75rem;
         font-size: 0.875rem;
@@ -107,20 +117,20 @@ st.markdown("""
 
     .stTextInput > div > div > input:focus,
     .stSelectbox > div > div > select:focus {
-        border-color: #0369A1;
-        box-shadow: 0 0 0 2px rgba(3, 105, 161, 0.1);
+        border-color: #6B7280;
+        box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.1);
     }
 
-    /* 進度條 */
+    /* 進度條 - 深青綠色 */
     .stProgress > div > div > div > div {
-        background-color: #0369A1;
+        background-color: #0F766E;
         border-radius: 4px;
     }
 
     /* 標籤頁 */
     .stTabs [data-baseweb="tab-list"] {
         gap: 0;
-        border-bottom: 1px solid #E2E8F0;
+        border-bottom: 1px solid #E5E7EB;
     }
 
     .stTabs [data-baseweb="tab"] {
@@ -128,19 +138,19 @@ st.markdown("""
         border-bottom: 2px solid transparent;
         padding: 0.5rem 1rem;
         font-size: 0.875rem;
-        color: #64748B;
+        color: #6B7280;
     }
-    
+
     .stTabs [aria-selected="true"] {
-        border-bottom-color: #0369A1;
-        color: #0F172A;
+        border-bottom-color: #1E293B;
+        color: #111827;
         font-weight: 500;
     }
 
     /* 側邊欄 */
     section[data-testid="stSidebar"] {
         background-color: #FFFFFF;
-        border-right: 1px solid #E2E8F0;
+        border-right: 1px solid #E5E7EB;
     }
 
     section[data-testid="stSidebar"] > div {
@@ -156,12 +166,18 @@ st.markdown("""
     /* 數據框 */
     .dataframe {
         border-radius: 6px;
-        border: 1px solid #E2E8F0;
+        border: 1px solid #E5E7EB;
     }
 
     /* 圖表 */
     .js-plotly-plot {
         border-radius: 6px;
+    }
+
+    /* Metric 數值 - 更專業的顯示 */
+    [data-testid="stMetricValue"] {
+        font-weight: 600;
+        color: #111827;
     }
 
     /* 隱藏側邊欄收合按鈕 */
@@ -327,25 +343,13 @@ def main():
     api_status = check_api_keys()
 
     if not api_status['all_configured']:
-        st.error("API 密鑰配置不完整，請先配置必要的 API 密鑰")
-
-        with st.expander("配置指南", expanded=True):
-            st.markdown("""
-            **至少配置一個 LLM 提供商：**
-
-            1. **OpenAI** (OPENAI_API_KEY) - [platform.openai.com](https://platform.openai.com/)
-            2. **Anthropic** (ANTHROPIC_API_KEY) - [console.anthropic.com](https://console.anthropic.com/)
-            3. **FinnHub** (FINNHUB_API_KEY，可選) - [finnhub.io](https://finnhub.io/)
-
-            在專案根目錄建立 `.env` 檔案並填入密鑰後重啟應用。
-            """)
-
-        for key, status in api_status['details'].items():
-            if status['configured']:
-                st.success(f"{key}: {status['display']}")
-            else:
-                st.error(f"{key}: 未配置")
-
+        st.warning("API 密鑰未配置")
+        st.markdown(
+            "請在專案根目錄的 `.env` 檔案中配置至少一個提供商的密鑰，然後重啟應用。\n\n"
+            "- **OpenAI**: `OPENAI_API_KEY` ([取得](https://platform.openai.com/))\n"
+            "- **Anthropic**: `ANTHROPIC_API_KEY` ([取得](https://console.anthropic.com/))\n"
+            "- **FinnHub**: `FINNHUB_API_KEY` 可選 ([取得](https://finnhub.io/))"
+        )
         return
 
     # 渲染側邊欄模型配置
@@ -577,7 +581,7 @@ def main():
             st.session_state.show_analysis_results = False
 
     # 風險提示
-    st.caption("本系統提供的分析結果僅供參考，不構成投資建議。投資有風險，請理性決策。")
+    st.caption("分析結果僅供研究參考，不構成投資建議。")
 
 
 if __name__ == "__main__":

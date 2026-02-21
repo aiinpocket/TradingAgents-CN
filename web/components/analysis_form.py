@@ -13,8 +13,6 @@ logger = get_logger('web')
 def render_analysis_form():
     """渲染股票分析表單，收集使用者輸入的分析參數"""
 
-    st.subheader("分析配置")
-
     # 取得緩存的表單配置
     cached_config = st.session_state.get('form_config') or {}
 
@@ -27,7 +25,7 @@ def render_analysis_form():
         with col1:
             # 市場選擇（固定為美股）
             market_type = "美股"
-            st.info("目前僅支援美股分析")
+            st.caption("支援美股 (NYSE/NASDAQ)")
 
             cached_stock = cached_config.get('stock_symbol', '') if cached_config else ''
 
@@ -64,7 +62,7 @@ def render_analysis_form():
             )
 
         # 分析師團隊選擇
-        st.markdown("### 選擇分析師團隊")
+        st.markdown("**分析師團隊**")
 
         col1, col2 = st.columns(2)
 
@@ -107,10 +105,8 @@ def render_analysis_form():
         if fundamentals_analyst:
             selected_analysts.append(("fundamentals", "基本面分析師"))
 
-        # 顯示選擇摘要
-        if selected_analysts:
-            st.success(f"已選擇 {len(selected_analysts)} 個分析師: {', '.join([a[1] for a in selected_analysts])}")
-        else:
+        # 提示至少選擇一個分析師
+        if not selected_analysts:
             st.warning("請至少選擇一個分析師")
 
         # 高級選項
@@ -130,14 +126,12 @@ def render_analysis_form():
             custom_prompt = st.text_area(
                 "自定義分析要求",
                 placeholder="輸入特定的分析要求或關注點...",
-                help="可以輸入特定的分析要求，AI 會在分析中重點關注"
+                help="輸入特定的分析要求，系統會重點關注"
             )
 
-        # 顯示輸入狀態提示
+        # 顯示輸入提示（僅在未輸入時）
         if not stock_symbol:
-            st.info("請在上方輸入股票代碼，輸入完成後按回車鍵確認")
-        else:
-            st.success(f"已輸入股票代碼: {stock_symbol}")
+            st.caption("請輸入股票代碼後按回車確認")
 
         # 在提交按鈕前檢測配置變化並保存
         current_config = {

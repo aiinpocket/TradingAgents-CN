@@ -68,7 +68,7 @@ def render_analysis_info(results):
             st.metric(
                 label="LLM 提供商",
                 value=provider_name,
-                help="使用的 AI 模型提供商"
+                help="使用的模型提供商"
             )
 
         with col2:
@@ -85,9 +85,9 @@ def render_analysis_info(results):
             }.get(llm_model, llm_model)
 
             st.metric(
-                label="AI 模型",
+                label="模型",
                 value=model_display,
-                help="使用的具體 AI 模型"
+                help="使用的具體模型"
             )
 
         with col3:
@@ -97,7 +97,7 @@ def render_analysis_info(results):
             st.metric(
                 label="分析師數量",
                 value=f"{analysts_count} 個",
-                help="參與分析的 AI 分析師數量"
+                help="參與分析的分析師數量"
             )
 
         # 顯示分析師列表
@@ -122,7 +122,7 @@ def render_decision_summary(decision, stock_symbol=None):
 
     # 沒有決策數據時顯示提示
     if not decision:
-        st.info("分析完成後，投資決策將在此處顯示。包含投資建議、目標價位、風險評級和置信度等關鍵指標。")
+        st.info("分析完成後，投資決策將在此處顯示。")
         return
 
     col1, col2, col3, col4 = st.columns(4)
@@ -144,7 +144,7 @@ def render_decision_summary(decision, stock_symbol=None):
         st.metric(
             label="投資建議",
             value=chinese_action,
-            help="基於 AI 分析的投資建議"
+            help="基於多維度分析的投資建議"
         )
 
     with col2:
@@ -160,7 +160,7 @@ def render_decision_summary(decision, stock_symbol=None):
             label="置信度",
             value=confidence_str,
             delta=confidence_delta,
-            help="AI 對分析結果的置信度"
+            help="分析結果的置信度"
         )
 
     with col3:
@@ -186,10 +186,10 @@ def render_decision_summary(decision, stock_symbol=None):
 
         if target_price is not None and isinstance(target_price, (int, float)) and target_price > 0:
             price_display = f"{currency_symbol}{target_price:.2f}"
-            help_text = "AI 預測的目標價位"
+            help_text = "目標價位"
         else:
             price_display = "待分析"
-            help_text = "目標價位需要更詳細的分析才能確定"
+            help_text = "目標價位待定"
 
         st.metric(
             label="目標價位",
@@ -199,7 +199,7 @@ def render_decision_summary(decision, stock_symbol=None):
 
     # 分析推理
     if 'reasoning' in decision and decision['reasoning']:
-        with st.expander("AI 分析推理", expanded=True):
+        with st.expander("分析推理過程", expanded=True):
             st.markdown(decision['reasoning'])
 
 
@@ -344,9 +344,8 @@ def render_analysis_placeholder():
     """渲染分析數據等待提示"""
 
     st.info(
-        "請先配置 API 密鑰並運行股票分析。"
-        "分析完成後，系統將生成包含多個智能體團隊分析的詳細投資報告，"
-        "涵蓋技術分析、基本面分析、新聞分析和風險評估。"
+        "請先配置 API 密鑰並執行股票分析。"
+        "分析完成後，將生成涵蓋技術面、基本面、新聞及風險評估的詳細投資報告。"
     )
 
 
@@ -354,16 +353,11 @@ def render_risk_warning():
     """渲染風險提示"""
 
     st.markdown("---")
-    st.subheader("重要風險提示")
 
-    st.error("""
-    **投資風險提示**:
-    - **僅供參考**: 本分析結果僅供參考，不構成投資建議
-    - **投資風險**: 股票投資有風險，可能導致本金損失
-    - **理性決策**: 請結合多方信息進行理性投資決策
-    - **專業諮詢**: 重大投資決策建議諮詢專業財務顧問
-    - **自擔風險**: 投資決策及其後果由投資者自行承擔
-    """)
+    st.warning(
+        "本分析結果僅供研究參考，不構成投資建議。"
+        "投資有風險，決策請結合多方資訊並諮詢專業顧問。"
+    )
 
     st.caption(f"分析生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
@@ -381,7 +375,7 @@ def create_price_chart(price_data):
         y=price_data['price'],
         mode='lines',
         name='股價',
-        line=dict(color='#0369A1', width=2)
+        line=dict(color='#1E293B', width=2)
     ))
 
     fig.update_layout(
@@ -409,7 +403,7 @@ def create_sentiment_gauge(sentiment_score):
         delta={'reference': 50},
         gauge={
             'axis': {'range': [None, 100]},
-            'bar': {'color': "#0369A1"},
+            'bar': {'color': "#0F766E"},
             'steps': [
                 {'range': [0, 25], 'color': "#F1F5F9"},
                 {'range': [25, 50], 'color': "#E2E8F0"},
