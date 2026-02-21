@@ -74,7 +74,7 @@ def display_unified_progress(analysis_id: str, show_refresh_controls: bool = Tru
     else:
         st.info(f"{status_label} **當前狀態**: {last_message}")
 
-    # 重新整理控件
+    # 重新整理元件
     if show_refresh_controls and status in ('running', 'initializing'):
         _render_refresh_controls(analysis_id, status, show_refresh_controls)
 
@@ -114,7 +114,7 @@ def _render_view_report_button(analysis_id: str, progress_data: dict):
 
 
 def _render_refresh_controls(analysis_id: str, status: str, show_controls: bool):
-    """渲染重新整理控件（非阻塞式自動重新整理）"""
+    """渲染重新整理元件（非阻塞式自動重新整理）"""
     if not show_controls:
         return
 

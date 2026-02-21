@@ -83,7 +83,7 @@ def setup_redis_windows():
     1. 下載Redis for Windows:
        https://github.com/microsoftarchive/redis/releases
        
-    2. 解壓到目錄 (如 C:\\Redis)
+    2. 解壓縮到目錄 (如 C:\\Redis)
     
     3. 啟動Redis 伺服器:
        - 開啟命令列，進入Redis目錄

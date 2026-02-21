@@ -715,7 +715,7 @@ def render_detailed_analysis_content(selected_result):
         # 建立標籤頁顯示不同的報告
         report_tabs = list(reports.keys())
 
-        # 為報告名稱新增中文標題和圖標
+        # 為報告名稱新增中文標題和圖示
         report_display_names = {
             'final_trade_decision': '最終交易決策',
             'fundamentals_report': '基本面分析',
@@ -922,7 +922,7 @@ def render_detailed_analysis_content(selected_result):
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
         with tab:
-            # 在內容區域顯示圖標和描述
+            # 在內容區域顯示圖示和描述
             st.markdown(f"## {module['icon']} {module['title']}")
             st.markdown(f"*{module['description']}*")
             st.markdown("---")
@@ -1144,7 +1144,7 @@ def show_expanded_detail(result):
         # 取得報告資料
         reports = result['reports']
 
-        # 為報告名稱新增中文標題和圖標
+        # 為報告名稱新增中文標題和圖示
         report_display_names = {
             'final_trade_decision': '最終交易決策',
             'fundamentals_report': '基本面分析',
