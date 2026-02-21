@@ -3,7 +3,6 @@
 import os
 from pathlib import Path
 import json
-from datetime import date
 from typing import Dict, Any
 
 from langchain_openai import ChatOpenAI
@@ -18,11 +17,7 @@ from tradingagents.agents.utils.memory import FinancialSituationMemory
 # 導入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
-from tradingagents.agents.utils.agent_states import (
-    AgentState,
-    InvestDebateState,
-    RiskDebateState,
-)
+from tradingagents.agents.utils.agent_states import AgentState
 from tradingagents.dataflows.interface import set_config
 
 from .conditional_logic import ConditionalLogic
