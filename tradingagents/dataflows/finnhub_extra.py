@@ -2,14 +2,57 @@
 FinnHub 進階資料聚合模組
 將多個免費 API 端點聚合為三個工具函式，供分析師智慧體使用
 包含：情緒數據、分析師共識、技術訊號
+每個報告帶有記憶體快取，避免同一股票短時間內重複呼叫 API
 """
 
 import os
+import time
 import finnhub
 from datetime import datetime, timedelta
 from tradingagents.utils.logging_manager import get_logger
 
 logger = get_logger('dataflows')
+
+# 報告快取（模組層級，同行程內所有使用者共享）
+# 格式: { "report_type:TICKER:date": {"data": str, "timestamp": float} }
+_report_cache: dict = {}
+
+# 各報告類型的快取有效期（秒）
+_CACHE_TTL = {
+    "sentiment": 3600,      # 情緒數據：1 小時（盤中變化較快）
+    "analyst": 21600,       # 分析師共識：6 小時（評級更新頻率低）
+    "technical": 3600,      # 技術訊號：1 小時（隨市場變動）
+}
+
+
+def _get_cached_report(report_type: str, ticker: str, extra_key: str = "") -> str:
+    """從快取取得報告，如果存在且未過期則回傳，否則回傳 None"""
+    cache_key = f"{report_type}:{ticker}:{extra_key}"
+    entry = _report_cache.get(cache_key)
+    if entry is None:
+        return None
+    ttl = _CACHE_TTL.get(report_type, 3600)
+    if (time.time() - entry["timestamp"]) > ttl:
+        _report_cache.pop(cache_key, None)
+        return None
+    logger.info(f"FinnHub {report_type} 快取命中: {ticker}")
+    return entry["data"]
+
+
+def _set_cached_report(report_type: str, ticker: str, data: str, extra_key: str = "") -> None:
+    """將報告存入快取"""
+    cache_key = f"{report_type}:{ticker}:{extra_key}"
+    _report_cache[cache_key] = {"data": data, "timestamp": time.time()}
+
+
+def clear_finnhub_cache(ticker: str = None) -> None:
+    """清除 FinnHub 報告快取，不指定 ticker 則清除全部"""
+    if ticker:
+        keys_to_remove = [k for k in _report_cache if f":{ticker}:" in k]
+        for k in keys_to_remove:
+            _report_cache.pop(k, None)
+    else:
+        _report_cache.clear()
 
 
 def _get_finnhub_client():
@@ -32,6 +75,11 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
     Returns:
         str: Markdown 格式的情緒分析報告
     """
+    # 快取檢查
+    cached = _get_cached_report("sentiment", ticker, curr_date)
+    if cached:
+        return cached
+
     client = _get_finnhub_client()
     if not client:
         return "FinnHub API 金鑰未設定，無法取得情緒數據"
@@ -164,7 +212,9 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
         report_sections.append("## 社交媒體情緒\n數據取得失敗\n")
 
     report_sections.append("---\n*數據來源: FinnHub API (免費方案)*")
-    return "\n".join(report_sections)
+    result = "\n".join(report_sections)
+    _set_cached_report("sentiment", ticker, result, curr_date)
+    return result
 
 
 def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
@@ -180,6 +230,11 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
     Returns:
         str: Markdown 格式的分析師共識報告
     """
+    # 快取檢查
+    cached = _get_cached_report("analyst", ticker, curr_date)
+    if cached:
+        return cached
+
     client = _get_finnhub_client()
     if not client:
         return "FinnHub API 金鑰未設定，無法取得分析師數據"
@@ -365,7 +420,9 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
         report_sections.append("## 同業公司\n數據取得失敗\n")
 
     report_sections.append("---\n*數據來源: FinnHub API (免費方案)*")
-    return "\n".join(report_sections)
+    result = "\n".join(report_sections)
+    _set_cached_report("analyst", ticker, result, curr_date)
+    return result
 
 
 def get_finnhub_technical_report(ticker: str, resolution: str = 'D') -> str:
@@ -380,6 +437,11 @@ def get_finnhub_technical_report(ticker: str, resolution: str = 'D') -> str:
     Returns:
         str: Markdown 格式的技術訊號報告
     """
+    # 快取檢查
+    cached = _get_cached_report("technical", ticker, resolution)
+    if cached:
+        return cached
+
     client = _get_finnhub_client()
     if not client:
         return "FinnHub API 金鑰未設定，無法取得技術訊號"
@@ -466,4 +528,6 @@ def get_finnhub_technical_report(ticker: str, resolution: str = 'D') -> str:
         report_sections.append("## 支撐與壓力位\n數據取得失敗\n")
 
     report_sections.append("---\n*數據來源: FinnHub API (免費方案)*")
-    return "\n".join(report_sections)
+    result = "\n".join(report_sections)
+    _set_cached_report("technical", ticker, result, resolution)
+    return result
