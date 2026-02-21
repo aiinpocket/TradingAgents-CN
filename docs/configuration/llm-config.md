@@ -1,412 +1,412 @@
-# 大語言模型配置 (v0.1.7)
+# (v0.1.7)
 
-## 概述
+## 
 
-TradingAgents-CN 框架支援 OpenAI 和 Anthropic 兩大語言模型提供商。本文件詳細介紹了如何配置和優化不同的 LLM 以獲得最佳效能和成本效益。
+TradingAgents-CN OpenAI Anthropic LLM 
 
-## 🎯 v0.1.7 LLM支援更新
+## v0.1.7 LLM
 
-- ✅ **智慧路由**: 根據任務自動選擇最優模型
-- ✅ **成本控制**: 詳細的成本監控和限制
-- ✅ **工具呼叫**: 完整的Function Calling支援
+- ****: 
+- ****: 
+- ****: Function Calling
 
-## 支援的 LLM 提供商
+## LLM 
 
 ### 1. OpenAI
 
-#### 支援的模型
+#### 
 ```python
 openai_models = {
-    "gpt-4o": {
-        "description": "最新的 GPT-4 優化版本",
-        "context_length": 128000,
-        "cost_per_1k_tokens": {"input": 0.005, "output": 0.015},
-        "recommended_for": ["深度分析", "複雜推理", "高品質輸出"]
-    },
-    "gpt-4o-mini": {
-        "description": "輕量級 GPT-4 版本",
-        "context_length": 128000,
-        "cost_per_1k_tokens": {"input": 0.00015, "output": 0.0006},
-        "recommended_for": ["快速任務", "成本敏感場景", "大量API呼叫"]
-    },
-    "gpt-4-turbo": {
-        "description": "GPT-4 Turbo 版本",
-        "context_length": 128000,
-        "cost_per_1k_tokens": {"input": 0.01, "output": 0.03},
-        "recommended_for": ["平衡效能和成本", "標準分析任務"]
-    },
-    "gpt-3.5-turbo": {
-        "description": "經濟實用的選擇",
-        "context_length": 16385,
-        "cost_per_1k_tokens": {"input": 0.0005, "output": 0.0015},
-        "recommended_for": ["簡單任務", "預算有限", "快速響應"]
-    }
+ "gpt-4o": {
+ "description": " GPT-4 ",
+ "context_length": 128000,
+ "cost_per_1k_tokens": {"input": 0.005, "output": 0.015},
+ "recommended_for": ["", "", ""]
+ },
+ "gpt-4o-mini": {
+ "description": " GPT-4 ",
+ "context_length": 128000,
+ "cost_per_1k_tokens": {"input": 0.00015, "output": 0.0006},
+ "recommended_for": ["", "", "API"]
+ },
+ "gpt-4-turbo": {
+ "description": "GPT-4 Turbo ",
+ "context_length": 128000,
+ "cost_per_1k_tokens": {"input": 0.01, "output": 0.03},
+ "recommended_for": ["", ""]
+ },
+ "gpt-3.5-turbo": {
+ "description": "",
+ "context_length": 16385,
+ "cost_per_1k_tokens": {"input": 0.0005, "output": 0.0015},
+ "recommended_for": ["", "", ""]
+ }
 }
 ```
 
-#### 配置示例
+#### 
 ```python
-# OpenAI 配置
+# OpenAI 
 openai_config = {
-    "llm_provider": "openai",
-    "backend_url": "https://api.openai.com/v1",
-    "deep_think_llm": "gpt-4o",           # 用於複雜分析
-    "quick_think_llm": "gpt-4o-mini",     # 用於簡單任務
-    "api_key": os.getenv("OPENAI_API_KEY"),
+ "llm_provider": "openai",
+ "backend_url": "https://api.openai.com/v1",
+ "deep_think_llm": "gpt-4o", # 
+ "quick_think_llm": "gpt-4o-mini", # 
+ "api_key": os.getenv("OPENAI_API_KEY"),
 
-    # 模型參數
-    "model_params": {
-        "temperature": 0.1,               # 低溫度保證一致性
-        "max_tokens": 2000,               # 最大輸出長度
-        "top_p": 0.9,                     # 核採樣參數
-        "frequency_penalty": 0.0,         # 頻率懲罰
-        "presence_penalty": 0.0,          # 存在懲罰
-    },
+ # 
+ "model_params": {
+ "temperature": 0.1, # 
+ "max_tokens": 2000, # 
+ "top_p": 0.9, # 
+ "frequency_penalty": 0.0, # 
+ "presence_penalty": 0.0, # 
+ },
 
-    # 速率限制
-    "rate_limits": {
-        "requests_per_minute": 3500,      # 每分鐘請求數
-        "tokens_per_minute": 90000,       # 每分鐘token數
-    },
+ # 
+ "rate_limits": {
+ "requests_per_minute": 3500, # 
+ "tokens_per_minute": 90000, # token
+ },
 
-    # 重試配置
-    "retry_config": {
-        "max_retries": 3,
-        "backoff_factor": 2,
-        "timeout": 60
-    }
+ # 
+ "retry_config": {
+ "max_retries": 3,
+ "backoff_factor": 2,
+ "timeout": 60
+ }
 }
 ```
 
 ### 2. Anthropic Claude
 
-#### 支援的模型
+#### 
 ```python
 anthropic_models = {
-    "claude-3-opus-20240229": {
-        "description": "最強大的 Claude 模型",
-        "context_length": 200000,
-        "cost_per_1k_tokens": {"input": 0.015, "output": 0.075},
-        "recommended_for": ["最複雜的分析", "高品質推理", "創意任務"]
-    },
-    "claude-3-sonnet-20240229": {
-        "description": "平衡效能和成本",
-        "context_length": 200000,
-        "cost_per_1k_tokens": {"input": 0.003, "output": 0.015},
-        "recommended_for": ["標準分析任務", "平衡使用場景"]
-    },
-    "claude-3-haiku-20240307": {
-        "description": "快速且經濟的選擇",
-        "context_length": 200000,
-        "cost_per_1k_tokens": {"input": 0.00025, "output": 0.00125},
-        "recommended_for": ["快速任務", "大量呼叫", "成本優化"]
-    }
+ "claude-3-opus-20240229": {
+ "description": " Claude ",
+ "context_length": 200000,
+ "cost_per_1k_tokens": {"input": 0.015, "output": 0.075},
+ "recommended_for": ["", "", ""]
+ },
+ "claude-3-sonnet-20240229": {
+ "description": "",
+ "context_length": 200000,
+ "cost_per_1k_tokens": {"input": 0.003, "output": 0.015},
+ "recommended_for": ["", ""]
+ },
+ "claude-3-haiku-20240307": {
+ "description": "",
+ "context_length": 200000,
+ "cost_per_1k_tokens": {"input": 0.00025, "output": 0.00125},
+ "recommended_for": ["", "", ""]
+ }
 }
 ```
 
-#### 配置示例
+#### 
 ```python
-# Anthropic 配置
+# Anthropic 
 anthropic_config = {
-    "llm_provider": "anthropic",
-    "backend_url": "https://api.anthropic.com",
-    "deep_think_llm": "claude-3-opus-20240229",
-    "quick_think_llm": "claude-3-haiku-20240307",
-    "api_key": os.getenv("ANTHROPIC_API_KEY"),
+ "llm_provider": "anthropic",
+ "backend_url": "https://api.anthropic.com",
+ "deep_think_llm": "claude-3-opus-20240229",
+ "quick_think_llm": "claude-3-haiku-20240307",
+ "api_key": os.getenv("ANTHROPIC_API_KEY"),
 
-    # 模型參數
-    "model_params": {
-        "temperature": 0.1,
-        "max_tokens": 2000,
-        "top_p": 0.9,
-        "top_k": 40,
-    },
+ # 
+ "model_params": {
+ "temperature": 0.1,
+ "max_tokens": 2000,
+ "top_p": 0.9,
+ "top_k": 40,
+ },
 
-    # 速率限制
-    "rate_limits": {
-        "requests_per_minute": 1000,
-        "tokens_per_minute": 40000,
-    }
+ # 
+ "rate_limits": {
+ "requests_per_minute": 1000,
+ "tokens_per_minute": 40000,
+ }
 }
 ```
 
-## LLM 選擇策略
+## LLM 
 
-### 基於任務類型的選擇
+### 
 ```python
 class LLMSelector:
-    """LLM 選擇器 - 根據任務選擇最適合的模型"""
+ """LLM - """
 
-    def __init__(self, config: Dict):
-        self.config = config
-        self.task_model_mapping = self._initialize_task_mapping()
+ def __init__(self, config: Dict):
+ self.config = config
+ self.task_model_mapping = self._initialize_task_mapping()
 
-    def select_model(self, task_type: str, complexity: str = "medium") -> str:
-        """根據任務類型和複雜度選擇模型"""
+ def select_model(self, task_type: str, complexity: str = "medium") -> str:
+ """"""
 
-        task_config = self.task_model_mapping.get(task_type, {})
+ task_config = self.task_model_mapping.get(task_type, {})
 
-        if complexity == "high":
-            return task_config.get("high_complexity", self.config["deep_think_llm"])
-        elif complexity == "low":
-            return task_config.get("low_complexity", self.config["quick_think_llm"])
-        else:
-            return task_config.get("medium_complexity", self.config["deep_think_llm"])
+ if complexity == "high":
+ return task_config.get("high_complexity", self.config["deep_think_llm"])
+ elif complexity == "low":
+ return task_config.get("low_complexity", self.config["quick_think_llm"])
+ else:
+ return task_config.get("medium_complexity", self.config["deep_think_llm"])
 
-    def _initialize_task_mapping(self) -> Dict:
-        """初始化任務-模型映射"""
-        return {
-            "fundamental_analysis": {
-                "high_complexity": "gpt-4o",
-                "medium_complexity": "gpt-4o-mini",
-                "low_complexity": "gpt-3.5-turbo"
-            },
-            "technical_analysis": {
-                "high_complexity": "claude-3-opus-20240229",
-                "medium_complexity": "claude-3-sonnet-20240229",
-                "low_complexity": "claude-3-haiku-20240307"
-            },
-            "news_analysis": {
-                "high_complexity": "gpt-4o",
-                "medium_complexity": "gpt-4o-mini",
-                "low_complexity": "gpt-4o-mini"
-            },
-            "social_sentiment": {
-                "high_complexity": "claude-3-sonnet-20240229",
-                "medium_complexity": "gpt-4o-mini",
-                "low_complexity": "gpt-4o-mini"
-            },
-            "risk_assessment": {
-                "high_complexity": "gpt-4o",
-                "medium_complexity": "claude-3-sonnet-20240229",
-                "low_complexity": "gpt-4o-mini"
-            },
-            "trading_decision": {
-                "high_complexity": "gpt-4o",
-                "medium_complexity": "gpt-4o",
-                "low_complexity": "claude-3-sonnet-20240229"
-            }
-        }
+ def _initialize_task_mapping(self) -> Dict:
+ """-"""
+ return {
+ "fundamental_analysis": {
+ "high_complexity": "gpt-4o",
+ "medium_complexity": "gpt-4o-mini",
+ "low_complexity": "gpt-3.5-turbo"
+ },
+ "technical_analysis": {
+ "high_complexity": "claude-3-opus-20240229",
+ "medium_complexity": "claude-3-sonnet-20240229",
+ "low_complexity": "claude-3-haiku-20240307"
+ },
+ "news_analysis": {
+ "high_complexity": "gpt-4o",
+ "medium_complexity": "gpt-4o-mini",
+ "low_complexity": "gpt-4o-mini"
+ },
+ "social_sentiment": {
+ "high_complexity": "claude-3-sonnet-20240229",
+ "medium_complexity": "gpt-4o-mini",
+ "low_complexity": "gpt-4o-mini"
+ },
+ "risk_assessment": {
+ "high_complexity": "gpt-4o",
+ "medium_complexity": "claude-3-sonnet-20240229",
+ "low_complexity": "gpt-4o-mini"
+ },
+ "trading_decision": {
+ "high_complexity": "gpt-4o",
+ "medium_complexity": "gpt-4o",
+ "low_complexity": "claude-3-sonnet-20240229"
+ }
+ }
 ```
 
-### 成本優化策略
+### 
 ```python
 class CostOptimizer:
-    """成本優化器 - 在效能和成本間找到平衡"""
+ """ - """
 
-    def __init__(self, budget_config: Dict):
-        self.daily_budget = budget_config.get("daily_budget", 100)  # 美元
-        self.cost_tracking = {}
-        self.model_costs = self._load_model_costs()
+ def __init__(self, budget_config: Dict):
+ self.daily_budget = budget_config.get("daily_budget", 100) # 
+ self.cost_tracking = {}
+ self.model_costs = self._load_model_costs()
 
-    def get_cost_optimized_config(self, current_usage: Dict) -> Dict:
-        """獲取成本優化的配置"""
+ def get_cost_optimized_config(self, current_usage: Dict) -> Dict:
+ """"""
 
-        remaining_budget = self._calculate_remaining_budget(current_usage)
+ remaining_budget = self._calculate_remaining_budget(current_usage)
 
-        if remaining_budget > 50:  # 預算充足
-            return {
-                "deep_think_llm": "gpt-4o",
-                "quick_think_llm": "gpt-4o-mini",
-                "max_debate_rounds": 3
-            }
-        elif remaining_budget > 20:  # 預算中等
-            return {
-                "deep_think_llm": "gpt-4o-mini",
-                "quick_think_llm": "gpt-4o-mini",
-                "max_debate_rounds": 2
-            }
-        else:  # 預算緊張
-            return {
-                "deep_think_llm": "gpt-3.5-turbo",
-                "quick_think_llm": "gpt-3.5-turbo",
-                "max_debate_rounds": 1
-            }
+ if remaining_budget > 50: # 
+ return {
+ "deep_think_llm": "gpt-4o",
+ "quick_think_llm": "gpt-4o-mini",
+ "max_debate_rounds": 3
+ }
+ elif remaining_budget > 20: # 
+ return {
+ "deep_think_llm": "gpt-4o-mini",
+ "quick_think_llm": "gpt-4o-mini",
+ "max_debate_rounds": 2
+ }
+ else: # 
+ return {
+ "deep_think_llm": "gpt-3.5-turbo",
+ "quick_think_llm": "gpt-3.5-turbo",
+ "max_debate_rounds": 1
+ }
 
-    def estimate_request_cost(self, model: str, input_tokens: int, output_tokens: int) -> float:
-        """估算請求成本"""
+ def estimate_request_cost(self, model: str, input_tokens: int, output_tokens: int) -> float:
+ """"""
 
-        model_cost = self.model_costs.get(model, {"input": 0.001, "output": 0.002})
+ model_cost = self.model_costs.get(model, {"input": 0.001, "output": 0.002})
 
-        input_cost = (input_tokens / 1000) * model_cost["input"]
-        output_cost = (output_tokens / 1000) * model_cost["output"]
+ input_cost = (input_tokens / 1000) * model_cost["input"]
+ output_cost = (output_tokens / 1000) * model_cost["output"]
 
-        return input_cost + output_cost
+ return input_cost + output_cost
 ```
 
-## 效能優化
+## 
 
-### 提示詞優化
+### 
 ```python
 class PromptOptimizer:
-    """提示詞優化器"""
+ """"""
 
-    def __init__(self):
-        self.prompt_templates = self._load_prompt_templates()
+ def __init__(self):
+ self.prompt_templates = self._load_prompt_templates()
 
-    def optimize_prompt(self, task_type: str, model: str, context: Dict) -> str:
-        """優化提示詞"""
+ def optimize_prompt(self, task_type: str, model: str, context: Dict) -> str:
+ """"""
 
-        base_prompt = self.prompt_templates[task_type]["base"]
+ base_prompt = self.prompt_templates[task_type]["base"]
 
-        # 根據模型特點調整提示詞
-        if "gpt" in model.lower():
-            optimized_prompt = self._optimize_for_gpt(base_prompt, context)
-        elif "claude" in model.lower():
-            optimized_prompt = self._optimize_for_claude(base_prompt, context)
-        else:
-            optimized_prompt = base_prompt
+ # 
+ if "gpt" in model.lower():
+ optimized_prompt = self._optimize_for_gpt(base_prompt, context)
+ elif "claude" in model.lower():
+ optimized_prompt = self._optimize_for_claude(base_prompt, context)
+ else:
+ optimized_prompt = base_prompt
 
-        return optimized_prompt
+ return optimized_prompt
 
-    def _optimize_for_gpt(self, prompt: str, context: Dict) -> str:
-        """為 GPT 模型優化提示詞"""
+ def _optimize_for_gpt(self, prompt: str, context: Dict) -> str:
+ """ GPT """
 
-        # GPT 喜歡結構化的指令
-        structured_prompt = f"""
-任務: {context.get('task_description', '')}
+ # GPT 
+ structured_prompt = f"""
+: {context.get('task_description', '')}
 
-指令:
-1. 仔細分析提供的資料
-2. 應用相關的金融分析方法
-3. 提供清晰的結論和建議
-4. 包含置信度評估
+:
+1. 
+2. 
+3. 
+4. 
 
-資料:
+:
 {context.get('data', '')}
 
-請按照以下格式回答:
-- 分析結果: [你的分析]
-- 結論: [主要結論]
-- 建議: [具體建議]
-- 置信度: [0-1之間的數值]
+:
+- : []
+- : []
+- : []
+- : [0-1]
 """
-        return structured_prompt
+ return structured_prompt
 
-    def _optimize_for_claude(self, prompt: str, context: Dict) -> str:
-        """為 Claude 模型優化提示詞"""
+ def _optimize_for_claude(self, prompt: str, context: Dict) -> str:
+ """ Claude """
 
-        # Claude 喜歡對話式的提示
-        conversational_prompt = f"""
-我需要你作為一個專業的金融分析師來幫助我分析以下資料。
+ # Claude 
+ conversational_prompt = f"""
+
 
 {context.get('data', '')}
 
-請你:
-1. 深入分析這些資料的含義
-2. 識別關鍵的趨勢和模式
-3. 評估潛在的風險和機會
-4. 給出你的專業建議
+:
+1. 
+2. 
+3. 
+4. 
 
-請用專業但易懂的語言回答，並解釋你的推理過程。
+
 """
-        return conversational_prompt
+ return conversational_prompt
 ```
 
-### 並行控制
+### 
 ```python
 class LLMConcurrencyManager:
-    """LLM 並行管理器"""
+ """LLM """
 
-    def __init__(self, config: Dict):
-        self.config = config
-        self.semaphores = self._initialize_semaphores()
-        self.rate_limiters = self._initialize_rate_limiters()
+ def __init__(self, config: Dict):
+ self.config = config
+ self.semaphores = self._initialize_semaphores()
+ self.rate_limiters = self._initialize_rate_limiters()
 
-    def _initialize_semaphores(self) -> Dict:
-        """初始化信號量控制並行"""
-        return {
-            "openai": asyncio.Semaphore(10),      # OpenAI 最多10個並行
-            "anthropic": asyncio.Semaphore(5),    # Anthropic 最多5個並行
-        }
+ def _initialize_semaphores(self) -> Dict:
+ """"""
+ return {
+ "openai": asyncio.Semaphore(10), # OpenAI 10
+ "anthropic": asyncio.Semaphore(5), # Anthropic 5
+ }
 
-    async def execute_with_concurrency_control(self, provider: str, llm_call: callable) -> Any:
-        """在並行控制下執行LLM呼叫"""
+ async def execute_with_concurrency_control(self, provider: str, llm_call: callable) -> Any:
+ """LLM"""
 
-        semaphore = self.semaphores.get(provider)
-        rate_limiter = self.rate_limiters.get(provider)
+ semaphore = self.semaphores.get(provider)
+ rate_limiter = self.rate_limiters.get(provider)
 
-        async with semaphore:
-            await rate_limiter.acquire()
-            try:
-                result = await llm_call()
-                return result
-            except Exception as e:
-                # 處理速率限制錯誤
-                if "rate_limit" in str(e).lower():
-                    await asyncio.sleep(60)  # 等待1分鐘
-                    return await llm_call()
-                else:
-                    raise e
+ async with semaphore:
+ await rate_limiter.acquire()
+ try:
+ result = await llm_call()
+ return result
+ except Exception as e:
+ # 
+ if "rate_limit" in str(e).lower():
+ await asyncio.sleep(60) # 1
+ return await llm_call()
+ else:
+ raise e
 ```
 
-## 監控和除錯
+## 
 
-### LLM 效能監控
+### LLM 
 ```python
 class LLMMonitor:
-    """LLM 效能監控"""
+ """LLM """
 
-    def __init__(self):
-        self.metrics = {
-            "request_count": defaultdict(int),
-            "response_times": defaultdict(list),
-            "token_usage": defaultdict(dict),
-            "error_rates": defaultdict(float),
-            "costs": defaultdict(float)
-        }
+ def __init__(self):
+ self.metrics = {
+ "request_count": defaultdict(int),
+ "response_times": defaultdict(list),
+ "token_usage": defaultdict(dict),
+ "error_rates": defaultdict(float),
+ "costs": defaultdict(float)
+ }
 
-    def record_request(self, model: str, response_time: float,
-                      input_tokens: int, output_tokens: int, cost: float):
-        """記錄請求指標"""
+ def record_request(self, model: str, response_time: float,
+ input_tokens: int, output_tokens: int, cost: float):
+ """"""
 
-        self.metrics["request_count"][model] += 1
-        self.metrics["response_times"][model].append(response_time)
+ self.metrics["request_count"][model] += 1
+ self.metrics["response_times"][model].append(response_time)
 
-        if model not in self.metrics["token_usage"]:
-            self.metrics["token_usage"][model] = {"input": 0, "output": 0}
+ if model not in self.metrics["token_usage"]:
+ self.metrics["token_usage"][model] = {"input": 0, "output": 0}
 
-        self.metrics["token_usage"][model]["input"] += input_tokens
-        self.metrics["token_usage"][model]["output"] += output_tokens
-        self.metrics["costs"][model] += cost
+ self.metrics["token_usage"][model]["input"] += input_tokens
+ self.metrics["token_usage"][model]["output"] += output_tokens
+ self.metrics["costs"][model] += cost
 
-    def get_performance_report(self) -> Dict:
-        """獲取效能報告"""
+ def get_performance_report(self) -> Dict:
+ """"""
 
-        report = {}
+ report = {}
 
-        for model in self.metrics["request_count"]:
-            response_times = self.metrics["response_times"][model]
+ for model in self.metrics["request_count"]:
+ response_times = self.metrics["response_times"][model]
 
-            report[model] = {
-                "total_requests": self.metrics["request_count"][model],
-                "avg_response_time": sum(response_times) / len(response_times) if response_times else 0,
-                "total_input_tokens": self.metrics["token_usage"][model].get("input", 0),
-                "total_output_tokens": self.metrics["token_usage"][model].get("output", 0),
-                "total_cost": self.metrics["costs"][model],
-                "avg_cost_per_request": self.metrics["costs"][model] / self.metrics["request_count"][model] if self.metrics["request_count"][model] > 0 else 0
-            }
+ report[model] = {
+ "total_requests": self.metrics["request_count"][model],
+ "avg_response_time": sum(response_times) / len(response_times) if response_times else 0,
+ "total_input_tokens": self.metrics["token_usage"][model].get("input", 0),
+ "total_output_tokens": self.metrics["token_usage"][model].get("output", 0),
+ "total_cost": self.metrics["costs"][model],
+ "avg_cost_per_request": self.metrics["costs"][model] / self.metrics["request_count"][model] if self.metrics["request_count"][model] > 0 else 0
+ }
 
-        return report
+ return report
 ```
 
-## 最佳實踐
+## 
 
-### 1. 模型選擇建議
-- **高精度任務**: 使用 GPT-4o 或 Claude-3-Opus
-- **平衡場景**: 使用 GPT-4o-mini 或 Claude-3-Sonnet
-- **成本敏感**: 使用 GPT-3.5-turbo 或 Claude-3-Haiku
+### 1. 
+- ****: GPT-4o Claude-3-Opus
+- ****: GPT-4o-mini Claude-3-Sonnet
+- ****: GPT-3.5-turbo Claude-3-Haiku
 
-### 2. 成本控制策略
-- 設定每日預算限制
-- 使用較小模型處理簡單任務
-- 實施智慧快取減少重複呼叫
-- 監控token使用量
+### 2. 
+- 
+- 
+- 
+- token
 
-### 3. 效能優化技巧
-- 優化提示詞長度和結構
-- 使用適當的溫度參數
-- 實施並行控制避免速率限制
-- 定期監控和調整配置
+### 3. 
+- 
+- 
+- 
+- 
 
-透過合理的LLM配置和優化，可以在保證分析品質的同時控制成本並提高系統效能。
+LLM

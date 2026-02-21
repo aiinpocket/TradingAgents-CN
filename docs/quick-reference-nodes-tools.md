@@ -1,243 +1,243 @@
-# 📋 TradingAgents 節點工具快速參考
+# TradingAgents 
 
-## 🔄 分析流程概覽
+## 
 
 ```
-開始 → 驗證 → 準備 → 預估 → 配置 → 初始化
-    ↓
-分析師團隊 (並行執行)
-├── 市場分析師      ← get_stock_market_data_unified
-├── 基本面分析師    ← get_stock_fundamentals_unified
-├── 新聞分析師      ← get_realtime_stock_news
-└── 社交媒體分析師  ← get_stock_news_openai
-    ↓
-研究員辯論
-├── 看漲研究員 ←→ 看跌研究員
-└── 研究經理 (形成共識)
-    ↓
-交易員 (制定交易策略)
-    ↓
-風險評估團隊
-├── 激進評估 ← 保守評估 → 中性評估
-└── 風險經理 (最終風險決策)
-    ↓
-信號處理 → 最終決策
+ → → → → → 
+ ↓
+ ()
+ ← get_stock_market_data_unified
+ ← get_stock_fundamentals_unified
+ ← get_realtime_stock_news
+ ← get_stock_news_openai
+ ↓
+
+ ←→ 
+ ()
+ ↓
+ ()
+ ↓
+
+ ← → 
+ ()
+ ↓
+ → 
 ```
 
-## 👥 核心節點速查
+## 
 
-| 節點類型 | 節點名稱 | 主要職責 | 核心工具 |
+| | | | |
 |---------|---------|---------|---------|
-| **分析師** | 市場分析師 | 技術分析、趨勢識別 | `get_stock_market_data_unified` |
-| **分析師** | 基本面分析師 | 財務分析、估值模型 | `get_stock_fundamentals_unified` |
-| **分析師** | 新聞分析師 | 新聞事件、宏觀分析 | `get_realtime_stock_news` |
-| **分析師** | 社交媒體分析師 | 情緒分析、輿論監控 | `get_stock_news_openai` |
-| **研究員** | 看漲研究員 | 樂觀角度、增長潛力 | LLM推理 + 記憶 |
-| **研究員** | 看跌研究員 | 悲觀角度、風險識別 | LLM推理 + 記憶 |
-| **管理層** | 研究經理 | 辯論主持、共識形成 | LLM推理 + 記憶 |
-| **交易** | 交易員 | 交易決策、倉位管理 | LLM推理 + 記憶 |
-| **風險** | 激進評估 | 高風險高收益策略 | LLM推理 |
-| **風險** | 保守評估 | 低風險穩健策略 | LLM推理 |
-| **風險** | 中性評估 | 平衡風險收益 | LLM推理 |
-| **管理層** | 風險經理 | 風險控制、政策制定 | LLM推理 + 記憶 |
-| **處理** | 信號處理 | 信號整合、最終輸出 | 信號處理演算法 |
+| **** | | | `get_stock_market_data_unified` |
+| **** | | | `get_stock_fundamentals_unified` |
+| **** | | | `get_realtime_stock_news` |
+| **** | | | `get_stock_news_openai` |
+| **** | | | LLM + |
+| **** | | | LLM + |
+| **** | | | LLM + |
+| **** | | | LLM + |
+| **** | | | LLM |
+| **** | | | LLM |
+| **** | | | LLM |
+| **** | | | LLM + |
+| **** | | | |
 
-## 🔧 核心工具速查
+## 
 
-### 📈 市場數據工具
+### 
 ```python
-# 統一市場數據工具 (推薦)
+# ()
 get_stock_market_data_unified(ticker, start_date, end_date)
-# 自動識別股票類型，調用最佳數據源
-# 美股: Yahoo + FinnHub
+# 
+# : Yahoo + FinnHub
 
-# 備用工具
-get_YFin_data_online(symbol, start_date, end_date)           # Yahoo Finance
-get_stockstats_indicators_report_online(symbol, period)     # 技術指標
+# 
+get_YFin_data_online(symbol, start_date, end_date) # Yahoo Finance
+get_stockstats_indicators_report_online(symbol, period) # 
 ```
 
-### 📊 基本面工具
+### 
 ```python
-# 統一基本面工具 (推薦)
+# ()
 get_stock_fundamentals_unified(ticker, start_date, end_date, curr_date)
-# 自動識別股票類型，調用最佳數據源
-# 美股: FinnHub + SimFin
+# 
+# : FinnHub + SimFin
 
-# 補充工具
-get_finnhub_company_insider_sentiment(symbol)               # 內部人士情緒
-get_simfin_balance_sheet(ticker, year, period)             # 資產負債表
-get_simfin_income_stmt(ticker, year, period)               # 損益表
+# 
+get_finnhub_company_insider_sentiment(symbol) # 
+get_simfin_balance_sheet(ticker, year, period) # 
+get_simfin_income_stmt(ticker, year, period) # 
 ```
 
-### 📰 新聞工具
+### 
 ```python
-# 即時新聞
-get_realtime_stock_news(symbol, days_back)                 # 即時股票新聞
-get_global_news_openai(query, max_results)                 # 全球新聞 (OpenAI)
-get_google_news(query, lang, country)                      # Google 新聞
+# 
+get_realtime_stock_news(symbol, days_back) # 
+get_global_news_openai(query, max_results) # (OpenAI)
+get_google_news(query, lang, country) # Google 
 
-# 歷史新聞
-get_finnhub_news(symbol, start_date, end_date)             # FinnHub 新聞
+# 
+get_finnhub_news(symbol, start_date, end_date) # FinnHub 
 ```
 
-### 社交媒體工具
+### 
 ```python
-# 情緒分析
-get_stock_news_openai(symbol, sentiment_focus)             # 股票新聞情緒
-get_finnhub_social_sentiment(symbol)                       # FinnHub 情緒數據
+# 
+get_stock_news_openai(symbol, sentiment_focus) # 
+get_finnhub_social_sentiment(symbol) # FinnHub 
 ```
 
-## 🎯 數據源映射
+## 
 
-| 股票類型 | 識別規則 | 市場數據源 | 基本面數據源 | 新聞數據源 |
+| | | | | |
 |---------|---------|-----------|-------------|-----------|
-| **美股** | 字母代碼 (AAPL) | Yahoo + FinnHub | FinnHub + SimFin | FinnHub + Google |
+| **** | (AAPL) | Yahoo + FinnHub | FinnHub + SimFin | FinnHub + Google |
 
-## ⚙️ 配置速查
+## 
 
-### 分析師選擇
+### 
 ```python
-# 快速分析 (1-2分鐘)
+# (1-2)
 selected_analysts = ["market"]
 
-# 基礎分析 (3-5分鐘)
+# (3-5)
 selected_analysts = ["market", "fundamentals"]
 
-# 完整分析 (5-10分鐘)
+# (5-10)
 selected_analysts = ["market", "fundamentals", "news", "social"]
 ```
 
-### 研究深度
+### 
 ```python
-research_depth = 1    # 快速: 減少工具調用，快速模型
-research_depth = 2    # 標準: 平衡速度和品質 (推薦)
-research_depth = 3    # 深度: 增加辯論輪次，深度模型
+research_depth = 1 # : 
+research_depth = 2 # : ()
+research_depth = 3 # : 
 ```
 
-### LLM提供商
+### LLM
 ```python
-llm_provider = "openai"       # OpenAI GPT-4 系列
-llm_provider = "anthropic"    # Anthropic Claude 系列
+llm_provider = "openai" # OpenAI GPT-4 
+llm_provider = "anthropic" # Anthropic Claude 
 ```
 
-## 🔄 工具調用循環
+## 
 
-每個分析師都遵循LangGraph的標準循環：
+LangGraph
 
 ```
-1️⃣ 分析師節點
-    ↓ (決定需要什麼數據)
-2️⃣ 條件判斷
-    ↓ (檢查是否有工具調用)
-3️⃣ 工具節點
-    ↓ (執行數據獲取)
-4️⃣ 回到分析師節點
-    ↓ (處理數據，生成報告)
-5️⃣ 條件判斷
-    ↓ (檢查是否完成)
-6️⃣ 訊息清理 → 下一個分析師
+1⃣ 
+ ↓ ()
+2⃣ 
+ ↓ ()
+3⃣ 
+ ↓ ()
+4⃣ 
+ ↓ ()
+5⃣ 
+ ↓ ()
+6⃣ → 
 ```
 
-**日誌示例**:
+****:
 ```
-[模塊開始] market_analyst - 股票: AAPL
-[市場分析師] 工具調用: ['get_stock_market_data_unified']
-[模塊完成] market_analyst - 成功 - 耗時: 41.73s
+[] market_analyst - : AAPL
+[] : ['get_stock_market_data_unified']
+[] market_analyst - - : 41.73s
 ```
 
-## 🚀 快速使用
+## 
 
-### 基本用法
+### 
 ```python
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 
-# 創建分析圖
+# 
 graph = TradingAgentsGraph(
-    selected_analysts=["market", "fundamentals"],
-    config={"llm_provider": "openai", "research_depth": 2}
+ selected_analysts=["market", "fundamentals"],
+ config={"llm_provider": "openai", "research_depth": 2}
 )
 
-# 執行分析
+# 
 state, decision = graph.propagate("AAPL", "2025-01-17")
-print(f"建議: {decision['action']}, 置信度: {decision['confidence']}")
+print(f": {decision['action']}, : {decision['confidence']}")
 ```
 
-### Web界面使用
+### Web
 ```bash
-# 啟動Web界面
+# Web
 python web/run_web.py
 
-# 訪問 http://localhost:8501
-# 1. 輸入股票代碼
-# 2. 選擇分析師和研究深度
-# 3. 點擊"開始分析"
-# 4. 查看即時進度和結果
+# http://localhost:8501
+# 1. 
+# 2. 
+# 3. ""
+# 4. 
 ```
 
-## ❓ 常見問題速查
+## 
 
-| 問題 | 原因 | 解決方案 |
+| | | |
 |-----|------|---------|
-| 分析時間過長 | 研究深度過高/網路慢 | 降低research_depth，檢查網路 |
-| 重複分析師調用 | LangGraph正常機制 | 正常現象，等待完成 |
-| 基本面分析師多輪調用 | 強制工具調用機制 | 正常現象，確保數據品質 |
-| API調用失敗 | 密鑰錯誤/限額超出 | 檢查.env配置，確認API額度 |
-| 進度卡住 | 網路超時/API異常 | 刷新頁面，檢查日誌 |
-| 中文亂碼 | 編碼問題 | 使用UTF-8編碼，檢查字體 |
+| | / | research_depth |
+| | LangGraph | |
+| | | |
+| API | / | .envAPI |
+| | /API | |
+| | | UTF-8 |
 
-## 🔄 工具調用機制詳解
+## 
 
-### 📈 市場分析師（簡單模式）
+### 
 ```
-1️⃣ 分析師決策 → 2️⃣ 調用統一工具 → 3️⃣ 生成報告
-```
-
-### 📊 基本面分析師（複雜模式）
-```
-1️⃣ 嘗試LLM自主調用 → 2️⃣ 工具執行 → 3️⃣ 數據處理
-                ↓ (如果LLM未調用工具)
-4️⃣ 強制工具調用 → 5️⃣ 重新生成報告
+1⃣ → 2⃣ → 3⃣ 
 ```
 
-### 🧠 LLM工具選擇邏輯
-1. **系統提示詞引導** (權重最高)
-2. **工具描述匹配度**
-3. **工具名稱語義理解**
-4. **參數簡潔性偏好**
-5. **模型特性差異**
+### 
+```
+1⃣ LLM → 2⃣ → 3⃣ 
+ ↓ (LLM)
+4⃣ → 5⃣ 
+```
 
-## 📊 輸出格式
+### LLM
+1. **** ()
+2. ****
+3. ****
+4. ****
+5. ****
 
-### 最終決策格式
+## 
+
+### 
 ```json
 {
-    "action": "買入/持有/賣出",
-    "confidence": 8.5,
-    "target_price": "195.80",
-    "stop_loss": "175.20",
-    "position_size": "中等倉位",
-    "time_horizon": "3-6個月",
-    "reasoning": "詳細分析理由..."
+ "action": "//",
+ "confidence": 8.5,
+ "target_price": "195.80",
+ "stop_loss": "175.20",
+ "position_size": "",
+ "time_horizon": "3-6",
+ "reasoning": "..."
 }
 ```
 
-### 分析報告結構
+### 
 ```
-市場分析報告
-├── 股票基本資訊
-├── 技術指標分析
-├── 價格趨勢分析
-├── 成交量分析
-└── 投資建議
 
-基本面分析報告
-├── 財務狀況分析
-├── 估值分析
-├── 行業對比
-├── 風險評估
-└── 投資建議
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
 ```
 
 ---
 
-*快速參考 | TradingAgents v0.1.7 | 更多詳情請查看完整文檔*
+* | TradingAgents v0.1.7 | *
