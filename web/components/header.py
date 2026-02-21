@@ -29,7 +29,7 @@ def render_header():
                 font-size: 0.813rem;
                 color: #64748B;
                 margin: 0.125rem 0 0 0;
-            ">Multi-Agent Stock Analysis</p>
+            ">多智慧體股票分析系統</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
