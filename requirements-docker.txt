@@ -54,11 +54,11 @@ durationpy==0.10
 et_xmlfile==2.0.0
 exceptiongroup==1.3.0
 feedparser==6.0.12
-filelock==3.19.1
+filelock==3.20.3
 filetype==1.2.0
 finnhub-python==2.4.24
 flatbuffers==25.2.10
-fonttools==4.60.0
+fonttools==4.60.2
 frozendict==2.4.6
 frozenlist==1.7.0
 fsspec==2025.9.0
@@ -101,7 +101,7 @@ langsmith==0.4.30
 Markdown==3.9
 markdown-it-py==4.0.0
 MarkupSafe==3.0.2
-marshmallow==3.26.1
+marshmallow==3.26.2
 matplotlib==3.10.6
 mdurl==0.1.2
 mmh3==5.2.0
@@ -116,7 +116,7 @@ numpy==2.2.6
 oauthlib==3.3.1
 onnxruntime==1.22.1
 openai==1.108.2
-orjson==3.11.3
+orjson==3.11.4
 overrides==7.7.0
 packaging==25.0
 pandas==2.3.2
@@ -127,7 +127,6 @@ plotly==6.3.0
 pluggy==1.6.0
 prompt_toolkit==3.0.52
 propcache==0.3.2
-protobuf==6.32.1
 psutil==7.1.0
 pyarrow==21.0.0
 pybase64==1.4.2
