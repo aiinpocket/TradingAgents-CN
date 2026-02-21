@@ -80,7 +80,7 @@ class OptimizedUSDataProvider:
             if cache_key:
                 cached_data = self.cache.load_stock_data(cache_key)
                 if cached_data:
-                    logger.info(f"從緩存加載美股數據: {symbol}")
+                    logger.info(f"從緩存載入美股數據: {symbol}")
                     return cached_data
         
         # 緩存未命中，從API獲取 - 優先使用FINNHUB
@@ -93,7 +93,7 @@ class OptimizedUSDataProvider:
             self._wait_for_rate_limit()
 
             formatted_data = self._get_data_from_finnhub(symbol, start_date, end_date)
-            if formatted_data and "錯誤信息" not in formatted_data:
+            if formatted_data and "錯誤訊息" not in formatted_data:
                 data_source = "finnhub"
                 logger.info(f"FINNHUB數據獲取成功: {symbol}")
             else:
@@ -146,7 +146,7 @@ class OptimizedUSDataProvider:
                           start_date: str, end_date: str) -> str:
         """格式化股票數據為字符串"""
         
-        # 移除時區信息
+        # 移除時區資訊
         if data.index.tz is not None:
             data.index = data.index.tz_localize(None)
         
@@ -156,7 +156,7 @@ class OptimizedUSDataProvider:
             if col in data.columns:
                 data[col] = data[col].round(2)
         
-        # 獲取最新價格和統計信息
+        # 獲取最新價格和統計資訊
         latest_price = data['Close'].iloc[-1]
         price_change = data['Close'].iloc[-1] - data['Close'].iloc[0]
         price_change_pct = (price_change / data['Close'].iloc[0]) * 100
@@ -176,7 +176,7 @@ class OptimizedUSDataProvider:
         # 格式化輸出
         result = f"""# {symbol} 美股數據分析
 
-## 基本信息
+## 基本資訊
 - 股票代碼: {symbol}
 - 數據期間: {start_date} 至 {end_date}
 - 數據條數: {len(data)}條
@@ -248,7 +248,7 @@ class OptimizedUSDataProvider:
             if not quote or 'c' not in quote:
                 return None
 
-            # 獲取公司信息
+            # 獲取公司資訊
             profile = client.company_profile2(symbol=symbol.upper())
             company_name = profile.get('name', symbol.upper()) if profile else symbol.upper()
 
@@ -289,7 +289,7 @@ class OptimizedUSDataProvider:
         """生成備用數據"""
         return f"""# {symbol} 美股數據獲取失敗
 
-## 錯誤信息
+## 錯誤訊息
 {error_msg}
 
 ## 模擬數據（僅供演示）

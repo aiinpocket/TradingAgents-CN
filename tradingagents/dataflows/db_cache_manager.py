@@ -288,31 +288,31 @@ class DatabaseCacheManager:
         return cache_key
     
     def load_stock_data(self, cache_key: str) -> Optional[Union[pd.DataFrame, str]]:
-        """從Redis或MongoDB加載股票數據"""
+        """從Redis或MongoDB載入股票數據"""
         
-        # 首先嘗試從Redis加載（更快）
+        # 首先嘗試從Redis載入（更快）
         if self.redis_client:
             try:
                 redis_data = self.redis_client.get(cache_key)
                 if redis_data:
                     data_dict = json.loads(redis_data)
-                    logger.info(f"從Redis加載數據: {cache_key}")
+                    logger.info(f"從Redis載入數據: {cache_key}")
                     
                     if data_dict["data_format"] == "dataframe_json":
                         return pd.read_json(data_dict["data"], orient='records')
                     else:
                         return data_dict["data"]
             except Exception as e:
-                logger.error(f"Redis加載失敗: {e}")
+                logger.error(f"Redis載入失敗: {e}")
         
-        # 如果Redis沒有，從MongoDB加載
+        # 如果Redis沒有，從MongoDB載入
         if self.mongodb_db is not None:
             try:
                 collection = self.mongodb_db.stock_data
                 doc = collection.find_one({"_id": cache_key})
                 
                 if doc:
-                    logger.info(f"從MongoDB加載數據: {cache_key}")
+                    logger.info(f"從MongoDB載入數據: {cache_key}")
                     
                     # 同時更新到Redis緩存
                     if self.redis_client:
@@ -339,7 +339,7 @@ class DatabaseCacheManager:
                         return doc["data"]
                         
             except Exception as e:
-                logger.error(f"MongoDB加載失敗: {e}")
+                logger.error(f"MongoDB載入失敗: {e}")
         
         return None
     
@@ -494,7 +494,7 @@ class DatabaseCacheManager:
         return cache_key
 
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計信息"""
+        """獲取緩存統計資訊"""
         stats = {
             "mongodb": {"available": self.mongodb_db is not None, "collections": {}},
             "redis": {"available": self.redis_client is not None, "keys": 0, "memory_usage": "N/A"}

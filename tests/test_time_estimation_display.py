@@ -39,7 +39,7 @@ def test_time_estimation_display():
         
         # 步驟2: 數據獲取階段
         ui.show_step_header(2, "數據獲取階段 | Data Collection Phase")
-        ui.show_progress("正在獲取股票基本信息...")
+        ui.show_progress("正在獲取股票基本資訊...")
         time.sleep(0.3)
         ui.show_success("數據獲取準備完成")
         

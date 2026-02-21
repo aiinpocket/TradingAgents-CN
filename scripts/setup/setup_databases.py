@@ -204,7 +204,7 @@ def test_connections():
         if db_manager.is_mongodb_available() and db_manager.is_redis_available():
             logger.info(f" MongoDB + Redis 連接成功！")
 
-            # 獲取統計信息
+            # 獲取統計資訊
             stats = db_manager.get_cache_stats()
             logger.info(f" 緩存統計: {stats}")
 

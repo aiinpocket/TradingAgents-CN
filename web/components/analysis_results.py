@@ -58,7 +58,7 @@ def get_tags_file():
     return get_analysis_results_dir() / "tags.json"
 
 def load_favorites():
-    """加載收藏列表"""
+    """載入收藏列表"""
     favorites_file = get_favorites_file()
     if favorites_file.exists():
         try:
@@ -79,7 +79,7 @@ def save_favorites(favorites):
         return False
 
 def load_tags():
-    """加載標籤數據"""
+    """載入標籤數據"""
     tags_file = get_tags_file()
     if tags_file.exists():
         try:
@@ -124,19 +124,19 @@ def get_analysis_tags(analysis_id):
 
 def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, analyst_type=None,
                          limit=100, search_text=None, tags_filter=None, favorites_only=False):
-    """加載分析結果 - 優先從MongoDB加載"""
+    """載入分析結果 - 優先從MongoDB載入"""
     all_results = []
     favorites = load_favorites() if favorites_only else []
     tags_data = load_tags()
     mongodb_loaded = False
 
-    # 優先從MongoDB加載數據
+    # 優先從MongoDB載入數據
     if MONGODB_AVAILABLE:
         try:
-            logger.debug("[數據加載] 從MongoDB加載分析結果")
+            logger.debug("[數據載入] 從MongoDB載入分析結果")
             mongodb_manager = MongoDBReportManager()
             mongodb_results = mongodb_manager.get_all_reports()
-            logger.debug(f"[數據加載] MongoDB返回 {len(mongodb_results)} 個結果")
+            logger.debug(f"[數據載入] MongoDB返回 {len(mongodb_results)} 個結果")
 
             for mongo_result in mongodb_results:
                 # 轉換MongoDB結果格式
@@ -157,18 +157,18 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                 all_results.append(result)
 
             mongodb_loaded = True
-            logger.info(f"從MongoDB加載了 {len(mongodb_results)} 個分析結果")
+            logger.info(f"從MongoDB載入了 {len(mongodb_results)} 個分析結果")
 
         except Exception as e:
-            logger.warning(f"MongoDB加載失敗: {e}")
-            logger.error(f"MongoDB加載失敗: {e}")
+            logger.warning(f"MongoDB載入失敗: {e}")
+            logger.error(f"MongoDB載入失敗: {e}")
             mongodb_loaded = False
     else:
         logger.info("MongoDB不可用，將使用文件系統數據")
 
-    # 只有在MongoDB加載失敗或不可用時才從文件系統加載
+    # 只有在MongoDB載入失敗或不可用時才從文件系統載入
     if not mongodb_loaded:
-        logger.debug("[備用數據源] 從文件系統加載分析結果")
+        logger.debug("[備用數據源] 從文件系統載入分析結果")
 
         # 首先嘗試從Web界面的保存位置讀取
         web_results_dir = get_analysis_results_dir()
@@ -180,7 +180,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                 with open(result_file, 'r', encoding='utf-8') as f:
                     result = json.load(f)
 
-                    # 添加標籤信息
+                    # 添加標籤資訊
                     result['tags'] = tags_data.get(result.get('analysis_id', ''), [])
                     result['is_favorite'] = result.get('analysis_id', '') in favorites
                     result['source'] = 'file_system'# 標記數據來源
@@ -243,7 +243,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                         # 創建分析結果條目
                         analysis_id = f"{stock_code}_{date_str}_{int(timestamp)}"
 
-                        # 嘗試從元數據文件中讀取真實的研究深度和分析師信息
+                        # 嘗試從中繼資料文件中讀取真實的研究深度和分析師資訊
                         research_depth = 1
                         analysts = ['market', 'fundamentals', 'trader'] # 預設值
 
@@ -255,13 +255,13 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                                     research_depth = metadata.get('research_depth', 1)
                                     analysts = metadata.get('analysts', analysts)
                             except Exception as e:
-                                # 如果讀取元數據失敗，使用推斷邏輯
+                                # 如果讀取中繼資料失敗，使用推斷邏輯
                                 if len(reports) >= 5:
                                     research_depth = 3
                                 elif len(reports) >= 3:
                                     research_depth = 2
                         else:
-                            # 如果沒有元數據文件，使用推斷邏輯
+                            # 如果沒有中繼資料文件，使用推斷邏輯
                             if len(reports) >= 5:
                                 research_depth = 3
                             elif len(reports) >= 3:
@@ -284,7 +284,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 
                         all_results.append(result)
 
-        logger.debug(f"[備用數據源] 從文件系統加載了 {len(all_results)} 個分析結果")
+        logger.debug(f"[備用數據源] 從文件系統載入了 {len(all_results)} 個分析結果")
     
     # 過濾結果
     filtered_results = []
@@ -385,7 +385,7 @@ def render_analysis_results():
         else:
             selected_tags = []
     
-    # 加載分析結果
+    # 載入分析結果
     results = load_analysis_results(
         start_date=start_date,
         end_date=end_date,
@@ -565,7 +565,7 @@ def render_results_cards(results: List[Dict[str, Any]]):
 
             st.divider()
     
-    # 顯示分頁信息
+    # 顯示分頁資訊
     if total_pages > 1:
         st.info(f"第 {page + 1} 頁，共 {total_pages} 頁，總計 {len(results)} 條記錄")
     
@@ -787,13 +787,13 @@ def render_results_export(results: List[Dict[str, Any]]):
         return
     
     # 導出選項
-    export_type = st.selectbox("選擇導出內容", ["摘要信息", "完整數據"])
+    export_type = st.selectbox("選擇導出內容", ["摘要資訊", "完整數據"])
     export_format = st.selectbox("選擇導出格式", ["CSV", "JSON", "Excel"])
     
     if st.button("導出結果"):
         try:
-            if export_type == "摘要信息":
-                # 導出摘要信息
+            if export_type == "摘要資訊":
+                # 導出摘要資訊
                 summary_data = []
                 for result in results:
                     summary_data.append({
@@ -905,8 +905,8 @@ def render_results_comparison(results: List[Dict[str, Any]]):
         st.warning("請選擇不同的分析結果進行對比")
         return
     
-    # 基本信息對比
-    st.subheader("基本信息對比")
+    # 基本資訊對比
+    st.subheader("基本資訊對比")
     
     comparison_data = {
         "項目": ["股票代碼", "分析時間", "分析師數量", "研究深度", "狀態", "標籤數量"],
@@ -1083,7 +1083,7 @@ def render_detailed_analysis(results: List[Dict[str, Any]]):
         )
         selected_result = results[selected_option[1]]
         
-        # 顯示基本信息
+        # 顯示基本資訊
         col1, col2, col3 = st.columns(3)
         
         with col1:
@@ -1140,7 +1140,7 @@ def render_detailed_analysis_content(selected_result):
             st.warning("該分析結果沒有可用的報告內容")
             return
         
-        # 調試信息：顯示所有可用的報告
+        # 除錯資訊：顯示所有可用的報告
         logger.debug(f"[彈窗調試] 數據來源: {selected_result.get('source', '未知')}")
         logger.debug(f"[彈窗調試] 可用報告數量: {len(reports)}")
         logger.debug(f"[彈窗調試] 報告類型: {list(reports.keys())}")

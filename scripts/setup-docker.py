@@ -125,7 +125,7 @@ def main():
     
     if setup_docker_env():
         logger.info(f"\n Docker環境配置完成！")
-        logger.info(f"\n 更多信息請參考:")
+        logger.info(f"\n 更多資訊請參考:")
         logger.info(f"- Docker部署指南: docs/DOCKER_GUIDE.md")
         logger.info(f"- 項目文件: README.md")
     else:

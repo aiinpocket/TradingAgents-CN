@@ -50,7 +50,7 @@ def test_cli_logging_setup():
         print("\n 測試日誌輸出:")
         print("   執行 logger.info('測試消息')...")
         logger.info("這是一條測試日誌消息，應該只寫入文件，不在控制台顯示")
-        print("    如果上面沒有顯示時間戳和日誌信息，說明修複成功")
+        print("    如果上面沒有顯示時間戳和日誌資訊，說明修複成功")
         
         return True
         
@@ -73,7 +73,7 @@ def test_console_output():
         print(" 測試Rich Console輸出:")
         console.print("[bold cyan]這是一條用戶界面消息[/bold cyan]")
         console.print("[green] 這應該正常顯示，沒有時間戳[/green]")
-        console.print("[yellow] 這是用戶友好的提示信息[/yellow]")
+        console.print("[yellow] 這是用戶友好的提示資訊[/yellow]")
         
         print(" Console輸出正常，界面清爽")
         
@@ -155,7 +155,7 @@ def test_cli_interface_preview():
         console.print("   示例 | Examples: SPY, AAPL, TSLA, NVDA, MSFT")
         
         print("\n" + "-" * 40)
-        print(" 界面清爽，沒有時間戳和技術日誌信息")
+        print(" 界面清爽，沒有時間戳和技術日誌資訊")
         
         return True
         
@@ -206,7 +206,7 @@ def main():
     if passed == total:
         print(" 所有測試通過！CLI日誌修複成功")
         print("\n 修複效果:")
-        print("1.  控制台不再顯示技術日誌信息")
+        print("1.  控制台不再顯示技術日誌資訊")
         print("2.  用戶界面清爽美觀")
         print("3.  系統日誌正常寫入文件")
         print("4.  用戶提示使用Rich Console顯示")
@@ -214,8 +214,8 @@ def main():
         print("\n 用戶體驗改善:")
         print("- 界面簡潔，沒有時間戳干擾")
         print("- 彩色輸出更加美觀")
-        print("- 技術信息和用戶信息分離")
-        print("- 調試信息仍然記錄在日誌文件中")
+        print("- 技術資訊和用戶資訊分離")
+        print("- 除錯資訊仍然記錄在日誌文件中")
     else:
         print(" 部分測試失敗，需要進一步優化")
     

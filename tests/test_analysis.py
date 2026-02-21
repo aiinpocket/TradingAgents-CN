@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-# 加載環境變量
+# 載入環境變量
 load_dotenv(project_root / ".env", override=True)
 
 def test_basic_imports():

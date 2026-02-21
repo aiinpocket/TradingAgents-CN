@@ -79,7 +79,7 @@ def test_basic_system():
         cache = get_cache()
         print(" 緩存系統初始化成功")
         
-        # 獲取緩存信息
+        # 獲取緩存資訊
         backend_info = cache.get_cache_backend_info()
         print(f"  緩存系統: {backend_info['system']}")
         print(f"  主要後端: {backend_info['primary_backend']}")
@@ -95,12 +95,12 @@ def test_basic_system():
         )
         print(f" 數據保存成功: {cache_key}")
         
-        # 加載數據
+        # 載入數據
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print(" 數據加載成功")
+            print(" 數據載入成功")
         else:
-            print(" 數據加載失敗")
+            print(" 數據載入失敗")
             return False
         
     except Exception as e:

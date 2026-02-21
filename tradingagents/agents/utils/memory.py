@@ -170,11 +170,11 @@ class FinancialSituationMemory:
                 logger.info(f"智能截斷：在段落邊界截斷，保留{len(truncated)}/{len(text)}字符")
                 return truncated, True
         
-        # 最後選擇：保留前半部分和後半部分的關鍵信息
+        # 最後選擇：保留前半部分和後半部分的關鍵資訊
         front_part = text[:max_length//2]
         back_part = text[-(max_length//2-100):]  # 留100字符給連接符
         truncated = front_part + "\n...[內容截斷]...\n" + back_part
-        logger.warning(f"強制截斷：保留首尾關鍵信息，{len(text)}字符截斷為{len(truncated)}字符")
+        logger.warning(f"強制截斷：保留首尾關鍵資訊，{len(text)}字符截斷為{len(truncated)}字符")
         return truncated, True
 
     def get_embedding(self, text):
@@ -199,7 +199,7 @@ class FinancialSituationMemory:
         # 檢查是否啟用長度限制
         if self.enable_embedding_length_check and text_length > self.max_embedding_length:
             logger.warning(f"文本過長({text_length:,}字符 > {self.max_embedding_length:,}字符)，跳過向量化")
-            # 儲存跳過信息
+            # 儲存跳過資訊
             self._last_text_info = {
                 'original_length': text_length,
                 'processed_length': 0,
@@ -211,11 +211,11 @@ class FinancialSituationMemory:
             }
             return [0.0] * 1024
         
-        # 記錄文本信息（不進行任何截斷）
+        # 記錄文本資訊（不進行任何截斷）
         if text_length > 8192:
             logger.info(f"處理長文本: {text_length}字符，提供商: {self.llm_provider}")
         
-        # 儲存文本處理信息
+        # 儲存文本處理資訊
         self._last_text_info = {
             'original_length': text_length,
             'processed_length': text_length,  # 不截斷，保持原長度
@@ -287,7 +287,7 @@ class FinancialSituationMemory:
         }
 
     def get_last_text_info(self):
-        """獲取最後處理的文本信息"""
+        """獲取最後處理的文本資訊"""
         return getattr(self, '_last_text_info', None)
 
     def add_situations(self, situations_and_advice):
@@ -359,7 +359,7 @@ class FinancialSituationMemory:
                     }
                     memories.append(memory_item)
                 
-                # 記錄查詢信息
+                # 記錄查詢資訊
                 if hasattr(self, '_last_text_info') and self._last_text_info.get('was_truncated'):
                     logger.info(f"截斷文本查詢完成，找到{len(memories)}個相關記憶")
                     logger.debug(f"原文長度: {self._last_text_info['original_length']}, "
@@ -374,7 +374,7 @@ class FinancialSituationMemory:
             return []
 
     def get_cache_info(self):
-        """獲取緩存相關信息，用於調試和監控"""
+        """獲取緩存相關資訊，用於調試和監控"""
         info = {
             'collection_count': self.situation_collection.count(),
             'client_status': 'enabled' if self.client != "DISABLED" else 'disabled',
@@ -382,7 +382,7 @@ class FinancialSituationMemory:
             'provider': self.llm_provider
         }
         
-        # 添加最後一次文本處理信息
+        # 添加最後一次文本處理資訊
         if hasattr(self, '_last_text_info'):
             info['last_text_processing'] = self._last_text_info
             

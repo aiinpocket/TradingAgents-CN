@@ -164,13 +164,13 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
 
 def get_env_info(env_var: str) -> dict:
     """
-    獲取環境變量的詳細信息
+    獲取環境變量的詳細資訊
     
     Args:
         env_var: 環境變量名
         
     Returns:
-        dict: 環境變量信息
+        dict: 環境變量資訊
     """
     value = os.getenv(env_var)
     

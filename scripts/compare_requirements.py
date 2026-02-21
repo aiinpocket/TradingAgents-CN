@@ -123,7 +123,7 @@ def main():
                 print(f"    pyproject.toml:   {pyproject_ver or '(無版本限制)'}")
     
     # 顯示統計
-    print("\n 統計信息:")
+    print("\n 統計資訊:")
     print("-" * 80)
     print(f"  requirements.txt:  {len(req_packages)} 個包")
     print(f"  pyproject.toml:    {len(pyproject_packages)} 個包")

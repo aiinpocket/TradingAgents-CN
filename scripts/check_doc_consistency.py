@@ -53,7 +53,7 @@ class DocumentationChecker:
         project_version = version_file.read_text().strip()
         print(f"   項目版本: {project_version}")
         
-        # 檢查文件中的版本信息
+        # 檢查文件中的版本資訊
         doc_files = list(self.docs_dir.rglob("*.md"))
         for doc_file in doc_files:
             try:
@@ -73,7 +73,7 @@ class DocumentationChecker:
                             if doc_version != project_version:
                                 issues.append(f" {doc_file.relative_to(self.project_root)}: 版本不一致 (文件: {doc_version}, 項目: {project_version})")
                         else:
-                            issues.append(f" {doc_file.relative_to(self.project_root)}: 缺少版本信息")
+                            issues.append(f" {doc_file.relative_to(self.project_root)}: 缺少版本資訊")
                 else:
                     # 核心文件應該有版本頭部
                     if any(keyword in str(doc_file) for keyword in ["agents", "architecture", "development"]):

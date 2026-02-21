@@ -72,7 +72,7 @@ def test_markdown_conversion():
         # 測試內容
         test_markdown = """# 測試報告
 
-## 基本信息
+## 基本資訊
 - **股票代碼**: TEST001
 - **生成時間**: 2025-01-12 15:30:00
 

@@ -66,23 +66,23 @@ class SmartSessionManager:
         return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
-        """加載分析狀態"""
-        # 優先從Redis加載
+        """載入分析狀態"""
+        # 優先從Redis載入
         if self.use_redis and self.redis_manager:
             try:
                 data = self.redis_manager.load_analysis_state()
                 if data:
                     return data
             except Exception as e:
-                st.warning(f"Redis加載失敗，切換到文件儲存: {e}")
+                st.warning(f"Redis載入失敗，切換到文件儲存: {e}")
                 self.use_redis = False
         
-        # 從文件儲存加載
+        # 從文件儲存載入
         if self.file_manager:
             try:
                 return self.file_manager.load_analysis_state()
             except Exception as e:
-                st.error(f"文件儲存加載失敗: {e}")
+                st.error(f"文件儲存載入失敗: {e}")
                 return None
         
         return None
@@ -104,7 +104,7 @@ class SmartSessionManager:
                 pass
     
     def get_debug_info(self) -> Dict[str, Any]:
-        """獲取調試信息"""
+        """獲取除錯資訊"""
         debug_info = {
             "storage_type": "Redis" if self.use_redis else "文件儲存",
             "redis_available": self.redis_manager is not None,
@@ -112,7 +112,7 @@ class SmartSessionManager:
             "use_redis": self.use_redis
         }
         
-        # 獲取當前使用的管理器的調試信息
+        # 獲取當前使用的管理器的除錯資訊
         if self.use_redis and self.redis_manager:
             try:
                 redis_debug = self.redis_manager.get_debug_info()
@@ -139,7 +139,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         if st.session_state.get('current_analysis_id'):
             return st.session_state.current_analysis_id
         
-        # 2. 從會話儲存加載
+        # 2. 從會話儲存載入
         session_data = smart_session_manager.load_analysis_state()
         if session_data:
             analysis_id = session_data.get('analysis_id')
@@ -189,5 +189,5 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         st.warning(f"設置持久化分析ID失敗: {e}")
 
 def get_session_debug_info() -> Dict[str, Any]:
-    """獲取會話管理器調試信息"""
+    """獲取會話管理器除錯資訊"""
     return smart_session_manager.get_debug_info()

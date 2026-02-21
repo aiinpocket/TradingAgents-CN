@@ -19,7 +19,7 @@ def test_smart_config():
         config_manager = get_smart_config()
         config_manager.print_status()
         
-        # 獲取配置信息
+        # 獲取配置資訊
         config = get_config()
         print(f"\n 配置獲取成功")
         print(f"主要緩存後端: {config['cache']['primary_backend']}")
@@ -60,12 +60,12 @@ def test_adaptive_cache():
         )
         print(f" 數據保存成功: {cache_key}")
         
-        # 測試加載
+        # 測試載入
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print(" 數據加載成功，內容匹配")
+            print(" 數據載入成功，內容匹配")
         else:
-            print(" 數據加載失敗或內容不匹配")
+            print(" 數據載入失敗或內容不匹配")
             return False
         
         # 測試查找
@@ -123,20 +123,20 @@ def test_performance():
             save_time = time.time() - start_time
             total_save_time += save_time
             
-            # 測試加載性能
+            # 測試載入性能
             start_time = time.time()
             loaded_data = cache.load_stock_data(cache_key)
             load_time = time.time() - start_time
             total_load_time += load_time
             
-            print(f"  {symbol}: 保存 {save_time:.4f}s, 加載 {load_time:.4f}s")
+            print(f"  {symbol}: 保存 {save_time:.4f}s, 載入 {load_time:.4f}s")
         
         avg_save_time = total_save_time / len(symbols)
         avg_load_time = total_load_time / len(symbols)
         
         print(f"\n 平均性能:")
         print(f"  保存時間: {avg_save_time:.4f}秒")
-        print(f"  加載時間: {avg_load_time:.4f}秒")
+        print(f"  載入時間: {avg_load_time:.4f}秒")
         
         # 計算性能改進
         api_simulation_time = 2.0  # 假設API調用需要2秒

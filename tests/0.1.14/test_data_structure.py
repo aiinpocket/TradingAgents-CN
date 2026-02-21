@@ -14,7 +14,7 @@ def test_data_structure():
         
         print(" 測試分析結果數據結構...")
         
-        # 加載分析結果
+        # 載入分析結果
         results = load_analysis_results(limit=5)
         
         print(f" 找到 {len(results)} 個分析結果")

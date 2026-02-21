@@ -25,7 +25,7 @@ def print_colored(text, color=Colors.GREEN):
     print(f"{color}{text}{Colors.END}")
 
 def print_header():
-    """打印歡迎信息"""
+    """打印歡迎資訊"""
     print_colored("=" * 60, Colors.BLUE)
     print_colored(" TradingAgents-CN 快速安裝向導", Colors.BOLD)
     print_colored("=" * 60, Colors.BLUE)

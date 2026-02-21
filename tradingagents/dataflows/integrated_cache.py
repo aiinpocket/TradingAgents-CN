@@ -105,7 +105,7 @@ class IntegratedCacheManager:
     
     def load_stock_data(self, cache_key: str) -> Optional[Any]:
         """
-        從緩存加載股票數據
+        從緩存載入股票數據
         
         Args:
             cache_key: 緩存鍵
@@ -165,7 +165,7 @@ class IntegratedCacheManager:
             return self.legacy_cache.save_news_data(symbol, data, data_source)
     
     def load_news_data(self, cache_key: str) -> Optional[Any]:
-        """加載新聞數據"""
+        """載入新聞數據"""
         if self.use_adaptive:
             return self.adaptive_cache.load_data(cache_key)
         else:
@@ -184,14 +184,14 @@ class IntegratedCacheManager:
             return self.legacy_cache.save_fundamentals_data(symbol, data, data_source)
     
     def load_fundamentals_data(self, cache_key: str) -> Optional[Any]:
-        """加載基本面數據"""
+        """載入基本面數據"""
         if self.use_adaptive:
             return self.adaptive_cache.load_data(cache_key)
         else:
             return self.legacy_cache.load_fundamentals_data(cache_key)
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計信息"""
+        """獲取緩存統計資訊"""
         if self.use_adaptive:
             # 獲取自適應緩存統計
             adaptive_stats = self.adaptive_cache.get_cache_stats()
@@ -227,7 +227,7 @@ class IntegratedCacheManager:
         self.legacy_cache.clear_expired_cache()
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
-        """獲取緩存後端信息"""
+        """獲取緩存後端資訊"""
         if self.use_adaptive:
             return {
                 "system": "adaptive",

@@ -74,7 +74,7 @@ def main():
         for i, (file_path, _) in enumerate(error_files, 1):
             logger.info(f"{i:2d}. {file_path}")
         
-        logger.error(f"\n 使用詳細檢查腳本查看具體錯誤信息:")
+        logger.error(f"\n 使用詳細檢查腳本查看具體錯誤訊息:")
         logger.info(f"   python syntax_checker.py")
     else:
         logger.info(f"\n 所有文件語法檢查通過!")

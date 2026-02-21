@@ -105,10 +105,10 @@ try:
     )
     print(f" 數據保存成功: {cache_key}")
     
-    # 測試數據加載
+    # 測試數據載入
     loaded_data = cache.load_stock_data(cache_key)
     if loaded_data == test_data:
-        print(" 數據加載成功，內容匹配")
+        print(" 數據載入成功，內容匹配")
     else:
         print(f" 數據不匹配")
         print(f"  期望: {test_data}")
@@ -149,13 +149,13 @@ try:
     )
     save_time = time.time() - start_time
     
-    # 加載測試
+    # 載入測試
     start_time = time.time()
     data = cache.load_stock_data(cache_key)
     load_time = time.time() - start_time
     
     print(f" 保存時間: {save_time:.4f}秒")
-    print(f" 加載時間: {load_time:.4f}秒")
+    print(f" 載入時間: {load_time:.4f}秒")
     
     if load_time < 0.1:
         print(" 緩存性能良好 (<0.1秒)")
@@ -166,7 +166,7 @@ except Exception as e:
     print(f" 性能測試失敗: {e}")
 
 # 測試6：緩存統計
-print("\n 緩存統計信息...")
+print("\n 緩存統計資訊...")
 try:
     cache = get_cache()
     stats = cache.get_cache_stats()
@@ -189,7 +189,7 @@ print("2. 語法檢查: 驗證Python語法正確性")
 print("3. 模塊導入: 測試模塊是否可以正常導入")
 print("4. 功能測試: 驗證緩存基本功能")
 print("5. 性能測試: 檢查緩存性能")
-print("6. 統計信息: 獲取緩存使用統計")
+print("6. 統計資訊: 獲取緩存使用統計")
 
 print("\n 下一步:")
 print("1. 如果測試通過，可以開始清理中文內容")

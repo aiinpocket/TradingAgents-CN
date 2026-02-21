@@ -27,7 +27,7 @@ def test_final_config():
     print(f"MONGODB_ENABLED: {os.getenv('MONGODB_ENABLED', 'false')} -> {mongodb_enabled}")
     print(f"REDIS_ENABLED: {os.getenv('REDIS_ENABLED', 'false')} -> {redis_enabled}")
     
-    # 3. 顯示配置信息
+    # 3. 顯示配置資訊
     print("\n 數據庫配置:")
     
     if mongodb_enabled:
@@ -97,12 +97,12 @@ def test_final_config():
         )
         print(f" 數據保存成功: {cache_key}")
         
-        # 加載數據
+        # 載入數據
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print(" 數據加載成功")
+            print(" 數據載入成功")
         else:
-            print(" 數據加載失敗")
+            print(" 數據載入失敗")
             return False
         
     except Exception as e:

@@ -107,7 +107,7 @@ class AdaptiveCacheSystem:
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
-        """從文件緩存加載（支援 JSON 格式，兼容舊 .pkl 檔案）"""
+        """從文件緩存載入（支援 JSON 格式，兼容舊 .pkl 檔案）"""
         try:
             # 優先使用 JSON 格式
             json_file = self.cache_dir / f"{cache_key}.json"
@@ -119,7 +119,7 @@ class AdaptiveCacheSystem:
                 # 還原時間戳
                 if isinstance(cache_data['timestamp'], str):
                     cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
-                self.logger.debug(f"文件緩存加載成功 (JSON): {cache_key}")
+                self.logger.debug(f"文件緩存載入成功 (JSON): {cache_key}")
                 return cache_data
 
             # 舊格式 .pkl 檔案不再支援載入（安全考量）
@@ -131,7 +131,7 @@ class AdaptiveCacheSystem:
             return None
 
         except Exception as e:
-            self.logger.error(f"文件緩存加載失敗: {e}")
+            self.logger.error(f"文件緩存載入失敗: {e}")
             return None
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
@@ -159,7 +159,7 @@ class AdaptiveCacheSystem:
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
-        """從 Redis 緩存加載（使用 JSON 反序列化）"""
+        """從 Redis 緩存載入（使用 JSON 反序列化）"""
         redis_client = self.db_manager.get_redis_client()
         if not redis_client:
             return None
@@ -180,11 +180,11 @@ class AdaptiveCacheSystem:
             if isinstance(cache_data['timestamp'], str):
                 cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
 
-            self.logger.debug(f"Redis緩存加載成功: {cache_key}")
+            self.logger.debug(f"Redis緩存載入成功: {cache_key}")
             return cache_data
 
         except Exception as e:
-            self.logger.error(f"Redis緩存加載失敗: {e}")
+            self.logger.error(f"Redis緩存載入失敗: {e}")
             return None
     
     def _save_to_mongodb(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
@@ -220,7 +220,7 @@ class AdaptiveCacheSystem:
             return False
     
     def _load_from_mongodb(self, cache_key: str) -> Optional[Dict]:
-        """從 MongoDB 緩存加載（使用 JSON 反序列化）"""
+        """從 MongoDB 緩存載入（使用 JSON 反序列化）"""
         mongodb_client = self.db_manager.get_mongodb_client()
         if not mongodb_client:
             return None
@@ -257,11 +257,11 @@ class AdaptiveCacheSystem:
                 'backend': 'mongodb'
             }
 
-            self.logger.debug(f"MongoDB緩存加載成功: {cache_key}")
+            self.logger.debug(f"MongoDB緩存載入成功: {cache_key}")
             return cache_data
 
         except Exception as e:
-            self.logger.error(f"MongoDB緩存加載失敗: {e}")
+            self.logger.error(f"MongoDB緩存載入失敗: {e}")
             return None
     
     def save_data(self, symbol: str, data: Any, start_date: str = "", end_date: str = "", 
@@ -270,7 +270,7 @@ class AdaptiveCacheSystem:
         # 生成緩存鍵
         cache_key = self._get_cache_key(symbol, start_date, end_date, data_source, data_type)
         
-        # 準備元數據
+        # 準備中繼資料
         metadata = {
             'symbol': symbol,
             'start_date': start_date,
@@ -305,10 +305,10 @@ class AdaptiveCacheSystem:
         return cache_key
     
     def load_data(self, cache_key: str) -> Optional[Any]:
-        """從緩存加載數據"""
+        """從緩存載入數據"""
         cache_data = None
         
-        # 根據主要後端加載
+        # 根據主要後端載入
         if self.primary_backend == "redis":
             cache_data = self._load_from_redis(cache_key)
         elif self.primary_backend == "mongodb":
@@ -318,7 +318,7 @@ class AdaptiveCacheSystem:
         
         # 如果主要後端失敗，嘗試降級
         if not cache_data and self.fallback_enabled:
-            self.logger.debug(f"主要後端({self.primary_backend})加載失敗，嘗試文件緩存")
+            self.logger.debug(f"主要後端({self.primary_backend})載入失敗，嘗試文件緩存")
             cache_data = self._load_from_file(cache_key)
         
         if not cache_data:
@@ -348,7 +348,7 @@ class AdaptiveCacheSystem:
         return None
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計信息"""
+        """獲取緩存統計資訊"""
         stats = {
             'primary_backend': self.primary_backend,
             'fallback_enabled': self.fallback_enabled,

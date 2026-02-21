@@ -166,9 +166,9 @@ class VersionManager:
         return True
     
     def show_info(self):
-        """顯示版本信息"""
+        """顯示版本資訊"""
         current_version = self.get_current_version()
-        logger.info(f" TradingAgents 版本信息")
+        logger.info(f" TradingAgents 版本資訊")
         logger.info(f"當前版本: {current_version}")
         logger.info(f"版本文件: {self.version_file}")
         logger.info(f"更新日誌: {self.changelog_file}")
@@ -186,8 +186,8 @@ def main():
     parser = argparse.ArgumentParser(description='TradingAgents 版本管理工具')
     subparsers = parser.add_subparsers(dest='command', help='可用命令')
     
-    # 顯示信息命令
-    subparsers.add_parser('info', help='顯示版本信息')
+    # 顯示資訊命令
+    subparsers.add_parser('info', help='顯示版本資訊')
     
     # 設置版本命令
     set_parser = subparsers.add_parser('set', help='設置版本號')

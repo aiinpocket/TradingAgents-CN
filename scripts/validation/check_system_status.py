@@ -33,7 +33,7 @@ def check_system_status():
             import os
             from dotenv import load_dotenv
 
-            # 加載環境變量
+            # 載入環境變量
             load_dotenv(env_file)
 
             logger.info(f" 數據庫配置狀態:")
@@ -140,12 +140,12 @@ def check_system_status():
         )
         logger.info(f" 數據保存成功: {cache_key}")
         
-        # 測試數據加載
+        # 測試數據載入
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            logger.info(f" 數據加載成功，內容匹配")
+            logger.info(f" 數據載入成功，內容匹配")
         else:
-            logger.error(f" 數據加載失敗或內容不匹配")
+            logger.error(f" 數據載入失敗或內容不匹配")
         
         # 測試數據查找
         found_key = cache.find_cached_stock_data(
@@ -184,14 +184,14 @@ def check_system_status():
         )
         save_time = time.time() - start_time
         
-        # 加載性能測試
+        # 載入性能測試
         start_time = time.time()
         data = cache.load_stock_data(cache_key)
         load_time = time.time() - start_time
         
         logger.info(f" 性能測試結果:")
         logger.info(f"  保存時間: {save_time:.4f}秒")
-        logger.info(f"  加載時間: {load_time:.4f}秒")
+        logger.info(f"  載入時間: {load_time:.4f}秒")
         
         if load_time < 0.1:
             logger.info(f" 緩存性能良好 (<0.1秒)")

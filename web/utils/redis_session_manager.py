@@ -59,7 +59,7 @@ class RedisSessionManager:
     def _get_session_key(self) -> str:
         """生成會話鍵"""
         try:
-            # 嘗試獲取Streamlit的session信息
+            # 嘗試獲取Streamlit的session資訊
             if hasattr(st, 'session_state') and hasattr(st.session_state, '_get_session_id'):
                 session_id = st.session_state._get_session_id()
                 return f"{self.session_prefix}{session_id}"
@@ -72,7 +72,7 @@ class RedisSessionManager:
             user_agent = headers.get('User-Agent', 'unknown')
             x_forwarded_for = headers.get('X-Forwarded-For', 'unknown')
             
-            # 生成基於用戶信息的唯一標識
+            # 生成基於用戶資訊的唯一標識
             unique_str = f"{user_agent}_{x_forwarded_for}_{int(time.time() / 3600)}"  # 按小時分組
             session_hash = hashlib.sha256(unique_str.encode()).hexdigest()[:16]
             
@@ -127,23 +127,23 @@ class RedisSessionManager:
             return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
-        """加載分析狀態"""
+        """載入分析狀態"""
         try:
             session_key = self._get_session_key()
             
             if self.use_redis:
-                # 從Redis加載
+                # 從Redis載入
                 data = self.redis_client.get(session_key)
                 if data:
                     return json.loads(data)
             else:
-                # 從文件加載（fallback）
+                # 從文件載入（fallback）
                 return self._load_from_file(session_key)
             
             return None
             
         except Exception as e:
-            st.warning(f"加載會話狀態失敗: {e}")
+            st.warning(f"載入會話狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -181,7 +181,7 @@ class RedisSessionManager:
             st.warning(f"文件保存失敗: {e}")
     
     def _load_from_file(self, session_key: str) -> Optional[Dict[str, Any]]:
-        """從文件加載（fallback方案）"""
+        """從文件載入（fallback方案）"""
         try:
             filename = f"./data/{session_key.replace(':', '_')}.json"
             if os.path.exists(filename):
@@ -199,7 +199,7 @@ class RedisSessionManager:
             return None
             
         except Exception as e:
-            st.warning(f"文件加載失敗: {e}")
+            st.warning(f"文件載入失敗: {e}")
             return None
     
     def _delete_file(self, session_key: str):
@@ -213,7 +213,7 @@ class RedisSessionManager:
             st.warning(f"文件刪除失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
-        """獲取調試信息"""
+        """獲取除錯資訊"""
         try:
             session_key = self._get_session_key()
             

@@ -350,7 +350,7 @@ def render_detailed_records_table(records: List[UsageRecord]):
     st.dataframe(display_df, use_container_width=True)
 
 def load_detailed_records(days: int) -> List[UsageRecord]:
-    """加載詳細記錄"""
+    """載入詳細記錄"""
     try:
         all_records = config_manager.load_usage_records()
         
@@ -368,7 +368,7 @@ def load_detailed_records(days: int) -> List[UsageRecord]:
         
         return filtered_records
     except Exception as e:
-        st.error(f"加載記錄失敗: {e}")
+        st.error(f"載入記錄失敗: {e}")
         return []
 
 def export_statistics_data(days: int):

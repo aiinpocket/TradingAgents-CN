@@ -16,7 +16,7 @@ class DatabaseManager:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-        # 加載.env配置
+        # 載入.env配置
         self._load_env_config()
 
         # 數據庫連接狀態
@@ -34,8 +34,8 @@ class DatabaseManager:
         self.logger.info(f"數據庫管理器初始化完成 - MongoDB: {self.mongodb_available}, Redis: {self.redis_available}")
     
     def _load_env_config(self):
-        """從.env文件加載配置"""
-        # 嘗試加載python-dotenv
+        """從.env文件載入配置"""
+        # 嘗試載入python-dotenv
         try:
             from dotenv import load_dotenv
             load_dotenv()
@@ -268,7 +268,7 @@ class DatabaseManager:
         return self.primary_backend
 
     def get_config(self) -> Dict[str, Any]:
-        """獲取配置信息"""
+        """獲取配置資訊"""
         return {
             "mongodb": self.mongodb_config,
             "redis": self.redis_config,
@@ -296,7 +296,7 @@ class DatabaseManager:
         }
 
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計信息"""
+        """獲取緩存統計資訊"""
         stats = {
             "mongodb_available": self.mongodb_available,
             "redis_available": self.redis_available,

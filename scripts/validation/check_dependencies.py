@@ -145,13 +145,13 @@ def test_cache_without_database():
         )
         logger.info(f" 數據保存成功: {cache_key}")
         
-        # 加載數據
+        # 載入數據
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            logger.info(f" 數據加載成功，文件緩存工作正常")
+            logger.info(f" 數據載入成功，文件緩存工作正常")
             return True
         else:
-            logger.error(f" 數據加載失敗")
+            logger.error(f" 數據載入失敗")
             return False
             
     except Exception as e:

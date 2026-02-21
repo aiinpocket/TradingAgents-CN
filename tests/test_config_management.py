@@ -42,7 +42,7 @@ def test_config_manager():
         models.append(new_model)
         config_manager.save_models(models)
         
-        # 重新加載驗證
+        # 重新載入驗證
         reloaded_models = config_manager.load_models()
         assert len(reloaded_models) == len(models), "模型數量應該匹配"
         

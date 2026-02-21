@@ -135,7 +135,7 @@ def test_package_installation_simulation():
         print(f"  缺少包: {missing_packages}")
         print("   運行以下命令安裝: pip install -r requirements_db.txt")
     
-    return True  # 這個測試總是通過，只是信息性的
+    return True  # 這個測試總是通過，只是資訊性的
 
 
 def test_compatibility_checker_tool():

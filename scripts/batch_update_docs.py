@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 批量更新文件腳本
-為所有核心文件添加版本信息頭部，修復常見問題
+為所有核心文件添加版本資訊頭部，修復常見問題
 """
 
 import os
@@ -45,7 +45,7 @@ class DocumentationUpdater:
         ]
     
     def create_version_header(self, status: str = "待更新") -> str:
-        """創建版本信息頭部"""
+        """創建版本資訊頭部"""
         return f"""---
 version: {self.current_version}
 last_updated: {self.current_date}

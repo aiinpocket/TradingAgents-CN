@@ -14,15 +14,15 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_load_analysis_results():
-    """測試加載分析結果功能"""
+    """測試載入分析結果功能"""
     try:
         from web.components.analysis_results import load_analysis_results
         
-        print(" 測試加載分析結果...")
+        print(" 測試載入分析結果...")
         
-        # 測試基本加載
+        # 測試基本載入
         results = load_analysis_results(limit=10)
-        print(f" 成功加載 {len(results)} 個分析結果")
+        print(f" 成功載入 {len(results)} 個分析結果")
         
         if results:
             # 檢查結果結構
@@ -153,7 +153,7 @@ def main():
     
     tests = [
         ("創建測試數據", create_test_data),
-        ("加載分析結果", test_load_analysis_results),
+        ("載入分析結果", test_load_analysis_results),
         ("對比功能", test_comparison_functions),
         ("圖表功能", test_chart_functions)
     ]

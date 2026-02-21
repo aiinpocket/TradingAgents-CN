@@ -124,7 +124,7 @@ python cli/main.py --llm-provider anthropic --model claude-sonnet-4 --stock TSLA
     return release_notes.strip()
 
 def show_release_info():
-    """顯示發布信息"""
+    """顯示發布資訊"""
     logger.info(f" TradingAgents-CN v0.1.2 已成功發布到GitHub！")
     logger.info(f"=")
     
@@ -201,7 +201,7 @@ def main():
     logger.info(f"5. 勾選 'Set as the latest release'")
     logger.info(f"6. 點擊 'Publish release'")
     
-    # 顯示發布信息
+    # 顯示發布資訊
     show_release_info()
     
     return True

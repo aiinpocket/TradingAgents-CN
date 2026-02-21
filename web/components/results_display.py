@@ -37,7 +37,7 @@ def render_results(results):
     # 投資決策摘要
     render_decision_summary(decision, stock_symbol)
 
-    # 分析配置信息
+    # 分析配置資訊
     render_analysis_info(results)
 
     # 詳細分析報告
@@ -51,9 +51,9 @@ def render_results(results):
 
 
 def render_analysis_info(results):
-    """渲染分析配置信息"""
+    """渲染分析配置資訊"""
 
-    with st.expander("分析配置信息", expanded=False):
+    with st.expander("分析配置資訊", expanded=False):
         col1, col2, col3 = st.columns(3)
 
         with col1:

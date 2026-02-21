@@ -19,7 +19,7 @@ def is_docker_environment() -> bool:
         if os.path.exists('/.dockerenv'):
             return True
         
-        # 檢查cgroup信息
+        # 檢查cgroup資訊
         with open('/proc/1/cgroup', 'r', encoding='utf-8') as f:
             content = f.read()
             if 'docker' in content or 'containerd' in content:
@@ -200,7 +200,7 @@ def check_docker_pdf_dependencies():
     return True, "所有依賴已安裝"
 
 def get_docker_status_info():
-    """獲取Docker環境狀態信息"""
+    """獲取Docker環境狀態資訊"""
     info = {
         'is_docker': is_docker_environment(),
         'dependencies_ok': False,

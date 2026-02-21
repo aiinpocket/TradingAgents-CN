@@ -211,7 +211,7 @@ class StockDataPreparer:
 
                 if has_valid_data:
                     has_historical_data = True
-                    has_basic_info = True  # 美股通常不單獨獲取基本信息
+                    has_basic_info = True  # 美股通常不單獨獲取基本資訊
                     logger.info(f"[美股數據] 歷史數據獲取成功: {formatted_code} ({period_days}天)")
                     cache_status = f"歷史數據已緩存({period_days}天)"
 

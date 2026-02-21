@@ -53,8 +53,8 @@ def find_tradingagents_container():
     return None
 
 def get_container_info(container_name):
-    """獲取容器基本信息"""
-    print(f"\n 容器信息: {container_name}")
+    """獲取容器基本資訊"""
+    print(f"\n 容器資訊: {container_name}")
     print("-" * 50)
     
     # 容器狀態
@@ -116,7 +116,7 @@ def explore_log_locations(container_name):
                 found_logs.append(log_file)
                 print(f"    找到日誌文件: {log_file}")
                 
-                # 獲取文件信息
+                # 獲取文件資訊
                 success2, output2, error2 = run_command(f"docker exec {container_name} ls -lh {log_file}")
                 if success2:
                     print(f"      詳情: {output2.strip()}")
@@ -136,7 +136,7 @@ def get_docker_logs(container_name):
         with open(docker_log_file, 'w', encoding='utf-8') as f:
             f.write(output)
         
-        # 統計信息
+        # 統計資訊
         lines = len(output.split('\n'))
         size = len(output.encode('utf-8'))
         
@@ -278,7 +278,7 @@ def main():
         print("   docker-compose up -d")
         return False
     
-    # 2. 獲取容器信息
+    # 2. 獲取容器資訊
     get_container_info(container_name)
     
     # 3. 檢查日誌配置

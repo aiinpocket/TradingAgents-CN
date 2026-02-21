@@ -28,7 +28,7 @@ def _get_company_name(ticker: str, market_info: dict) -> str:
 
     Args:
         ticker: 股票代碼
-        market_info: 市場信息字典
+        market_info: 市場資訊字典
 
     Returns:
         str: 公司名稱
@@ -127,10 +127,10 @@ def create_market_analyst_react(llm, toolkit):
 - 報告必須基於工具獲取的真實數據進行分析
 - 報告長度不少於800字
 - 包含具體的數據、指標數值和專業分析
-- 結合新聞信息分析市場情緒
+- 結合新聞資訊分析市場情緒
 
 報告格式應包含：
-## 股票基本信息
+## 股票基本資訊
 ## 技術指標分析
 ## 價格趨勢分析
 ## 成交量分析
@@ -225,7 +225,7 @@ def create_market_analyst(llm, toolkit):
 
 你必須對{company_name}（股票代碼：{ticker}）進行詳細的技術分析。
 
-**股票信息：**
+**股票資訊：**
 - 公司名稱：{company_name}
 - 股票代碼：{ticker}
 - 所屬市場：{market_info['market_name']}
@@ -245,7 +245,7 @@ def create_market_analyst(llm, toolkit):
 7. 所有價格數據使用{market_info['currency_name']}（{market_info['currency_symbol']}）表示
 
 **輸出格式：**
-## 股票基本信息
+## 股票基本資訊
 - 公司名稱：{company_name}
 - 股票代碼：{ticker}
 - 所屬市場：{market_info['market_name']}

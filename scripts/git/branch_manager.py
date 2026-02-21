@@ -108,7 +108,7 @@ class BranchManager:
             else:
                 logger.info(f" 工作目錄乾淨")
         
-        # 分支信息
+        # 分支資訊
         branches = self.get_all_branches()
         logger.info(f"\n 本地分支 ({len(branches['local'])}個):")
         for branch in branches['local']:

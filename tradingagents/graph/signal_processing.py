@@ -64,9 +64,9 @@ class SignalProcessor:
         messages = [
             (
                 "system",
-                f"""您是一位專業的金融分析助手，負責從交易員的分析報告中提取結構化的投資決策信息。
+                f"""您是一位專業的金融分析助手，負責從交易員的分析報告中提取結構化的投資決策資訊。
 
-請從提供的分析報告中提取以下信息，並以JSON格式返回：
+請從提供的分析報告中提取以下資訊，並以JSON格式返回：
 
 {{
     "action": "買入/持有/賣出",
@@ -87,7 +87,7 @@ class SignalProcessor:
 - 股票代碼 {stock_symbol or '未知'} 是{market_info['market_name']}，使用{currency}計價
 - 目標價格必須與股票的交易貨幣一致（{currency_symbol}）
 
-如果某些信息在報告中沒有明確提及，請使用合理的預設值。""",
+如果某些資訊在報告中沒有明確提及，請使用合理的預設值。""",
             ),
             ("human", full_signal),
         ]
@@ -215,7 +215,7 @@ class SignalProcessor:
         """智能價格推算方法（僅支援美股）"""
         import re
         
-        # 嘗試從文本中提取當前價格和漲跌幅信息
+        # 嘗試從文本中提取當前價格和漲跌幅資訊
         current_price = None
         percentage_change = None
         
@@ -236,7 +236,7 @@ class SignalProcessor:
                 except ValueError:
                     continue
         
-        # 提取漲跌幅信息
+        # 提取漲跌幅資訊
         percentage_patterns = [
             r'上漲\s*(\d+(?:\.\d+)?)%',
             r'漲幅\s*(\d+(?:\.\d+)?)%',
@@ -253,7 +253,7 @@ class SignalProcessor:
                 except ValueError:
                     continue
         
-        # 基於動作和信息推算目標價
+        # 基於動作和資訊推算目標價
         if current_price and percentage_change:
             if action == '買入':
                 return round(current_price * (1 + percentage_change), 2)

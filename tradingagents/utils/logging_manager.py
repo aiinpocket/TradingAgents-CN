@@ -78,8 +78,8 @@ class TradingAgentsLogger:
         self._setup_logging()
     
     def _load_default_config(self) -> Dict[str, Any]:
-        """加載預設日誌配置"""
-        # 嘗試從配置文件加載
+        """載入預設日誌配置"""
+        # 嘗試從配置文件載入
         config = self._load_config_file()
         if config:
             return config
@@ -129,7 +129,7 @@ class TradingAgentsLogger:
         }
 
     def _load_config_file(self) -> Optional[Dict[str, Any]]:
-        """從配置文件加載日誌配置"""
+        """從配置文件載入日誌配置"""
         # 確定配置文件路徑
         config_paths = [
             'config/logging_docker.toml' if os.getenv('DOCKER_CONTAINER') == 'true' else None,
@@ -146,7 +146,7 @@ class TradingAgentsLogger:
                     # 轉換配置格式
                     return self._convert_toml_config(config_data)
                 except Exception as e:
-                    _bootstrap_logger.warning(f"警告: 無法加載配置文件 {config_path}: {e}")
+                    _bootstrap_logger.warning(f"警告: 無法載入配置文件 {config_path}: {e}")
                     continue
 
         return None

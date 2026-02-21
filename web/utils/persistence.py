@@ -42,8 +42,8 @@ class ModelPersistence:
             logger.warning(f"[Persistence] URL參數保存失敗: {e}")
     
     def load_config(self):
-        """從session state或URL加載配置"""
-        # 首先嘗試從URL參數加載
+        """從session state或URL載入配置"""
+        # 首先嘗試從URL參數載入
         try:
             query_params = st.query_params
             if 'provider' in query_params:
@@ -52,15 +52,15 @@ class ModelPersistence:
                     'category': query_params.get('category', 'openai'),
                     'model': query_params.get('model', '')
                 }
-                logger.debug(f"[Persistence] 從URL加載配置: {config}")
+                logger.debug(f"[Persistence] 從URL載入配置: {config}")
                 return config
         except Exception as e:
-            logger.warning(f"[Persistence] URL參數加載失敗: {e}")
+            logger.warning(f"[Persistence] URL參數載入失敗: {e}")
         
-        # 然後嘗試從session state加載
+        # 然後嘗試從session state載入
         if self.storage_key in st.session_state:
             config = st.session_state[self.storage_key]
-            logger.debug(f"[Persistence] 從Session State加載配置: {config}")
+            logger.debug(f"[Persistence] 從Session State載入配置: {config}")
             return config
         
         # 返回預設配置
@@ -91,7 +91,7 @@ def save_model_selection(provider, category="", model=""):
     persistence.save_config(provider, category, model)
 
 def load_model_selection():
-    """加載模型選擇"""
+    """載入模型選擇"""
     return persistence.load_config()
 
 def clear_model_selection():

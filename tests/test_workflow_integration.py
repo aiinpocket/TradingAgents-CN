@@ -132,7 +132,7 @@ def test_news_analyst_integration():
                 "session_id": "test_session"
             }
             
-            # 測試新聞分析師調用（會因為LLM配置問題失敗，但可以驗證工具加載）
+            # 測試新聞分析師調用（會因為LLM配置問題失敗，但可以驗證工具載入）
             print(f"   測試新聞分析師節點調用...")
             
             # 這裡只是驗證能否正常創建，不實際調用
@@ -152,7 +152,7 @@ def test_news_analyst_integration():
         print(f"   工作流程: 已集成到整體交易智能體流程")
         
         print(f"\n 在整體流程中的使用情況：")
-        print(f"  1. 當用戶選擇包含'news'的分析師時，系統會自動加載新聞分析師")
+        print(f"  1. 當用戶選擇包含'news'的分析師時，系統會自動載入新聞分析師")
         print(f"  2. 新聞分析師會創建並綁定統一新聞工具到LLM")
         print(f"  3. LLM在分析時會調用 get_stock_news_unified 工具")
         print(f"  4. 統一工具會自動識別美股股票並獲取相應新聞")

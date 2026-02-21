@@ -174,19 +174,19 @@ class SmartConfigManager:
             logger.error(f" 配置保存失敗: {e}")
     
     def load_config(self, config_path: str = "smart_config.json") -> bool:
-        """從文件加載配置"""
+        """從文件載入配置"""
         try:
             if os.path.exists(config_path):
                 with open(config_path, 'r', encoding='utf-8') as f:
                     self.config = json.load(f)
-                logger.info(f" 配置已從文件加載: {config_path}")
+                logger.info(f" 配置已從文件載入: {config_path}")
                 return True
         except Exception as e:
-            logger.error(f" 配置加載失敗: {e}")
+            logger.error(f" 配置載入失敗: {e}")
         return False
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
-        """獲取緩存後端信息"""
+        """獲取緩存後端資訊"""
         return {
             "primary_backend": self.config["cache"]["primary_backend"],
             "mongodb_available": self.mongodb_available,

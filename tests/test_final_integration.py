@@ -40,7 +40,7 @@ def test_final_integration():
             
             def get_google_news(self, params):
                 query = params.get("query", "unknown")
-                return f"Google新聞搜索結果 - {query}: 相關財經新聞內容，包含重要市場信息"
+                return f"Google新聞搜索結果 - {query}: 相關財經新聞內容，包含重要市場資訊"
             
             def get_global_news_openai(self, params):
                 query = params.get("query", "unknown")
@@ -69,14 +69,14 @@ def test_final_integration():
                 if case["code"] in result:
                     print(f"   包含股票代碼")
                 if "新聞數據來源" in result:
-                    print(f"   包含數據來源信息")
+                    print(f"   包含數據來源資訊")
             else:
                 print(f"   獲取失敗")
         
         print(f"\n 統一新聞工具測試完成")
         
-        # 2. 測試新聞分析師的工具加載
-        print(f"\n 第二步：測試新聞分析師工具加載...")
+        # 2. 測試新聞分析師的工具載入
+        print(f"\n 第二步：測試新聞分析師工具載入...")
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         
         # 檢查新聞分析師是否正確導入了統一新聞工具

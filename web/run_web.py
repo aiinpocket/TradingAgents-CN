@@ -135,7 +135,7 @@ def check_api_keys():
     
     from dotenv import load_dotenv
     
-    # 加載環境變量
+    # 載入環境變量
     project_root = Path(__file__).parent.parent
     load_dotenv(project_root / ".env")
     

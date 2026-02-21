@@ -252,7 +252,7 @@ class AsyncProgressTracker:
         return name_map.get(analyst, f'{analyst}分析師')
 
     def _get_analyst_step_info(self, analyst: str) -> Dict[str, str]:
-        """獲取分析師步驟信息（名稱和描述）"""
+        """獲取分析師步驟資訊（名稱和描述）"""
         analyst_info = {
             'market': {
                 "name": "市場分析",

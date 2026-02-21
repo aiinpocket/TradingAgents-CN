@@ -60,7 +60,7 @@ def create_news_analyst(llm, toolkit):
 
         # 新增 FinnHub 情緒量化工具，提供客觀的新聞情緒評分
         tools = [unified_news_tool, toolkit.get_finnhub_sentiment_data]
-        logger.info("[新聞分析師] 已加載統一新聞工具和 FinnHub 情緒工具")
+        logger.info("[新聞分析師] 已載入統一新聞工具和 FinnHub 情緒工具")
 
         system_message = (
             """您是一位專業的財經新聞分析師，負責分析最新的市場新聞和事件對股票價格的潛在影響。
@@ -71,7 +71,7 @@ def create_news_analyst(llm, toolkit):
 您的主要職責包括：
 1. 獲取和分析最新的實時新聞（優先15-30分鐘內的新聞）
 2. 評估新聞事件的緊急程度和市場影響
-3. 識別可能影響股價的關鍵信息
+3. 識別可能影響股價的關鍵資訊
 4. 分析新聞的時效性和可靠性
 5. 提供基於新聞的交易建議和價格影響評估
 
@@ -96,7 +96,7 @@ def create_news_analyst(llm, toolkit):
 - 提供基於新聞的價格調整建議
 - 識別關鍵價格支撐位和阻力位
 - 評估新聞對長期投資價值的影響
-- 不允許回覆'無法評估價格影響'或'需要更多信息'
+- 不允許回覆'無法評估價格影響'或'需要更多資訊'
 
 請特別注意：
 - 使用 FinnHub 新聞情緒量化評分（bullish/bearish 比例、行業平均比較）來佐證你的分析判斷
@@ -148,7 +148,7 @@ def create_news_analyst(llm, toolkit):
         prompt = prompt.partial(current_date=current_date)
         prompt = prompt.partial(ticker=ticker)
         
-        # 獲取模型信息用於統一新聞工具的特殊處理
+        # 獲取模型資訊用於統一新聞工具的特殊處理
         model_info = ""
         try:
             if hasattr(llm, 'model_name'):

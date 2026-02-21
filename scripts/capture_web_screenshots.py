@@ -114,12 +114,12 @@ def capture_screenshots():
             logger.info(" 正在訪問Web界面...")
             driver.get("http://localhost:8501")
             
-            # 等待頁面加載
+            # 等待頁面載入
             WebDriverWait(driver, 30).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
             
-            # 等待Streamlit完全加載
+            # 等待Streamlit完全載入
             time.sleep(5)
             
             # 創建截圖目錄

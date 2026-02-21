@@ -17,7 +17,7 @@ logger = get_logger('web')
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-# 確保環境變量正確加載
+# 確保環境變量正確載入
 load_dotenv(project_root / ".env", override=True)
 
 # 添加配置管理器
@@ -335,7 +335,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         state, decision = graph.propagate(formatted_symbol, analysis_date)
 
-        # 調試信息
+        # 除錯資訊
         logger.debug(f" 分析完成，decision類型: {type(decision)}")
         logger.debug(f" decision內容: {decision}")
 
@@ -469,7 +469,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                         'event_type': 'web_analysis_error'
                     }, exc_info=True)
 
-        # 如果真實分析失敗，返回錯誤信息而不是誤導性演示數據
+        # 如果真實分析失敗，返回錯誤訊息而不是誤導性演示數據
         return {
             'stock_symbol': stock_symbol,
             'analysis_date': analysis_date,
@@ -497,7 +497,7 @@ def format_analysis_results(results):
     state = results['state']
     decision = results['decision']
 
-    # 提取關鍵信息
+    # 提取關鍵資訊
     # decision 可能是字符串（如 "BUY", "SELL", "HOLD"）或字典
     if isinstance(decision, str):
         # 將英文投資建議轉換為中文
@@ -566,7 +566,7 @@ def format_analysis_results(results):
             'reasoning': f'分析結果: {str(decision)}'
         }
     
-    # 格式化狀態信息
+    # 格式化狀態資訊
     formatted_state = {}
     
     # 處理各個分析模塊的結果 - 包含完整的智能體團隊分析
@@ -602,7 +602,7 @@ def format_analysis_results(results):
         'decision': formatted_decision,
         'state': formatted_state,
         'success': True,
-        # 將配置信息放在頂層，供前端直接訪問
+        # 將配置資訊放在頂層，供前端直接訪問
         'analysis_date': results['analysis_date'],
         'analysts': results['analysts'],
         'research_depth': results['research_depth'],

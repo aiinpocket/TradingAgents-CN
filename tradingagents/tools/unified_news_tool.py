@@ -36,13 +36,13 @@ class UnifiedNewsAnalyzer:
         Args:
             stock_code: 股票代碼
             max_news: 最大新聞數量
-            model_info: 當前使用的模型信息，用於特殊處理
+            model_info: 當前使用的模型資訊，用於特殊處理
 
         Returns:
             str: 格式化的新聞內容
         """
         logger.info(f"[統一新聞工具] 開始獲取 {stock_code} 的新聞，模型: {model_info}")
-        logger.info(f"[統一新聞工具] 當前模型信息: {model_info}")
+        logger.info(f"[統一新聞工具] 當前模型資訊: {model_info}")
 
         if self.cache_enabled:
             cache_key = self._generate_cache_key(stock_code, max_news)
@@ -174,7 +174,7 @@ def create_unified_news_tool(toolkit):
         Args:
             stock_code (str): 美股股票代碼 (如 AAPL、TSLA、NVDA)
             max_news (int): 最大新聞數量，預設100
-            model_info (str): 當前使用的模型信息，用於特殊處理
+            model_info (str): 當前使用的模型資訊，用於特殊處理
 
         Returns:
             str: 格式化的新聞內容

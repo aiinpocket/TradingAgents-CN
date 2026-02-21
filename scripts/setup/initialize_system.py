@@ -45,7 +45,7 @@ def initialize_system():
         try:
             with open(config_file, 'r', encoding='utf-8') as f:
                 existing_config = json.load(f)
-            logger.info(f" 現有配置加載成功")
+            logger.info(f" 現有配置載入成功")
         except Exception as e:
             logger.error(f" 現有配置讀取失敗: {e}")
             existing_config = None
@@ -234,7 +234,7 @@ cache = get_cache()
 # 保存數據
 cache_key = cache.save_stock_data("AAPL", stock_data)
 
-# 加載數據
+# 載入數據
 data = cache.load_stock_data(cache_key)
 ```
 

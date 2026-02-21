@@ -124,7 +124,7 @@ class FileSessionManager:
             return False
     
     def load_analysis_state(self) -> Optional[Dict[str, Any]]:
-        """加載分析狀態"""
+        """載入分析狀態"""
         try:
             fingerprint = self._get_browser_fingerprint()
             session_file = self._get_session_file_path(fingerprint)
@@ -147,7 +147,7 @@ class FileSessionManager:
             return session_data
             
         except Exception as e:
-            st.warning(f"加載會話狀態失敗: {e}")
+            st.warning(f"載入會話狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -170,7 +170,7 @@ class FileSessionManager:
             st.warning(f"清除會話狀態失敗: {e}")
     
     def get_debug_info(self) -> Dict[str, Any]:
-        """獲取調試信息"""
+        """獲取除錯資訊"""
         try:
             fingerprint = self._get_browser_fingerprint()
             session_file = self._get_session_file_path(fingerprint)

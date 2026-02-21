@@ -127,7 +127,7 @@ class MongoDBStorage:
             return False
     
     def load_usage_records(self, limit: int = 10000, days: int = None) -> List[UsageRecord]:
-        """從MongoDB加載使用記錄"""
+        """從MongoDB載入使用記錄"""
         if not self._connected:
             return []
         
@@ -159,7 +159,7 @@ class MongoDBStorage:
             return records
             
         except Exception as e:
-            logger.error(f"從MongoDB加載記錄失敗: {e}")
+            logger.error(f"從MongoDB載入記錄失敗: {e}")
             return []
     
     def get_usage_statistics(self, days: int = 30) -> Dict[str, Any]:
@@ -214,7 +214,7 @@ class MongoDBStorage:
             return {}
     
     def get_provider_statistics(self, days: int = 30) -> Dict[str, Dict[str, Any]]:
-        """按供應商獲取統計信息"""
+        """按供應商獲取統計資訊"""
         if not self._connected:
             return {}
         

@@ -278,7 +278,7 @@ def main():
         logger.info(f"3. 訪問Redis管理界面: http://localhost:8081")
         return True
     else:
-        logger.error(f"\n 部分初始化失敗，請檢查錯誤信息")
+        logger.error(f"\n 部分初始化失敗，請檢查錯誤訊息")
         return False
 
 

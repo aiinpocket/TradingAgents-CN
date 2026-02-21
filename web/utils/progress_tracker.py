@@ -241,7 +241,7 @@ class SmartAnalysisProgressTracker:
         return None
     
     def get_current_step_info(self) -> Dict:
-        """獲取當前步驟信息"""
+        """獲取當前步驟資訊"""
         if self.current_step < len(self.analysis_steps):
             return self.analysis_steps[self.current_step]
         return {"name": "完成", "description": "分析已完成", "weight": 0}
@@ -297,11 +297,11 @@ class SmartStreamlitProgressDisplay:
         # 更新狀態文本
         self.status_text.markdown(f"**當前狀態:** {message}")
 
-        # 更新步驟信息
+        # 更新步驟資訊
         step_text = f"**進度:** 第 {current_step + 1} 步，共 {total_steps} 步 ({progress:.1%})"
         self.step_info.markdown(step_text)
 
-        # 更新時間信息
+        # 更新時間資訊
         time_text = f"**已用時間:** {self._format_time(elapsed_time)}"
         if remaining_time > 0:
             time_text += f" | **預計剩餘:** {self._format_time(remaining_time)}"

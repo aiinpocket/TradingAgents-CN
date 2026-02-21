@@ -261,7 +261,7 @@ class RedisPerformanceTester:
             }
             
         except Exception as e:
-            print(f" 獲取內存信息失敗: {e}")
+            print(f" 獲取內存資訊失敗: {e}")
             return None
     
     def run_full_test(self):

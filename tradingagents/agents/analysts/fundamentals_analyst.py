@@ -20,7 +20,7 @@ def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
 
     Args:
         ticker: 股票代碼
-        market_info: 市場信息字典
+        market_info: 市場資訊字典
 
     Returns:
         str: 公司名稱
@@ -133,9 +133,9 @@ def create_fundamentals_analyst(llm, toolkit):
             "嚴格禁止："
             "- 不允許說'我將調用工具'"
             "- 不允許假設任何數據"
-            "- 不允許編造公司信息"
+            "- 不允許編造公司資訊"
             "- 不允許直接回答而不調用工具"
-            "- 不允許回覆'無法確定價位'或'需要更多信息'"
+            "- 不允許回覆'無法確定價位'或'需要更多資訊'"
             "- 不允許使用英文投資建議（buy/hold/sell）"
             "你必須："
             "- 立即調用統一基本面分析工具"
@@ -268,7 +268,7 @@ def create_fundamentals_analyst(llm, toolkit):
 {combined_data}
 
 請提供：
-1. 公司基本信息分析（{company_name}，股票代碼：{ticker}）
+1. 公司基本資訊分析（{company_name}，股票代碼：{ticker}）
 2. 財務狀況評估
 3. 盈利能力分析
 4. 估值分析（使用{currency_info}）

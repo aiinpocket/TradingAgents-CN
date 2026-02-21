@@ -109,7 +109,7 @@ def test_get_finnhub_news():
     )
     
     print(f"函數返回結果: {result[:200]}...")  # 只顯示前200個字符
-    print(f"是否包含錯誤信息: {'無法獲取' in result}")
+    print(f"是否包含錯誤訊息: {'無法獲取' in result}")
 
 def create_sample_data_structure():
     """創建示例數據目錄結構"""
@@ -173,7 +173,7 @@ def main():
     
     print("\n=== 測試總結 ===")
     print("1. 數據目錄路徑已修複為跨平台兼容")
-    print("2. 添加了詳細的錯誤處理和調試信息")
+    print("2. 添加了詳細的錯誤處理和除錯資訊")
     print("3. 當數據文件不存在時會提供清晰的錯誤提示")
     print("4. 建議下載或配置正確的Finnhub數據")
     

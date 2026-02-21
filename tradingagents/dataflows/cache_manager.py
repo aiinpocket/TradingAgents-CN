@@ -165,11 +165,11 @@ class StockDataCache:
         return base_dir / f"{cache_key}.{file_format}"
     
     def _get_metadata_path(self, cache_key: str) -> Path:
-        """獲取元數據文件路徑"""
+        """獲取中繼資料文件路徑"""
         return self.metadata_dir / f"{cache_key}_meta.json"
     
     def _save_metadata(self, cache_key: str, metadata: Dict[str, Any]):
-        """保存元數據"""
+        """保存中繼資料"""
         metadata_path = self._get_metadata_path(cache_key)
         metadata_path.parent.mkdir(parents=True, exist_ok=True)  # 確保目錄存在
         metadata['cached_at'] = datetime.now().isoformat()
@@ -178,7 +178,7 @@ class StockDataCache:
             json.dump(metadata, f, ensure_ascii=False, indent=2)
     
     def _load_metadata(self, cache_key: str) -> Optional[Dict[str, Any]]:
-        """加載元數據"""
+        """載入中繼資料"""
         metadata_path = self._get_metadata_path(cache_key)
         if not metadata_path.exists():
             return None
@@ -187,7 +187,7 @@ class StockDataCache:
             with open(metadata_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
-            logger.error(f"加載元數據失敗: {e}")
+            logger.error(f"載入中繼資料失敗: {e}")
             return None
     
     def is_cache_valid(self, cache_key: str, max_age_hours: int = None, symbol: str = None, data_type: str = None) -> bool:
@@ -203,7 +203,7 @@ class StockDataCache:
                 cache_type = f"{market_type}_{data_type}"
                 max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
             else:
-                # 從元數據中獲取信息
+                # 從中繼資料中獲取資訊
                 symbol = metadata.get('symbol', '')
                 data_type = metadata.get('data_type', 'stock_data')
                 market_type = self._determine_market_type(symbol)
@@ -271,7 +271,7 @@ class StockDataCache:
             with open(cache_path, 'w', encoding='utf-8') as f:
                 f.write(str(data))
 
-        # 保存元數據
+        # 保存中繼資料
         metadata = {
             'symbol': symbol,
             'data_type': 'stock_data',
@@ -285,14 +285,14 @@ class StockDataCache:
         }
         self._save_metadata(cache_key, metadata)
 
-        # 獲取描述信息
+        # 獲取描述資訊
         cache_type = f"{market_type}_stock_data"
         desc = self.cache_config.get(cache_type, {}).get('description', '股票數據')
         logger.info(f"{desc}已緩存: {symbol} ({data_source}) -> {cache_key}")
         return cache_key
     
     def load_stock_data(self, cache_key: str) -> Optional[Union[pd.DataFrame, str]]:
-        """從緩存加載股票數據"""
+        """從緩存載入股票數據"""
         metadata = self._load_metadata(cache_key)
         if not metadata:
             return None
@@ -308,7 +308,7 @@ class StockDataCache:
                 with open(cache_path, 'r', encoding='utf-8') as f:
                     return f.read()
         except Exception as e:
-            logger.error(f"加載緩存數據失敗: {e}")
+            logger.error(f"載入緩存數據失敗: {e}")
             return None
     
     def find_cached_stock_data(self, symbol: str, start_date: str = None,
@@ -452,7 +452,7 @@ class StockDataCache:
         return cache_key
     
     def load_fundamentals_data(self, cache_key: str) -> Optional[str]:
-        """從緩存加載基本面數據"""
+        """從緩存載入基本面數據"""
         metadata = self._load_metadata(cache_key)
         if not metadata:
             return None
@@ -465,7 +465,7 @@ class StockDataCache:
             with open(cache_path, 'r', encoding='utf-8') as f:
                 return f.read()
         except Exception as e:
-            logger.error(f"加載基本面緩存數據失敗: {e}")
+            logger.error(f"載入基本面緩存數據失敗: {e}")
             return None
     
     def find_cached_fundamentals_data(self, symbol: str, data_source: str = None,
@@ -528,7 +528,7 @@ class StockDataCache:
                     if data_file.exists():
                         data_file.unlink()
                     
-                    # 刪除元數據文件
+                    # 刪除中繼資料文件
                     metadata_file.unlink()
                     cleared_count += 1
                     
@@ -538,7 +538,7 @@ class StockDataCache:
         logger.info(f"已清理 {cleared_count} 個過期緩存文件")
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計信息"""
+        """獲取緩存統計資訊"""
         stats = {
             'total_files': 0,
             'stock_data_count': 0,

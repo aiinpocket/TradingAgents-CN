@@ -42,7 +42,7 @@ def render_model_config():
     """渲染模型配置頁面"""
     st.markdown("**模型配置**")
 
-    # 加載現有配置
+    # 載入現有配置
     models = config_manager.load_models()
 
     # 顯示當前配置
@@ -152,7 +152,7 @@ def render_pricing_config():
     """渲染定價配置頁面"""
     st.markdown("**定價設置**")
 
-    # 加載現有定價
+    # 載入現有定價
     pricing_configs = config_manager.load_pricing()
 
     # 顯示當前定價
@@ -364,7 +364,7 @@ def render_system_settings():
     """渲染系統設置頁面"""
     st.markdown("**系統設置**")
 
-    # 加載當前設置
+    # 載入當前設置
     settings = config_manager.load_settings()
 
     st.markdown("**基本設置**")

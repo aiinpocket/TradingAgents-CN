@@ -93,8 +93,8 @@ def explore_container_filesystem(container_name):
     return found_logs
 
 def get_log_file_info(container_name, log_file):
-    """獲取日誌文件信息"""
-    print(f"\n 日誌文件信息: {log_file}")
+    """獲取日誌文件資訊"""
+    print(f"\n 日誌文件資訊: {log_file}")
     
     # 文件大小和修改時間
     success, output, error = run_command(f"docker exec {container_name} ls -lh {log_file}")

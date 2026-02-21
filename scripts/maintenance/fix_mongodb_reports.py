@@ -122,7 +122,7 @@ def main():
         return False
 
 def show_report_details():
-    """顯示報告詳細信息（調試用）"""
+    """顯示報告詳細資訊（調試用）"""
     try:
         from web.utils.mongodb_report_manager import MongoDBReportManager
         
@@ -133,7 +133,7 @@ def show_report_details():
         
         reports = mongodb_manager.get_all_reports(limit=10)
         
-        print(f"\n 最近10個報告的詳細信息:")
+        print(f"\n 最近10個報告的詳細資訊:")
         print("=" * 80)
         
         for i, report in enumerate(reports, 1):
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="修復MongoDB分析報告數據結構")
-    parser.add_argument("--details", action="store_true", help="顯示報告詳細信息")
+    parser.add_argument("--details", action="store_true", help="顯示報告詳細資訊")
     parser.add_argument("--fix", action="store_true", help="執行修復操作")
     
     args = parser.parse_args()

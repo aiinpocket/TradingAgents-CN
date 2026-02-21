@@ -38,16 +38,16 @@ def test_cli_ui_manager():
         ui.show_success("系統初始化完成")
         
         # 測試警告消息
-        ui.show_warning("這是一條警告信息")
+        ui.show_warning("這是一條警告資訊")
         
         # 測試錯誤消息
-        ui.show_error("這是一條錯誤信息")
+        ui.show_error("這是一條錯誤訊息")
         
         # 測試步驟標題
         ui.show_step_header(1, "測試步驟標題")
         
-        # 測試數據信息
-        ui.show_data_info("股票信息", "AAPL", "Apple Inc.")
+        # 測試數據資訊
+        ui.show_data_info("股票資訊", "AAPL", "Apple Inc.")
         
         print("\n CLI用戶界面管理器測試完成")
         return True
@@ -86,9 +86,9 @@ def test_analysis_flow_simulation():
         
         # 步驟2: 數據獲取階段
         ui.show_step_header(2, "數據獲取階段 | Data Collection Phase")
-        ui.show_progress("正在獲取股票基本信息...")
+        ui.show_progress("正在獲取股票基本資訊...")
         time.sleep(0.5)
-        ui.show_data_info("股票信息", "AAPL", "Apple Inc.")
+        ui.show_data_info("股票資訊", "AAPL", "Apple Inc.")
         time.sleep(0.3)
         ui.show_progress("正在獲取市場數據...")
         time.sleep(0.5)
@@ -160,7 +160,7 @@ def test_progress_vs_logging():
         # 系統日誌（只寫入文件，不在控制台顯示）
         print("\n 系統日誌（只寫入文件）:")
         logger.info("這是系統日誌消息，應該只寫入文件")
-        logger.debug("這是調試信息，用戶看不到")
+        logger.debug("這是除錯資訊，用戶看不到")
         logger.error("這是錯誤日誌，只記錄在文件中")
         
         print(" 如果上面沒有顯示時間戳和模塊名，說明日誌分離成功")
@@ -200,16 +200,16 @@ def test_user_experience():
         ui.show_error("友好的錯誤提示")
         print("    用戶知道出了什麼問題")
         
-        # 重要信息突出
-        ui.show_data_info("重要數據", "AAPL", "關鍵信息突出顯示")
-        print("    重要信息容易識別")
+        # 重要資訊突出
+        ui.show_data_info("重要數據", "AAPL", "關鍵資訊突出顯示")
+        print("    重要資訊容易識別")
         
         print("\n 用戶體驗測試完成")
         print(" 改進效果:")
         print("   - 界面清爽，沒有技術日誌干擾")
         print("   - 進度清晰，用戶不會感到等待焦慮")
         print("   - 反饋及時，用戶體驗流暢")
-        print("   - 信息分層，重要內容突出")
+        print("   - 資訊分層，重要內容突出")
         
         return True
         
@@ -262,7 +262,7 @@ def main():
         print("\n 改進成果:")
         print("1.  清晰的步驟指示和進度反饋")
         print("2.  用戶界面和系統日誌完全分離")
-        print("3.  重要過程信息及時顯示給用戶")
+        print("3.  重要過程資訊及時顯示給用戶")
         print("4.  界面保持清爽美觀")
         print("5.  用戶不再需要等待很久才知道結果")
         

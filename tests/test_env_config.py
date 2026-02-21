@@ -76,7 +76,7 @@ def test_env_config():
         cache = get_cache()
         print(" 緩存系統創建成功")
         
-        # 獲取後端信息
+        # 獲取後端資訊
         backend_info = cache.get_cache_backend_info()
         print(f"  緩存系統: {backend_info['system']}")
         print(f"  主要後端: {backend_info['primary_backend']}")
@@ -93,12 +93,12 @@ def test_env_config():
         )
         print(f" 數據保存成功: {cache_key}")
         
-        # 加載數據
+        # 載入數據
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print(" 數據加載成功，內容匹配")
+            print(" 數據載入成功，內容匹配")
         else:
-            print(" 數據加載失敗或內容不匹配")
+            print(" 數據載入失敗或內容不匹配")
             return False
         
     except Exception as e:

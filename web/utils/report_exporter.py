@@ -180,7 +180,7 @@ class ReportExporter:
 
 ---
 
-## 分析配置信息
+## 分析配置資訊
 
 - **LLM提供商**: {results.get('llm_provider', 'N/A')}
 - **模型**: {results.get('llm_model', 'N/A')}
@@ -235,7 +235,7 @@ class ReportExporter:
 **投資風險提示**:
 - **僅供參考**: 本分析結果僅供參考，不構成投資建議
 - **投資風險**: 股票投資有風險，可能導致本金損失
-- **理性決策**: 請結合多方信息進行理性投資決策
+- **理性決策**: 請結合多方資訊進行理性投資決策
 - **專業諮詢**: 重大投資決策建議諮詢專業財務顧問
 - **自擔風險**: 投資決策及其後果由投資者自行承擔
 
@@ -504,7 +504,7 @@ class ReportExporter:
 
                 continue
 
-        # 如果所有引擎都失敗，提供詳細的錯誤信息和解決方案
+        # 如果所有引擎都失敗，提供詳細的錯誤訊息和解決方案
         error_msg = f"""PDF生成失敗，最後錯誤: {last_error}
 
 可能的解決方案:
@@ -733,7 +733,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                 saved_files[module_key] = str(file_path)
                 logger.info(f"保存模塊報告: {file_path}")
 
-        # 如果有決策信息，也保存最終決策報告
+        # 如果有決策資訊，也保存最終決策報告
         decision = results.get('decision', {})
         if decision:
             decision_content = f"# {stock_symbol} 最終投資決策\n\n"
@@ -755,7 +755,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
             saved_files['final_trade_decision'] = str(decision_file)
             logger.info(f"保存最終決策: {decision_file}")
 
-        # 保存分析元數據文件，包含研究深度等信息
+        # 保存分析中繼資料文件，包含研究深度等資訊
         metadata = {
             'stock_symbol': stock_symbol,
             'analysis_date': analysis_date,
@@ -771,7 +771,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         with open(metadata_file, 'w', encoding='utf-8') as f:
             json.dump(metadata, f, ensure_ascii=False, indent=2)
 
-        logger.info(f"保存分析元數據: {metadata_file}")
+        logger.info(f"保存分析中繼資料: {metadata_file}")
         logger.info(f"分模塊報告保存完成，共保存 {len(saved_files)} 個文件")
         logger.info(f"保存目錄: {os.path.normpath(str(reports_dir))}")
 
@@ -1021,8 +1021,8 @@ def render_export_buttons(results: Dict[str, Any]):
                     logger.error(f"Word導出異常: {str(e)}", exc_info=True)
                     st.error(f"Word文檔生成失敗: {str(e)}")
 
-                    # 顯示詳細錯誤信息
-                    with st.expander("查看詳細錯誤信息"):
+                    # 顯示詳細錯誤訊息
+                    with st.expander("查看詳細錯誤訊息"):
                         st.text(str(e))
 
                     # 提供解決方案
@@ -1093,8 +1093,8 @@ def render_export_buttons(results: Dict[str, Any]):
                     logger.error(f"PDF導出異常: {str(e)}", exc_info=True)
                     st.error(f"PDF生成失敗")
 
-                    # 顯示詳細錯誤信息
-                    with st.expander("查看詳細錯誤信息"):
+                    # 顯示詳細錯誤訊息
+                    with st.expander("查看詳細錯誤訊息"):
                         st.text(str(e))
 
                     # 提供解決方案

@@ -13,7 +13,7 @@ def _get_company_name_for_social_media(ticker: str, market_info: dict) -> str:
 
     Args:
         ticker: 股票代碼
-        market_info: 市場信息字典
+        market_info: 市場資訊字典
 
     Returns:
         str: 公司名稱

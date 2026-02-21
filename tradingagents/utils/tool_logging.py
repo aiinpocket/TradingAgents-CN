@@ -37,7 +37,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
             # 記錄開始時間
             start_time = time.time()
             
-            # 準備參數信息
+            # 準備參數資訊
             args_info = {}
             if log_args:
                 # 記錄位置參數
@@ -69,7 +69,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                 # 計算執行時間
                 duration = time.time() - start_time
                 
-                # 準備結果信息
+                # 準備結果資訊
                 result_info = None
                 if log_result and result is not None:
                     result_str = str(result)

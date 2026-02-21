@@ -151,7 +151,7 @@ def test_pdf_generation():
         
         test_markdown = """# PDF測試報告
 
-## 基本信息
+## 基本資訊
 - **測試時間**: 2025-01-12
 - **測試目的**: 驗證PDF生成功能
 

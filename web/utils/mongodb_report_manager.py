@@ -39,7 +39,7 @@ class MongoDBReportManager:
     def _connect(self):
         """連接到MongoDB"""
         try:
-            # 加載環境變量
+            # 載入環境變量
             from dotenv import load_dotenv
             load_dotenv()
 
@@ -64,7 +64,7 @@ class MongoDBReportManager:
                 "connectTimeoutMS": 5000
             }
 
-            # 如果有用戶名和密碼，添加認證信息
+            # 如果有用戶名和密碼，添加認證資訊
             if mongodb_username and mongodb_password:
                 connect_kwargs.update({
                     "username": mongodb_username,
@@ -140,7 +140,7 @@ class MongoDBReportManager:
                 # 報告內容
                 "reports": reports,
 
-                # 元數據
+                # 中繼資料
                 "created_at": timestamp,
                 "updated_at": timestamp
             }

@@ -36,13 +36,13 @@ def test_config_manager_import():
         
         # 測試基本功能
         models = config_manager.load_models()
-        print(f" 加載了 {len(models)} 個模型配置")
+        print(f" 載入了 {len(models)} 個模型配置")
         
         pricing = config_manager.load_pricing()
-        print(f" 加載了 {len(pricing)} 個定價配置")
+        print(f" 載入了 {len(pricing)} 個定價配置")
         
         settings = config_manager.load_settings()
-        print(f" 加載了 {len(settings)} 個系統設置")
+        print(f" 載入了 {len(settings)} 個系統設置")
         
         return True
     except Exception as e:

@@ -447,14 +447,14 @@ class RealtimeNewsAggregator:
         else:
             report += "數據時效性: 一般 (超過1小時)\n"
         
-        # 記錄報告生成完成信息
+        # 記錄報告生成完成資訊
         end_time = datetime.now()
         time_taken = (end_time - start_time).total_seconds()
         report_length = len(report)
         
         logger.info(f"[新聞報告] {ticker} 新聞報告生成完成，耗時: {time_taken:.2f}秒，報告長度: {report_length}字符")
         
-        # 記錄時效性信息
+        # 記錄時效性資訊
         time_diff_minutes = time_diff.total_seconds() / 60
         logger.info(f"[新聞報告] {ticker} 新聞時效性: 最新新聞發布於 {time_diff_minutes:.1f}分鐘前")
         
@@ -557,11 +557,11 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
     except Exception as e:
         logger.error(f"[新聞分析] Google 新聞獲取失敗: {e}，所有備用方案均已嘗試")
     
-    # 所有方法都失敗，返回錯誤信息
+    # 所有方法都失敗，返回錯誤訊息
     total_time_taken = (datetime.now() - start_total_time).total_seconds()
     logger.error(f"[新聞分析] {ticker} 的所有新聞獲取方法均已失敗，總耗時 {total_time_taken:.2f} 秒")
     
-    # 記錄詳細的失敗信息
+    # 記錄詳細的失敗資訊
     failure_details = {
         "股票代碼": ticker,
         "股票類型": stock_type,
@@ -575,7 +575,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
 實時新聞獲取失敗 - {ticker}
 分析日期: {curr_date}
 
-錯誤信息: 所有可用的新聞源都未能獲取到相關新聞
+錯誤訊息: 所有可用的新聞源都未能獲取到相關新聞
 
 備用建議:
 1. 檢查網絡連接和API密鑰配置

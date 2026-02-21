@@ -283,7 +283,7 @@ def main():
         print("1.  每個分析師只顯示一次完成提示")
         print("2.  流式處理中的重複chunk被正確處理")
         print("3.  分析師完成狀態正確跟蹤")
-        print("4.  用戶界面清爽，沒有重複信息")
+        print("4.  用戶界面清爽，沒有重複資訊")
         
         print("\n 技術實現:")
         print("- 使用completed_analysts集合跟蹤已完成的分析師")

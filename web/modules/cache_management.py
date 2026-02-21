@@ -65,7 +65,7 @@ def main():
         try:
             stats = cache.get_cache_stats()
             
-            # 顯示統計信息
+            # 顯示統計資訊
             metric_col1, metric_col2 = st.columns(2)
             
             with metric_col1:
@@ -107,7 +107,7 @@ def main():
     with col2:
         st.subheader("緩存配置")
 
-        # 顯示緩存配置信息
+        # 顯示緩存配置資訊
         if hasattr(cache, 'cache_config'):
             st.markdown("**美股數據緩存配置**")
             us_configs = {k: v for k, v in cache.cache_config.items() if k.startswith('us_')}
@@ -118,7 +118,7 @@ def main():
                 - 最大文件數: {config_data.get('max_files', 'N/A')}
                 """)
         else:
-            st.warning("緩存配置信息不可用")
+            st.warning("緩存配置資訊不可用")
 
     # 緩存測試功能
     st.markdown("---")
@@ -175,18 +175,18 @@ def main():
         - 提高分析響應速度
         """)
         
-        # 緩存目錄信息
+        # 緩存目錄資訊
         cache_dir = cache.cache_dir
         st.markdown(f"**緩存目錄：**`{cache_dir}`")
         
-        # 子目錄信息
+        # 子目錄資訊
         st.markdown("**子目錄結構：**")
         st.code(f"""
  {cache_dir.name}/
 ├──  stock_data/     # 股票數據緩存
 ├──  news_data/      # 新聞數據緩存
 ├──  fundamentals/   # 基本面數據緩存
-└──  metadata/       # 元數據文件
+└──  metadata/       # 中繼資料文件
         """)
     
     st.markdown("---")

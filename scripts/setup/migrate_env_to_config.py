@@ -19,7 +19,7 @@ sys.path.insert(0, str(project_root))
 from tradingagents.config.config_manager import config_manager, ModelConfig
 
 def load_env_config():
-    """加載 .env 文件配置"""
+    """載入 .env 文件配置"""
     env_file = project_root / ".env"
     if not env_file.exists():
         logger.error(f" .env 文件不存在")
@@ -38,7 +38,7 @@ def migrate_model_configs(env_config):
     """遷移模型配置"""
     logger.info(f" 遷移模型配置...")
     
-    # 加載現有配置
+    # 載入現有配置
     models = config_manager.load_models()
     
     # 更新API密鑰
@@ -99,7 +99,7 @@ def main():
     logger.info(f" .env 配置遷移工具")
     logger.info(f"=")
     
-    # 加載 .env 配置
+    # 載入 .env 配置
     env_config = load_env_config()
     if not env_config:
         return False
@@ -107,7 +107,7 @@ def main():
     logger.info(f" 檢測到的 .env 配置:")
     for key, value in env_config.items():
         if 'api_key' in key or 'secret' in key:
-            # 隱藏敏感信息
+            # 隱藏敏感資訊
             display_value = f"***{value[-4:]}" if value else "未設置"
         else:
             display_value = value if value else "未設置"

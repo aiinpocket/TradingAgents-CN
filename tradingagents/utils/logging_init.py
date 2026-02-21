@@ -29,7 +29,7 @@ def init_logging(config_override: Optional[dict] = None) -> None:
     # 獲取初始化日誌器
     logger = get_logger('tradingagents.init')
     
-    # 記錄初始化信息
+    # 記錄初始化資訊
     logger.info("TradingAgents-CN 日誌系統初始化完成")
     logger.info(f"日誌目錄: {logger_manager.config.get('handlers', {}).get('file', {}).get('directory', 'N/A')}")
     logger.info(f"日誌級別: {logger_manager.config.get('level', 'INFO')}")
@@ -38,7 +38,7 @@ def init_logging(config_override: Optional[dict] = None) -> None:
     if logger_manager.config.get('docker', {}).get('enabled', False):
         logger.info("Docker環境檢測到，使用容器優化配置")
     
-    # 記錄環境信息
+    # 記錄環境資訊
     logger.debug(f"Python版本: {sys.version}")
     logger.debug(f"工作目錄: {os.getcwd()}")
     logger.debug(f"環境變量: DOCKER_CONTAINER={os.getenv('DOCKER_CONTAINER', 'false')}")
@@ -87,19 +87,19 @@ def get_session_logger(session_id: str, module_name: str = 'session') -> 'loggin
 
 
 def log_startup_info():
-    """記錄應用啟動信息"""
+    """記錄應用啟動資訊"""
     logger = get_logger('tradingagents.startup')
     
     logger.info("=" * 60)
     logger.info("TradingAgents-CN 啟動")
     logger.info("=" * 60)
     
-    # 系統信息
+    # 系統資訊
     import platform
     logger.info(f"系統: {platform.system()} {platform.release()}")
     logger.info(f"Python: {platform.python_version()}")
     
-    # 環境信息
+    # 環境資訊
     env_info = {
         'DOCKER_CONTAINER': os.getenv('DOCKER_CONTAINER', 'false'),
         'TRADINGAGENTS_LOG_LEVEL': os.getenv('TRADINGAGENTS_LOG_LEVEL', 'INFO'),
@@ -113,7 +113,7 @@ def log_startup_info():
 
 
 def log_shutdown_info():
-    """記錄應用關閉信息"""
+    """記錄應用關閉資訊"""
     logger = get_logger('tradingagents.shutdown')
     
     logger.info("=" * 60)

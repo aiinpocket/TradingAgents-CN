@@ -53,14 +53,14 @@ def test_cache_manager_fundamentals():
         cache_key = cache.save_fundamentals_data(test_symbol, test_data, data_source="test")
         print(f" 數據已保存，緩存鍵: {cache_key}")
         
-        # 測試從緩存加載
-        print(f"\n 測試從緩存加載基本面數據...")
+        # 測試從緩存載入
+        print(f"\n 測試從緩存載入基本面數據...")
         loaded_data = cache.load_fundamentals_data(cache_key)
         if loaded_data:
-            print(f" 數據加載成功，長度: {len(loaded_data)}")
+            print(f" 數據載入成功，長度: {len(loaded_data)}")
             print(f" 數據預覽: {loaded_data[:200]}...")
         else:
-            print(f" 數據加載失敗")
+            print(f" 數據載入失敗")
         
         # 測試查找緩存
         print(f"\n 測試查找基本面緩存數據...")

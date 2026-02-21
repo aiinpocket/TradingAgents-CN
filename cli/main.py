@@ -38,7 +38,7 @@ from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.utils.logging_manager import get_logger
 
-# 加載環境變量
+# 載入環境變量
 load_dotenv()
 
 # 常量定義
@@ -103,23 +103,23 @@ class CLIUserInterface:
             self.console.print(message)
 
     def show_progress(self, message: str):
-        """顯示進度信息"""
+        """顯示進度資訊"""
         self.console.print(f"{message}")
         # 同時記錄到日誌文件
         self.logger.info(f"進度: {message}")
 
     def show_success(self, message: str):
-        """顯示成功信息"""
+        """顯示成功資訊"""
         self.console.print(f"[green]{message}[/green]")
         self.logger.info(f"成功: {message}")
 
     def show_error(self, message: str):
-        """顯示錯誤信息"""
+        """顯示錯誤訊息"""
         self.console.print(f"[red]{message}[/red]")
         self.logger.error(f"錯誤: {message}")
 
     def show_warning(self, message: str):
-        """顯示警告信息"""
+        """顯示警告資訊"""
         self.console.print(f"[yellow]{message}[/yellow]")
         self.logger.warning(f"警告: {message}")
 
@@ -129,7 +129,7 @@ class CLIUserInterface:
         self.console.print("─" * 60)
 
     def show_data_info(self, data_type: str, symbol: str, details: str = ""):
-        """顯示數據獲取信息"""
+        """顯示數據獲取資訊"""
         if details:
             self.console.print(f"{data_type}: {symbol} - {details}")
         else:
@@ -986,7 +986,7 @@ def run_analysis():
         ui.show_error("分析終止 | Analysis terminated")
         return
 
-    # 顯示分析開始信息
+    # 顯示分析開始資訊
     ui.show_step_header(1, "準備分析環境 | Preparing Analysis Environment")
     ui.show_progress(f"正在分析股票: {selections['ticker']}")
     ui.show_progress(f"分析日期: {selections['analysis_date']}")
@@ -1151,7 +1151,7 @@ def run_analysis():
 
         # 顯示數據獲取階段
         ui.show_step_header(3, "數據獲取階段 | Data Collection Phase")
-        ui.show_progress("正在獲取股票基本信息...")
+        ui.show_progress("正在獲取股票基本資訊...")
 
         # Initialize state and get graph args
         init_agent_state = graph.propagator.create_initial_state(
@@ -1214,10 +1214,10 @@ def run_analysis():
                     if "market_report" not in completed_analysts:
                         ui.show_success("市場分析完成")
                         completed_analysts.add("market_report")
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.info(f"首次顯示市場分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.debug(f"跳過重複的市場分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1235,10 +1235,10 @@ def run_analysis():
                     if "sentiment_report" not in completed_analysts:
                         ui.show_success("情感分析完成")
                         completed_analysts.add("sentiment_report")
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.info(f"首次顯示情感分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.debug(f"跳過重複的情感分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1256,10 +1256,10 @@ def run_analysis():
                     if "news_report" not in completed_analysts:
                         ui.show_success("新聞分析完成")
                         completed_analysts.add("news_report")
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.info(f"首次顯示新聞分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.debug(f"跳過重複的新聞分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1277,10 +1277,10 @@ def run_analysis():
                     if "fundamentals_report" not in completed_analysts:
                         ui.show_success("基本面分析完成")
                         completed_analysts.add("fundamentals_report")
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.info(f"首次顯示基本面分析完成提示，已完成分析師: {completed_analysts}")
                     else:
-                        # 調試信息（寫入日誌文件）
+                        # 除錯資訊（寫入日誌文件）
                         logger.debug(f"跳過重複的基本面分析完成提示，已完成分析師: {completed_analysts}")
 
                     message_buffer.update_report_section(
@@ -1609,11 +1609,11 @@ def config():
 
 @app.command(
     name="version",
-    help="版本信息 | Version information"
+    help="版本資訊 | Version information"
 )
 def version():
     """
-    顯示版本信息
+    顯示版本資訊
     Display version information
     """
     # 讀取版本號
@@ -1623,7 +1623,7 @@ def version():
     except FileNotFoundError:
         version = "1.0.0"
 
-    logger.info(f"\n[bold blue]TradingAgents 版本信息 | Version Information[/bold blue]")
+    logger.info(f"\n[bold blue]TradingAgents 版本資訊 | Version Information[/bold blue]")
     logger.info(f"[green]版本 | Version:[/green] {version} [yellow](預覽版 | Preview)[/yellow]")
     logger.info(f"[green]發布日期 | Release Date:[/green] 2025-06-26")
     logger.info(f"[green]框架 | Framework:[/green] 多智能體金融交易分析 | Multi-Agent Financial Trading Analysis")
@@ -1699,7 +1699,7 @@ def data_config(
     settings = config_manager.load_settings()
     current_data_dir = get_data_dir()
     
-    # 配置信息表格
+    # 配置資訊表格
     config_table = Table(show_header=True, header_style="bold magenta")
     config_table.add_column("配置項 | Configuration", style="cyan")
     config_table.add_column("路徑 | Path", style="green")
@@ -1720,7 +1720,7 @@ def data_config(
     
     console.print(config_table)
     
-    # 環境變量信息
+    # 環境變量資訊
     logger.info(f"\n[blue]環境變量 | Environment Variables:[/blue]")
     env_table = Table(show_header=True, header_style="bold magenta")
     env_table.add_column("環境變量 | Variable", style="cyan")
@@ -1816,13 +1816,13 @@ def test():
 )
 def help_chinese():
     """
-    顯示中文幫助信息
+    顯示中文幫助資訊
     Display Chinese help information
     """
     logger.info(f"\n[bold blue]TradingAgents 中文幫助 | Chinese Help[/bold blue]")
 
     logger.info(f"\n[bold yellow]快速開始 | Quick Start:[/bold yellow]")
-    logger.info(f"1. [cyan]python -m cli.main config[/cyan]     # 查看配置信息")
+    logger.info(f"1. [cyan]python -m cli.main config[/cyan]     # 查看配置資訊")
     logger.info(f"2. [cyan]python -m cli.main examples[/cyan]   # 查看示例程序")
     logger.info(f"3. [cyan]python -m cli.main test[/cyan]       # 運行測試")
     logger.info(f"4. [cyan]python -m cli.main analyze[/cyan]    # 開始股票分析")
@@ -1856,7 +1856,7 @@ def help_chinese():
     )
     commands_table.add_row(
         "version",
-        "版本信息 | Version",
+        "版本資訊 | Version",
         "顯示軟體版本和功能特性資訊"
     )
 

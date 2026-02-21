@@ -75,7 +75,7 @@ class ConfigManager:
         self.usage_file = self.config_dir / "usage.json"
         self.settings_file = self.config_dir / "settings.json"
 
-        # 加載.env文件（保持向後兼容）
+        # 載入.env文件（保持向後兼容）
         self._load_env_file()
 
         # 初始化MongoDB存儲（如果可用）
@@ -85,8 +85,8 @@ class ConfigManager:
         self._init_default_configs()
 
     def _load_env_file(self):
-        """加載.env文件（保持向後兼容）"""
-        # 嘗試從項目根目錄加載.env文件
+        """載入.env文件（保持向後兼容）"""
+        # 嘗試從項目根目錄載入.env文件
         project_root = Path(__file__).parent.parent.parent
         env_file = project_root / ".env"
 
@@ -266,7 +266,7 @@ class ConfigManager:
             self.save_settings(default_settings)
     
     def load_models(self) -> List[ModelConfig]:
-        """加載模型配置，優先使用.env中的API密鑰"""
+        """載入模型配置，優先使用.env中的API密鑰"""
         try:
             with open(self.models_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -298,7 +298,7 @@ class ConfigManager:
 
                 return models
         except Exception as e:
-            logger.error(f"加載模型配置失敗: {e}")
+            logger.error(f"載入模型配置失敗: {e}")
             return []
     
     def save_models(self, models: List[ModelConfig]):
@@ -311,13 +311,13 @@ class ConfigManager:
             logger.error(f"保存模型配置失敗: {e}")
     
     def load_pricing(self) -> List[PricingConfig]:
-        """加載定價配置"""
+        """載入定價配置"""
         try:
             with open(self.pricing_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             return [PricingConfig(**item) for item in data]
         except Exception as e:
-            logger.error(f"加載定價配置失敗: {e}")
+            logger.error(f"載入定價配置失敗: {e}")
             return []
     
     def save_pricing(self, pricing: List[PricingConfig]):
@@ -330,7 +330,7 @@ class ConfigManager:
             logger.error(f"保存定價配置失敗: {e}")
     
     def load_usage_records(self) -> List[UsageRecord]:
-        """加載使用記錄"""
+        """載入使用記錄"""
         try:
             if not self.usage_file.exists():
                 return []
@@ -338,7 +338,7 @@ class ConfigManager:
                 data = json.load(f)
                 return [UsageRecord(**item) for item in data]
         except Exception as e:
-            logger.error(f"加載使用記錄失敗: {e}")
+            logger.error(f"載入使用記錄失敗: {e}")
             return []
     
     def save_usage_records(self, records: List[UsageRecord]):
@@ -399,7 +399,7 @@ class ConfigManager:
                 total_cost = input_cost + output_cost
                 return round(total_cost, 6)
 
-        # 只在找不到配置時輸出調試信息
+        # 只在找不到配置時輸出除錯資訊
         logger.warning(f"[calculate_cost] 未找到匹配的定價配置: {provider}/{model_name}")
         logger.debug("[calculate_cost] 可用的配置:")
         for pricing in pricing_configs:
@@ -408,7 +408,7 @@ class ConfigManager:
         return 0.0
     
     def load_settings(self) -> Dict[str, Any]:
-        """加載設置，合併.env中的配置"""
+        """載入設置，合併.env中的配置"""
         try:
             if self.settings_file.exists():
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
@@ -431,7 +431,7 @@ class ConfigManager:
                 }
                 self.save_settings(settings)
         except Exception as e:
-            logger.error(f"加載設置失敗: {e}")
+            logger.error(f"載入設置失敗: {e}")
             settings = {}
 
         # 合併.env中的其他配置

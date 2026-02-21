@@ -43,7 +43,7 @@ def check_syntax(file_path: str) -> Tuple[bool, str]:
     Check syntax of a single Python file
     
     Returns:
-        Tuple[bool, str]: (是否有語法錯誤, 錯誤信息)
+        Tuple[bool, str]: (是否有語法錯誤, 錯誤訊息)
     """
     try:
         py_compile.compile(file_path, doraise=True)

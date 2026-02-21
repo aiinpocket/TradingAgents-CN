@@ -103,8 +103,8 @@ def cleanup_python_cache():
     return total_cleaned
 
 def get_cache_statistics():
-    """獲取緩存統計信息"""
-    logger.info(f" 獲取緩存統計信息...")
+    """獲取緩存統計資訊"""
+    logger.info(f" 獲取緩存統計資訊...")
     
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
@@ -147,7 +147,7 @@ def main():
     parser.add_argument("--days", type=int, default=7, help="清理多少天前的緩存 (預設: 7)")
     parser.add_argument("--type", choices=["all", "file", "database", "python"], 
                        default="all", help="清理類型 (預設: all)")
-    parser.add_argument("--stats", action="store_true", help="只顯示統計信息，不清理")
+    parser.add_argument("--stats", action="store_true", help="只顯示統計資訊，不清理")
     
     args = parser.parse_args()
     
