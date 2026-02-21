@@ -373,7 +373,7 @@ class ConfigManager:
             if success:
                 return record
             else:
-                logger.error(f"MongoDB保存失敗，回退到JSON文件存儲")
+                logger.error("MongoDB保存失敗，回退到JSON文件存儲")
 
         # 回退到JSON文件存儲
         records = self.load_usage_records()
@@ -401,7 +401,7 @@ class ConfigManager:
 
         # 只在找不到配置時輸出調試信息
         logger.warning(f"[calculate_cost] 未找到匹配的定價配置: {provider}/{model_name}")
-        logger.debug(f"[calculate_cost] 可用的配置:")
+        logger.debug("[calculate_cost] 可用的配置:")
         for pricing in pricing_configs:
             logger.debug(f"[calculate_cost]   - {pricing.provider}/{pricing.model_name}")
 

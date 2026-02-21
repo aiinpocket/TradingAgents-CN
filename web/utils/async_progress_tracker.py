@@ -150,7 +150,7 @@ class AsyncProgressTracker:
             logger.info(f"[Redis檢查] REDIS_ENABLED原值='{redis_enabled_raw}' -> 處理後='{redis_enabled}'")
 
             if redis_enabled != 'true':
-                logger.info(f"[異步進度] Redis已禁用，使用文件儲存")
+                logger.info("[異步進度] Redis已禁用，使用文件儲存")
                 return False
 
             import redis
@@ -336,7 +336,7 @@ class AsyncProgressTracker:
         # 如果是完成訊息，確保進度為100%
         if "分析完成" in message or "分析成功" in message or "分析完成" in message:
             self.current_step = len(self.analysis_steps) - 1
-            logger.info(f"[異步進度] 分析完成，設置為最終步驟")
+            logger.info("[異步進度] 分析完成，設置為最終步驟")
 
         # 計算進度
         progress_percentage = self._calculate_weighted_progress() * 100
@@ -529,7 +529,7 @@ class AsyncProgressTracker:
             try:
                 if self.use_redis:
                     # Redis失敗，嘗試文件儲存
-                    logger.warning(f"[異步進度] Redis保存失敗，嘗試文件儲存")
+                    logger.warning("[異步進度] Redis保存失敗，嘗試文件儲存")
                     backup_file = f"./data/progress_{self.analysis_id}.json"
                     os.makedirs(os.path.dirname(backup_file), exist_ok=True)
                     safe_data = safe_serialize(self.progress_data)
@@ -538,7 +538,7 @@ class AsyncProgressTracker:
                     logger.info(f"[備用儲存] 文件保存成功: {backup_file}")
                 else:
                     # 文件儲存失敗，嘗試簡化數據
-                    logger.warning(f"[異步進度] 文件保存失敗，嘗試簡化數據")
+                    logger.warning("[異步進度] 文件保存失敗，嘗試簡化數據")
                     simplified_data = {
                         'analysis_id': self.analysis_id,
                         'status': self.progress_data.get('status', 'unknown'),

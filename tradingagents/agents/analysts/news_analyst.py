@@ -53,14 +53,14 @@ def create_news_analyst(llm, toolkit):
         logger.info(f"[新聞分析師] 公司名稱: {company_name}")
         
         # 使用統一新聞工具，簡化工具調用
-        logger.info(f"[新聞分析師] 使用統一新聞工具，自動識別股票類型並獲取相應新聞")
+        logger.info("[新聞分析師] 使用統一新聞工具，自動識別股票類型並獲取相應新聞")
    # 創建統一新聞工具
         unified_news_tool = create_unified_news_tool(toolkit)
         unified_news_tool.name = "get_stock_news_unified"
 
         # 新增 FinnHub 情緒量化工具，提供客觀的新聞情緒評分
         tools = [unified_news_tool, toolkit.get_finnhub_sentiment_data]
-        logger.info(f"[新聞分析師] 已加載統一新聞工具和 FinnHub 情緒工具")
+        logger.info("[新聞分析師] 已加載統一新聞工具和 FinnHub 情緒工具")
 
         system_message = (
             """您是一位專業的財經新聞分析師，負責分析最新的市場新聞和事件對股票價格的潛在影響。
@@ -179,7 +179,7 @@ def create_news_analyst(llm, toolkit):
                 
                 try:
                     # 強制獲取新聞數據
-                    logger.info(f"[新聞分析師] 強制調用統一新聞工具獲取新聞數據...")
+                    logger.info("[新聞分析師] 強制調用統一新聞工具獲取新聞數據...")
                     forced_news = unified_news_tool(stock_code=ticker, max_news=10, model_info="")
                     
                     if forced_news and len(forced_news.strip()) > 100:
@@ -198,17 +198,17 @@ def create_news_analyst(llm, toolkit):
 請基於上述真實新聞數據撰寫詳細的中文分析報告。
 """
                         
-                        logger.info(f"[新聞分析師] 基於強制獲取的新聞數據重新生成完整分析...")
+                        logger.info("[新聞分析師] 基於強制獲取的新聞數據重新生成完整分析...")
                         forced_result = llm.invoke([{"role": "user", "content": forced_prompt}])
                         
                         if hasattr(forced_result, 'content') and forced_result.content:
                             report = forced_result.content
                             logger.info(f"[新聞分析師] 強制補救成功，生成基於真實數據的報告，長度: {len(report)} 字符")
                         else:
-                            logger.warning(f"[新聞分析師] 強制補救失敗，使用原始結果")
+                            logger.warning("[新聞分析師] 強制補救失敗，使用原始結果")
                             report = result.content
                     else:
-                        logger.warning(f"[新聞分析師] 統一新聞工具獲取失敗，使用原始結果")
+                        logger.warning("[新聞分析師] 統一新聞工具獲取失敗，使用原始結果")
                         report = result.content
                         
                 except Exception as e:

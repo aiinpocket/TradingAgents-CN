@@ -60,7 +60,7 @@ class IntegratedCacheManager:
             mongodb_available = self.db_manager.is_mongodb_available()
             redis_available = self.db_manager.is_redis_available()
             
-            self.logger.info(f"緩存配置:")
+            self.logger.info("緩存配置:")
             self.logger.info(f"  主要後端: {backend}")
             self.logger.info(f"  MongoDB: {'可用' if mongodb_available else '不可用'}")
             self.logger.info(f"  Redis: {'可用' if redis_available else '不可用'}")

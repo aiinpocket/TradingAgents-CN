@@ -73,8 +73,8 @@ class StockDataCache:
         }
 
         logger.info(f"緩存管理器初始化完成，緩存目錄: {self.cache_dir}")
-        logger.info(f"數據庫緩存管理器初始化完成")
-        logger.info(f"   美股數據: 已配置")
+        logger.info("數據庫緩存管理器初始化完成")
+        logger.info("   美股數據: 已配置")
 
     def _determine_market_type(self, symbol: str) -> str:
         """根據股票代碼判斷市場類型（目前僅支援美股）"""

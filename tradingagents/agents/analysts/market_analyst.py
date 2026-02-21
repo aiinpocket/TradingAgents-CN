@@ -59,7 +59,7 @@ def create_market_analyst_react(llm, toolkit):
     """使用 ReAct Agent 模式的市場分析師"""
     @log_analyst_module("market_react")
     def market_analyst_react_node(state):
-        logger.debug(f"===== ReAct市場分析師節點開始 =====")
+        logger.debug("===== ReAct市場分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
@@ -68,7 +68,7 @@ def create_market_analyst_react(llm, toolkit):
 
         if toolkit.config["online_tools"]:
             # 在線模式，使用 ReAct Agent
-            logger.info(f"[市場分析師] 使用 ReAct Agent 分析美股")
+            logger.info("[市場分析師] 使用 ReAct Agent 分析美股")
 
             # 建立美股數據工具
             from langchain_core.tools import BaseTool
@@ -149,7 +149,7 @@ def create_market_analyst_react(llm, toolkit):
                     max_execution_time=180
                 )
 
-                logger.debug(f"執行 ReAct Agent 查詢...")
+                logger.debug("執行 ReAct Agent 查詢...")
                 result = agent_executor.invoke({'input': query})
 
                 report = result['output']
@@ -162,7 +162,7 @@ def create_market_analyst_react(llm, toolkit):
             # 離線模式，使用原有邏輯
             report = "離線模式，暫不支援"
 
-        logger.debug(f"===== ReAct市場分析師節點結束 =====")
+        logger.debug("===== ReAct市場分析師節點結束 =====")
 
         return {
             "messages": [("assistant", report)],
@@ -175,7 +175,7 @@ def create_market_analyst_react(llm, toolkit):
 def create_market_analyst(llm, toolkit):
 
     def market_analyst_node(state):
-        logger.debug(f"===== 市場分析師節點開始 =====")
+        logger.debug("===== 市場分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
@@ -197,7 +197,7 @@ def create_market_analyst(llm, toolkit):
 
         if toolkit.config["online_tools"]:
             # 使用統一的市場數據工具和 FinnHub 技術訊號
-            logger.info(f"[市場分析師] 使用統一市場數據工具和 FinnHub 技術訊號")
+            logger.info("[市場分析師] 使用統一市場數據工具和 FinnHub 技術訊號")
             tools = [toolkit.get_stock_market_data_unified, toolkit.get_finnhub_technical_signals]
             # 安全地獲取工具名稱用於調試
             tool_names_debug = []

@@ -49,7 +49,7 @@ def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
 def create_fundamentals_analyst(llm, toolkit):
     @log_analyst_module("fundamentals")
     def fundamentals_analyst_node(state):
-        logger.debug(f"===== 基本面分析師節點開始 =====")
+        logger.debug("===== 基本面分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
@@ -85,7 +85,7 @@ def create_fundamentals_analyst(llm, toolkit):
         # 選擇工具
         if toolkit.config["online_tools"]:
             # 使用統一的基本面分析工具和華爾街分析師共識數據
-            logger.info(f"[基本面分析師] 使用統一基本面分析工具和分析師共識數據")
+            logger.info("[基本面分析師] 使用統一基本面分析工具和分析師共識數據")
             tools = [toolkit.get_stock_fundamentals_unified, toolkit.get_finnhub_analyst_consensus]
             # 安全地獲取工具名稱用於調試
             tool_names_debug = []
@@ -192,7 +192,7 @@ def create_fundamentals_analyst(llm, toolkit):
             else:
                 debug_tool_names.append(str(tool))
         logger.debug(f"綁定的工具列表: {debug_tool_names}")
-        logger.debug(f"創建工具鏈，讓模型自主決定是否調用工具")
+        logger.debug("創建工具鏈，讓模型自主決定是否調用工具")
 
         try:
             chain = prompt | fresh_llm.bind_tools(tools)
@@ -201,14 +201,14 @@ def create_fundamentals_analyst(llm, toolkit):
             logger.error(f"工具綁定失敗: {e}")
             raise e
 
-        logger.debug(f"調用LLM鏈...")
+        logger.debug("調用LLM鏈...")
 
         # 添加詳細的股票代碼追蹤日誌
         logger.info(f"[股票代碼追蹤] LLM調用前，ticker參數: '{ticker}'")
         logger.info(f"[股票代碼追蹤] 傳遞給LLM的訊息數量: {len(state['messages'])}")
 
         result = chain.invoke(state["messages"])
-        logger.debug(f"LLM調用完成")
+        logger.debug("LLM調用完成")
 
         # 檢查工具調用情況
         tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
@@ -228,11 +228,11 @@ def create_fundamentals_analyst(llm, toolkit):
             }
 
         # 沒有工具調用，使用強制工具調用修復
-        logger.debug(f"檢測到模型未調用工具，啟用強制工具調用模式")
+        logger.debug("檢測到模型未調用工具，啟用強制工具調用模式")
 
         # 強制調用統一基本面分析工具
         try:
-            logger.debug(f"強制調用 get_stock_fundamentals_unified...")
+            logger.debug("強制調用 get_stock_fundamentals_unified...")
             unified_tool = None
             for tool in tools:
                 tool_name = None
@@ -255,7 +255,7 @@ def create_fundamentals_analyst(llm, toolkit):
                 logger.debug(f"統一工具數據獲取成功，長度: {len(combined_data)}字符")
             else:
                 combined_data = "統一基本面分析工具不可用"
-                logger.debug(f"統一工具未找到")
+                logger.debug("統一工具未找到")
         except Exception as e:
             combined_data = f"統一基本面分析工具調用失敗: {e}"
             logger.debug(f"統一工具調用異常: {e}")

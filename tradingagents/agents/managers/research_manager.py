@@ -20,7 +20,7 @@ def create_research_manager(llm, memory):
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"memory為None，跳過歷史記憶檢索")
+            logger.warning("memory為None，跳過歷史記憶檢索")
             past_memories = []
 
         past_memory_str = ""

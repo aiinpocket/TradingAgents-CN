@@ -61,7 +61,7 @@ class UnifiedNewsAnalyzer:
         logger.info(f"[統一新聞工具] 返回結果預覽 (前1000字符): {result[:1000]}")
 
         if not result or len(result.strip()) < 50:
-            logger.warning(f"[統一新聞工具] 返回結果異常短或為空！")
+            logger.warning("[統一新聞工具] 返回結果異常短或為空！")
             logger.warning(f"[統一新聞工具] 完整結果內容: '{result}'")
 
         if self.cache_enabled and result and len(result.strip()) >= 50:
@@ -105,7 +105,7 @@ class UnifiedNewsAnalyzer:
         # 優先級1: OpenAI全球新聞
         try:
             if hasattr(self.toolkit, 'get_global_news_openai'):
-                logger.info(f"[統一新聞工具] 嘗試OpenAI美股新聞...")
+                logger.info("[統一新聞工具] 嘗試OpenAI美股新聞...")
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
                 if result and len(result.strip()) > 50:
@@ -117,7 +117,7 @@ class UnifiedNewsAnalyzer:
         # 優先級2: Google新聞（英文搜索）
         try:
             if hasattr(self.toolkit, 'get_google_news'):
-                logger.info(f"[統一新聞工具] 嘗試Google美股新聞...")
+                logger.info("[統一新聞工具] 嘗試Google美股新聞...")
                 query = f"{stock_code} stock news earnings financial"
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
@@ -130,7 +130,7 @@ class UnifiedNewsAnalyzer:
         # 優先級3: FinnHub新聞（如果可用）
         try:
             if hasattr(self.toolkit, 'get_finnhub_news'):
-                logger.info(f"[統一新聞工具] 嘗試FinnHub美股新聞...")
+                logger.info("[統一新聞工具] 嘗試FinnHub美股新聞...")
                 # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
                 result = self.toolkit.get_finnhub_news.invoke({"symbol": stock_code, "max_results": min(max_news, 50)})
                 if result and len(result.strip()) > 50:

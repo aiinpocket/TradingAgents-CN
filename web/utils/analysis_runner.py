@@ -199,7 +199,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     update_progress("檢查環境變量配置...")
     finnhub_key = os.getenv("FINNHUB_API_KEY")
 
-    logger.info(f"環境變量檢查:")
+    logger.info("環境變量檢查:")
     logger.info(f"  FINNHUB_API_KEY: {'已設置' if finnhub_key else '未設置'}")
 
     if not finnhub_key:
@@ -300,7 +300,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         os.makedirs(config["results_dir"], exist_ok=True)
         os.makedirs(config["data_cache_dir"], exist_ok=True)
 
-        logger.info(f"目錄配置:")
+        logger.info("目錄配置:")
         logger.info(f"  - 數據目錄: {config['data_dir']}")
         logger.info(f"  - 結果目錄: {config['results_dir']}")
         logger.info(f"  - 緩存目錄: {config['data_cache_dir']}")
@@ -312,7 +312,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.info(f"分析日期: {analysis_date}")
 
         # 調整股票代碼格式
-        logger.debug(f" ===== 股票代碼格式化 =====")
+        logger.debug(" ===== 股票代碼格式化 =====")
         logger.debug(f" 原始股票代碼: '{stock_symbol}'")
 
         # 美股代碼轉為大寫
@@ -328,8 +328,8 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 執行分析
         update_progress(f"開始分析 {formatted_symbol} 股票，這可能需要几分鐘時間...")
-        logger.debug(f" ===== 調用graph.propagate =====")
-        logger.debug(f" 傳遞給graph.propagate的參數:")
+        logger.debug(" ===== 調用graph.propagate =====")
+        logger.debug(" 傳遞給graph.propagate的參數:")
         logger.debug(f" symbol: '{formatted_symbol}'")
         logger.debug(f" date: '{analysis_date}'")
 
@@ -415,27 +415,27 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             from .report_exporter import save_analysis_report, save_modular_reports_to_results_dir
             
             # 1. 保存分模塊報告到本地目錄
-            logger.info(f" [本地保存] 開始保存分模塊報告到本地目錄")
+            logger.info(" [本地保存] 開始保存分模塊報告到本地目錄")
             local_files = save_modular_reports_to_results_dir(results, stock_symbol)
             if local_files:
                 logger.info(f" [本地保存] 已保存 {len(local_files)} 個本地報告文件")
                 for module, path in local_files.items():
                     logger.info(f"  - {module}: {path}")
             else:
-                logger.warning(f" [本地保存] 本地報告文件保存失敗")
+                logger.warning(" [本地保存] 本地報告文件保存失敗")
             
             # 2. 保存分析報告到MongoDB
-            logger.info(f" [MongoDB保存] 開始保存分析報告到MongoDB")
+            logger.info(" [MongoDB保存] 開始保存分析報告到MongoDB")
             save_success = save_analysis_report(
                 stock_symbol=stock_symbol,
                 analysis_results=results
             )
             
             if save_success:
-                logger.info(f" [MongoDB保存] 分析報告已成功保存到MongoDB")
+                logger.info(" [MongoDB保存] 分析報告已成功保存到MongoDB")
                 update_progress("分析報告已保存到數據庫和本地文件")
             else:
-                logger.warning(f" [MongoDB保存] MongoDB報告保存失敗")
+                logger.warning(" [MongoDB保存] MongoDB報告保存失敗")
                 if local_files:
                     update_progress("本地報告已保存，但數據庫保存失敗")
                 else:

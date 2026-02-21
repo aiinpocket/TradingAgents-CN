@@ -28,7 +28,7 @@ class OptimizedUSDataProvider:
         self.last_api_call = 0
         self.min_api_interval = 1.0  # 最小API調用間隔（秒）
         
-        logger.info(f"優化美股數據提供器初始化完成")
+        logger.info("優化美股數據提供器初始化完成")
     
     def _wait_for_rate_limit(self):
         """等待API限制"""
@@ -97,7 +97,7 @@ class OptimizedUSDataProvider:
                 data_source = "finnhub"
                 logger.info(f"FINNHUB數據獲取成功: {symbol}")
             else:
-                logger.error(f"FINNHUB數據獲取失敗，嘗試備用方案")
+                logger.error("FINNHUB數據獲取失敗，嘗試備用方案")
                 formatted_data = None
 
         except Exception as e:

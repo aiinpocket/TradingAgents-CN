@@ -33,11 +33,11 @@ def check_dependencies():
 
     if missing_packages:
         logger.error(f"缺少必要的依賴包: {', '.join(missing_packages)}")
-        logger.info(f"請運行以下命令安裝:")
+        logger.info("請運行以下命令安裝:")
         logger.info(f"pip install {''.join(missing_packages)}")
         return False
 
-    logger.info(f"依賴包檢查通過")
+    logger.info("依賴包檢查通過")
     return True
 
 def clean_cache_files(force_clean=False):
@@ -93,18 +93,18 @@ def clean_cache_files(force_clean=False):
 
     except Exception as e:
         logger.warning(f"查找緩存目錄時出錯: {e}")
-        logger.info(f"跳過緩存清理")
+        logger.info("跳過緩存清理")
         return
 
     if not cache_dirs:
-        logger.info(f"無需清理緩存文件")
+        logger.info("無需清理緩存文件")
         return
 
     if not force_clean:
         # 可選清理：只清理項目代碼的緩存，不清理虛擬環境
         project_cache_dirs = [d for d in cache_dirs if 'env'not in str(d)]
         if project_cache_dirs:
-            logger.info(f"清理項目緩存文件...")
+            logger.info("清理項目緩存文件...")
             for cache_dir in project_cache_dirs:
                 try:
                     import shutil
@@ -112,12 +112,12 @@ def clean_cache_files(force_clean=False):
                     logger.info(f"已清理: {cache_dir.relative_to(project_root)}")
                 except Exception as e:
                     logger.error(f"清理失敗: {cache_dir.relative_to(project_root)} - {e}")
-            logger.info(f"項目緩存清理完成")
+            logger.info("項目緩存清理完成")
         else:
-            logger.info(f"無需清理項目緩存")
+            logger.info("無需清理項目緩存")
     else:
         # 強制清理：清理所有緩存
-        logger.info(f"強制清理所有緩存文件...")
+        logger.info("強制清理所有緩存文件...")
         for cache_dir in cache_dirs:
             try:
                 import shutil
@@ -125,7 +125,7 @@ def clean_cache_files(force_clean=False):
                 logger.info(f"已清理: {cache_dir.relative_to(project_root)}")
             except Exception as e:
                 logger.error(f"清理失敗: {cache_dir.relative_to(project_root)} - {e}")
-        logger.info(f"所有緩存清理完成")
+        logger.info("所有緩存清理完成")
 
 def check_api_keys():
     """檢查API密鑰配置"""
@@ -144,19 +144,19 @@ def check_api_keys():
     llm_configured = openai_key or anthropic_key
 
     if not llm_configured:
-        logger.warning(f"未檢測到任何 LLM 提供商的 API 密鑰")
-        logger.info(f"請確保在.env文件中至少配置以下其中一個密鑰:")
-        logger.info(f"- OPENAI_API_KEY (OpenAI GPT 模型)")
-        logger.info(f"- ANTHROPIC_API_KEY (Anthropic Claude 模型)")
-        logger.info(f"\n配置方法:")
-        logger.info(f"1. 複制 .env.example 為 .env")
-        logger.info(f"2. 編輯 .env 文件，填入真實API密鑰")
+        logger.warning("未檢測到任何 LLM 提供商的 API 密鑰")
+        logger.info("請確保在.env文件中至少配置以下其中一個密鑰:")
+        logger.info("- OPENAI_API_KEY (OpenAI GPT 模型)")
+        logger.info("- ANTHROPIC_API_KEY (Anthropic Claude 模型)")
+        logger.info("\n配置方法:")
+        logger.info("1. 複制 .env.example 為 .env")
+        logger.info("2. 編輯 .env 文件，填入真實API密鑰")
         return False
 
     if not finnhub_key:
-        logger.warning(f"FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
+        logger.warning("FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
 
-    logger.info(f"API密鑰配置完成")
+    logger.info("API密鑰配置完成")
     return True
 
 # 在文件頂部添加導入
@@ -167,27 +167,27 @@ import psutil
 def main():
     """主函數"""
     
-    logger.info(f"TradingAgents-CN Web應用啟動器")
-    logger.info(f"=")
+    logger.info("TradingAgents-CN Web應用啟動器")
+    logger.info("=")
     
     # 清理緩存文件（可選，避免Streamlit文件監控錯誤）
     clean_cache_files(force_clean=False)
     
     # 檢查依賴
-    logger.debug(f"檢查依賴包...")
+    logger.debug("檢查依賴包...")
     if not check_dependencies():
         return
     
     # 檢查API密鑰
-    logger.info(f"檢查API密鑰...")
+    logger.info("檢查API密鑰...")
     if not check_api_keys():
-        logger.info(f"\n 提示: 您仍可以啟動Web應用查看界面，但無法進行實際分析")
+        logger.info("\n 提示: 您仍可以啟動Web應用查看界面，但無法進行實際分析")
         response = input("是否繼續啟動? (y/n): ").lower().strip()
         if response != 'y':
             return
     
     # 啟動Streamlit應用
-    logger.info(f"\n 啟動Web應用...")
+    logger.info("\n 啟動Web應用...")
     
     web_dir = Path(__file__).parent
     app_file = web_dir / "app.py"
@@ -214,17 +214,17 @@ def main():
         # Streamlit會自動查找.streamlit/config.toml文件
     
     logger.info(f"執行命令: {''.join(cmd)}")
-    logger.info(f"\n Web應用啟動中...")
-    logger.info(f"瀏覽器將自動打開 http://localhost:8501")
-    logger.info(f"按 Ctrl+C 停止應用")
-    logger.info(f"=")
+    logger.info("\n Web應用啟動中...")
+    logger.info("瀏覽器將自動打開 http://localhost:8501")
+    logger.info("按 Ctrl+C 停止應用")
+    logger.info("=")
     
     # 創建進程對象而不是直接運行
     process = None
     
     def signal_handler(signum, frame):
         """信號處理函數"""
-        logger.info(f"\n\n 接收到停止信號，正在關閉Web應用...")
+        logger.info("\n\n 接收到停止信號，正在關閉Web應用...")
         if process:
             try:
                 # 終止進程及其子進程
@@ -235,9 +235,9 @@ def main():
                 
                 # 等待進程結束
                 parent.wait(timeout=5)
-                logger.info(f"Web應用已成功停止")
+                logger.info("Web應用已成功停止")
             except (psutil.NoSuchProcess, psutil.TimeoutExpired):
-                logger.warning(f"強制終止進程")
+                logger.warning("強制終止進程")
                 if process:
                     process.kill()
         sys.exit(0)
@@ -264,21 +264,21 @@ if __name__ == "__main__":
             # 設置環境變量跳過清理
             import os
             os.environ['SKIP_CACHE_CLEAN'] = 'true'
-            logger.info(f"啟動模式: 跳過緩存清理")
+            logger.info("啟動模式: 跳過緩存清理")
         elif sys.argv[1] == "--force-clean":
             # 強制清理所有緩存
-            logger.info(f"啟動模式: 強制清理所有緩存")
+            logger.info("啟動模式: 強制清理所有緩存")
             clean_cache_files(force_clean=True)
         elif sys.argv[1] == "--help":
-            logger.info(f"TradingAgents-CN Web應用啟動器")
-            logger.info(f"=")
-            logger.info(f"用法:")
-            logger.info(f"python run_web.py # 默認啟動（清理項目緩存）")
-            logger.info(f"python run_web.py --no-clean # 跳過緩存清理")
-            logger.info(f"python run_web.py --force-clean # 強制清理所有緩存")
-            logger.info(f"python run_web.py --help # 顯示幫助")
-            logger.info(f"\n環境變量:")
-            logger.info(f"SKIP_CACHE_CLEAN=true # 跳過緩存清理")
+            logger.info("TradingAgents-CN Web應用啟動器")
+            logger.info("=")
+            logger.info("用法:")
+            logger.info("python run_web.py # 默認啟動（清理項目緩存）")
+            logger.info("python run_web.py --no-clean # 跳過緩存清理")
+            logger.info("python run_web.py --force-clean # 強制清理所有緩存")
+            logger.info("python run_web.py --help # 顯示幫助")
+            logger.info("\n環境變量:")
+            logger.info("SKIP_CACHE_CLEAN=true # 跳過緩存清理")
             exit(0)
 
     main()

@@ -36,7 +36,7 @@ try:
     DOCKER_ADAPTER_AVAILABLE = True
 except ImportError:
     DOCKER_ADAPTER_AVAILABLE = False
-    logger.warning(f"Docker適配器不可用")
+    logger.warning("Docker適配器不可用")
 
 # 導入導出相關庫
 try:
@@ -50,11 +50,11 @@ try:
         pypandoc.get_pandoc_version()
         PANDOC_AVAILABLE = True
     except OSError:
-        logger.warning(f"未找到pandoc，正在嘗試自動下載...")
+        logger.warning("未找到pandoc，正在嘗試自動下載...")
         try:
             pypandoc.download_pandoc()
             PANDOC_AVAILABLE = True
-            logger.info(f"pandoc下載成功！")
+            logger.info("pandoc下載成功！")
         except Exception as download_error:
             logger.error(f"pandoc下載失敗: {download_error}")
             PANDOC_AVAILABLE = False
@@ -65,7 +65,7 @@ except ImportError as e:
     EXPORT_AVAILABLE = False
     PANDOC_AVAILABLE = False
     logger.info(f"導出功能依賴包缺失: {e}")
-    logger.info(f"請安裝: pip install pypandoc markdown")
+    logger.info("請安裝: pip install pypandoc markdown")
 
 
 class ReportExporter:
@@ -77,7 +77,7 @@ class ReportExporter:
         self.is_docker = DOCKER_ADAPTER_AVAILABLE and is_docker_environment()
 
         # 記錄初始化狀態
-        logger.info(f"ReportExporter初始化:")
+        logger.info("ReportExporter初始化:")
         logger.info(f"- export_available: {self.export_available}")
         logger.info(f"- pandoc_available: {self.pandoc_available}")
         logger.info(f"- is_docker: {self.is_docker}")
@@ -464,7 +464,7 @@ class ReportExporter:
                     extra_args.append(f'--pdf-engine={engine}')
                     logger.info(f"使用PDF引擎: {engine}")
                 else:
-                    logger.info(f"使用默認PDF引擎")
+                    logger.info("使用默認PDF引擎")
 
                 logger.info(f"PDF參數: {extra_args}")
 
@@ -529,7 +529,7 @@ class ReportExporter:
         """導出報告為指定格式"""
 
         logger.info(f"開始導出報告: format={format_type}")
-        logger.info(f"導出狀態檢查:")
+        logger.info("導出狀態檢查:")
         logger.info(f"- export_available: {self.export_available}")
         logger.info(f"- pandoc_available: {self.pandoc_available}")
         logger.info(f"- is_docker: {self.is_docker}")
@@ -779,7 +779,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         logger.info(f"保存目錄: {os.path.normpath(str(reports_dir))}")
 
         # 同時保存到MongoDB
-        logger.info(f"[MongoDB調試] 開始MongoDB保存流程")
+        logger.info("[MongoDB調試] 開始MongoDB保存流程")
         logger.info(f"[MongoDB調試] MONGODB_REPORT_AVAILABLE: {MONGODB_REPORT_AVAILABLE}")
         logger.info(f"[MongoDB調試] mongodb_report_manager存在: {mongodb_report_manager is not None}")
 
@@ -812,11 +812,11 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
                     )
 
                     if success:
-                        logger.info(f"分析報告已同時保存到MongoDB")
+                        logger.info("分析報告已同時保存到MongoDB")
                     else:
-                        logger.warning(f"MongoDB保存失敗，但文件保存成功")
+                        logger.warning("MongoDB保存失敗，但文件保存成功")
                 else:
-                    logger.warning(f"沒有報告內容可保存到MongoDB")
+                    logger.warning("沒有報告內容可保存到MongoDB")
 
             except Exception as e:
                 logger.error(f"MongoDB保存過程出錯: {e}")

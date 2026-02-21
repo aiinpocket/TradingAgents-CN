@@ -42,7 +42,7 @@ class SignalProcessor:
         # 清理和驗證信號內容
         full_signal = full_signal.strip()
         if len(full_signal) == 0:
-            logger.error(f" [SignalProcessor] 信號內容為空")
+            logger.error(" [SignalProcessor] 信號內容為空")
             return {
                 'action': '持有',
                 'target_price': None,
@@ -94,13 +94,13 @@ class SignalProcessor:
 
         # 驗證messages內容
         if not messages or len(messages) == 0:
-            logger.error(f" [SignalProcessor] messages為空")
+            logger.error(" [SignalProcessor] messages為空")
             return self._get_default_decision()
         
         # 驗證human訊息內容
         human_content = messages[1][1] if len(messages) > 1 else ""
         if not human_content or len(human_content.strip()) == 0:
-            logger.error(f" [SignalProcessor] human訊息內容為空")
+            logger.error(" [SignalProcessor] human訊息內容為空")
             return self._get_default_decision()
 
         logger.debug(f"[SignalProcessor] 準備調用LLM，訊息數量: {len(messages)}, 信號長度: {len(full_signal)}")
@@ -176,7 +176,7 @@ class SignalProcessor:
                             logger.debug(f"[SignalProcessor] 智能推算目標價格: {target_price}")
                         else:
                             target_price = None
-                            logger.warning(f"[SignalProcessor] 未能提取到目標價格，設置為None")
+                            logger.warning("[SignalProcessor] 未能提取到目標價格，設置為None")
                 else:
                     # 確保價格是數值類型
                     try:
@@ -189,7 +189,7 @@ class SignalProcessor:
                         logger.debug(f"[SignalProcessor] 處理後的目標價格: {target_price}")
                     except (ValueError, TypeError):
                         target_price = None
-                        logger.warning(f"[SignalProcessor] 價格轉換失敗，設置為None")
+                        logger.warning("[SignalProcessor] 價格轉換失敗，設置為None")
 
                 result = {
                     'action': action,

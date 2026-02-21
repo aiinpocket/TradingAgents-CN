@@ -24,7 +24,7 @@ def create_risk_manager(llm, memory):
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"memory為None，跳過歷史記憶檢索")
+            logger.warning("memory為None，跳過歷史記憶檢索")
             past_memories = []
 
         past_memory_str = ""
@@ -74,7 +74,7 @@ def create_risk_manager(llm, memory):
                         logger.warning(f"[Risk Manager] LLM響應內容過短: {len(response_content)} 字符")
                         response_content = ""
                 else:
-                    logger.warning(f"[Risk Manager] LLM響應為空或無效")
+                    logger.warning("[Risk Manager] LLM響應為空或無效")
                     response_content = ""
                     
             except Exception as e:
@@ -83,12 +83,12 @@ def create_risk_manager(llm, memory):
             
             retry_count += 1
             if retry_count < max_retries and not response_content:
-                logger.info(f"[Risk Manager] 等待2秒後重試...")
+                logger.info("[Risk Manager] 等待2秒後重試...")
                 time.sleep(2)
         
         # 如果所有重試都失敗，生成默認決策
         if not response_content:
-            logger.error(f"[Risk Manager] 所有LLM調用嘗試失敗，使用默認決策")
+            logger.error("[Risk Manager] 所有LLM調用嘗試失敗，使用默認決策")
             response_content = f"""**默認建議：持有**
 
 由於技術原因無法生成詳細分析，基於當前市場狀況和風險控制原則，建議對{company_name}採取持有策略。

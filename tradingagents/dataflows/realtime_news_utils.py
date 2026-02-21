@@ -97,7 +97,7 @@ class RealtimeNewsAggregator:
                 
             all_news.extend(newsapi_news)
         else:
-            logger.info(f"[新聞聚合器] NewsAPI 密鑰未配置，跳過此新聞源")
+            logger.info("[新聞聚合器] NewsAPI 密鑰未配置，跳過此新聞源")
         
         # 去重和排序
         logger.info(f"[新聞聚合器] 開始對 {len(all_news)} 條新聞進行去重和排序")
@@ -465,23 +465,23 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
     """
     獲取實時股票新聞的主要接口函數
     """
-    logger.info(f"[新聞分析] ========== 函數入口 ==========")
-    logger.info(f"[新聞分析] 函數: get_realtime_stock_news")
+    logger.info("[新聞分析] ========== 函數入口 ==========")
+    logger.info("[新聞分析] 函數: get_realtime_stock_news")
     logger.info(f"[新聞分析] 參數: ticker={ticker}, curr_date={curr_date}, hours_back={hours_back}")
     logger.info(f"[新聞分析] 開始獲取 {ticker} 的實時新聞，日期: {curr_date}, 回溯時間: {hours_back}小時")
     start_total_time = datetime.now()
     logger.info(f"[新聞分析] 開始時間: {start_total_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
     
     # 股票類型判斷 - 美股
-    logger.info(f"[新聞分析] ========== 步驟1: 股票類型判斷 ==========")
+    logger.info("[新聞分析] ========== 步驟1: 股票類型判斷 ==========")
     stock_type = "美股"
     logger.info(f"[新聞分析] 原始ticker: {ticker}")
     logger.info(f"[新聞分析] 股票 {ticker} 類型: {stock_type}")
     
     # 使用實時新聞聚合器
-    logger.info(f"[新聞分析] ========== 步驟3: 實時新聞聚合器 ==========")
+    logger.info("[新聞分析] ========== 步驟3: 實時新聞聚合器 ==========")
     aggregator = RealtimeNewsAggregator()
-    logger.info(f"[新聞分析] 成功創建實時新聞聚合器實例")
+    logger.info("[新聞分析] 成功創建實時新聞聚合器實例")
     try:
         logger.info(f"[新聞分析] 嘗試使用實時新聞聚合器獲取 {ticker} 的新聞")
         start_time = datetime.now()
@@ -507,13 +507,13 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             logger.info(f"[新聞分析] 新聞標題示例: {', '.join(sample_titles)}")
             
             # 格式化報告
-            logger.info(f"[新聞分析] 開始格式化新聞報告")
+            logger.info("[新聞分析] 開始格式化新聞報告")
             report = aggregator.format_news_report(news_items, ticker)
             logger.info(f"[新聞分析] 報告格式化完成，長度: {len(report)} 字符")
             
             total_time_taken = (datetime.now() - start_total_time).total_seconds()
             logger.info(f"[新聞分析] 成功生成 {ticker} 的新聞報告，總耗時 {total_time_taken:.2f} 秒，新聞來源: 實時新聞聚合器")
-            logger.info(f"[新聞分析] ========== 實時新聞聚合器獲取成功，函數即將返回 ==========")
+            logger.info("[新聞分析] ========== 實時新聞聚合器獲取成功，函數即將返回 ==========")
             return report
         else:
             logger.warning(f"[新聞分析] 實時新聞聚合器未獲取到 {ticker} 的新聞，耗時 {time_taken:.2f} 秒，嘗試使用備用新聞源")
@@ -550,7 +550,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             if sample_titles:
                 logger.info(f"[新聞分析] 新聞標題示例: {', '.join(sample_titles)}")
                 
-            logger.info(f"[新聞分析] 成功生成 Google 新聞報告，新聞來源: Google")
+            logger.info("[新聞分析] 成功生成 Google 新聞報告，新聞來源: Google")
             return google_news
         else:
             logger.warning(f"[新聞分析] Google 新聞未獲取到 {ticker} 的新聞數據，耗時 {time_taken:.2f} 秒")

@@ -199,7 +199,7 @@ def get_simfin_balance_sheet(
 
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
-        logger.info(f"No balance sheet available before the given current date.")
+        logger.info("No balance sheet available before the given current date.")
         return ""
 
     # Get the most recent balance sheet by selecting the row with the latest Publish Date
@@ -246,7 +246,7 @@ def get_simfin_cashflow(
 
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
-        logger.info(f"No cash flow statement available before the given current date.")
+        logger.info("No cash flow statement available before the given current date.")
         return ""
 
     # Get the most recent cash flow statement by selecting the row with the latest Publish Date
@@ -293,7 +293,7 @@ def get_simfin_income_statements(
 
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
-        logger.info(f"No income statement available before the given current date.")
+        logger.info("No income statement available before the given current date.")
         return ""
 
     # Get the most recent income statement by selecting the row with the latest Publish Date
@@ -862,12 +862,12 @@ def get_fundamentals_openai(ticker, curr_date):
         # 檢查是否配置了OpenAI API Key（這是最關鍵的檢查）
         openai_api_key = os.getenv("OPENAI_API_KEY")
         if not openai_api_key:
-            logger.debug(f"未配置OPENAI_API_KEY，跳過OpenAI API，直接使用Finnhub")
+            logger.debug("未配置OPENAI_API_KEY，跳過OpenAI API，直接使用Finnhub")
             return get_fundamentals_finnhub(ticker, curr_date)
 
         # 檢查是否配置了OpenAI相關設定
         if not config.get("backend_url") or not config.get("quick_think_llm"):
-            logger.debug(f"OpenAI配置不完整，直接使用Finnhub API")
+            logger.debug("OpenAI配置不完整，直接使用Finnhub API")
             return get_fundamentals_finnhub(ticker, curr_date)
 
         # 檢查backend_url是否是OpenAI的URL
@@ -919,7 +919,7 @@ def get_fundamentals_openai(ticker, curr_date):
         
     except Exception as e:
         logger.error(f"OpenAI基本面數據獲取失敗: {str(e)}")
-        logger.debug(f"回退到Finnhub API...")
+        logger.debug("回退到Finnhub API...")
         return get_fundamentals_finnhub(ticker, curr_date)
 
 

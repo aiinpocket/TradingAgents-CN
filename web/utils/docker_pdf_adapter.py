@@ -57,7 +57,7 @@ def setup_xvfb_display():
 
         # 設置DISPLAY環境變量
         os.environ['DISPLAY'] = ':99'
-        logger.info(f"Docker虛擬顯示器設置成功")
+        logger.info("Docker虛擬顯示器設置成功")
         return True
     except Exception as e:
         logger.error(f"虛擬顯示器設置失敗: {e}")
@@ -126,10 +126,10 @@ def test_docker_pdf_generation() -> bool:
         # 檢查文件是否生成
         if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
             os.unlink(output_file)  # 清理測試文件
-            logger.info(f"Docker PDF生成測試成功")
+            logger.info("Docker PDF生成測試成功")
             return True
         else:
-            logger.error(f"Docker PDF生成測試失敗")
+            logger.error("Docker PDF生成測試失敗")
             return False
             
     except Exception as e:
@@ -220,8 +220,8 @@ def get_docker_status_info():
     return info
 
 if __name__ == "__main__":
-    logger.info(f"Docker PDF適配器測試")
-    logger.info(f"=")
+    logger.info("Docker PDF適配器測試")
+    logger.info("=")
     
     status = get_docker_status_info()
     
@@ -230,10 +230,10 @@ if __name__ == "__main__":
     logger.error(f"PDF測試: {'通過' if status['pdf_test_ok'] else '失敗'}")
     
     if status['is_docker'] and status['dependencies_ok'] and status['pdf_test_ok']:
-        logger.info(f"\nDocker PDF功能完全正常！")
+        logger.info("\nDocker PDF功能完全正常！")
     elif status['is_docker'] and not status['dependencies_ok']:
-        logger.warning(f"\nDocker環境缺少PDF依賴，請重新構建鏡像")
+        logger.warning("\nDocker環境缺少PDF依賴，請重新構建鏡像")
     elif status['is_docker'] and not status['pdf_test_ok']:
-        logger.error(f"\nDocker PDF測試失敗，可能需要調整配置")
+        logger.error("\nDocker PDF測試失敗，可能需要調整配置")
     else:
-        logger.info(f"\n非Docker環境，使用標準PDF配置")
+        logger.info("\n非Docker環境，使用標準PDF配置")

@@ -23,7 +23,7 @@ try:
     MONGODB_AVAILABLE = True
 except ImportError:
     MONGODB_AVAILABLE = False
-    logger.warning(f"pymongo 未安裝，MongoDB功能不可用")
+    logger.warning("pymongo 未安裝，MongoDB功能不可用")
 
 # Redis
 try:
@@ -32,7 +32,7 @@ try:
     REDIS_AVAILABLE = True
 except ImportError:
     REDIS_AVAILABLE = False
-    logger.warning(f"redis 未安裝，Redis功能不可用")
+    logger.warning("redis 未安裝，Redis功能不可用")
 
 
 class DatabaseCacheManager:
@@ -81,7 +81,7 @@ class DatabaseCacheManager:
         self._init_mongodb()
         self._init_redis()
         
-        logger.info(f"數據庫緩存管理器初始化完成")
+        logger.info("數據庫緩存管理器初始化完成")
         logger.debug(f"   MongoDB: {'已連接' if self.mongodb_client else '未連接'}")
         logger.debug(f"   Redis: {'已連接' if self.redis_client else '未連接'}")
     
@@ -193,7 +193,7 @@ class DatabaseCacheManager:
             ])
             fundamentals_collection.create_index([("created_at", 1)])
             
-            logger.info(f"MongoDB索引創建完成")
+            logger.info("MongoDB索引創建完成")
             
         except Exception as e:
             logger.error(f"MongoDB索引創建失敗: {e}")
@@ -330,7 +330,7 @@ class DatabaseCacheManager:
                                 6 * 3600,
                                 json.dumps(redis_data, ensure_ascii=False)
                             )
-                            logger.info(f"數據已同步到Redis緩存")
+                            logger.info("數據已同步到Redis緩存")
                         except Exception as e:
                             logger.error(f"Redis同步失敗: {e}")
                     
@@ -550,11 +550,11 @@ class DatabaseCacheManager:
         """關閉數據庫連接"""
         if self.mongodb_client:
             self.mongodb_client.close()
-            logger.info(f"MongoDB連接已關閉")
+            logger.info("MongoDB連接已關閉")
 
         if self.redis_client:
             self.redis_client.close()
-            logger.info(f"Redis連接已關閉")
+            logger.info("Redis連接已關閉")
 
 
 # 全局數據庫緩存實例

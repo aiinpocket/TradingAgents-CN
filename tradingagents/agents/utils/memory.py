@@ -46,7 +46,7 @@ class ChromaDBManager:
                         # Windows 10 或更老版本，使用兼容配置
                         from .chromadb_win10_config import get_win10_chromadb_client
                         self._client = get_win10_chromadb_client()
-                        logger.info(f"[ChromaDB] Windows 10兼容配置初始化完成")
+                        logger.info("[ChromaDB] Windows 10兼容配置初始化完成")
                 else:
                     # 非Windows系統，使用標準配置
                     settings = Settings(
@@ -68,7 +68,7 @@ class ChromaDBManager:
                         is_persistent=False
                     )
                     self._client = chromadb.Client(settings)
-                    logger.info(f"[ChromaDB] 使用備用配置初始化完成")
+                    logger.info("[ChromaDB] 使用備用配置初始化完成")
                 except Exception as backup_error:
                     # 最後的備用方案
                     self._client = chromadb.Client()
@@ -133,7 +133,7 @@ class FinancialSituationMemory:
                 )
             else:
                 self.client = "DISABLED"
-                logger.warning(f"未找到OPENAI_API_KEY，記憶功能已禁用")
+                logger.warning("未找到OPENAI_API_KEY，記憶功能已禁用")
 
         # 使用單例ChromaDB管理器
         self.chroma_manager = ChromaDBManager()
@@ -183,17 +183,17 @@ class FinancialSituationMemory:
         # 檢查記憶功能是否被禁用
         if self.client == "DISABLED":
             # 內存功能已禁用，返回空向量
-            logger.debug(f"記憶功能已禁用，返回空向量")
+            logger.debug("記憶功能已禁用，返回空向量")
             return [0.0] * 1024  # 返回1024維的零向量
 
         # 驗證輸入文本
         if not text or not isinstance(text, str):
-            logger.warning(f"輸入文本為空或無效，返回空向量")
+            logger.warning("輸入文本為空或無效，返回空向量")
             return [0.0] * 1024
 
         text_length = len(text)
         if text_length == 0:
-            logger.warning(f"輸入文本長度為0，返回空向量")
+            logger.warning("輸入文本長度為0，返回空向量")
             return [0.0] * 1024
         
         # 檢查是否啟用長度限制
@@ -228,11 +228,11 @@ class FinancialSituationMemory:
         if True:
             # 使用OpenAI兼容的嵌入模型
             if self.client is None:
-                logger.warning(f"嵌入客戶端未初始化，返回空向量")
+                logger.warning("嵌入客戶端未初始化，返回空向量")
                 return [0.0] * 1024  # 返回空向量
             elif self.client == "DISABLED":
                 # 內存功能已禁用，返回空向量
-                logger.debug(f"內存功能已禁用，返回空向量")
+                logger.debug("內存功能已禁用，返回空向量")
                 return [0.0] * 1024  # 返回1024維的零向量
 
             # 嘗試調用OpenAI兼容的embedding API
@@ -259,7 +259,7 @@ class FinancialSituationMemory:
                 if is_length_error:
                     # 長度限制錯誤：直接降級，不截斷重試
                     logger.warning(f"{self.llm_provider}長度限制: {str(e)}")
-                    logger.info(f"為保證分析準確性，不截斷文本，記憶功能降級")
+                    logger.info("為保證分析準確性，不截斷文本，記憶功能降級")
                 else:
                     # 其他類型的錯誤
                     if 'attributeerror' in error_str:
@@ -273,7 +273,7 @@ class FinancialSituationMemory:
                     else:
                         logger.error(f"{self.llm_provider} embedding異常: {str(e)}")
                 
-                logger.warning(f"記憶功能降級，返回空向量")
+                logger.warning("記憶功能降級，返回空向量")
                 return [0.0] * 1024
 
     def get_embedding_config_status(self):
@@ -321,13 +321,13 @@ class FinancialSituationMemory:
         
         # 檢查是否為空向量（記憶功能被禁用或出錯）
         if all(x == 0.0 for x in query_embedding):
-            logger.debug(f"查詢embedding為空向量，返回空結果")
+            logger.debug("查詢embedding為空向量，返回空結果")
             return []
         
         # 檢查是否有足夠的數據進行查詢
         collection_count = self.situation_collection.count()
         if collection_count == 0:
-            logger.debug(f"記憶庫為空，返回空結果")
+            logger.debug("記憶庫為空，返回空結果")
             return []
         
         # 調整查詢數量，不能超過集合中的文檔數量

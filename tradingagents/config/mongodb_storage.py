@@ -72,7 +72,7 @@ class MongoDBStorage:
             
         except (ConnectionFailure, ServerSelectionTimeoutError) as e:
             logger.error(f"MongoDB連接失敗: {e}")
-            logger.info(f"將使用本地JSON文件儲存")
+            logger.info("將使用本地JSON文件儲存")
             self._connected = False
         except Exception as e:
             logger.error(f"MongoDB初始化失敗: {e}")
@@ -119,7 +119,7 @@ class MongoDBStorage:
             if result.inserted_id:
                 return True
             else:
-                logger.error(f"MongoDB插入失敗：未返回插入ID")
+                logger.error("MongoDB插入失敗：未返回插入ID")
                 return False
                 
         except Exception as e:
@@ -287,4 +287,4 @@ class MongoDBStorage:
         if self.client:
             self.client.close()
             self._connected = False
-            logger.info(f"MongoDB連接已關閉")
+            logger.info("MongoDB連接已關閉")

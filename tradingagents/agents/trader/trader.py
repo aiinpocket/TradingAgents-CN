@@ -22,7 +22,7 @@ def create_trader(llm, memory):
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.debug(f"===== 交易員節點開始 =====")
+        logger.debug("===== 交易員節點開始 =====")
         logger.debug(f"交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
         logger.debug(f"貨幣符號: {currency_symbol}")
         logger.debug(f"基本面報告長度: {len(fundamentals_report)}")
@@ -32,13 +32,13 @@ def create_trader(llm, memory):
 
         # 檢查memory是否可用
         if memory is not None:
-            logger.debug(f"memory可用，獲取歷史記憶")
+            logger.debug("memory可用，獲取歷史記憶")
             past_memories = memory.get_memories(curr_situation, n_matches=2)
             past_memory_str = ""
             for i, rec in enumerate(past_memories, 1):
                 past_memory_str += rec["recommendation"] + "\n\n"
         else:
-            logger.warning(f"memory為None，跳過歷史記憶檢索")
+            logger.warning("memory為None，跳過歷史記憶檢索")
             past_memories = []
             past_memory_str = "暫無歷史記憶數據可參考。"
 
@@ -97,10 +97,10 @@ def create_trader(llm, memory):
 
         result = llm.invoke(messages)
 
-        logger.debug(f"LLM調用完成")
+        logger.debug("LLM調用完成")
         logger.debug(f"交易員回覆長度: {len(result.content)}")
         logger.debug(f"交易員回覆前500字符: {result.content[:500]}...")
-        logger.debug(f"===== 交易員節點結束 =====")
+        logger.debug("===== 交易員節點結束 =====")
 
         return {
             "messages": [result],
