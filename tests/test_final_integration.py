@@ -68,8 +68,8 @@ def test_final_integration():
                 # 檢查是否包含預期內容
                 if case["code"] in result:
                     print(f"   包含股票代碼")
-                if "新聞數據來源" in result:
-                    print(f"   包含數據來源資訊")
+                if "新聞資料來源" in result:
+                    print(f"   包含資料來源資訊")
             else:
                 print(f"   獲取失敗")
         

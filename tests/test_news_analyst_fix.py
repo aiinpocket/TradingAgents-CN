@@ -40,7 +40,7 @@ def test_tool_parameters():
         # 檢查工具是否接受這些參數
         result = toolkit.get_realtime_stock_news.invoke(params)
         print(f"    get_realtime_stock_news 調用成功")
-        print(f"    返回數據長度: {len(result) if result else 0} 字符")
+        print(f"    傳回資料長度: {len(result) if result else 0} 字符")
         
     except Exception as e:
         print(f"    get_realtime_stock_news 調用失敗: {e}")
@@ -57,7 +57,7 @@ def test_tool_parameters():
         # 檢查工具是否接受這些參數
         result = toolkit.get_google_news.invoke(params)
         print(f"    get_google_news 調用成功")
-        print(f"    返回數據長度: {len(result) if result else 0} 字符")
+        print(f"    傳回資料長度: {len(result) if result else 0} 字符")
         
     except Exception as e:
         print(f"    get_google_news 調用失敗: {e}")
@@ -88,7 +88,7 @@ def test_tool_parameters():
     print("   1.  get_realtime_stock_news 現在正確傳遞 ticker 和 curr_date")
     print("   2.  get_google_news 現在正確傳遞 query 和 curr_date")
     print("   3.  修複了 Pydantic 驗證錯誤")
-    print("   4.  新聞分析師應該能夠正常獲取新聞數據")
+    print("   4.  新聞分析師應該能夠正常獲取新聞資料")
 
 if __name__ == "__main__":
     test_tool_parameters()

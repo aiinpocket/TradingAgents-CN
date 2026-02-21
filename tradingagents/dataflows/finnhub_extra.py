@@ -1,7 +1,7 @@
 """
 FinnHub 進階資料聚合模組
 將多個免費 API 端點聚合為三個工具函式，供分析師智慧體使用
-包含：情緒數據、分析師共識、技術訊號
+包含：情緒資料、分析師共識、技術訊號
 每個報告帶有記憶體快取，避免同一股票短時間內重複呼叫 API
 """
 
@@ -19,7 +19,7 @@ _report_cache: dict = {}
 
 # 各報告類型的快取有效期（秒）
 _CACHE_TTL = {
-    "sentiment": 3600,      # 情緒數據：1 小時（盤中變化較快）
+    "sentiment": 3600,      # 情緒資料：1 小時（盤中變化較快）
     "analyst": 21600,       # 分析師共識：6 小時（評級更新頻率低）
     "technical": 3600,      # 技術訊號：1 小時（隨市場變動）
 }
@@ -65,7 +65,7 @@ def _get_finnhub_client():
 
 def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
     """
-    情緒數據聚合工具 - 整合新聞情緒量化評分和社交媒體情緒
+    情緒資料聚合工具 - 整合新聞情緒量化評分和社交媒體情緒
     包含：News Sentiment + Social Sentiment
 
     Args:
@@ -82,11 +82,11 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
 
     client = _get_finnhub_client()
     if not client:
-        return "FinnHub API 金鑰未設定，無法取得情緒數據"
+        return "FinnHub API 金鑰未設定，無法取得情緒資料"
 
     report_sections = []
-    report_sections.append(f"# {ticker} FinnHub 情緒數據報告\n")
-    report_sections.append(f"**數據日期**: {curr_date}\n")
+    report_sections.append(f"# {ticker} FinnHub 情緒資料報告\n")
+    report_sections.append(f"**資料日期**: {curr_date}\n")
 
     # --- News Sentiment ---
     try:
@@ -145,10 +145,10 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
 
             report_sections.append(f"**新聞情緒總結**: {sentiment_label}，{sector_comparison}\n")
         else:
-            report_sections.append("## 新聞情緒分析\n無可用數據\n")
+            report_sections.append("## 新聞情緒分析\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub News Sentiment 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 新聞情緒分析\n數據取得失敗\n")
+        report_sections.append("## 新聞情緒分析\n資料取得失敗\n")
 
     # --- Social Sentiment (FinnHub 社交媒體情緒) ---
     try:
@@ -161,7 +161,7 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
             to=end_dt.strftime("%Y-%m-%d")
         )
 
-        # 合併所有平台的社交媒體數據
+        # 合併所有平台的社交媒體資料
         all_entries = []
         for platform in ['twitter']:
             entries = social_data.get(platform, []) if social_data else []
@@ -186,12 +186,12 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
             report_sections.append(f"| 平均評分 | {avg_score:.4f} |")
             report_sections.append("")
         else:
-            report_sections.append("## 社交媒體情緒\n近期無社交媒體討論數據\n")
+            report_sections.append("## 社交媒體情緒\n近期無社交媒體討論資料\n")
     except Exception as e:
         logger.warning(f"FinnHub Social Sentiment 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 社交媒體情緒\n數據取得失敗\n")
+        report_sections.append("## 社交媒體情緒\n資料取得失敗\n")
 
-    report_sections.append("---\n*數據來源: FinnHub API (免費方案)*")
+    report_sections.append("---\n*資料來源: FinnHub API (免費方案)*")
     result = "\n".join(report_sections)
     _set_cached_report("sentiment", ticker, result, curr_date)
     return result
@@ -199,7 +199,7 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
 
 def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
     """
-    分析師共識數據聚合工具 - 整合華爾街分析師評級和預測
+    分析師共識資料聚合工具 - 整合華爾街分析師評級和預測
     包含：Recommendation Trends + Price Target + Upgrade/Downgrade +
           EPS Estimates + Revenue Estimates + Earnings Calendar + Peers
 
@@ -217,11 +217,11 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
 
     client = _get_finnhub_client()
     if not client:
-        return "FinnHub API 金鑰未設定，無法取得分析師數據"
+        return "FinnHub API 金鑰未設定，無法取得分析師資料"
 
     report_sections = []
     report_sections.append(f"# {ticker} 華爾街分析師共識報告\n")
-    report_sections.append(f"**數據日期**: {curr_date}\n")
+    report_sections.append(f"**資料日期**: {curr_date}\n")
 
     # --- Recommendation Trends ---
     try:
@@ -259,10 +259,10 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
                     consensus = "意見分歧"
                 report_sections.append(f"**最新共識**: {consensus}（買入類佔比 {buy_pct:.0%}）\n")
         else:
-            report_sections.append("## 分析師評級分布\n無可用數據\n")
+            report_sections.append("## 分析師評級分布\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub Recommendation Trends 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 分析師評級分布\n數據取得失敗\n")
+        report_sections.append("## 分析師評級分布\n資料取得失敗\n")
 
     # --- Price Target ---
     try:
@@ -278,10 +278,10 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
             report_sections.append(f"| 分析師數量 | {pt.get('lastUpdated', 'N/A')} |")
             report_sections.append("")
         else:
-            report_sections.append("## 目標價共識\n無可用數據\n")
+            report_sections.append("## 目標價共識\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub Price Target 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 目標價共識\n數據取得失敗\n")
+        report_sections.append("## 目標價共識\n資料取得失敗\n")
 
     # --- Upgrade/Downgrade ---
     try:
@@ -308,7 +308,7 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
             report_sections.append("## 近期評級變動\n近 90 天無評級變動\n")
     except Exception as e:
         logger.warning(f"FinnHub Upgrade/Downgrade 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 近期評級變動\n數據取得失敗\n")
+        report_sections.append("## 近期評級變動\n資料取得失敗\n")
 
     # --- EPS Estimates ---
     try:
@@ -328,10 +328,10 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
                 )
             report_sections.append("")
         else:
-            report_sections.append("## EPS 預測\n無可用數據\n")
+            report_sections.append("## EPS 預測\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub EPS Estimates 取得失敗 ({ticker}): {e}")
-        report_sections.append("## EPS 預測\n數據取得失敗\n")
+        report_sections.append("## EPS 預測\n資料取得失敗\n")
 
     # --- Revenue Estimates ---
     try:
@@ -352,10 +352,10 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
                 )
             report_sections.append("")
         else:
-            report_sections.append("## 營收預測\n無可用數據\n")
+            report_sections.append("## 營收預測\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub Revenue Estimates 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 營收預測\n數據取得失敗\n")
+        report_sections.append("## 營收預測\n資料取得失敗\n")
 
     # --- Earnings Calendar ---
     try:
@@ -382,7 +382,7 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
             report_sections.append("## 下次財報日期\n近 90 天內無預定財報發布\n")
     except Exception as e:
         logger.warning(f"FinnHub Earnings Calendar 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 下次財報日期\n數據取得失敗\n")
+        report_sections.append("## 下次財報日期\n資料取得失敗\n")
 
     # --- Peers ---
     try:
@@ -394,12 +394,12 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
                 report_sections.append("## 同業公司\n")
                 report_sections.append(f"同業股票代碼: {', '.join(peer_list)}\n")
         else:
-            report_sections.append("## 同業公司\n無可用數據\n")
+            report_sections.append("## 同業公司\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub Peers 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 同業公司\n數據取得失敗\n")
+        report_sections.append("## 同業公司\n資料取得失敗\n")
 
-    report_sections.append("---\n*數據來源: FinnHub API (免費方案)*")
+    report_sections.append("---\n*資料來源: FinnHub API (免費方案)*")
     result = "\n".join(report_sections)
     _set_cached_report("analyst", ticker, result, curr_date)
     return result
@@ -475,10 +475,10 @@ def get_finnhub_technical_report(ticker: str, resolution: str = 'D') -> str:
                     f"**訊號摘要**: {signal_summary}（買入 {buy_count}/{total_signals}）\n"
                 )
         else:
-            report_sections.append("## 綜合技術訊號\n無可用數據\n")
+            report_sections.append("## 綜合技術訊號\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub Aggregate Indicators 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 綜合技術訊號\n數據取得失敗\n")
+        report_sections.append("## 綜合技術訊號\n資料取得失敗\n")
 
     # --- Support Resistance ---
     try:
@@ -502,12 +502,12 @@ def get_finnhub_technical_report(ticker: str, resolution: str = 'D') -> str:
                 report_sections.append(f"| {label} | ${level:.2f} |")
             report_sections.append("")
         else:
-            report_sections.append("## 支撐與壓力位\n無可用數據\n")
+            report_sections.append("## 支撐與壓力位\n無可用資料\n")
     except Exception as e:
         logger.warning(f"FinnHub Support Resistance 取得失敗 ({ticker}): {e}")
-        report_sections.append("## 支撐與壓力位\n數據取得失敗\n")
+        report_sections.append("## 支撐與壓力位\n資料取得失敗\n")
 
-    report_sections.append("---\n*數據來源: FinnHub API (免費方案)*")
+    report_sections.append("---\n*資料來源: FinnHub API (免費方案)*")
     result = "\n".join(report_sections)
     _set_cached_report("technical", ticker, result, resolution)
     return result

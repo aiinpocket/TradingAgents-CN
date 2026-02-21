@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-實時新聞數據獲取工具
+實時新聞資料取得工具
 解決新聞滯後性問題
 """
 
@@ -20,7 +20,7 @@ logger = get_logger('agents')
 
 @dataclass
 class NewsItem:
-    """新聞項目數據結構"""
+    """新聞項目資料結構"""
     title: str
     content: str
     source: str
@@ -392,8 +392,8 @@ class RealtimeNewsAggregator:
         start_time = datetime.now()
         
         if not news_items:
-            logger.warning(f"[新聞報告] 未獲取到 {ticker} 的實時新聞數據")
-            return f"未獲取到{ticker}的實時新聞數據。"
+            logger.warning(f"[新聞報告] 未獲取到 {ticker} 的實時新聞資料")
+            return f"未獲取到{ticker}的實時新聞資料。"
         
         # 按緊急程度分組
         high_urgency = [n for n in news_items if n.urgency == 'high']
@@ -437,15 +437,15 @@ class RealtimeNewsAggregator:
         latest_news = max(news_items, key=lambda x: x.publish_time)
         time_diff = datetime.now() - latest_news.publish_time
         
-        report += f"\n## 數據時效性\n"
+        report += f"\n## 資料時效性\n"
         report += f"最新新聞發布於: {time_diff.total_seconds() / 60:.0f}分鐘前\n"
         
         if time_diff.total_seconds() < 1800:  # 30分鐘內
-            report += "數據時效性: 優秀 (30分鐘內)\n"
+            report += "資料時效性: 優秀 (30分鐘內)\n"
         elif time_diff.total_seconds() < 3600:  # 1小時內
-            report += "數據時效性: 良好 (1小時內)\n"
+            report += "資料時效性: 良好 (1小時內)\n"
         else:
-            report += "數據時效性: 一般 (超過1小時)\n"
+            report += "資料時效性: 一般 (超過1小時)\n"
         
         # 記錄報告生成完成資訊
         end_time = datetime.now()
@@ -494,8 +494,8 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
         time_taken = (end_time - start_time).total_seconds()
         logger.info(f"[新聞分析] 聚合器調用結束時間: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
         logger.info(f"[新聞分析] 聚合器調用耗時: {time_taken:.2f}秒")
-        logger.info(f"[新聞分析] 聚合器返回數據類型: {type(news_items)}")
-        logger.info(f"[新聞分析] 聚合器返回數據: {news_items}")
+        logger.info(f"[新聞分析] 聚合器返回資料類型: {type(news_items)}")
+        logger.info(f"[新聞分析] 聚合器傳回資料: {news_items}")
         
         # 如果成功獲取到新聞
         if news_items and len(news_items) > 0:
@@ -531,7 +531,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
         
         # 美股使用英文關鍵詞進行搜索
         search_query = f"{ticker} stock news"
-        logger.info(f"[新聞分析] 開始從Google獲取 {ticker} 的新聞數據，查詢: {search_query}")
+        logger.info(f"[新聞分析] 開始從Google獲取 {ticker} 的新聞資料，查詢: {search_query}")
         
         start_time = datetime.now()
         google_news = get_google_news(search_query, curr_date, 1)
@@ -553,7 +553,7 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
             logger.info("[新聞分析] 成功生成 Google 新聞報告，新聞來源: Google")
             return google_news
         else:
-            logger.warning(f"[新聞分析] Google 新聞未獲取到 {ticker} 的新聞數據，耗時 {time_taken:.2f} 秒")
+            logger.warning(f"[新聞分析] Google 新聞未獲取到 {ticker} 的新聞資料，耗時 {time_taken:.2f} 秒")
     except Exception as e:
         logger.error(f"[新聞分析] Google 新聞獲取失敗: {e}，所有備用方案均已嘗試")
     

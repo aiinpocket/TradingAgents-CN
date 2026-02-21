@@ -234,7 +234,7 @@ class RedisSessionManager:
                         "db": os.getenv('REDIS_DB', 0)
                     }
                     
-                    # 檢查會話數據
+                    # 檢查會話資料
                     data = self.redis_client.get(session_key)
                     if data:
                         debug_info["session_data"] = json.loads(data)
@@ -253,13 +253,13 @@ class RedisSessionManager:
 redis_session_manager = RedisSessionManager()
 
 def get_persistent_analysis_id() -> Optional[str]:
-    """獲取持久化的分析ID（優先級：session state > Redis會話 > Redis分析數據）"""
+    """獲取持久化的分析ID（優先級：session state > Redis會話 > Redis分析資料）"""
     try:
         # 1. 首先檢查session state
         if st.session_state.get('current_analysis_id'):
             return st.session_state.current_analysis_id
         
-        # 2. 檢查Redis會話數據
+        # 2. 檢查Redis會話資料
         session_data = redis_session_manager.load_analysis_state()
         if session_data:
             analysis_id = session_data.get('analysis_id')

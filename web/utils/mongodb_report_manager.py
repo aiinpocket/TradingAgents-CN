@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 MongoDB報告管理器
-用於保存和讀取分析報告到MongoDB數據庫
+用於保存和讀取分析報告到MongoDB資料庫
 """
 
 import os
@@ -78,7 +78,7 @@ class MongoDBReportManager:
             # 測試連接
             self.client.admin.command('ping')
             
-            # 選擇數據庫和集合
+            # 選擇資料庫和集合
             self.db = self.client[mongodb_database]
             self.collection = self.db["analysis_reports"]
             
@@ -180,12 +180,12 @@ class MongoDBReportManager:
                     date_query["$lte"] = end_date
                 query["analysis_date"] = date_query
             
-            # 查詢數據
+            # 查詢資料
             cursor = self.collection.find(query).sort("timestamp", -1).limit(limit)
             
             results = []
             for doc in cursor:
-                # 處理timestamp字段，兼容不同的數據類型
+                # 處理timestamp字段，兼容不同的資料類型
                 timestamp_value = doc.get("timestamp")
                 if hasattr(timestamp_value, 'timestamp'):
                     # datetime對象
@@ -296,7 +296,7 @@ class MongoDBReportManager:
             return []
 
     def fix_inconsistent_reports(self) -> bool:
-        """修複不一致的報告數據結構"""
+        """修複不一致的報告資料結構"""
         if not self.connected:
             logger.warning("MongoDB未連接，跳過修複")
             return False
@@ -315,7 +315,7 @@ class MongoDBReportManager:
             inconsistent_docs = list(cursor)
 
             if not inconsistent_docs:
-                logger.info("所有報告數據結構一致，無需修複")
+                logger.info("所有報告資料結構一致，無需修複")
                 return True
 
             logger.info(f"發現 {len(inconsistent_docs)} 個不一致的報告，開始修複...")
@@ -351,7 +351,7 @@ class MongoDBReportManager:
             return False
 
     def save_report(self, report_data: Dict[str, Any]) -> bool:
-        """保存報告數據（通用方法）"""
+        """保存報告資料（通用方法）"""
         if not self.connected:
             logger.warning("MongoDB未連接，跳過保存")
             return False
@@ -359,7 +359,7 @@ class MongoDBReportManager:
         try:
             # 確保有必要的字段
             if 'analysis_id' not in report_data:
-                logger.error("報告數據缺少analysis_id字段")
+                logger.error("報告資料缺少analysis_id字段")
                 return False
 
             # 添加保存時間戳

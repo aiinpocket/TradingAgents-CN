@@ -13,7 +13,7 @@ logger = get_logger('web')
 def render_analysis_form():
     """渲染股票分析表單，收集使用者輸入的分析參數"""
 
-    # 取得緩存的表單配置
+    # 取得快取的表單配置
     cached_config = st.session_state.get('form_config') or {}
 
     # 建立表單
@@ -91,7 +91,7 @@ def render_analysis_form():
             fundamentals_analyst = st.checkbox(
                 "基本面分析師",
                 value='fundamentals' in cached_analysts,
-                help="分析財務數據、公司基本面、估值水平"
+                help="分析財務資料、公司基本面、估值水平"
             )
 
         # 收集選中的分析師
@@ -167,7 +167,7 @@ def render_analysis_form():
             use_container_width=True
         )
 
-    # 提交時返回表單數據
+    # 提交時返回表單資料
     if submitted and stock_symbol:
         logger.info(f"分析表單提交: {stock_symbol} ({market_type})")
 
@@ -183,7 +183,7 @@ def render_analysis_form():
             'custom_prompt': custom_prompt
         }
 
-        # 保存表單配置到緩存和持久化儲存（複用已建構的 current_config）
+        # 保存表單配置到快取和持久化儲存（複用已建構的 current_config）
         st.session_state.form_config = current_config
 
         try:

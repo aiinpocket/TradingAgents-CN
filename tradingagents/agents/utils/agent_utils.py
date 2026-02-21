@@ -392,7 +392,7 @@ class Toolkit:
         curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"] = None
     ) -> str:
         """
-        統一的股票基本面分析工具，使用 OpenAI/Finnhub 數據源
+        統一的股票基本面分析工具，使用 OpenAI/Finnhub 資料來源
 
         Args:
             ticker: 股票代碼（如：AAPL、TSLA）
@@ -401,7 +401,7 @@ class Toolkit:
             curr_date: 當前日期（可選，格式：YYYY-MM-DD）
 
         Returns:
-            str: 基本面分析數據和報告
+            str: 基本面分析資料和報告
         """
         logger.info(f"[統一基本面工具] 分析股票: {ticker}")
 
@@ -418,28 +418,28 @@ class Toolkit:
 
             result_data = []
 
-            # 使用 OpenAI/Finnhub 數據源獲取基本面資料
-            logger.info(f"[統一基本面工具] 處理美股數據: {ticker}")
+            # 使用 OpenAI/Finnhub 資料來源獲取基本面資料
+            logger.info(f"[統一基本面工具] 處理美股資料: {ticker}")
 
             try:
                 from tradingagents.dataflows.interface import get_fundamentals_openai
                 us_data = get_fundamentals_openai(ticker, curr_date)
-                result_data.append(f"## 基本面數據\n{us_data}")
+                result_data.append(f"## 基本面資料\n{us_data}")
             except Exception as e:
-                result_data.append(f"## 基本面數據\n獲取失敗: {e}")
+                result_data.append(f"## 基本面資料\n獲取失敗: {e}")
 
             # 組合所有資料
-            combined_result = f"""# {ticker} 基本面分析數據
+            combined_result = f"""# {ticker} 基本面分析資料
 
 **分析日期**: {curr_date}
 
 {chr(10).join(result_data)}
 
 ---
-*數據來源: OpenAI / Finnhub API*
+*資料來源: OpenAI / Finnhub API*
 """
 
-            logger.info(f"[統一基本面工具] 數據獲取完成，總長度: {len(combined_result)}")
+            logger.info(f"[統一基本面工具] 資料取得完成，總長度: {len(combined_result)}")
             return combined_result
 
         except Exception as e:
@@ -456,7 +456,7 @@ class Toolkit:
         end_date: Annotated[str, "結束日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        統一的股票市場數據工具，獲取價格和技術指標數據
+        統一的股票市場資料工具，獲取價格和技術指標資料
 
         Args:
             ticker: 股票代碼（如：AAPL、TSLA）
@@ -464,39 +464,39 @@ class Toolkit:
             end_date: 結束日期（格式：YYYY-MM-DD）
 
         Returns:
-            str: 市場數據和技術分析報告
+            str: 市場資料和技術分析報告
         """
         logger.info(f"[統一市場工具] 分析股票: {ticker}")
 
         try:
             result_data = []
 
-            # 使用優化的美股數據獲取工具
-            logger.info(f"[統一市場工具] 處理美股市場數據: {ticker}")
+            # 使用優化的美股資料取得工具
+            logger.info(f"[統一市場工具] 處理美股市場資料: {ticker}")
 
             try:
                 from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
                 us_data = get_us_stock_data_cached(ticker, start_date, end_date)
-                result_data.append(f"## 市場數據\n{us_data}")
+                result_data.append(f"## 市場資料\n{us_data}")
             except Exception as e:
-                result_data.append(f"## 市場數據\n獲取失敗: {e}")
+                result_data.append(f"## 市場資料\n獲取失敗: {e}")
 
             # 組合資料
-            combined_result = f"""# {ticker} 市場數據分析
+            combined_result = f"""# {ticker} 市場資料分析
 
 **分析期間**: {start_date} 至 {end_date}
 
 {chr(10).join(result_data)}
 
 ---
-*數據來源: Yahoo Finance / Finnhub API*
+*資料來源: Yahoo Finance / Finnhub API*
 """
 
-            logger.info(f"[統一市場工具] 數據獲取完成，總長度: {len(combined_result)}")
+            logger.info(f"[統一市場工具] 資料取得完成，總長度: {len(combined_result)}")
             return combined_result
 
         except Exception as e:
-            error_msg = f"統一市場數據工具執行失敗: {str(e)}"
+            error_msg = f"統一市場資料工具執行失敗: {str(e)}"
             logger.error(f"[統一市場工具] {error_msg}")
             return error_msg
 
@@ -508,7 +508,7 @@ class Toolkit:
         curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        統一的股票新聞工具，使用 Finnhub 新聞數據源
+        統一的股票新聞工具，使用 Finnhub 新聞資料來源
 
         Args:
             ticker: 股票代碼（如：AAPL、TSLA）
@@ -548,10 +548,10 @@ class Toolkit:
 {chr(10).join(result_data)}
 
 ---
-*數據來源: Finnhub API*
+*資料來源: Finnhub API*
 """
 
-            logger.info(f"[統一新聞工具] 數據獲取完成，總長度: {len(combined_result)}")
+            logger.info(f"[統一新聞工具] 資料取得完成，總長度: {len(combined_result)}")
             return combined_result
 
         except Exception as e:
@@ -567,7 +567,7 @@ class Toolkit:
         curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        統一的股票情緒分析工具，使用 FinnHub 社交媒體情緒數據
+        統一的股票情緒分析工具，使用 FinnHub 社交媒體情緒資料
 
         Args:
             ticker: 股票代碼（如：AAPL、TSLA）
@@ -579,14 +579,14 @@ class Toolkit:
         logger.info(f"[統一情緒工具] 分析股票: {ticker}")
 
         try:
-            # 使用 FinnHub 情緒數據
-            logger.info(f"[統一情緒工具] 透過 FinnHub 獲取情緒數據: {ticker}")
+            # 使用 FinnHub 情緒資料
+            logger.info(f"[統一情緒工具] 透過 FinnHub 獲取情緒資料: {ticker}")
 
             try:
                 from tradingagents.dataflows.finnhub_extra import get_finnhub_sentiment_report
                 sentiment_data = get_finnhub_sentiment_report(ticker, curr_date)
             except Exception as e:
-                sentiment_data = f"FinnHub 情緒數據獲取失敗: {e}"
+                sentiment_data = f"FinnHub 情緒資料取得失敗: {e}"
 
             combined_result = f"""# {ticker} 情緒分析
 
@@ -595,10 +595,10 @@ class Toolkit:
 {sentiment_data}
 
 ---
-*數據來源: FinnHub*
+*資料來源: FinnHub*
 """
 
-            logger.info(f"[統一情緒工具] 數據獲取完成，總長度: {len(combined_result)}")
+            logger.info(f"[統一情緒工具] 資料取得完成，總長度: {len(combined_result)}")
             return combined_result
 
         except Exception as e:
@@ -613,7 +613,7 @@ class Toolkit:
         curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        取得 FinnHub 情緒量化數據，包含新聞情緒評分和社交媒體情緒分析。
+        取得 FinnHub 情緒量化資料，包含新聞情緒評分和社交媒體情緒分析。
         整合 News Sentiment（看多/看空比例、行業比較）和
         Social Sentiment（社交媒體提及次數、正負面比例）。
 
@@ -622,9 +622,9 @@ class Toolkit:
             curr_date: 當前日期（格式：YYYY-MM-DD）
 
         Returns:
-            str: 情緒量化數據報告
+            str: 情緒量化資料報告
         """
-        logger.info(f"[FinnHub情緒工具] 取得 {ticker} 的情緒數據")
+        logger.info(f"[FinnHub情緒工具] 取得 {ticker} 的情緒資料")
         return get_finnhub_sentiment_report(ticker, curr_date)
 
     @staticmethod
@@ -634,7 +634,7 @@ class Toolkit:
         curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"]
     ) -> str:
         """
-        取得華爾街分析師共識數據，包含評級分布、目標價、評級變動、
+        取得華爾街分析師共識資料，包含評級分布、目標價、評級變動、
         盈利預測（EPS/營收）、下次財報日期和同業公司列表。
 
         Args:
@@ -642,9 +642,9 @@ class Toolkit:
             curr_date: 當前日期（格式：YYYY-MM-DD）
 
         Returns:
-            str: 分析師共識數據報告
+            str: 分析師共識資料報告
         """
-        logger.info(f"[FinnHub分析師工具] 取得 {ticker} 的分析師共識數據")
+        logger.info(f"[FinnHub分析師工具] 取得 {ticker} 的分析師共識資料")
         return get_finnhub_analyst_report(ticker, curr_date)
 
     @staticmethod

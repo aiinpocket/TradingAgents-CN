@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 系統初始化腳本
-初始化數據庫配置，確保系統可以在有或沒有數據庫的情況下運行
+初始化資料庫配置，確保系統可以在有或沒有資料庫的情況下運行
 """
 
 import sys
@@ -28,14 +28,14 @@ def initialize_system():
     config_dir.mkdir(exist_ok=True)
     logger.info(f" 配置目錄: {config_dir}")
     
-    # 2. 創建數據緩存目錄
-    logger.info(f"\n 創建緩存目錄...")
+    # 2. 創建資料快取目錄
+    logger.info(f"\n 創建快取目錄...")
     cache_dir = project_root / "data" / "cache"
     cache_dir.mkdir(parents=True, exist_ok=True)
-    logger.info(f" 緩存目錄: {cache_dir}")
+    logger.info(f" 快取目錄: {cache_dir}")
     
-    # 3. 檢查並創建數據庫配置檔
-    logger.info(f"\n 配置數據庫設置...")
+    # 3. 檢查並創建資料庫配置檔
+    logger.info(f"\n 配置資料庫設置...")
     config_file = config_dir / "database_config.json"
     
     if config_file.exists():
@@ -52,8 +52,8 @@ def initialize_system():
     else:
         existing_config = None
     
-    # 4. 檢測數據庫可用性
-    logger.debug(f"\n 檢測數據庫可用性...")
+    # 4. 檢測資料庫可用性
+    logger.debug(f"\n 檢測資料庫可用性...")
     
     # 檢測MongoDB
     mongodb_available = False
@@ -88,16 +88,16 @@ def initialize_system():
     # 5. 生成配置
     logger.info(f"\n 生成系統配置...")
     
-    # 確定主要緩存後端
+    # 確定主要快取後端
     if redis_available:
         primary_backend = "redis"
-        logger.info(f" 選擇Redis作為主要緩存後端")
+        logger.info(f" 選擇Redis作為主要快取後端")
     elif mongodb_available:
         primary_backend = "mongodb"
-        logger.info(f" 選擇MongoDB作為主要緩存後端")
+        logger.info(f" 選擇MongoDB作為主要快取後端")
     else:
         primary_backend = "file"
-        logger.info(f" 選擇檔案作為主要緩存後端")
+        logger.info(f" 選擇檔案作為主要快取後端")
     
     # 創建配置
     config = {
@@ -162,19 +162,19 @@ def initialize_system():
     # 7. 測試系統
     logger.info(f"\n 測試系統初始化...")
     try:
-        # 測試數據庫管理器
+        # 測試資料庫管理器
         from tradingagents.config.database_manager import get_database_manager
         
         db_manager = get_database_manager()
         status = db_manager.get_status_report()
         
         logger.info(f" 系統狀態:")
-        logger.error(f"  數據庫可用: {' 是' if status['database_available'] else ' 否'}")
+        logger.error(f"  資料庫可用: {' 是' if status['database_available'] else ' 否'}")
         logger.error(f"  MongoDB: {' 可用' if status['mongodb']['available'] else ' 不可用'}")
         logger.error(f"  Redis: {' 可用' if status['redis']['available'] else ' 不可用'}")
-        logger.info(f"  緩存後端: {status['cache_backend']}")
+        logger.info(f"  快取後端: {status['cache_backend']}")
         
-        # 測試緩存系統
+        # 測試快取系統
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
@@ -182,13 +182,13 @@ def initialize_system():
         logger.info(f"  性能模式: {performance_mode}")
         
         # 簡單功能測試
-        test_key = cache.save_stock_data("INIT_TEST", "初始化測試數據", data_source="init")
+        test_key = cache.save_stock_data("INIT_TEST", "初始化測試資料", data_source="init")
         test_data = cache.load_stock_data(test_key)
         
-        if test_data == "初始化測試數據":
-            logger.info(f" 緩存功能測試通過")
+        if test_data == "初始化測試資料":
+            logger.info(f" 快取功能測試通過")
         else:
-            logger.error(f" 緩存功能測試失敗")
+            logger.error(f" 快取功能測試失敗")
             return False
         
     except Exception as e:
@@ -204,23 +204,23 @@ def initialize_system():
 
 ## 當前配置
 
-- **數據庫可用**: {'是' if mongodb_available or redis_available else '否'}
+- **資料庫可用**: {'是' if mongodb_available or redis_available else '否'}
 - **MongoDB**: {' 可用' if mongodb_available else ' 不可用'}
 - **Redis**: {' 可用' if redis_available else ' 不可用'}
-- **主要緩存後端**: {primary_backend}
+- **主要快取後端**: {primary_backend}
 - **性能模式**: {cache.get_performance_mode() if 'cache' in locals() else '未知'}
 
 ## 系統特性
 
 ### 自動降級支持
-- 系統會自動檢測可用的數據庫服務
-- 如果數據庫不可用，自動使用檔案緩存
+- 系統會自動檢測可用的資料庫服務
+- 如果資料庫不可用，自動使用檔案快取
 - 保證系統在任何環境下都能正常運行
 
 ### 性能優化
-- 智能緩存策略，減少API調用
-- 支持多種數據類型的TTL管理
-- 自動清理過期緩存
+- 智能快取策略，減少API調用
+- 支持多種資料類型的TTL管理
+- 自動清理過期快取
 
 ## 使用方法
 
@@ -228,13 +228,13 @@ def initialize_system():
 ```python
 from tradingagents.dataflows.integrated_cache import get_cache
 
-# 獲取緩存實例
+# 獲取快取實例
 cache = get_cache()
 
-# 保存數據
+# 保存資料
 cache_key = cache.save_stock_data("AAPL", stock_data)
 
-# 載入數據
+# 載入資料
 data = cache.load_stock_data(cache_key)
 ```
 
@@ -249,7 +249,7 @@ python scripts/validation/check_system_status.py
 
     if not mongodb_available and not redis_available:
         usage_guide += """
-### 安裝數據庫以獲得更好性能
+### 安裝資料庫以獲得更好性能
 
 1. **安裝Python依賴**:
    ```bash
@@ -274,7 +274,7 @@ python scripts/validation/check_system_status.py
     else:
         usage_guide += """
 ### 系統已優化
- 數據庫服務可用，系統運行在最佳性能模式
+ 資料庫服務可用，系統運行在最佳性能模式
 """
     
     usage_file = project_root / "SYSTEM_SETUP_GUIDE.md"
@@ -290,15 +290,15 @@ python scripts/validation/check_system_status.py
     logger.info(f" 系統初始化完成!")
     logger.info(f"\n 初始化結果:")
     logger.info(f"  配置檔:  已創建")
-    logger.info(f"  緩存目錄:  已創建")
-    logger.info(f"  數據庫檢測:  已完成")
+    logger.info(f"  快取目錄:  已創建")
+    logger.info(f"  資料庫檢測:  已完成")
     logger.info(f"  系統測試:  已通過")
     logger.info(f"  使用指南:  已生成")
     
     if mongodb_available or redis_available:
         logger.info(f"\n 系統運行在高性能模式!")
     else:
-        logger.info(f"\n 系統運行在檔案緩存模式")
+        logger.info(f"\n 系統運行在檔案快取模式")
         logger.info(f" 安裝MongoDB/Redis可獲得更好性能")
     
     logger.info(f"\n 下一步:")

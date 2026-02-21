@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Finnhub數據下載腳本
+Finnhub資料下載腳本
 
-這個腳本用於從Finnhub API下載新聞數據、內部人情緒數據和內部人交易數據。
+這個腳本用於從Finnhub API下載新聞資料、內部人情緒資料和內部人交易資料。
 支持批量下載和增量更新。
 
 使用方法:
@@ -37,7 +37,7 @@ except ImportError as e:
     sys.exit(1)
 
 class FinnhubDataDownloader:
-    """Finnhub數據下載器"""
+    """Finnhub資料下載器"""
     
     def __init__(self, api_key: str = None, data_dir: str = None):
         """
@@ -45,14 +45,14 @@ class FinnhubDataDownloader:
         
         Args:
             api_key: Finnhub API密鑰
-            data_dir: 數據存儲目錄
+            data_dir: 資料儲存目錄
         """
         # 獲取API密鑰
         self.api_key = api_key or os.getenv('FINNHUB_API_KEY')
         if not self.api_key:
             raise ValueError(" 未找到Finnhub API密鑰，請設置FINNHUB_API_KEY環境變量")
         
-        # 獲取數據目錄
+        # 獲取資料目錄
         if data_dir:
             self.data_dir = data_dir
         else:
@@ -64,12 +64,12 @@ class FinnhubDataDownloader:
                 # 使用項目根目錄下的data目錄
                 self.data_dir = str(project_root / "data")
 
-            logger.info(f" 數據目錄來源: {'環境變量' if env_data_dir else '項目根目錄'}")
+            logger.info(f" 資料目錄來源: {'環境變量' if env_data_dir else '項目根目錄'}")
         
         self.base_url = "https://finnhub.io/api/v1"
         self.session = requests.Session()
         
-        logger.info(f" 數據目錄: {self.data_dir}")
+        logger.info(f" 資料目錄: {self.data_dir}")
         logger.info(f" API密鑰: {self.api_key[:8]}...")
     
     def _make_request(self, endpoint: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -81,7 +81,7 @@ class FinnhubDataDownloader:
             params: 請求參數
             
         Returns:
-            API響應數據
+            API響應資料
         """
         params['token'] = self.api_key
         url = f"{self.base_url}/{endpoint}"
@@ -104,14 +104,14 @@ class FinnhubDataDownloader:
     
     def download_news_data(self, symbols: List[str], days: int = 7, force_refresh: bool = False):
         """
-        下載新聞數據
+        下載新聞資料
         
         Args:
             symbols: 股票代碼列表
-            days: 下載多少天的數據
+            days: 下載多少天的資料
             force_refresh: 是否強制刷新
         """
-        logger.info(f" 開始下載新聞數據，股票: {symbols}, 天數: {days}")
+        logger.info(f" 開始下載新聞資料，股票: {symbols}, 天數: {days}")
         
         # 創建目錄
         news_dir = Path(self.data_dir) / "finnhub_data" / "news_data"
@@ -122,7 +122,7 @@ class FinnhubDataDownloader:
         start_date = end_date - timedelta(days=days)
         
         for symbol in symbols:
-            logger.info(f" 下載 {symbol} 的新聞數據...")
+            logger.info(f" 下載 {symbol} 的新聞資料...")
             
             # 檢查檔案是否存在且有效
             file_path = news_dir / f"{symbol}_data_formatted.json"
@@ -138,9 +138,9 @@ class FinnhubDataDownloader:
                 except Exception as e:
                     logger.warning(f" 檢查 {symbol} 檔案狀態失敗: {e}，重新下載")
 
-            logger.info(f" 開始下載 {symbol} 的新聞數據...")
+            logger.info(f" 開始下載 {symbol} 的新聞資料...")
             
-            # 下載新聞數據
+            # 下載新聞資料
             params = {
                 'symbol': symbol,
                 'from': start_date.strftime('%Y-%m-%d'),
@@ -152,7 +152,7 @@ class FinnhubDataDownloader:
             logger.info(f" API響應類型: {type(news_data)}, 長度: {len(news_data) if isinstance(news_data, list) else 'N/A'}")
 
             if news_data and isinstance(news_data, list) and len(news_data) > 0:
-                # 格式化數據
+                # 格式化資料
                 formatted_data = []
                 for item in news_data:
                     formatted_item = {
@@ -166,7 +166,7 @@ class FinnhubDataDownloader:
                     }
                     formatted_data.append(formatted_item)
 
-                # 保存數據
+                # 保存資料
                 try:
                     with open(file_path, 'w', encoding='utf-8') as f:
                         json.dump(formatted_data, f, ensure_ascii=False, indent=2)
@@ -174,7 +174,7 @@ class FinnhubDataDownloader:
                     # 驗證檔案保存
                     if file_path.exists():
                         file_size = file_path.stat().st_size
-                        logger.info(f" {symbol} 新聞數據已保存: {len(formatted_data)} 條, 檔案大小: {file_size} 字節")
+                        logger.info(f" {symbol} 新聞資料已保存: {len(formatted_data)} 條, 檔案大小: {file_size} 字節")
                     else:
                         logger.error(f" {symbol} 檔案保存失敗，檔案不存在")
 
@@ -184,27 +184,27 @@ class FinnhubDataDownloader:
             elif news_data and isinstance(news_data, dict):
                 logger.warning(f" {symbol} API返回字典而非列表: {news_data}")
             else:
-                logger.warning(f" {symbol} 新聞數據下載失敗或為空")
+                logger.warning(f" {symbol} 新聞資料下載失敗或為空")
             
             # 避免API限制
             time.sleep(1)
     
     def download_insider_sentiment(self, symbols: List[str], force_refresh: bool = False):
         """
-        下載內部人情緒數據
+        下載內部人情緒資料
         
         Args:
             symbols: 股票代碼列表
             force_refresh: 是否強制刷新
         """
-        logger.info(f" 開始下載內部人情緒數據，股票: {symbols}")
+        logger.info(f" 開始下載內部人情緒資料，股票: {symbols}")
         
         # 創建目錄
         sentiment_dir = Path(self.data_dir) / "finnhub_data" / "insider_senti"
         sentiment_dir.mkdir(parents=True, exist_ok=True)
         
         for symbol in symbols:
-            logger.info(f" 下載 {symbol} 的內部人情緒數據...")
+            logger.info(f" 下載 {symbol} 的內部人情緒資料...")
             
             # 檢查檔案是否存在
             file_path = sentiment_dir / f"{symbol}_data_formatted.json"
@@ -212,38 +212,38 @@ class FinnhubDataDownloader:
                 logger.info(f" {symbol} 情緒資料檔案已存在，跳過下載")
                 continue
             
-            # 下載情緒數據
+            # 下載情緒資料
             params = {'symbol': symbol}
             sentiment_data = self._make_request('stock/insider-sentiment', params)
             
             if sentiment_data and 'data' in sentiment_data:
-                # 保存數據
+                # 保存資料
                 with open(file_path, 'w', encoding='utf-8') as f:
                     json.dump(sentiment_data, f, ensure_ascii=False, indent=2)
                 
-                logger.info(f" {symbol} 內部人情緒數據已保存")
+                logger.info(f" {symbol} 內部人情緒資料已保存")
             else:
-                logger.warning(f" {symbol} 內部人情緒數據下載失敗")
+                logger.warning(f" {symbol} 內部人情緒資料下載失敗")
             
             # 避免API限制
             time.sleep(1)
     
     def download_insider_transactions(self, symbols: List[str], force_refresh: bool = False):
         """
-        下載內部人交易數據
+        下載內部人交易資料
         
         Args:
             symbols: 股票代碼列表
             force_refresh: 是否強制刷新
         """
-        logger.info(f" 開始下載內部人交易數據，股票: {symbols}")
+        logger.info(f" 開始下載內部人交易資料，股票: {symbols}")
         
         # 創建目錄
         trans_dir = Path(self.data_dir) / "finnhub_data" / "insider_trans"
         trans_dir.mkdir(parents=True, exist_ok=True)
         
         for symbol in symbols:
-            logger.info(f" 下載 {symbol} 的內部人交易數據...")
+            logger.info(f" 下載 {symbol} 的內部人交易資料...")
             
             # 檢查檔案是否存在
             file_path = trans_dir / f"{symbol}_data_formatted.json"
@@ -251,30 +251,30 @@ class FinnhubDataDownloader:
                 logger.info(f" {symbol} 交易資料檔案已存在，跳過下載")
                 continue
             
-            # 下載交易數據
+            # 下載交易資料
             params = {'symbol': symbol}
             trans_data = self._make_request('stock/insider-transactions', params)
             
             if trans_data and 'data' in trans_data:
-                # 保存數據
+                # 保存資料
                 with open(file_path, 'w', encoding='utf-8') as f:
                     json.dump(trans_data, f, ensure_ascii=False, indent=2)
                 
-                logger.info(f" {symbol} 內部人交易數據已保存")
+                logger.info(f" {symbol} 內部人交易資料已保存")
             else:
-                logger.warning(f" {symbol} 內部人交易數據下載失敗")
+                logger.warning(f" {symbol} 內部人交易資料下載失敗")
             
             # 避免API限制
             time.sleep(1)
 
 def main():
     """主函數"""
-    parser = argparse.ArgumentParser(description='Finnhub數據下載腳本')
+    parser = argparse.ArgumentParser(description='Finnhub資料下載腳本')
     
     parser.add_argument('--data-type', 
                        choices=['news', 'sentiment', 'transactions', 'all'],
                        default='all',
-                       help='要下載的數據類型')
+                       help='要下載的資料類型')
     
     parser.add_argument('--symbols',
                        type=str,
@@ -284,15 +284,15 @@ def main():
     parser.add_argument('--days',
                        type=int,
                        default=7,
-                       help='下載多少天的新聞數據')
+                       help='下載多少天的新聞資料')
     
     parser.add_argument('--force-refresh',
                        action='store_true',
-                       help='強制刷新已存在的數據')
+                       help='強制刷新已存在的資料')
     
     parser.add_argument('--all',
                        action='store_true',
-                       help='下載所有類型的數據')
+                       help='下載所有類型的資料')
     
     parser.add_argument('--api-key',
                        type=str,
@@ -300,7 +300,7 @@ def main():
     
     parser.add_argument('--data-dir',
                        type=str,
-                       help='數據存儲目錄')
+                       help='資料儲存目錄')
     
     args = parser.parse_args()
     
@@ -314,18 +314,18 @@ def main():
             data_dir=args.data_dir
         )
         
-        # 確定要下載的數據類型
+        # 確定要下載的資料類型
         if args.all:
             data_types = ['news', 'sentiment', 'transactions']
         else:
             data_types = [args.data_type] if args.data_type != 'all' else ['news', 'sentiment', 'transactions']
         
-        logger.info(f" 開始下載Finnhub數據")
+        logger.info(f" 開始下載Finnhub資料")
         logger.info(f" 股票代碼: {symbols}")
-        logger.info(f" 數據類型: {data_types}")
+        logger.info(f" 資料類型: {data_types}")
         logger.info(f" 強制刷新: {args.force_refresh}")
         
-        # 下載數據
+        # 下載資料
         for data_type in data_types:
             if data_type == 'news':
                 downloader.download_news_data(symbols, args.days, args.force_refresh)
@@ -334,7 +334,7 @@ def main():
             elif data_type == 'transactions':
                 downloader.download_insider_transactions(symbols, args.force_refresh)
         
-        logger.info(" 數據下載完成！")
+        logger.info(" 資料下載完成！")
         
     except Exception as e:
         logger.error(f" 下載失敗: {e}")

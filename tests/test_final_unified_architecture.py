@@ -63,9 +63,9 @@ def test_complete_unified_architecture():
         
         # 檢查是否包含統一工具
         if 'get_stock_market_data_unified' in market_tool_names:
-            print(f"     包含統一市場數據工具")
+            print(f"     包含統一市場資料工具")
         else:
-            print(f"     缺少統一市場數據工具")
+            print(f"     缺少統一市場資料工具")
             return False
         
         print(" 完整統一工具架構測試通過")
@@ -243,7 +243,7 @@ def main():
         print(" 完全移除了舊工具註冊")
         print(" LLM只能調用統一工具")
         print(" 工具內部自動識別股票類型")
-        print(" 自動路由到正確數據源")
+        print(" 自動路由到正確資料來源")
         print(" 避免了工具調用混亂")
         print(" 簡化了系統架構")
         print(" 提高了可維護性")

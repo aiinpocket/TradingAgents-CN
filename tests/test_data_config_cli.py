@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-測試數據目錄配置CLI功能
+測試資料目錄配置CLI功能
 Test Data Directory Configuration CLI Features
 """
 
@@ -20,30 +20,30 @@ from tradingagents.dataflows.config import get_data_dir, set_data_dir, initializ
 
 def test_data_dir_configuration():
     """
-    測試數據目錄配置功能
+    測試資料目錄配置功能
     Test data directory configuration functionality
     """
-    print("\n=== 測試數據目錄配置功能 | Testing Data Directory Configuration ===")
+    print("\n=== 測試資料目錄配置功能 | Testing Data Directory Configuration ===")
     
     # 1. 測試預設配置
     print("\n1. 測試預設配置 | Testing Default Configuration")
     initialize_config()
     default_data_dir = get_data_dir()
-    print(f"預設數據目錄 | Default data directory: {default_data_dir}")
+    print(f"預設資料目錄 | Default data directory: {default_data_dir}")
     
-    # 2. 測試設置自定義數據目錄
-    print("\n2. 測試設置自定義數據目錄 | Testing Custom Data Directory")
+    # 2. 測試設置自定義資料目錄
+    print("\n2. 測試設置自定義資料目錄 | Testing Custom Data Directory")
     with tempfile.TemporaryDirectory() as temp_dir:
         custom_data_dir = os.path.join(temp_dir, "custom_trading_data")
-        print(f"設置自定義數據目錄 | Setting custom data directory: {custom_data_dir}")
+        print(f"設置自定義資料目錄 | Setting custom data directory: {custom_data_dir}")
         
         set_data_dir(custom_data_dir)
         current_data_dir = get_data_dir()
-        print(f"當前數據目錄 | Current data directory: {current_data_dir}")
+        print(f"當前資料目錄 | Current data directory: {current_data_dir}")
         
         # 驗證目錄是否創建
         if os.path.exists(custom_data_dir):
-            print(" 自定義數據目錄創建成功 | Custom data directory created successfully")
+            print(" 自定義資料目錄創建成功 | Custom data directory created successfully")
             
             # 檢查子目錄結構
             expected_subdirs = [
@@ -60,7 +60,7 @@ def test_data_dir_configuration():
                 else:
                     print(f"   子目錄缺失 | Subdirectory missing: {subdir}")
         else:
-            print(" 自定義數據目錄創建失敗 | Custom data directory creation failed")
+            print(" 自定義資料目錄創建失敗 | Custom data directory creation failed")
     
     # 3. 測試環境變量配置
     print("\n3. 測試環境變量配置 | Testing Environment Variable Configuration")
@@ -74,7 +74,7 @@ def test_data_dir_configuration():
         # 重新初始化配置以讀取環境變量
         initialize_config()
         env_current_data_dir = get_data_dir()
-        print(f"環境變量數據目錄 | Environment variable data directory: {env_current_data_dir}")
+        print(f"環境變量資料目錄 | Environment variable data directory: {env_current_data_dir}")
         
         if env_current_data_dir == env_data_dir:
             print(" 環境變量配置生效 | Environment variable configuration effective")
@@ -97,7 +97,7 @@ def test_data_dir_configuration():
     config_manager.ensure_directories_exist()
     print(" 目錄自動創建功能測試完成 | Auto directory creation test completed")
     
-    print("\n=== 數據目錄配置測試完成 | Data Directory Configuration Test Completed ===")
+    print("\n=== 資料目錄配置測試完成 | Data Directory Configuration Test Completed ===")
 
 def test_cli_commands():
     """
@@ -112,7 +112,7 @@ def test_cli_commands():
     print("   python -m cli.main data-config")
     print("   python -m cli.main data-config --show")
     print()
-    print("2. 設置自定義數據目錄 | Set custom data directory:")
+    print("2. 設置自定義資料目錄 | Set custom data directory:")
     print("   python -m cli.main data-config --set C:\\custom\\trading\\data")
     print()
     print("3. 重置為預設配置 | Reset to default configuration:")
@@ -129,7 +129,7 @@ def main():
     主測試函數
     Main test function
     """
-    print("數據目錄配置功能測試 | Data Directory Configuration Feature Test")
+    print("資料目錄配置功能測試 | Data Directory Configuration Feature Test")
     print("=" * 70)
     
     try:
@@ -141,7 +141,7 @@ def main():
         
         print("\n 所有測試完成！| All tests completed!")
         print("\n 總結 | Summary:")
-        print(" 數據目錄配置功能已實現 | Data directory configuration feature implemented")
+        print(" 資料目錄配置功能已實現 | Data directory configuration feature implemented")
         print(" 支持自定義路徑設置 | Custom path setting supported")
         print(" 支持環境變量配置 | Environment variable configuration supported")
         print(" 集成配置管理器 | Configuration manager integrated")

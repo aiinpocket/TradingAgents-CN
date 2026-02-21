@@ -33,7 +33,7 @@ def get_data_in_range(ticker, start_date, end_date, data_type, data_dir, period=
     try:
         if not os.path.exists(data_path):
             logger.warning(f"資料檔案不存在: {data_path}")
-            logger.warning("請確保已下載相關數據或檢查數據目錄配置")
+            logger.warning("請確保已下載相關資料或檢查資料目錄配置")
             return {}
         
         with open(data_path, "r", encoding="utf-8") as f:

@@ -12,7 +12,7 @@ from datetime import datetime
 def test_markdown_content():
     """生成測試用的Markdown內容"""
     
-    # 模擬真實的分析結果數據
+    # 模擬真實的分析結果資料
     test_content = """# 605499 股票分析報告
 
 **生成時間**: 2025-01-12 16:20:00  

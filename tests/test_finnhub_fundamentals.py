@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試Finnhub基本面數據獲取功能、OpenAI fallback機制和緩存功能
+測試Finnhub基本面資料取得功能、OpenAI fallback機制和快取功能
 """
 
 import os
@@ -24,57 +24,57 @@ def test_finnhub_api_key():
         return False
 
 def test_finnhub_fundamentals_with_cache():
-    """測試Finnhub基本面數據獲取和緩存功能"""
-    print("\n 測試Finnhub基本面數據獲取和緩存功能...")
+    """測試Finnhub基本面資料取得和快取功能"""
+    print("\n 測試Finnhub基本面資料取得和快取功能...")
     
     try:
         from tradingagents.dataflows.interface import get_fundamentals_finnhub
         from tradingagents.dataflows.cache_manager import get_cache
         
-        # 清理可能存在的緩存
+        # 清理可能存在的快取
         cache = get_cache()
         test_ticker = "AAPL"
         curr_date = datetime.now().strftime('%Y-%m-%d')
         
-        print(f"\n 第一次獲取 {test_ticker} 的基本面數據（從API獲取）...")
+        print(f"\n 第一次獲取 {test_ticker} 的基本面資料（從API獲取）...")
         start_time = time.time()
         result1 = get_fundamentals_finnhub(test_ticker, curr_date)
         first_time = time.time() - start_time
         
         if result1 and len(result1) > 100:
-            print(f" {test_ticker} 基本面數據獲取成功，長度: {len(result1)}")
+            print(f" {test_ticker} 基本面資料取得成功，長度: {len(result1)}")
             print(f" 第一次獲取耗時: {first_time:.2f}秒")
-            print(f" 數據預覽: {result1[:200]}...")
+            print(f" 資料預覽: {result1[:200]}...")
             
-            # 第二次獲取，應該從緩存讀取
-            print(f"\n 第二次獲取 {test_ticker} 的基本面數據（從緩存獲取）...")
+            # 第二次獲取，應該從快取讀取
+            print(f"\n 第二次獲取 {test_ticker} 的基本面資料（從快取獲取）...")
             start_time = time.time()
             result2 = get_fundamentals_finnhub(test_ticker, curr_date)
             second_time = time.time() - start_time
             
             print(f" 第二次獲取耗時: {second_time:.2f}秒")
             
-            # 驗證緩存效果
+            # 驗證快取效果
             if second_time < first_time and result1 == result2:
-                print(f" 緩存功能正常！速度提升了 {((first_time - second_time) / first_time * 100):.1f}%")
+                print(f" 快取功能正常！速度提升了 {((first_time - second_time) / first_time * 100):.1f}%")
                 return True
             else:
-                print(f" 緩存可能未生效")
+                print(f" 快取可能未生效")
                 return False
         else:
-            print(f" {test_ticker} 基本面數據獲取失敗或數據過短")
+            print(f" {test_ticker} 基本面資料取得失敗或資料過短")
             print(f" 返回內容: {result1}")
             return False
         
     except Exception as e:
-        print(f" Finnhub基本面數據測試失敗: {str(e)}")
+        print(f" Finnhub基本面資料測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_openai_fallback_with_cache():
-    """測試OpenAI fallback機制和緩存功能"""
-    print("\n 測試OpenAI fallback機制和緩存功能...")
+    """測試OpenAI fallback機制和快取功能"""
+    print("\n 測試OpenAI fallback機制和快取功能...")
     
     try:
         from tradingagents.dataflows.interface import get_fundamentals_openai
@@ -94,30 +94,30 @@ def test_openai_fallback_with_cache():
         curr_date = datetime.now().strftime('%Y-%m-%d')
         test_ticker = "MSFT"
         
-        print(f"\n 第一次通過OpenAI接口獲取 {test_ticker} 數據（應fallback到Finnhub）...")
+        print(f"\n 第一次通過OpenAI接口獲取 {test_ticker} 資料（應fallback到Finnhub）...")
         start_time = time.time()
         result1 = get_fundamentals_openai(test_ticker, curr_date)
         first_time = time.time() - start_time
         
         if result1 and "Finnhub" in result1:
             print(" OpenAI fallback機制工作正常，成功回退到Finnhub API")
-            print(f" 數據長度: {len(result1)}")
+            print(f" 資料長度: {len(result1)}")
             print(f" 第一次獲取耗時: {first_time:.2f}秒")
             
-            # 第二次獲取，應該從緩存讀取
-            print(f"\n 第二次通過OpenAI接口獲取 {test_ticker} 數據（應從緩存獲取）...")
+            # 第二次獲取，應該從快取讀取
+            print(f"\n 第二次通過OpenAI接口獲取 {test_ticker} 資料（應從快取獲取）...")
             start_time = time.time()
             result2 = get_fundamentals_openai(test_ticker, curr_date)
             second_time = time.time() - start_time
             
             print(f" 第二次獲取耗時: {second_time:.2f}秒")
             
-            # 驗證緩存效果
+            # 驗證快取效果
             if second_time < first_time and result1 == result2:
-                print(f" fallback + 緩存功能正常！速度提升了 {((first_time - second_time) / first_time * 100):.1f}%")
+                print(f" fallback + 快取功能正常！速度提升了 {((first_time - second_time) / first_time * 100):.1f}%")
                 success = True
             else:
-                print(f" 緩存可能未生效")
+                print(f" 快取可能未生效")
                 success = False
         else:
             print(" OpenAI fallback機制可能有問題")
@@ -139,20 +139,20 @@ def test_openai_fallback_with_cache():
         return False
 
 def test_cache_management():
-    """測試緩存管理功能"""
-    print("\n 測試緩存管理功能...")
+    """測試快取管理功能"""
+    print("\n 測試快取管理功能...")
     
     try:
         from tradingagents.dataflows.cache_manager import get_cache
         
         cache = get_cache()
         
-        # 獲取緩存統計
+        # 獲取快取統計
         stats = cache.get_cache_stats()
-        print(f" 當前緩存統計: {stats}")
+        print(f" 當前快取統計: {stats}")
         
-        # 檢查緩存配置
-        print(f"\n 基本面數據緩存配置:")
+        # 檢查快取配置
+        print(f"\n 基本面資料快取配置:")
         for cache_type, config in cache.cache_config.items():
             if 'fundamentals' in cache_type:
                 print(f"  - {cache_type}: TTL={config['ttl_hours']}小時, 最大檔案數={config['max_files']}, 描述={config['description']}")
@@ -160,14 +160,14 @@ def test_cache_management():
         return True
         
     except Exception as e:
-        print(f" 緩存管理測試失敗: {str(e)}")
+        print(f" 快取管理測試失敗: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
 
 def main():
     """主測試函數"""
-    print(" 開始Finnhub基本面數據功能和緩存測試")
+    print(" 開始Finnhub基本面資料功能和快取測試")
     print("=" * 60)
     
     # 檢查環境
@@ -177,9 +177,9 @@ def main():
     # 運行測試
     tests = [
         ("Finnhub API密鑰檢查", test_finnhub_api_key),
-        ("Finnhub基本面數據獲取和緩存", test_finnhub_fundamentals_with_cache),
-        ("OpenAI fallback機制和緩存", test_openai_fallback_with_cache),
-        ("緩存管理功能", test_cache_management),
+        ("Finnhub基本面資料取得和快取", test_finnhub_fundamentals_with_cache),
+        ("OpenAI fallback機制和快取", test_openai_fallback_with_cache),
+        ("快取管理功能", test_cache_management),
     ]
     
     results = []
@@ -203,14 +203,14 @@ def main():
     print(f"\n 測試完成: {passed}/{total} 個測試通過")
     
     if passed == total:
-        print(" 所有測試都通過了！Finnhub基本面數據功能和緩存系統正常工作。")
+        print(" 所有測試都通過了！Finnhub基本面資料功能和快取系統正常工作。")
         print("\n 功能特性:")
         print("1.  當OpenAI配置不可用時，系統會自動使用Finnhub API")
-        print("2.  Finnhub提供官方財務數據，包括PE、PS、ROE等關鍵指標")
-        print("3.  數據來源於公司財報和SEC檔案，具有較高的可靠性")
-        print("4. 支持智能緩存機制，美股基本面數據緩存24小時")
-        print("5.  緩存按市場類型分類存儲，提高查找效率")
-        print("6.  自動檢測緩存有效性，過期數據會重新獲取")
+        print("2.  Finnhub提供官方財務資料，包括PE、PS、ROE等關鍵指標")
+        print("3.  資料來源於公司財報和SEC檔案，具有較高的可靠性")
+        print("4. 支持智能快取機制，美股基本面資料快取24小時")
+        print("5.  快取按市場類型分類存儲，提高查找效率")
+        print("6.  自動檢測快取有效性，過期資料會重新獲取")
     else:
         print(" 部分測試失敗，請檢查相關配置。")
 

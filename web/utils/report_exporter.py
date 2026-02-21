@@ -155,7 +155,7 @@ class ReportExporter:
         # 生成時間戳
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        # 清理關鍵數據
+        # 清理關鍵資料
         action = self._clean_text_for_markdown(decision.get('action', 'N/A')).upper()
         target_price = self._clean_text_for_markdown(decision.get('target_price', 'N/A'))
         reasoning = self._clean_text_for_markdown(decision.get('reasoning', '暫無分析推理'))
@@ -199,7 +199,7 @@ class ReportExporter:
         # 添加各個分析模塊的內容 - 與CLI端保持一致的完整結構
         analysis_modules = [
             ('market_report', '市場技術分析', '技術指標、價格趨勢、支撐阻力位分析'),
-            ('fundamentals_report', '基本面分析', '財務數據、估值水平、盈利能力分析'),
+            ('fundamentals_report', '基本面分析', '財務資料、估值水平、盈利能力分析'),
             ('sentiment_report', '市場情緒分析', '投資者情緒、社交媒體情緒指標'),
             ('news_report', '新聞事件分析', '相關新聞事件、市場動態影響分析'),
             ('risk_assessment', '風險評估', '風險因素識別、風險等級評估'),
@@ -221,7 +221,7 @@ class ReportExporter:
                 else:
                     md_content += f"{content}\n\n"
             else:
-                md_content += "暫無數據\n\n"
+                md_content += "暫無資料\n\n"
 
         # 添加團隊決策報告部分 - 與CLI端保持一致
         md_content = self._add_team_decision_reports(md_content, state)
@@ -337,22 +337,6 @@ class ReportExporter:
             logger.info(f"pypandoc參數: {extra_args} (禁用YAML解析)")
 
             logger.info("使用pypandoc將markdown轉換為docx...")
-
-            # 調試：保存實際的Markdown內容
-            debug_file = '/app/debug_markdown.md'
-            try:
-                with open(debug_file, 'w', encoding='utf-8') as f:
-                    f.write(md_content)
-                logger.info(f"實際Markdown內容已保存到: {debug_file}")
-                logger.info(f"內容長度: {len(md_content)} 字符")
-
-                # 顯示前几行內容
-                lines = md_content.split('\n')[:5]
-                logger.info("前5行內容:")
-                for i, line in enumerate(lines, 1):
-                    logger.info(f"{i}: {repr(line)}")
-            except Exception as e:
-                logger.error(f"保存除錯檔案失敗: {e}")
 
             # 清理內容避免YAML解析問題
             cleaned_content = self._clean_markdown_for_pandoc(md_content)
@@ -528,13 +512,13 @@ class ReportExporter:
                 return content
 
             else:
-                logger.error(f"不支持的匯出格式: {format_type}")
-                st.error(f"不支持的匯出格式: {format_type}")
+                logger.error(f"不支援的匯出格式: {format_type}")
+                st.error(f"不支援的匯出格式: {format_type}")
                 return None
 
         except Exception as e:
             logger.error(f"匯出失敗: {str(e)}", exc_info=True)
-            st.error(f"匯出失敗: {str(e)}")
+            st.error("匯出失敗，請稍後再試或改用 Markdown 格式匯出。")
             return None
 
 

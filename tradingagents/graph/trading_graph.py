@@ -156,7 +156,7 @@ class TradingAgentsGraph:
                 [
                     # 新聞情緒工具
                     self.toolkit.get_stock_news_openai,
-                    # FinnHub 情緒量化數據
+                    # FinnHub 情緒量化資料
                     self.toolkit.get_finnhub_sentiment_data,
                 ]
             ),
@@ -166,7 +166,7 @@ class TradingAgentsGraph:
                     self.toolkit.get_global_news_openai,
                     self.toolkit.get_google_news,
                     self.toolkit.get_finnhub_news,
-                    # FinnHub 情緒量化數據
+                    # FinnHub 情緒量化資料
                     self.toolkit.get_finnhub_sentiment_data,
                 ]
             ),

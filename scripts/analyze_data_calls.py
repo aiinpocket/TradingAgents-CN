@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-數據獲取調用分析工具
-專門分析數據獲取相關的日誌，提供詳細的調用統計和性能分析
+資料取得調用分析工具
+專門分析資料取得相關的日誌，提供詳細的調用統計和性能分析
 """
 
 import json
@@ -20,7 +20,7 @@ logger = get_logger('scripts')
 
 
 class DataCallAnalyzer:
-    """數據獲取調用分析器"""
+    """資料取得調用分析器"""
     
     def __init__(self, log_file: Path):
         self.log_file = log_file
@@ -34,7 +34,7 @@ class DataCallAnalyzer:
             logger.error(f" 日誌檔案不存在: {self.log_file}")
             return
             
-        logger.info(f" 解析數據獲取日誌: {self.log_file}")
+        logger.info(f" 解析資料取得日誌: {self.log_file}")
         
         with open(self.log_file, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
@@ -54,7 +54,7 @@ class DataCallAnalyzer:
                 # 解析普通日誌
                 self._process_regular_log(line, line_num)
         
-        logger.info(f" 解析完成: {len(self.data_calls)} 條數據調用, {len(self.tool_calls)} 條工具調用, {len(self.data_source_calls)} 條數據源調用")
+        logger.info(f" 解析完成: {len(self.data_calls)} 條資料呼叫, {len(self.tool_calls)} 條工具調用, {len(self.data_source_calls)} 條資料來源調用")
     
     def _process_structured_entry(self, entry: Dict[str, Any], line_num: int):
         """處理結構化日誌條目"""
@@ -110,11 +110,11 @@ class DataCallAnalyzer:
     
     def _process_regular_log(self, line: str, line_num: int):
         """處理普通日誌行"""
-        # 匹配數據獲取相關的日誌
+        # 匹配資料取得相關的日誌
         patterns = [
-            (r'.*\[數據獲取\].*symbol=(\w+).*start_date=([^,]+).*end_date=([^,]+)', 'data_fetch'),
+            (r'.*\[資料取得\].*symbol=(\w+).*start_date=([^,]+).*end_date=([^,]+)', 'data_fetch'),
             (r'.*\[工具調用\].*(\w+)', 'tool_call'),
-            (r'.*\[統一接口\].*獲取(\w+)股票數據', 'unified_call'),
+            (r'.*\[統一接口\].*獲取(\w+)股票資料', 'unified_call'),
             (r'.*\[(YFinance|FinnHub)\].*調用參數.*symbol=(\w+)', 'data_source_call')
         ]
         
@@ -155,8 +155,8 @@ class DataCallAnalyzer:
                 break
     
     def analyze_data_calls(self) -> Dict[str, Any]:
-        """分析數據獲取調用"""
-        logger.info(f"\n 數據獲取調用分析")
+        """分析資料取得調用"""
+        logger.info(f"\n 資料取得調用分析")
         logger.info(f"=")
         
         analysis = {
@@ -186,7 +186,7 @@ class DataCallAnalyzer:
             if symbol:
                 analysis['by_symbol'][symbol] += 1
             
-            # 統計數據源
+            # 統計資料來源
             data_source = call.get('data_source')
             if data_source:
                 analysis['by_data_source'][data_source] += 1
@@ -243,7 +243,7 @@ class DataCallAnalyzer:
                 logger.info(f"  - {symbol}: {count} 次")
         
         if analysis['by_data_source']:
-            logger.info(f"\n 按數據源統計:")
+            logger.info(f"\n 按資料來源統計:")
             for source, count in Counter(analysis['by_data_source']).most_common():
                 logger.info(f"  - {source}: {count} 次")
         
@@ -307,24 +307,24 @@ class DataCallAnalyzer:
     
     def generate_report(self) -> str:
         """生成分析報告"""
-        logger.info(f"\n 生成數據獲取分析報告")
+        logger.info(f"\n 生成資料取得分析報告")
         logger.info(f"=")
         
         data_analysis = self.analyze_data_calls()
         tool_analysis = self.analyze_tool_calls()
         
         report = f"""
-# 數據獲取調用分析報告
+# 資料取得調用分析報告
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 日誌檔案: {self.log_file}
 
 ## 概覽
-- 數據獲取調用: {data_analysis['total_calls']}
+- 資料取得調用: {data_analysis['total_calls']}
 - 工具調用: {tool_analysis['total_calls']}
-- 數據源調用: {len(self.data_source_calls)}
+- 資料來源調用: {len(self.data_source_calls)}
 
-## 數據獲取性能
+## 資料取得性能
 - 總耗時: {data_analysis['performance']['total_duration']:.2f}s
 - 平均耗時: {data_analysis['performance']['avg_duration']:.2f}s
 - 慢調用數量: {len(data_analysis['performance']['slow_calls'])}
@@ -339,10 +339,10 @@ class DataCallAnalyzer:
         
         # 添加建議
         if data_analysis['performance']['avg_duration'] > 3.0:
-            report += "-  平均數據獲取時間較長，建議優化緩存策略\n"
+            report += "-  平均資料取得時間較長，建議優化快取策略\n"
         
         if data_analysis['success_rate']['error'] > 0:
-            report += f"-  發現 {data_analysis['success_rate']['error']} 個數據獲取錯誤，建議檢查數據源配置\n"
+            report += f"-  發現 {data_analysis['success_rate']['error']} 個資料取得錯誤，建議檢查資料來源配置\n"
         
         if len(data_analysis['performance']['slow_calls']) > 5:
             report += "-  慢調用較多，建議分析網絡連接和API限制\n"
@@ -351,7 +351,7 @@ class DataCallAnalyzer:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='數據獲取調用分析工具')
+    parser = argparse.ArgumentParser(description='資料取得調用分析工具')
     parser.add_argument('log_file', help='日誌檔案路徑')
     parser.add_argument('--output', '-o', help='輸出報告檔案路徑')
     parser.add_argument('--format', choices=['text', 'json'], default='text', help='輸出格式')

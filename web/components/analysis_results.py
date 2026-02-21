@@ -79,7 +79,7 @@ def save_favorites(favorites):
         return False
 
 def load_tags():
-    """載入標籤數據"""
+    """載入標籤資料"""
     tags_file = get_tags_file()
     if tags_file.exists():
         try:
@@ -90,7 +90,7 @@ def load_tags():
     return {}
 
 def save_tags(tags):
-    """保存標籤數據"""
+    """保存標籤資料"""
     tags_file = get_tags_file()
     try:
         with open(tags_file, 'w', encoding='utf-8') as f:
@@ -130,13 +130,13 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
     tags_data = load_tags()
     mongodb_loaded = False
 
-    # 優先從MongoDB載入數據
+    # 優先從MongoDB載入資料
     if MONGODB_AVAILABLE:
         try:
-            logger.debug("[數據載入] 從MongoDB載入分析結果")
+            logger.debug("[資料載入] 從MongoDB載入分析結果")
             mongodb_manager = MongoDBReportManager()
             mongodb_results = mongodb_manager.get_all_reports()
-            logger.debug(f"[數據載入] MongoDB返回 {len(mongodb_results)} 個結果")
+            logger.debug(f"[資料載入] MongoDB返回 {len(mongodb_results)} 個結果")
 
             for mongo_result in mongodb_results:
                 # 轉換MongoDB結果格式
@@ -152,7 +152,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                     'tags': tags_data.get(mongo_result.get('analysis_id', ''), []),
                     'is_favorite': mongo_result.get('analysis_id', '') in favorites,
                     'reports': mongo_result.get('reports', {}),
-                    'source': 'mongodb'# 標記數據來源
+                    'source': 'mongodb'# 標記資料來源
                 }
                 all_results.append(result)
 
@@ -164,11 +164,11 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
             logger.error(f"MongoDB載入失敗: {e}")
             mongodb_loaded = False
     else:
-        logger.info("MongoDB不可用，將使用檔案系統數據")
+        logger.info("MongoDB不可用，將使用檔案系統資料")
 
     # 只有在MongoDB載入失敗或不可用時才從檔案系統載入
     if not mongodb_loaded:
-        logger.debug("[備用數據源] 從檔案系統載入分析結果")
+        logger.debug("[備用資料來源] 從檔案系統載入分析結果")
 
         # 首先嘗試從Web界面的保存位置讀取
         web_results_dir = get_analysis_results_dir()
@@ -183,7 +183,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                     # 添加標籤資訊
                     result['tags'] = tags_data.get(result.get('analysis_id', ''), [])
                     result['is_favorite'] = result.get('analysis_id', '') in favorites
-                    result['source'] = 'file_system'# 標記數據來源
+                    result['source'] = 'file_system'# 標記資料來源
 
                     all_results.append(result)
             except Exception as e:
@@ -279,12 +279,12 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                             'tags': tags_data.get(analysis_id, []),
                             'is_favorite': analysis_id in favorites,
                             'reports': reports, # 保存所有報告內容
-                            'source': 'file_system'# 標記數據來源
+                            'source': 'file_system'# 標記資料來源
                         }
 
                         all_results.append(result)
 
-        logger.debug(f"[備用數據源] 從檔案系統載入了 {len(all_results)} 個分析結果")
+        logger.debug(f"[備用資料來源] 從檔案系統載入了 {len(all_results)} 個分析結果")
     
     # 過濾結果
     filtered_results = []
@@ -368,7 +368,7 @@ def render_analysis_results():
         analyst_filter = st.selectbox(
             "分析師類型",
             ["全部", "market_analyst", "social_media_analyst", "news_analyst", "fundamental_analyst"],
-            help="社交媒體分析師透過 FinnHub 情緒數據分析美股市場情緒"
+            help="社交媒體分析師透過 FinnHub 情緒資料分析美股市場情緒"
         )
         
         if analyst_filter == "全部":
@@ -462,7 +462,7 @@ def render_results_list(results: List[Dict[str, Any]]):
 def render_results_table(results: List[Dict[str, Any]]):
     """渲染表格視圖"""
     
-    # 準備表格數據
+    # 準備表格資料
     table_data = []
     for result in results:
         table_data.append({
@@ -491,7 +491,7 @@ def render_results_cards(results: List[Dict[str, Any]]):
     else:
         page = 0
     
-    # 獲取當前頁數據
+    # 獲取當前頁資料
     start_idx = page * page_size
     end_idx = min(start_idx + page_size, len(results))
     page_results = results[start_idx:end_idx]
@@ -787,7 +787,7 @@ def render_results_export(results: List[Dict[str, Any]]):
         return
     
     # 匯出選項
-    export_type = st.selectbox("選擇匯出內容", ["摘要資訊", "完整數據"])
+    export_type = st.selectbox("選擇匯出內容", ["摘要資訊", "完整資料"])
     export_format = st.selectbox("選擇匯出格式", ["CSV", "JSON", "Excel"])
     
     if st.button("匯出結果"):
@@ -843,18 +843,18 @@ def render_results_export(results: List[Dict[str, Any]]):
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
             
-            else: # 完整數據
+            else: # 完整資料
                 if export_format == "JSON":
                     json_data = json.dumps(results, ensure_ascii=False, indent=2)
                     
                     st.download_button(
-                        label="下載完整數據 JSON 檔案",
+                        label="下載完整資料 JSON 檔案",
                         data=json_data,
                         file_name=f"analysis_full_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                         mime="application/json"
                     )
                 else:
-                    st.warning("完整數據只支持 JSON 格式匯出")
+                    st.warning("完整資料只支持 JSON 格式匯出")
             
             st.success(f"{export_format} 檔案準備完成，請點擊下載按鈕")
             
@@ -1066,7 +1066,7 @@ def render_detailed_analysis(results: List[Dict[str, Any]]):
     st.subheader("詳細分析")
     
     if not results:
-        st.info("沒有可分析的數據")
+        st.info("沒有可分析的資料")
         return
     
     # 選擇要查看的分析結果
@@ -1129,9 +1129,9 @@ def render_detailed_analysis(results: List[Dict[str, Any]]):
 
 def render_detailed_analysis_content(selected_result):
     """渲染詳細分析結果內容"""
-    st.subheader("完整分析數據")
+    st.subheader("完整分析資料")
 
-    # 檢查是否有報告數據（支持檔案系統和MongoDB）
+    # 檢查是否有報告資料（支持檔案系統和MongoDB）
     if 'reports'in selected_result and selected_result['reports']:
         # 顯示檔案系統中的報告
         reports = selected_result['reports']
@@ -1141,7 +1141,7 @@ def render_detailed_analysis_content(selected_result):
             return
         
         # 除錯資訊：顯示所有可用的報告
-        logger.debug(f"[彈窗調試] 數據來源: {selected_result.get('source', '未知')}")
+        logger.debug(f"[彈窗調試] 資料來源: {selected_result.get('source', '未知')}")
         logger.debug(f"[彈窗調試] 可用報告數量: {len(reports)}")
         logger.debug(f"[彈窗調試] 報告類型: {list(reports.keys())}")
 
@@ -1197,7 +1197,7 @@ def render_detailed_analysis_content(selected_result):
             'key': 'fundamentals_report',
             'title': '基本面分析',
             'icon': '',
-            'description': '財務數據、估值水平、盈利能力分析'
+            'description': '財務資料、估值水平、盈利能力分析'
         },
         {
             'key': 'sentiment_report',
@@ -1249,11 +1249,11 @@ def render_detailed_analysis_content(selected_result):
         }
     ]
     
-    # 過濾出有數據的模塊
+    # 過濾出有資料的模塊
     available_modules = []
     for module in analysis_modules:
         if module['key'] in selected_result and selected_result[module['key']]:
-            # 檢查字典類型的數據是否有實際內容
+            # 檢查字典類型的資料是否有實際內容
             if isinstance(selected_result[module['key']], dict):
                 # 對於字典，檢查是否有非空的值
                 has_content = any(v for v in selected_result[module['key']].values() if v)
@@ -1264,15 +1264,15 @@ def render_detailed_analysis_content(selected_result):
                 available_modules.append(module)
 
     if not available_modules:
-        # 如果沒有預定義模塊的數據，顯示所有可用的分析數據
-        st.info("顯示完整分析報告數據")
+        # 如果沒有預定義模塊的資料，顯示所有可用的分析資料
+        st.info("顯示完整分析報告資料")
         
-        # 排除一些基礎字段，只顯示分析相關的數據
+        # 排除一些基礎字段，只顯示分析相關的資料
         excluded_keys = {'analysis_id', 'timestamp', 'stock_symbol', 'analysts', 
                         'research_depth', 'status', 'summary', 'performance', 
                         'is_favorite', 'tags', 'full_data'}
         
-        # 獲取所有分析相關的數據
+        # 獲取所有分析相關的資料
         analysis_data = {}
         for key, value in selected_result.items():
             if key not in excluded_keys and value:
@@ -1287,7 +1287,7 @@ def render_detailed_analysis_content(selected_result):
                         analysis_data[key] = value
         
         if analysis_data:
-            # 創建動態標籤頁顯示所有分析數據
+            # 創建動態標籤頁顯示所有分析資料
             tab_names = []
             tab_data = []
             
@@ -1316,7 +1316,7 @@ def render_detailed_analysis_content(selected_result):
                     st.markdown(f"## {tab_names[i]}")
                     st.markdown("---")
                     
-                    # 根據數據類型顯示內容
+                    # 根據資料類型顯示內容
                     if isinstance(value, str):
                         # 如果是長文本，使用markdown顯示
                         if len(value) > 100:
@@ -1344,13 +1344,13 @@ def render_detailed_analysis_content(selected_result):
                         # 其他類型直接顯示
                         st.write(value)
         else:
-            # 如果真的沒有任何分析數據，顯示原始JSON
-            st.warning("該分析結果暫無詳細報告數據")
-            with st.expander("查看原始數據"):
+            # 如果真的沒有任何分析資料，顯示原始JSON
+            st.warning("該分析結果暫無詳細報告資料")
+            with st.expander("查看原始資料"):
                 st.json(selected_result)
         return
 
-    # 只為有數據的模塊創建標籤頁
+    # 只為有資料的模塊創建標籤頁
     tabs = st.tabs([module['title'] for module in available_modules])
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
@@ -1446,7 +1446,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                 logger.debug(f"[MongoDB保存] 開始保存分析結果: {analysis_id}")
                 mongodb_manager = MongoDBReportManager()
 
-                # 使用標準的save_analysis_report方法，確保數據結構一致
+                # 使用標準的save_analysis_report方法，確保資料結構一致
                 analysis_results = {
                     'stock_symbol': result_entry.get('stock_symbol', ''),
                     'analysts': result_entry.get('analysts', []),
@@ -1523,9 +1523,9 @@ def show_expanded_detail(result):
         st.markdown("---")
         st.markdown("### 詳細分析報告")
 
-        # 檢查是否有報告數據
+        # 檢查是否有報告資料
         if 'reports'not in result or not result['reports']:
-            # 如果沒有reports字段，檢查是否有其他分析數據
+            # 如果沒有reports字段，檢查是否有其他分析資料
             if result.get('summary'):
                 st.subheader("分析摘要")
                 st.markdown(result['summary'])
@@ -1574,7 +1574,7 @@ def show_expanded_detail(result):
                 st.info("暫無詳細分析報告")
             return
 
-        # 獲取報告數據
+        # 獲取報告資料
         reports = result['reports']
 
         # 為報告名稱添加中文標題和圖標

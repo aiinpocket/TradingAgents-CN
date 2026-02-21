@@ -25,13 +25,13 @@ def display_unified_progress(analysis_id: str, show_refresh_controls: bool = Tru
 
     progress_data = get_progress_by_id(analysis_id)
 
-    # 無進度數據時顯示初始狀態
+    # 無進度資料時顯示初始狀態
     if not progress_data:
         st.info("**當前狀態**: 準備開始分析...")
         _render_refresh_controls(analysis_id, 'initializing', show_refresh_controls)
         return False
 
-    # 解析進度數據
+    # 解析進度資料
     status = progress_data.get('status', 'running')
     current_step = progress_data.get('current_step', 0)
     current_step_name = progress_data.get('current_step_name', '準備階段')

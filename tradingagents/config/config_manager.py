@@ -245,7 +245,7 @@ class ConfigManager:
         
         # 預設設置
         if not self.settings_file.exists():
-            # 匯入預設數據目錄配置
+            # 匯入預設資料目錄配置
             import os
             default_data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
             
@@ -439,8 +439,8 @@ class ConfigManager:
             "finnhub_api_key": os.getenv("FINNHUB_API_KEY", ""),
             "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", ""),
             "log_level": os.getenv("TRADINGAGENTS_LOG_LEVEL", "INFO"),
-            "data_dir": os.getenv("TRADINGAGENTS_DATA_DIR", ""),  # 數據目錄環境變量
-            "cache_dir": os.getenv("TRADINGAGENTS_CACHE_DIR", ""),  # 緩存目錄環境變量
+            "data_dir": os.getenv("TRADINGAGENTS_DATA_DIR", ""),  # 資料目錄環境變量
+            "cache_dir": os.getenv("TRADINGAGENTS_CACHE_DIR", ""),  # 快取目錄環境變量
         }
 
         # 添加OpenAI相關配置
@@ -529,7 +529,7 @@ class ConfigManager:
             except Exception as e:
                 continue
         
-        # 統計數據
+        # 統計資料
         total_cost = sum(record.cost for record in recent_records)
         total_input_tokens = sum(record.input_tokens for record in recent_records)
         total_output_tokens = sum(record.output_tokens for record in recent_records)
@@ -560,7 +560,7 @@ class ConfigManager:
         }
     
     def get_data_dir(self) -> str:
-        """獲取數據目錄路徑"""
+        """獲取資料目錄路徑"""
         settings = self.load_settings()
         data_dir = settings.get("data_dir")
         if not data_dir:
@@ -569,10 +569,10 @@ class ConfigManager:
         return data_dir
 
     def set_data_dir(self, data_dir: str):
-        """設置數據目錄路徑"""
+        """設置資料目錄路徑"""
         settings = self.load_settings()
         settings["data_dir"] = data_dir
-        # 同時更新緩存目錄
+        # 同時更新快取目錄
         settings["cache_dir"] = os.path.join(data_dir, "cache")
         self.save_settings(settings)
         

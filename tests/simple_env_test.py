@@ -18,7 +18,7 @@ def test_env_reading():
         return False
     
     # 讀取環境變量
-    print("\n 數據庫配置:")
+    print("\n 資料庫配置:")
     
     # MongoDB配置
     mongodb_host = os.getenv("MONGODB_HOST", "localhost")
@@ -46,8 +46,8 @@ def test_env_reading():
     print(f"  Password: {'***' if redis_password else '未設置'}")
     print(f"  DB: {redis_db}")
     
-    # 測試數據庫連接
-    print("\n 測試數據庫連接...")
+    # 測試資料庫連接
+    print("\n 測試資料庫連接...")
     
     # 測試MongoDB
     mongodb_available = False
@@ -95,9 +95,9 @@ def test_env_reading():
     print(f"Redis: {' 可用' if redis_available else ' 不可用'}")
     
     if mongodb_available or redis_available:
-        print(" 數據庫可用，系統將使用高性能模式")
+        print(" 資料庫可用，系統將使用高性能模式")
     else:
-        print(" 數據庫不可用，系統將使用檔案緩存模式")
+        print(" 資料庫不可用，系統將使用檔案快取模式")
         print(" 這是正常的，系統可以正常工作")
     
     return True

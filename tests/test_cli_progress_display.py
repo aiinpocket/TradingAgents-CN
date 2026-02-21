@@ -46,7 +46,7 @@ def test_cli_ui_manager():
         # 測試步驟標題
         ui.show_step_header(1, "測試步驟標題")
         
-        # 測試數據資訊
+        # 測試資料資訊
         ui.show_data_info("股票資訊", "AAPL", "Apple Inc.")
         
         print("\n CLI用戶界面管理器測試完成")
@@ -84,19 +84,19 @@ def test_analysis_flow_simulation():
         time.sleep(0.5)
         ui.show_success("分析系統初始化完成")
         
-        # 步驟2: 數據獲取階段
-        ui.show_step_header(2, "數據獲取階段 | Data Collection Phase")
+        # 步驟2: 資料取得階段
+        ui.show_step_header(2, "資料取得階段 | Data Collection Phase")
         ui.show_progress("正在獲取股票基本資訊...")
         time.sleep(0.5)
         ui.show_data_info("股票資訊", "AAPL", "Apple Inc.")
         time.sleep(0.3)
-        ui.show_progress("正在獲取市場數據...")
+        ui.show_progress("正在獲取市場資料...")
         time.sleep(0.5)
-        ui.show_data_info("市場數據", "AAPL", "32條記錄")
+        ui.show_data_info("市場資料", "AAPL", "32條記錄")
         time.sleep(0.3)
-        ui.show_progress("正在獲取基本面數據...")
+        ui.show_progress("正在獲取基本面資料...")
         time.sleep(0.5)
-        ui.show_success("數據獲取準備完成")
+        ui.show_success("資料取得準備完成")
         
         # 步驟3: 智能分析階段
         ui.show_step_header(3, "智能分析階段 | AI Analysis Phase")
@@ -153,8 +153,8 @@ def test_progress_vs_logging():
         
         # 用戶界面消息（清爽顯示）
         print("\n 用戶界面消息:")
-        ui.show_progress("正在獲取數據...")
-        ui.show_success("數據獲取完成")
+        ui.show_progress("正在獲取資料...")
+        ui.show_success("資料取得完成")
         ui.show_warning("網絡延遲較高")
         
         # 系統日誌（只寫入檔案，不在控制台顯示）
@@ -201,7 +201,7 @@ def test_user_experience():
         print("    用戶知道出了什麼問題")
         
         # 重要資訊突出
-        ui.show_data_info("重要數據", "AAPL", "關鍵資訊突出顯示")
+        ui.show_data_info("重要資料", "AAPL", "關鍵資訊突出顯示")
         print("    重要資訊容易識別")
         
         print("\n 用戶體驗測試完成")

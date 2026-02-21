@@ -127,7 +127,7 @@ def render_decision_summary(decision, stock_symbol=None):
 
     st.subheader("投資決策摘要")
 
-    # 沒有決策數據時顯示提示
+    # 沒有決策資料時顯示提示
     if not decision:
         st.info("分析完成後，投資決策將在此處顯示。")
         return
@@ -225,7 +225,7 @@ def render_detailed_analysis(state):
         {
             'key': 'fundamentals_report',
             'title': '基本面分析',
-            'description': '財務數據、估值水平、盈利能力分析'
+            'description': '財務資料、估值水平、盈利能力分析'
         },
         {
             'key': 'sentiment_report',
@@ -269,7 +269,7 @@ def render_detailed_analysis(state):
         }
     ]
 
-    # 過濾出有數據的模塊
+    # 過濾出有資料的模塊
     available_modules = []
     for module in analysis_modules:
         if module['key'] in state and state[module['key']]:
@@ -348,7 +348,7 @@ def render_risk_debate_content(content):
 
 
 def render_analysis_placeholder():
-    """渲染分析數據等待提示"""
+    """渲染分析資料等待提示"""
 
     st.info(
         "請先配置 API 密鑰並執行股票分析。"

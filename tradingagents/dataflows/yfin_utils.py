@@ -12,14 +12,14 @@ from .utils import save_output, SavePathType, decorate_all_methods
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
-# 匯入緩存管理器
+# 匯入快取管理器
 try:
     from .cache_manager import get_cache
 
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False
-    logger.warning("緩存管理器不可用，將直接從API獲取數據")
+    logger.warning("快取管理器不可用，將直接從API獲取資料")
 
 
 def init_ticker(func: Callable) -> Callable:

@@ -83,8 +83,8 @@ class BranchManager:
     def create_branch(self, branch_type, branch_name, description=None):
         """創建新分支"""
         if branch_type not in self.branch_types:
-            logger.error(f" 不支持的分支類型: {branch_type}")
-            logger.info(f"支持的類型: {', '.join(self.branch_types.keys())}")
+            logger.error(f" 不支援的分支類型: {branch_type}")
+            logger.info(f"支援的類型: {', '.join(self.branch_types.keys())}")
             return False
         
         config = self.branch_types[branch_type]

@@ -89,14 +89,14 @@ class SmartSessionManager:
     
     def clear_analysis_state(self):
         """清除分析狀態"""
-        # 清除Redis中的數據
+        # 清除Redis中的資料
         if self.use_redis and self.redis_manager:
             try:
                 self.redis_manager.clear_analysis_state()
             except Exception:
                 pass
 
-        # 清除檔案中的數據
+        # 清除檔案中的資料
         if self.file_manager:
             try:
                 self.file_manager.clear_analysis_state()
@@ -151,7 +151,7 @@ def get_persistent_analysis_id() -> Optional[str]:
                 st.session_state.last_market_type = session_data.get('market_type', '')
                 return analysis_id
         
-        # 3. 最後從分析數據恢複最新分析
+        # 3. 最後從分析資料恢複最新分析
         try:
             from .async_progress_tracker import get_latest_analysis_id
             latest_id = get_latest_analysis_id()

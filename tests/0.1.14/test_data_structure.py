@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試數據結構腳本
+測試資料結構腳本
 """
 
 import sys
@@ -8,11 +8,11 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def test_data_structure():
-    """測試分析結果數據結構"""
+    """測試分析結果資料結構"""
     try:
         from web.components.analysis_results import load_analysis_results
         
-        print(" 測試分析結果數據結構...")
+        print(" 測試分析結果資料結構...")
         
         # 載入分析結果
         results = load_analysis_results(limit=5)
@@ -21,7 +21,7 @@ def test_data_structure():
         
         if results:
             result = results[0]
-            print(f"\n 第一個結果的數據結構:")
+            print(f"\n 第一個結果的資料結構:")
             print(f"   analysis_id: {result.get('analysis_id', 'missing')}")
             print(f"   source: {result.get('source', 'missing')}")
             print(f"   stock_symbol: {result.get('stock_symbol', 'missing')}")

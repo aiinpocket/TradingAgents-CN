@@ -1,6 +1,6 @@
 """
 基本面分析師 - 統一工具架構版本
-使用統一工具自動識別股票類型並調用相應數據源
+使用統一工具自動識別股票類型並調用相應資料來源
 """
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -84,8 +84,8 @@ def create_fundamentals_analyst(llm, toolkit):
 
         # 選擇工具
         if toolkit.config["online_tools"]:
-            # 使用統一的基本面分析工具和華爾街分析師共識數據
-            logger.info("[基本面分析師] 使用統一基本面分析工具和分析師共識數據")
+            # 使用統一的基本面分析工具和華爾街分析師共識資料
+            logger.info("[基本面分析師] 使用統一基本面分析工具和分析師共識資料")
             tools = [toolkit.get_stock_fundamentals_unified, toolkit.get_finnhub_analyst_consensus]
             # 安全地獲取工具名稱用於調試
             tool_names_debug = []
@@ -99,7 +99,7 @@ def create_fundamentals_analyst(llm, toolkit):
             logger.debug(f"選擇的工具: {tool_names_debug}")
             logger.debug(f"統一工具將自動處理: {market_info['market_name']}")
         else:
-            # 離線模式：使用 FinnHub 和 SimFin 數據，加上分析師共識
+            # 離線模式：使用 FinnHub 和 SimFin 資料，加上分析師共識
             tools = [
                 toolkit.get_finnhub_company_insider_sentiment,
                 toolkit.get_finnhub_company_insider_transactions,
@@ -113,13 +113,13 @@ def create_fundamentals_analyst(llm, toolkit):
         system_message = (
             f"你是一位專業的股票基本面分析師。"
             f"\n\n**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**\n"
-            f"絕對強制要求：你必須調用工具獲取真實數據！不允許任何假設或編造！"
+            f"絕對強制要求：你必須調用工具獲取真實資料！不允許任何假設或編造！"
             f"任務：分析{company_name}（股票代碼：{ticker}，{market_info['market_name']}）"
             f"[重要] 立即調用 get_stock_fundamentals_unified 工具"
             f"參數：ticker='{ticker}', start_date='{start_date}', end_date='{current_date}', curr_date='{current_date}'"
             "分析要求："
-            "- 整合華爾街分析師共識數據（評級分布、目標價、EPS/營收預測）到你的估值分析中"
-            "- 基於真實數據進行深度基本面分析"
+            "- 整合華爾街分析師共識資料（評級分布、目標價、EPS/營收預測）到你的估值分析中"
+            "- 基於真實資料進行深度基本面分析"
             f"- 計算並提供合理價位區間（使用{market_info['currency_name']}{market_info['currency_symbol']}）"
             "- 分析當前股價是否被低估或高估"
             "- 提供基於基本面的目標價位建議"
@@ -132,15 +132,15 @@ def create_fundamentals_analyst(llm, toolkit):
             f"- 貨幣單位使用：{market_info['currency_name']}（{market_info['currency_symbol']}）"
             "嚴格禁止："
             "- 不允許說'我將調用工具'"
-            "- 不允許假設任何數據"
+            "- 不允許假設任何資料"
             "- 不允許編造公司資訊"
             "- 不允許直接回答而不調用工具"
             "- 不允許回覆'無法確定價位'或'需要更多資訊'"
             "- 不允許使用英文投資建議（buy/hold/sell）"
             "你必須："
             "- 立即調用統一基本面分析工具"
-            "- 等待工具返回真實數據"
-            "- 基於真實數據進行分析"
+            "- 等待工具返回真實資料"
+            "- 基於真實資料進行分析"
             "- 提供具體的價位區間和目標價"
             "- 使用中文投資建議（買入/持有/賣出）"
             "現在立即開始調用工具！不要說任何其他話！"
@@ -148,9 +148,9 @@ def create_fundamentals_analyst(llm, toolkit):
 
         # 系統提示模板
         system_prompt = (
-            "[強制要求] 你必須調用工具獲取真實數據！"
+            "[強制要求] 你必須調用工具獲取真實資料！"
             "[禁止] 不允許假設、編造或直接回答任何問題！"
-            "[必須] 立即調用提供的工具獲取真實數據，然後基於真實數據進行分析。"
+            "[必須] 立即調用提供的工具獲取真實資料，然後基於真實資料進行分析。"
             "可用工具：{tool_names}。\n{system_message}"
             "當前日期：{current_date}。"
             "分析目標：{company_name}（股票代碼：{ticker}）。"
@@ -252,7 +252,7 @@ def create_fundamentals_analyst(llm, toolkit):
                     'end_date': current_date,
                     'curr_date': current_date
                 })
-                logger.debug(f"統一工具數據獲取成功，長度: {len(combined_data)}字符")
+                logger.debug(f"統一工具資料取得成功，長度: {len(combined_data)}字符")
             else:
                 combined_data = "統一基本面分析工具不可用"
                 logger.debug("統一工具未找到")
@@ -262,8 +262,8 @@ def create_fundamentals_analyst(llm, toolkit):
 
         currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
 
-        # 生成基於真實數據的分析報告
-        analysis_prompt = f"""基於以下真實數據，對{company_name}（股票代碼：{ticker}）進行詳細的基本面分析：
+        # 生成基於真實資料的分析報告
+        analysis_prompt = f"""基於以下真實資料，對{company_name}（股票代碼：{ticker}）進行詳細的基本面分析：
 
 {combined_data}
 
@@ -275,7 +275,7 @@ def create_fundamentals_analyst(llm, toolkit):
 5. 投資建議（買入/持有/賣出）
 
 要求：
-- 基於提供的真實數據進行分析
+- 基於提供的真實資料進行分析
 - 正確使用公司名稱"{company_name}"和股票代碼"{ticker}"
 - 價格使用{currency_info}
 - 投資建議使用中文
@@ -283,7 +283,7 @@ def create_fundamentals_analyst(llm, toolkit):
 
         try:
             analysis_prompt_template = ChatPromptTemplate.from_messages([
-                ("system", "你是專業的股票基本面分析師，基於提供的真實數據進行分析。"),
+                ("system", "你是專業的股票基本面分析師，基於提供的真實資料進行分析。"),
                 ("human", "{analysis_request}")
             ])
 

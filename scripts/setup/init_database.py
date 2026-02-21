@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-數據庫初始化腳本
-創建MongoDB集合和索引，初始化Redis緩存結構
+資料庫初始化腳本
+創建MongoDB集合和索引，初始化Redis快取結構
 """
 
 import os
@@ -17,8 +17,8 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
 
 def init_mongodb():
-    """初始化MongoDB數據庫"""
-    logger.info(f" 初始化MongoDB數據庫...")
+    """初始化MongoDB資料庫"""
+    logger.info(f" 初始化MongoDB資料庫...")
     
     try:
         from tradingagents.config.database_manager import get_database_manager
@@ -32,8 +32,8 @@ def init_mongodb():
         mongodb_client = db_manager.get_mongodb_client()
         db = mongodb_client[db_manager.mongodb_config["database"]]
         
-        # 創建股票數據集合和索引
-        logger.info(f" 創建股票數據集合...")
+        # 創建股票資料集合和索引
+        logger.info(f" 創建股票資料集合...")
         stock_data_collection = db.stock_data
         
         # 創建索引
@@ -41,7 +41,7 @@ def init_mongodb():
         stock_data_collection.create_index([("created_at", -1)])
         stock_data_collection.create_index([("updated_at", -1)])
         
-        logger.info(f" 股票數據集合創建完成")
+        logger.info(f" 股票資料集合創建完成")
         
         # 創建分析結果集合和索引
         logger.info(f" 創建分析結果集合...")
@@ -75,8 +75,8 @@ def init_mongodb():
         
         logger.info(f" 配置集合創建完成")
         
-        # 插入初始配置數據
-        logger.info(f" 插入初始配置數據...")
+        # 插入初始配置資料
+        logger.info(f" 插入初始配置資料...")
         initial_configs = [
             {
                 "config_type": "cache",
@@ -86,7 +86,7 @@ def init_mongodb():
                     "us_news": 21600,
                     "us_fundamentals": 86400
                 },
-                "description": "緩存TTL配置",
+                "description": "快取TTL配置",
                 "created_at": datetime.utcnow(),
                 "updated_at": datetime.utcnow()
             },
@@ -113,11 +113,11 @@ def init_mongodb():
                 upsert=True
             )
         
-        logger.info(f" 初始配置數據插入完成")
+        logger.info(f" 初始配置資料插入完成")
         
-        # 顯示數據庫統計
-        logger.info(f"\n 數據庫統計:")
-        logger.info(f"  - 股票數據: {stock_data_collection.count_documents({})} 條記錄")
+        # 顯示資料庫統計
+        logger.info(f"\n 資料庫統計:")
+        logger.info(f"  - 股票資料: {stock_data_collection.count_documents({})} 條記錄")
         logger.info(f"  - 分析結果: {analysis_collection.count_documents({})} 條記錄")
         logger.info(f"  - 用戶會話: {sessions_collection.count_documents({})} 條記錄")
         logger.info(f"  - 配置項: {config_collection.count_documents({})} 條記錄")
@@ -130,8 +130,8 @@ def init_mongodb():
 
 
 def init_redis():
-    """初始化Redis緩存"""
-    logger.info(f"\n 初始化Redis緩存...")
+    """初始化Redis快取"""
+    logger.info(f"\n 初始化Redis快取...")
     
     try:
         from tradingagents.config.database_manager import get_database_manager
@@ -144,12 +144,12 @@ def init_redis():
         
         redis_client = db_manager.get_redis_client()
         
-        # 清理現有緩存（可選）
-        logger.info(f" 清理現有緩存...")
+        # 清理現有快取（可選）
+        logger.info(f" 清理現有快取...")
         redis_client.flushdb()
         
-        # 設置初始緩存配置
-        logger.info(f" 設置緩存配置...")
+        # 設置初始快取配置
+        logger.info(f" 設置快取配置...")
         cache_config = {
             "version": "1.0",
             "initialized_at": datetime.utcnow().isoformat(),
@@ -162,8 +162,8 @@ def init_redis():
         
         db_manager.cache_set("system:cache_config", cache_config, ttl=86400*30)  # 30天
         
-        # 設置緩存統計初始值
-        logger.info(f" 初始化緩存統計...")
+        # 設置快取統計初始值
+        logger.info(f" 初始化快取統計...")
         stats = {
             "cache_hits": 0,
             "cache_misses": 0,
@@ -173,21 +173,21 @@ def init_redis():
         
         db_manager.cache_set("system:cache_stats", stats, ttl=86400*7)  # 7天
         
-        # 測試緩存功能
-        logger.info(f" 測試緩存功能...")
+        # 測試快取功能
+        logger.info(f" 測試快取功能...")
         test_key = "test:init"
         test_value = {"message": "Redis初始化成功", "timestamp": datetime.utcnow().isoformat()}
         
         if db_manager.cache_set(test_key, test_value, ttl=60):
             retrieved_value = db_manager.cache_get(test_key)
             if retrieved_value and retrieved_value["message"] == test_value["message"]:
-                logger.info(f" 緩存讀寫測試通過")
-                db_manager.cache_delete(test_key)  # 清理測試數據
+                logger.info(f" 快取讀寫測試通過")
+                db_manager.cache_delete(test_key)  # 清理測試資料
             else:
-                logger.error(f" 緩存讀取測試失敗")
+                logger.error(f" 快取讀取測試失敗")
                 return False
         else:
-            logger.error(f" 緩存寫入測試失敗")
+            logger.error(f" 快取寫入測試失敗")
             return False
         
         # 顯示Redis統計
@@ -205,8 +205,8 @@ def init_redis():
 
 
 def test_database_connection():
-    """測試數據庫連接"""
-    logger.info(f"\n 測試數據庫連接...")
+    """測試資料庫連接"""
+    logger.info(f"\n 測試資料庫連接...")
     
     try:
         from tradingagents.config.database_manager import get_database_manager
@@ -241,18 +241,18 @@ def test_database_connection():
         return mongodb_ok and redis_ok
         
     except Exception as e:
-        logger.error(f" 數據庫連接測試失敗: {e}")
+        logger.error(f" 資料庫連接測試失敗: {e}")
         return False
 
 
 def main():
     """主函數"""
-    logger.info(f" TradingAgents 數據庫初始化")
+    logger.info(f" TradingAgents 資料庫初始化")
     logger.info(f"=")
     
     # 測試連接
     if not test_database_connection():
-        logger.error(f"\n 數據庫連接失敗，請檢查:")
+        logger.error(f"\n 資料庫連接失敗，請檢查:")
         logger.info(f"1. Docker服務是否啟動: docker ps")
         logger.info(f"2. 運行啟動腳本: scripts/start_docker_services.bat")
         logger.info(f"3. 檢查環境變量配置: .env 檔案")
@@ -271,10 +271,10 @@ def main():
     logger.error(f"  Redis: {' 成功' if redis_success else ' 失敗'}")
     
     if mongodb_success and redis_success:
-        logger.info(f"\n 數據庫初始化完成！")
+        logger.info(f"\n 資料庫初始化完成！")
         logger.info(f"\n 下一步:")
         logger.info(f"1. 啟動Web應用: python start_web.py")
-        logger.info(f"2. 訪問緩存管理: http://localhost:8501 -> 緩存管理")
+        logger.info(f"2. 訪問快取管理: http://localhost:8501 -> 快取管理")
         logger.info(f"3. 訪問Redis管理界面: http://localhost:8081")
         return True
     else:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-智能系統完整測試 - 驗證自適應配置和緩存系統
+智能系統完整測試 - 驗證自適應配置和快取系統
 """
 
 import time
@@ -22,7 +22,7 @@ def test_smart_config():
         # 獲取配置資訊
         config = get_config()
         print(f"\n 配置獲取成功")
-        print(f"主要緩存後端: {config['cache']['primary_backend']}")
+        print(f"主要快取後端: {config['cache']['primary_backend']}")
         
         return True, config_manager
         
@@ -31,26 +31,26 @@ def test_smart_config():
         return False, None
 
 def test_adaptive_cache():
-    """測試自適應緩存系統"""
-    print("\n 測試自適應緩存系統")
+    """測試自適應快取系統"""
+    print("\n 測試自適應快取系統")
     print("-" * 30)
     
     try:
         from adaptive_cache_manager import get_cache
         
-        # 獲取緩存管理器
+        # 獲取快取管理器
         cache = get_cache()
         
-        # 顯示緩存狀態
+        # 顯示快取狀態
         stats = cache.get_cache_stats()
-        print(" 緩存狀態:")
+        print(" 快取狀態:")
         for key, value in stats.items():
             print(f"  {key}: {value}")
         
         # 測試基本功能
-        print("\n 測試基本緩存功能...")
+        print("\n 測試基本快取功能...")
         
-        test_data = f"測試數據 - {datetime.now()}"
+        test_data = f"測試資料 - {datetime.now()}"
         cache_key = cache.save_stock_data(
             symbol="AAPL",
             data=test_data,
@@ -58,14 +58,14 @@ def test_adaptive_cache():
             end_date="2024-12-31",
             data_source="smart_test"
         )
-        print(f" 數據保存成功: {cache_key}")
+        print(f" 資料保存成功: {cache_key}")
         
         # 測試載入
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print(" 數據載入成功，內容匹配")
+            print(" 資料載入成功，內容匹配")
         else:
-            print(" 數據載入失敗或內容不匹配")
+            print(" 資料載入失敗或內容不匹配")
             return False
         
         # 測試查找
@@ -77,22 +77,22 @@ def test_adaptive_cache():
         )
         
         if found_key:
-            print(f" 緩存查找成功: {found_key}")
+            print(f" 快取查找成功: {found_key}")
         else:
-            print(" 緩存查找失敗")
+            print(" 快取查找失敗")
             return False
         
         return True, cache
         
     except Exception as e:
-        print(f" 自適應緩存測試失敗: {e}")
+        print(f" 自適應快取測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False, None
 
 def test_performance():
     """測試性能"""
-    print("\n 測試緩存性能")
+    print("\n 測試快取性能")
     print("-" * 30)
     
     try:
@@ -100,7 +100,7 @@ def test_performance():
         
         cache = get_cache()
         
-        # 性能測試數據
+        # 性能測試資料
         symbols = ["AAPL", "MSFT", "GOOGL", "TSLA", "NVDA"]
         
         print(" 性能測試結果:")
@@ -109,7 +109,7 @@ def test_performance():
         total_load_time = 0
         
         for symbol in symbols:
-            test_data = f"性能測試數據 - {symbol}"
+            test_data = f"性能測試資料 - {symbol}"
             
             # 測試保存性能
             start_time = time.time()
@@ -151,7 +151,7 @@ def test_performance():
                 print(" 性能改進有限")
                 return True
         else:
-            print(" 緩存性能不如預期")
+            print(" 快取性能不如預期")
             return False
             
     except Exception as e:
@@ -178,11 +178,11 @@ def test_fallback_mechanism():
         print(f"主要後端: {cache.primary_backend}")
         
         if cache.primary_backend == "file":
-            print(" 使用檔案緩存，無需降級")
+            print(" 使用檔案快取，無需降級")
         elif cache.primary_backend == "redis" and not cache.redis_enabled:
-            print(" Redis不可用，已自動降級到檔案緩存")
+            print(" Redis不可用，已自動降級到檔案快取")
         elif cache.primary_backend == "mongodb" and not cache.mongodb_enabled:
-            print(" MongoDB不可用，已自動降級到檔案緩存")
+            print(" MongoDB不可用，已自動降級到檔案快取")
         else:
             print(f" {cache.primary_backend} 後端正常工作")
         
@@ -221,10 +221,10 @@ def generate_test_report(results):
         
         if not results.get("智能配置", True):
             print("  - 檢查智能配置系統")
-        if not results.get("自適應緩存", True):
-            print("  - 檢查緩存系統配置")
+        if not results.get("自適應快取", True):
+            print("  - 檢查快取系統配置")
         if not results.get("性能測試", True):
-            print("  - 優化緩存性能")
+            print("  - 優化快取性能")
         if not results.get("降級機制", True):
             print("  - 檢查降級機制配置")
 
@@ -241,9 +241,9 @@ def main():
     config_success, config_manager = test_smart_config()
     results["智能配置"] = config_success
     
-    # 測試2: 自適應緩存
+    # 測試2: 自適應快取
     cache_success, cache_manager = test_adaptive_cache()
-    results["自適應緩存"] = cache_success
+    results["自適應快取"] = cache_success
     
     # 測試3: 性能測試
     if cache_success:

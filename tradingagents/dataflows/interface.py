@@ -62,12 +62,12 @@ def get_finnhub_news(
     result = get_data_in_range(ticker, before, curr_date, "news_data", DATA_DIR)
 
     if len(result) == 0:
-        error_msg = f"無法獲取{ticker}的新聞數據 ({before} 到 {curr_date})\n"
+        error_msg = f"無法獲取{ticker}的新聞資料 ({before} 到 {curr_date})\n"
         error_msg += f"可能的原因：\n"
         error_msg += f"1. 資料檔案不存在或路徑配置錯誤\n"
-        error_msg += f"2. 指定日期範圍內沒有新聞數據\n"
-        error_msg += f"3. 需要先下載或更新Finnhub新聞數據\n"
-        error_msg += f"建議：檢查數據目錄配置或重新獲取新聞數據"
+        error_msg += f"2. 指定日期範圍內沒有新聞資料\n"
+        error_msg += f"3. 需要先下載或更新Finnhub新聞資料\n"
+        error_msg += f"建議：檢查資料目錄配置或重新獲取新聞資料"
         logger.debug(f"{error_msg}")
         return error_msg
 
@@ -108,7 +108,7 @@ def get_finnhub_company_insider_sentiment(
     data = get_data_in_range(ticker, before, curr_date, "insider_senti", DATA_DIR)
 
     if len(data) == 0:
-        return f"[{ticker}] 在指定期間內無內部人情緒數據。"
+        return f"[{ticker}] 在指定期間內無內部人情緒資料。"
 
     result_str = ""
     seen_dicts = []
@@ -149,7 +149,7 @@ def get_finnhub_company_insider_transactions(
     data = get_data_in_range(ticker, before, curr_date, "insider_trans", DATA_DIR)
 
     if len(data) == 0:
-        return f"[{ticker}] 在指定期間內無內部人交易數據。"
+        return f"[{ticker}] 在指定期間內無內部人交易資料。"
 
     result_str = ""
 
@@ -199,7 +199,7 @@ def get_simfin_balance_sheet(
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
         logger.info("No balance sheet available before the given current date.")
-        return f"[{ticker}] 在指定日期前無可用的資產負債表數據。"
+        return f"[{ticker}] 在指定日期前無可用的資產負債表資料。"
 
     # Get the most recent balance sheet by selecting the row with the latest Publish Date
     latest_balance_sheet = filtered_df.loc[filtered_df["Publish Date"].idxmax()]
@@ -246,7 +246,7 @@ def get_simfin_cashflow(
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
         logger.info("No cash flow statement available before the given current date.")
-        return f"[{ticker}] 在指定日期前無可用的現金流量表數據。"
+        return f"[{ticker}] 在指定日期前無可用的現金流量表資料。"
 
     # Get the most recent cash flow statement by selecting the row with the latest Publish Date
     latest_cash_flow = filtered_df.loc[filtered_df["Publish Date"].idxmax()]
@@ -293,7 +293,7 @@ def get_simfin_income_statements(
     # Check if there are any available reports; if not, return a notification
     if filtered_df.empty:
         logger.info("No income statement available before the given current date.")
-        return f"[{ticker}] 在指定日期前無可用的損益表數據。"
+        return f"[{ticker}] 在指定日期前無可用的損益表資料。"
 
     # Get the most recent income statement by selecting the row with the latest Publish Date
     latest_income = filtered_df.loc[filtered_df["Publish Date"].idxmax()]
@@ -498,7 +498,7 @@ def get_stockstats_indicator(
         logger.error(
             f"Error getting stockstats indicator data for indicator {indicator} on {curr_date}: {e}"
         )
-        return f"[{symbol}] 無法獲取 {indicator} 技術指標數據: {e}"
+        return f"[{symbol}] 無法獲取 {indicator} 技術指標資料: {e}"
 
     return str(indicator_value)
 
@@ -551,7 +551,7 @@ def get_YFin_data_online(
 ):
     # 檢查yfinance是否可用
     if not YF_AVAILABLE or yf is None:
-        return "yfinance庫不可用，無法獲取美股數據"
+        return "yfinance庫不可用，無法獲取美股資料"
 
     datetime.strptime(start_date, "%Y-%m-%d")
     datetime.strptime(end_date, "%Y-%m-%d")
@@ -696,12 +696,12 @@ def get_global_news_openai(curr_date):
 
 def get_fundamentals_finnhub(ticker, curr_date):
     """
-    使用Finnhub API獲取股票基本面數據作為OpenAI的備選方案
+    使用Finnhub API獲取股票基本面資料作為OpenAI的備選方案
     Args:
         ticker (str): 股票代碼
         curr_date (str): 當前日期，格式為yyyy-mm-dd
     Returns:
-        str: 格式化的基本面數據報告
+        str: 格式化的基本面資料報告
     """
     try:
         import finnhub
@@ -714,7 +714,7 @@ def get_fundamentals_finnhub(ticker, curr_date):
         if cached_key:
             cached_data = cache.load_fundamentals_data(cached_key)
             if cached_data:
-                logger.debug(f"從快取載入Finnhub基本面數據: {ticker}")
+                logger.debug(f"從快取載入Finnhub基本面資料: {ticker}")
                 return cached_data
         
         # 獲取Finnhub API密鑰
@@ -725,13 +725,13 @@ def get_fundamentals_finnhub(ticker, curr_date):
         # 初始化Finnhub客戶端
         finnhub_client = finnhub.Client(api_key=api_key)
         
-        logger.debug(f"使用Finnhub API獲取 {ticker} 的基本面數據...")
+        logger.debug(f"使用Finnhub API獲取 {ticker} 的基本面資料...")
         
-        # 獲取基本財務數據
+        # 獲取基本財務資料
         try:
             basic_financials = finnhub_client.company_basic_financials(ticker, 'all')
         except Exception as e:
-            logger.error(f"Finnhub基本財務數據獲取失敗: {str(e)}")
+            logger.error(f"Finnhub基本財務資料取得失敗: {str(e)}")
             basic_financials = None
         
         # 獲取公司概況
@@ -741,17 +741,17 @@ def get_fundamentals_finnhub(ticker, curr_date):
             logger.error(f"Finnhub公司概況獲取失敗: {str(e)}")
             company_profile = None
         
-        # 獲取收益數據
+        # 獲取收益資料
         try:
             earnings = finnhub_client.company_earnings(ticker, limit=4)
         except Exception as e:
-            logger.error(f"Finnhub收益數據獲取失敗: {str(e)}")
+            logger.error(f"Finnhub收益資料取得失敗: {str(e)}")
             earnings = None
         
         # 格式化報告
-        report = f"# {ticker} 基本面分析報告（Finnhub數據源）\n\n"
-        report += f"**數據獲取時間**: {curr_date}\n"
-        report += f"**數據來源**: Finnhub API\n\n"
+        report = f"# {ticker} 基本面分析報告（Finnhub資料來源）\n\n"
+        report += f"**資料取得時間**: {curr_date}\n"
+        report += f"**資料來源**: Finnhub API\n\n"
         
         # 公司概況部分
         if company_profile:
@@ -807,42 +807,42 @@ def get_fundamentals_finnhub(ticker, curr_date):
                 report += f"| {period} | {actual} | {estimate} | {surprise} |\n"
             report += "\n"
         
-        # 數據可用性說明
-        report += "## 數據說明\n"
-        report += "- 本報告使用Finnhub API提供的官方財務數據\n"
-        report += "- 數據來源於公司財報和SEC檔案\n"
-        report += "- TTM表示過去12個月數據\n"
-        report += "- Annual表示年度數據\n\n"
+        # 資料可用性說明
+        report += "## 資料說明\n"
+        report += "- 本報告使用Finnhub API提供的官方財務資料\n"
+        report += "- 資料來源於公司財報和SEC檔案\n"
+        report += "- TTM表示過去12個月資料\n"
+        report += "- Annual表示年度資料\n\n"
         
         if not basic_financials and not company_profile and not earnings:
-            report += "**警告**: 無法獲取該股票的基本面數據，可能原因：\n"
+            report += "**警告**: 無法獲取該股票的基本面資料，可能原因：\n"
             report += "- 股票代碼不正確\n"
             report += "- Finnhub API限制\n"
-            report += "- 該股票暫無基本面數據\n"
+            report += "- 該股票暫無基本面資料\n"
         
         # 儲存到快取
         if report and len(report) > 100:  # 只有當報告有實際內容時才快取
             cache.save_fundamentals_data(ticker, report, data_source="finnhub")
         
-        logger.debug(f"Finnhub基本面數據獲取完成，報告長度: {len(report)}")
+        logger.debug(f"Finnhub基本面資料取得完成，報告長度: {len(report)}")
         return report
         
     except ImportError:
         return "錯誤：未安裝finnhub-python庫，請運行: pip install finnhub-python"
     except Exception as e:
-        logger.error(f"Finnhub基本面數據獲取失敗: {str(e)}")
-        return f"Finnhub基本面數據獲取失敗: {str(e)}"
+        logger.error(f"Finnhub基本面資料取得失敗: {str(e)}")
+        return f"Finnhub基本面資料取得失敗: {str(e)}"
 
 
 def get_fundamentals_openai(ticker, curr_date):
     """
-    獲取股票基本面數據，優先使用OpenAI，失敗時回退到Finnhub API
+    獲取股票基本面資料，優先使用OpenAI，失敗時回退到Finnhub API
     支援快取機制以提高效能
     Args:
         ticker (str): 股票代碼
         curr_date (str): 當前日期，格式為yyyy-mm-dd
     Returns:
-        str: 基本面數據報告
+        str: 基本面資料報告
     """
     try:
         from .cache_manager import get_cache
@@ -853,7 +853,7 @@ def get_fundamentals_openai(ticker, curr_date):
         if cached_key:
             cached_data = cache.load_fundamentals_data(cached_key)
             if cached_data:
-                logger.debug(f"從快取載入OpenAI基本面數據: {ticker}")
+                logger.debug(f"從快取載入OpenAI基本面資料: {ticker}")
                 return cached_data
         
         config = get_config()
@@ -875,7 +875,7 @@ def get_fundamentals_openai(ticker, curr_date):
             logger.debug(f"backend_url不是OpenAI API ({backend_url})，跳過OpenAI，使用Finnhub")
             return get_fundamentals_finnhub(ticker, curr_date)
         
-        logger.debug(f"嘗試使用OpenAI獲取 {ticker} 的基本面數據...")
+        logger.debug(f"嘗試使用OpenAI獲取 {ticker} 的基本面資料...")
         
         client = OpenAI(base_url=config["backend_url"])
 
@@ -913,11 +913,11 @@ def get_fundamentals_openai(ticker, curr_date):
         if result and len(result) > 100:  # 只有當結果有實際內容時才快取
             cache.save_fundamentals_data(ticker, result, data_source="openai")
         
-        logger.debug(f"OpenAI基本面數據獲取成功，長度: {len(result)}")
+        logger.debug(f"OpenAI基本面資料取得成功，長度: {len(result)}")
         return result
         
     except Exception as e:
-        logger.error(f"OpenAI基本面數據獲取失敗: {str(e)}")
+        logger.error(f"OpenAI基本面資料取得失敗: {str(e)}")
         logger.debug("回退到Finnhub API...")
         return get_fundamentals_finnhub(ticker, curr_date)
 

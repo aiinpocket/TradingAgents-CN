@@ -144,7 +144,7 @@ def render_model_config():
     3. 重新啟動應用程式
     4. 系統會自動檢測並載入新配置的模型
 
-    **注意**: Web界面不支持直接添加新模型，這是為了保護您的API密鑰安全。
+    **注意**: Web 介面不支援直接添加新模型，這是為了保護您的 API 密鑰安全。
     """)
 
 
@@ -259,7 +259,7 @@ def render_usage_statistics():
     with col2:
         st.metric("統計週期", f"最近 {days} 天")
 
-    # 獲取統計數據
+    # 獲取統計資料
     stats = config_manager.get_usage_statistics(days)
 
     if stats["total_requests"] == 0:
@@ -445,8 +445,8 @@ def render_system_settings():
         st.success("設置已保存！")
         st.rerun()
     
-    # 數據管理
-    st.markdown("**數據管理**")
+    # 資料管理
+    st.markdown("**資料管理**")
     
     col1, col2, col3 = st.columns(3)
     
@@ -523,7 +523,7 @@ def render_env_status():
         with api_col2:
             st.write("**其他API密鑰:**")
             finnhub_status = "已配置" if env_status["api_keys"]["finnhub"] else "未配置"
-            st.write(f"- FinnHub (金融數據): {finnhub_status}")
+            st.write(f"- FinnHub (金融資料): {finnhub_status}")
 
     # 配置優先級說明
     st.info("""

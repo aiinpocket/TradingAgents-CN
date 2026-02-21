@@ -70,12 +70,12 @@ def create_market_analyst_react(llm, toolkit):
             # 在線模式，使用 ReAct Agent
             logger.info("[市場分析師] 使用 ReAct Agent 分析美股")
 
-            # 建立美股數據工具
+            # 建立美股資料工具
             from langchain_core.tools import BaseTool
 
             class USStockDataTool(BaseTool):
                 name: str = "get_us_stock_data"
-                description: str = f"獲取美股{ticker}的市場數據和技術指標。直接調用，無需參數。"
+                description: str = f"獲取美股{ticker}的市場資料和技術指標。直接調用，無需參數。"
 
                 def _run(self, query: str = "") -> str:
                     try:
@@ -88,7 +88,7 @@ def create_market_analyst_react(llm, toolkit):
                             force_refresh=False
                         )
                     except Exception as e:
-                        logger.error(f"優化美股數據獲取失敗: {e}")
+                        logger.error(f"優化美股資料取得失敗: {e}")
                         try:
                             return toolkit.get_YFin_data_online.invoke({
                                 'symbol': ticker,
@@ -96,7 +96,7 @@ def create_market_analyst_react(llm, toolkit):
                                 'end_date': current_date
                             })
                         except Exception as e2:
-                            return f"獲取股票數據失敗: {str(e2)}"
+                            return f"獲取股票資料失敗: {str(e2)}"
 
             class FinnhubNewsTool(BaseTool):
                 name: str = "get_finnhub_news"
@@ -111,22 +111,22 @@ def create_market_analyst_react(llm, toolkit):
                             'end_date': current_date
                         })
                     except Exception as e:
-                        return f"獲取新聞數據失敗: {str(e)}"
+                        return f"獲取新聞資料失敗: {str(e)}"
 
             tools = [USStockDataTool(), FinnhubNewsTool()]
             query = f"""請對美股{ticker}進行詳細的技術分析。
 
 執行步驟：
-1. 使用get_us_stock_data工具獲取股票市場數據和技術指標（通過FINNHUB API）
+1. 使用get_us_stock_data工具獲取股票市場資料和技術指標（通過FINNHUB API）
 2. 使用get_finnhub_news工具獲取最新新聞和市場情緒
-3. 基於獲取的真實數據進行深入的技術指標分析
+3. 基於獲取的真實資料進行深入的技術指標分析
 4. 直接輸出完整的技術分析報告內容
 
 重要要求：
 - 必須輸出完整的技術分析報告內容，不要只是描述報告已完成
-- 報告必須基於工具獲取的真實數據進行分析
+- 報告必須基於工具獲取的真實資料進行分析
 - 報告長度不少於800字
-- 包含具體的數據、指標數值和專業分析
+- 包含具體的資料、指標數值和專業分析
 - 結合新聞資訊分析市場情緒
 
 報告格式應包含：
@@ -196,8 +196,8 @@ def create_market_analyst(llm, toolkit):
         logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
         if toolkit.config["online_tools"]:
-            # 使用統一的市場數據工具和 FinnHub 技術訊號
-            logger.info("[市場分析師] 使用統一市場數據工具和 FinnHub 技術訊號")
+            # 使用統一的市場資料工具和 FinnHub 技術訊號
+            logger.info("[市場分析師] 使用統一市場資料工具和 FinnHub 技術訊號")
             tools = [toolkit.get_stock_market_data_unified, toolkit.get_finnhub_technical_signals]
             # 安全地獲取工具名稱用於調試
             tool_names_debug = []
@@ -232,17 +232,17 @@ def create_market_analyst(llm, toolkit):
 - 計價貨幣：{market_info['currency_name']}（{market_info['currency_symbol']}）
 
 **工具調用指令：**
-你有一個工具叫做get_stock_market_data_unified，你必須立即調用這個工具來獲取{company_name}（{ticker}）的市場數據。
+你有一個工具叫做get_stock_market_data_unified，你必須立即調用這個工具來獲取{company_name}（{ticker}）的市場資料。
 不要說你將要調用工具，直接調用工具。
 
 **分析要求：**
-1. 調用工具後，基於獲取的真實數據進行技術分析
+1. 調用工具後，基於獲取的真實資料進行技術分析
 2. 分析移動平均線、MACD、RSI、布林帶等技術指標
 3. 參考 FinnHub 技術分析綜合訊號（買入/賣出信號統計、ADX趨勢強度）和支撐壓力位補充你的技術分析
 4. 考慮{market_info['market_name']}市場特點進行分析
 5. 提供具體的數值和專業分析
 6. 給出明確的投資建議
-7. 所有價格數據使用{market_info['currency_name']}（{market_info['currency_symbol']}）表示
+7. 所有價格資料使用{market_info['currency_name']}（{market_info['currency_symbol']}）表示
 
 **輸出格式：**
 ## 股票基本資訊
@@ -254,7 +254,7 @@ def create_market_analyst(llm, toolkit):
 ## 價格趨勢分析
 ## 投資建議
 
-請使用中文，基於真實數據進行分析。確保在分析中正確使用公司名稱"{company_name}"和股票代碼"{ticker}"。"""
+請使用中文，基於真實資料進行分析。確保在分析中正確使用公司名稱"{company_name}"和股票代碼"{ticker}"。"""
         )
 
 
@@ -263,7 +263,7 @@ def create_market_analyst(llm, toolkit):
                 (
                     "system",
                     "你是一位專業的股票技術分析師，與其他分析師協作。"
-                    "使用提供的工具來獲取和分析股票數據。"
+                    "使用提供的工具來獲取和分析股票資料。"
                     "如果你無法完全回答，沒關係；其他分析師會從不同角度繼續分析。"
                     "執行你能做的技術分析工作來取得進展。"
                     "如果你有明確的技術面投資建議：**買入/持有/賣出**，"
@@ -345,10 +345,10 @@ def create_market_analyst(llm, toolkit):
                     tool_messages.append(tool_message)
 
                 # 基於工具結果生成完整分析報告
-                analysis_prompt = f"""現在請基於上述工具獲取的數據，生成詳細的技術分析報告。
+                analysis_prompt = f"""現在請基於上述工具獲取的資料，生成詳細的技術分析報告。
 
 要求：
-1. 報告必須基於工具返回的真實數據進行分析
+1. 報告必須基於工具返回的真實資料進行分析
 2. 包含具體的技術指標數值和專業分析
 3. 提供明確的投資建議和風險提示
 4. 報告長度不少於800字

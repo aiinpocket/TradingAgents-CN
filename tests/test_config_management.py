@@ -210,7 +210,7 @@ def test_usage_statistics():
             )
             total_expected_cost += record.cost
         
-        # 測試統計數據
+        # 測試統計資料
         stats = config_manager.get_usage_statistics(30)
         
         assert stats["total_requests"] == len(test_records), f"請求數應該是 {len(test_records)}"

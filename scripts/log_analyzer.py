@@ -173,8 +173,8 @@ class LogAnalyzer:
                 error_patterns['API錯誤'] += 1
             elif '網絡' in message or 'network' in message or 'connection' in message:
                 error_patterns['網絡錯誤'] += 1
-            elif '數據庫' in message or 'database' in message or 'mongodb' in message:
-                error_patterns['數據庫錯誤'] += 1
+            elif '資料庫' in message or 'database' in message or 'mongodb' in message:
+                error_patterns['資料庫錯誤'] += 1
             elif 'PDF' in message or 'pdf' in message:
                 error_patterns['PDF匯出錯誤'] += 1
             else:
@@ -318,7 +318,7 @@ class LogAnalyzer:
 
 ## 性能分析
 - 慢操作數量: {len(performance['slow_operations'])}
-- 平均分析時間: {sum(performance['analysis_times']) / len(performance['analysis_times']):.2f}s (如果有數據)
+- 平均分析時間: {sum(performance['analysis_times']) / len(performance['analysis_times']):.2f}s (如果有資料)
 - 總成本: ¥{performance['cost_summary']['total_cost']:.4f}
 
 ## 使用情況

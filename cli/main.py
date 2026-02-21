@@ -129,7 +129,7 @@ class CLIUserInterface:
         self.console.print("─" * 60)
 
     def show_data_info(self, data_type: str, symbol: str, details: str = ""):
-        """顯示數據獲取資訊"""
+        """顯示資料取得資訊"""
         if details:
             self.console.print(f"{data_type}: {symbol} - {details}")
         else:
@@ -930,11 +930,11 @@ def extract_content_string(content):
         text_parts = []
         for item in content:
             if isinstance(item, dict):
-                item_type = item.get('type')  # 緩存type值
+                item_type = item.get('type')  # 快取type值
                 if item_type == 'text':
                     text_parts.append(item.get('text', ''))
                 elif item_type == 'tool_use':
-                    tool_name = item.get('name', 'unknown')  # 緩存name值
+                    tool_name = item.get('name', 'unknown')  # 快取name值
                     text_parts.append(f"[Tool: {tool_name}]")
             else:
                 text_parts.append(str(item))
@@ -954,9 +954,9 @@ def check_api_keys(llm_provider: str) -> bool:
     elif "anthropic" in llm_provider.lower():
         if not os.getenv("ANTHROPIC_API_KEY"):
             missing_keys.append("ANTHROPIC_API_KEY")
-    # 檢查金融數據API密鑰
+    # 檢查金融資料API密鑰
     if not os.getenv("FINNHUB_API_KEY"):
-        missing_keys.append("FINNHUB_API_KEY (金融數據)")
+        missing_keys.append("FINNHUB_API_KEY (金融資料)")
 
     if missing_keys:
         logger.error("[red]缺少必要的API密鑰 | Missing required API keys[/red]")
@@ -1114,9 +1114,9 @@ def run_analysis():
         )
         update_display(layout, spinner_text)
 
-        # 顯示數據預獲取和驗證階段
-        ui.show_step_header(2, "數據驗證階段 | Data Validation Phase")
-        ui.show_progress("驗證股票代碼並預獲取數據...")
+        # 顯示資料預獲取和驗證階段
+        ui.show_step_header(2, "資料驗證階段 | Data Validation Phase")
+        ui.show_progress("驗證股票代碼並預獲取資料...")
 
         try:
             from tradingagents.utils.stock_validator import prepare_stock_data
@@ -1124,7 +1124,7 @@ def run_analysis():
             # 確定市場類型（僅支援美股）
             market_type = "美股"
 
-            # 預獲取股票數據（預設30天歷史數據）
+            # 預獲取股票資料（預設30天歷史資料）
             preparation_result = prepare_stock_data(
                 stock_code=selections["ticker"],
                 market_type=market_type,
@@ -1133,24 +1133,24 @@ def run_analysis():
             )
 
             if not preparation_result.is_valid:
-                ui.show_error(f"股票數據驗證失敗: {preparation_result.error_message}")
+                ui.show_error(f"股票資料驗證失敗: {preparation_result.error_message}")
                 ui.show_warning(f"建議: {preparation_result.suggestion}")
-                logger.error(f"股票數據驗證失敗: {preparation_result.error_message}")
+                logger.error(f"股票資料驗證失敗: {preparation_result.error_message}")
                 return
 
-            # 數據預獲取成功
-            ui.show_success(f"數據準備完成: {preparation_result.stock_name} ({preparation_result.market_type})")
-            ui.show_user_message(f"緩存狀態: {preparation_result.cache_status}", "dim")
-            logger.info(f"股票數據預獲取成功: {preparation_result.stock_name}")
+            # 資料預取得成功
+            ui.show_success(f"資料準備完成: {preparation_result.stock_name} ({preparation_result.market_type})")
+            ui.show_user_message(f"快取狀態: {preparation_result.cache_status}", "dim")
+            logger.info(f"股票資料預獲取成功: {preparation_result.stock_name}")
 
         except Exception as e:
-            ui.show_error(f"數據預獲取過程中發生錯誤: {str(e)}")
+            ui.show_error(f"資料預取得過程中發生錯誤: {str(e)}")
             ui.show_warning("請檢查網絡連接或稍後重試")
-            logger.error(f"數據預獲取異常: {str(e)}")
+            logger.error(f"資料預取得異常: {str(e)}")
             return
 
-        # 顯示數據獲取階段
-        ui.show_step_header(3, "數據獲取階段 | Data Collection Phase")
+        # 顯示資料取得階段
+        ui.show_step_header(3, "資料取得階段 | Data Collection Phase")
         ui.show_progress("正在獲取股票基本資訊...")
 
         # Initialize state and get graph args
@@ -1159,7 +1159,7 @@ def run_analysis():
         )
         args = graph.propagator.get_graph_args()
 
-        ui.show_success("數據獲取準備完成")
+        ui.show_success("資料取得準備完成")
 
         # 顯示分析階段
         ui.show_step_header(4, "智能分析階段 | AI Analysis Phase (預計耗時約10分鐘)")
@@ -1580,7 +1580,7 @@ def config():
     api_keys_table.add_row(
         "FINNHUB_API_KEY",
         "已配置" if finnhub_key else "未配置",
-        f"金融數據 | {finnhub_key[:DEFAULT_API_KEY_DISPLAY_LENGTH]}..." if finnhub_key else "金融數據API密鑰"
+        f"金融資料 | {finnhub_key[:DEFAULT_API_KEY_DISPLAY_LENGTH]}..." if finnhub_key else "金融資料API密鑰"
     )
     api_keys_table.add_row(
         "OPENAI_API_KEY",
@@ -1653,34 +1653,34 @@ def version():
 
 @app.command(
     name="data-config",
-    help="數據目錄配置 | Data directory configuration"
+    help="資料目錄配置 | Data directory configuration"
 )
 def data_config(
     show: bool = typer.Option(False, "--show", "-s", help="顯示當前配置 | Show current configuration"),
-    set_dir: Optional[str] = typer.Option(None, "--set", "-d", help="設置數據目錄 | Set data directory"),
+    set_dir: Optional[str] = typer.Option(None, "--set", "-d", help="設置資料目錄 | Set data directory"),
     reset: bool = typer.Option(False, "--reset", "-r", help="重置為預設配置 | Reset to default configuration")
 ):
     """
-    配置數據目錄路徑
+    配置資料目錄路徑
     Configure data directory paths
     """
     from tradingagents.config.config_manager import config_manager
     from tradingagents.dataflows.config import get_data_dir, set_data_dir
     
-    logger.info(f"\n[bold blue]數據目錄配置 | Data Directory Configuration[/bold blue]")
+    logger.info(f"\n[bold blue]資料目錄配置 | Data Directory Configuration[/bold blue]")
     
     if reset:
         # 重置為預設配置
         default_data_dir = os.path.join(os.path.expanduser("~"), "Documents", "TradingAgents", "data")
         set_data_dir(default_data_dir)
-        logger.info(f"[green]已重置數據目錄為預設路徑: {default_data_dir}[/green]")
+        logger.info(f"[green]已重置資料目錄為預設路徑: {default_data_dir}[/green]")
         return
     
     if set_dir:
-        # 設置新的數據目錄
+        # 設置新的資料目錄
         try:
             set_data_dir(set_dir)
-            logger.info(f"[green]數據目錄已設置為: {set_dir}[/green]")
+            logger.info(f"[green]資料目錄已設置為: {set_dir}[/green]")
             
             # 顯示創建的目錄結構
             if os.path.exists(set_dir):
@@ -1692,7 +1692,7 @@ def data_config(
                     indent = '  ' * level
                     logger.info(f"{indent}{os.path.basename(root)}/")
         except Exception as e:
-            logger.error(f"[red]設置數據目錄失敗: {e}[/red]")
+            logger.error(f"[red]設置資料目錄失敗: {e}[/red]")
         return
     
     # 顯示當前配置（預設行為或使用--show）
@@ -1706,8 +1706,8 @@ def data_config(
     config_table.add_column("狀態 | Status", style="yellow")
     
     directories = {
-        "數據目錄 | Data Directory": settings.get("data_dir", "未配置"),
-        "緩存目錄 | Cache Directory": settings.get("cache_dir", "未配置"),
+        "資料目錄 | Data Directory": settings.get("data_dir", "未配置"),
+        "快取目錄 | Cache Directory": settings.get("cache_dir", "未配置"),
         "結果目錄 | Results Directory": settings.get("results_dir", "未配置")
     }
     
@@ -1739,7 +1739,7 @@ def data_config(
     
     # 使用說明
     logger.info(f"\n[yellow]使用說明 | Usage:[/yellow]")
-    logger.info(f"- 設置數據目錄: tradingagents data-config --set /path/to/data")
+    logger.info(f"- 設置資料目錄: tradingagents data-config --set /path/to/data")
     logger.info(f"- 重置為預設: tradingagents data-config --reset")
     logger.info(f"- 查看當前配置: tradingagents data-config --show")
     logger.info(f"- 環境變量優先級最高 | Environment variables have highest priority")

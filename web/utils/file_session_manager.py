@@ -134,7 +134,7 @@ class FileSessionManager:
             if not session_file.exists():
                 return None
 
-            # 讀取會話數據
+            # 讀取會話資料
             with open(session_file, 'r', encoding='utf-8') as f:
                 session_data = json.load(f)
 
@@ -213,7 +213,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         if st.session_state.get('current_analysis_id'):
             return st.session_state.current_analysis_id
         
-        # 2. 檢查檔案會話數據
+        # 2. 檢查檔案會話資料
         session_data = file_session_manager.load_analysis_state()
         if session_data:
             analysis_id = session_data.get('analysis_id')

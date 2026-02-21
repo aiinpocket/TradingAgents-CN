@@ -38,11 +38,11 @@ def test_complete_analysis_flow():
         time.sleep(0.3)
         ui.show_success("分析系統初始化完成")
         
-        # 步驟2: 數據獲取階段
-        ui.show_step_header(2, "數據獲取階段 | Data Collection Phase")
+        # 步驟2: 資料取得階段
+        ui.show_step_header(2, "資料取得階段 | Data Collection Phase")
         ui.show_progress("正在獲取股票基本資訊...")
         time.sleep(0.3)
-        ui.show_success("數據獲取準備完成")
+        ui.show_success("資料取得準備完成")
         
         # 步驟3: 智能分析階段
         ui.show_step_header(3, "智能分析階段 | AI Analysis Phase")
@@ -187,7 +187,7 @@ def test_analysis_stages():
             {
                 "name": "基礎分析階段",
                 "analysts": [" 市場分析師", " 基本面分析師", " 技術分析師", " 情感分析師"],
-                "description": "獲取和分析基礎數據"
+                "description": "獲取和分析基礎資料"
             },
             {
                 "name": "研究團隊階段", 

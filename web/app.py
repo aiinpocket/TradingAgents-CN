@@ -99,7 +99,7 @@ st.markdown("""
         line-height: 1.5;
     }
 
-    /* 主容器 - 緊湊的數據密集型佈局 */
+    /* 主容器 - 緊湊的資料密集型佈局 */
     .main .block-container {
         padding: 1rem 1.5rem;
         max-width: 1280px;
@@ -192,7 +192,7 @@ st.markdown("""
         color: var(--text-primary);
     }
 
-    /* 數據框 */
+    /* 資料框 */
     .dataframe {
         border-radius: 4px;
         border: 1px solid var(--border-color);

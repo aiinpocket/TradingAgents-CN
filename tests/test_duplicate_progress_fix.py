@@ -193,7 +193,7 @@ def test_real_scenario_simulation():
         # 模擬市場分析師的多次輸出（這是導致重複的原因）
         print("\n 市場分析師工作過程:")
         market_outputs = [
-            "獲取市場數據...",
+            "獲取市場資料...",
             "分析價格趨勢...", 
             "計算技術指標...",
             "生成市場報告..."
@@ -213,7 +213,7 @@ def test_real_scenario_simulation():
         # 模擬基本面分析師
         print("\n 基本面分析師工作過程:")
         fundamentals_outputs = [
-            "獲取財務數據...",
+            "獲取財務資料...",
             "分析財務指標...",
             "評估公司價值..."
         ]

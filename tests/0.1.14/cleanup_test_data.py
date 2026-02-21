@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-清理測試數據
+清理測試資料
 """
 
 import sys
@@ -26,8 +26,8 @@ def cleanup_test_files():
         print(f" 測試目錄不存在: {test_dir}")
 
 def cleanup_mongodb_test_data():
-    """清理MongoDB測試數據"""
-    print(" 清理MongoDB測試數據...")
+    """清理MongoDB測試資料"""
+    print(" 清理MongoDB測試資料...")
     
     try:
         from web.utils.mongodb_report_manager import mongodb_report_manager
@@ -36,13 +36,13 @@ def cleanup_mongodb_test_data():
             print(" MongoDB未連接")
             return
         
-        # 刪除測試數據
+        # 刪除測試資料
         collection = mongodb_report_manager.collection
         result = collection.delete_many({"stock_symbol": "TEST123"})
         
         print(f" 已刪除 {result.deleted_count} 條TEST123相關記錄")
         
-        # 刪除其他測試數據
+        # 刪除其他測試資料
         result2 = collection.delete_many({"stock_symbol": "TEST001"})
         print(f" 已刪除 {result2.deleted_count} 條TEST001相關記錄")
         
@@ -51,7 +51,7 @@ def cleanup_mongodb_test_data():
 
 def main():
     """主函數"""
-    print(" 清理測試數據")
+    print(" 清理測試資料")
     print("=" * 30)
     
     cleanup_test_files()

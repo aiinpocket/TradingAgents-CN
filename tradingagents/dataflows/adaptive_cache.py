@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-自適應緩存系統
-根據數據庫可用性自動選擇最佳緩存策略
+自適應快取系統
+根據資料庫可用性自動選擇最佳快取策略
 """
 
 import os
@@ -16,15 +16,15 @@ import pandas as pd
 from ..config.database_manager import get_database_manager
 
 class AdaptiveCacheSystem:
-    """自適應緩存系統"""
+    """自適應快取系統"""
     
     def __init__(self, cache_dir: str = "data/cache"):
         self.logger = logging.getLogger(__name__)
         
-        # 獲取數據庫管理器
+        # 獲取資料庫管理器
         self.db_manager = get_database_manager()
         
-        # 設置緩存目錄
+        # 設置快取目錄
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         
@@ -32,15 +32,15 @@ class AdaptiveCacheSystem:
         self.config = self.db_manager.get_config()
         self.cache_config = self.config["cache"]
         
-        # 初始化緩存後端
+        # 初始化快取後端
         self.primary_backend = self.cache_config["primary_backend"]
         self.fallback_enabled = self.cache_config["fallback_enabled"]
         
-        self.logger.info(f"自適應緩存系統初始化 - 主要後端: {self.primary_backend}")
+        self.logger.info(f"自適應快取系統初始化 - 主要後端: {self.primary_backend}")
     
     def _get_cache_key(self, symbol: str, start_date: str = "", end_date: str = "", 
                       data_source: str = "default", data_type: str = "stock_data") -> str:
-        """生成緩存鍵"""
+        """生成快取鍵"""
         key_data = f"{symbol}_{start_date}_{end_date}_{data_source}_{data_type}"
         return hashlib.md5(key_data.encode()).hexdigest()
     
@@ -54,7 +54,7 @@ class AdaptiveCacheSystem:
         return ttl_seconds
     
     def _is_cache_valid(self, cache_time: datetime, ttl_seconds: int) -> bool:
-        """檢查緩存是否有效"""
+        """檢查快取是否有效"""
         if cache_time is None:
             return False
         
@@ -62,7 +62,7 @@ class AdaptiveCacheSystem:
         return datetime.now() < expiry_time
     
     def _serialize_data(self, data: Any) -> dict:
-        """將數據序列化為 JSON 安全格式，避免使用 pickle"""
+        """將資料序列化為 JSON 安全格式，避免使用 pickle"""
         if isinstance(data, pd.DataFrame):
             return {'_type': 'dataframe', '_value': data.to_json()}
         elif isinstance(data, pd.Series):
@@ -73,7 +73,7 @@ class AdaptiveCacheSystem:
             return {'_type': 'raw', '_value': data}
 
     def _deserialize_data(self, serialized: dict) -> Any:
-        """從 JSON 安全格式還原數據"""
+        """從 JSON 安全格式還原資料"""
         data_type = serialized.get('_type', 'raw')
         value = serialized.get('_value')
         if data_type == 'dataframe':
@@ -86,7 +86,7 @@ class AdaptiveCacheSystem:
             return value
 
     def _save_to_file(self, cache_key: str, data: Any, metadata: Dict) -> bool:
-        """保存到檔案緩存（使用 JSON 格式取代 pickle）"""
+        """保存到檔案快取（使用 JSON 格式取代 pickle）"""
         try:
             cache_file = self.cache_dir / f"{cache_key}.json"
             cache_data = {
@@ -99,27 +99,27 @@ class AdaptiveCacheSystem:
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(cache_data, f, ensure_ascii=False, default=str)
 
-            self.logger.debug(f"檔案緩存保存成功: {cache_key}")
+            self.logger.debug(f"檔案快取保存成功: {cache_key}")
             return True
 
         except Exception as e:
-            self.logger.error(f"檔案緩存保存失敗: {e}")
+            self.logger.error(f"檔案快取保存失敗: {e}")
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
-        """從檔案緩存載入（支援 JSON 格式，兼容舊 .pkl 檔案）"""
+        """從檔案快取載入（支援 JSON 格式，兼容舊 .pkl 檔案）"""
         try:
             # 優先使用 JSON 格式
             json_file = self.cache_dir / f"{cache_key}.json"
             if json_file.exists():
                 with open(json_file, 'r', encoding='utf-8') as f:
                     cache_data = json.load(f)
-                # 還原序列化的數據
+                # 還原序列化的資料
                 cache_data['data'] = self._deserialize_data(cache_data['data'])
                 # 還原時間戳
                 if isinstance(cache_data['timestamp'], str):
                     cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
-                self.logger.debug(f"檔案緩存載入成功 (JSON): {cache_key}")
+                self.logger.debug(f"檔案快取載入成功 (JSON): {cache_key}")
                 return cache_data
 
             # 舊格式 .pkl 檔案不再支援載入（安全考量）
@@ -131,11 +131,11 @@ class AdaptiveCacheSystem:
             return None
 
         except Exception as e:
-            self.logger.error(f"檔案緩存載入失敗: {e}")
+            self.logger.error(f"檔案快取載入失敗: {e}")
             return None
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
-        """保存到 Redis 緩存（使用 JSON 序列化）"""
+        """保存到 Redis 快取（使用 JSON 序列化）"""
         redis_client = self.db_manager.get_redis_client()
         if not redis_client:
             return False
@@ -151,15 +151,15 @@ class AdaptiveCacheSystem:
             serialized_data = json.dumps(cache_data, ensure_ascii=False, default=str)
             redis_client.setex(cache_key, ttl_seconds, serialized_data)
 
-            self.logger.debug(f"Redis緩存保存成功: {cache_key}")
+            self.logger.debug(f"Redis快取保存成功: {cache_key}")
             return True
 
         except Exception as e:
-            self.logger.error(f"Redis緩存保存失敗: {e}")
+            self.logger.error(f"Redis快取保存失敗: {e}")
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
-        """從 Redis 緩存載入（使用 JSON 反序列化）"""
+        """從 Redis 快取載入（使用 JSON 反序列化）"""
         redis_client = self.db_manager.get_redis_client()
         if not redis_client:
             return None
@@ -174,21 +174,21 @@ class AdaptiveCacheSystem:
                 serialized_data = serialized_data.decode('utf-8')
 
             cache_data = json.loads(serialized_data)
-            # 還原序列化的數據
+            # 還原序列化的資料
             cache_data['data'] = self._deserialize_data(cache_data['data'])
             # 轉換時間戳
             if isinstance(cache_data['timestamp'], str):
                 cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
 
-            self.logger.debug(f"Redis緩存載入成功: {cache_key}")
+            self.logger.debug(f"Redis快取載入成功: {cache_key}")
             return cache_data
 
         except Exception as e:
-            self.logger.error(f"Redis緩存載入失敗: {e}")
+            self.logger.error(f"Redis快取載入失敗: {e}")
             return None
     
     def _save_to_mongodb(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
-        """保存到 MongoDB 緩存（使用 JSON 序列化）"""
+        """保存到 MongoDB 快取（使用 JSON 序列化）"""
         mongodb_client = self.db_manager.get_mongodb_client()
         if not mongodb_client:
             return False
@@ -212,15 +212,15 @@ class AdaptiveCacheSystem:
 
             collection.replace_one({'_id': cache_key}, cache_doc, upsert=True)
 
-            self.logger.debug(f"MongoDB緩存保存成功: {cache_key}")
+            self.logger.debug(f"MongoDB快取保存成功: {cache_key}")
             return True
 
         except Exception as e:
-            self.logger.error(f"MongoDB緩存保存失敗: {e}")
+            self.logger.error(f"MongoDB快取保存失敗: {e}")
             return False
     
     def _load_from_mongodb(self, cache_key: str) -> Optional[Dict]:
-        """從 MongoDB 緩存載入（使用 JSON 反序列化）"""
+        """從 MongoDB 快取載入（使用 JSON 反序列化）"""
         mongodb_client = self.db_manager.get_mongodb_client()
         if not mongodb_client:
             return None
@@ -238,7 +238,7 @@ class AdaptiveCacheSystem:
                 collection.delete_one({'_id': cache_key})
                 return None
 
-            # 反序列化數據
+            # 反序列化資料
             if doc['data_type'] == 'json':
                 serialized = json.loads(doc['data'])
                 data = self._deserialize_data(serialized)
@@ -257,17 +257,17 @@ class AdaptiveCacheSystem:
                 'backend': 'mongodb'
             }
 
-            self.logger.debug(f"MongoDB緩存載入成功: {cache_key}")
+            self.logger.debug(f"MongoDB快取載入成功: {cache_key}")
             return cache_data
 
         except Exception as e:
-            self.logger.error(f"MongoDB緩存載入失敗: {e}")
+            self.logger.error(f"MongoDB快取載入失敗: {e}")
             return None
     
     def save_data(self, symbol: str, data: Any, start_date: str = "", end_date: str = "", 
                   data_source: str = "default", data_type: str = "stock_data") -> str:
-        """保存數據到緩存"""
-        # 生成緩存鍵
+        """保存資料到快取"""
+        # 生成快取鍵
         cache_key = self._get_cache_key(symbol, start_date, end_date, data_source, data_type)
         
         # 準備中繼資料
@@ -294,18 +294,18 @@ class AdaptiveCacheSystem:
         
         # 如果主要後端失敗，使用降級策略
         if not success and self.fallback_enabled:
-            self.logger.warning(f"主要後端({self.primary_backend})保存失敗，使用檔案緩存降級")
+            self.logger.warning(f"主要後端({self.primary_backend})保存失敗，使用檔案快取降級")
             success = self._save_to_file(cache_key, data, metadata)
         
         if success:
-            self.logger.info(f"數據緩存成功: {symbol} -> {cache_key} (後端: {self.primary_backend})")
+            self.logger.info(f"資料快取成功: {symbol} -> {cache_key} (後端: {self.primary_backend})")
         else:
-            self.logger.error(f"數據緩存失敗: {symbol}")
+            self.logger.error(f"資料快取失敗: {symbol}")
         
         return cache_key
     
     def load_data(self, cache_key: str) -> Optional[Any]:
-        """從緩存載入數據"""
+        """從快取載入資料"""
         cache_data = None
         
         # 根據主要後端載入
@@ -318,37 +318,37 @@ class AdaptiveCacheSystem:
         
         # 如果主要後端失敗，嘗試降級
         if not cache_data and self.fallback_enabled:
-            self.logger.debug(f"主要後端({self.primary_backend})載入失敗，嘗試檔案緩存")
+            self.logger.debug(f"主要後端({self.primary_backend})載入失敗，嘗試檔案快取")
             cache_data = self._load_from_file(cache_key)
         
         if not cache_data:
             return None
         
-        # 檢查緩存是否有效（僅對檔案緩存，數據庫緩存有自己的TTL機制）
+        # 檢查快取是否有效（僅對檔案快取，資料庫快取有自己的TTL機制）
         if cache_data.get('backend') == 'file':
             symbol = cache_data['metadata'].get('symbol', '')
             data_type = cache_data['metadata'].get('data_type', 'stock_data')
             ttl_seconds = self._get_ttl_seconds(symbol, data_type)
             
             if not self._is_cache_valid(cache_data['timestamp'], ttl_seconds):
-                self.logger.debug(f"檔案緩存已過期: {cache_key}")
+                self.logger.debug(f"檔案快取已過期: {cache_key}")
                 return None
         
         return cache_data['data']
     
     def find_cached_data(self, symbol: str, start_date: str = "", end_date: str = "", 
                         data_source: str = "default", data_type: str = "stock_data") -> Optional[str]:
-        """查找緩存的數據"""
+        """查找快取的資料"""
         cache_key = self._get_cache_key(symbol, start_date, end_date, data_source, data_type)
         
-        # 檢查緩存是否存在且有效
+        # 檢查快取是否存在且有效
         if self.load_data(cache_key) is not None:
             return cache_key
         
         return None
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計資訊"""
+        """獲取快取統計資訊"""
         stats = {
             'primary_backend': self.primary_backend,
             'fallback_enabled': self.fallback_enabled,
@@ -381,8 +381,8 @@ class AdaptiveCacheSystem:
         return stats
     
     def clear_expired_cache(self):
-        """清理過期緩存"""
-        self.logger.info("開始清理過期緩存...")
+        """清理過期快取"""
+        self.logger.info("開始清理過期快取...")
 
         cleared_files = 0
         # 清理 JSON 格式快取
@@ -415,17 +415,17 @@ class AdaptiveCacheSystem:
             except Exception as e:
                 self.logger.error(f"刪除舊快取檔案失敗 {pkl_file}: {e}")
 
-        self.logger.info(f"檔案緩存清理完成，刪除 {cleared_files} 個過期/不安全檔案")
+        self.logger.info(f"檔案快取清理完成，刪除 {cleared_files} 個過期/不安全檔案")
 
         # MongoDB 會自動清理過期文檔（透過 expires_at 字段）
         # Redis 會自動清理過期鍵
 
 
-# 全局緩存系統實例
+# 全局快取系統實例
 _cache_system = None
 
 def get_cache_system() -> AdaptiveCacheSystem:
-    """獲取全局自適應緩存系統實例"""
+    """獲取全局自適應快取系統實例"""
     global _cache_system
     if _cache_system is None:
         _cache_system = AdaptiveCacheSystem()

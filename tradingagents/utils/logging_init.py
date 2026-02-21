@@ -135,7 +135,7 @@ def setup_analysis_logging(session_id: str):
 
 
 def setup_dataflow_logging():
-    """設置數據流專用日誌"""
+    """設置資料流專用日誌"""
     return get_logger('dataflows')
 
 
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     analysis_logger.info("分析模塊日誌測試")
     
     dataflow_logger = setup_dataflow_logging()
-    dataflow_logger.info("數據流模塊日誌測試")
+    dataflow_logger.info("資料流模塊日誌測試")
     
     llm_logger = setup_llm_logging()
     llm_logger.info("LLM適配器模塊日誌測試")

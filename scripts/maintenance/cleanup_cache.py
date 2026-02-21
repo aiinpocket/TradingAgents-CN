@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-緩存清理工具
-清理過期的快取檔案和數據庫記錄
+快取清理工具
+清理過期的快取檔案和資料庫記錄
 """
 
 import os
@@ -18,8 +18,8 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 def cleanup_file_cache(max_age_days: int = 7):
-    """清理檔案緩存"""
-    logger.info(f" 清理 {max_age_days} 天前的檔案緩存...")
+    """清理檔案快取"""
+    logger.info(f" 清理 {max_age_days} 天前的檔案快取...")
     
     cache_dirs = [
         project_root / "cache",
@@ -34,7 +34,7 @@ def cleanup_file_cache(max_age_days: int = 7):
         if not cache_dir.exists():
             continue
             
-        logger.info(f" 檢查緩存目錄: {cache_dir}")
+        logger.info(f" 檢查快取目錄: {cache_dir}")
         
         for cache_file in cache_dir.rglob("*"):
             if cache_file.is_file():
@@ -47,12 +47,12 @@ def cleanup_file_cache(max_age_days: int = 7):
                 except Exception as e:
                     logger.error(f"   刪除失敗: {cache_file.name} - {e}")
     
-    logger.info(f" 檔案緩存清理完成，刪除了 {total_cleaned} 個檔案")
+    logger.info(f" 檔案快取清理完成，刪除了 {total_cleaned} 個檔案")
     return total_cleaned
 
 def cleanup_database_cache(max_age_days: int = 7):
-    """清理數據庫緩存"""
-    logger.info(f" 清理 {max_age_days} 天前的數據庫緩存...")
+    """清理資料庫快取"""
+    logger.info(f" 清理 {max_age_days} 天前的資料庫快取...")
     
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
@@ -61,14 +61,14 @@ def cleanup_database_cache(max_age_days: int = 7):
         
         if hasattr(cache, 'clear_old_cache'):
             cleared_count = cache.clear_old_cache(max_age_days)
-            logger.info(f" 數據庫緩存清理完成，刪除了 {cleared_count} 條記錄")
+            logger.info(f" 資料庫快取清理完成，刪除了 {cleared_count} 條記錄")
             return cleared_count
         else:
-            logger.info(f"[INFO]當前緩存系統不支持自動清理")
+            logger.info("[INFO]當前快取系統不支援自動清理")
             return 0
             
     except Exception as e:
-        logger.error(f" 數據庫緩存清理失敗: {e}")
+        logger.error(f" 資料庫快取清理失敗: {e}")
         return 0
 
 def cleanup_python_cache():
@@ -99,22 +99,22 @@ def cleanup_python_cache():
                 except Exception as e:
                     logger.error(f"   刪除失敗: {cache_file.relative_to(project_root)} - {e}")
     
-    logger.info(f" Python緩存清理完成，刪除了 {total_cleaned} 個項目")
+    logger.info(f" Python快取清理完成，刪除了 {total_cleaned} 個項目")
     return total_cleaned
 
 def get_cache_statistics():
-    """獲取緩存統計資訊"""
-    logger.info(f" 獲取緩存統計資訊...")
+    """獲取快取統計資訊"""
+    logger.info(f" 獲取快取統計資訊...")
     
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
         
-        logger.info(f" 緩存模式: {cache.get_performance_mode()}")
-        logger.info(f" 數據庫可用: {'是' if cache.is_database_available() else '否'}")
+        logger.info(f" 快取模式: {cache.get_performance_mode()}")
+        logger.info(f" 資料庫可用: {'是' if cache.is_database_available() else '否'}")
         
-        # 統計檔案緩存
+        # 統計檔案快取
         cache_dirs = [
             project_root / "cache",
             project_root / "data" / "cache",
@@ -131,20 +131,20 @@ def get_cache_statistics():
                         total_files += 1
                         total_size += cache_file.stat().st_size
         
-        logger.info(f" 檔案緩存: {total_files} 個檔案，{total_size / 1024 / 1024:.2f} MB")
+        logger.info(f" 檔案快取: {total_files} 個檔案，{total_size / 1024 / 1024:.2f} MB")
         
     except Exception as e:
-        logger.error(f" 獲取緩存統計失敗: {e}")
+        logger.error(f" 獲取快取統計失敗: {e}")
 
 def main():
     """主函數"""
-    logger.info(f" TradingAgents 緩存清理工具")
+    logger.info(f" TradingAgents 快取清理工具")
     logger.info(f"=")
     
     import argparse
 
-    parser = argparse.ArgumentParser(description="清理TradingAgents緩存")
-    parser.add_argument("--days", type=int, default=7, help="清理多少天前的緩存 (預設: 7)")
+    parser = argparse.ArgumentParser(description="清理TradingAgents快取")
+    parser.add_argument("--days", type=int, default=7, help="清理多少天前的快取 (預設: 7)")
     parser.add_argument("--type", choices=["all", "file", "database", "python"], 
                        default="all", help="清理類型 (預設: all)")
     parser.add_argument("--stats", action="store_true", help="只顯示統計資訊，不清理")
@@ -167,11 +167,11 @@ def main():
         total_cleaned += cleanup_python_cache()
     
     logger.info(f"\n")
-    logger.info(f" 緩存清理完成！總共清理了 {total_cleaned} 個項目")
+    logger.info(f" 快取清理完成！總共清理了 {total_cleaned} 個項目")
     logger.info(f"\n 使用提示:")
-    logger.info(f"  --stats     查看緩存統計")
-    logger.info(f"  --days 3    清理3天前的緩存")
-    logger.info(f"  --type file 只清理檔案緩存")
+    logger.info(f"  --stats     查看快取統計")
+    logger.info(f"  --days 3    清理3天前的快取")
+    logger.info(f"  --type file 只清理檔案快取")
 
 if __name__ == "__main__":
     main()

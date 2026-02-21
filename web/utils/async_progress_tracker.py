@@ -189,8 +189,8 @@ class AsyncProgressTracker:
     def _generate_dynamic_steps(self) -> List[Dict]:
         """根據分析師數量和研究深度動態生成分析步驟"""
         steps = [
-            {"name": "準備階段", "description": "驗證股票代碼，檢查數據源可用性", "weight": 0.05},
-            {"name": "環境檢查", "description": "檢查API密鑰配置，確保數據獲取正常", "weight": 0.02},
+            {"name": "準備階段", "description": "驗證股票代碼，檢查資料來源可用性", "weight": 0.05},
+            {"name": "環境檢查", "description": "檢查API密鑰配置，確保資料取得正常", "weight": 0.02},
             {"name": "成本估算", "description": "根據分析深度預估API調用成本", "weight": 0.01},
             {"name": "參數設置", "description": "配置分析參數和AI模型選擇", "weight": 0.02},
             {"name": "啟動引擎", "description": "初始化AI分析引擎，準備開始分析", "weight": 0.05},
@@ -294,7 +294,7 @@ class AsyncProgressTracker:
         # 基礎時間（秒）- 環境準備、配置等
         base_time = 60
         
-        # 每個分析師的實際耗時（基於真實測試數據）
+        # 每個分析師的實際耗時（基於真實測試資料）
         analyst_base_time = {
             1: 120,  # 快速分析：每個分析師約2分鐘
             2: 180,  # 基礎分析：每個分析師約3分鐘  
@@ -342,7 +342,7 @@ class AsyncProgressTracker:
         progress_percentage = self._calculate_weighted_progress() * 100
         remaining_time = self._estimate_remaining_time(progress_percentage / 100, elapsed_time)
 
-        # 更新進度數據
+        # 更新進度資料
         current_step_info = self.analysis_steps[self.current_step] if self.current_step < len(self.analysis_steps) else self.analysis_steps[-1]
 
         # 特殊處理工具調用訊息，更新步驟描述但不改變步驟
@@ -350,13 +350,13 @@ class AsyncProgressTracker:
         if "工具調用" in message:
             # 提取工具名稱並更新描述
             if "get_stock_market_data_unified" in message:
-                step_description = "正在獲取市場數據和技術指標..."
+                step_description = "正在獲取市場資料和技術指標..."
             elif "get_stock_fundamentals_unified" in message:
-                step_description = "正在獲取基本面數據和財務指標..."
+                step_description = "正在獲取基本面資料和財務指標..."
             elif "get_us_stock_data" in message:
-                step_description = "正在獲取美股市場數據..."
+                step_description = "正在獲取美股市場資料..."
             elif "get_us_fundamentals" in message:
-                step_description = "正在獲取美股基本面數據..."
+                step_description = "正在獲取美股基本面資料..."
             else:
                 step_description = "正在調用分析工具..."
         elif "模塊開始" in message:
@@ -391,8 +391,8 @@ class AsyncProgressTracker:
         # 開始分析階段 - 只匹配最初的開始訊息
         if "開始股票分析" in message:
             return 0
-        # 數據驗證階段
-        elif "驗證" in message or "預獲取" in message or "數據準備" in message:
+        # 資料驗證階段
+        elif "驗證" in message or "預獲取" in message or "資料準備" in message:
             return 0
         # 環境準備階段
         elif "環境" in message or "api" in message_lower or "密鑰" in message:
@@ -513,7 +513,7 @@ class AsyncProgressTracker:
                 self.redis_client.setex(key, 3600, data_json)  # 1小時過期
 
                 logger.info(f"[Redis寫入] {self.analysis_id} -> {status} | {current_step_name} | {progress_pct:.1f}%")
-                logger.debug(f"[Redis詳情] 鍵: {key}, 數據大小: {len(data_json)} 字節")
+                logger.debug(f"[Redis詳情] 鍵: {key}, 資料大小: {len(data_json)} 字節")
             else:
                 # 保存到檔案（安全序列化）
                 safe_data = safe_serialize(self.progress_data)
@@ -537,8 +537,8 @@ class AsyncProgressTracker:
                         json.dump(safe_data, f, ensure_ascii=False, indent=2)
                     logger.info(f"[備用儲存] 檔案保存成功: {backup_file}")
                 else:
-                    # 檔案儲存失敗，嘗試簡化數據
-                    logger.warning("[異步進度] 檔案保存失敗，嘗試簡化數據")
+                    # 檔案儲存失敗，嘗試簡化資料
+                    logger.warning("[異步進度] 檔案保存失敗，嘗試簡化資料")
                     simplified_data = {
                         'analysis_id': self.analysis_id,
                         'status': self.progress_data.get('status', 'unknown'),
@@ -549,7 +549,7 @@ class AsyncProgressTracker:
                     backup_file = f"./data/progress_{self.analysis_id}.json"
                     with open(backup_file, 'w', encoding='utf-8') as f:
                         json.dump(simplified_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"[備用儲存] 簡化數據保存成功: {backup_file}")
+                    logger.info(f"[備用儲存] 簡化資料保存成功: {backup_file}")
             except Exception as backup_e:
                 logger.error(f"[異步進度] 備用儲存也失敗: {backup_e}")
     
@@ -701,7 +701,7 @@ def get_latest_analysis_id() -> Optional[str]:
                 if not keys:
                     return None
 
-                # 獲取每個鍵的數據，找到最新的
+                # 獲取每個鍵的資料，找到最新的
                 latest_time = 0
                 latest_id = None
 

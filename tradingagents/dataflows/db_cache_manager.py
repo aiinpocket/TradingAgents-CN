@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MongoDB + Redis 數據庫緩存管理器
-提供高性能的股票數據緩存和持久化儲存
+MongoDB + Redis 資料庫快取管理器
+提供高性能的股票資料快取和持久化儲存
 """
 
 import os
@@ -35,7 +35,7 @@ except ImportError:
 
 
 class DatabaseCacheManager:
-    """MongoDB + Redis 數據庫緩存管理器"""
+    """MongoDB + Redis 資料庫快取管理器"""
     
     def __init__(self,
                  mongodb_url: Optional[str] = None,
@@ -43,13 +43,13 @@ class DatabaseCacheManager:
                  mongodb_db: str = "tradingagents",
                  redis_db: int = 0):
         """
-        初始化數據庫緩存管理器
+        初始化資料庫快取管理器
 
         Args:
             mongodb_url: MongoDB連接URL，預設使用配置檔端口
             redis_url: Redis連接URL，預設使用配置檔端口
-            mongodb_db: MongoDB數據庫名
-            redis_db: Redis數據庫編號
+            mongodb_db: MongoDB資料庫名
+            redis_db: Redis資料庫編號
         """
         # 從配置檔獲取正確的端口
         mongodb_port = os.getenv("MONGODB_PORT", "27018")
@@ -80,7 +80,7 @@ class DatabaseCacheManager:
         self._init_mongodb()
         self._init_redis()
         
-        logger.info("數據庫緩存管理器初始化完成")
+        logger.info("資料庫快取管理器初始化完成")
         logger.debug(f"   MongoDB: {'已連接' if self.mongodb_client else '未連接'}")
         logger.debug(f"   Redis: {'已連接' if self.redis_client else '未連接'}")
     
@@ -164,7 +164,7 @@ class DatabaseCacheManager:
             return
         
         try:
-            # 股票數據集合索引
+            # 股票資料集合索引
             stock_collection = self.mongodb_db.stock_data
             stock_collection.create_index([
                 ("symbol", 1),
@@ -174,7 +174,7 @@ class DatabaseCacheManager:
             ])
             stock_collection.create_index([("created_at", 1)])
             
-            # 新聞數據集合索引
+            # 新聞資料集合索引
             news_collection = self.mongodb_db.news_data
             news_collection.create_index([
                 ("symbol", 1),
@@ -183,7 +183,7 @@ class DatabaseCacheManager:
             ])
             news_collection.create_index([("created_at", 1)])
             
-            # 基本面數據集合索引
+            # 基本面資料集合索引
             fundamentals_collection = self.mongodb_db.fundamentals_data
             fundamentals_collection.create_index([
                 ("symbol", 1),
@@ -198,7 +198,7 @@ class DatabaseCacheManager:
             logger.error(f"MongoDB索引創建失敗: {e}")
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
-        """生成緩存鍵"""
+        """生成快取鍵"""
         params_str = f"{data_type}_{symbol}"
         for key, value in sorted(kwargs.items()):
             params_str += f"_{key}_{value}"
@@ -210,18 +210,18 @@ class DatabaseCacheManager:
                        start_date: str = None, end_date: str = None,
                        data_source: str = "unknown", market_type: str = None) -> str:
         """
-        保存股票數據到MongoDB和Redis
+        保存股票資料到MongoDB和Redis
         
         Args:
             symbol: 股票代碼
-            data: 股票數據
+            data: 股票資料
             start_date: 開始日期
             end_date: 結束日期
-            data_source: 數據源
+            data_source: 資料來源
             market_type: 市場類型 (僅支援 us)
         
         Returns:
-            cache_key: 緩存鍵
+            cache_key: 快取鍵
         """
         cache_key = self._generate_cache_key("stock", symbol,
                                            start_date=start_date,
@@ -236,7 +236,7 @@ class DatabaseCacheManager:
             # 統一視為美股
             market_type = "us"
         
-        # 準備文檔數據
+        # 準備文檔資料
         doc = {
             "_id": cache_key,
             "symbol": symbol,
@@ -249,7 +249,7 @@ class DatabaseCacheManager:
             "updated_at": datetime.utcnow()
         }
         
-        # 處理數據格式
+        # 處理資料格式
         if isinstance(data, pd.DataFrame):
             doc["data"] = data.to_json(orient='records', date_format='iso')
             doc["data_format"] = "dataframe_json"
@@ -262,11 +262,11 @@ class DatabaseCacheManager:
             try:
                 collection = self.mongodb_db.stock_data
                 collection.replace_one({"_id": cache_key}, doc, upsert=True)
-                logger.info(f"股票數據已保存到MongoDB: {symbol} -> {cache_key}")
+                logger.info(f"股票資料已保存到MongoDB: {symbol} -> {cache_key}")
             except Exception as e:
                 logger.error(f"MongoDB保存失敗: {e}")
         
-        # 保存到Redis（快速緩存，6小時過期）
+        # 保存到Redis（快速快取，6小時過期）
         if self.redis_client:
             try:
                 redis_data = {
@@ -281,14 +281,14 @@ class DatabaseCacheManager:
                     6 * 3600,  # 6小時過期
                     json.dumps(redis_data, ensure_ascii=False)
                 )
-                logger.info(f"股票數據已緩存到Redis: {symbol} -> {cache_key}")
+                logger.info(f"股票資料已快取到Redis: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"Redis緩存失敗: {e}")
+                logger.error(f"Redis快取失敗: {e}")
         
         return cache_key
     
     def load_stock_data(self, cache_key: str) -> Optional[Union[pd.DataFrame, str]]:
-        """從Redis或MongoDB載入股票數據"""
+        """從Redis或MongoDB載入股票資料"""
         
         # 首先嘗試從Redis載入（更快）
         if self.redis_client:
@@ -296,7 +296,7 @@ class DatabaseCacheManager:
                 redis_data = self.redis_client.get(cache_key)
                 if redis_data:
                     data_dict = json.loads(redis_data)
-                    logger.info(f"從Redis載入數據: {cache_key}")
+                    logger.info(f"從Redis載入資料: {cache_key}")
                     
                     if data_dict["data_format"] == "dataframe_json":
                         return pd.read_json(data_dict["data"], orient='records')
@@ -312,9 +312,9 @@ class DatabaseCacheManager:
                 doc = collection.find_one({"_id": cache_key})
                 
                 if doc:
-                    logger.info(f"從MongoDB載入數據: {cache_key}")
+                    logger.info(f"從MongoDB載入資料: {cache_key}")
                     
-                    # 同時更新到Redis緩存
+                    # 同時更新到Redis快取
                     if self.redis_client:
                         try:
                             redis_data = {
@@ -329,7 +329,7 @@ class DatabaseCacheManager:
                                 6 * 3600,
                                 json.dumps(redis_data, ensure_ascii=False)
                             )
-                            logger.info("數據已同步到Redis緩存")
+                            logger.info("資料已同步到Redis快取")
                         except Exception as e:
                             logger.error(f"Redis同步失敗: {e}")
                     
@@ -346,9 +346,9 @@ class DatabaseCacheManager:
     def find_cached_stock_data(self, symbol: str, start_date: str = None,
                               end_date: str = None, data_source: str = None,
                               max_age_hours: int = 6) -> Optional[str]:
-        """查找匹配的緩存數據"""
+        """查找匹配的快取資料"""
         
-        # 生成精確匹配的緩存鍵
+        # 生成精確匹配的快取鍵
         exact_key = self._generate_cache_key("stock", symbol,
                                            start_date=start_date,
                                            end_date=end_date,
@@ -387,13 +387,13 @@ class DatabaseCacheManager:
             except Exception as e:
                 logger.error(f"MongoDB查詢失敗: {e}")
         
-        logger.error(f"未找到有效緩存: {symbol}")
+        logger.error(f"未找到有效快取: {symbol}")
         return None
 
     def save_news_data(self, symbol: str, news_data: str,
                       start_date: str = None, end_date: str = None,
                       data_source: str = "unknown") -> str:
-        """保存新聞數據到MongoDB和Redis"""
+        """保存新聞資料到MongoDB和Redis"""
         cache_key = self._generate_cache_key("news", symbol,
                                            start_date=start_date,
                                            end_date=end_date,
@@ -417,7 +417,7 @@ class DatabaseCacheManager:
             try:
                 collection = self.mongodb_db.news_data
                 collection.replace_one({"_id": cache_key}, doc, upsert=True)
-                logger.info(f"新聞數據已保存到MongoDB: {symbol} -> {cache_key}")
+                logger.info(f"新聞資料已保存到MongoDB: {symbol} -> {cache_key}")
             except Exception as e:
                 logger.error(f"MongoDB保存失敗: {e}")
 
@@ -435,16 +435,16 @@ class DatabaseCacheManager:
                     24 * 3600,  # 24小時過期
                     json.dumps(redis_data, ensure_ascii=False)
                 )
-                logger.info(f"新聞數據已緩存到Redis: {symbol} -> {cache_key}")
+                logger.info(f"新聞資料已快取到Redis: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"Redis緩存失敗: {e}")
+                logger.error(f"Redis快取失敗: {e}")
 
         return cache_key
 
     def save_fundamentals_data(self, symbol: str, fundamentals_data: str,
                               analysis_date: str = None,
                               data_source: str = "unknown") -> str:
-        """保存基本面數據到MongoDB和Redis"""
+        """保存基本面資料到MongoDB和Redis"""
         if not analysis_date:
             analysis_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -468,7 +468,7 @@ class DatabaseCacheManager:
             try:
                 collection = self.mongodb_db.fundamentals_data
                 collection.replace_one({"_id": cache_key}, doc, upsert=True)
-                logger.info(f"基本面數據已保存到MongoDB: {symbol} -> {cache_key}")
+                logger.info(f"基本面資料已保存到MongoDB: {symbol} -> {cache_key}")
             except Exception as e:
                 logger.error(f"MongoDB保存失敗: {e}")
 
@@ -487,14 +487,14 @@ class DatabaseCacheManager:
                     24 * 3600,  # 24小時過期
                     json.dumps(redis_data, ensure_ascii=False)
                 )
-                logger.info(f"基本面數據已緩存到Redis: {symbol} -> {cache_key}")
+                logger.info(f"基本面資料已快取到Redis: {symbol} -> {cache_key}")
             except Exception as e:
-                logger.error(f"Redis緩存失敗: {e}")
+                logger.error(f"Redis快取失敗: {e}")
 
         return cache_key
 
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計資訊"""
+        """獲取快取統計資訊"""
         stats = {
             "mongodb": {"available": self.mongodb_db is not None, "collections": {}},
             "redis": {"available": self.redis_client is not None, "keys": 0, "memory_usage": "N/A"}
@@ -526,7 +526,7 @@ class DatabaseCacheManager:
         return stats
 
     def clear_old_cache(self, max_age_days: int = 7):
-        """清理過期緩存"""
+        """清理過期快取"""
         cutoff_time = datetime.utcnow() - timedelta(days=max_age_days)
         cleared_count = 0
 
@@ -546,7 +546,7 @@ class DatabaseCacheManager:
         return cleared_count
 
     def close(self):
-        """關閉數據庫連接"""
+        """關閉資料庫連接"""
         if self.mongodb_client:
             self.mongodb_client.close()
             logger.info("MongoDB連接已關閉")
@@ -556,11 +556,11 @@ class DatabaseCacheManager:
             logger.info("Redis連接已關閉")
 
 
-# 全局數據庫緩存實例
+# 全局資料庫快取實例
 _db_cache_instance = None
 
 def get_db_cache() -> DatabaseCacheManager:
-    """獲取全局數據庫緩存實例"""
+    """獲取全局資料庫快取實例"""
     global _db_cache_instance
     if _db_cache_instance is None:
         _db_cache_instance = DatabaseCacheManager()

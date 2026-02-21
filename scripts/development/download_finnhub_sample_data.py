@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Finnhub示例數據下載腳本
+Finnhub示例資料下載腳本
 
-這個腳本用於創建示例的Finnhub資料檔案，以便測試新聞數據功能。
-在沒有真實API密鑰或數據的情況下，可以使用此腳本創建測試數據。
+這個腳本用於創建示例的Finnhub資料檔案，以便測試新聞資料功能。
+在沒有真實API密鑰或資料的情況下，可以使用此腳本創建測試資料。
 """
 
 import os
@@ -26,18 +26,18 @@ from tradingagents.dataflows.config import get_config, set_config
 
 def create_sample_news_data(ticker, data_dir, days=7):
     """
-    創建示例新聞數據
+    創建示例新聞資料
     
     Args:
         ticker (str): 股票代碼
-        data_dir (str): 數據目錄
-        days (int): 生成多少天的數據
+        data_dir (str): 資料目錄
+        days (int): 生成多少天的資料
     """
     # 創建目錄結構
     news_dir = os.path.join(data_dir, "finnhub_data", "news_data")
     os.makedirs(news_dir, exist_ok=True)
     
-    # 生成示例新聞數據
+    # 生成示例新聞資料
     sample_news = {
         "AAPL": [
             "蘋果公司發布新款iPhone，銷量預期強勁",
@@ -76,7 +76,7 @@ def create_sample_news_data(ticker, data_dir, days=7):
         ]
     }
     
-    # 為指定股票生成數據
+    # 為指定股票生成資料
     if ticker not in sample_news:
         # 如果不在預定義列表中，使用通用模板
         headlines = [
@@ -89,7 +89,7 @@ def create_sample_news_data(ticker, data_dir, days=7):
     else:
         headlines = sample_news[ticker]
     
-    # 生成日期數據
+    # 生成日期資料
     data = {}
     current_date = datetime.now()
     
@@ -121,19 +121,19 @@ def create_sample_news_data(ticker, data_dir, days=7):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f" 創建示例新聞數據: {file_path}")
-    logger.info(f"   包含 {len(data)} 天的數據，共 {sum(len(news) for news in data.values())} 條新聞")
+    logger.info(f" 創建示例新聞資料: {file_path}")
+    logger.info(f"   包含 {len(data)} 天的資料，共 {sum(len(news) for news in data.values())} 條新聞")
     
     return file_path
 
 def create_sample_insider_data(ticker, data_dir, data_type):
     """
-    創建示例內部人數據
+    創建示例內部人資料
     
     Args:
         ticker (str): 股票代碼
-        data_dir (str): 數據目錄
-        data_type (str): 數據類型 (insider_senti 或 insider_trans)
+        data_dir (str): 資料目錄
+        data_type (str): 資料類型 (insider_senti 或 insider_trans)
     """
     # 創建目錄結構
     insider_dir = os.path.join(data_dir, "finnhub_data", data_type)
@@ -143,8 +143,8 @@ def create_sample_insider_data(ticker, data_dir, data_type):
     current_date = datetime.now()
     
     if data_type == "insider_senti":
-        # 內部人情緒數據
-        for i in range(3):  # 生成3個月的數據
+        # 內部人情緒資料
+        for i in range(3):  # 生成3個月的資料
             date = current_date - timedelta(days=30*i)
             date_str = date.strftime("%Y-%m-%d")
             
@@ -158,10 +158,10 @@ def create_sample_insider_data(ticker, data_dir, data_type):
             data[date_str] = sentiment_data
     
     elif data_type == "insider_trans":
-        # 內部人交易數據
+        # 內部人交易資料
         executives = ["CEO John Smith", "CFO Jane Doe", "CTO Mike Johnson"]
         
-        for i in range(7):  # 生成7天的數據
+        for i in range(7):  # 生成7天的資料
             date = current_date - timedelta(days=i)
             date_str = date.strftime("%Y-%m-%d")
             
@@ -182,14 +182,14 @@ def create_sample_insider_data(ticker, data_dir, data_type):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f" 創建示例{data_type}數據: {file_path}")
+    logger.info(f" 創建示例{data_type}資料: {file_path}")
     return file_path
 
 def main():
     """
     主函數
     """
-    logger.info(f"Finnhub示例數據下載腳本")
+    logger.info(f"Finnhub示例資料下載腳本")
     logger.info(f"=")
     
     # 獲取配置
@@ -197,35 +197,35 @@ def main():
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        logger.error(f" 數據目錄未配置")
+        logger.error(f" 資料目錄未配置")
         return
     
-    logger.info(f"數據目錄: {data_dir}")
+    logger.info(f"資料目錄: {data_dir}")
     
-    # 確保數據目錄存在
+    # 確保資料目錄存在
     os.makedirs(data_dir, exist_ok=True)
     
     # 常用股票代碼
     tickers = ["AAPL", "TSLA", "MSFT", "GOOGL", "AMZN"]
     
-    logger.info(f"\n創建示例數據...")
+    logger.info(f"\n創建示例資料...")
     
-    # 為每個股票創建新聞數據
+    # 為每個股票創建新聞資料
     for ticker in tickers:
         create_sample_news_data(ticker, data_dir, days=7)
         create_sample_insider_data(ticker, data_dir, "insider_senti")
         create_sample_insider_data(ticker, data_dir, "insider_trans")
     
-    logger.info(f"\n=== 數據創建完成 ===")
-    logger.info(f"數據位置: {data_dir}")
-    logger.info(f"包含以下股票的示例數據:")
+    logger.info(f"\n=== 資料創建完成 ===")
+    logger.info(f"資料位置: {data_dir}")
+    logger.info(f"包含以下股票的示例資料:")
     for ticker in tickers:
         logger.info(f"  - {ticker}: 新聞、內部人情緒、內部人交易")
     
     logger.info(f"\n現在您可以測試Finnhub新聞功能了！")
     
-    # 測試數據獲取
-    logger.info(f"\n=== 測試數據獲取 ===")
+    # 測試資料取得
+    logger.info(f"\n=== 測試資料取得 ===")
     try:
         from tradingagents.dataflows.interface import get_finnhub_news
 
@@ -237,10 +237,10 @@ def main():
         )
         
         if result and "無法獲取" not in result:
-            logger.info(f" 新聞數據獲取成功！")
+            logger.info(f" 新聞資料取得成功！")
             logger.info(f"示例內容: {result[:200]}...")
         else:
-            logger.error(f" 新聞數據獲取失敗，請檢查配置")
+            logger.error(f" 新聞資料取得失敗，請檢查配置")
             logger.info(f"返回結果: {result}")
     
     except Exception as e:

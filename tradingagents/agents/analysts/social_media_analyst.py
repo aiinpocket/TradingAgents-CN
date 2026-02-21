@@ -56,7 +56,7 @@ def create_social_media_analyst(llm, toolkit):
         if toolkit.config["online_tools"]:
             tools = [toolkit.get_stock_news_openai, toolkit.get_finnhub_sentiment_data]
         else:
-            # 使用 FinnHub 情緒量化數據和統一情緒分析工具
+            # 使用 FinnHub 情緒量化資料和統一情緒分析工具
             tools = [
                 toolkit.get_stock_sentiment_unified,
                 toolkit.get_finnhub_sentiment_data,
@@ -67,11 +67,11 @@ def create_social_media_analyst(llm, toolkit):
 
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 
-**使用 FinnHub 情緒量化數據**（新聞看多/看空比例、分析師共識評分），這些數據提供客觀的量化指標。
+**使用 FinnHub 情緒量化資料**（新聞看多/看空比例、分析師共識評分），這些資料提供客觀的量化指標。
 搭配新聞分析來理解市場情緒的具體內容和變化趨勢。
 
 您的主要職責包括：
-1. 使用 FinnHub 情緒量化數據取得客觀的看多/看空比例和行業比較
+1. 使用 FinnHub 情緒量化資料取得客觀的看多/看空比例和行業比較
 2. 監控財經媒體和新聞對股票的報導傾向
 3. 識別影響股價的熱點事件和市場傳言
 4. 評估散戶與機構投資者的觀點差異
@@ -81,7 +81,7 @@ def create_social_media_analyst(llm, toolkit):
 重點關注來源：
 - 財經新聞：Bloomberg、CNBC、Reuters、Yahoo Finance
 - 專業分析：各大券商研報、Seeking Alpha
-- FinnHub 情緒量化數據：新聞情緒評分、分析師共識
+- FinnHub 情緒量化資料：新聞情緒評分、分析師共識
 
 分析要點：
 - FinnHub 新聞情緒量化指標（bullish/bearish 比例、與行業平均的比較）
@@ -96,7 +96,7 @@ def create_social_media_analyst(llm, toolkit):
 - 識別情緒驅動的價格支撐位和阻力位
 - 提供基於情緒分析的價格預期調整
 - 評估市場情緒對估值的影響程度
-- 不允許回覆'無法評估情緒影響'或'需要更多數據'
+- 不允許回覆'無法評估情緒影響'或'需要更多資料'
 
 必須包含：
 - 情緒指數評分（1-10分）
@@ -104,7 +104,7 @@ def create_social_media_analyst(llm, toolkit):
 - 基於情緒的交易時機建議
 
 請撰寫詳細的中文分析報告，並在報告末尾附上Markdown表格總結關鍵發現。
-注意：如果特定平台的數據獲取受限，請明確說明並提供替代分析建議。"""
+注意：如果特定平台的資料取得受限，請明確說明並提供替代分析建議。"""
         )
 
         prompt = ChatPromptTemplate.from_messages(

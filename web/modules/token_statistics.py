@@ -42,14 +42,14 @@ def render_token_statistics():
         days = days_map[time_range]
         
         # 刷新按鈕
-        if st.button("刷新數據", use_container_width=True):
+        if st.button("刷新資料", use_container_width=True):
             st.rerun()
         
-        # 匯出數據按鈕
-        if st.button("匯出統計數據", use_container_width=True):
+        # 匯出資料按鈕
+        if st.button("匯出統計資料", use_container_width=True):
             export_statistics_data(days)
     
-    # 獲取統計數據
+    # 獲取統計資料
     try:
         stats = config_manager.get_usage_statistics(days)
         records = load_detailed_records(days)
@@ -85,8 +85,8 @@ def render_token_statistics():
         render_detailed_records_table(records)
         
     except Exception as e:
-        st.error(f"獲取統計數據失敗: {str(e)}")
-        st.info("請檢查配置檔和數據儲存是否正常")
+        st.error(f"獲取統計資料失敗: {str(e)}")
+        st.info("請檢查配置檔和資料儲存是否正常")
 
 def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     """渲染概覽指標"""
@@ -152,7 +152,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
     with col1:
         st.markdown("**Token使用分布**")
         
-        # 創建饼圖數據
+        # 創建饼圖資料
         token_data = {
             'Token類型': ['輸入Token', '輸出Token'],
             '數量': [stats['total_input_tokens'], stats['total_output_tokens']]
@@ -200,7 +200,7 @@ def render_provider_statistics(stats: Dict[str, Any]):
     provider_stats = stats.get('provider_stats', {})
     
     if not provider_stats:
-        st.info("暫無供應商統計數據")
+        st.info("暫無供應商統計資料")
         return
     
     # 創建供應商對比表
@@ -251,7 +251,7 @@ def render_cost_trends(records: List[UsageRecord]):
     """渲染成本趨勢圖"""
     st.markdown("**成本趨勢分析**")
     
-    # 按日期聚合數據
+    # 按日期聚合資料
     df_records = pd.DataFrame([
         {
             'date': datetime.fromisoformat(record.timestamp).date(),
@@ -263,7 +263,7 @@ def render_cost_trends(records: List[UsageRecord]):
     ])
     
     if df_records.empty:
-        st.info("暫無趨勢數據")
+        st.info("暫無趨勢資料")
         return
     
     # 按日期聚合
@@ -372,12 +372,12 @@ def load_detailed_records(days: int) -> List[UsageRecord]:
         return []
 
 def export_statistics_data(days: int):
-    """匯出統計數據"""
+    """匯出統計資料"""
     try:
         stats = config_manager.get_usage_statistics(days)
         records = load_detailed_records(days)
         
-        # 創建匯出數據
+        # 創建匯出資料
         export_data = {
             'summary': stats,
             'detailed_records': [
@@ -401,13 +401,13 @@ def export_statistics_data(days: int):
         
         # 提供下載
         st.download_button(
-            label="下載統計數據",
+            label="下載統計資料",
             data=json.dumps(export_data, ensure_ascii=False, indent=2),
             file_name=filename,
             mime="application/json"
         )
         
-        st.success(f"統計數據已準備好下載: {filename}")
+        st.success(f"統計資料已準備好下載: {filename}")
         
     except Exception as e:
         st.error(f"匯出失敗: {str(e)}")

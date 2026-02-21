@@ -94,13 +94,13 @@ def check_basic_dependencies():
     return missing_packages
 
 def create_fallback_config():
-    """創建無數據庫的備用配置"""
+    """創建無資料庫的備用配置"""
     logger.info(f"\n 創建備用配置...")
     
     fallback_config = {
         "cache": {
             "enabled": True,
-            "backend": "file",  # 使用檔案緩存而不是數據庫
+            "backend": "file",  # 使用檔案快取而不是資料庫
             "file_cache_dir": "./tradingagents/dataflows/data_cache",
             "ttl_settings": {
                 "us_stock_data": 7200,      # 2小時
@@ -109,7 +109,7 @@ def create_fallback_config():
             }
         },
         "database": {
-            "enabled": False,  # 禁用數據庫
+            "enabled": False,  # 禁用資料庫
             "mongodb": {
                 "enabled": False
             },
@@ -122,20 +122,20 @@ def create_fallback_config():
     return fallback_config
 
 def test_cache_without_database():
-    """測試不使用數據庫的緩存功能"""
-    logger.info(f"\n 測試檔案緩存功能...")
+    """測試不使用資料庫的快取功能"""
+    logger.info(f"\n 測試檔案快取功能...")
     
     try:
-        # 匯入緩存管理器
+        # 匯入快取管理器
         from tradingagents.dataflows.cache_manager import get_cache
 
         
-        # 創建緩存實例
+        # 創建快取實例
         cache = get_cache()
-        logger.info(f" 緩存實例創建成功: {type(cache).__name__}")
+        logger.info(f" 快取實例創建成功: {type(cache).__name__}")
         
         # 測試基本功能
-        test_data = "測試數據 - 無數據庫模式"
+        test_data = "測試資料 - 無資料庫模式"
         cache_key = cache.save_stock_data(
             symbol="TEST",
             data=test_data,
@@ -143,19 +143,19 @@ def test_cache_without_database():
             end_date="2024-12-31",
             data_source="no_db_test"
         )
-        logger.info(f" 數據保存成功: {cache_key}")
+        logger.info(f" 資料保存成功: {cache_key}")
         
-        # 載入數據
+        # 載入資料
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            logger.info(f" 數據載入成功，檔案緩存工作正常")
+            logger.info(f" 資料載入成功，檔案快取工作正常")
             return True
         else:
-            logger.error(f" 數據載入失敗")
+            logger.error(f" 資料載入失敗")
             return False
             
     except Exception as e:
-        logger.error(f" 緩存測試失敗: {e}")
+        logger.error(f" 快取測試失敗: {e}")
         traceback.print_exc()
         return False
 
@@ -164,16 +164,16 @@ def generate_installation_guide():
     guide = """
 # 依賴安裝指南
 
-## 基本運行（無數據庫）
-系統可以在沒有MongoDB和Redis的情況下正常運行，使用檔案緩存。
+## 基本運行（無資料庫）
+系統可以在沒有MongoDB和Redis的情況下正常運行，使用檔案快取。
 
 ### 必需依賴
 ```bash
 pip install pandas yfinance requests
 ```
 
-## 完整功能（包含數據庫）
-如果需要企業級緩存和數據持久化功能：
+## 完整功能（包含資料庫）
+如果需要企業級快取和資料持久化功能：
 
 ### 1. 安裝Python包
 ```bash
@@ -204,20 +204,20 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 
 ## 配置說明
 
-### 檔案緩存模式（預設）
-- 緩存存儲在本地檔案系統
+### 檔案快取模式（預設）
+- 快取存儲在本地檔案系統
 - 性能良好，適合單機使用
 - 無需額外服務
 
-### 數據庫模式（可選）
-- MongoDB：數據持久化
-- Redis：高性能緩存
+### 資料庫模式（可選）
+- MongoDB：資料持久化
+- Redis：高性能快取
 - 適合生產環境和多實例部署
 
 ## 運行模式檢測
 系統會自動檢測可用的服務：
-1. 如果MongoDB/Redis可用，自動使用數據庫緩存
-2. 如果不可用，自動降級到檔案緩存
+1. 如果MongoDB/Redis可用，自動使用資料庫快取
+2. 如果不可用，自動降級到檔案快取
 3. 功能完全兼容，性能略有差異
 """
     
@@ -231,7 +231,7 @@ def main():
     # 檢查基本依賴
     missing_packages = check_basic_dependencies()
     
-    # 檢查數據庫依賴
+    # 檢查資料庫依賴
     pymongo_available, mongodb_running = check_mongodb_availability()
     redis_available, redis_running = check_redis_availability()
     
@@ -244,21 +244,21 @@ def main():
         return False
     
     if not pymongo_available and not redis_available:
-        logger.info(f"[INFO]數據庫依賴未安裝，將使用檔案緩存模式")
+        logger.info(f"[INFO]資料庫依賴未安裝，將使用檔案快取模式")
         logger.info(f" 系統可以正常運行，性能良好")
         
     elif not mongodb_running and not redis_running:
-        logger.info(f"[INFO]數據庫服務未運行，將使用檔案緩存模式")
+        logger.info(f"[INFO]資料庫服務未運行，將使用檔案快取模式")
         logger.info(f" 系統可以正常運行")
         
     else:
-        logger.info(f" 數據庫服務可用，將使用高性能緩存模式")
+        logger.info(f" 資料庫服務可用，將使用高性能快取模式")
         if mongodb_running:
-            logger.info(f"   MongoDB: 數據持久化")
+            logger.info(f"   MongoDB: 資料持久化")
         if redis_running:
-            logger.info(f"   Redis: 高性能緩存")
+            logger.info(f"   Redis: 高性能快取")
     
-    # 測試緩存功能
+    # 測試快取功能
     cache_works = test_cache_without_database()
     
     # 生成安裝指南
@@ -273,7 +273,7 @@ def main():
     logger.error(f"  基本依賴: {' 完整' if not missing_packages else ' 缺失'}")
     logger.error(f"  MongoDB: {' 可用' if mongodb_running else ' 不可用'}")
     logger.error(f"  Redis: {' 可用' if redis_running else ' 不可用'}")
-    logger.error(f"  緩存功能: {' 正常' if cache_works else ' 異常'}")
+    logger.error(f"  快取功能: {' 正常' if cache_works else ' 異常'}")
     
     if not missing_packages and cache_works:
         logger.info(f"\n 系統可以正常運行！")

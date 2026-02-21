@@ -81,7 +81,7 @@ def quick_redis_test(host=None, port=None, password=None):
         print(f"  SET吞吐量: {set_throughput:.2f} 操作/秒")
         print(f"  GET吞吐量: {get_throughput:.2f} 操作/秒")
         
-        # 清理測試數據
+        # 清理測試資料
         r.delete("test_key")
         for i in range(100):
             r.delete(f"throughput_test_{i}")

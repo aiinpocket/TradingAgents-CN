@@ -26,7 +26,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
     Args:
         tool_name: 工具名稱，如果不提供則使用函數名
         log_args: 是否記錄參數
-        log_result: 是否記錄返回結果（註意：可能包含大量數據）
+        log_result: 是否記錄返回結果（註意：可能包含大量資料）
     """
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
@@ -115,10 +115,10 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
 
 def log_data_source_call(source_name: str):
     """
-    數據源調用專用日誌裝飾器
+    資料來源調用專用日誌裝飾器
     
     Args:
-        source_name: 數據源名稱（如：yfinance、finnhub、googlenews 等）
+        source_name: 資料來源名稱（如：yfinance、finnhub、googlenews 等）
     """
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
@@ -128,9 +128,9 @@ def log_data_source_call(source_name: str):
             # 提取股票代碼（通常是第一個參數）
             symbol = args[0] if args else kwargs.get('symbol', kwargs.get('ticker', 'unknown'))
             
-            # 記錄數據源調用開始
+            # 記錄資料來源調用開始
             tool_logger.info(
-                f"[數據源] {source_name} - 獲取 {symbol} 數據",
+                f"[資料來源] {source_name} - 獲取 {symbol} 資料",
                 extra={
                     'data_source': source_name,
                     'symbol': symbol,
@@ -148,7 +148,7 @@ def log_data_source_call(source_name: str):
                 
                 if success:
                     tool_logger.info(
-                        f"[數據源] {source_name} - {symbol} 數據獲取成功 (耗時: {duration:.2f}s)",
+                        f"[資料來源] {source_name} - {symbol} 資料取得成功 (耗時: {duration:.2f}s)",
                         extra={
                             'data_source': source_name,
                             'symbol': symbol,
@@ -160,7 +160,7 @@ def log_data_source_call(source_name: str):
                     )
                 else:
                     tool_logger.warning(
-                        f"[數據源] {source_name} - {symbol} 數據獲取失敗 (耗時: {duration:.2f}s)",
+                        f"[資料來源] {source_name} - {symbol} 資料取得失敗 (耗時: {duration:.2f}s)",
                         extra={
                             'data_source': source_name,
                             'symbol': symbol,
@@ -176,7 +176,7 @@ def log_data_source_call(source_name: str):
                 duration = time.time() - start_time
                 
                 tool_logger.error(
-                    f"[數據源] {source_name} - {symbol} 數據獲取異常 (耗時: {duration:.2f}s): {str(e)}",
+                    f"[資料來源] {source_name} - {symbol} 資料取得異常 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'data_source': source_name,
                         'symbol': symbol,
@@ -265,7 +265,7 @@ def log_tool_usage(tool_name: str, symbol: str = None, **extra_data):
     Args:
         tool_name: 工具名稱
         symbol: 股票代碼（可選）
-        **extra_data: 額外的數據
+        **extra_data: 額外的資料
     """
     extra = {
         'tool_name': tool_name,
@@ -287,7 +287,7 @@ def log_analysis_step(step_name: str, symbol: str, **extra_data):
     Args:
         step_name: 步驟名稱
         symbol: 股票代碼
-        **extra_data: 額外的數據
+        **extra_data: 額外的資料
     """
     extra = {
         'step_name': step_name,
@@ -415,9 +415,9 @@ def log_graph_module(graph_type: str):
 
 def log_dataflow_module(dataflow_type: str):
     """
-    數據流模塊專用裝飾器
+    資料流模塊專用裝飾器
 
     Args:
-        dataflow_type: 數據流類型（如：cache、interface、provider等）
+        dataflow_type: 資料流類型（如：cache、interface、provider等）
     """
     return log_analysis_module(f"dataflow_{dataflow_type}")

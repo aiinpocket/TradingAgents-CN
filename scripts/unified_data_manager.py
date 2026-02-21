@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-統一數據目錄配置管理器
+統一資料目錄配置管理器
 Unified Data Directory Configuration Manager
 
-提供統一的數據目錄配置管理功能
+提供統一的資料目錄配置管理功能
 """
 
 import os
@@ -14,11 +14,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 class UnifiedDataDirectoryManager:
-    """統一數據目錄管理器"""
+    """統一資料目錄管理器"""
     
     def __init__(self, project_root: Optional[Union[str, Path]] = None):
         """
-        初始化數據目錄管理器
+        初始化資料目錄管理器
         
         Args:
             project_root: 項目根目錄，預設為當前檔案的上級目錄
@@ -29,7 +29,7 @@ class UnifiedDataDirectoryManager:
         else:
             self.project_root = Path(project_root)
         
-        # 預設數據目錄配置
+        # 預設資料目錄配置
         self._default_config = {
             'data_root': 'data',
             'cache': 'data/cache',
@@ -80,7 +80,7 @@ class UnifiedDataDirectoryManager:
     
     def get_path(self, key: str, create: bool = True) -> Path:
         """
-        獲取指定數據目錄的路徑
+        獲取指定資料目錄的路徑
         
         Args:
             key: 目錄鍵名
@@ -113,7 +113,7 @@ class UnifiedDataDirectoryManager:
     
     def get_all_paths(self, create: bool = True) -> Dict[str, Path]:
         """
-        獲取所有數據目錄路徑
+        獲取所有資料目錄路徑
         
         Args:
             create: 是否自動創建目錄
@@ -132,20 +132,20 @@ class UnifiedDataDirectoryManager:
     
     def create_all_directories(self) -> bool:
         """
-        創建所有數據目錄
+        創建所有資料目錄
         
         Returns:
             bool: 是否成功創建所有目錄
         """
         try:
-            logger.info(" 創建統一數據目錄結構...")
+            logger.info(" 創建統一資料目錄結構...")
             
             paths = self.get_all_paths(create=True)
             
             for key, path in paths.items():
                 logger.info(f"   {key}: {path}")
             
-            logger.info(" 統一數據目錄結構創建完成")
+            logger.info(" 統一資料目錄結構創建完成")
             return True
             
         except Exception as e:
@@ -191,17 +191,17 @@ class UnifiedDataDirectoryManager:
     
     def print_structure(self):
         """打印目錄結構"""
-        print(" 統一數據目錄結構:")
+        print(" 統一資料目錄結構:")
         print(f" 項目根目錄: {self.project_root}")
         print()
         
         # 按層級組織顯示
         structure = {
-            ' 數據根目錄': ['data_root'],
-            ' 緩存目錄': ['cache', 'cache_stock_data', 'cache_news_data', 'cache_fundamentals', 'cache_metadata'],
+            ' 資料根目錄': ['data_root'],
+            ' 快取目錄': ['cache', 'cache_stock_data', 'cache_news_data', 'cache_fundamentals', 'cache_metadata'],
             ' 分析結果': ['analysis_results', 'results_summary', 'results_detailed', 'results_exports'],
-            ' 數據庫': ['databases', 'db_mongodb', 'db_redis'],
-            ' 會話數據': ['sessions', 'sessions_web', 'sessions_cli'],
+            ' 資料庫': ['databases', 'db_mongodb', 'db_redis'],
+            ' 會話資料': ['sessions', 'sessions_web', 'sessions_cli'],
             ' 日誌檔案': ['logs', 'logs_application', 'logs_operations', 'logs_user_activities'],
             ' 配置檔': ['config', 'config_user', 'config_system'],
             ' 暫存檔案': ['temp', 'temp_downloads', 'temp_processing'],
@@ -225,13 +225,13 @@ _data_manager = None
 
 def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> UnifiedDataDirectoryManager:
     """
-    獲取全局數據目錄管理器實例
+    獲取全局資料目錄管理器實例
     
     Args:
         project_root: 項目根目錄
         
     Returns:
-        UnifiedDataDirectoryManager: 數據目錄管理器實例
+        UnifiedDataDirectoryManager: 資料目錄管理器實例
     """
     global _data_manager
     if _data_manager is None:
@@ -240,7 +240,7 @@ def get_data_manager(project_root: Optional[Union[str, Path]] = None) -> Unified
 
 def get_data_path(key: str, create: bool = True) -> Path:
     """
-    便捷函數：獲取數據目錄路徑
+    便捷函數：獲取資料目錄路徑
     
     Args:
         key: 目錄鍵名
@@ -255,7 +255,7 @@ def main():
     """命令行工具主函數"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='統一數據目錄配置管理器')
+    parser = argparse.ArgumentParser(description='統一資料目錄配置管理器')
     parser.add_argument('--project-root', help='項目根目錄路徑')
     parser.add_argument('--create', action='store_true', help='創建所有目錄')
     parser.add_argument('--validate', action='store_true', help='驗證目錄結構')

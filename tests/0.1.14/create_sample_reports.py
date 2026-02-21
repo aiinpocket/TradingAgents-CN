@@ -14,7 +14,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 def create_sample_report(stock_symbol: str, stock_name: str):
     """創建示例分析報告"""
     
-    # 分析結果數據
+    # 分析結果資料
     analysis_results = {
         "summary": f"{stock_name}({stock_symbol}) 綜合分析顯示該股票具有良好的投資潛力，建議關注。",
         "analysts": ["market_analyst", "fundamentals_analyst", "trader_agent"]

@@ -212,9 +212,9 @@ def test_simple_functionality():
         # 測試TradingAgents匯入
         print(" TradingAgents LLM適配器匯入成功")
         
-        # 測試數據流匯入
+        # 測試資料流匯入
         from tradingagents.dataflows import interface
-        print("TradingAgents數據流匯入成功")
+        print("TradingAgents資料流匯入成功")
         
         # 測試圖形匯入
         from tradingagents.graph.trading_graph import TradingAgentsGraph

@@ -30,7 +30,7 @@ class ChromaDBManager:
     def __init__(self):
         if not self._initialized:
             try:
-                # 自動檢測操作系統版本並使用最優配置
+                # 自動檢測作業系統版本並使用最優配置
                 import platform
                 system = platform.system()
                 
@@ -79,7 +79,7 @@ class ChromaDBManager:
         """線程安全地獲取或創建集合"""
         with self._lock:
             if name in self._collections:
-                logger.info(f"[ChromaDB] 使用緩存集合: {name}")
+                logger.info(f"[ChromaDB] 使用快取集合: {name}")
                 return self._collections[name]
 
             try:
@@ -100,7 +100,7 @@ class ChromaDBManager:
                         logger.error(f"[ChromaDB] 集合操作失敗: {name}, 錯誤: {final_error}")
                         raise final_error
 
-            # 緩存集合
+            # 快取集合
             self._collections[name] = collection
             return collection
 
@@ -110,9 +110,9 @@ class FinancialSituationMemory:
         self.config = config
         self.llm_provider = config.get("llm_provider", "openai").lower()
 
-        # 配置向量緩存的長度限制（向量緩存預設啟用長度檢查）
+        # 配置向量快取的長度限制（向量快取預設啟用長度檢查）
         self.max_embedding_length = int(os.getenv('MAX_EMBEDDING_CONTENT_LENGTH', '50000'))  # 預設50K字符
-        self.enable_embedding_length_check = os.getenv('ENABLE_EMBEDDING_LENGTH_CHECK', 'true').lower() == 'true'  # 向量緩存預設啟用
+        self.enable_embedding_length_check = os.getenv('ENABLE_EMBEDDING_LENGTH_CHECK', 'true').lower() == 'true'  # 向量快取預設啟用
         
         # 根據LLM提供商選擇嵌入模型和客戶端
         # 統一使用 OpenAI embedding
@@ -140,7 +140,7 @@ class FinancialSituationMemory:
         self.situation_collection = self.chroma_manager.get_or_create_collection(name)
 
     def _smart_text_truncation(self, text, max_length=8192):
-        """智能文本截斷，保持語義完整性和緩存兼容性"""
+        """智能文本截斷，保持語義完整性和快取兼容性"""
         if len(text) <= max_length:
             return text, False  # 返回原文本和是否截斷的標誌
         
@@ -277,7 +277,7 @@ class FinancialSituationMemory:
                 return [0.0] * 1024
 
     def get_embedding_config_status(self):
-        """獲取向量緩存配置狀態"""
+        """獲取向量快取配置狀態"""
         return {
             'enabled': self.enable_embedding_length_check,
             'max_embedding_length': self.max_embedding_length,
@@ -324,7 +324,7 @@ class FinancialSituationMemory:
             logger.debug("查詢embedding為空向量，返回空結果")
             return []
         
-        # 檢查是否有足夠的數據進行查詢
+        # 檢查是否有足夠的資料進行查詢
         collection_count = self.situation_collection.count()
         if collection_count == 0:
             logger.debug("記憶庫為空，返回空結果")
@@ -374,7 +374,7 @@ class FinancialSituationMemory:
             return []
 
     def get_cache_info(self):
-        """獲取緩存相關資訊，用於調試和監控"""
+        """獲取快取相關資訊，用於調試和監控"""
         info = {
             'collection_count': self.situation_collection.count(),
             'client_status': 'enabled' if self.client != "DISABLED" else 'disabled',

@@ -159,7 +159,7 @@ python scripts/{category}/script_name.py
 - 環境設置
 - 依賴安裝  
 - API配置
-- 數據庫設置
+- 資料庫設置
 
 ###  validation/ - 驗證腳本
 - Git配置驗證
@@ -168,8 +168,8 @@ python scripts/{category}/script_name.py
 - API連接測試
 
 ###  maintenance/ - 維護腳本
-- 緩存清理
-- 數據備份
+- 快取清理
+- 資料備份
 - 依賴更新
 - 上游同步
 
@@ -187,7 +187,7 @@ python scripts/{category}/script_name.py
 ###  docker/ - Docker腳本
 - Docker服務管理
 - 容器啟動停止
-- 數據庫初始化
+- 資料庫初始化
 
 ###  git/ - Git工具腳本
 - 上游同步

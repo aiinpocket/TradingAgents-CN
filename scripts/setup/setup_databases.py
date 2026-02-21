@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-數據庫環境設置腳本
+資料庫環境設置腳本
 自動安裝和配置MongoDB + Redis
 """
 
@@ -33,7 +33,7 @@ def run_command(command, description=""):
 
 def install_python_packages():
     """安裝Python依賴包"""
-    logger.info(f"\n 安裝Python數據庫依賴包...")
+    logger.info(f"\n 安裝Python資料庫依賴包...")
     
     packages = [
         "pymongo>=4.6.0",
@@ -187,12 +187,12 @@ def setup_docker_option():
 
 def create_env_template():
     """創建環境變量模板"""
-    logger.info(f" 數據庫配置已整合到主要的 .env 檔案中")
+    logger.info(f" 資料庫配置已整合到主要的 .env 檔案中")
     logger.info(f"請參考 .env.example 檔案進行配置")
 
 def test_connections():
-    """測試數據庫連接"""
-    logger.debug(f"\n 測試數據庫連接...")
+    """測試資料庫連接"""
+    logger.debug(f"\n 測試資料庫連接...")
     
     try:
         from tradingagents.config.database_manager import get_database_manager
@@ -206,14 +206,14 @@ def test_connections():
 
             # 獲取統計資訊
             stats = db_manager.get_cache_stats()
-            logger.info(f" 緩存統計: {stats}")
+            logger.info(f" 快取統計: {stats}")
 
         elif db_manager.is_mongodb_available():
             logger.info(f" MongoDB 連接成功，Redis 未連接")
         elif db_manager.is_redis_available():
             logger.info(f" Redis 連接成功，MongoDB 未連接")
         else:
-            logger.error(f" 數據庫連接失敗")
+            logger.error(f" 資料庫連接失敗")
             
         db_manager.close()
         
@@ -225,17 +225,17 @@ def test_connections():
 
 def main():
     """主函數"""
-    logger.info(f" TradingAgents 數據庫環境設置")
+    logger.info(f" TradingAgents 資料庫環境設置")
     logger.info(f"=")
     
-    # 檢測操作系統
+    # 檢測作業系統
     system = platform.system().lower()
-    logger.info(f" 檢測到操作系統: {system}")
+    logger.info(f" 檢測到作業系統: {system}")
     
     # 安裝Python依賴
     install_python_packages()
     
-    # 根據操作系統提供設置指南
+    # 根據作業系統提供設置指南
     if system == "windows":
         setup_mongodb_windows()
         setup_redis_windows()
@@ -243,7 +243,7 @@ def main():
         setup_mongodb_linux()
         setup_redis_linux()
     else:
-        logger.warning(f" 不支持的操作系統: {system}")
+        logger.warning(f" 不支援的作業系統: {system}")
     
     # Docker選項
     setup_docker_option()

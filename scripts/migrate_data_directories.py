@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-數據目錄重新組織遷移腳本
+資料目錄重新組織遷移腳本
 Data Directory Reorganization Migration Script
 
-此腳本將項目中分散的數據目錄重新組織為統一的結構
+此腳本將項目中分散的資料目錄重新組織為統一的結構
 """
 
 import os
@@ -26,7 +26,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class DataDirectoryMigrator:
-    """數據目錄遷移器"""
+    """資料目錄遷移器"""
     
     def __init__(self, project_root: str = None):
         self.project_root = Path(project_root) if project_root else Path(__file__).parent.parent
@@ -47,35 +47,35 @@ class DataDirectoryMigrator:
         
         # 遷移映射：(源路徑, 目標路徑)
         self.migration_map = [
-            # 緩存數據遷移
+            # 快取資料遷移
             ('tradingagents/dataflows/data_cache', 'data/cache'),
             
             # 分析結果遷移
             ('results', 'data/analysis_results/detailed'),
             ('web/data/analysis_results', 'data/analysis_results/summary'),
             
-            # 數據庫數據遷移
+            # 資料庫資料遷移
             ('data/mongodb', 'data/databases/mongodb'),
             ('data/redis', 'data/databases/redis'),
             
-            # 會話數據遷移
+            # 會話資料遷移
             ('data/sessions', 'data/sessions/cli_sessions'),
             ('web/data/sessions', 'data/sessions/web_sessions'),
             
-            # 日誌數據遷移
+            # 日誌資料遷移
             ('web/data/user_activities', 'data/logs/user_activities'),
             
-            # 報告數據遷移（如果存在）
+            # 報告資料遷移（如果存在）
             ('data/reports', 'data/analysis_results/exports'),
         ]
     
     def create_backup(self) -> bool:
-        """創建數據備份"""
+        """創建資料備份"""
         try:
-            logger.info(f" 開始創建數據備份到: {self.backup_dir}")
+            logger.info(f" 開始創建資料備份到: {self.backup_dir}")
             self.backup_dir.mkdir(exist_ok=True)
             
-            # 備份現有數據目錄
+            # 備份現有資料目錄
             backup_paths = ['data', 'web/data', 'results', 'tradingagents/dataflows/data_cache']
             
             for path in backup_paths:
@@ -91,7 +91,7 @@ class DataDirectoryMigrator:
                     
                     logger.info(f"   已備份: {path}")
             
-            logger.info(f" 數據備份完成: {self.backup_dir}")
+            logger.info(f" 資料備份完成: {self.backup_dir}")
             return True
             
         except Exception as e:
@@ -130,9 +130,9 @@ class DataDirectoryMigrator:
             return False
     
     def migrate_data(self) -> bool:
-        """遷移數據"""
+        """遷移資料"""
         try:
-            logger.info(" 開始數據遷移...")
+            logger.info(" 開始資料遷移...")
             
             for source_path, target_path in self.migration_map:
                 source = self.project_root / source_path
@@ -160,11 +160,11 @@ class DataDirectoryMigrator:
                 except Exception as e:
                     logger.error(f"   遷移失敗: {source_path} → {target_path}, 錯誤: {e}")
             
-            logger.info(" 數據遷移完成")
+            logger.info(" 資料遷移完成")
             return True
             
         except Exception as e:
-            logger.error(f" 數據遷移失敗: {e}")
+            logger.error(f" 資料遷移失敗: {e}")
             return False
     
     def _merge_directories(self, source: Path, target: Path):
@@ -198,8 +198,8 @@ class DataDirectoryMigrator:
             
             # 添加新的環境變量配置
             new_config = """
-# ===== 數據目錄配置 (重新組織後) =====
-# 統一數據根目錄
+# ===== 資料目錄配置 (重新組織後) =====
+# 統一資料根目錄
 TRADINGAGENTS_DATA_DIR=./data
 
 # 子目錄配置（可選，使用預設值）
@@ -222,7 +222,7 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
                 
                 logger.info(" .env 檔案更新完成")
             else:
-                logger.info("[INFO].env 檔案已包含數據目錄配置")
+                logger.info("[INFO].env 檔案已包含資料目錄配置")
             
             return True
             
@@ -283,12 +283,12 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
     
     def run_migration(self, cleanup_old: bool = False) -> bool:
         """運行完整的遷移流程"""
-        logger.info(" 開始數據目錄重新組織遷移...")
+        logger.info(" 開始資料目錄重新組織遷移...")
         
         steps = [
             ("創建備份", self.create_backup),
             ("創建新目錄結構", self.create_new_structure),
-            ("遷移數據", self.migrate_data),
+            ("遷移資料", self.migrate_data),
             ("更新環境變量", self.update_env_file),
             ("創建遷移報告", self.create_migration_report),
         ]
@@ -302,9 +302,9 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
                 logger.error(f" 步驟失敗: {step_name}")
                 return False
         
-        logger.info("\n 數據目錄重新組織完成！")
+        logger.info("\n 資料目錄重新組織完成！")
         logger.info(f" 備份位置: {self.backup_dir}")
-        logger.info(f" 新數據目錄: {self.project_root / 'data'}")
+        logger.info(f" 新資料目錄: {self.project_root / 'data'}")
         
         return True
 
@@ -313,7 +313,7 @@ def main():
     """主函數"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='數據目錄重新組織遷移腳本')
+    parser = argparse.ArgumentParser(description='資料目錄重新組織遷移腳本')
     parser.add_argument('--project-root', help='項目根目錄路徑')
     parser.add_argument('--cleanup-old', action='store_true', help='遷移後清理舊目錄')
     parser.add_argument('--dry-run', action='store_true', help='僅顯示遷移計劃，不執行實際遷移')

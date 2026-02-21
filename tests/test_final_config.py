@@ -28,7 +28,7 @@ def test_final_config():
     print(f"REDIS_ENABLED: {os.getenv('REDIS_ENABLED', 'false')} -> {redis_enabled}")
     
     # 3. 顯示配置資訊
-    print("\n 數據庫配置:")
+    print("\n 資料庫配置:")
     
     if mongodb_enabled:
         print("MongoDB:  啟用")
@@ -46,19 +46,19 @@ def test_final_config():
     else:
         print("Redis:  禁用")
     
-    # 4. 測試數據庫管理器
-    print("\n 測試數據庫管理器...")
+    # 4. 測試資料庫管理器
+    print("\n 測試資料庫管理器...")
     try:
         from tradingagents.config.database_manager import get_database_manager
         
         db_manager = get_database_manager()
-        print(" 數據庫管理器創建成功")
+        print(" 資料庫管理器創建成功")
         
         # 獲取狀態報告
         status = db_manager.get_status_report()
         
         print(" 檢測結果:")
-        print(f"  數據庫可用: {' 是' if status['database_available'] else ' 否'}")
+        print(f"  資料庫可用: {' 是' if status['database_available'] else ' 否'}")
         
         mongodb_info = status['mongodb']
         print(f"  MongoDB: {' 可用' if mongodb_info['available'] else ' 不可用'}")
@@ -66,28 +66,28 @@ def test_final_config():
         redis_info = status['redis']
         print(f"  Redis: {' 可用' if redis_info['available'] else ' 不可用'}")
         
-        print(f"  緩存後端: {status['cache_backend']}")
+        print(f"  快取後端: {status['cache_backend']}")
         
     except Exception as e:
-        print(f" 數據庫管理器測試失敗: {e}")
+        print(f" 資料庫管理器測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
     
-    # 5. 測試緩存系統
-    print("\n 測試緩存系統...")
+    # 5. 測試快取系統
+    print("\n 測試快取系統...")
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
-        print(" 緩存系統創建成功")
+        print(" 快取系統創建成功")
         
         # 獲取性能模式
         performance_mode = cache.get_performance_mode()
         print(f"  性能模式: {performance_mode}")
         
         # 測試基本功能
-        test_data = "測試數據 - 最終配置"
+        test_data = "測試資料 - 最終配置"
         cache_key = cache.save_stock_data(
             symbol="TEST_FINAL",
             data=test_data,
@@ -95,18 +95,18 @@ def test_final_config():
             end_date="2024-12-31",
             data_source="final_test"
         )
-        print(f" 數據保存成功: {cache_key}")
+        print(f" 資料保存成功: {cache_key}")
         
-        # 載入數據
+        # 載入資料
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print(" 數據載入成功")
+            print(" 資料載入成功")
         else:
-            print(" 數據載入失敗")
+            print(" 資料載入失敗")
             return False
         
     except Exception as e:
-        print(f" 緩存系統測試失敗: {e}")
+        print(f" 快取系統測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -115,16 +115,16 @@ def test_final_config():
     print("\n 配置總結:")
     print(" 使用.env 檔案進行配置")
     print(" 通過MONGODB_ENABLED和REDIS_ENABLED控制啟用狀態")
-    print(" 預設情況下數據庫都是禁用的")
-    print(" 系統使用檔案緩存，性能良好")
-    print(" 可以通過修改.env 檔案啟用數據庫")
+    print(" 預設情況下資料庫都是禁用的")
+    print(" 系統使用檔案快取，性能良好")
+    print(" 可以通過修改.env 檔案啟用資料庫")
     
     print("\n 使用說明:")
     print("1. 預設配置：MONGODB_ENABLED=false, REDIS_ENABLED=false")
     print("2. 啟用MongoDB：將MONGODB_ENABLED設置為true")
     print("3. 啟用Redis：將REDIS_ENABLED設置為true")
-    print("4. 系統會自動檢測並使用啟用的數據庫")
-    print("5. 如果數據庫不可用，自動降級到檔案緩存")
+    print("4. 系統會自動檢測並使用啟用的資料庫")
+    print("5. 如果資料庫不可用，自動降級到檔案快取")
     
     return True
 
@@ -137,10 +137,10 @@ def main():
             print("\n 最終配置測試完成!")
             print("\n 系統特性:")
             print(" 簡化配置：只需要.env 檔案")
-            print(" 明確控制：通過啟用開關控制數據庫")
-            print(" 預設安全：預設不啟用數據庫")
-            print(" 智能降級：數據庫不可用時自動使用檔案緩存")
-            print(" 性能優化：有數據庫時自動使用高性能模式")
+            print(" 明確控制：通過啟用開關控制資料庫")
+            print(" 預設安全：預設不啟用資料庫")
+            print(" 智能降級：資料庫不可用時自動使用檔案快取")
+            print(" 性能優化：有資料庫時自動使用高性能模式")
         
         return success
         

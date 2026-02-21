@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-智能配置系統 - 自動檢測和配置數據庫依賴
+智能配置系統 - 自動檢測和配置資料庫依賴
 確保系統在有或沒有MongoDB/Redis的情況下都能正常運行
 """
 
@@ -113,7 +113,7 @@ class SmartConfigManager:
         self.config = {
             "cache": {
                 "enabled": True,
-                "primary_backend": "file",  # 預設使用檔案緩存
+                "primary_backend": "file",  # 預設使用檔案快取
                 "fallback_enabled": True,
                 "ttl_settings": {
                     "us_stock_data": 7200,      # 2小時
@@ -139,26 +139,26 @@ class SmartConfigManager:
             "detection_results": self.detection_results
         }
         
-        # 根據可用服務調整緩存策略
+        # 根據可用服務調整快取策略
         if self.redis_available and self.mongodb_available:
             self.config["cache"]["primary_backend"] = "redis"
             self.config["cache"]["secondary_backend"] = "mongodb"
             self.config["cache"]["tertiary_backend"] = "file"
-            logger.info(f" 配置模式: Redis + MongoDB + 檔案緩存")
+            logger.info(f" 配置模式: Redis + MongoDB + 檔案快取")
             
         elif self.redis_available:
             self.config["cache"]["primary_backend"] = "redis"
             self.config["cache"]["secondary_backend"] = "file"
-            logger.info(f" 配置模式: Redis + 檔案緩存")
+            logger.info(f" 配置模式: Redis + 檔案快取")
             
         elif self.mongodb_available:
             self.config["cache"]["primary_backend"] = "mongodb"
             self.config["cache"]["secondary_backend"] = "file"
-            logger.info(f" 配置模式: MongoDB + 檔案緩存")
+            logger.info(f" 配置模式: MongoDB + 檔案快取")
             
         else:
             self.config["cache"]["primary_backend"] = "file"
-            logger.info(f" 配置模式: 純檔案緩存")
+            logger.info(f" 配置模式: 純檔案快取")
     
     def get_config(self) -> Dict[str, Any]:
         """獲取配置"""
@@ -186,7 +186,7 @@ class SmartConfigManager:
         return False
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
-        """獲取緩存後端資訊"""
+        """獲取快取後端資訊"""
         return {
             "primary_backend": self.config["cache"]["primary_backend"],
             "mongodb_available": self.mongodb_available,
@@ -205,9 +205,9 @@ class SmartConfigManager:
             status = " 可用" if info['available'] else " 不可用"
             logger.info(f"  {service.upper()}: {status} - {info['message']}")
         
-        # 緩存配置
+        # 快取配置
         cache_info = self.get_cache_backend_info()
-        logger.info(f"\n 緩存配置:")
+        logger.info(f"\n 快取配置:")
         logger.info(f"  主要後端: {cache_info['primary_backend']}")
         logger.info(f"  降級支持: {'啟用' if cache_info['fallback_enabled'] else '禁用'}")
         
@@ -219,16 +219,16 @@ class SmartConfigManager:
         elif self.mongodb_available:
             mode = " 持久化模式 (MongoDB + 檔案)"
         else:
-            mode = " 基礎模式 (純檔案緩存)"
+            mode = " 基礎模式 (純檔案快取)"
         
         logger.info(f"  運行模式: {mode}")
         
         # 性能預期
         logger.info(f"\n 性能預期:")
         if self.redis_available:
-            logger.info(f"  緩存性能: 極快 (<0.001秒)")
+            logger.info(f"  快取性能: 極快 (<0.001秒)")
         else:
-            logger.info(f"  緩存性能: 很快 (<0.01秒)")
+            logger.info(f"  快取性能: 很快 (<0.01秒)")
         logger.info(f"  相比API調用: 99%+ 性能提升")
 
 
@@ -255,7 +255,7 @@ def is_redis_available() -> bool:
     return get_smart_config().redis_available
 
 def get_cache_backend() -> str:
-    """獲取當前緩存後端"""
+    """獲取當前快取後端"""
     config = get_config()
     return config["cache"]["primary_backend"]
 
@@ -280,12 +280,12 @@ def main():
     env_script = f"""# 環境變量配置腳本
 # 根據檢測結果自動生成
 
-# 緩存配置
+# 快取配置
 export CACHE_BACKEND="{config['cache']['primary_backend']}"
 export CACHE_ENABLED="true"
 export FALLBACK_ENABLED="{str(config['cache']['fallback_enabled']).lower()}"
 
-# 數據庫配置
+# 資料庫配置
 export MONGODB_ENABLED="{str(config['database']['mongodb']['enabled']).lower()}"
 export REDIS_ENABLED="{str(config['database']['redis']['enabled']).lower()}"
 
@@ -293,7 +293,7 @@ export REDIS_ENABLED="{str(config['database']['redis']['enabled']).lower()}"
 export US_STOCK_TTL="{config['cache']['ttl_settings']['us_stock_data']}"
 
 echo " 環境變量已設置"
-echo "緩存後端: $CACHE_BACKEND"
+echo "快取後端: $CACHE_BACKEND"
 echo "MongoDB: $MONGODB_ENABLED"
 echo "Redis: $REDIS_ENABLED"
 """
@@ -307,12 +307,12 @@ echo "Redis: $REDIS_ENABLED"
     ps_script = f"""# PowerShell環境變量配置腳本
 # 根據檢測結果自動生成
 
-# 緩存配置
+# 快取配置
 $env:CACHE_BACKEND = "{config['cache']['primary_backend']}"
 $env:CACHE_ENABLED = "true"
 $env:FALLBACK_ENABLED = "{str(config['cache']['fallback_enabled']).lower()}"
 
-# 數據庫配置
+# 資料庫配置
 $env:MONGODB_ENABLED = "{str(config['database']['mongodb']['enabled']).lower()}"
 $env:REDIS_ENABLED = "{str(config['database']['redis']['enabled']).lower()}"
 
@@ -320,7 +320,7 @@ $env:REDIS_ENABLED = "{str(config['database']['redis']['enabled']).lower()}"
 $env:US_STOCK_TTL = "{config['cache']['ttl_settings']['us_stock_data']}"
 
 Write-Host " 環境變量已設置" -ForegroundColor Green
-Write-Host "緩存後端: $env:CACHE_BACKEND" -ForegroundColor Cyan
+Write-Host "快取後端: $env:CACHE_BACKEND" -ForegroundColor Cyan
 Write-Host "MongoDB: $env:MONGODB_ENABLED" -ForegroundColor Cyan
 Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
 """

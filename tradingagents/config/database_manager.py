@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-智能數據庫管理器
+智能資料庫管理器
 自動檢測MongoDB和Redis可用性，提供降級方案
 使用項目現有的.env配置
 """
@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 
 class DatabaseManager:
-    """智能數據庫管理器"""
+    """智能資料庫管理器"""
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
@@ -19,19 +19,19 @@ class DatabaseManager:
         # 載入.env配置
         self._load_env_config()
 
-        # 數據庫連接狀態
+        # 資料庫連接狀態
         self.mongodb_available = False
         self.redis_available = False
         self.mongodb_client = None
         self.redis_client = None
 
-        # 檢測數據庫可用性
+        # 檢測資料庫可用性
         self._detect_databases()
 
         # 初始化連接
         self._initialize_connections()
 
-        self.logger.info(f"數據庫管理器初始化完成 - MongoDB: {self.mongodb_available}, Redis: {self.redis_available}")
+        self.logger.info(f"資料庫管理器初始化完成 - MongoDB: {self.mongodb_available}, Redis: {self.redis_available}")
     
     def _load_env_config(self):
         """從.env 檔案載入配置"""
@@ -152,8 +152,8 @@ class DatabaseManager:
             return False, f"Redis連接失敗: {str(e)}"
     
     def _detect_databases(self):
-        """檢測所有數據庫"""
-        self.logger.info("開始檢測數據庫可用性...")
+        """檢測所有資料庫"""
+        self.logger.info("開始檢測資料庫可用性...")
         
         # 檢測MongoDB
         mongodb_available, mongodb_msg = self._detect_mongodb()
@@ -178,7 +178,7 @@ class DatabaseManager:
     
     def _update_config_based_on_detection(self):
         """根據檢測結果更新配置"""
-        # 確定緩存後端
+        # 確定快取後端
         if self.redis_available:
             self.primary_backend = "redis"
         elif self.mongodb_available:
@@ -186,10 +186,10 @@ class DatabaseManager:
         else:
             self.primary_backend = "file"
 
-        self.logger.info(f"主要緩存後端: {self.primary_backend}")
+        self.logger.info(f"主要快取後端: {self.primary_backend}")
     
     def _initialize_connections(self):
-        """初始化數據庫連接"""
+        """初始化資料庫連接"""
         # 初始化MongoDB連接
         if self.mongodb_available:
             try:
@@ -260,11 +260,11 @@ class DatabaseManager:
         return self.redis_available
     
     def is_database_available(self) -> bool:
-        """檢查是否有任何數據庫可用"""
+        """檢查是否有任何資料庫可用"""
         return self.mongodb_available or self.redis_available
     
     def get_cache_backend(self) -> str:
-        """獲取當前緩存後端"""
+        """獲取當前快取後端"""
         return self.primary_backend
 
     def get_config(self) -> Dict[str, Any]:
@@ -296,7 +296,7 @@ class DatabaseManager:
         }
 
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計資訊"""
+        """獲取快取統計資訊"""
         stats = {
             "mongodb_available": self.mongodb_available,
             "redis_available": self.redis_available,
@@ -316,7 +316,7 @@ class DatabaseManager:
         return stats
 
     def cache_clear_pattern(self, pattern: str) -> int:
-        """清理匹配模式的緩存"""
+        """清理匹配模式的快取"""
         cleared_count = 0
 
         if self.redis_available and self.redis_client:
@@ -325,16 +325,16 @@ class DatabaseManager:
                 if keys:
                     cleared_count += self.redis_client.delete(*keys)
             except Exception as e:
-                self.logger.error(f"Redis緩存清理失敗: {e}")
+                self.logger.error(f"Redis快取清理失敗: {e}")
 
         return cleared_count
 
 
-# 全局數據庫管理器實例
+# 全局資料庫管理器實例
 _database_manager = None
 
 def get_database_manager() -> DatabaseManager:
-    """獲取全局數據庫管理器實例"""
+    """獲取全局資料庫管理器實例"""
     global _database_manager
     if _database_manager is None:
         _database_manager = DatabaseManager()
@@ -349,7 +349,7 @@ def is_redis_available() -> bool:
     return get_database_manager().is_redis_available()
 
 def get_cache_backend() -> str:
-    """獲取當前緩存後端"""
+    """獲取當前快取後端"""
     return get_database_manager().get_cache_backend()
 
 def get_mongodb_client():

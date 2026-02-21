@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 MongoDB儲存適配器
-用於將token使用記錄儲存到MongoDB數據庫
+用於將token使用記錄儲存到MongoDB資料庫
 """
 
 import os
@@ -79,7 +79,7 @@ class MongoDBStorage:
             self._connected = False
     
     def _create_indexes(self):
-        """創建數據庫索引"""
+        """創建資料庫索引"""
         try:
             # 創建複合索引
             self.collection.create_index([

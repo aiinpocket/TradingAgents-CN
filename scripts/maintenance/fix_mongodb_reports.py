@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-修復MongoDB中不一致的分析報告數據結構
+修復MongoDB中不一致的分析報告資料結構
 
-這個腳本用於修復MongoDB中保存的分析報告數據結構不一致的問題。
+這個腳本用於修復MongoDB中保存的分析報告資料結構不一致的問題。
 主要解決以下問題：
 1. 缺少reports字段的檔案
 2. reports字段為空或None的檔案
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     """主函數"""
-    print(" MongoDB分析報告數據修復工具")
+    print(" MongoDB分析報告資料修復工具")
     print("=" * 50)
     
     try:
@@ -49,8 +49,8 @@ def main():
         
         print(f" MongoDB連接成功")
         
-        # 1. 檢查當前數據狀態
-        print(f"\n 檢查當前數據狀態...")
+        # 1. 檢查當前資料狀態
+        print(f"\n 檢查當前資料狀態...")
         all_reports = mongodb_manager.get_all_reports(limit=1000)
         print(f" 總報告數量: {len(all_reports)}")
         
@@ -72,7 +72,7 @@ def main():
         print(f"   - reports字段為空: {empty_reports_count}")
         
         if inconsistent_count == 0:
-            print(" 所有報告數據結構一致，無需修復")
+            print(" 所有報告資料結構一致，無需修復")
             return True
         
         # 2. 詢問用戶是否繼續修復
@@ -103,7 +103,7 @@ def main():
             print(f" 修復後不一致報告數量: {final_inconsistent_count}")
             
             if final_inconsistent_count == 0:
-                print(" 所有報告數據結構已修復完成！")
+                print(" 所有報告資料結構已修復完成！")
                 return True
             else:
                 print(f" 仍有 {final_inconsistent_count} 個報告需要手動處理")
@@ -167,7 +167,7 @@ def show_report_details():
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="修復MongoDB分析報告數據結構")
+    parser = argparse.ArgumentParser(description="修復MongoDB分析報告資料結構")
     parser.add_argument("--details", action="store_true", help="顯示報告詳細資訊")
     parser.add_argument("--fix", action="store_true", help="執行修復操作")
     

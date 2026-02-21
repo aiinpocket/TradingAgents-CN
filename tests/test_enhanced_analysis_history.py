@@ -87,7 +87,7 @@ def test_chart_functions():
         
         print(" 測試圖表功能...")
         
-        # 創建模擬數據
+        # 創建模擬資料
         mock_data = []
         for i in range(10):
             mock_data.append({
@@ -104,7 +104,7 @@ def test_chart_functions():
             })
         
         df = pd.DataFrame(mock_data)
-        print(f" 創建模擬數據: {len(df)} 條記錄")
+        print(f" 創建模擬資料: {len(df)} 條記錄")
         
         # 注意：這裡只是測試函數是否可以匯入，實際渲染需要Streamlit環境
         print(" 圖表函數匯入成功")
@@ -117,11 +117,11 @@ def test_chart_functions():
 
 
 def create_test_data():
-    """創建測試數據"""
+    """創建測試資料"""
     try:
-        print(" 創建測試數據...")
+        print(" 創建測試資料...")
         
-        # 確保測試數據目錄存在
+        # 確保測試資料目錄存在
         test_data_dir = project_root / "data" / "analysis_results" / "detailed" / "TEST001"
         test_date_dir = test_data_dir / "2025-07-31" / "reports"
         test_date_dir.mkdir(parents=True, exist_ok=True)
@@ -138,11 +138,11 @@ def create_test_data():
             with open(report_file, 'w', encoding='utf-8') as f:
                 f.write(content)
         
-        print(f" 測試數據創建成功: {test_date_dir}")
+        print(f" 測試資料創建成功: {test_date_dir}")
         return True
         
     except Exception as e:
-        print(f" 創建測試數據失敗: {e}")
+        print(f" 創建測試資料失敗: {e}")
         return False
 
 
@@ -152,7 +152,7 @@ def main():
     print("=" * 50)
     
     tests = [
-        ("創建測試數據", create_test_data),
+        ("創建測試資料", create_test_data),
         ("載入分析結果", test_load_analysis_results),
         ("對比功能", test_comparison_functions),
         ("圖表功能", test_chart_functions)

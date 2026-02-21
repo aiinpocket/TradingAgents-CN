@@ -20,7 +20,7 @@ def test_safe_dataframe():
         
         print(" 測試安全DataFrame函數...")
         
-        # 測試混合數據類型
+        # 測試混合資料類型
         mixed_data = {
             '項目': ['股票代碼', '分析時間', '分析師數量', '研究深度'],
             '結果A': ['AAPL', '2025-07-31 12:00', 3, 5],  # 混合字符串和整數
@@ -31,8 +31,8 @@ def test_safe_dataframe():
         df = safe_dataframe(mixed_data)
         print(f" 安全DataFrame創建成功，形狀: {df.shape}")
         
-        # 檢查數據類型
-        print(" 數據類型檢查:")
+        # 檢查資料類型
+        print(" 資料類型檢查:")
         for col in df.columns:
             dtype = df[col].dtype
             print(f"   {col}: {dtype}")
@@ -41,14 +41,14 @@ def test_safe_dataframe():
             else:
                 print(f"    {col} 不是字符串類型")
         
-        # 測試列表數據
+        # 測試列表資料
         list_data = [
             {'股票': 'AAPL', '價格': 10.5, '數量': 100},
             {'股票': 'MSFT', '價格': 20.3, '數量': 200}
         ]
         
         df_list = safe_dataframe(list_data)
-        print(f" 列表數據DataFrame創建成功，形狀: {df_list.shape}")
+        print(f" 列表資料DataFrame創建成功，形狀: {df_list.shape}")
         
         return True
         
@@ -58,13 +58,13 @@ def test_safe_dataframe():
 
 
 def test_comparison_data():
-    """測試對比數據創建"""
+    """測試對比資料創建"""
     try:
         from web.components.analysis_results import safe_dataframe
         
-        print("\n 測試對比數據創建...")
+        print("\n 測試對比資料創建...")
         
-        # 模擬對比數據
+        # 模擬對比資料
         comparison_data = {
             "項目": ["股票代碼", "分析時間", "分析師數量", "研究深度", "狀態", "標籤數量"],
             "分析結果 A": [
@@ -86,9 +86,9 @@ def test_comparison_data():
         }
         
         df = safe_dataframe(comparison_data)
-        print(f" 對比數據DataFrame創建成功")
+        print(f" 對比資料DataFrame創建成功")
         
-        # 驗證所有數據都是字符串
+        # 驗證所有資料都是字符串
         all_string = all(df[col].dtype == 'object' for col in df.columns)
         if all_string:
             print(" 所有列都是字符串類型")
@@ -103,13 +103,13 @@ def test_comparison_data():
 
 
 def test_timeline_data():
-    """測試時間線數據創建"""
+    """測試時間線資料創建"""
     try:
         from web.components.analysis_results import safe_dataframe
         
-        print("\n 測試時間線數據創建...")
+        print("\n 測試時間線資料創建...")
         
-        # 模擬時間線數據
+        # 模擬時間線資料
         timeline_data = []
         for i in range(3):
             timeline_data.append({
@@ -121,7 +121,7 @@ def test_timeline_data():
             })
         
         df = safe_dataframe(timeline_data)
-        print(f" 時間線數據DataFrame創建成功，行數: {len(df)}")
+        print(f" 時間線資料DataFrame創建成功，行數: {len(df)}")
         
         # 檢查序號列是否為字符串
         if df['序號'].dtype == 'object':
@@ -144,7 +144,7 @@ def test_arrow_conversion():
         
         print("\n 測試Arrow轉換...")
         
-        # 創建可能導致Arrow錯誤的數據
+        # 創建可能導致Arrow錯誤的資料
         problematic_data = {
             '文本列': ['text1', 'text2', 'text3'],
             '數字列': [1, 2, 3],  # 整數
@@ -176,8 +176,8 @@ def main():
     
     tests = [
         ("安全DataFrame函數", test_safe_dataframe),
-        ("對比數據創建", test_comparison_data),
-        ("時間線數據創建", test_timeline_data),
+        ("對比資料創建", test_comparison_data),
+        ("時間線資料創建", test_timeline_data),
         ("Arrow轉換", test_arrow_conversion)
     ]
     

@@ -54,7 +54,7 @@ def translate_analyst_labels(text):
     return text
 
 def extract_risk_assessment(state):
-    """從分析狀態中提取風險評估數據"""
+    """從分析狀態中提取風險評估資料"""
     try:
         risk_debate_state = state.get('risk_debate_state', {})
 
@@ -90,7 +90,7 @@ def extract_risk_assessment(state):
         return risk_assessment
 
     except Exception as e:
-        logger.info(f"提取風險評估數據時出錯: {e}")
+        logger.info(f"提取風險評估資料時出錯: {e}")
         return None
 
 def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, llm_provider, llm_model, market_type="美股", progress_callback=None):
@@ -115,13 +115,13 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     # 生成會話ID用於Token跟蹤和日誌關聯
     session_id = f"analysis_{uuid.uuid4().hex[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
-    # 1. 數據預獲取和驗證階段
-    update_progress("驗證股票代碼並預獲取數據...", 1, 10)
+    # 1. 資料預取得和驗證階段
+    update_progress("驗證股票代碼並預獲取資料...", 1, 10)
 
     try:
         from tradingagents.utils.stock_validator import prepare_stock_data
 
-        # 預獲取股票數據（預設30天歷史數據）
+        # 預獲取股票資料（預設30天歷史資料）
         preparation_result = prepare_stock_data(
             stock_code=stock_symbol,
             market_type=market_type,
@@ -130,7 +130,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         )
 
         if not preparation_result.is_valid:
-            error_msg = f"股票數據驗證失敗: {preparation_result.error_message}"
+            error_msg = f"股票資料驗證失敗: {preparation_result.error_message}"
             update_progress(error_msg)
             logger.error(f"[{session_id}] {error_msg}")
 
@@ -143,14 +143,14 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 'session_id': session_id
             }
 
-        # 數據預獲取成功
-        success_msg = f"數據準備完成: {preparation_result.stock_name} ({preparation_result.market_type})"
+        # 資料預取得成功
+        success_msg = f"資料準備完成: {preparation_result.stock_name} ({preparation_result.market_type})"
         update_progress(success_msg)  # 使用智能檢測，不再硬編碼步驟
         logger.info(f"[{session_id}] {success_msg}")
-        logger.info(f"[{session_id}] 緩存狀態: {preparation_result.cache_status}")
+        logger.info(f"[{session_id}] 快取狀態: {preparation_result.cache_status}")
 
     except Exception as e:
-        error_msg = f"數據預獲取過程中發生錯誤: {str(e)}"
+        error_msg = f"資料預取得過程中發生錯誤: {str(e)}"
         update_progress(error_msg)
         logger.error(f"[{session_id}] {error_msg}")
 
@@ -203,7 +203,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     logger.info(f"  FINNHUB_API_KEY: {'已設置' if finnhub_key else '未設置'}")
 
     if not finnhub_key:
-        logger.warning("FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
+        logger.warning("FINNHUB_API_KEY 未設置，部分美股資料功能可能受限")
 
     update_progress("環境變量驗證通過")
 
@@ -227,7 +227,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
             # 統一使用在線工具，避免離線工具的各種問題
             config["online_tools"] = True  # 所有市場都使用統一工具
-            logger.info(f" [快速分析] {market_type}使用統一工具，確保數據源正確和穩定性")
+            logger.info(f" [快速分析] {market_type}使用統一工具，確保資料來源正確和穩定性")
         elif research_depth == 2:  # 2級 - 基礎分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
@@ -258,7 +258,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             logger.info(f" [Anthropic] 使用模型: {llm_model}")
 
         # 修複路徑問題 - 優先使用環境變量配置
-        # 數據目錄：優先使用環境變量，否則使用預設路徑
+        # 資料目錄：優先使用環境變量，否則使用預設路徑
         if not config.get("data_dir") or config["data_dir"] == "./data":
             env_data_dir = os.getenv("TRADINGAGENTS_DATA_DIR")
             if env_data_dir:
@@ -282,7 +282,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             else:
                 config["results_dir"] = str(project_root / "results")
 
-        # 緩存目錄：優先使用環境變量，否則使用預設路徑
+        # 快取目錄：優先使用環境變量，否則使用預設路徑
         if not config.get("data_cache_dir"):
             env_cache_dir = os.getenv("TRADINGAGENTS_CACHE_DIR")
             if env_cache_dir:
@@ -301,9 +301,9 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         os.makedirs(config["data_cache_dir"], exist_ok=True)
 
         logger.info("目錄配置:")
-        logger.info(f"  - 數據目錄: {config['data_dir']}")
+        logger.info(f"  - 資料目錄: {config['data_dir']}")
         logger.info(f"  - 結果目錄: {config['results_dir']}")
-        logger.info(f"  - 緩存目錄: {config['data_cache_dir']}")
+        logger.info(f"  - 快取目錄: {config['data_cache_dir']}")
         logger.info(f"  - 環境變量 TRADINGAGENTS_RESULTS_DIR: {os.getenv('TRADINGAGENTS_RESULTS_DIR', '未設置')}")
 
         logger.info(f"使用配置: {config}")
@@ -342,7 +342,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 格式化結果
         update_progress("分析完成，正在整理結果...")
 
-        # 提取風險評估數據
+        # 提取風險評估資料
         risk_assessment = extract_risk_assessment(state)
 
         # 將風險評估添加到狀態中
@@ -433,11 +433,11 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             
             if save_success:
                 logger.info(" [MongoDB保存] 分析報告已成功保存到MongoDB")
-                update_progress("分析報告已保存到數據庫和本地檔案")
+                update_progress("分析報告已保存到資料庫和本地檔案")
             else:
                 logger.warning(" [MongoDB保存] MongoDB報告保存失敗")
                 if local_files:
-                    update_progress("本地報告已保存，但數據庫保存失敗")
+                    update_progress("本地報告已保存，但資料庫保存失敗")
                 else:
                     update_progress("報告保存失敗，但分析已完成")
                 
@@ -469,7 +469,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                         'event_type': 'web_analysis_error'
                     }, exc_info=True)
 
-        # 如果真實分析失敗，返回錯誤訊息而不是誤導性演示數據
+        # 如果真實分析失敗，返回錯誤訊息而不是誤導性演示資料
         return {
             'stock_symbol': stock_symbol,
             'analysis_date': analysis_date,
@@ -577,7 +577,7 @@ def format_analysis_results(results):
         'news_report',
         'risk_assessment',
         'investment_plan',
-        # 添加缺失的團隊決策數據，確保與CLI端一致
+        # 添加缺失的團隊決策資料，確保與CLI端一致
         'investment_debate_state',  # 研究團隊辯論（多頭/空頭研究員）
         'trader_investment_plan',   # 交易團隊計劃
         'risk_debate_state',        # 風險管理團隊決策

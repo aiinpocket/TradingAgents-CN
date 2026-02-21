@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試使用.env配置的數據庫管理器
+測試使用.env配置的資料庫管理器
 """
 
 import sys
@@ -9,7 +9,7 @@ from pathlib import Path
 
 def test_env_config():
     """測試.env配置"""
-    print(" 測試使用.env配置的數據庫管理器")
+    print(" 測試使用.env配置的資料庫管理器")
     print("=" * 50)
     
     # 1. 檢查.env 檔案
@@ -22,7 +22,7 @@ def test_env_config():
         with open(env_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         
-        print(" 數據庫相關配置:")
+        print(" 資料庫相關配置:")
         for line in lines:
             line = line.strip()
             if line and not line.startswith('#'):
@@ -37,19 +37,19 @@ def test_env_config():
         print(f" .env 檔案不存在: {env_file}")
         return False
     
-    # 2. 測試數據庫管理器
-    print("\n 測試數據庫管理器...")
+    # 2. 測試資料庫管理器
+    print("\n 測試資料庫管理器...")
     try:
         from tradingagents.config.database_manager import get_database_manager
         
         db_manager = get_database_manager()
-        print(" 數據庫管理器創建成功")
+        print(" 資料庫管理器創建成功")
         
         # 獲取狀態報告
         status = db_manager.get_status_report()
         
-        print(" 數據庫狀態:")
-        print(f"  數據庫可用: {' 是' if status['database_available'] else ' 否'}")
+        print(" 資料庫狀態:")
+        print(f"  資料庫可用: {' 是' if status['database_available'] else ' 否'}")
         
         mongodb_info = status['mongodb']
         print(f"  MongoDB: {' 可用' if mongodb_info['available'] else ' 不可用'}")
@@ -59,31 +59,31 @@ def test_env_config():
         print(f"  Redis: {' 可用' if redis_info['available'] else ' 不可用'}")
         print(f"    地址: {redis_info['host']}:{redis_info['port']}")
         
-        print(f"  緩存後端: {status['cache_backend']}")
+        print(f"  快取後端: {status['cache_backend']}")
         print(f"  降級支持: {' 啟用' if status['fallback_enabled'] else ' 禁用'}")
         
     except Exception as e:
-        print(f" 數據庫管理器測試失敗: {e}")
+        print(f" 資料庫管理器測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
     
-    # 3. 測試緩存系統
-    print("\n 測試緩存系統...")
+    # 3. 測試快取系統
+    print("\n 測試快取系統...")
     try:
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
-        print(" 緩存系統創建成功")
+        print(" 快取系統創建成功")
         
         # 獲取後端資訊
         backend_info = cache.get_cache_backend_info()
-        print(f"  緩存系統: {backend_info['system']}")
+        print(f"  快取系統: {backend_info['system']}")
         print(f"  主要後端: {backend_info['primary_backend']}")
         print(f"  性能模式: {cache.get_performance_mode()}")
         
         # 測試基本功能
-        test_data = "測試數據 - 使用.env配置"
+        test_data = "測試資料 - 使用.env配置"
         cache_key = cache.save_stock_data(
             symbol="TEST_ENV",
             data=test_data,
@@ -91,18 +91,18 @@ def test_env_config():
             end_date="2024-12-31",
             data_source="env_test"
         )
-        print(f" 數據保存成功: {cache_key}")
+        print(f" 資料保存成功: {cache_key}")
         
-        # 載入數據
+        # 載入資料
         loaded_data = cache.load_stock_data(cache_key)
         if loaded_data == test_data:
-            print(" 數據載入成功，內容匹配")
+            print(" 資料載入成功，內容匹配")
         else:
-            print(" 數據載入失敗或內容不匹配")
+            print(" 資料載入失敗或內容不匹配")
             return False
         
     except Exception as e:
-        print(f" 緩存系統測試失敗: {e}")
+        print(f" 快取系統測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -128,17 +128,17 @@ def test_env_config():
     # 5. 總結
     print("\n 測試總結:")
     print(" 系統已正確使用.env配置檔")
-    print(" 數據庫管理器正常工作")
-    print(" 緩存系統正常工作")
+    print(" 資料庫管理器正常工作")
+    print(" 快取系統正常工作")
     print(" 支持MongoDB和Redis的完整配置")
-    print(" 在數據庫不可用時自動降級到檔案緩存")
+    print(" 在資料庫不可用時自動降級到檔案快取")
     
     print("\n 配置說明:")
-    print("1. 系統讀取.env 檔案中的數據庫配置")
+    print("1. 系統讀取.env 檔案中的資料庫配置")
     print("2. 自動檢測MongoDB和Redis是否可用")
-    print("3. 根據可用性選擇最佳緩存後端")
+    print("3. 根據可用性選擇最佳快取後端")
     print("4. 支持用戶名密碼認證")
-    print("5. 在數據庫不可用時自動使用檔案緩存")
+    print("5. 在資料庫不可用時自動使用檔案快取")
     
     return True
 
@@ -151,8 +151,8 @@ def main():
             print("\n .env配置測試完成!")
             print("\n 系統特性:")
             print(" 使用項目現有的.env配置")
-            print(" 預設不依賴數據庫，可以純檔案緩存運行")
-            print(" 自動檢測和使用可用的數據庫")
+            print(" 預設不依賴資料庫，可以純檔案快取運行")
+            print(" 自動檢測和使用可用的資料庫")
             print(" 支持完整的MongoDB和Redis配置")
             print(" 智能降級，確保系統穩定性")
         

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-測試Finnhub新聞數據路徑修複
+測試Finnhub新聞資料路徑修複
 
 這個腳本用於驗證:
-1. 數據目錄路徑配置是否正確
-2. 新聞數據檔案路徑是否存在
+1. 資料目錄路徑配置是否正確
+2. 新聞資料檔案路徑是否存在
 3. 錯誤處理是否正常工作
 """
 
@@ -22,42 +22,42 @@ from tradingagents.dataflows.interface import get_finnhub_news
 from tradingagents.dataflows.finnhub_utils import get_data_in_range
 
 def test_data_dir_config():
-    """測試數據目錄配置"""
-    print("=== 測試數據目錄配置 ===")
+    """測試資料目錄配置"""
+    print("=== 測試資料目錄配置 ===")
     
     config = get_config()
     data_dir = config.get('data_dir')
     
-    print(f"當前數據目錄配置: {data_dir}")
-    print(f"數據目錄是否存在: {os.path.exists(data_dir) if data_dir else False}")
+    print(f"當前資料目錄配置: {data_dir}")
+    print(f"資料目錄是否存在: {os.path.exists(data_dir) if data_dir else False}")
     
     # 檢查是否為跨平台路徑
     if data_dir:
         if '/' in data_dir and '\\' in data_dir:
-            print(" 警告: 數據目錄路徑混合了Unix和Windows分隔符")
+            print(" 警告: 資料目錄路徑混合了Unix和Windows分隔符")
         elif data_dir.startswith('/Users/') and os.name == 'nt':
             print(" 警告: 在Windows系統上使用了Unix路徑")
         else:
-            print(" 數據目錄路徑格式正確")
+            print(" 資料目錄路徑格式正確")
     
     return data_dir
 
 def test_finnhub_news_path():
-    """測試Finnhub新聞數據路徑"""
-    print("\n=== 測試Finnhub新聞數據路徑 ===")
+    """測試Finnhub新聞資料路徑"""
+    print("\n=== 測試Finnhub新聞資料路徑 ===")
     
     config = get_config()
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        print(" 數據目錄未配置")
+        print(" 資料目錄未配置")
         return False
     
-    # 測試AAPL新聞數據路徑
+    # 測試AAPL新聞資料路徑
     ticker = "AAPL"
     news_data_path = os.path.join(data_dir, "finnhub_data", "news_data", f"{ticker}_data_formatted.json")
     
-    print(f"新聞數據檔案路徑: {news_data_path}")
+    print(f"新聞資料檔案路徑: {news_data_path}")
     print(f"檔案是否存在: {os.path.exists(news_data_path)}")
     
     # 檢查目錄結構
@@ -65,11 +65,11 @@ def test_finnhub_news_path():
     news_dir = os.path.join(finnhub_dir, "news_data")
     
     print(f"Finnhub目錄是否存在: {os.path.exists(finnhub_dir)}")
-    print(f"新聞數據目錄是否存在: {os.path.exists(news_dir)}")
+    print(f"新聞資料目錄是否存在: {os.path.exists(news_dir)}")
     
     if os.path.exists(news_dir):
         files = os.listdir(news_dir)
-        print(f"新聞數據目錄中的檔案: {files[:5]}...")  # 只顯示前5個檔案
+        print(f"新聞資料目錄中的檔案: {files[:5]}...")  # 只顯示前5個檔案
     
     return os.path.exists(news_data_path)
 
@@ -81,7 +81,7 @@ def test_get_data_in_range():
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        print(" 數據目錄未配置")
+        print(" 資料目錄未配置")
         return
     
     # 測試不存在的股票代碼
@@ -112,14 +112,14 @@ def test_get_finnhub_news():
     print(f"是否包含錯誤訊息: {'無法獲取' in result}")
 
 def create_sample_data_structure():
-    """創建示例數據目錄結構"""
-    print("\n=== 創建示例數據目錄結構 ===")
+    """創建示例資料目錄結構"""
+    print("\n=== 創建示例資料目錄結構 ===")
     
     config = get_config()
     data_dir = config.get('data_dir')
     
     if not data_dir:
-        print(" 數據目錄未配置")
+        print(" 資料目錄未配置")
         return
     
     # 創建目錄結構
@@ -152,37 +152,37 @@ def create_sample_data_structure():
 
 def main():
     """主測試函數"""
-    print("Finnhub新聞數據路徑修複測試")
+    print("Finnhub新聞資料路徑修複測試")
     print("=" * 50)
     
-    # 測試數據目錄配置
+    # 測試資料目錄配置
     data_dir = test_data_dir_config()
     
-    # 測試新聞數據路徑
+    # 測試新聞資料路徑
     news_exists = test_finnhub_news_path()
     
     # 測試錯誤處理
     test_get_data_in_range()
     test_get_finnhub_news()
     
-    # 如果數據不存在，創建示例結構
+    # 如果資料不存在，創建示例結構
     if not news_exists:
         create_sample_data_structure()
-        print("\n重新測試新聞數據路徑:")
+        print("\n重新測試新聞資料路徑:")
         test_finnhub_news_path()
     
     print("\n=== 測試總結 ===")
-    print("1. 數據目錄路徑已修複為跨平台兼容")
+    print("1. 資料目錄路徑已修複為跨平台兼容")
     print("2. 添加了詳細的錯誤處理和除錯資訊")
     print("3. 當資料檔案不存在時會提供清晰的錯誤提示")
-    print("4. 建議下載或配置正確的Finnhub數據")
+    print("4. 建議下載或配置正確的Finnhub資料")
     
     print("\n=== 解決方案建議 ===")
-    print("如果仍然遇到新聞數據問題，請:")
+    print("如果仍然遇到新聞資料問題，請:")
     print("1. 確保已正確配置Finnhub API密鑰")
-    print("2. 運行數據下載腳本獲取新聞數據")
-    print("3. 檢查數據目錄權限")
-    print(f"4. 確認數據目錄存在: {data_dir}")
+    print("2. 運行資料下載腳本獲取新聞資料")
+    print("3. 檢查資料目錄權限")
+    print(f"4. 確認資料目錄存在: {data_dir}")
 
 if __name__ == "__main__":
     main()

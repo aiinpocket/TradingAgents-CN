@@ -107,7 +107,7 @@ class RedisPerformanceTester:
                         failed_count += 1
                         
             elif operation_type == 'get':
-                # 先設置一些測試數據
+                # 先設置一些測試資料
                 for i in range(min(100, operations)):
                     self.redis_client.set(f"test_key_{i}", f"test_value_{i}")
                 
@@ -287,12 +287,12 @@ class RedisPerformanceTester:
         # 4. 內存使用
         results['memory'] = self.test_memory_usage()
         
-        # 清理測試數據
+        # 清理測試資料
         try:
             self.redis_client.flushdb()
-            print("\n 清理測試數據完成")
+            print("\n 清理測試資料完成")
         except Exception as e:
-            print(f"  清理測試數據失敗: {e}")
+            print(f"  清理測試資料失敗: {e}")
         
         return results
 
@@ -302,7 +302,7 @@ def main():
     parser.add_argument("--host", default="localhost", help="Redis主機地址")
     parser.add_argument("--port", type=int, default=6379, help="Redis端口")
     parser.add_argument("--password", help="Redis密碼")
-    parser.add_argument("--db", type=int, default=0, help="Redis數據庫編號")
+    parser.add_argument("--db", type=int, default=0, help="Redis資料庫編號")
     parser.add_argument("--test", choices=['latency', 'throughput', 'concurrent', 'memory', 'all'], 
                        default='all', help="測試類型")
     parser.add_argument("--output", help="結果輸出檔案(JSON格式)")

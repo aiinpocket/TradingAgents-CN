@@ -40,7 +40,7 @@ def test_finnhub_api():
                 'end_date': '2025-06-29'
             })
             print(f" FINNHUB新聞API調用成功")
-            print(f"新聞數據長度: {len(news_result) if news_result else 0}")
+            print(f"新聞資料長度: {len(news_result) if news_result else 0}")
             if news_result and len(news_result) > 100:
                 print(f"新聞內容前200字符:")
                 print(news_result[:200])
@@ -49,8 +49,8 @@ def test_finnhub_api():
         except Exception as e:
             print(f" FINNHUB新聞API調用失敗: {e}")
         
-        # 測試Yahoo Finance數據API
-        print(f"\n 測試Yahoo Finance數據API...")
+        # 測試Yahoo Finance資料API
+        print(f"\n 測試Yahoo Finance資料API...")
         try:
             stock_result = toolkit.get_YFin_data_online.invoke({
                 'symbol': 'AAPL',
@@ -58,12 +58,12 @@ def test_finnhub_api():
                 'end_date': '2025-06-29'
             })
             print(f" Yahoo Finance API調用成功")
-            print(f"股票數據長度: {len(stock_result) if stock_result else 0}")
+            print(f"股票資料長度: {len(stock_result) if stock_result else 0}")
             if stock_result and len(stock_result) > 100:
-                print(f"股票數據前200字符:")
+                print(f"股票資料前200字符:")
                 print(stock_result[:200])
             else:
-                print(f"股票數據: {stock_result}")
+                print(f"股票資料: {stock_result}")
         except Exception as e:
             print(f" Yahoo Finance API調用失敗: {e}")
         
@@ -75,12 +75,12 @@ def test_finnhub_api():
                 'curr_date': '2025-06-29'
             })
             print(f" OpenAI基本面API調用成功")
-            print(f"基本面數據長度: {len(fundamentals_result) if fundamentals_result else 0}")
+            print(f"基本面資料長度: {len(fundamentals_result) if fundamentals_result else 0}")
             if fundamentals_result and len(fundamentals_result) > 100:
-                print(f"基本面數據前200字符:")
+                print(f"基本面資料前200字符:")
                 print(fundamentals_result[:200])
             else:
-                print(f"基本面數據: {fundamentals_result}")
+                print(f"基本面資料: {fundamentals_result}")
         except Exception as e:
             print(f" OpenAI基本面API調用失敗: {e}")
         

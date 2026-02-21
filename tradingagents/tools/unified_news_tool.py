@@ -2,7 +2,7 @@
 """
 統一新聞分析工具
 整合美股市場的新聞獲取邏輯到一個工具函數中
-讓大模型只需要調用一個工具就能獲取美股的新聞數據
+讓大模型只需要調用一個工具就能獲取美股的新聞資料
 """
 
 import logging
@@ -139,7 +139,7 @@ class UnifiedNewsAnalyzer:
         except Exception as e:
             logger.warning(f"[統一新聞工具] FinnHub美股新聞獲取失敗: {e}")
         
-        return "無法獲取美股新聞數據，所有新聞源均不可用"
+        return "無法獲取美股新聞資料，所有新聞源均不可用"
     
     def _format_news_result(self, news_content: str, source: str, model_info: str = "") -> str:
         """格式化新聞結果"""
@@ -148,14 +148,14 @@ class UnifiedNewsAnalyzer:
         logger.info(f"[統一新聞工具] 新聞內容長度: {len(news_content)} 字符")
 
         formatted_result = f"""
-=== 新聞數據來源: {source} ===
+=== 新聞資料來源: {source} ===
 獲取時間: {timestamp}
-數據長度: {len(news_content)} 字符
+資料長度: {len(news_content)} 字符
 
 === 新聞內容 ===
 {news_content}
 
-=== 數據狀態 ===
+=== 資料狀態 ===
 狀態: 成功獲取
 來源: {source}
 時間戳: {timestamp}

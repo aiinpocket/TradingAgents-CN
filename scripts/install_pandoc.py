@@ -56,7 +56,7 @@ def install_pandoc_system():
     elif system == "linux":
         return install_pandoc_linux()
     else:
-        logger.error(f" 不支持的操作系統: {system}")
+        logger.error(f" 不支援的作業系統: {system}")
         return False
 
 def install_pandoc_windows():

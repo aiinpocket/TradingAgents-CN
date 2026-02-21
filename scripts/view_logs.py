@@ -175,7 +175,7 @@ def main():
             choice = input("\n請選擇 (0-5): ").strip()
             
             if choice == "0":
-                print(" 再见！")
+                print(" 再見！")
                 break
             elif choice == "1":
                 show_log_files()
@@ -218,7 +218,7 @@ def main():
                 print(" 無效選擇，請重新輸入")
                 
         except KeyboardInterrupt:
-            print("\n 再见！")
+            print("\n 再見！")
             break
         except Exception as e:
             print(f" 發生錯誤: {e}")

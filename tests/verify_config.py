@@ -35,12 +35,12 @@ print(f"MongoDB啟用: {mongodb_bool}")
 print(f"Redis啟用: {redis_bool}")
 
 if not mongodb_bool and not redis_bool:
-    print(" 預設配置：數據庫都未啟用，系統將使用檔案緩存")
+    print(" 預設配置：資料庫都未啟用，系統將使用檔案快取")
 else:
-    print(" 有數據庫啟用，系統將嘗試連接數據庫")
+    print(" 有資料庫啟用，系統將嘗試連接資料庫")
 
 print("\n 配置說明:")
 print("- MONGODB_ENABLED=false (預設)")
 print("- REDIS_ENABLED=false (預設)")
-print("- 系統使用檔案緩存，無需數據庫")
-print("- 如需啟用數據庫，修改.env 檔案中的對應值為true")
+print("- 系統使用檔案快取，無需資料庫")
+print("- 如需啟用資料庫，修改.env 檔案中的對應值為true")

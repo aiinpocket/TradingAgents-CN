@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試數據庫依賴包兼容性修複
+測試資料庫依賴包兼容性修複
 驗證requirements_db.txt的兼容性改進
 """
 
@@ -160,7 +160,7 @@ def test_compatibility_checker_tool():
         
         print(f"  返回碼: {result.returncode}")
         
-        if " TradingAgents 數據庫依賴包兼容性檢查" in result.stdout:
+        if " TradingAgents 資料庫依賴包兼容性檢查" in result.stdout:
             print("   兼容性檢查工具運行成功")
             
             # 檢查是否檢測到pickle5問題
@@ -214,7 +214,7 @@ def test_documentation_completeness():
 
 def main():
     """主測試函數"""
-    print(" 數據庫依賴包兼容性修複測試")
+    print(" 資料庫依賴包兼容性修複測試")
     print("=" * 60)
     
     tests = [
@@ -244,7 +244,7 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有測試通過！數據庫依賴包兼容性修複成功")
+        print(" 所有測試通過！資料庫依賴包兼容性修複成功")
         print("\n 修複內容:")
         print(" 移除pickle5依賴，解決Python 3.10+兼容性問題")
         print(" 優化版本要求，提高環境兼容性")

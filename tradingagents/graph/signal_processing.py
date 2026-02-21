@@ -120,7 +120,7 @@ class SignalProcessor:
                 logger.debug(f"[SignalProcessor] 提取的JSON: {json_text}")
                 decision_data = json.loads(json_text)
 
-                # 驗證和標準化數據
+                # 驗證和標準化資料
                 action = decision_data.get('action', '持有')
                 if action not in ['買入', '持有', '賣出']:
                     # 嘗試映射英文和其他變體
@@ -326,5 +326,5 @@ class SignalProcessor:
             'target_price': None,
             'confidence': 0.5,
             'risk_score': 0.5,
-            'reasoning': '輸入數據無效，預設持有建議'
+            'reasoning': '輸入資料無效，預設持有建議'
         }

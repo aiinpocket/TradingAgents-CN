@@ -42,35 +42,35 @@ for file_path in files_to_check:
 # 測試3：嘗試匯入模塊
 print("\n 測試模塊匯入...")
 
-# 測試緩存管理器
+# 測試快取管理器
 try:
     from tradingagents.dataflows.cache_manager import get_cache, StockDataCache
     print(" cache_manager 匯入成功")
     
-    # 創建緩存實例
+    # 創建快取實例
     cache = get_cache()
-    print(f" 緩存實例創建成功: {type(cache).__name__}")
+    print(f" 快取實例創建成功: {type(cache).__name__}")
     
-    # 檢查緩存目錄
+    # 檢查快取目錄
     if hasattr(cache, 'cache_dir'):
-        print(f" 緩存目錄: {cache.cache_dir}")
+        print(f" 快取目錄: {cache.cache_dir}")
         if cache.cache_dir.exists():
-            print(" 緩存目錄已創建")
+            print(" 快取目錄已創建")
         else:
-            print(" 緩存目錄不存在")
+            print(" 快取目錄不存在")
     
 except Exception as e:
     print(f" cache_manager 匯入失敗: {e}")
     traceback.print_exc()
 
-# 測試優化美股數據
+# 測試優化美股資料
 try:
     from tradingagents.dataflows.optimized_us_data import get_optimized_us_data_provider
     print(" optimized_us_data 匯入成功")
     
-    # 創建數據提供器
+    # 創建資料提供器
     provider = get_optimized_us_data_provider()
-    print(f" 數據提供器創建成功: {type(provider).__name__}")
+    print(f" 資料提供器創建成功: {type(provider).__name__}")
     
 except Exception as e:
     print(f" optimized_us_data 匯入失敗: {e}")
@@ -90,12 +90,12 @@ except Exception as e:
     traceback.print_exc()
 
 # 測試4：基本功能測試
-print("\n 測試緩存基本功能...")
+print("\n 測試快取基本功能...")
 try:
     cache = get_cache()
     
-    # 測試數據保存
-    test_data = f"測試數據 - {datetime.now()}"
+    # 測試資料保存
+    test_data = f"測試資料 - {datetime.now()}"
     cache_key = cache.save_stock_data(
         symbol="TEST",
         data=test_data,
@@ -103,18 +103,18 @@ try:
         end_date="2024-12-31",
         data_source="integration_test"
     )
-    print(f" 數據保存成功: {cache_key}")
+    print(f" 資料保存成功: {cache_key}")
     
-    # 測試數據載入
+    # 測試資料載入
     loaded_data = cache.load_stock_data(cache_key)
     if loaded_data == test_data:
-        print(" 數據載入成功，內容匹配")
+        print(" 資料載入成功，內容匹配")
     else:
-        print(f" 數據不匹配")
+        print(f" 資料不匹配")
         print(f"  期望: {test_data}")
         print(f"  實際: {loaded_data}")
     
-    # 測試緩存查找
+    # 測試快取查找
     found_key = cache.find_cached_stock_data(
         symbol="TEST",
         start_date="2024-01-01",
@@ -123,12 +123,12 @@ try:
     )
     
     if found_key:
-        print(f" 緩存查找成功: {found_key}")
+        print(f" 快取查找成功: {found_key}")
     else:
-        print(" 緩存查找失敗")
+        print(" 快取查找失敗")
     
 except Exception as e:
-    print(f" 緩存功能測試失敗: {e}")
+    print(f" 快取功能測試失敗: {e}")
     traceback.print_exc()
 
 # 測試5：性能測試
@@ -142,7 +142,7 @@ try:
     start_time = time.time()
     cache_key = cache.save_stock_data(
         symbol="PERF",
-        data="性能測試數據",
+        data="性能測試資料",
         start_date="2024-01-01",
         end_date="2024-12-31",
         data_source="perf_test"
@@ -158,25 +158,25 @@ try:
     print(f" 載入時間: {load_time:.4f}秒")
     
     if load_time < 0.1:
-        print(" 緩存性能良好 (<0.1秒)")
+        print(" 快取性能良好 (<0.1秒)")
     else:
-        print(" 緩存性能需要優化")
+        print(" 快取性能需要優化")
     
 except Exception as e:
     print(f" 性能測試失敗: {e}")
 
-# 測試6：緩存統計
-print("\n 緩存統計資訊...")
+# 測試6：快取統計
+print("\n 快取統計資訊...")
 try:
     cache = get_cache()
     stats = cache.get_cache_stats()
     
-    print("緩存統計:")
+    print("快取統計:")
     for key, value in stats.items():
         print(f"  {key}: {value}")
     
 except Exception as e:
-    print(f" 緩存統計失敗: {e}")
+    print(f" 快取統計失敗: {e}")
 
 print("\n" + "=" * 40)
 print(" 集成測試完成!")
@@ -187,9 +187,9 @@ print("\n 測試總結:")
 print("1. 檔案複制: 檢查檔案是否正確複制")
 print("2. 語法檢查: 驗證Python語法正確性")
 print("3. 模塊匯入: 測試模塊是否可以正常匯入")
-print("4. 功能測試: 驗證緩存基本功能")
-print("5. 性能測試: 檢查緩存性能")
-print("6. 統計資訊: 獲取緩存使用統計")
+print("4. 功能測試: 驗證快取基本功能")
+print("5. 性能測試: 檢查快取性能")
+print("6. 統計資訊: 獲取快取使用統計")
 
 print("\n 下一步:")
 print("1. 如果測試通過，可以開始清理中文內容")

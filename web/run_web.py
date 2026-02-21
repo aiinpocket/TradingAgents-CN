@@ -60,12 +60,12 @@ def clean_cache_files(force_clean=False):
         skip_clean = os.getenv('SKIP_CACHE_CLEAN', 'false').lower() == 'true'
 
     if skip_clean and not force_clean:
-        logger.info("跳過緩存清理（SKIP_CACHE_CLEAN=true）")
+        logger.info("跳過快取清理（SKIP_CACHE_CLEAN=true）")
         return
 
     project_root = Path(__file__).parent.parent
 
-    # 在特定目錄中安全查找緩存，避免遞歸深度問題
+    # 在特定目錄中安全查找快取，避免遞歸深度問題
     cache_dirs = []
     try:
         # 只在特定目錄中查找，避免深度遞歸
@@ -96,8 +96,8 @@ def clean_cache_files(force_clean=False):
                     continue
 
     except Exception as e:
-        logger.warning(f"查找緩存目錄時出錯: {e}")
-        logger.info("跳過緩存清理")
+        logger.warning(f"查找快取目錄時出錯: {e}")
+        logger.info("跳過快取清理")
         return
 
     if not cache_dirs:
@@ -105,7 +105,7 @@ def clean_cache_files(force_clean=False):
         return
 
     if not force_clean:
-        # 可選清理：只清理項目代碼的緩存，不清理虛擬環境
+        # 可選清理：只清理項目代碼的快取，不清理虛擬環境
         project_cache_dirs = [d for d in cache_dirs if 'env' not in str(d)]
         if project_cache_dirs:
             logger.info("清理項目快取檔案...")
@@ -115,11 +115,11 @@ def clean_cache_files(force_clean=False):
                     logger.info(f"已清理: {cache_dir.relative_to(project_root)}")
                 except Exception as e:
                     logger.error(f"清理失敗: {cache_dir.relative_to(project_root)} - {e}")
-            logger.info("項目緩存清理完成")
+            logger.info("項目快取清理完成")
         else:
-            logger.info("無需清理項目緩存")
+            logger.info("無需清理項目快取")
     else:
-        # 強制清理：清理所有緩存
+        # 強制清理：清理所有快取
         logger.info("強制清理所有快取檔案...")
         for cache_dir in cache_dirs:
             try:
@@ -128,7 +128,7 @@ def clean_cache_files(force_clean=False):
                 logger.info(f"已清理: {cache_dir.relative_to(project_root)}")
             except Exception as e:
                 logger.error(f"清理失敗: {cache_dir.relative_to(project_root)} - {e}")
-        logger.info("所有緩存清理完成")
+        logger.info("所有快取清理完成")
 
 def check_api_keys():
     """檢查API密鑰配置"""
@@ -157,7 +157,7 @@ def check_api_keys():
         return False
 
     if not finnhub_key:
-        logger.warning("FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
+        logger.warning("FINNHUB_API_KEY 未設置，部分美股資料功能可能受限")
 
     logger.info("API密鑰配置完成")
     return True
@@ -258,21 +258,21 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] == "--no-clean":
             os.environ['SKIP_CACHE_CLEAN'] = 'true'
-            logger.info("啟動模式: 跳過緩存清理")
+            logger.info("啟動模式: 跳過快取清理")
         elif sys.argv[1] == "--force-clean":
-            # 強制清理所有緩存
-            logger.info("啟動模式: 強制清理所有緩存")
+            # 強制清理所有快取
+            logger.info("啟動模式: 強制清理所有快取")
             clean_cache_files(force_clean=True)
         elif sys.argv[1] == "--help":
             logger.info("TradingAgents-CN Web應用啟動器")
             logger.info("=")
             logger.info("用法:")
-            logger.info("python run_web.py # 預設啟動（清理項目緩存）")
-            logger.info("python run_web.py --no-clean # 跳過緩存清理")
-            logger.info("python run_web.py --force-clean # 強制清理所有緩存")
+            logger.info("python run_web.py # 預設啟動（清理項目快取）")
+            logger.info("python run_web.py --no-clean # 跳過快取清理")
+            logger.info("python run_web.py --force-clean # 強制清理所有快取")
             logger.info("python run_web.py --help # 顯示幫助")
             logger.info("\n環境變量:")
-            logger.info("SKIP_CACHE_CLEAN=true # 跳過緩存清理")
+            logger.info("SKIP_CACHE_CLEAN=true # 跳過快取清理")
             exit(0)
 
     main()

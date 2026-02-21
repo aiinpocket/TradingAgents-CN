@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-自適應緩存管理器 - 根據可用服務自動選擇最佳緩存策略
-支持檔案緩存、Redis緩存、MongoDB緩存的智能切換
+自適應快取管理器 - 根據可用服務自動選擇最佳快取策略
+支持檔案快取、Redis快取、MongoDB快取的智能切換
 """
 
 import os
@@ -25,7 +25,7 @@ except ImportError:
     SMART_CONFIG_AVAILABLE = False
 
 class AdaptiveCacheManager:
-    """自適應緩存管理器 - 智能選擇緩存後端"""
+    """自適應快取管理器 - 智能選擇快取後端"""
     
     def __init__(self, cache_dir: str = "data_cache"):
         self.cache_dir = Path(cache_dir)
@@ -38,10 +38,10 @@ class AdaptiveCacheManager:
         # 獲取智能配置
         self._load_smart_config()
         
-        # 初始化緩存後端
+        # 初始化快取後端
         self._init_backends()
         
-        self.logger.info(f"緩存管理器初始化完成，主要後端: {self.primary_backend}")
+        self.logger.info(f"快取管理器初始化完成，主要後端: {self.primary_backend}")
     
     def _load_smart_config(self):
         """載入智能配置"""
@@ -60,7 +60,7 @@ class AdaptiveCacheManager:
             except Exception as e:
                 self.logger.warning(f"智能配置載入失敗: {e}")
         
-        # 預設配置（純檔案緩存）
+        # 預設配置（純檔案快取）
         self.config = {
             "cache": {
                 "primary_backend": "file",
@@ -78,10 +78,10 @@ class AdaptiveCacheManager:
         self.fallback_enabled = True
         self.ttl_settings = self.config["cache"]["ttl_settings"]
         
-        self.logger.info("使用預設配置（純檔案緩存）")
+        self.logger.info("使用預設配置（純檔案快取）")
     
     def _init_backends(self):
-        """初始化緩存後端"""
+        """初始化快取後端"""
         self.mongodb_client = None
         self.redis_client = None
         
@@ -126,7 +126,7 @@ class AdaptiveCacheManager:
                 self.logger.info("Redis不可用，降級到MongoDB")
             else:
                 self.primary_backend = "file"
-                self.logger.info("Redis不可用，降級到檔案緩存")
+                self.logger.info("Redis不可用，降級到檔案快取")
         
         elif self.primary_backend == "mongodb" and not self.mongodb_enabled:
             if self.redis_enabled:
@@ -134,11 +134,11 @@ class AdaptiveCacheManager:
                 self.logger.info("MongoDB不可用，降級到Redis")
             else:
                 self.primary_backend = "file"
-                self.logger.info("MongoDB不可用，降級到檔案緩存")
+                self.logger.info("MongoDB不可用，降級到檔案快取")
     
     def _get_cache_key(self, symbol: str, start_date: str, end_date: str, 
                       data_source: str = "default") -> str:
-        """生成緩存鍵"""
+        """生成快取鍵"""
         key_data = f"{symbol}_{start_date}_{end_date}_{data_source}"
         return hashlib.md5(key_data.encode()).hexdigest()
     
@@ -150,7 +150,7 @@ class AdaptiveCacheManager:
         return ttl_seconds
     
     def _is_cache_valid(self, cache_time: datetime, ttl_seconds: int) -> bool:
-        """檢查緩存是否有效"""
+        """檢查快取是否有效"""
         if cache_time is None:
             return False
         
@@ -185,7 +185,7 @@ class AdaptiveCacheManager:
             with open(cache_file, 'r', encoding='utf-8') as f:
                 cache_data = json.load(f)
 
-            # 還原序列化的數據
+            # 還原序列化的資料
             if 'data' in cache_data and isinstance(cache_data['data'], dict) and '_type' in cache_data['data']:
                 cache_data['data'] = self._deserialize_data(cache_data['data'])
 
@@ -195,7 +195,7 @@ class AdaptiveCacheManager:
             return None
 
     def _serialize_data(self, data: Any) -> Any:
-        """將數據序列化為 JSON 安全格式"""
+        """將資料序列化為 JSON 安全格式"""
         if isinstance(data, pd.DataFrame):
             return {'_type': 'dataframe', '_value': data.to_json()}
         elif isinstance(data, pd.Series):
@@ -206,7 +206,7 @@ class AdaptiveCacheManager:
             return {'_type': 'raw', '_value': data}
 
     def _deserialize_data(self, serialized: dict) -> Any:
-        """從 JSON 安全格式還原數據"""
+        """從 JSON 安全格式還原資料"""
         data_type = serialized.get('_type', 'raw')
         value = serialized.get('_value')
         if data_type == 'dataframe':
@@ -219,7 +219,7 @@ class AdaptiveCacheManager:
             return value
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
-        """保存到Redis緩存"""
+        """保存到Redis快取"""
         if not self.redis_client:
             return False
         
@@ -234,11 +234,11 @@ class AdaptiveCacheManager:
             self.redis_client.setex(cache_key, ttl_seconds, serialized_data)
             return True
         except Exception as e:
-            self.logger.error(f"Redis緩存保存失敗: {e}")
+            self.logger.error(f"Redis快取保存失敗: {e}")
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
-        """從Redis緩存載入"""
+        """從Redis快取載入"""
         if not self.redis_client:
             return None
         
@@ -254,13 +254,13 @@ class AdaptiveCacheManager:
             
             return cache_data
         except Exception as e:
-            self.logger.error(f"Redis緩存載入失敗: {e}")
+            self.logger.error(f"Redis快取載入失敗: {e}")
             return None
     
     def save_stock_data(self, symbol: str, data: Any, start_date: str = None, 
                        end_date: str = None, data_source: str = "default") -> str:
-        """保存股票數據到緩存"""
-        # 生成緩存鍵
+        """保存股票資料到快取"""
+        # 生成快取鍵
         cache_key = self._get_cache_key(symbol, start_date or "", end_date or "", data_source)
         
         # 準備中繼資料
@@ -284,21 +284,21 @@ class AdaptiveCacheManager:
             # MongoDB保存邏輯（簡化版）
             success = self._save_to_file(cache_key, data, metadata)
         
-        # 如果主要後端失敗，使用檔案緩存作為備用
+        # 如果主要後端失敗，使用檔案快取作為備用
         if not success and self.fallback_enabled:
             success = self._save_to_file(cache_key, data, metadata)
             if success:
-                self.logger.info(f"使用檔案緩存備用保存: {cache_key}")
+                self.logger.info(f"使用檔案快取備用保存: {cache_key}")
         
         if success:
-            self.logger.info(f"數據保存成功: {symbol} -> {cache_key}")
+            self.logger.info(f"資料保存成功: {symbol} -> {cache_key}")
         else:
-            self.logger.error(f"數據保存失敗: {symbol}")
+            self.logger.error(f"資料保存失敗: {symbol}")
         
         return cache_key
     
     def load_stock_data(self, cache_key: str) -> Optional[Any]:
-        """從緩存載入股票數據"""
+        """從快取載入股票資料"""
         cache_data = None
         
         # 根據主要後端載入
@@ -308,39 +308,39 @@ class AdaptiveCacheManager:
             # MongoDB載入邏輯（簡化版）
             cache_data = self._load_from_file(cache_key)
         
-        # 如果主要後端失敗，嘗試檔案緩存
+        # 如果主要後端失敗，嘗試檔案快取
         if not cache_data and self.fallback_enabled:
             cache_data = self._load_from_file(cache_key)
             if cache_data:
-                self.logger.info(f"使用檔案緩存備用載入: {cache_key}")
+                self.logger.info(f"使用檔案快取備用載入: {cache_key}")
         
         if not cache_data:
             return None
         
-        # 檢查緩存是否有效
+        # 檢查快取是否有效
         symbol = cache_data['metadata'].get('symbol', '')
         data_type = cache_data['metadata'].get('data_type', 'stock_data')
         ttl_seconds = self._get_ttl_seconds(symbol, data_type)
         
         if not self._is_cache_valid(cache_data['timestamp'], ttl_seconds):
-            self.logger.info(f"緩存已過期: {cache_key}")
+            self.logger.info(f"快取已過期: {cache_key}")
             return None
         
         return cache_data['data']
     
     def find_cached_stock_data(self, symbol: str, start_date: str = None, 
                               end_date: str = None, data_source: str = "default") -> Optional[str]:
-        """查找緩存的股票數據"""
+        """查找快取的股票資料"""
         cache_key = self._get_cache_key(symbol, start_date or "", end_date or "", data_source)
         
-        # 檢查緩存是否存在且有效
+        # 檢查快取是否存在且有效
         if self.load_stock_data(cache_key) is not None:
             return cache_key
         
         return None
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """獲取緩存統計資訊"""
+        """獲取快取統計資訊"""
         stats = {
             'primary_backend': self.primary_backend,
             'mongodb_enabled': self.mongodb_enabled,
@@ -362,11 +362,11 @@ class AdaptiveCacheManager:
         return stats
 
 
-# 全局緩存管理器實例
+# 全局快取管理器實例
 _cache_manager = None
 
 def get_cache() -> AdaptiveCacheManager:
-    """獲取全局自適應緩存管理器"""
+    """獲取全局自適應快取管理器"""
     global _cache_manager
     if _cache_manager is None:
         _cache_manager = AdaptiveCacheManager()
@@ -374,23 +374,23 @@ def get_cache() -> AdaptiveCacheManager:
 
 
 def main():
-    """測試自適應緩存管理器"""
-    logger.info(f" 測試自適應緩存管理器")
+    """測試自適應快取管理器"""
+    logger.info(f" 測試自適應快取管理器")
     logger.info(f"=")
     
-    # 創建緩存管理器
+    # 創建快取管理器
     cache = get_cache()
     
     # 顯示狀態
     stats = cache.get_cache_stats()
-    logger.info(f"\n 緩存狀態:")
+    logger.info(f"\n 快取狀態:")
     for key, value in stats.items():
         logger.info(f"  {key}: {value}")
     
-    # 測試緩存功能
-    logger.info(f"\n 測試緩存功能...")
+    # 測試快取功能
+    logger.info(f"\n 測試快取功能...")
     
-    test_data = "測試股票數據 - AAPL"
+    test_data = "測試股票資料 - AAPL"
     cache_key = cache.save_stock_data(
         symbol="AAPL",
         data=test_data,
@@ -398,16 +398,16 @@ def main():
         end_date="2024-12-31",
         data_source="test"
     )
-    logger.info(f" 數據保存: {cache_key}")
+    logger.info(f" 資料保存: {cache_key}")
     
-    # 載入數據
+    # 載入資料
     loaded_data = cache.load_stock_data(cache_key)
     if loaded_data == test_data:
-        logger.info(f" 數據載入成功")
+        logger.info(f" 資料載入成功")
     else:
-        logger.error(f" 數據載入失敗")
+        logger.error(f" 資料載入失敗")
     
-    # 查找緩存
+    # 查找快取
     found_key = cache.find_cached_stock_data(
         symbol="AAPL",
         start_date="2024-01-01",
@@ -416,11 +416,11 @@ def main():
     )
     
     if found_key:
-        logger.info(f" 緩存查找成功: {found_key}")
+        logger.info(f" 快取查找成功: {found_key}")
     else:
-        logger.error(f" 緩存查找失敗")
+        logger.error(f" 快取查找失敗")
     
-    logger.info(f"\n 自適應緩存管理器測試完成!")
+    logger.info(f"\n 自適應快取管理器測試完成!")
 
 
 if __name__ == "__main__":

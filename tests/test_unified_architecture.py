@@ -68,7 +68,7 @@ def test_market_analyst_unified():
                 
                 # 檢查是否只綁定了統一工具
                 if len(tools) == 1 and tools[0].name == 'get_stock_market_data_unified':
-                    print(f"   正確綁定統一市場數據工具")
+                    print(f"   正確綁定統一市場資料工具")
                     return self
                 else:
                     print(f"   綁定了錯誤的工具: {[tool.name for tool in tools]}")
@@ -212,7 +212,7 @@ def test_stock_type_routing():
                 print(f"   基本面工具調用失敗: {e}")
                 return False
             
-            # 測試市場數據工具
+            # 測試市場資料工具
             try:
                 result = toolkit.get_stock_market_data_unified.invoke({
                     'ticker': ticker,
@@ -221,12 +221,12 @@ def test_stock_type_routing():
                 })
                 
                 if expected_market in result and expected_currency in result:
-                    print(f"   市場數據工具路由正確")
+                    print(f"   市場資料工具路由正確")
                 else:
-                    print(f"   市場數據工具路由可能有問題")
+                    print(f"   市場資料工具路由可能有問題")
                     
             except Exception as e:
-                print(f"   市場數據工具調用失敗: {e}")
+                print(f"   市場資料工具調用失敗: {e}")
                 return False
         
         print(" 股票類型路由測試通過")

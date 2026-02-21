@@ -12,7 +12,7 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def create_mock_analysis_results():
-    """創建模擬的分析結果數據"""
+    """創建模擬的分析結果資料"""
     return {
         'stock_symbol': 'TEST123',
         'analysis_date': '2025-07-31',
@@ -74,14 +74,14 @@ def test_save_analysis_result():
         # 匯入保存函數
         from web.components.analysis_results import save_analysis_result
         
-        # 創建模擬數據
+        # 創建模擬資料
         analysis_id = f"test_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         stock_symbol = "TEST123"
         analysts = ['market_analyst', 'fundamentals_analyst', 'trader_agent']
         research_depth = 3
         result_data = create_mock_analysis_results()
         
-        print(f" 測試數據:")
+        print(f" 測試資料:")
         print(f"   分析ID: {analysis_id}")
         print(f"   股票代碼: {stock_symbol}")
         print(f"   分析師: {analysts}")

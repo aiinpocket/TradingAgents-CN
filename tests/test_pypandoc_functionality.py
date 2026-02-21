@@ -178,7 +178,7 @@ def test_report_exporter():
         print(f"   匯出功能可用: {exporter.export_available}")
         print(f"   Pandoc可用: {exporter.pandoc_available}")
         
-        # 測試數據
+        # 測試資料
         test_results = {
             'stock_symbol': 'TEST001',
             'decision': {
