@@ -105,7 +105,7 @@ uv --version
 ### 1. 
 ```bash
 # 
-git clone https://github.com/your-repo/TradingAgents-CN.git
+git clone https://github.com/aiinpocket/TradingAgents-CN.git
 cd TradingAgents-CN
 
 # 
@@ -572,7 +572,7 @@ docker-compose logs -f
 
 
 
-- **GitHub Issues**: [](https://github.com/your-repo/TradingAgents-CN/issues)
+- **GitHub Issues**: [](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - ****: [](../README.md)
 - ****: [](https://your-community-link)
 

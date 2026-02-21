@@ -316,15 +316,15 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.info(f"分析日期: {analysis_date}")
 
         # 調整股票代碼格式
-        logger.debug(f" [RUNNER DEBUG] ===== 股票代碼格式化 =====")
-        logger.debug(f" [RUNNER DEBUG] 原始股票代碼: '{stock_symbol}'")
+        logger.debug(f" ===== 股票代碼格式化 =====")
+        logger.debug(f" 原始股票代碼: '{stock_symbol}'")
 
         # 美股代碼轉為大寫
         formatted_symbol = stock_symbol.upper()
-        logger.debug(f" [RUNNER DEBUG] 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
+        logger.debug(f" 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
         update_progress(f"準備分析美股: {formatted_symbol}")
 
-        logger.debug(f" [RUNNER DEBUG] 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
+        logger.debug(f" 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
         # 初始化交易圖
         update_progress("初始化分析引擎...")
@@ -332,16 +332,16 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 執行分析
         update_progress(f"開始分析 {formatted_symbol} 股票，這可能需要几分鐘時間...")
-        logger.debug(f" [RUNNER DEBUG] ===== 調用graph.propagate =====")
-        logger.debug(f" [RUNNER DEBUG] 傳遞給graph.propagate的參數:")
-        logger.debug(f" [RUNNER DEBUG]   symbol: '{formatted_symbol}'")
-        logger.debug(f" [RUNNER DEBUG]   date: '{analysis_date}'")
+        logger.debug(f" ===== 調用graph.propagate =====")
+        logger.debug(f" 傳遞給graph.propagate的參數:")
+        logger.debug(f" symbol: '{formatted_symbol}'")
+        logger.debug(f" date: '{analysis_date}'")
 
         state, decision = graph.propagate(formatted_symbol, analysis_date)
 
         # 調試信息
-        logger.debug(f" [DEBUG] 分析完成，decision類型: {type(decision)}")
-        logger.debug(f" [DEBUG] decision內容: {decision}")
+        logger.debug(f" 分析完成，decision類型: {type(decision)}")
+        logger.debug(f" decision內容: {decision}")
 
         # 格式化結果
         update_progress("分析完成，正在整理結果...")

@@ -44,11 +44,11 @@ def create_news_analyst(llm, toolkit):
                 }
 
                 company_name = us_stock_names.get(ticker.upper(), ticker)
-                logger.debug(f"[DEBUG] 美股名稱映射: {ticker} -> {company_name}")
+                logger.debug(f"美股名稱映射: {ticker} -> {company_name}")
                 return company_name
 
             except Exception as e:
-                logger.error(f"[DEBUG] 獲取公司名稱失敗: {e}")
+                logger.error(f"獲取公司名稱失敗: {e}")
                 return ticker
         
         company_name = _get_company_name(ticker, market_info)

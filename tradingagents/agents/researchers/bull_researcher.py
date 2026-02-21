@@ -9,7 +9,7 @@ logger = get_logger("default")
 
 def create_bull_researcher(llm, memory):
     def bull_node(state) -> dict:
-        logger.debug(f"[DEBUG] ===== 看漲研究員節點開始 =====")
+        logger.debug(f"===== 看漲研究員節點開始 =====")
 
         investment_debate_state = state["investment_debate_state"]
         history = investment_debate_state.get("history", "")
@@ -29,13 +29,13 @@ def create_bull_researcher(llm, memory):
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.debug(f"[DEBUG] 接收到的報告:")
-        logger.debug(f"[DEBUG] - 市場報告長度: {len(market_research_report)}")
-        logger.debug(f"[DEBUG] - 情緒報告長度: {len(sentiment_report)}")
-        logger.debug(f"[DEBUG] - 新聞報告長度: {len(news_report)}")
-        logger.debug(f"[DEBUG] - 基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"[DEBUG] - 基本面報告前200字符: {fundamentals_report[:200]}...")
-        logger.debug(f"[DEBUG] - 股票代碼: {company_name}, 類型: {market_info['market_name']}, 貨幣: {currency}")
+        logger.debug(f"接收到的報告:")
+        logger.debug(f"- 市場報告長度: {len(market_research_report)}")
+        logger.debug(f"- 情緒報告長度: {len(sentiment_report)}")
+        logger.debug(f"- 新聞報告長度: {len(news_report)}")
+        logger.debug(f"- 基本面報告長度: {len(fundamentals_report)}")
+        logger.debug(f"- 基本面報告前200字符: {fundamentals_report[:200]}...")
+        logger.debug(f"- 股票代碼: {company_name}, 類型: {market_info['market_name']}, 貨幣: {currency}")
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
 
@@ -43,7 +43,7 @@ def create_bull_researcher(llm, memory):
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"[DEBUG] memory為None，跳過歷史記憶檢索")
+            logger.warning(f"memory為None，跳過歷史記憶檢索")
             past_memories = []
 
         past_memory_str = ""

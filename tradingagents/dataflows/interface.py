@@ -75,7 +75,7 @@ def get_finnhub_news(
         error_msg += f"2. 指定日期範圍內沒有新聞數據\n"
         error_msg += f"3. 需要先下載或更新Finnhub新聞數據\n"
         error_msg += f"建議：檢查數據目錄配置或重新獲取新聞數據"
-        logger.debug(f"[DEBUG] {error_msg}")
+        logger.debug(f"{error_msg}")
         return error_msg
 
     combined_result = ""
@@ -721,7 +721,7 @@ def get_fundamentals_finnhub(ticker, curr_date):
         if cached_key:
             cached_data = cache.load_fundamentals_data(cached_key)
             if cached_data:
-                logger.debug(f"[DEBUG] 從快取載入Finnhub基本面數據: {ticker}")
+                logger.debug(f"從快取載入Finnhub基本面數據: {ticker}")
                 return cached_data
         
         # 獲取Finnhub API密鑰
@@ -732,27 +732,27 @@ def get_fundamentals_finnhub(ticker, curr_date):
         # 初始化Finnhub客戶端
         finnhub_client = finnhub.Client(api_key=api_key)
         
-        logger.debug(f"[DEBUG] 使用Finnhub API獲取 {ticker} 的基本面數據...")
+        logger.debug(f"使用Finnhub API獲取 {ticker} 的基本面數據...")
         
         # 獲取基本財務數據
         try:
             basic_financials = finnhub_client.company_basic_financials(ticker, 'all')
         except Exception as e:
-            logger.error(f"[DEBUG] Finnhub基本財務數據獲取失敗: {str(e)}")
+            logger.error(f"Finnhub基本財務數據獲取失敗: {str(e)}")
             basic_financials = None
         
         # 獲取公司概況
         try:
             company_profile = finnhub_client.company_profile2(symbol=ticker)
         except Exception as e:
-            logger.error(f"[DEBUG] Finnhub公司概況獲取失敗: {str(e)}")
+            logger.error(f"Finnhub公司概況獲取失敗: {str(e)}")
             company_profile = None
         
         # 獲取收益數據
         try:
             earnings = finnhub_client.company_earnings(ticker, limit=4)
         except Exception as e:
-            logger.error(f"[DEBUG] Finnhub收益數據獲取失敗: {str(e)}")
+            logger.error(f"Finnhub收益數據獲取失敗: {str(e)}")
             earnings = None
         
         # 格式化報告
@@ -831,13 +831,13 @@ def get_fundamentals_finnhub(ticker, curr_date):
         if report and len(report) > 100:  # 只有當報告有實際內容時才快取
             cache.save_fundamentals_data(ticker, report, data_source="finnhub")
         
-        logger.debug(f"[DEBUG] Finnhub基本面數據獲取完成，報告長度: {len(report)}")
+        logger.debug(f"Finnhub基本面數據獲取完成，報告長度: {len(report)}")
         return report
         
     except ImportError:
         return "錯誤：未安裝finnhub-python庫，請運行: pip install finnhub-python"
     except Exception as e:
-        logger.error(f"[DEBUG] Finnhub基本面數據獲取失敗: {str(e)}")
+        logger.error(f"Finnhub基本面數據獲取失敗: {str(e)}")
         return f"Finnhub基本面數據獲取失敗: {str(e)}"
 
 
@@ -860,7 +860,7 @@ def get_fundamentals_openai(ticker, curr_date):
         if cached_key:
             cached_data = cache.load_fundamentals_data(cached_key)
             if cached_data:
-                logger.debug(f"[DEBUG] 從快取載入OpenAI基本面數據: {ticker}")
+                logger.debug(f"從快取載入OpenAI基本面數據: {ticker}")
                 return cached_data
         
         config = get_config()
@@ -868,21 +868,21 @@ def get_fundamentals_openai(ticker, curr_date):
         # 檢查是否配置了OpenAI API Key（這是最關鍵的檢查）
         openai_api_key = os.getenv("OPENAI_API_KEY")
         if not openai_api_key:
-            logger.debug(f"[DEBUG] 未配置OPENAI_API_KEY，跳過OpenAI API，直接使用Finnhub")
+            logger.debug(f"未配置OPENAI_API_KEY，跳過OpenAI API，直接使用Finnhub")
             return get_fundamentals_finnhub(ticker, curr_date)
 
         # 檢查是否配置了OpenAI相關設定
         if not config.get("backend_url") or not config.get("quick_think_llm"):
-            logger.debug(f"[DEBUG] OpenAI配置不完整，直接使用Finnhub API")
+            logger.debug(f"OpenAI配置不完整，直接使用Finnhub API")
             return get_fundamentals_finnhub(ticker, curr_date)
 
         # 檢查backend_url是否是OpenAI的URL
         backend_url = config.get("backend_url", "")
         if "openai.com" not in backend_url:
-            logger.debug(f"[DEBUG] backend_url不是OpenAI API ({backend_url})，跳過OpenAI，使用Finnhub")
+            logger.debug(f"backend_url不是OpenAI API ({backend_url})，跳過OpenAI，使用Finnhub")
             return get_fundamentals_finnhub(ticker, curr_date)
         
-        logger.debug(f"[DEBUG] 嘗試使用OpenAI獲取 {ticker} 的基本面數據...")
+        logger.debug(f"嘗試使用OpenAI獲取 {ticker} 的基本面數據...")
         
         client = OpenAI(base_url=config["backend_url"])
 
@@ -920,12 +920,12 @@ def get_fundamentals_openai(ticker, curr_date):
         if result and len(result) > 100:  # 只有當結果有實際內容時才快取
             cache.save_fundamentals_data(ticker, result, data_source="openai")
         
-        logger.debug(f"[DEBUG] OpenAI基本面數據獲取成功，長度: {len(result)}")
+        logger.debug(f"OpenAI基本面數據獲取成功，長度: {len(result)}")
         return result
         
     except Exception as e:
-        logger.error(f"[DEBUG] OpenAI基本面數據獲取失敗: {str(e)}")
-        logger.debug(f"[DEBUG] 回退到Finnhub API...")
+        logger.error(f"OpenAI基本面數據獲取失敗: {str(e)}")
+        logger.debug(f"回退到Finnhub API...")
         return get_fundamentals_finnhub(ticker, curr_date)
 
 

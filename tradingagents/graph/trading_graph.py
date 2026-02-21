@@ -168,20 +168,20 @@ class TradingAgentsGraph:
         """Run the trading agents graph for a company on a specific date."""
 
         # 添加詳細的接收日誌
-        logger.debug(f"[GRAPH DEBUG] ===== TradingAgentsGraph.propagate 接收參數 =====")
-        logger.debug(f"[GRAPH DEBUG] 接收到的company_name: '{company_name}' (類型: {type(company_name)})")
-        logger.debug(f"[GRAPH DEBUG] 接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")
+        logger.debug(f"===== TradingAgentsGraph.propagate 接收參數 =====")
+        logger.debug(f"接收到的company_name: '{company_name}' (類型: {type(company_name)})")
+        logger.debug(f"接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")
 
         self.ticker = company_name
-        logger.debug(f"[GRAPH DEBUG] 設置self.ticker: '{self.ticker}'")
+        logger.debug(f"設置self.ticker: '{self.ticker}'")
 
         # Initialize state
-        logger.debug(f"[GRAPH DEBUG] 創建初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")
+        logger.debug(f"創建初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")
         init_agent_state = self.propagator.create_initial_state(
             company_name, trade_date
         )
-        logger.debug(f"[GRAPH DEBUG] 初始狀態中的company_of_interest: '{init_agent_state.get('company_of_interest', 'NOT_FOUND')}'")
-        logger.debug(f"[GRAPH DEBUG] 初始狀態中的trade_date: '{init_agent_state.get('trade_date', 'NOT_FOUND')}'")
+        logger.debug(f"初始狀態中的company_of_interest: '{init_agent_state.get('company_of_interest', 'NOT_FOUND')}'")
+        logger.debug(f"初始狀態中的trade_date: '{init_agent_state.get('trade_date', 'NOT_FOUND')}'")
         args = self.propagator.get_graph_args()
 
         if self.debug:

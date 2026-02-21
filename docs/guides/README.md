@@ -86,7 +86,7 @@ status: updated
 #### 
 - ****: [](../troubleshooting/)
 - ****: [FAQ](../faq/)
-- ****: [GitHub Issues](https://github.com/your-repo/issues)
+- ****: [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
 
 ## 
 
@@ -136,9 +136,9 @@ status: updated
 ## 
 
 ### 
-- **GitHub Issues**: [](https://github.com/your-repo/issues)
-- ****: [](https://github.com/your-repo/issues/new?template=documentation.md)
-- ****: [](https://github.com/your-repo/issues/new?template=feature_request.md)
+- **GitHub Issues**: [](https://github.com/aiinpocket/TradingAgents-CN/issues)
+- ****: [](https://github.com/aiinpocket/TradingAgents-CN/issues/new?template=documentation.md)
+- ****: [](https://github.com/aiinpocket/TradingAgents-CN/issues/new?template=feature_request.md)
 
 ### 
 - ****: [](https://your-community-link)

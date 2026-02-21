@@ -50,15 +50,15 @@ def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
 def create_fundamentals_analyst(llm, toolkit):
     @log_analyst_module("fundamentals")
     def fundamentals_analyst_node(state):
-        logger.debug(f"[DEBUG] ===== 基本面分析師節點開始 =====")
+        logger.debug(f"===== 基本面分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
         start_date = '2025-05-28'
 
-        logger.debug(f"[DEBUG] 輸入參數: ticker={ticker}, date={current_date}")
-        logger.debug(f"[DEBUG] 當前狀態中的訊息數量: {len(state.get('messages', []))}")
-        logger.debug(f"[DEBUG] 現有基本面報告: {state.get('fundamentals_report', 'None')}")
+        logger.debug(f"輸入參數: ticker={ticker}, date={current_date}")
+        logger.debug(f"當前狀態中的訊息數量: {len(state.get('messages', []))}")
+        logger.debug(f"現有基本面報告: {state.get('fundamentals_report', 'None')}")
 
         # 取得股票市場資訊（僅支援美股）
         from tradingagents.utils.stock_utils import get_stock_market_info
@@ -70,13 +70,13 @@ def create_fundamentals_analyst(llm, toolkit):
         market_info = get_stock_market_info(ticker)
         logger.info(f"[股票代碼追蹤] get_stock_market_info 返回的市場資訊: {market_info}")
 
-        logger.debug(f"[DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
-        logger.debug(f"[DEBUG] 市場資訊: is_us={market_info['is_us']}")
-        logger.debug(f"[DEBUG] 工具配置檢查: online_tools={toolkit.config['online_tools']}")
+        logger.debug(f"股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
+        logger.debug(f"市場資訊: is_us={market_info['is_us']}")
+        logger.debug(f"工具配置檢查: online_tools={toolkit.config['online_tools']}")
 
         # 獲取公司名稱
         company_name = _get_company_name_for_fundamentals(ticker, market_info)
-        logger.debug(f"[DEBUG] 公司名稱: {ticker} -> {company_name}")
+        logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
         # 選擇工具
         if toolkit.config["online_tools"]:
@@ -92,8 +92,8 @@ def create_fundamentals_analyst(llm, toolkit):
                     tool_names_debug.append(tool.__name__)
                 else:
                     tool_names_debug.append(str(tool))
-            logger.debug(f"[DEBUG] 選擇的工具: {tool_names_debug}")
-            logger.debug(f"[DEBUG] 統一工具將自動處理: {market_info['market_name']}")
+            logger.debug(f"選擇的工具: {tool_names_debug}")
+            logger.debug(f"統一工具將自動處理: {market_info['market_name']}")
         else:
             # 離線模式：使用 FinnHub 和 SimFin 數據，加上分析師共識
             tools = [
@@ -177,7 +177,7 @@ def create_fundamentals_analyst(llm, toolkit):
 
         fresh_llm = llm
 
-        logger.debug(f"[DEBUG] 創建LLM鏈，工具數量: {len(tools)}")
+        logger.debug(f"創建LLM鏈，工具數量: {len(tools)}")
         # 安全地獲取工具名稱用於調試
         debug_tool_names = []
         for tool in tools:
@@ -187,35 +187,35 @@ def create_fundamentals_analyst(llm, toolkit):
                 debug_tool_names.append(tool.__name__)
             else:
                 debug_tool_names.append(str(tool))
-        logger.debug(f"[DEBUG] 綁定的工具列表: {debug_tool_names}")
-        logger.debug(f"[DEBUG] 創建工具鏈，讓模型自主決定是否調用工具")
+        logger.debug(f"綁定的工具列表: {debug_tool_names}")
+        logger.debug(f"創建工具鏈，讓模型自主決定是否調用工具")
 
         try:
             chain = prompt | fresh_llm.bind_tools(tools)
-            logger.debug(f"[DEBUG] 工具綁定成功，綁定了 {len(tools)} 個工具")
+            logger.debug(f"工具綁定成功，綁定了 {len(tools)} 個工具")
         except Exception as e:
-            logger.error(f"[DEBUG] 工具綁定失敗: {e}")
+            logger.error(f"工具綁定失敗: {e}")
             raise e
 
-        logger.debug(f"[DEBUG] 調用LLM鏈...")
+        logger.debug(f"調用LLM鏈...")
 
         # 添加詳細的股票代碼追蹤日誌
         logger.info(f"[股票代碼追蹤] LLM調用前，ticker參數: '{ticker}'")
         logger.info(f"[股票代碼追蹤] 傳遞給LLM的訊息數量: {len(state['messages'])}")
 
         result = chain.invoke(state["messages"])
-        logger.debug(f"[DEBUG] LLM調用完成")
+        logger.debug(f"LLM調用完成")
 
         # 檢查工具調用情況
         tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
-        logger.debug(f"[DEBUG] 工具調用數量: {tool_call_count}")
+        logger.debug(f"工具調用數量: {tool_call_count}")
 
         if tool_call_count > 0:
             # 有工具調用，返回狀態讓工具執行
             tool_calls_info = []
             for tc in result.tool_calls:
                 tool_calls_info.append(tc['name'])
-                logger.debug(f"[DEBUG] 工具調用 {len(tool_calls_info)}: {tc}")
+                logger.debug(f"工具調用 {len(tool_calls_info)}: {tc}")
 
             logger.info(f"[基本面分析師] 工具調用: {tool_calls_info}")
             return {
@@ -224,11 +224,11 @@ def create_fundamentals_analyst(llm, toolkit):
             }
 
         # 沒有工具調用，使用強制工具調用修復
-        logger.debug(f"[DEBUG] 檢測到模型未調用工具，啟用強制工具調用模式")
+        logger.debug(f"檢測到模型未調用工具，啟用強制工具調用模式")
 
         # 強制調用統一基本面分析工具
         try:
-            logger.debug(f"[DEBUG] 強制調用 get_stock_fundamentals_unified...")
+            logger.debug(f"強制調用 get_stock_fundamentals_unified...")
             unified_tool = None
             for tool in tools:
                 tool_name = None
@@ -248,13 +248,13 @@ def create_fundamentals_analyst(llm, toolkit):
                     'end_date': current_date,
                     'curr_date': current_date
                 })
-                logger.debug(f"[DEBUG] 統一工具數據獲取成功，長度: {len(combined_data)}字符")
+                logger.debug(f"統一工具數據獲取成功，長度: {len(combined_data)}字符")
             else:
                 combined_data = "統一基本面分析工具不可用"
-                logger.debug(f"[DEBUG] 統一工具未找到")
+                logger.debug(f"統一工具未找到")
         except Exception as e:
             combined_data = f"統一基本面分析工具調用失敗: {e}"
-            logger.debug(f"[DEBUG] 統一工具調用異常: {e}")
+            logger.debug(f"統一工具調用異常: {e}")
 
         currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
 
@@ -294,7 +294,7 @@ def create_fundamentals_analyst(llm, toolkit):
             logger.info(f"[基本面分析師] 強制工具調用完成，報告長度: {len(report)}")
 
         except Exception as e:
-            logger.error(f"[DEBUG] 強制工具調用分析失敗: {e}")
+            logger.error(f"強制工具調用分析失敗: {e}")
             report = f"基本面分析失敗：{str(e)}"
 
         return {"fundamentals_report": report}

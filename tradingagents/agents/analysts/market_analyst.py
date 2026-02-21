@@ -39,11 +39,11 @@ def _get_company_name(ticker: str, market_info: dict) -> str:
         }
 
         company_name = us_stock_names.get(ticker.upper(), ticker)
-        logger.debug(f"[DEBUG] 美股名稱映射: {ticker} -> {company_name}")
+        logger.debug(f"美股名稱映射: {ticker} -> {company_name}")
         return company_name
 
     except Exception as e:
-        logger.error(f"[DEBUG] 獲取公司名稱失敗: {e}")
+        logger.error(f"獲取公司名稱失敗: {e}")
         return ticker
 
 
@@ -51,12 +51,12 @@ def create_market_analyst_react(llm, toolkit):
     """使用 ReAct Agent 模式的市場分析師"""
     @log_analyst_module("market_react")
     def market_analyst_react_node(state):
-        logger.debug(f"[DEBUG] ===== ReAct市場分析師節點開始 =====")
+        logger.debug(f"===== ReAct市場分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
 
-        logger.debug(f"[DEBUG] 輸入參數: ticker={ticker}, date={current_date}")
+        logger.debug(f"輸入參數: ticker={ticker}, date={current_date}")
 
         if toolkit.config["online_tools"]:
             # 在線模式，使用 ReAct Agent
@@ -71,7 +71,7 @@ def create_market_analyst_react(llm, toolkit):
 
                 def _run(self, query: str = "") -> str:
                     try:
-                        logger.debug(f"[DEBUG] USStockDataTool 調用，股票代碼: {ticker}")
+                        logger.debug(f"USStockDataTool 調用，股票代碼: {ticker}")
                         from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
                         return get_us_stock_data_cached(
                             symbol=ticker,
@@ -96,7 +96,7 @@ def create_market_analyst_react(llm, toolkit):
 
                 def _run(self, query: str = "") -> str:
                     try:
-                        logger.debug(f"[DEBUG] FinnhubNewsTool 調用，股票代碼: {ticker}")
+                        logger.debug(f"FinnhubNewsTool 調用，股票代碼: {ticker}")
                         return toolkit.get_finnhub_news.invoke({
                             'ticker': ticker,
                             'start_date': '2025-05-28',
@@ -141,20 +141,20 @@ def create_market_analyst_react(llm, toolkit):
                     max_execution_time=180
                 )
 
-                logger.debug(f"[DEBUG] 執行 ReAct Agent 查詢...")
+                logger.debug(f"執行 ReAct Agent 查詢...")
                 result = agent_executor.invoke({'input': query})
 
                 report = result['output']
                 logger.info(f"[市場分析師] ReAct Agent 完成，報告長度: {len(report)}")
 
             except Exception as e:
-                logger.error(f"[DEBUG] ReAct Agent 失敗: {str(e)}")
+                logger.error(f"ReAct Agent 失敗: {str(e)}")
                 report = f"ReAct Agent 市場分析失敗: {str(e)}"
         else:
             # 離線模式，使用原有邏輯
             report = "離線模式，暫不支援"
 
-        logger.debug(f"[DEBUG] ===== ReAct市場分析師節點結束 =====")
+        logger.debug(f"===== ReAct市場分析師節點結束 =====")
 
         return {
             "messages": [("assistant", report)],
@@ -167,25 +167,25 @@ def create_market_analyst_react(llm, toolkit):
 def create_market_analyst(llm, toolkit):
 
     def market_analyst_node(state):
-        logger.debug(f"[DEBUG] ===== 市場分析師節點開始 =====")
+        logger.debug(f"===== 市場分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
 
-        logger.debug(f"[DEBUG] 輸入參數: ticker={ticker}, date={current_date}")
-        logger.debug(f"[DEBUG] 當前狀態中的訊息數量: {len(state.get('messages', []))}")
-        logger.debug(f"[DEBUG] 現有市場報告: {state.get('market_report', 'None')}")
+        logger.debug(f"輸入參數: ticker={ticker}, date={current_date}")
+        logger.debug(f"當前狀態中的訊息數量: {len(state.get('messages', []))}")
+        logger.debug(f"現有市場報告: {state.get('market_report', 'None')}")
 
         # 取得股票市場資訊（僅支援美股）
         from tradingagents.utils.stock_utils import get_stock_market_info
 
         market_info = get_stock_market_info(ticker)
 
-        logger.debug(f"[DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
+        logger.debug(f"股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
 
         # 獲取公司名稱
         company_name = _get_company_name(ticker, market_info)
-        logger.debug(f"[DEBUG] 公司名稱: {ticker} -> {company_name}")
+        logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
         if toolkit.config["online_tools"]:
             # 使用統一的市場數據工具和 FinnHub 技術訊號
@@ -200,8 +200,8 @@ def create_market_analyst(llm, toolkit):
                     tool_names_debug.append(tool.__name__)
                 else:
                     tool_names_debug.append(str(tool))
-            logger.debug(f"[DEBUG] 選擇的工具: {tool_names_debug}")
-            logger.debug(f"[DEBUG] 統一工具將自動處理: {market_info['market_name']}")
+            logger.debug(f"選擇的工具: {tool_names_debug}")
+            logger.debug(f"統一工具將自動處理: {market_info['market_name']}")
         else:
             tools = [
                 toolkit.get_YFin_data,
@@ -307,7 +307,7 @@ def create_market_analyst(llm, toolkit):
                     tool_args = tool_call.get('args', {})
                     tool_id = tool_call.get('id')
 
-                    logger.debug(f"[DEBUG] 執行工具: {tool_name}, 參數: {tool_args}")
+                    logger.debug(f"執行工具: {tool_name}, 參數: {tool_args}")
 
                     # 找到對應的工具並執行
                     tool_result = None
@@ -321,10 +321,10 @@ def create_market_analyst(llm, toolkit):
                         if current_tool_name == tool_name:
                             try:
                                 tool_result = tool.invoke(tool_args)
-                                logger.debug(f"[DEBUG] 工具執行成功，結果長度: {len(str(tool_result))}")
+                                logger.debug(f"工具執行成功，結果長度: {len(str(tool_result))}")
                                 break
                             except Exception as tool_error:
-                                logger.error(f"[DEBUG] 工具執行失敗: {tool_error}")
+                                logger.error(f"工具執行失敗: {tool_error}")
                                 tool_result = f"工具執行失敗: {str(tool_error)}"
 
                     if tool_result is None:

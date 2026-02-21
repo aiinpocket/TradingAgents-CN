@@ -24,23 +24,23 @@ def create_trader(llm, memory):
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.debug(f"[DEBUG] ===== 交易員節點開始 =====")
-        logger.debug(f"[DEBUG] 交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
-        logger.debug(f"[DEBUG] 貨幣符號: {currency_symbol}")
-        logger.debug(f"[DEBUG] 基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"[DEBUG] 基本面報告前200字符: {fundamentals_report[:200]}...")
+        logger.debug(f"===== 交易員節點開始 =====")
+        logger.debug(f"交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
+        logger.debug(f"貨幣符號: {currency_symbol}")
+        logger.debug(f"基本面報告長度: {len(fundamentals_report)}")
+        logger.debug(f"基本面報告前200字符: {fundamentals_report[:200]}...")
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
 
         # 檢查memory是否可用
         if memory is not None:
-            logger.debug(f"[DEBUG] memory可用，獲取歷史記憶")
+            logger.debug(f"memory可用，獲取歷史記憶")
             past_memories = memory.get_memories(curr_situation, n_matches=2)
             past_memory_str = ""
             for i, rec in enumerate(past_memories, 1):
                 past_memory_str += rec["recommendation"] + "\n\n"
         else:
-            logger.warning(f"[DEBUG] memory為None，跳過歷史記憶檢索")
+            logger.warning(f"memory為None，跳過歷史記憶檢索")
             past_memories = []
             past_memory_str = "暫無歷史記憶數據可參考。"
 
@@ -94,15 +94,15 @@ def create_trader(llm, memory):
             context,
         ]
 
-        logger.debug(f"[DEBUG] 準備調用LLM，系統提示包含貨幣: {currency}")
-        logger.debug(f"[DEBUG] 系統提示中的關鍵部分: 目標價格({currency})")
+        logger.debug(f"準備調用LLM，系統提示包含貨幣: {currency}")
+        logger.debug(f"系統提示中的關鍵部分: 目標價格({currency})")
 
         result = llm.invoke(messages)
 
-        logger.debug(f"[DEBUG] LLM調用完成")
-        logger.debug(f"[DEBUG] 交易員回覆長度: {len(result.content)}")
-        logger.debug(f"[DEBUG] 交易員回覆前500字符: {result.content[:500]}...")
-        logger.debug(f"[DEBUG] ===== 交易員節點結束 =====")
+        logger.debug(f"LLM調用完成")
+        logger.debug(f"交易員回覆長度: {len(result.content)}")
+        logger.debug(f"交易員回覆前500字符: {result.content[:500]}...")
+        logger.debug(f"===== 交易員節點結束 =====")
 
         return {
             "messages": [result],

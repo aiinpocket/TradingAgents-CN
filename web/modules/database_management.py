@@ -290,7 +290,7 @@ def main():
     st.markdown("""
     <div style='text-align: center; color: #666; font-size: 0.9em;'>
         數據庫緩存管理系統 | TradingAgents v0.1.2 |
-        <a href='https://github.com/your-repo/TradingAgents' target='_blank'>GitHub</a>
+        <a href='https://github.com/aiinpocket/TradingAgents-CN' target='_blank'>GitHub</a>
     </div>
     """, unsafe_allow_html=True)
 

@@ -208,7 +208,7 @@ python examples/simple_analysis_demo.py
 如果遇到問題，請：
 
 1. 查看 [故障排除指南](../docs/troubleshooting/)
-2. 提交 [Issue](https://github.com/your-repo/issues)
+2. 提交 [Issue](https://github.com/aiinpocket/TradingAgents-CN/issues)
 3. 加入我們的社群討論
 
 ## 授權
