@@ -12,7 +12,7 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def create_mock_analysis_results():
-    """創建模擬的分析結果資料"""
+    """建立模擬的分析結果資料"""
     return {
         'stock_symbol': 'TEST123',
         'analysis_date': '2025-07-31',
@@ -74,7 +74,7 @@ def test_save_analysis_result():
         # 匯入保存函數
         from web.components.analysis_results import save_analysis_result
         
-        # 創建模擬資料
+        # 建立模擬資料
         analysis_id = f"test_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         stock_symbol = "TEST123"
         analysts = ['market_analyst', 'fundamentals_analyst', 'trader_agent']
@@ -101,7 +101,7 @@ def test_save_analysis_result():
         if success:
             print(" 分析結果保存成功！")
             
-            # 檢查檔案是否創建
+            # 檢查檔案是否建立
             print(f"\n 檢查保存的檔案:")
             
             # 檢查JSON 檔案
@@ -110,7 +110,7 @@ def test_save_analysis_result():
             json_file = results_dir / f"analysis_{analysis_id}.json"
             
             if json_file.exists():
-                print(f" JSON 檔案已創建: {json_file}")
+                print(f" JSON 檔案已建立: {json_file}")
             else:
                 print(f" JSON 檔案未找到: {json_file}")
             
@@ -133,7 +133,7 @@ def test_save_analysis_result():
             print(f" 詳細報告目錄: {reports_dir}")
             
             if reports_dir.exists():
-                print(" 詳細報告目錄已創建")
+                print(" 詳細報告目錄已建立")
                 
                 # 列出報告檔案
                 report_files = list(reports_dir.glob("*.md"))
@@ -144,7 +144,7 @@ def test_save_analysis_result():
                 else:
                     print(" 報告目錄存在但無檔案")
             else:
-                print(f" 詳細報告目錄未創建: {reports_dir}")
+                print(f" 詳細報告目錄未建立: {reports_dir}")
             
         else:
             print(" 分析結果保存失敗")

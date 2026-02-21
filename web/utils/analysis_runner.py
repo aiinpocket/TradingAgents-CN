@@ -17,7 +17,7 @@ logger = get_logger('web')
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-# 確保環境變量正確載入
+# 確保環境變數正確載入
 load_dotenv(project_root / ".env", override=True)
 
 # 添加配置管理器
@@ -195,24 +195,24 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         update_progress(f"預估分析成本: ${estimated_cost:.4f}")
 
-    # 驗證環境變量
-    update_progress("檢查環境變量配置...")
+    # 驗證環境變數
+    update_progress("檢查環境變數配置...")
     finnhub_key = os.getenv("FINNHUB_API_KEY")
 
-    logger.info("環境變量檢查:")
+    logger.info("環境變數檢查:")
     logger.info(f"  FINNHUB_API_KEY: {'已設定' if finnhub_key else '未設定'}")
 
     if not finnhub_key:
         logger.warning("FINNHUB_API_KEY 未設定，部分美股資料功能可能受限")
 
-    update_progress("環境變量驗證通過")
+    update_progress("環境變數驗證通過")
 
     try:
         # 匯入必要的模組
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
 
-        # 創建配置
+        # 建立配置
         update_progress("配置分析參數...")
         config = DEFAULT_CONFIG.copy()
         config["llm_provider"] = llm_provider
@@ -257,12 +257,12 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             config["backend_url"] = "https://api.anthropic.com/"
             logger.info(f" [Anthropic] 使用模型: {llm_model}")
 
-        # 修複路徑問題 - 優先使用環境變量配置
-        # 資料目錄：優先使用環境變量，否則使用預設路徑
+        # 修複路徑問題 - 優先使用環境變數配置
+        # 資料目錄：優先使用環境變數，否則使用預設路徑
         if not config.get("data_dir") or config["data_dir"] == "./data":
             env_data_dir = os.getenv("TRADINGAGENTS_DATA_DIR")
             if env_data_dir:
-                # 如果環境變量是相對路徑，相對於項目根目錄解析
+                # 如果環境變數是相對路徑，相對於項目根目錄解析
                 if not os.path.isabs(env_data_dir):
                     config["data_dir"] = str(project_root / env_data_dir)
                 else:
@@ -270,11 +270,11 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             else:
                 config["data_dir"] = str(project_root / "data")
 
-        # 結果目錄：優先使用環境變量，否則使用預設路徑
+        # 結果目錄：優先使用環境變數，否則使用預設路徑
         if not config.get("results_dir") or config["results_dir"] == "./results":
             env_results_dir = os.getenv("TRADINGAGENTS_RESULTS_DIR")
             if env_results_dir:
-                # 如果環境變量是相對路徑，相對於項目根目錄解析
+                # 如果環境變數是相對路徑，相對於項目根目錄解析
                 if not os.path.isabs(env_results_dir):
                     config["results_dir"] = str(project_root / env_results_dir)
                 else:
@@ -282,11 +282,11 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             else:
                 config["results_dir"] = str(project_root / "results")
 
-        # 快取目錄：優先使用環境變量，否則使用預設路徑
+        # 快取目錄：優先使用環境變數，否則使用預設路徑
         if not config.get("data_cache_dir"):
             env_cache_dir = os.getenv("TRADINGAGENTS_CACHE_DIR")
             if env_cache_dir:
-                # 如果環境變量是相對路徑，相對於項目根目錄解析
+                # 如果環境變數是相對路徑，相對於項目根目錄解析
                 if not os.path.isabs(env_cache_dir):
                     config["data_cache_dir"] = str(project_root / env_cache_dir)
                 else:
@@ -295,7 +295,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 config["data_cache_dir"] = str(project_root / "tradingagents" / "dataflows" / "data_cache")
 
         # 確保目錄存在
-        update_progress("創建必要的目錄...")
+        update_progress("建立必要的目錄...")
         os.makedirs(config["data_dir"], exist_ok=True)
         os.makedirs(config["results_dir"], exist_ok=True)
         os.makedirs(config["data_cache_dir"], exist_ok=True)
@@ -304,7 +304,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.info(f"  - 資料目錄: {config['data_dir']}")
         logger.info(f"  - 結果目錄: {config['results_dir']}")
         logger.info(f"  - 快取目錄: {config['data_cache_dir']}")
-        logger.info(f"  - 環境變量 TRADINGAGENTS_RESULTS_DIR: {os.getenv('TRADINGAGENTS_RESULTS_DIR', '未設定')}")
+        logger.info(f"  - 環境變數 TRADINGAGENTS_RESULTS_DIR: {os.getenv('TRADINGAGENTS_RESULTS_DIR', '未設定')}")
 
         logger.info(f"使用配置: {config}")
         logger.info(f"分析師列表: {analysts}")
@@ -328,7 +328,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 執行分析
         update_progress(f"開始分析 {formatted_symbol} 股票，這可能需要几分鐘時間...")
-        logger.debug(" ===== 調用graph.propagate =====")
+        logger.debug(" ===== 呼叫graph.propagate =====")
         logger.debug(" 傳遞給graph.propagate的參數:")
         logger.debug(f" symbol: '{formatted_symbol}'")
         logger.debug(f" date: '{analysis_date}'")
@@ -351,7 +351,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 記錄Token使用（實際使用量，這裡使用估算值）
         if TOKEN_TRACKING_ENABLED:
-            # 在實際應用中，這些值應該從LLM響應中取得
+            # 在實際應用中，這些值應該從LLM回應中取得
             # 這裡使用基於分析師數量和研究深度的估算
             actual_input_tokens = len(analysts) * (1500 if research_depth == "快速" else 2500 if research_depth == "標準" else 4000)
             actual_output_tokens = len(analysts) * (800 if research_depth == "快速" else 1200 if research_depth == "標準" else 2000)

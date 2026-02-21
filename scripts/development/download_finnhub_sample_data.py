@@ -3,8 +3,8 @@
 """
 Finnhub示例資料下載腳本
 
-這個腳本用於創建示例的Finnhub資料檔案，以便測試新聞資料功能。
-在沒有真實API密鑰或資料的情況下，可以使用此腳本創建測試資料。
+這個腳本用於建立示例的Finnhub資料檔案，以便測試新聞資料功能。
+在沒有真實API密鑰或資料的情況下，可以使用此腳本建立測試資料。
 """
 
 import os
@@ -26,14 +26,14 @@ from tradingagents.dataflows.config import get_config, set_config
 
 def create_sample_news_data(ticker, data_dir, days=7):
     """
-    創建示例新聞資料
+    建立示例新聞資料
     
     Args:
         ticker (str): 股票代碼
         data_dir (str): 資料目錄
         days (int): 生成多少天的資料
     """
-    # 創建目錄結構
+    # 建立目錄結構
     news_dir = os.path.join(data_dir, "finnhub_data", "news_data")
     os.makedirs(news_dir, exist_ok=True)
     
@@ -121,21 +121,21 @@ def create_sample_news_data(ticker, data_dir, days=7):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f" 創建示例新聞資料: {file_path}")
+    logger.info(f" 建立示例新聞資料: {file_path}")
     logger.info(f"   包含 {len(data)} 天的資料，共 {sum(len(news) for news in data.values())} 條新聞")
     
     return file_path
 
 def create_sample_insider_data(ticker, data_dir, data_type):
     """
-    創建示例內部人資料
+    建立示例內部人資料
     
     Args:
         ticker (str): 股票代碼
         data_dir (str): 資料目錄
         data_type (str): 資料類型 (insider_senti 或 insider_trans)
     """
-    # 創建目錄結構
+    # 建立目錄結構
     insider_dir = os.path.join(data_dir, "finnhub_data", data_type)
     os.makedirs(insider_dir, exist_ok=True)
     
@@ -182,7 +182,7 @@ def create_sample_insider_data(ticker, data_dir, data_type):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    logger.info(f" 創建示例{data_type}資料: {file_path}")
+    logger.info(f" 建立示例{data_type}資料: {file_path}")
     return file_path
 
 def main():
@@ -208,15 +208,15 @@ def main():
     # 常用股票代碼
     tickers = ["AAPL", "TSLA", "MSFT", "GOOGL", "AMZN"]
     
-    logger.info(f"\n創建示例資料...")
+    logger.info(f"\n建立示例資料...")
     
-    # 為每個股票創建新聞資料
+    # 為每個股票建立新聞資料
     for ticker in tickers:
         create_sample_news_data(ticker, data_dir, days=7)
         create_sample_insider_data(ticker, data_dir, "insider_senti")
         create_sample_insider_data(ticker, data_dir, "insider_trans")
     
-    logger.info(f"\n=== 資料創建完成 ===")
+    logger.info(f"\n=== 資料建立完成 ===")
     logger.info(f"資料位置: {data_dir}")
     logger.info(f"包含以下股票的示例資料:")
     for ticker in tickers:

@@ -378,7 +378,7 @@ def main():
     logger.info(f" 測試自適應快取管理器")
     logger.info(f"=")
     
-    # 創建快取管理器
+    # 建立快取管理器
     cache = get_cache()
     
     # 顯示狀態

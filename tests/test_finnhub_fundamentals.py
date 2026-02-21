@@ -20,7 +20,7 @@ def test_finnhub_api_key():
         print(f" Finnhub API密鑰已配置: {api_key[:8]}...")
         return True
     else:
-        print(" 未配置FINNHUB_API_KEY環境變量")
+        print(" 未配置FINNHUB_API_KEY環境變數")
         return False
 
 def test_finnhub_fundamentals_with_cache():

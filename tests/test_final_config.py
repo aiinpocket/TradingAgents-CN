@@ -52,7 +52,7 @@ def test_final_config():
         from tradingagents.config.database_manager import get_database_manager
         
         db_manager = get_database_manager()
-        print(" 資料庫管理器創建成功")
+        print(" 資料庫管理器建立成功")
         
         # 取得狀態報告
         status = db_manager.get_status_report()
@@ -80,7 +80,7 @@ def test_final_config():
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
-        print(" 快取系統創建成功")
+        print(" 快取系統建立成功")
         
         # 取得性能模式
         performance_mode = cache.get_performance_mode()

@@ -55,7 +55,7 @@ def setup_docker_env():
         'REDIS_PORT': '6379'
     }
     
-    logger.info(f"\n 配置Docker環境變量...")
+    logger.info(f"\n 配置Docker環境變數...")
     for key, value in docker_configs.items():
         # 替換配置值
         import re

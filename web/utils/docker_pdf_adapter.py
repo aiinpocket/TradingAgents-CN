@@ -27,7 +27,7 @@ def is_docker_environment() -> bool:
     except (OSError, IOError):
         pass
     
-    # 檢查環境變量
+    # 檢查環境變數
     return os.environ.get('DOCKER_CONTAINER', '').lower() == 'true'
 
 def setup_xvfb_display():
@@ -55,7 +55,7 @@ def setup_xvfb_display():
         import time
         time.sleep(2)
 
-        # 設定DISPLAY環境變量
+        # 設定DISPLAY環境變數
         os.environ['DISPLAY'] = ':99'
         logger.info("Docker虛擬顯示器設定成功")
         return True
@@ -99,7 +99,7 @@ def test_docker_pdf_generation() -> bool:
         </head>
         <body>
             <h1>Docker PDF 測試</h1>
-            <p>這是在Docker環境中生成的PDF測試文檔。</p>
+            <p>這是在Docker環境中生成的PDF測試文件。</p>
             <p>中文字符測試：你好世界！</p>
         </body>
         </html>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-測試LLM工具調用機制的詳細調試腳本
-模擬實際的LLM工具調用過程
+測試LLM工具呼叫機制的詳細除錯腳本
+模擬實際的LLM工具呼叫過程
 """
 
 import logging
@@ -37,45 +37,45 @@ def test_function_exists():
         logger.error(f"取得Toolkit函數失敗: {e}")
 
 def test_direct_call():
-    """測試直接函數調用"""
-    logger.info("========== 測試2: 直接函數調用 ==========")
+    """測試直接函數呼叫"""
+    logger.info("========== 測試2: 直接函數呼叫 ==========")
     try:
         curr_date = datetime.now().strftime('%Y-%m-%d')
-        logger.info(f"調用參數: ticker='AAPL', date='{curr_date}'")
+        logger.info(f"呼叫參數: ticker='AAPL', date='{curr_date}'")
         
         start_time = datetime.now()
         result = get_realtime_stock_news('AAPL', curr_date)
         end_time = datetime.now()
         
-        logger.info(f"調用成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
+        logger.info(f"呼叫成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
         logger.info(f"返回結果類型: {type(result)}")
         logger.info(f"返回結果長度: {len(result)} 字符")
         logger.info(f"結果前100字符: {result[:100]}...")
         return True, result
     except Exception as e:
-        logger.error(f"直接調用失敗: {e}")
+        logger.error(f"直接呼叫失敗: {e}")
         import traceback
         logger.error(f"錯誤詳情: {traceback.format_exc()}")
         return False, None
 
 def test_toolkit_call():
-    """測試Toolkit調用"""
-    logger.info("========== 測試3: Toolkit調用 ==========")
+    """測試Toolkit呼叫"""
+    logger.info("========== 測試3: Toolkit呼叫 ==========")
     try:
         curr_date = datetime.now().strftime('%Y-%m-%d')
-        logger.info(f"調用參數: ticker='AAPL', date='{curr_date}'")
+        logger.info(f"呼叫參數: ticker='AAPL', date='{curr_date}'")
         
         start_time = datetime.now()
         result = Toolkit.get_realtime_stock_news('AAPL', curr_date)
         end_time = datetime.now()
         
-        logger.info(f"Toolkit調用成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
+        logger.info(f"Toolkit呼叫成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
         logger.info(f"返回結果類型: {type(result)}")
         logger.info(f"返回結果長度: {len(result)} 字符")
         logger.info(f"結果前100字符: {result[:100]}...")
         return True, result
     except Exception as e:
-        logger.error(f"Toolkit調用失敗: {e}")
+        logger.error(f"Toolkit呼叫失敗: {e}")
         import traceback
         logger.error(f"錯誤詳情: {traceback.format_exc()}")
         return False, None
@@ -99,10 +99,10 @@ def test_toolkit_attributes():
     logger.info(f"Toolkit模組: {Toolkit.__module__ if hasattr(Toolkit, '__module__') else 'N/A'}")
 
 def simulate_llm_tool_call():
-    """模擬LLM工具調用過程"""
-    logger.info("========== 測試5: 模擬LLM工具調用 ==========")
+    """模擬LLM工具呼叫過程"""
+    logger.info("========== 測試5: 模擬LLM工具呼叫 ==========")
     
-    # 模擬LLM工具調用的參數格式
+    # 模擬LLM工具呼叫的參數格式
     tool_call_params = {
         "name": "get_realtime_stock_news",
         "arguments": {
@@ -111,10 +111,10 @@ def simulate_llm_tool_call():
         }
     }
     
-    logger.info(f"模擬工具調用參數: {tool_call_params}")
+    logger.info(f"模擬工具呼叫參數: {tool_call_params}")
     
     try:
-        # 嘗試通過反射調用
+        # 嘗試通過反射呼叫
         func_name = tool_call_params["name"]
         args = tool_call_params["arguments"]
         
@@ -126,7 +126,7 @@ def simulate_llm_tool_call():
             result = func(**args)
             end_time = datetime.now()
             
-            logger.info(f"模擬LLM調用成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
+            logger.info(f"模擬LLM呼叫成功，耗時: {(end_time - start_time).total_seconds():.2f}秒")
             logger.info(f"返回結果長度: {len(result)} 字符")
             return True, result
         else:
@@ -134,56 +134,56 @@ def simulate_llm_tool_call():
             return False, None
             
     except Exception as e:
-        logger.error(f"模擬LLM調用失敗: {e}")
+        logger.error(f"模擬LLM呼叫失敗: {e}")
         import traceback
         logger.error(f"錯誤詳情: {traceback.format_exc()}")
         return False, None
 
 def main():
     """主測試函數"""
-    logger.info("開始LLM工具調用機制詳細測試")
+    logger.info("開始LLM工具呼叫機制詳細測試")
     logger.info("=" * 60)
     
     # 測試1: 函數存在性
     test_function_exists()
     
-    # 測試2: 直接調用
+    # 測試2: 直接呼叫
     direct_success, direct_result = test_direct_call()
     
-    # 測試3: Toolkit調用
+    # 測試3: Toolkit呼叫
     toolkit_success, toolkit_result = test_toolkit_call()
     
     # 測試4: Toolkit屬性檢查
     test_toolkit_attributes()
     
-    # 測試5: 模擬LLM調用
+    # 測試5: 模擬LLM呼叫
     llm_success, llm_result = simulate_llm_tool_call()
     
     # 結果匯總
     logger.info("=" * 60)
     logger.info("========== 測試結果匯總 ==========")
-    logger.info(f"直接函數調用: {' 成功' if direct_success else ' 失敗'}")
-    logger.info(f"Toolkit調用: {' 成功' if toolkit_success else ' 失敗'}")
-    logger.info(f"模擬LLM調用: {' 成功' if llm_success else ' 失敗'}")
+    logger.info(f"直接函數呼叫: {' 成功' if direct_success else ' 失敗'}")
+    logger.info(f"Toolkit呼叫: {' 成功' if toolkit_success else ' 失敗'}")
+    logger.info(f"模擬LLM呼叫: {' 成功' if llm_success else ' 失敗'}")
     
     # 分析問題
     if direct_success and not toolkit_success:
         logger.warning(" 問題分析: Toolkit工具綁定存在問題")
     elif direct_success and not llm_success:
-        logger.warning(" 問題分析: LLM工具調用機制存在問題")
+        logger.warning(" 問題分析: LLM工具呼叫機制存在問題")
     elif not direct_success:
         logger.warning(" 問題分析: 函數本身存在問題")
     else:
-        logger.info(" 問題分析: 所有調用方式都成功")
+        logger.info(" 問題分析: 所有呼叫方式都成功")
     
     # 比較結果
     if direct_success and toolkit_success:
         if direct_result == toolkit_result:
-            logger.info(" 直接調用和Toolkit調用結果一致")
+            logger.info(" 直接呼叫和Toolkit呼叫結果一致")
         else:
-            logger.warning(" 直接調用和Toolkit調用結果不一致")
-            logger.info(f"直接調用結果長度: {len(direct_result)}")
-            logger.info(f"Toolkit調用結果長度: {len(toolkit_result)}")
+            logger.warning(" 直接呼叫和Toolkit呼叫結果不一致")
+            logger.info(f"直接呼叫結果長度: {len(direct_result)}")
+            logger.info(f"Toolkit呼叫結果長度: {len(toolkit_result)}")
 
 if __name__ == "__main__":
     main()

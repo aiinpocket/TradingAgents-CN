@@ -43,7 +43,7 @@ def test_env_config():
         from tradingagents.config.database_manager import get_database_manager
         
         db_manager = get_database_manager()
-        print(" 資料庫管理器創建成功")
+        print(" 資料庫管理器建立成功")
         
         # 取得狀態報告
         status = db_manager.get_status_report()
@@ -74,7 +74,7 @@ def test_env_config():
         from tradingagents.dataflows.integrated_cache import get_cache
         
         cache = get_cache()
-        print(" 快取系統創建成功")
+        print(" 快取系統建立成功")
         
         # 取得後端資訊
         backend_info = cache.get_cache_backend_info()
@@ -107,8 +107,8 @@ def test_env_config():
         traceback.print_exc()
         return False
     
-    # 4. 顯示環境變量
-    print("\n 檢查環境變量...")
+    # 4. 顯示環境變數
+    print("\n 檢查環境變數...")
     env_vars = [
         "MONGODB_HOST", "MONGODB_PORT", "MONGODB_USERNAME", "MONGODB_PASSWORD",
         "MONGODB_DATABASE", "MONGODB_AUTH_SOURCE",

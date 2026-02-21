@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-測試新聞分析師工具調用參數修複
-驗證強制調用和備用工具調用是否正確傳遞了所需參數
+測試新聞分析師工具呼叫參數修複
+驗證強制呼叫和備用工具呼叫是否正確傳遞了所需參數
 """
 
 import sys
@@ -15,7 +15,7 @@ from tradingagents.agents.utils.agent_utils import Toolkit
 
 def test_tool_parameters():
     """測試工具參數是否正確"""
-    print(" 測試新聞分析師工具調用參數修複")
+    print(" 測試新聞分析師工具呼叫參數修複")
     print("=" * 50)
     
     # 初始化工具包
@@ -31,41 +31,41 @@ def test_tool_parameters():
     print()
     
     # 測試 get_realtime_stock_news 工具
-    print(" 測試 get_realtime_stock_news 工具調用...")
+    print(" 測試 get_realtime_stock_news 工具呼叫...")
     try:
-        # 模擬修複後的調用方式
+        # 模擬修複後的呼叫方式
         params = {"ticker": ticker, "curr_date": curr_date}
         print(f"   參數: {params}")
         
         # 檢查工具是否接受這些參數
         result = toolkit.get_realtime_stock_news.invoke(params)
-        print(f"    get_realtime_stock_news 調用成功")
+        print(f"    get_realtime_stock_news 呼叫成功")
         print(f"    傳回資料長度: {len(result) if result else 0} 字符")
         
     except Exception as e:
-        print(f"    get_realtime_stock_news 調用失敗: {e}")
+        print(f"    get_realtime_stock_news 呼叫失敗: {e}")
     
     print()
     
     # 測試 get_google_news 工具
-    print(" 測試 get_google_news 工具調用...")
+    print(" 測試 get_google_news 工具呼叫...")
     try:
-        # 模擬修複後的調用方式
+        # 模擬修複後的呼叫方式
         params = {"query": f"{ticker} 股票 新聞", "curr_date": curr_date}
         print(f"   參數: {params}")
         
         # 檢查工具是否接受這些參數
         result = toolkit.get_google_news.invoke(params)
-        print(f"    get_google_news 調用成功")
+        print(f"    get_google_news 呼叫成功")
         print(f"    傳回資料長度: {len(result) if result else 0} 字符")
         
     except Exception as e:
-        print(f"    get_google_news 調用失敗: {e}")
+        print(f"    get_google_news 呼叫失敗: {e}")
     
     print()
     
-    # 測試修複前的錯誤調用方式（應該失敗）
-    print(" 測試修複前的錯誤調用方式（應該失敗）...")
+    # 測試修複前的錯誤呼叫方式（應該失敗）
+    print(" 測試修複前的錯誤呼叫方式（應該失敗）...")
     
     print("   測試 get_realtime_stock_news 缺少 curr_date:")
     try:

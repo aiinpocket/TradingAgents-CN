@@ -336,7 +336,7 @@ class LogAnalyzer:
             report += f"-  發現 {errors['error_count']} 個錯誤，建議檢查日誌\n"
 
         if performance['cost_summary']['total_cost'] > 10:
-            report += "-  API成本較高，建議優化調用策略\n"
+            report += "-  API成本較高，建議優化呼叫策略\n"
         
         return report
 

@@ -33,7 +33,7 @@ def check_system_status():
             import os
             from dotenv import load_dotenv
 
-            # 載入環境變量
+            # 載入環境變數
             load_dotenv(env_file)
 
             logger.info(f" 資料庫配置狀態:")
@@ -199,10 +199,10 @@ def check_system_status():
             logger.warning(f" 快取性能需要優化")
         
         # 計算性能改進
-        api_simulation_time = 2.0  # 假設API調用需要2秒
+        api_simulation_time = 2.0  # 假設API呼叫需要2秒
         if load_time < api_simulation_time:
             improvement = ((api_simulation_time - load_time) / api_simulation_time) * 100
-            logger.info(f" 相比API調用性能提升: {improvement:.1f}%")
+            logger.info(f" 相比API呼叫性能提升: {improvement:.1f}%")
         
     except Exception as e:
         logger.error(f" 性能測試失敗: {e}")
@@ -219,7 +219,7 @@ def check_system_status():
         else:
             logger.info(f"[INFO]資料庫不可用，系統使用檔案快取模式")
             logger.info(f" 提升性能建議:")
-            logger.info(f"  1. 配置環境變量啟用資料庫:")
+            logger.info(f"  1. 配置環境變數啟用資料庫:")
             logger.info(f"     MONGODB_ENABLED=true")
             logger.info(f"     REDIS_ENABLED=true")
             logger.info(f"  2. 啟動資料庫服務:")

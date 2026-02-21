@@ -11,10 +11,10 @@ def test_tool_binding():
     """測試工具綁定是否修複"""
     print("=== 測試統一新聞工具的LangChain綁定修複 ===")
     
-    # 創建工具包
+    # 建立工具包
     toolkit = Toolkit()
     
-    # 創建統一新聞工具
+    # 建立統一新聞工具
     unified_tool = create_unified_news_tool(toolkit)
     
     # 測試LangChain工具轉換
@@ -43,14 +43,14 @@ def test_tool_binding():
         traceback.print_exc()
         return False
     
-    # 測試工具調用
-    print("\n2. 測試工具調用...")
+    # 測試工具呼叫
+    print("\n2. 測試工具呼叫...")
     try:
         result = unified_tool('AAPL', 5)
-        print(f" 工具調用成功，結果長度: {len(result)} 字符")
+        print(f" 工具呼叫成功，結果長度: {len(result)} 字符")
         print(f"結果預覽: {result[:200]}...")
     except Exception as e:
-        print(f" 工具調用失敗: {e}")
+        print(f" 工具呼叫失敗: {e}")
         import traceback
         traceback.print_exc()
         return False

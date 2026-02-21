@@ -10,7 +10,7 @@ import sys
 def quick_redis_test(host=None, port=None, password=None):
     """快速Redis連接和性能測試"""
     
-    # 從環境變量取得配置
+    # 從環境變數取得配置
     host = host or os.getenv('REDIS_HOST', 'localhost')
     port = port or int(os.getenv('REDIS_PORT', 6379))
     password = password or os.getenv('REDIS_PASSWORD')
@@ -18,7 +18,7 @@ def quick_redis_test(host=None, port=None, password=None):
     print(f" 測試Redis連接: {host}:{port}")
     
     try:
-        # 創建Redis連接
+        # 建立Redis連接
         start_time = time.time()
         r = redis.Redis(
             host=host, 

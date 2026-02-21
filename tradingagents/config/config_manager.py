@@ -75,7 +75,7 @@ class ConfigManager:
         self.usage_file = self.config_dir / "usage.json"
         self.settings_file = self.config_dir / "settings.json"
 
-        # 載入.env 檔案（保持向後兼容）
+        # 載入.env 檔案（保持向後相容）
         self._load_env_file()
 
         # 初始化MongoDB存儲（如果可用）
@@ -85,7 +85,7 @@ class ConfigManager:
         self._init_default_configs()
 
     def _load_env_file(self):
-        """載入.env 檔案（保持向後兼容）"""
+        """載入.env 檔案（保持向後相容）"""
         # 嘗試從項目根目錄載入.env 檔案
         project_root = Path(__file__).parent.parent.parent
         env_file = project_root / ".env"
@@ -94,7 +94,7 @@ class ConfigManager:
             load_dotenv(env_file, override=True)
 
     def _get_env_api_key(self, provider: str) -> str:
-        """從環境變量取得API密鑰"""
+        """從環境變數取得API密鑰"""
         env_key_map = {
             "openai": "OPENAI_API_KEY",
             "anthropic": "ANTHROPIC_API_KEY"
@@ -414,7 +414,7 @@ class ConfigManager:
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
                     settings = json.load(f)
             else:
-                # 如果設定檔案不存在，創建預設設定
+                # 如果設定檔案不存在，建立預設設定
                 settings = {
                     "default_provider": "openai",
                     "default_model": "gpt-4o-mini",
@@ -439,8 +439,8 @@ class ConfigManager:
             "finnhub_api_key": os.getenv("FINNHUB_API_KEY", ""),
             "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", ""),
             "log_level": os.getenv("TRADINGAGENTS_LOG_LEVEL", "INFO"),
-            "data_dir": os.getenv("TRADINGAGENTS_DATA_DIR", ""),  # 資料目錄環境變量
-            "cache_dir": os.getenv("TRADINGAGENTS_CACHE_DIR", ""),  # 快取目錄環境變量
+            "data_dir": os.getenv("TRADINGAGENTS_DATA_DIR", ""),  # 資料目錄環境變數
+            "cache_dir": os.getenv("TRADINGAGENTS_CACHE_DIR", ""),  # 快取目錄環境變數
         }
 
         # 添加OpenAI相關配置
@@ -448,7 +448,7 @@ class ConfigManager:
         if openai_enabled_env in ["true", "false"]:
             env_settings["openai_enabled"] = openai_enabled_env == "true"
 
-        # 只有當環境變量存在且不為空時才覆蓋
+        # 只有當環境變數存在且不為空時才覆蓋
         for key, value in env_settings.items():
             # 對於布爾值，直接使用
             if isinstance(value, bool):
@@ -576,7 +576,7 @@ class ConfigManager:
         settings["cache_dir"] = os.path.join(data_dir, "cache")
         self.save_settings(settings)
         
-        # 如果啟用自動創建目錄，則創建目錄
+        # 如果啟用自動建立目錄，則建立目錄
         if settings.get("auto_create_dirs", True):
             self.ensure_directories_exist()
 
@@ -598,9 +598,9 @@ class ConfigManager:
             if directory and not os.path.exists(directory):
                 try:
                     os.makedirs(directory, exist_ok=True)
-                    logger.info(f"創建目錄: {directory}")
+                    logger.info(f"建立目錄: {directory}")
                 except Exception as e:
-                    logger.error(f"創建目錄失敗 {directory}: {e}")
+                    logger.error(f"建立目錄失敗 {directory}: {e}")
     
     def set_openai_enabled(self, enabled: bool):
         """設定OpenAI模型啟用狀態"""

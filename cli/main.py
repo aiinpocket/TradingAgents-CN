@@ -36,7 +36,7 @@ from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.utils.logging_manager import get_logger
 
-# 載入環境變量
+# 載入環境變數
 load_dotenv()
 
 # 常量定義
@@ -133,7 +133,7 @@ class CLIUserInterface:
         else:
             self.console.print(f"{data_type}: {symbol}")
 
-# 創建全局UI管理器
+# 建立全局UI管理器
 ui = CLIUserInterface()
 
 app = typer.Typer(
@@ -283,7 +283,7 @@ message_buffer = MessageBuffer()
 
 def create_layout():
     """
-    創建CLI界面的布局結構
+    建立CLI界面的布局結構
     Create the layout structure for CLI interface
     """
     layout = Layout()
@@ -307,7 +307,7 @@ def update_display(layout, spinner_text=None):
     Update CLI interface display content
     
     Args:
-        layout: Rich Layout對象
+        layout: Rich Layout物件
         spinner_text: 可選的spinner文本
     """
     # Header with welcome message
@@ -1680,7 +1680,7 @@ def data_config(
             set_data_dir(set_dir)
             logger.info(f"[green]資料目錄已設定為: {set_dir}[/green]")
             
-            # 顯示創建的目錄結構
+            # 顯示建立的目錄結構
             if os.path.exists(set_dir):
                 logger.info(f"\n[blue]目錄結構:[/blue]")
                 for root, dirs, files in os.walk(set_dir):
@@ -1718,10 +1718,10 @@ def data_config(
     
     console.print(config_table)
     
-    # 環境變量資訊
-    logger.info(f"\n[blue]環境變量 | Environment Variables:[/blue]")
+    # 環境變數資訊
+    logger.info(f"\n[blue]環境變數 | Environment Variables:[/blue]")
     env_table = Table(show_header=True, header_style="bold magenta")
-    env_table.add_column("環境變量 | Variable", style="cyan")
+    env_table.add_column("環境變數 | Variable", style="cyan")
     env_table.add_column("值 | Value", style="green")
     
     env_vars = {
@@ -1740,7 +1740,7 @@ def data_config(
     logger.info(f"- 設定資料目錄: tradingagents data-config --set /path/to/data")
     logger.info(f"- 重置為預設: tradingagents data-config --reset")
     logger.info(f"- 查看當前配置: tradingagents data-config --show")
-    logger.info(f"- 環境變量優先級最高 | Environment variables have highest priority")
+    logger.info(f"- 環境變數優先級最高 | Environment variables have highest priority")
 
 
 @app.command(

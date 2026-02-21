@@ -50,13 +50,13 @@ class FinnhubDataDownloader:
         # 取得API密鑰
         self.api_key = api_key or os.getenv('FINNHUB_API_KEY')
         if not self.api_key:
-            raise ValueError(" 未找到Finnhub API密鑰，請設定FINNHUB_API_KEY環境變量")
+            raise ValueError(" 未找到Finnhub API密鑰，請設定FINNHUB_API_KEY環境變數")
         
         # 取得資料目錄
         if data_dir:
             self.data_dir = data_dir
         else:
-            # 優先使用環境變量，然後是項目根目錄
+            # 優先使用環境變數，然後是項目根目錄
             env_data_dir = os.getenv('TRADINGAGENTS_DATA_DIR')
             if env_data_dir:
                 self.data_dir = env_data_dir
@@ -64,7 +64,7 @@ class FinnhubDataDownloader:
                 # 使用項目根目錄下的data目錄
                 self.data_dir = str(project_root / "data")
 
-            logger.info(f" 資料目錄來源: {'環境變量' if env_data_dir else '項目根目錄'}")
+            logger.info(f" 資料目錄來源: {'環境變數' if env_data_dir else '項目根目錄'}")
         
         self.base_url = "https://finnhub.io/api/v1"
         self.session = requests.Session()
@@ -81,7 +81,7 @@ class FinnhubDataDownloader:
             params: 請求參數
             
         Returns:
-            API響應資料
+            API回應資料
         """
         params['token'] = self.api_key
         url = f"{self.base_url}/{endpoint}"
@@ -92,7 +92,7 @@ class FinnhubDataDownloader:
             
             # 檢查API限制
             if response.status_code == 429:
-                logger.warning(" API調用頻率限制，等待60秒...")
+                logger.warning(" API呼叫頻率限制，等待60秒...")
                 time.sleep(60)
                 return self._make_request(endpoint, params)
             
@@ -113,7 +113,7 @@ class FinnhubDataDownloader:
         """
         logger.info(f" 開始下載新聞資料，股票: {symbols}, 天數: {days}")
         
-        # 創建目錄
+        # 建立目錄
         news_dir = Path(self.data_dir) / "finnhub_data" / "news_data"
         news_dir.mkdir(parents=True, exist_ok=True)
         
@@ -149,7 +149,7 @@ class FinnhubDataDownloader:
             
             news_data = self._make_request('company-news', params)
 
-            logger.info(f" API響應類型: {type(news_data)}, 長度: {len(news_data) if isinstance(news_data, list) else 'N/A'}")
+            logger.info(f" API回應類型: {type(news_data)}, 長度: {len(news_data) if isinstance(news_data, list) else 'N/A'}")
 
             if news_data and isinstance(news_data, list) and len(news_data) > 0:
                 # 格式化資料
@@ -199,7 +199,7 @@ class FinnhubDataDownloader:
         """
         logger.info(f" 開始下載內部人情緒資料，股票: {symbols}")
         
-        # 創建目錄
+        # 建立目錄
         sentiment_dir = Path(self.data_dir) / "finnhub_data" / "insider_senti"
         sentiment_dir.mkdir(parents=True, exist_ok=True)
         
@@ -238,7 +238,7 @@ class FinnhubDataDownloader:
         """
         logger.info(f" 開始下載內部人交易資料，股票: {symbols}")
         
-        # 創建目錄
+        # 建立目錄
         trans_dir = Path(self.data_dir) / "finnhub_data" / "insider_trans"
         trans_dir.mkdir(parents=True, exist_ok=True)
         
@@ -308,7 +308,7 @@ def main():
     symbols = [s.strip().upper() for s in args.symbols.split(',')]
     
     try:
-        # 創建下載器
+        # 建立下載器
         downloader = FinnhubDataDownloader(
             api_key=args.api_key,
             data_dir=args.data_dir

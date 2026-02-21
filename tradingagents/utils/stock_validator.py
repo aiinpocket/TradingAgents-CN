@@ -47,7 +47,7 @@ class StockDataPreparationResult:
         }
 
 
-# 保持向後兼容
+# 保持向後相容
 StockValidationResult = StockDataPreparationResult
 
 
@@ -329,7 +329,7 @@ def get_stock_preparation_message(stock_code: str, market_type: str = "auto",
         return f"資料準備失敗: {result.error_message}\n建議: {result.suggestion}"
 
 
-# 保持向後兼容的別名
+# 保持向後相容的別名
 StockValidator = StockDataPreparer
 get_stock_validator = get_stock_preparer
 validate_stock_exists = prepare_stock_data

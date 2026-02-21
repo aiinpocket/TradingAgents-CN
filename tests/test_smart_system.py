@@ -139,7 +139,7 @@ def test_performance():
         print(f"  載入時間: {avg_load_time:.4f}秒")
         
         # 計算性能改進
-        api_simulation_time = 2.0  # 假設API調用需要2秒
+        api_simulation_time = 2.0  # 假設API呼叫需要2秒
         if avg_load_time < api_simulation_time:
             improvement = ((api_simulation_time - avg_load_time) / api_simulation_time) * 100
             print(f"  性能改進: {improvement:.1f}%")
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     if success:
         print("\n下一步:")
         print("1. 清理中文內容")
-        print("2. 添加英文檔案")
+        print("2. 添加英文件案")
         print("3. 準備上游貢獻")
     else:
         print("\n需要解決的問題:")

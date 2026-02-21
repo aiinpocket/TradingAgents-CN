@@ -39,11 +39,11 @@ class MongoDBReportManager:
     def _connect(self):
         """連接到MongoDB"""
         try:
-            # 載入環境變量
+            # 載入環境變數
             from dotenv import load_dotenv
             load_dotenv()
 
-            # 從環境變量取得MongoDB配置
+            # 從環境變數取得MongoDB配置
             mongodb_host = os.getenv("MONGODB_HOST", "localhost")
             mongodb_port = int(os.getenv("MONGODB_PORT", "27017"))
             mongodb_username = os.getenv("MONGODB_USERNAME", "")
@@ -82,7 +82,7 @@ class MongoDBReportManager:
             self.db = self.client[mongodb_database]
             self.collection = self.db["analysis_reports"]
             
-            # 創建索引
+            # 建立索引
             self._create_indexes()
             
             self.connected = True
@@ -93,23 +93,23 @@ class MongoDBReportManager:
             self.connected = False
     
     def _create_indexes(self):
-        """創建索引以提高查詢性能"""
+        """建立索引以提高查詢性能"""
         try:
-            # 創建複合索引
+            # 建立複合索引
             self.collection.create_index([
                 ("stock_symbol", 1),
                 ("analysis_date", -1),
                 ("timestamp", -1)
             ])
             
-            # 創建單字段索引
+            # 建立單字段索引
             self.collection.create_index("analysis_id")
             self.collection.create_index("status")
             
-            logger.info("MongoDB索引創建成功")
+            logger.info("MongoDB索引建立成功")
             
         except Exception as e:
-            logger.error(f"MongoDB索引創建失敗: {e}")
+            logger.error(f"MongoDB索引建立失敗: {e}")
     
     def save_analysis_report(self, stock_symbol: str, analysis_results: Dict[str, Any],
                            reports: Dict[str, str]) -> bool:
@@ -123,7 +123,7 @@ class MongoDBReportManager:
             timestamp = datetime.now()
             analysis_id = f"{stock_symbol}_{timestamp.strftime('%Y%m%d_%H%M%S')}"
 
-            # 構建文檔
+            # 構建文件
             document = {
                 "analysis_id": analysis_id,
                 "stock_symbol": stock_symbol,
@@ -145,7 +145,7 @@ class MongoDBReportManager:
                 "updated_at": timestamp
             }
             
-            # 插入文檔
+            # 插入文件
             result = self.collection.insert_one(document)
             
             if result.inserted_id:
@@ -185,10 +185,10 @@ class MongoDBReportManager:
             
             results = []
             for doc in cursor:
-                # 處理timestamp字段，兼容不同的資料類型
+                # 處理timestamp字段，相容不同的資料類型
                 timestamp_value = doc.get("timestamp")
                 if hasattr(timestamp_value, 'timestamp'):
-                    # datetime對象
+                    # datetime物件
                     timestamp = timestamp_value.timestamp()
                 elif isinstance(timestamp_value, (int, float)):
                     # 已經是時間戳
@@ -302,7 +302,7 @@ class MongoDBReportManager:
             return False
 
         try:
-            # 查找缺少reports字段或reports字段為空的文檔
+            # 查找缺少reports字段或reports字段為空的文件
             query = {
                 "$or": [
                     {"reports": {"$exists": False}},
@@ -323,7 +323,7 @@ class MongoDBReportManager:
             fixed_count = 0
             for doc in inconsistent_docs:
                 try:
-                    # 為缺少reports字段的文檔添加空的reports字段
+                    # 為缺少reports字段的文件添加空的reports字段
                     update_data = {
                         "$set": {
                             "reports": {},
@@ -384,5 +384,5 @@ class MongoDBReportManager:
             return False
 
 
-# 創建全局實例
+# 建立全局實例
 mongodb_report_manager = MongoDBReportManager()

@@ -39,7 +39,7 @@ def check_web_service():
             logger.info(" Web服務正在執行")
             return True
         else:
-            logger.warning(f" Web服務響應異常: {response.status_code}")
+            logger.warning(f" Web服務回應異常: {response.status_code}")
             return False
     except Exception as e:
         logger.error(f" 無法連接到Web服務: {e}")
@@ -106,7 +106,7 @@ def capture_screenshots():
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--window-size=1920,1080")
         
-        # 創建WebDriver
+        # 建立WebDriver
         driver = webdriver.Chrome(options=chrome_options)
         
         try:
@@ -122,7 +122,7 @@ def capture_screenshots():
             # 等待Streamlit完全載入
             time.sleep(5)
             
-            # 創建截圖目錄
+            # 建立截圖目錄
             screenshots_dir = project_root / "docs" / "images"
             screenshots_dir.mkdir(exist_ok=True)
             
@@ -171,7 +171,7 @@ def capture_screenshots():
         return False
 
 def create_screenshot_guide():
-    """創建截圖指南"""
+    """建立截圖指南"""
     guide_content = f"""#  Web界面截圖捕獲指南
 
 ##  自動截圖
@@ -248,14 +248,14 @@ pip install selenium
     with open(guide_path, 'w', encoding='utf-8') as f:
         f.write(guide_content)
     
-    logger.info(f" 截圖指南已創建: {guide_path}")
+    logger.info(f" 截圖指南已建立: {guide_path}")
 
 def main():
     """主函數"""
     logger.info(" TradingAgents-CN Web界面截圖捕獲工具")
     logger.info("=" * 50)
     
-    # 創建截圖指南
+    # 建立截圖指南
     create_screenshot_guide()
     
     # 詢問用戶是否要自動捕獲截圖

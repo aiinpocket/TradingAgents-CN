@@ -52,7 +52,7 @@ def clean_cache_files(force_clean=False):
         force_clean: 是否強制清理，預設False（可選清理）
     """
 
-    # 檢查環境變量是否禁用清理
+    # 檢查環境變數是否禁用清理
     try:
         from tradingagents.config.env_utils import parse_bool_env
         skip_clean = parse_bool_env('SKIP_CACHE_CLEAN', False)
@@ -135,7 +135,7 @@ def check_api_keys():
     
     from dotenv import load_dotenv
     
-    # 載入環境變量
+    # 載入環境變數
     project_root = Path(__file__).parent.parent
     load_dotenv(project_root / ".env")
     
@@ -217,7 +217,7 @@ def main():
     logger.info("按 Ctrl+C 停止應用")
     logger.info("=")
     
-    # 創建進程對象而不是直接執行
+    # 建立進程物件而不是直接執行
     process = None
     
     def signal_handler(signum, frame):
@@ -271,7 +271,7 @@ if __name__ == "__main__":
             logger.info("python run_web.py --no-clean # 跳過快取清理")
             logger.info("python run_web.py --force-clean # 強制清理所有快取")
             logger.info("python run_web.py --help # 顯示幫助")
-            logger.info("\n環境變量:")
+            logger.info("\n環境變數:")
             logger.info("SKIP_CACHE_CLEAN=true # 跳過快取清理")
             exit(0)
 

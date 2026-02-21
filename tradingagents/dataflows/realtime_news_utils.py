@@ -135,7 +135,7 @@ class RealtimeNewsAggregator:
             end_time = datetime.now()
             start_time = end_time - timedelta(hours=hours_back)
             
-            # FinnHub API調用
+            # FinnHub API呼叫
             url = "https://finnhub.io/api/v1/company-news"
             params = {
                 'symbol': ticker,
@@ -479,19 +479,19 @@ def get_realtime_stock_news(ticker: str, curr_date: str, hours_back: int = 6) ->
     # 使用實時新聞聚合器
     logger.info("[新聞分析] ========== 步驟3: 實時新聞聚合器 ==========")
     aggregator = RealtimeNewsAggregator()
-    logger.info("[新聞分析] 成功創建實時新聞聚合器實例")
+    logger.info("[新聞分析] 成功建立實時新聞聚合器實例")
     try:
         logger.info(f"[新聞分析] 嘗試使用實時新聞聚合器取得 {ticker} 的新聞")
         start_time = datetime.now()
-        logger.info(f"[新聞分析] 聚合器調用開始時間: {start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
+        logger.info(f"[新聞分析] 聚合器呼叫開始時間: {start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
         
         # 取得實時新聞
         news_items = aggregator.get_realtime_stock_news(ticker, hours_back, max_news=10)
         
         end_time = datetime.now()
         time_taken = (end_time - start_time).total_seconds()
-        logger.info(f"[新聞分析] 聚合器調用結束時間: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
-        logger.info(f"[新聞分析] 聚合器調用耗時: {time_taken:.2f}秒")
+        logger.info(f"[新聞分析] 聚合器呼叫結束時間: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
+        logger.info(f"[新聞分析] 聚合器呼叫耗時: {time_taken:.2f}秒")
         logger.info(f"[新聞分析] 聚合器返回資料類型: {type(news_items)}")
         logger.info(f"[新聞分析] 聚合器傳回資料: {news_items}")
         

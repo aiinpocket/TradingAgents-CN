@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-創建示例分析報告
+建立示例分析報告
 用於測試Web界面的報告顯示功能
 """
 
@@ -12,7 +12,7 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'web'))
 
 def create_sample_report(stock_symbol: str, stock_name: str):
-    """創建示例分析報告"""
+    """建立示例分析報告"""
     
     # 分析結果資料
     analysis_results = {
@@ -136,7 +136,7 @@ def create_sample_report(stock_symbol: str, stock_name: str):
 
 def main():
     """主函數"""
-    print(" 創建示例分析報告...")
+    print(" 建立示例分析報告...")
     
     try:
         from web.utils.mongodb_report_manager import mongodb_report_manager
@@ -145,7 +145,7 @@ def main():
             print(" MongoDB未連接")
             return
         
-        # 創建多個示例報告
+        # 建立多個示例報告
         sample_stocks = [
             ("DEMO001", "示例科技股"),
             ("DEMO002", "示例銀行股"),
@@ -157,7 +157,7 @@ def main():
         success_count = 0
         
         for stock_symbol, stock_name in sample_stocks:
-            print(f" 創建 {stock_name}({stock_symbol}) 的分析報告...")
+            print(f" 建立 {stock_name}({stock_symbol}) 的分析報告...")
             
             analysis_results, reports = create_sample_report(stock_symbol, stock_name)
             
@@ -169,15 +169,15 @@ def main():
             
             if success:
                 success_count += 1
-                print(f" {stock_name} 報告創建成功")
+                print(f" {stock_name} 報告建立成功")
             else:
-                print(f" {stock_name} 報告創建失敗")
+                print(f" {stock_name} 報告建立失敗")
         
-        print(f"\n 完成！成功創建 {success_count}/{len(sample_stocks)} 個示例報告")
+        print(f"\n 完成！成功建立 {success_count}/{len(sample_stocks)} 個示例報告")
         print(" 現在可以在Web界面中查看這些報告了")
         
     except Exception as e:
-        print(f" 創建示例報告失敗: {e}")
+        print(f" 建立示例報告失敗: {e}")
         import traceback
         traceback.print_exc()
 

@@ -12,7 +12,7 @@ def test_conditional_logic_fix():
         from tradingagents.graph.conditional_logic import ConditionalLogic
         from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
         
-        # 創建條件邏輯實例
+        # 建立條件邏輯實例
         logic = ConditionalLogic()
         
         # 測試不同類型的消息
@@ -46,7 +46,7 @@ def test_conditional_logic_fix():
         for test_case in test_cases:
             print(f"\n  測試: {test_case['name']}")
             
-            # 創建模擬狀態
+            # 建立模擬狀態
             state = {
                 "messages": [test_case["message"]]
             }

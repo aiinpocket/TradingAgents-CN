@@ -311,13 +311,13 @@ class ReportExporter:
         return md_content
 
     def generate_docx_report(self, results: Dict[str, Any]) -> bytes:
-        """生成Word文檔格式的報告"""
+        """生成Word文件格式的報告"""
 
-        logger.info("開始生成Word文檔...")
+        logger.info("開始生成Word文件...")
 
         if not self.pandoc_available:
             logger.error("Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成Word文檔。請安裝pandoc或使用Markdown格式匯出。")
+            raise Exception("Pandoc不可用，無法生成Word文件。請安裝pandoc或使用Markdown格式匯出。")
 
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
@@ -325,8 +325,8 @@ class ReportExporter:
         logger.info(f"Markdown內容生成完成，長度: {len(md_content)} 字符")
 
         try:
-            logger.info("創建暫存檔案用於docx輸出...")
-            # 創建暫存檔案用於docx輸出
+            logger.info("建立暫存檔案用於docx輸出...")
+            # 建立暫存檔案用於docx輸出
             with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as tmp_file:
                 output_file = tmp_file.name
             logger.info(f"臨時檔案路徑: {output_file}")
@@ -364,18 +364,18 @@ class ReportExporter:
 
             return docx_content
         except Exception as e:
-            logger.error(f"Word文檔生成失敗: {e}", exc_info=True)
-            raise Exception(f"生成Word文檔失敗: {e}")
+            logger.error(f"Word文件生成失敗: {e}", exc_info=True)
+            raise Exception(f"生成Word文件失敗: {e}")
     
     
     def generate_pdf_report(self, results: Dict[str, Any]) -> bytes:
         """生成PDF格式的報告"""
 
-        logger.info("開始生成PDF文檔...")
+        logger.info("開始生成PDF文件...")
 
         if not self.pandoc_available:
             logger.error("Pandoc不可用")
-            raise Exception("Pandoc不可用，無法生成PDF文檔。請安裝pandoc或使用Markdown格式匯出。")
+            raise Exception("Pandoc不可用，無法生成PDF文件。請安裝pandoc或使用Markdown格式匯出。")
 
         # 首先生成markdown內容
         logger.info("生成Markdown內容...")
@@ -394,7 +394,7 @@ class ReportExporter:
         for engine_info in pdf_engines:
             engine, description = engine_info
             try:
-                # 創建暫存檔案用於PDF輸出
+                # 建立暫存檔案用於PDF輸出
                 with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
                     output_file = tmp_file.name
 
@@ -491,23 +491,23 @@ class ReportExporter:
                 return content.encode('utf-8')
 
             elif format_type == 'docx':
-                logger.info("生成Word文檔...")
+                logger.info("生成Word文件...")
                 if not self.pandoc_available:
-                    logger.error("pandoc不可用，無法生成Word文檔")
-                    st.error("pandoc不可用，無法生成Word文檔")
+                    logger.error("pandoc不可用，無法生成Word文件")
+                    st.error("pandoc不可用，無法生成Word文件")
                     return None
                 content = self.generate_docx_report(results)
-                logger.info(f"Word文檔生成成功，大小: {len(content)} 位元組")
+                logger.info(f"Word文件生成成功，大小: {len(content)} 位元組")
                 return content
 
             elif format_type == 'pdf':
-                logger.info("生成PDF文檔...")
+                logger.info("生成PDF文件...")
                 if not self.pandoc_available:
-                    logger.error("pandoc不可用，無法生成PDF文檔")
-                    st.error("pandoc不可用，無法生成PDF文檔")
+                    logger.error("pandoc不可用，無法生成PDF文件")
+                    st.error("pandoc不可用，無法生成PDF文件")
                     return None
                 content = self.generate_pdf_report(results)
-                logger.info(f"PDF文檔生成成功，大小: {len(content)} 位元組")
+                logger.info(f"PDF文件生成成功，大小: {len(content)} 位元組")
                 return content
 
             else:
@@ -521,7 +521,7 @@ class ReportExporter:
             return None
 
 
-# 創建全局匯出器實例
+# 建立全局匯出器實例
 report_exporter = ReportExporter()
 
 
@@ -584,13 +584,13 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         else:
             results_dir = project_root / "results"
 
-        # 創建股票專用目錄
+        # 建立股票專用目錄
         analysis_date = datetime.now().strftime('%Y-%m-%d')
         stock_dir = results_dir / stock_symbol / analysis_date
         reports_dir = stock_dir / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
 
-        # 創建message_tool.log檔案
+        # 建立message_tool.log檔案
         log_file = stock_dir / "message_tool.log"
         log_file.touch(exist_ok=True)
 
@@ -721,31 +721,31 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         logger.info(f"保存目錄: {os.path.normpath(str(reports_dir))}")
 
         # 同時保存到MongoDB
-        logger.info("[MongoDB調試] 開始MongoDB保存流程")
-        logger.info(f"[MongoDB調試] MONGODB_REPORT_AVAILABLE: {MONGODB_REPORT_AVAILABLE}")
-        logger.info(f"[MongoDB調試] mongodb_report_manager存在: {mongodb_report_manager is not None}")
+        logger.info("[MongoDB除錯] 開始MongoDB保存流程")
+        logger.info(f"[MongoDB除錯] MONGODB_REPORT_AVAILABLE: {MONGODB_REPORT_AVAILABLE}")
+        logger.info(f"[MongoDB除錯] mongodb_report_manager存在: {mongodb_report_manager is not None}")
 
         if MONGODB_REPORT_AVAILABLE and mongodb_report_manager:
-            logger.info(f"[MongoDB調試] MongoDB管理器連接狀態: {mongodb_report_manager.connected}")
+            logger.info(f"[MongoDB除錯] MongoDB管理器連接狀態: {mongodb_report_manager.connected}")
             try:
                 # 收集所有報告內容
                 reports_content = {}
 
-                logger.info(f"[MongoDB調試] 開始讀取 {len(saved_files)} 個報告檔案")
+                logger.info(f"[MongoDB除錯] 開始讀取 {len(saved_files)} 個報告檔案")
                 # 讀取已保存的檔案內容
                 for module_key, file_path in saved_files.items():
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
                             content = f.read()
                             reports_content[module_key] = content
-                            logger.info(f"[MongoDB調試] 成功讀取 {module_key}: {len(content)} 字符")
+                            logger.info(f"[MongoDB除錯] 成功讀取 {module_key}: {len(content)} 字符")
                     except Exception as e:
                         logger.warning(f"讀取報告檔案失敗 {file_path}: {e}")
 
                 # 保存到MongoDB
                 if reports_content:
-                    logger.info(f"[MongoDB調試] 準備保存到MongoDB，報告數量: {len(reports_content)}")
-                    logger.info(f"[MongoDB調試] 報告類型: {list(reports_content.keys())}")
+                    logger.info(f"[MongoDB除錯] 準備保存到MongoDB，報告數量: {len(reports_content)}")
+                    logger.info(f"[MongoDB除錯] 報告類型: {list(reports_content.keys())}")
 
                     success = mongodb_report_manager.save_analysis_report(
                         stock_symbol=stock_symbol,
@@ -790,7 +790,7 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
         # 取得results目錄配置
         results_dir_env = os.getenv("TRADINGAGENTS_RESULTS_DIR")
         if results_dir_env:
-            # 如果環境變量是相對路徑，相對於項目根目錄解析
+            # 如果環境變數是相對路徑，相對於項目根目錄解析
             if not os.path.isabs(results_dir_env):
                 results_dir = project_root / results_dir_env
             else:
@@ -799,7 +799,7 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
             # 預設使用項目根目錄下的results
             results_dir = project_root / "results"
 
-        # 創建股票專用目錄
+        # 建立股票專用目錄
         analysis_date = datetime.now().strftime('%Y-%m-%d')
         stock_dir = results_dir / stock_symbol / analysis_date / "reports"
         stock_dir.mkdir(parents=True, exist_ok=True)
@@ -812,7 +812,7 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
         logger.info(f"報告已保存到: {file_path}")
         logger.info(f"項目根目錄: {project_root}")
         logger.info(f"Results目錄: {results_dir}")
-        logger.info(f"環境變量TRADINGAGENTS_RESULTS_DIR: {results_dir_env}")
+        logger.info(f"環境變數TRADINGAGENTS_RESULTS_DIR: {results_dir_env}")
 
         return str(file_path)
 
@@ -919,9 +919,9 @@ def render_export_buttons(results: Dict[str, Any]):
                 logger.error("Markdown匯出失敗，content為空")
     
     with col2:
-        if st.button("匯出 Word", help="匯出為Word文檔格式"):
+        if st.button("匯出 Word", help="匯出為Word文件格式"):
             logger.info(f"用戶點擊Word匯出按鈕 - 股票: {stock_symbol}")
-            with st.spinner("正在生成Word文檔，請稍候..."):
+            with st.spinner("正在生成Word文件，請稍候..."):
                 try:
                     logger.info("開始Word匯出流程...")
 
@@ -948,9 +948,9 @@ def render_export_buttons(results: Dict[str, Any]):
                                 st.write("**Word彙總報告:**")
                                 st.write(f"- Word報告: `{saved_path}`")
                         elif saved_path:
-                            st.success(f"Word文檔已保存到: {saved_path}")
+                            st.success(f"Word文件已保存到: {saved_path}")
                         else:
-                            st.success("Word文檔生成成功！")
+                            st.success("Word文件生成成功！")
 
                         st.download_button(
                             label="下載 Word",
@@ -960,10 +960,10 @@ def render_export_buttons(results: Dict[str, Any]):
                         )
                     else:
                         logger.error("Word匯出失敗，content為空")
-                        st.error("Word文檔生成失敗")
+                        st.error("Word文件生成失敗")
                 except Exception as e:
                     logger.error(f"Word匯出異常: {str(e)}", exc_info=True)
-                    st.error(f"Word文檔生成失敗: {str(e)}")
+                    st.error(f"Word文件生成失敗: {str(e)}")
 
                     # 顯示詳細錯誤訊息
                     with st.expander("查看詳細錯誤訊息"):
@@ -1101,7 +1101,7 @@ def save_analysis_report(stock_symbol: str, analysis_results: Dict[str, Any],
         if report_content is None:
             report_content = report_exporter.generate_markdown_report(analysis_results)
         
-        # 調用MongoDB報告管理器保存報告
+        # 呼叫MongoDB報告管理器保存報告
         # 將報告內容包裝成字典格式
         reports_dict = {
             "markdown": report_content,

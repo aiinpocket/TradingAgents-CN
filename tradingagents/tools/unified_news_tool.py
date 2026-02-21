@@ -2,7 +2,7 @@
 """
 統一新聞分析工具
 整合美股市場的新聞取得邏輯到一個工具函數中
-讓大模型只需要調用一個工具就能取得美股的新聞資料
+讓大模型只需要呼叫一個工具就能取得美股的新聞資料
 """
 
 import logging
@@ -105,7 +105,7 @@ class UnifiedNewsAnalyzer:
         try:
             if hasattr(self.toolkit, 'get_global_news_openai'):
                 logger.info("[統一新聞工具] 嘗試OpenAI美股新聞...")
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
+                # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
                 if result and len(result.strip()) > 50:
                     logger.info(f"[統一新聞工具] OpenAI美股新聞取得成功: {len(result)} 字符")
@@ -118,7 +118,7 @@ class UnifiedNewsAnalyzer:
             if hasattr(self.toolkit, 'get_google_news'):
                 logger.info("[統一新聞工具] 嘗試Google美股新聞...")
                 query = f"{stock_code} stock news earnings financial"
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
+                # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
                 if result and len(result.strip()) > 50:
                     logger.info(f"[統一新聞工具] Google美股新聞取得成功: {len(result)} 字符")
@@ -130,7 +130,7 @@ class UnifiedNewsAnalyzer:
         try:
             if hasattr(self.toolkit, 'get_finnhub_news'):
                 logger.info("[統一新聞工具] 嘗試FinnHub美股新聞...")
-                # 使用LangChain工具的正確調用方式：.invoke()方法和字典參數
+                # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_finnhub_news.invoke({"symbol": stock_code, "max_results": min(max_news, 50)})
                 if result and len(result.strip()) > 50:
                     logger.info(f"[統一新聞工具] FinnHub美股新聞取得成功: {len(result)} 字符")
@@ -163,7 +163,7 @@ class UnifiedNewsAnalyzer:
 
 
 def create_unified_news_tool(toolkit):
-    """創建統一新聞工具函數"""
+    """建立統一新聞工具函數"""
     analyzer = UnifiedNewsAnalyzer(toolkit)
     
     def get_stock_news_unified(stock_code: str, max_news: int = 100, model_info: str = ""):

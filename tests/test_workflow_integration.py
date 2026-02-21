@@ -19,7 +19,7 @@ class MockLLM:
         return self
     
     def invoke(self, message):
-        """模擬調用"""
+        """模擬呼叫"""
         class MockResult:
             def __init__(self):
                 self.content = "模擬分析結果"
@@ -45,13 +45,13 @@ def test_news_analyst_integration():
         print(f"\n 第一步：檢查新聞分析師的工具綁定...")
         from tradingagents.agents.analysts.news_analyst import create_news_analyst
         
-        # 創建模擬工具包
+        # 建立模擬工具包
         mock_toolkit = MockToolkit()
         mock_llm = MockLLM()
         
-        # 創建新聞分析師
+        # 建立新聞分析師
         news_analyst = create_news_analyst(mock_llm, mock_toolkit)
-        print(f"   新聞分析師創建成功")
+        print(f"   新聞分析師建立成功")
         
         # 2. 檢查統一新聞工具的匯入和使用
         print(f"\n 第二步：檢查統一新聞工具的集成...")
@@ -78,12 +78,12 @@ def test_news_analyst_integration():
             # 檢查關鍵集成點
             integration_checks = [
                 ("統一新聞工具匯入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
-                ("工具創建", "unified_news_tool = create_unified_news_tool(toolkit)"),
+                ("工具建立", "unified_news_tool = create_unified_news_tool(toolkit)"),
                 ("工具名稱設定", 'unified_news_tool.name = "get_stock_news_unified"'),
                 ("工具列表", "tools = [unified_news_tool]"),
                 ("系統提示詞包含工具", "get_stock_news_unified"),
-                ("強制工具調用", "您的第一個動作必須是調用 get_stock_news_unified 工具"),
-                ("預處理工具調用", "pre_fetched_news = unified_news_tool(stock_code=ticker"),
+                ("強制工具呼叫", "您的第一個動作必須是呼叫 get_stock_news_unified 工具"),
+                ("預處理工具呼叫", "pre_fetched_news = unified_news_tool(stock_code=ticker"),
                 ("LLM工具綁定", "llm.bind_tools(tools)")
             ]
             
@@ -107,7 +107,7 @@ def test_news_analyst_integration():
             
             workflow_checks = [
                 ("新聞分析師匯入", "from tradingagents.agents.analysts.news_analyst import create_news_analyst"),
-                ("新聞分析師節點創建", 'analyst_nodes["news"] = create_news_analyst'),
+                ("新聞分析師節點建立", 'analyst_nodes["news"] = create_news_analyst'),
                 ("工作流程節點添加", "workflow.add_node")
             ]
             
@@ -120,8 +120,8 @@ def test_news_analyst_integration():
         except Exception as e:
             print(f"   無法讀取工作流程設定檔案: {e}")
         
-        # 5. 測試工具調用
-        print(f"\n 第五步：測試工具調用...")
+        # 5. 測試工具呼叫
+        print(f"\n 第五步：測試工具呼叫...")
         
         try:
             # 模擬狀態
@@ -132,11 +132,11 @@ def test_news_analyst_integration():
                 "session_id": "test_session"
             }
             
-            # 測試新聞分析師調用（會因為LLM配置問題失敗，但可以驗證工具載入）
-            print(f"   測試新聞分析師節點調用...")
+            # 測試新聞分析師呼叫（會因為LLM配置問題失敗，但可以驗證工具載入）
+            print(f"   測試新聞分析師節點呼叫...")
             
-            # 這裡只是驗證能否正常創建，不實際調用
-            print(f"   新聞分析師節點可以正常創建")
+            # 這裡只是驗證能否正常建立，不實際呼叫
+            print(f"   新聞分析師節點可以正常建立")
             
         except Exception as e:
             print(f"   新聞分析師節點測試遇到問題: {e}")
@@ -145,16 +145,16 @@ def test_news_analyst_integration():
         
         # 總結
         print(f"\n 集成狀態總結:")
-        print(f"   統一新聞工具: 已創建並集成到新聞分析師")
+        print(f"   統一新聞工具: 已建立並集成到新聞分析師")
         print(f"   新聞分析師: 已使用統一工具替代原有多個工具")
         print(f"   工具綁定: 已實現LLM工具綁定機制")
-        print(f"   系統提示詞: 已更新為強制調用統一工具")
+        print(f"   系統提示詞: 已更新為強制呼叫統一工具")
         print(f"   工作流程: 已集成到整體交易智能體流程")
         
         print(f"\n 在整體流程中的使用情況：")
         print(f"  1. 當用戶選擇包含'news'的分析師時，系統會自動載入新聞分析師")
-        print(f"  2. 新聞分析師會創建並綁定統一新聞工具到LLM")
-        print(f"  3. LLM在分析時會調用 get_stock_news_unified 工具")
+        print(f"  2. 新聞分析師會建立並綁定統一新聞工具到LLM")
+        print(f"  3. LLM在分析時會呼叫 get_stock_news_unified 工具")
         print(f"  4. 統一工具會自動識別美股股票並取得相應新聞")
         print(f"  6. 分析結果會傳遞給後續的研究員和管理員節點")
         

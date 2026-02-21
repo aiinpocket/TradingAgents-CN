@@ -20,7 +20,7 @@ def test_cli_ui_manager():
     try:
         from cli.main import CLIUserInterface
         
-        # 創建UI管理器
+        # 建立UI管理器
         ui = CLIUserInterface()
         
         print(" 測試各種消息類型:")

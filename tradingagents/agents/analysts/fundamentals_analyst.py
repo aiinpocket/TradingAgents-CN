@@ -1,6 +1,6 @@
 """
 基本面分析師 - 統一工具架構版本
-使用統一工具自動識別股票類型並調用相應資料來源
+使用統一工具自動識別股票類型並呼叫相應資料來源
 """
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -87,7 +87,7 @@ def create_fundamentals_analyst(llm, toolkit):
             # 使用統一的基本面分析工具和華爾街分析師共識資料
             logger.info("[基本面分析師] 使用統一基本面分析工具和分析師共識資料")
             tools = [toolkit.get_stock_fundamentals_unified, toolkit.get_finnhub_analyst_consensus]
-            # 安全地取得工具名稱用於調試
+            # 安全地取得工具名稱用於除錯
             tool_names_debug = []
             for tool in tools:
                 if hasattr(tool, 'name'):
@@ -113,9 +113,9 @@ def create_fundamentals_analyst(llm, toolkit):
         system_message = (
             f"你是一位專業的股票基本面分析師。"
             f"\n\n**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**\n"
-            f"絕對強制要求：你必須調用工具取得真實資料！不允許任何假設或編造！"
+            f"絕對強制要求：你必須呼叫工具取得真實資料！不允許任何假設或編造！"
             f"任務：分析{company_name}（股票代碼：{ticker}，{market_info['market_name']}）"
-            f"[重要] 立即調用 get_stock_fundamentals_unified 工具"
+            f"[重要] 立即呼叫 get_stock_fundamentals_unified 工具"
             f"參數：ticker='{ticker}', start_date='{start_date}', end_date='{current_date}', curr_date='{current_date}'"
             "分析要求："
             "- 整合華爾街分析師共識資料（評級分布、目標價、EPS/營收預測）到你的估值分析中"
@@ -131,40 +131,40 @@ def create_fundamentals_analyst(llm, toolkit):
             "- 絕對不允許使用英文：buy、hold、sell"
             f"- 貨幣單位使用：{market_info['currency_name']}（{market_info['currency_symbol']}）"
             "嚴格禁止："
-            "- 不允許說'我將調用工具'"
+            "- 不允許說'我將呼叫工具'"
             "- 不允許假設任何資料"
             "- 不允許編造公司資訊"
-            "- 不允許直接回答而不調用工具"
+            "- 不允許直接回答而不呼叫工具"
             "- 不允許回覆'無法確定價位'或'需要更多資訊'"
             "- 不允許使用英文投資建議（buy/hold/sell）"
             "你必須："
-            "- 立即調用統一基本面分析工具"
+            "- 立即呼叫統一基本面分析工具"
             "- 等待工具返回真實資料"
             "- 基於真實資料進行分析"
             "- 提供具體的價位區間和目標價"
             "- 使用中文投資建議（買入/持有/賣出）"
-            "現在立即開始調用工具！不要說任何其他話！"
+            "現在立即開始呼叫工具！不要說任何其他話！"
         )
 
         # 系統提示模板
         system_prompt = (
-            "[強制要求] 你必須調用工具取得真實資料！"
+            "[強制要求] 你必須呼叫工具取得真實資料！"
             "[禁止] 不允許假設、編造或直接回答任何問題！"
-            "[必須] 立即調用提供的工具取得真實資料，然後基於真實資料進行分析。"
+            "[必須] 立即呼叫提供的工具取得真實資料，然後基於真實資料進行分析。"
             "可用工具：{tool_names}。\n{system_message}"
             "當前日期：{current_date}。"
             "分析目標：{company_name}（股票代碼：{ticker}）。"
             "請確保在分析中正確區分公司名稱和股票代碼。"
         )
 
-        # 創建提示模板
+        # 建立提示模板
         prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),
             MessagesPlaceholder(variable_name="messages"),
         ])
 
         prompt = prompt.partial(system_message=system_message)
-        # 安全地取得工具名稱，處理函數和工具對象
+        # 安全地取得工具名稱，處理函數和工具物件
         tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):
@@ -181,8 +181,8 @@ def create_fundamentals_analyst(llm, toolkit):
 
         fresh_llm = llm
 
-        logger.debug(f"創建LLM鏈，工具數量: {len(tools)}")
-        # 安全地取得工具名稱用於調試
+        logger.debug(f"建立LLM鏈，工具數量: {len(tools)}")
+        # 安全地取得工具名稱用於除錯
         debug_tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):
@@ -192,7 +192,7 @@ def create_fundamentals_analyst(llm, toolkit):
             else:
                 debug_tool_names.append(str(tool))
         logger.debug(f"綁定的工具列表: {debug_tool_names}")
-        logger.debug("創建工具鏈，讓模型自主決定是否調用工具")
+        logger.debug("建立工具鏈，讓模型自主決定是否呼叫工具")
 
         try:
             chain = prompt | fresh_llm.bind_tools(tools)
@@ -201,38 +201,38 @@ def create_fundamentals_analyst(llm, toolkit):
             logger.error(f"工具綁定失敗: {e}")
             raise e
 
-        logger.debug("調用LLM鏈...")
+        logger.debug("呼叫LLM鏈...")
 
         # 添加詳細的股票代碼追蹤日誌
-        logger.info(f"[股票代碼追蹤] LLM調用前，ticker參數: '{ticker}'")
+        logger.info(f"[股票代碼追蹤] LLM呼叫前，ticker參數: '{ticker}'")
         logger.info(f"[股票代碼追蹤] 傳遞給LLM的訊息數量: {len(state['messages'])}")
 
         result = chain.invoke(state["messages"])
-        logger.debug("LLM調用完成")
+        logger.debug("LLM呼叫完成")
 
-        # 檢查工具調用情況
+        # 檢查工具呼叫情況
         tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
-        logger.debug(f"工具調用數量: {tool_call_count}")
+        logger.debug(f"工具呼叫數量: {tool_call_count}")
 
         if tool_call_count > 0:
-            # 有工具調用，返回狀態讓工具執行
+            # 有工具呼叫，返回狀態讓工具執行
             tool_calls_info = []
             for tc in result.tool_calls:
                 tool_calls_info.append(tc['name'])
-                logger.debug(f"工具調用 {len(tool_calls_info)}: {tc}")
+                logger.debug(f"工具呼叫 {len(tool_calls_info)}: {tc}")
 
-            logger.info(f"[基本面分析師] 工具調用: {tool_calls_info}")
+            logger.info(f"[基本面分析師] 工具呼叫: {tool_calls_info}")
             return {
                 "messages": [result],
                 "fundamentals_report": result.content if hasattr(result, 'content') else str(result)
             }
 
-        # 沒有工具調用，使用強制工具調用修復
-        logger.debug("檢測到模型未調用工具，啟用強制工具調用模式")
+        # 沒有工具呼叫，使用強制工具呼叫修復
+        logger.debug("檢測到模型未呼叫工具，啟用強制工具呼叫模式")
 
-        # 強制調用統一基本面分析工具
+        # 強制呼叫統一基本面分析工具
         try:
-            logger.debug("強制調用 get_stock_fundamentals_unified...")
+            logger.debug("強制呼叫 get_stock_fundamentals_unified...")
             unified_tool = None
             for tool in tools:
                 tool_name = None
@@ -245,7 +245,7 @@ def create_fundamentals_analyst(llm, toolkit):
                     unified_tool = tool
                     break
             if unified_tool:
-                logger.info(f"[股票代碼追蹤] 強制調用統一工具，傳入ticker: '{ticker}'")
+                logger.info(f"[股票代碼追蹤] 強制呼叫統一工具，傳入ticker: '{ticker}'")
                 combined_data = unified_tool.invoke({
                     'ticker': ticker,
                     'start_date': start_date,
@@ -257,8 +257,8 @@ def create_fundamentals_analyst(llm, toolkit):
                 combined_data = "統一基本面分析工具不可用"
                 logger.debug("統一工具未找到")
         except Exception as e:
-            combined_data = f"統一基本面分析工具調用失敗: {e}"
-            logger.debug(f"統一工具調用異常: {e}")
+            combined_data = f"統一基本面分析工具呼叫失敗: {e}"
+            logger.debug(f"統一工具呼叫異常: {e}")
 
         currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
 
@@ -295,10 +295,10 @@ def create_fundamentals_analyst(llm, toolkit):
             else:
                 report = str(analysis_result)
 
-            logger.info(f"[基本面分析師] 強制工具調用完成，報告長度: {len(report)}")
+            logger.info(f"[基本面分析師] 強制工具呼叫完成，報告長度: {len(report)}")
 
         except Exception as e:
-            logger.error(f"強制工具調用分析失敗: {e}")
+            logger.error(f"強制工具呼叫分析失敗: {e}")
             report = f"基本面分析失敗：{str(e)}"
 
         return {"fundamentals_report": report}

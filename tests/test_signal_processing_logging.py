@@ -21,13 +21,13 @@ def test_signal_processing_logging():
         logger = get_logger("default")
         logger.setLevel("INFO")
         
-        print(" 創建信號處理器...")
+        print(" 建立信號處理器...")
         
         # 匯入信號處理器
         from tradingagents.graph.signal_processing import SignalProcessor
         
         processor = SignalProcessor()
-        print(" 信號處理器創建完成")
+        print(" 信號處理器建立完成")
         
         # 測試不同的股票代碼
         test_cases = [
@@ -40,7 +40,7 @@ def test_signal_processing_logging():
             print(f"\n 測試股票: {stock_symbol} ({company_name})")
             print("-" * 60)
             
-            # 創建模擬的交易信號
+            # 建立模擬的交易信號
             mock_signal = f"""
 # {company_name}({stock_symbol})投資分析報告
 
@@ -60,12 +60,12 @@ def test_signal_processing_logging():
 基於綜合分析，建議買入{company_name}({stock_symbol})。
 """
             
-            print(f" [測試] 調用信號處理器...")
+            print(f" [測試] 呼叫信號處理器...")
             print(f"   股票代碼: {stock_symbol}")
             print(f"   信號長度: {len(mock_signal)} 字符")
             
             try:
-                # 調用信號處理器（這裡應該會觸發日誌記錄）
+                # 呼叫信號處理器（這裡應該會觸發日誌記錄）
                 result = processor.process_signal(mock_signal, stock_symbol)
                 
                 print(f" 信號處理完成")
@@ -107,10 +107,10 @@ def test_logging_extraction():
     print("=" * 80)
     
     try:
-        # 模擬信號處理模組的調用
+        # 模擬信號處理模組的呼叫
         from tradingagents.utils.tool_logging import log_graph_module
         
-        # 創建一個測試函數來驗證日誌裝飾器
+        # 建立一個測試函數來驗證日誌裝飾器
         @log_graph_module("signal_processing")
         def mock_process_signal(self, full_signal: str, stock_symbol: str = None) -> dict:
             """模擬信號處理函數"""
@@ -123,17 +123,17 @@ def test_logging_extraction():
                 'processed': True
             }
         
-        # 創建模擬的self對象
+        # 建立模擬的self物件
         class MockProcessor:
             pass
         
         mock_self = MockProcessor()
         
-        # 測試不同的調用方式
+        # 測試不同的呼叫方式
         test_cases = [
-            ("MSFT", "位置參數調用"),
-            ("AAPL", "關鍵字參數調用"),
-            ("TSLA", "混合參數調用"),
+            ("MSFT", "位置參數呼叫"),
+            ("AAPL", "關鍵字參數呼叫"),
+            ("TSLA", "混合參數呼叫"),
         ]
         
         for stock_symbol, call_type in test_cases:
@@ -143,20 +143,20 @@ def test_logging_extraction():
             mock_signal = f"測試信號 for {stock_symbol}"
             
             try:
-                if call_type == "位置參數調用":
-                    # 位置參數調用：mock_process_signal(self, full_signal, stock_symbol)
+                if call_type == "位置參數呼叫":
+                    # 位置參數呼叫：mock_process_signal(self, full_signal, stock_symbol)
                     result = mock_process_signal(mock_self, mock_signal, stock_symbol)
-                elif call_type == "關鍵字參數調用":
-                    # 關鍵字參數調用
+                elif call_type == "關鍵字參數呼叫":
+                    # 關鍵字參數呼叫
                     result = mock_process_signal(mock_self, mock_signal, stock_symbol=stock_symbol)
                 else:
-                    # 混合調用
+                    # 混合呼叫
                     result = mock_process_signal(mock_self, full_signal=mock_signal, stock_symbol=stock_symbol)
                 
-                print(f" 調用成功: {result}")
+                print(f" 呼叫成功: {result}")
                 
             except Exception as e:
-                print(f" 調用失敗: {e}")
+                print(f" 呼叫失敗: {e}")
         
         return True
         
@@ -204,7 +204,7 @@ def main():
         print("1.  正確提取信號處理模組的股票代碼")
         print("2.  日誌顯示準確的股票資訊")
         print("3.  避免顯示 'unknown' 股票代碼")
-        print("4.  支持多種參數調用方式")
+        print("4.  支持多種參數呼叫方式")
         
         print("\n 解決的問題:")
         print("-  信號處理模組日誌顯示股票代碼為 'unknown'")

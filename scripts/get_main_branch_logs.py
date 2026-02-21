@@ -209,8 +209,8 @@ def check_log_configuration(container_name):
     print(f"\n 檢查日誌配置...")
     print("-" * 50)
     
-    # 檢查環境變量
-    print(" 日誌相關環境變量:")
+    # 檢查環境變數
+    print(" 日誌相關環境變數:")
     success, output, error = run_command([
         "docker", "exec", container_name, "sh", "-c", "env | grep -i log"
     ])
@@ -219,7 +219,7 @@ def check_log_configuration(container_name):
             if line.strip():
                 print(f"   {line}")
     else:
-        print("    未找到日誌相關環境變量")
+        print("    未找到日誌相關環境變數")
     
     # 檢查Python日誌配置
     print("\n 檢查Python日誌配置:")

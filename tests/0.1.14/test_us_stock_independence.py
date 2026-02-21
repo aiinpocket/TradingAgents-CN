@@ -28,7 +28,7 @@ def test_us_stock_data_independence():
     print("\n 場景1: OpenAI禁用 + 即時資料啟用")
     print("-" * 40)
     
-    # 設定環境變量
+    # 設定環境變數
     os.environ['OPENAI_ENABLED'] = 'false'
     os.environ['REALTIME_DATA_ENABLED'] = 'true'
     
@@ -50,7 +50,7 @@ def test_us_stock_data_independence():
             else:
                 print(f"    {tool_name} 不可用")
                 
-        # 測試實際調用
+        # 測試實際呼叫
         try:
             # 測試取得蘋果股票資料
             result = toolkit.get_us_stock_data_cached("AAPL", "1d", "1mo")
@@ -62,13 +62,13 @@ def test_us_stock_data_independence():
             print(f"    美股資料取得異常: {e}")
             
     except Exception as e:
-        print(f"    Toolkit創建失敗: {e}")
+        print(f"    Toolkit建立失敗: {e}")
     
     # 測試場景2: OpenAI啟用，即時資料禁用
     print("\n 場景2: OpenAI啟用 + 即時資料禁用")
     print("-" * 40)
     
-    # 設定環境變量
+    # 設定環境變數
     os.environ['OPENAI_ENABLED'] = 'true'
     os.environ['REALTIME_DATA_ENABLED'] = 'false'
     
@@ -85,7 +85,7 @@ def test_us_stock_data_independence():
                 print(f"    {tool_name} 不可用")
                 
     except Exception as e:
-        print(f"    Toolkit創建失敗: {e}")
+        print(f"    Toolkit建立失敗: {e}")
     
     print("\n 結論:")
     print("   美股資料取得現在基於 REALTIME_DATA_ENABLED 配置")

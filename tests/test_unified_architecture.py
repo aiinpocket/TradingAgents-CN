@@ -15,7 +15,7 @@ def test_unified_tools_availability():
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        # 創建工具包
+        # 建立工具包
         config = DEFAULT_CONFIG.copy()
         config["online_tools"] = True
         toolkit = Toolkit(config)
@@ -54,14 +54,14 @@ def test_market_analyst_unified():
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config["online_tools"] = True
         
-        # 創建工具包
+        # 建立工具包
         toolkit = Toolkit(config)
         
-        # 創建模擬LLM
+        # 建立模擬LLM
         class MockLLM:
             def bind_tools(self, tools):
                 print(f" [MockLLM] 市場分析師綁定工具: {[tool.name for tool in tools]}")
@@ -83,7 +83,7 @@ def test_market_analyst_unified():
         
         llm = MockLLM()
         
-        # 創建市場分析師
+        # 建立市場分析師
         analyst = create_market_analyst(llm, toolkit)
         
         # 模擬狀態
@@ -95,10 +95,10 @@ def test_market_analyst_unified():
         
         print(f"  測試美股市場分析: {state['company_of_interest']}")
         
-        # 調用分析師（這會觸發工具選擇邏輯）
+        # 呼叫分析師（這會觸發工具選擇邏輯）
         result = analyst(state)
         
-        print(f"   市場分析師調用完成")
+        print(f"   市場分析師呼叫完成")
         return True
         
     except Exception as e:
@@ -117,14 +117,14 @@ def test_fundamentals_analyst_unified():
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config["online_tools"] = True
         
-        # 創建工具包
+        # 建立工具包
         toolkit = Toolkit(config)
         
-        # 創建模擬LLM
+        # 建立模擬LLM
         class MockLLM:
             def bind_tools(self, tools):
                 print(f" [MockLLM] 基本面分析師綁定工具: {[tool.name for tool in tools]}")
@@ -146,7 +146,7 @@ def test_fundamentals_analyst_unified():
         
         llm = MockLLM()
         
-        # 創建基本面分析師
+        # 建立基本面分析師
         analyst = create_fundamentals_analyst(llm, toolkit)
         
         # 模擬狀態
@@ -158,10 +158,10 @@ def test_fundamentals_analyst_unified():
         
         print(f"  測試美股基本面分析: {state['company_of_interest']}")
         
-        # 調用分析師（這會觸發工具選擇邏輯）
+        # 呼叫分析師（這會觸發工具選擇邏輯）
         result = analyst(state)
         
-        print(f"   基本面分析師調用完成")
+        print(f"   基本面分析師呼叫完成")
         return True
         
     except Exception as e:
@@ -209,7 +209,7 @@ def test_stock_type_routing():
                     print(f"   基本面工具路由可能有問題")
                     
             except Exception as e:
-                print(f"   基本面工具調用失敗: {e}")
+                print(f"   基本面工具呼叫失敗: {e}")
                 return False
             
             # 測試市場資料工具
@@ -226,7 +226,7 @@ def test_stock_type_routing():
                     print(f"   市場資料工具路由可能有問題")
                     
             except Exception as e:
-                print(f"   市場資料工具調用失敗: {e}")
+                print(f"   市場資料工具呼叫失敗: {e}")
                 return False
         
         print(" 股票類型路由測試通過")
@@ -269,7 +269,7 @@ def main():
         print("\n 架構優勢:")
         print(" 所有分析師使用統一工具")
         print(" 工具內部自動識別股票類型")
-        print(" 避免了LLM工具調用混亂")
+        print(" 避免了LLM工具呼叫混亂")
         print(" 簡化了系統提示和處理流程")
         print(" 更容易維護和擴展")
         print(" 統一的錯誤處理和日誌記錄")

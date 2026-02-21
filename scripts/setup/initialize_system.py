@@ -22,19 +22,19 @@ def initialize_system():
     logger.info(f" TradingAgents 系統初始化")
     logger.info(f"=")
     
-    # 1. 創建配置目錄
-    logger.info(f"\n 創建配置目錄...")
+    # 1. 建立配置目錄
+    logger.info(f"\n 建立配置目錄...")
     config_dir = project_root / "config"
     config_dir.mkdir(exist_ok=True)
     logger.info(f" 配置目錄: {config_dir}")
     
-    # 2. 創建資料快取目錄
-    logger.info(f"\n 創建快取目錄...")
+    # 2. 建立資料快取目錄
+    logger.info(f"\n 建立快取目錄...")
     cache_dir = project_root / "data" / "cache"
     cache_dir.mkdir(parents=True, exist_ok=True)
     logger.info(f" 快取目錄: {cache_dir}")
     
-    # 3. 檢查並創建資料庫配置檔
+    # 3. 檢查並建立資料庫配置檔
     logger.info(f"\n 配置資料庫設定...")
     config_file = config_dir / "database_config.json"
     
@@ -99,7 +99,7 @@ def initialize_system():
         primary_backend = "file"
         logger.info(f" 選擇檔案作為主要快取後端")
     
-    # 創建配置
+    # 建立配置
     config = {
         "database": {
             "enabled": mongodb_available or redis_available,
@@ -218,7 +218,7 @@ def initialize_system():
 - 保證系統在任何環境下都能正常執行
 
 ### 性能優化
-- 智能快取策略，減少API調用
+- 智能快取策略，減少API呼叫
 - 支持多種資料類型的TTL管理
 - 自動清理過期快取
 
@@ -289,8 +289,8 @@ python scripts/validation/check_system_status.py
     logger.info(f"\n")
     logger.info(f" 系統初始化完成!")
     logger.info(f"\n 初始化結果:")
-    logger.info(f"  配置檔:  已創建")
-    logger.info(f"  快取目錄:  已創建")
+    logger.info(f"  配置檔:  已建立")
+    logger.info(f"  快取目錄:  已建立")
     logger.info(f"  資料庫檢測:  已完成")
     logger.info(f"  系統測試:  已通過")
     logger.info(f"  使用指南:  已生成")

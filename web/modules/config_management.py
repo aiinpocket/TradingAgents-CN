@@ -49,7 +49,7 @@ def render_model_config():
     st.markdown("**當前模型配置**")
     
     if models:
-        # 創建DataFrame顯示
+        # 建立DataFrame顯示
         model_data = []
         env_status = config_manager.get_env_config_status()
 
@@ -332,7 +332,7 @@ def render_usage_statistics():
             costs = [daily_stats[date]["cost"] for date in dates]
             requests = [daily_stats[date]["requests"] for date in dates]
             
-            # 創建雙軸圖表
+            # 建立雙軸圖表
             fig = go.Figure()
             
             fig.add_trace(go.Scatter(

@@ -166,11 +166,11 @@ class BranchManager:
                 logger.error(f" 合併失敗: {stderr}")
                 return False
         
-        # 創建標籤
-        logger.info(f" 創建版本標籤 {version}...")
+        # 建立標籤
+        logger.info(f" 建立版本標籤 {version}...")
         success, _, stderr = self.run_git_command(['tag', '-a', version, '-m', f'Release {version}'])
         if not success:
-            logger.error(f" 創建標籤失敗: {stderr}")
+            logger.error(f" 建立標籤失敗: {stderr}")
             return False
         
         # 推送到遠程
@@ -224,8 +224,8 @@ class BranchManager:
         logger.info(f" 成功刪除 {deleted_count} 個分支")
     
     def create_feature_branch(self, branch_name: str, base_branch: str = 'main'):
-        """創建功能分支"""
-        logger.info(f" 創建功能分支: {branch_name}")
+        """建立功能分支"""
+        logger.info(f" 建立功能分支: {branch_name}")
         logger.info(f"=")
         
         # 切換到基礎分支
@@ -242,14 +242,14 @@ class BranchManager:
             logger.error(f" 拉取失敗: {stderr}")
             return False
         
-        # 創建新分支
-        logger.info(f" 創建新分支: {branch_name}")
+        # 建立新分支
+        logger.info(f" 建立新分支: {branch_name}")
         success, _, stderr = self.run_git_command(['checkout', '-b', branch_name])
         if not success:
-            logger.error(f" 創建分支失敗: {stderr}")
+            logger.error(f" 建立分支失敗: {stderr}")
             return False
         
-        logger.info(f" 功能分支 {branch_name} 創建成功！")
+        logger.info(f" 功能分支 {branch_name} 建立成功！")
         return True
 
 def main():
@@ -267,8 +267,8 @@ def main():
     cleanup_parser = subparsers.add_parser('cleanup', help='清理已合併的分支')
     cleanup_parser.add_argument('--no-dry-run', action='store_true', help='執行實際刪除')
     
-    # 創建功能分支
-    create_parser = subparsers.add_parser('create', help='創建功能分支')
+    # 建立功能分支
+    create_parser = subparsers.add_parser('create', help='建立功能分支')
     create_parser.add_argument('name', help='分支名稱')
     create_parser.add_argument('--base', default='main', help='基礎分支 (預設: main)')
     

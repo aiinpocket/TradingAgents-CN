@@ -17,11 +17,11 @@ def test_us_stock_market_analysis():
         from tradingagents.default_config import DEFAULT_CONFIG
         from langchain_openai import ChatOpenAI
 
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config['online_tools'] = True
 
-        # 創建工具包
+        # 建立工具包
         toolkit = Toolkit()
         toolkit.update_config(config)
 
@@ -29,11 +29,11 @@ def test_us_stock_market_analysis():
         print(f" 工具包方法檢查:")
         print(f"  - get_YFin_data_online: {hasattr(toolkit, 'get_YFin_data_online')}")
         
-        # 創建 OpenAI LLM
+        # 建立 OpenAI LLM
         llm = ChatOpenAI(model="gpt-4o-mini")
         # 使用 OpenAI GPT-4o-mini 模型
 
-        # 創建ReAct市場分析師
+        # 建立ReAct市場分析師
         analyst = create_market_analyst_react(llm, toolkit)
 
         # 測試美股
@@ -77,11 +77,11 @@ def test_us_stock_fundamentals_analysis():
         from tradingagents.default_config import DEFAULT_CONFIG
         from langchain_openai import ChatOpenAI
 
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config['online_tools'] = True
 
-        # 創建工具包
+        # 建立工具包
         toolkit = Toolkit()
         toolkit.update_config(config)
 
@@ -90,11 +90,11 @@ def test_us_stock_fundamentals_analysis():
         print(f"  - get_YFin_data_online: {hasattr(toolkit, 'get_YFin_data_online')}")
         print(f"  - get_fundamentals_openai: {hasattr(toolkit, 'get_fundamentals_openai')}")
         
-        # 創建 OpenAI LLM
+        # 建立 OpenAI LLM
         llm = ChatOpenAI(model="gpt-4o-mini")
         # 使用 OpenAI GPT-4o-mini 模型
 
-        # 創建ReAct基本面分析師
+        # 建立ReAct基本面分析師
         analyst = create_fundamentals_analyst_react(llm, toolkit)
 
         # 測試美股

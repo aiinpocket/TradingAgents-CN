@@ -71,15 +71,15 @@ class VersionManager:
         return new_version
     
     def create_git_tag(self, version, message=None):
-        """創建Git標籤"""
+        """建立Git標籤"""
         if message is None:
             message = f"Release version {version}"
         
         try:
-            # 創建標籤
+            # 建立標籤
             subprocess.run(['git', 'tag', '-a', f'v{version}', '-m', message], 
                          check=True, cwd=self.project_root)
-            logger.info(f" Git標籤 v{version} 已創建")
+            logger.info(f" Git標籤 v{version} 已建立")
             
             # 推送標籤
             subprocess.run(['git', 'push', 'origin', f'v{version}'], 
@@ -87,7 +87,7 @@ class VersionManager:
             logger.info(f" Git標籤 v{version} 已推送到遠程倉庫")
             
         except subprocess.CalledProcessError as e:
-            logger.error(f" 創建Git標籤失敗: {e}")
+            logger.error(f" 建立Git標籤失敗: {e}")
     
     def update_changelog(self, version, changes=None):
         """更新CHANGELOG檔案"""
@@ -159,7 +159,7 @@ class VersionManager:
             logger.error(f" 提交失敗: {e}")
             return False
         
-        # 創建Git標籤
+        # 建立Git標籤
         self.create_git_tag(new_version, message)
         
         logger.info(f" 版本 {new_version} 發布完成！")
@@ -205,8 +205,8 @@ def main():
     release_parser.add_argument('-m', '--message', help='發布訊息')
     release_parser.add_argument('-c', '--changes', help='更改說明')
     
-    # 創建標籤命令
-    tag_parser = subparsers.add_parser('tag', help='為當前版本創建Git標籤')
+    # 建立標籤命令
+    tag_parser = subparsers.add_parser('tag', help='為當前版本建立Git標籤')
     tag_parser.add_argument('-m', '--message', help='標籤訊息')
     
     args = parser.parse_args()

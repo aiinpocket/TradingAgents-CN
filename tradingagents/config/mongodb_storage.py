@@ -30,12 +30,12 @@ class MongoDBStorage:
         if not MONGODB_AVAILABLE:
             raise ImportError("pymongo is not installed. Please install it with: pip install pymongo")
         
-        # 修複硬編碼問題 - 如果沒有提供連接字串且環境變量也未設定，則拋出錯誤
+        # 修複硬編碼問題 - 如果沒有提供連接字串且環境變數也未設定，則拋出錯誤
         self.connection_string = connection_string or os.getenv("MONGODB_CONNECTION_STRING")
         if not self.connection_string:
             raise ValueError(
                 "MongoDB連接字串未配置。請通過以下方式之一進行配置：\n"
-                "1. 設定環境變量 MONGODB_CONNECTION_STRING\n"
+                "1. 設定環境變數 MONGODB_CONNECTION_STRING\n"
                 "2. 在初始化時傳入 connection_string 參數\n"
                 "例如: MONGODB_CONNECTION_STRING=mongodb://localhost:27017/"
             )
@@ -64,7 +64,7 @@ class MongoDBStorage:
             self.db = self.client[self.database_name]
             self.collection = self.db[self.collection_name]
             
-            # 創建索引以提高查詢性能
+            # 建立索引以提高查詢性能
             self._create_indexes()
             
             self._connected = True
@@ -79,23 +79,23 @@ class MongoDBStorage:
             self._connected = False
     
     def _create_indexes(self):
-        """創建資料庫索引"""
+        """建立資料庫索引"""
         try:
-            # 創建複合索引
+            # 建立複合索引
             self.collection.create_index([
                 ("timestamp", -1),  # 按時間倒序
                 ("provider", 1),
                 ("model_name", 1)
             ])
             
-            # 創建會話ID索引
+            # 建立會話ID索引
             self.collection.create_index("session_id")
             
-            # 創建分析類型索引
+            # 建立分析類型索引
             self.collection.create_index("analysis_type")
             
         except Exception as e:
-            logger.error(f"創建MongoDB索引失敗: {e}")
+            logger.error(f"建立MongoDB索引失敗: {e}")
     
     def is_connected(self) -> bool:
         """檢查是否連接到MongoDB"""
@@ -148,7 +148,7 @@ class MongoDBStorage:
                 doc.pop('_id', None)
                 doc.pop('_created_at', None)
                 
-                # 轉換為UsageRecord對象
+                # 轉換為UsageRecord物件
                 try:
                     record = UsageRecord(**doc)
                     records.append(record)

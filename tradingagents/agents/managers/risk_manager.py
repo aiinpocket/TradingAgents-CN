@@ -55,30 +55,30 @@ def create_risk_manager(llm, memory):
 
 專注於可操作的見解和持續改進。建立在過去經驗教訓的基礎上，批判性地評估所有觀點，確保每個決策都能帶來更好的結果。請用中文撰寫所有分析內容和建議。"""
 
-        # 增強的LLM調用，包含錯誤處理和重試機制
+        # 增強的LLM呼叫，包含錯誤處理和重試機制
         max_retries = 3
         retry_count = 0
         response_content = ""
         
         while retry_count < max_retries:
             try:
-                logger.info(f"[Risk Manager] 調用LLM生成交易決策 (嘗試 {retry_count + 1}/{max_retries})")
+                logger.info(f"[Risk Manager] 呼叫LLM生成交易決策 (嘗試 {retry_count + 1}/{max_retries})")
                 response = llm.invoke(prompt)
                 
                 if response and hasattr(response, 'content') and response.content:
                     response_content = response.content.strip()
-                    if len(response_content) > 10:  # 確保響應有實質內容
-                        logger.info(f"[Risk Manager] LLM調用成功，生成決策長度: {len(response_content)} 字符")
+                    if len(response_content) > 10:  # 確保回應有實質內容
+                        logger.info(f"[Risk Manager] LLM呼叫成功，生成決策長度: {len(response_content)} 字符")
                         break
                     else:
-                        logger.warning(f"[Risk Manager] LLM響應內容過短: {len(response_content)} 字符")
+                        logger.warning(f"[Risk Manager] LLM回應內容過短: {len(response_content)} 字符")
                         response_content = ""
                 else:
-                    logger.warning("[Risk Manager] LLM響應為空或無效")
+                    logger.warning("[Risk Manager] LLM回應為空或無效")
                     response_content = ""
                     
             except Exception as e:
-                logger.error(f"[Risk Manager] LLM調用失敗 (嘗試 {retry_count + 1}): {str(e)}")
+                logger.error(f"[Risk Manager] LLM呼叫失敗 (嘗試 {retry_count + 1}): {str(e)}")
                 response_content = ""
             
             retry_count += 1
@@ -88,7 +88,7 @@ def create_risk_manager(llm, memory):
         
         # 如果所有重試都失敗，生成預設決策
         if not response_content:
-            logger.error("[Risk Manager] 所有LLM調用嘗試失敗，使用預設決策")
+            logger.error("[Risk Manager] 所有LLM呼叫嘗試失敗，使用預設決策")
             response_content = f"""**預設建議：持有**
 
 由於技術原因無法生成詳細分析，基於當前市場狀況和風險控制原則，建議對{company_name}採取持有策略。

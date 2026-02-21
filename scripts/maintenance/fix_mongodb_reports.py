@@ -40,7 +40,7 @@ def main():
         # 匯入MongoDB管理器
         from web.utils.mongodb_report_manager import MongoDBReportManager
         
-        # 創建MongoDB管理器實例
+        # 建立MongoDB管理器實例
         mongodb_manager = MongoDBReportManager()
         
         if not mongodb_manager.connected:
@@ -122,7 +122,7 @@ def main():
         return False
 
 def show_report_details():
-    """顯示報告詳細資訊（調試用）"""
+    """顯示報告詳細資訊（除錯用）"""
     try:
         from web.utils.mongodb_report_manager import MongoDBReportManager
         

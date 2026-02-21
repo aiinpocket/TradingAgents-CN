@@ -2,7 +2,7 @@
 """
 集成快取管理器
 結合原有快取系統和新的自適應資料庫支持
-提供向後兼容的介面
+提供向後相容的介面
 """
 
 from typing import Any, Dict, Optional
@@ -275,11 +275,11 @@ def get_cache() -> IntegratedCacheManager:
         _integrated_cache = IntegratedCacheManager()
     return _integrated_cache
 
-# 向後兼容的函數
+# 向後相容的函數
 def get_stock_cache():
-    """向後兼容：取得股票快取"""
+    """向後相容：取得股票快取"""
     return get_cache()
 
 def create_cache_manager(cache_dir: str = None):
-    """向後兼容：創建快取管理器"""
+    """向後相容：建立快取管理器"""
     return IntegratedCacheManager(cache_dir)

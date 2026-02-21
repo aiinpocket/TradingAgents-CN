@@ -22,10 +22,10 @@ def test_news_analyst_integration():
         from tradingagents.tools.unified_news_tool import create_unified_news_tool
         print(" 成功匯入必要模組")
         
-        # 創建模擬工具包
+        # 建立模擬工具包
         class MockToolkit:
             def __init__(self):
-                # 創建統一新聞工具
+                # 建立統一新聞工具
                 self.unified_news_tool = create_unified_news_tool(self)
                 
             def get_realtime_stock_news(self, params):
@@ -56,9 +56,9 @@ def test_news_analyst_integration():
                 return f"OpenAI全球新聞 - {query}: 國際財經新聞內容"
         
         toolkit = MockToolkit()
-        print(" 創建模擬工具包成功")
+        print(" 建立模擬工具包成功")
         
-        # 創建模擬LLM
+        # 建立模擬LLM
         class MockLLM:
             def __init__(self):
                 self.__class__.__name__ = "MockLLM"
@@ -67,7 +67,7 @@ def test_news_analyst_integration():
                 return self
             
             def invoke(self, messages):
-                # 模擬LLM響應，包含工具調用
+                # 模擬LLM回應，包含工具呼叫
                 class MockResult:
                     def __init__(self):
                         self.content = """
@@ -97,7 +97,7 @@ def test_news_analyst_integration():
 
 基於真實新聞資料的專業分析報告。
 """
-                        # 模擬工具調用
+                        # 模擬工具呼叫
                         self.tool_calls = [{
                             "name": "get_stock_news_unified",
                             "args": {"stock_code": "AAPL", "max_news": 10}
@@ -106,11 +106,11 @@ def test_news_analyst_integration():
                 return MockResult()
         
         llm = MockLLM()
-        print(" 創建模擬LLM成功")
+        print(" 建立模擬LLM成功")
         
-        # 創建新聞分析師
+        # 建立新聞分析師
         news_analyst = create_news_analyst(llm, toolkit)
-        print(" 創建新聞分析師成功")
+        print(" 建立新聞分析師成功")
         
         # 測試不同股票
         test_stocks = [
@@ -125,7 +125,7 @@ def test_news_analyst_integration():
             print(f"{'='*60}")
             
             try:
-                # 調用新聞分析師
+                # 呼叫新聞分析師
                 start_time = datetime.now()
                 result = news_analyst({
                     "messages": [],

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 最終統一工具架構測試
-驗證所有修複是否完成，LLM只能調用統一工具
+驗證所有修複是否完成，LLM只能呼叫統一工具
 """
 
 import os
@@ -20,14 +20,14 @@ def test_complete_unified_architecture():
         from tradingagents.default_config import DEFAULT_CONFIG
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config["online_tools"] = True
         
-        # 創建工具包
+        # 建立工具包
         toolkit = Toolkit(config)
         
-        # 創建交易圖
+        # 建立交易圖
         graph = TradingAgentsGraph(config, toolkit)
         
         # 檢查ToolNode中註冊的工具
@@ -78,19 +78,19 @@ def test_complete_unified_architecture():
         return False
 
 def test_llm_tool_calling_simulation():
-    """模擬LLM工具調用測試"""
-    print("\n 模擬LLM工具調用測試...")
+    """模擬LLM工具呼叫測試"""
+    print("\n 模擬LLM工具呼叫測試...")
     
     try:
         from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config["online_tools"] = True
         
-        # 創建工具包
+        # 建立工具包
         toolkit = Toolkit(config)
         
         # 模擬LLM
@@ -112,7 +112,7 @@ def test_llm_tool_calling_simulation():
                     raise ValueError("綁定了錯誤的工具")
             
             def invoke(self, messages):
-                # 模擬正確的工具調用
+                # 模擬正確的工具呼叫
                 class MockResult:
                     def __init__(self):
                         self.tool_calls = [{
@@ -129,10 +129,10 @@ def test_llm_tool_calling_simulation():
                         self.content = ""
                 return MockResult()
         
-        # 創建模擬LLM
+        # 建立模擬LLM
         llm = MockLLM()
         
-        # 創建基本面分析師
+        # 建立基本面分析師
         analyst = create_fundamentals_analyst(llm, toolkit)
         
         # 模擬狀態
@@ -144,10 +144,10 @@ def test_llm_tool_calling_simulation():
         
         print(f"  測試美股基本面分析: {state['company_of_interest']}")
         
-        # 調用分析師
+        # 呼叫分析師
         result = analyst(state)
         
-        print(f"   基本面分析師調用完成")
+        print(f"   基本面分析師呼叫完成")
         print(f"  返回結果類型: {type(result)}")
         
         # 驗證結果
@@ -159,7 +159,7 @@ def test_llm_tool_calling_simulation():
             return False
         
     except Exception as e:
-        print(f" LLM工具調用模擬測試失敗: {e}")
+        print(f" LLM工具呼叫模擬測試失敗: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -201,7 +201,7 @@ def test_unified_tools_functionality():
                     print(f"    結果前200字符: {result[:200]}...")
                     
             except Exception as e:
-                print(f"     統一基本面工具調用失敗: {e}")
+                print(f"     統一基本面工具呼叫失敗: {e}")
                 return False
         
         print(" 統一工具功能測試通過")
@@ -241,10 +241,10 @@ def main():
         print("   統一工具架構完全成功！  ")
         print("\n 架構成就:")
         print(" 完全移除了舊工具註冊")
-        print(" LLM只能調用統一工具")
+        print(" LLM只能呼叫統一工具")
         print(" 工具內部自動識別股票類型")
         print(" 自動路由到正確資料來源")
-        print(" 避免了工具調用混亂")
+        print(" 避免了工具呼叫混亂")
         print(" 簡化了系統架構")
         print(" 提高了可維護性")
         print(" 統一了用戶體驗")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 資料庫初始化腳本
-創建MongoDB集合和索引，初始化Redis快取結構
+建立MongoDB集合和索引，初始化Redis快取結構
 """
 
 import os
@@ -32,48 +32,48 @@ def init_mongodb():
         mongodb_client = db_manager.get_mongodb_client()
         db = mongodb_client[db_manager.mongodb_config["database"]]
         
-        # 創建股票資料集合和索引
-        logger.info(f" 創建股票資料集合...")
+        # 建立股票資料集合和索引
+        logger.info(f" 建立股票資料集合...")
         stock_data_collection = db.stock_data
         
-        # 創建索引
+        # 建立索引
         stock_data_collection.create_index([("symbol", 1), ("market_type", 1)], unique=True)
         stock_data_collection.create_index([("created_at", -1)])
         stock_data_collection.create_index([("updated_at", -1)])
         
-        logger.info(f" 股票資料集合創建完成")
+        logger.info(f" 股票資料集合建立完成")
         
-        # 創建分析結果集合和索引
-        logger.info(f" 創建分析結果集合...")
+        # 建立分析結果集合和索引
+        logger.info(f" 建立分析結果集合...")
         analysis_collection = db.analysis_results
         
-        # 創建索引
+        # 建立索引
         analysis_collection.create_index([("symbol", 1), ("analysis_type", 1)])
         analysis_collection.create_index([("created_at", -1)])
         analysis_collection.create_index([("symbol", 1), ("created_at", -1)])
         
-        logger.info(f" 分析結果集合創建完成")
+        logger.info(f" 分析結果集合建立完成")
         
-        # 創建用戶會話集合和索引
-        logger.info(f" 創建用戶會話集合...")
+        # 建立用戶會話集合和索引
+        logger.info(f" 建立用戶會話集合...")
         sessions_collection = db.user_sessions
         
-        # 創建索引
+        # 建立索引
         sessions_collection.create_index([("session_id", 1)], unique=True)
         sessions_collection.create_index([("created_at", -1)])
         sessions_collection.create_index([("last_activity", -1)])
         
-        logger.info(f" 用戶會話集合創建完成")
+        logger.info(f" 用戶會話集合建立完成")
         
-        # 創建配置集合
-        logger.info(f" 創建配置集合...")
+        # 建立配置集合
+        logger.info(f" 建立配置集合...")
         config_collection = db.configurations
         
-        # 創建索引
+        # 建立索引
         config_collection.create_index([("config_type", 1), ("config_name", 1)], unique=True)
         config_collection.create_index([("updated_at", -1)])
         
-        logger.info(f" 配置集合創建完成")
+        logger.info(f" 配置集合建立完成")
         
         # 插入初始配置資料
         logger.info(f" 插入初始配置資料...")
@@ -255,7 +255,7 @@ def main():
         logger.error(f"\n 資料庫連接失敗，請檢查:")
         logger.info(f"1. Docker服務是否啟動: docker ps")
         logger.info(f"2. 執行啟動腳本: scripts/start_docker_services.bat")
-        logger.info(f"3. 檢查環境變量配置: .env 檔案")
+        logger.info(f"3. 檢查環境變數配置: .env 檔案")
         return False
     
     # 初始化MongoDB

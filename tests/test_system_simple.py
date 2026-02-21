@@ -115,7 +115,7 @@ def test_basic_system():
         from tradingagents.config.database_manager import get_database_manager
         
         db_manager = get_database_manager()
-        print(" 資料庫管理器創建成功")
+        print(" 資料庫管理器建立成功")
         
         # 取得狀態報告
         status = db_manager.get_status_report()

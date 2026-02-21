@@ -91,14 +91,14 @@ class TradingAgentsGraph:
         # Initialize memories (如果啟用)
         memory_enabled = self.config.get("memory_enabled", True)
         if memory_enabled:
-            # 使用單例ChromaDB管理器，避免並發創建衝突
+            # 使用單例ChromaDB管理器，避免並發建立衝突
             self.bull_memory = FinancialSituationMemory("bull_memory", self.config)
             self.bear_memory = FinancialSituationMemory("bear_memory", self.config)
             self.trader_memory = FinancialSituationMemory("trader_memory", self.config)
             self.invest_judge_memory = FinancialSituationMemory("invest_judge_memory", self.config)
             self.risk_manager_memory = FinancialSituationMemory("risk_manager_memory", self.config)
         else:
-            # 創建空的內存對象
+            # 建立空的內存物件
             self.bull_memory = None
             self.bear_memory = None
             self.trader_memory = None
@@ -196,7 +196,7 @@ class TradingAgentsGraph:
         logger.debug(f"設定self.ticker: '{self.ticker}'")
 
         # Initialize state
-        logger.debug(f"創建初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")
+        logger.debug(f"建立初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")
         init_agent_state = self.propagator.create_initial_state(
             company_name, trade_date
         )

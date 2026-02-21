@@ -110,10 +110,10 @@ def docker_install():
     
     # 檢查.env 檔案
     if not Path('.env').exists():
-        print_colored(" 創建環境配置檔...", Colors.BLUE)
+        print_colored(" 建立環境配置檔...", Colors.BLUE)
         if Path('.env.example').exists():
             shutil.copy('.env.example', '.env')
-            print_colored(" 已創建.env 檔案", Colors.GREEN)
+            print_colored(" 已建立.env 檔案", Colors.GREEN)
         else:
             print_colored(" 未找到.env.example檔案", Colors.RED)
             return False
@@ -150,12 +150,12 @@ def local_install():
     # 檢查虛擬環境
     venv_path = Path('env')
     if not venv_path.exists():
-        print_colored(" 創建虛擬環境...", Colors.BLUE)
+        print_colored(" 建立虛擬環境...", Colors.BLUE)
         try:
             subprocess.run([sys.executable, '-m', 'venv', 'env'], check=True)
-            print_colored(" 虛擬環境創建成功", Colors.GREEN)
+            print_colored(" 虛擬環境建立成功", Colors.GREEN)
         except subprocess.CalledProcessError as e:
-            print_colored(f" 虛擬環境創建失敗: {e}", Colors.RED)
+            print_colored(f" 虛擬環境建立失敗: {e}", Colors.RED)
             return False
     
     # 激活虛擬環境的Python路徑
@@ -189,12 +189,12 @@ def local_install():
         print_colored(f" 依賴安裝異常: {e}", Colors.RED)
         return False
     
-    # 創建.env 檔案
+    # 建立.env 檔案
     if not Path('.env').exists():
-        print_colored(" 創建環境配置檔...", Colors.BLUE)
+        print_colored(" 建立環境配置檔...", Colors.BLUE)
         if Path('.env.example').exists():
             shutil.copy('.env.example', '.env')
-            print_colored(" 已創建.env 檔案", Colors.GREEN)
+            print_colored(" 已建立.env 檔案", Colors.GREEN)
         else:
             print_colored(" 未找到.env.example檔案", Colors.RED)
             return False

@@ -21,20 +21,20 @@ class RedisSessionManager:
     def _init_redis(self) -> bool:
         """初始化Redis連接"""
         try:
-            # 首先檢查REDIS_ENABLED環境變量
+            # 首先檢查REDIS_ENABLED環境變數
             redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower()
             if redis_enabled != 'true':
                 return False
 
             import redis
 
-            # 從環境變量取得Redis配置
+            # 從環境變數取得Redis配置
             redis_host = os.getenv('REDIS_HOST', 'localhost')
             redis_port = int(os.getenv('REDIS_PORT', 6379))
             redis_password = os.getenv('REDIS_PASSWORD', None)
             redis_db = int(os.getenv('REDIS_DB', 0))
             
-            # 創建Redis連接
+            # 建立Redis連接
             self.redis_client = redis.Redis(
                 host=redis_host,
                 port=redis_port,

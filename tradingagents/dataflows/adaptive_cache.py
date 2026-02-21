@@ -106,7 +106,7 @@ class AdaptiveCacheSystem:
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
-        """從檔案快取載入（支援 JSON 格式，兼容舊 .pkl 檔案）"""
+        """從檔案快取載入（支援 JSON 格式，相容舊 .pkl 檔案）"""
         try:
             # 優先使用 JSON 格式
             json_file = self.cache_dir / f"{cache_key}.json"
@@ -242,7 +242,7 @@ class AdaptiveCacheSystem:
                 serialized = json.loads(doc['data'])
                 data = self._deserialize_data(serialized)
             elif doc['data_type'] == 'dataframe':
-                # 兼容舊格式
+                # 相容舊格式
                 data = pd.read_json(doc['data'])
             else:
                 # 舊 pickle 格式不再支援（安全考量）
@@ -416,7 +416,7 @@ class AdaptiveCacheSystem:
 
         self.logger.info(f"檔案快取清理完成，刪除 {cleared_files} 個過期/不安全檔案")
 
-        # MongoDB 會自動清理過期文檔（透過 expires_at 字段）
+        # MongoDB 會自動清理過期文件（透過 expires_at 字段）
         # Redis 會自動清理過期鍵
 
 

@@ -22,7 +22,7 @@ def test_final_integration():
         print(" 第一步：測試統一新聞工具...")
         from tradingagents.tools.unified_news_tool import create_unified_news_tool
         
-        # 創建模擬工具包
+        # 建立模擬工具包
         class MockToolkit:
             def get_realtime_stock_news(self, params):
                 stock_code = params.get("stock_code", "unknown")
@@ -91,7 +91,7 @@ def test_final_integration():
             
         checks = [
             ("統一新聞工具匯入", "from tradingagents.tools.unified_news_tool import create_unified_news_tool"),
-            ("統一工具創建", "unified_news_tool = create_unified_news_tool(toolkit)"),
+            ("統一工具建立", "unified_news_tool = create_unified_news_tool(toolkit)"),
             ("工具名稱設定", "unified_news_tool.name = \"get_stock_news_unified\""),
             ("系統提示詞更新", "get_stock_news_unified"),
             ("補救機制更新", "unified_news_tool")
@@ -106,16 +106,16 @@ def test_final_integration():
         # 4. 總結
         print(f"\n 集成驗證總結")
         print("=" * 60)
-        print(" 統一新聞工具創建成功")
+        print(" 統一新聞工具建立成功")
         print(" 支持美股自動識別")
         print(" 新聞分析師已集成統一工具")
         print(" 系統提示詞已更新")
         print(" 補救機制已優化")
         
         print(f"\n 主要改進效果：")
-        print("1. 大模型只需調用一個工具 get_stock_news_unified")
+        print("1. 大模型只需呼叫一個工具 get_stock_news_unified")
         print("2. 自動識別股票類型並選擇最佳新聞源")
-        print("3. 簡化了工具調用邏輯，提高成功率")
+        print("3. 簡化了工具呼叫邏輯，提高成功率")
         print("4. 統一了新聞格式，便於分析")
         print("5. 減少了補救機制的複雜度")
         

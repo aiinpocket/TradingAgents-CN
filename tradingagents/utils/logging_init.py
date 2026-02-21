@@ -41,7 +41,7 @@ def init_logging(config_override: Optional[dict] = None) -> None:
     # 記錄環境資訊
     logger.debug(f"Python版本: {sys.version}")
     logger.debug(f"工作目錄: {os.getcwd()}")
-    logger.debug(f"環境變量: DOCKER_CONTAINER={os.getenv('DOCKER_CONTAINER', 'false')}")
+    logger.debug(f"環境變數: DOCKER_CONTAINER={os.getenv('DOCKER_CONTAINER', 'false')}")
 
 
 def get_session_logger(session_id: str, module_name: str = 'session') -> 'logging.Logger':

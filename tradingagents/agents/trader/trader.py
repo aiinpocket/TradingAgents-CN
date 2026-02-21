@@ -92,12 +92,12 @@ def create_trader(llm, memory):
             context,
         ]
 
-        logger.debug(f"準備調用LLM，系統提示包含貨幣: {currency}")
+        logger.debug(f"準備呼叫LLM，系統提示包含貨幣: {currency}")
         logger.debug(f"系統提示中的關鍵部分: 目標價格({currency})")
 
         result = llm.invoke(messages)
 
-        logger.debug("LLM調用完成")
+        logger.debug("LLM呼叫完成")
         logger.debug(f"交易員回覆長度: {len(result.content)}")
         logger.debug(f"交易員回覆前500字符: {result.content[:500]}...")
         logger.debug("===== 交易員節點結束 =====")

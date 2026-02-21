@@ -79,14 +79,14 @@ def check_env_file():
     
     if not env_file.exists():
         if env_example.exists():
-            print(" .env 檔案不存在，正在從.env_example創建...")
+            print(" .env 檔案不存在，正在從.env_example建立...")
             try:
                 import shutil
                 shutil.copy(env_example, env_file)
-                print(" .env 檔案已創建")
+                print(" .env 檔案已建立")
                 print(" 請編輯.env 檔案，配置您的API密鑰")
             except Exception as e:
-                print(f" 創建.env 檔案失敗: {e}")
+                print(f" 建立.env 檔案失敗: {e}")
                 return False
         else:
             print(" 找不到.env_example檔案")

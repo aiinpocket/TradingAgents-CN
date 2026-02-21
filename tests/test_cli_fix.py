@@ -51,7 +51,7 @@ def test_selections_dictionary_keys():
             mock_shallow.return_value = 'gpt-4o-mini'
             mock_deep.return_value = 'gpt-4o'
             
-            # 調用函數
+            # 呼叫函數
             selections = get_user_selections()
             
             # 驗證必要的鍵存在
@@ -84,10 +84,10 @@ def test_selections_dictionary_keys():
 
 def test_process_signal_call():
     """
-    測試process_signal調用是否使用正確的鍵名
+    測試process_signal呼叫是否使用正確的鍵名
     Test if process_signal call uses correct key name
     """
-    print("\n 測試process_signal調用...")
+    print("\n 測試process_signal呼叫...")
     
     try:
         # 讀取main.py檔案內容
@@ -109,7 +109,7 @@ def test_process_signal_call():
         else:
             print(" 確認不存在錯誤的鍵名 selections['stock_symbol']")
         
-        print(" process_signal調用測試通過")
+        print(" process_signal呼叫測試通過")
         return True
         
     except Exception as e:

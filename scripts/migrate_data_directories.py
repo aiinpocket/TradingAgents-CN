@@ -70,9 +70,9 @@ class DataDirectoryMigrator:
         ]
     
     def create_backup(self) -> bool:
-        """創建資料備份"""
+        """建立資料備份"""
         try:
-            logger.info(f" 開始創建資料備份到: {self.backup_dir}")
+            logger.info(f" 開始建立資料備份到: {self.backup_dir}")
             self.backup_dir.mkdir(exist_ok=True)
             
             # 備份現有資料目錄
@@ -99,9 +99,9 @@ class DataDirectoryMigrator:
             return False
     
     def create_new_structure(self) -> bool:
-        """創建新的目錄結構"""
+        """建立新的目錄結構"""
         try:
-            logger.info(" 創建新的目錄結構...")
+            logger.info(" 建立新的目錄結構...")
             
             for root_dir, subdirs in self.new_structure.items():
                 root_path = self.project_root / root_dir
@@ -115,18 +115,18 @@ class DataDirectoryMigrator:
                         for sub_subdir in sub_subdirs:
                             (subdir_path / sub_subdir).mkdir(exist_ok=True)
                             
-                        logger.info(f"   創建目錄: {subdir_path.relative_to(self.project_root)}")
+                        logger.info(f"   建立目錄: {subdir_path.relative_to(self.project_root)}")
                 elif isinstance(subdirs, list):
                     for subdir in subdirs:
                         subdir_path = root_path / subdir
                         subdir_path.mkdir(exist_ok=True)
-                        logger.info(f"   創建目錄: {subdir_path.relative_to(self.project_root)}")
+                        logger.info(f"   建立目錄: {subdir_path.relative_to(self.project_root)}")
             
-            logger.info(" 新目錄結構創建完成")
+            logger.info(" 新目錄結構建立完成")
             return True
             
         except Exception as e:
-            logger.error(f" 創建目錄結構失敗: {e}")
+            logger.error(f" 建立目錄結構失敗: {e}")
             return False
     
     def migrate_data(self) -> bool:
@@ -196,7 +196,7 @@ class DataDirectoryMigrator:
             with open(env_file, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # 添加新的環境變量配置
+            # 添加新的環境變數配置
             new_config = """
 # ===== 資料目錄配置 (重新組織後) =====
 # 統一資料根目錄
@@ -231,7 +231,7 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
             return False
     
     def create_migration_report(self) -> bool:
-        """創建遷移報告"""
+        """建立遷移報告"""
         try:
             report = {
                 'migration_date': datetime.now().isoformat(),
@@ -250,7 +250,7 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
             return True
             
         except Exception as e:
-            logger.error(f" 創建遷移報告失敗: {e}")
+            logger.error(f" 建立遷移報告失敗: {e}")
             return False
     
     def cleanup_old_directories(self, confirm: bool = False) -> bool:
@@ -286,11 +286,11 @@ TRADINGAGENTS_RESULTS_DIR=${TRADINGAGENTS_DATA_DIR}/analysis_results
         logger.info(" 開始資料目錄重新組織遷移...")
         
         steps = [
-            ("創建備份", self.create_backup),
-            ("創建新目錄結構", self.create_new_structure),
+            ("建立備份", self.create_backup),
+            ("建立新目錄結構", self.create_new_structure),
             ("遷移資料", self.migrate_data),
-            ("更新環境變量", self.update_env_file),
-            ("創建遷移報告", self.create_migration_report),
+            ("更新環境變數", self.update_env_file),
+            ("建立遷移報告", self.create_migration_report),
         ]
         
         if cleanup_old:

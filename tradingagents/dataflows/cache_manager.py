@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 股票資料快取管理器
-支持本地快取股票資料，減少API調用，提高響應速度
+支持本地快取股票資料，減少API呼叫，提高回應速度
 """
 
 import os
@@ -35,13 +35,13 @@ class StockDataCache:
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(exist_ok=True)
 
-        # 創建子目錄 - 美股市場分類
+        # 建立子目錄 - 美股市場分類
         self.us_stock_dir = self.cache_dir / "us_stocks"
         self.us_news_dir = self.cache_dir / "us_news"
         self.us_fundamentals_dir = self.cache_dir / "us_fundamentals"
         self.metadata_dir = self.cache_dir / "metadata"
 
-        # 創建所有目錄
+        # 建立所有目錄
         for dir_path in [self.us_stock_dir, self.us_news_dir,
                         self.us_fundamentals_dir, self.metadata_dir]:
             dir_path.mkdir(exist_ok=True)
@@ -138,7 +138,7 @@ class StockDataCache:
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
         """生成快取鍵"""
-        # 創建一個包含所有參數的字串
+        # 建立一個包含所有參數的字串
         params_str = f"{data_type}_{symbol}"
         for key, value in sorted(kwargs.items()):
             params_str += f"_{key}_{value}"

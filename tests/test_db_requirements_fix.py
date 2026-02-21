@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-測試資料庫依賴包兼容性修複
-驗證requirements_db.txt的兼容性改進
+測試資料庫依賴包相容性修複
+驗證requirements_db.txt的相容性改進
 """
 
 import os
@@ -29,8 +29,8 @@ def test_python_version_check():
 
 
 def test_pickle_compatibility():
-    """測試pickle兼容性"""
-    print(" 測試pickle兼容性...")
+    """測試pickle相容性"""
+    print(" 測試pickle相容性...")
     
     try:
         import pickle
@@ -139,8 +139,8 @@ def test_package_installation_simulation():
 
 
 def test_compatibility_checker_tool():
-    """測試兼容性檢查工具"""
-    print(" 測試兼容性檢查工具...")
+    """測試相容性檢查工具"""
+    print(" 測試相容性檢查工具...")
     
     checker_file = os.path.join(project_root, "check_db_requirements.py")
     
@@ -149,7 +149,7 @@ def test_compatibility_checker_tool():
         return False
     
     try:
-        # 執行兼容性檢查工具
+        # 執行相容性檢查工具
         result = subprocess.run(
             [sys.executable, checker_file],
             cwd=project_root,
@@ -160,8 +160,8 @@ def test_compatibility_checker_tool():
         
         print(f"  返回碼: {result.returncode}")
         
-        if " TradingAgents 資料庫依賴包兼容性檢查" in result.stdout:
-            print("   兼容性檢查工具執行成功")
+        if " TradingAgents 資料庫依賴包相容性檢查" in result.stdout:
+            print("   相容性檢查工具執行成功")
             
             # 檢查是否檢測到pickle5問題
             if "pickle5" in result.stdout and "建議卸載" in result.stdout:
@@ -171,15 +171,15 @@ def test_compatibility_checker_tool():
             
             return True
         else:
-            print("   兼容性檢查工具輸出異常")
+            print("   相容性檢查工具輸出異常")
             print(f"  輸出: {result.stdout[:200]}...")
             return False
             
     except subprocess.TimeoutExpired:
-        print("   兼容性檢查工具執行超時")
+        print("   相容性檢查工具執行超時")
         return False
     except Exception as e:
-        print(f"   兼容性檢查工具執行失敗: {e}")
+        print(f"   相容性檢查工具執行失敗: {e}")
         return False
 
 
@@ -214,15 +214,15 @@ def test_documentation_completeness():
 
 def main():
     """主測試函數"""
-    print(" 資料庫依賴包兼容性修複測試")
+    print(" 資料庫依賴包相容性修複測試")
     print("=" * 60)
     
     tests = [
         ("Python版本檢查", test_python_version_check),
-        ("pickle兼容性", test_pickle_compatibility),
+        ("pickle相容性", test_pickle_compatibility),
         ("requirements檔案語法", test_requirements_file_syntax),
         ("包安裝模擬", test_package_installation_simulation),
-        ("兼容性檢查工具", test_compatibility_checker_tool),
+        ("相容性檢查工具", test_compatibility_checker_tool),
         ("檔案完整性", test_documentation_completeness),
     ]
     
@@ -244,11 +244,11 @@ def main():
     print(f" 測試結果: {passed}/{total} 通過")
     
     if passed == total:
-        print(" 所有測試通過！資料庫依賴包兼容性修複成功")
+        print(" 所有測試通過！資料庫依賴包相容性修複成功")
         print("\n 修複內容:")
-        print(" 移除pickle5依賴，解決Python 3.10+兼容性問題")
-        print(" 優化版本要求，提高環境兼容性")
-        print(" 添加兼容性檢查工具")
+        print(" 移除pickle5依賴，解決Python 3.10+相容性問題")
+        print(" 優化版本要求，提高環境相容性")
+        print(" 添加相容性檢查工具")
         print(" 完善安裝指南和故障排除檔案")
         
         print("\n 用戶體驗改進:")

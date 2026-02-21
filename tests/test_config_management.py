@@ -21,7 +21,7 @@ def test_config_manager():
     print(" 測試配置管理器")
     print("=" * 50)
     
-    # 創建臨時目錄用於測試
+    # 建立臨時目錄用於測試
     with tempfile.TemporaryDirectory() as temp_dir:
         config_manager = ConfigManager(temp_dir)
         

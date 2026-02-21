@@ -84,7 +84,7 @@ class TradingAgentsLogger:
         if config:
             return config
 
-        # 從環境變量取得配置
+        # 從環境變數取得配置
         log_level = os.getenv('TRADINGAGENTS_LOG_LEVEL', 'INFO').upper()
         log_dir = os.getenv('TRADINGAGENTS_LOG_DIR', './logs')
 
@@ -109,7 +109,7 @@ class TradingAgentsLogger:
                     'directory': log_dir
                 },
                 'structured': {
-                    'enabled': False,  # 預設關閉，可通過環境變量啟用
+                    'enabled': False,  # 預設關閉，可通過環境變數啟用
                     'level': 'INFO',
                     'directory': log_dir
                 }
@@ -177,15 +177,15 @@ class TradingAgentsLogger:
     
     def _setup_logging(self):
         """設定日誌系統"""
-        # 創建日誌目錄
+        # 建立日誌目錄
         if self.config['handlers']['file']['enabled']:
             log_dir = Path(self.config['handlers']['file']['directory'])
             try:
                 log_dir.mkdir(parents=True, exist_ok=True)
             except (OSError, PermissionError) as e:
-                # 如果無法創建日誌目錄（例如只讀檔案系統），禁用檔案日誌
+                # 如果無法建立日誌目錄（例如只讀檔案系統），禁用檔案日誌
                 import warnings
-                warnings.warn(f"無法創建日誌目錄 {log_dir}: {e}，禁用檔案日誌")
+                warnings.warn(f"無法建立日誌目錄 {log_dir}: {e}，禁用檔案日誌")
                 self.config['handlers']['file']['enabled'] = False
         
         # 設定根日誌級別
@@ -270,9 +270,9 @@ class TradingAgentsLogger:
             structured_handler.setFormatter(formatter)
             logger.addHandler(structured_handler)
         except (OSError, PermissionError, FileNotFoundError) as e:
-            # 如果無法創建structured日誌，只輸出警告但不中斷
+            # 如果無法建立structured日誌，只輸出警告但不中斷
             import warnings
-            warnings.warn(f"無法創建結構化日誌檔案: {e}，跳過structured handler")
+            warnings.warn(f"無法建立結構化日誌檔案: {e}，跳過structured handler")
     
     def _configure_specific_loggers(self):
         """配置特定的日誌器"""

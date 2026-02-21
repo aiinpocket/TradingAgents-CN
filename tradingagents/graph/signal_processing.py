@@ -103,13 +103,13 @@ class SignalProcessor:
             logger.error(" [SignalProcessor] human訊息內容為空")
             return self._get_default_decision()
 
-        logger.debug(f"[SignalProcessor] 準備調用LLM，訊息數量: {len(messages)}, 信號長度: {len(full_signal)}")
+        logger.debug(f"[SignalProcessor] 準備呼叫LLM，訊息數量: {len(messages)}, 信號長度: {len(full_signal)}")
 
         try:
             response = self.quick_thinking_llm.invoke(messages).content
-            logger.debug(f"[SignalProcessor] LLM響應: {response[:200]}...")
+            logger.debug(f"[SignalProcessor] LLM回應: {response[:200]}...")
 
-            # 嘗試解析JSON響應
+            # 嘗試解析JSON回應
             import json
             import re
 

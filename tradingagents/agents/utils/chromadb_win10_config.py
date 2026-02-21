@@ -1,10 +1,10 @@
-# Windows 10 ChromaDB 兼容性配置
+# Windows 10 ChromaDB 相容性配置
 import chromadb
 from chromadb.config import Settings
 
 # Windows 10 專用配置
 def get_win10_chromadb_client():
-    '''取得Windows 10兼容的ChromaDB客戶端'''
+    '''取得Windows 10相容的ChromaDB客戶端'''
     settings = Settings(
         allow_reset=True,
         anonymized_telemetry=False,

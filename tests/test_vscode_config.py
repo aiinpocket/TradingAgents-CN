@@ -176,8 +176,8 @@ def test_project_structure():
     return True
 
 def test_environment_variables():
-    """測試環境變量"""
-    print("\n 環境變量驗證")
+    """測試環境變數"""
+    print("\n 環境變數驗證")
     print("=" * 50)
     
     # 讀取.env 檔案
@@ -188,7 +188,7 @@ def test_environment_variables():
     
     print(" .env 檔案存在")
     
-    # 檢查關鍵環境變量
+    # 檢查關鍵環境變數
     key_vars = [
         'OPENAI_API_KEY',
         'FINNHUB_API_KEY'
@@ -235,7 +235,7 @@ def main():
     print("   - VSCode設定檔案")
     print("   - 項目結構完整性")
     print("   - 關鍵包匯入")
-    print("   - 環境變量配置")
+    print("   - 環境變數配置")
     print("=" * 70)
     
     # 執行所有測試
@@ -245,7 +245,7 @@ def main():
         ("虛擬環境路徑", test_virtual_env_path),
         ("包匯入", test_package_imports),
         ("項目結構", test_project_structure),
-        ("環境變量", test_environment_variables),
+        ("環境變數", test_environment_variables),
         ("基本功能", test_simple_functionality)
     ]
     
@@ -275,7 +275,7 @@ def main():
     if passed == total:
         print("\n VSCode配置完全正確！")
         print("\n 現在您可以:")
-        print("    在VSCode中正常開發和調試")
+        print("    在VSCode中正常開發和除錯")
         print("    使用集成終端執行Python代碼")
         print("    執行測試和格式化代碼")
         print("    使用智能代碼補全和錯誤檢查")

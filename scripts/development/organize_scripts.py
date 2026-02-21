@@ -14,7 +14,7 @@ logger = get_logger('scripts')
 
 
 def create_scripts_structure():
-    """創建scripts子目錄結構"""
+    """建立scripts子目錄結構"""
     
     project_path = Path("C:/code/TradingAgentsCN")
     scripts_path = project_path / "scripts"
@@ -84,14 +84,14 @@ def create_scripts_structure():
         }
     }
     
-    # 創建子目錄
-    logger.info(f" 創建子目錄...")
+    # 建立子目錄
+    logger.info(f" 建立子目錄...")
     for category, info in script_categories.items():
         category_path = scripts_path / category
         category_path.mkdir(exist_ok=True)
-        logger.info(f" 創建目錄: scripts/{category} - {info['description']}")
+        logger.info(f" 建立目錄: scripts/{category} - {info['description']}")
         
-        # 創建README檔案
+        # 建立README檔案
         readme_path = category_path / "README.md"
         readme_content = f"""# {category.title()} Scripts
 
@@ -125,7 +125,7 @@ python scripts/{category}/script_name.py
         
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(readme_content)
-        logger.info(f" 創建README: scripts/{category}/README.md")
+        logger.info(f" 建立README: scripts/{category}/README.md")
     
     # 移動現有腳本到對應目錄
     logger.info(f"\n 移動現有腳本...")
@@ -146,8 +146,8 @@ python scripts/{category}/script_name.py
             else:
                 logger.info(f"[INFO]腳本不存在: {script_name}")
     
-    # 創建主README
-    logger.info(f"\n 創建主README...")
+    # 建立主README
+    logger.info(f"\n 建立主README...")
     main_readme_path = scripts_path / "README.md"
     main_readme_content = """# Scripts Directory
 
@@ -223,7 +223,7 @@ powershell -ExecutionPolicy Bypass -File scripts/maintenance/cleanup.ps1
     
     with open(main_readme_path, 'w', encoding='utf-8') as f:
         f.write(main_readme_content)
-    logger.info(f" 創建主README: scripts/README.md")
+    logger.info(f" 建立主README: scripts/README.md")
     
     # 顯示剩餘的未分類腳本
     logger.info(f"\n 檢查未分類的腳本...")
@@ -252,7 +252,7 @@ def main():
         
         if success:
             logger.info(f"\n 整理結果:")
-            logger.info(f" 創建了分類子目錄")
+            logger.info(f" 建立了分類子目錄")
             logger.info(f" 移動了現有腳本")
             logger.info(f" 生成了README檔案")
             logger.info(f"\n 建議:")

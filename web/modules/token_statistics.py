@@ -63,7 +63,7 @@ def render_token_statistics():
             2. **確保API配置**: 檢查 LLM API 密鑰是否已在 .env 檔案中正確配置
             3. **啟用成本跟蹤**: 在配置管理中啟用Token成本跟蹤
             
-            系統會自動記錄所有LLM調用的Token使用情況。
+            系統會自動記錄所有LLM呼叫的Token使用情況。
             """)
             return
         
@@ -92,7 +92,7 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     """渲染概覽指標"""
     st.markdown(f"**{time_range}概覽**")
     
-    # 創建指標卡片
+    # 建立指標卡片
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -104,7 +104,7 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     
     with col2:
         st.metric(
-            label="總調用次數",
+            label="總呼叫次數",
             value=f"{stats['total_requests']:,}",
             delta=None
         )
@@ -152,7 +152,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
     with col1:
         st.markdown("**Token使用分布**")
         
-        # 創建饼圖資料
+        # 建立饼圖資料
         token_data = {
             'Token類型': ['輸入Token', '輸出Token'],
             '數量': [stats['total_input_tokens'], stats['total_output_tokens']]
@@ -170,7 +170,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
     with col2:
         st.markdown("**成本vs Token關系**")
         
-        # 創建散點圖
+        # 建立散點圖
         df_records = pd.DataFrame([
             {
                 'total_tokens': record.input_tokens + record.output_tokens,
@@ -203,12 +203,12 @@ def render_provider_statistics(stats: Dict[str, Any]):
         st.info("暫無供應商統計資料")
         return
     
-    # 創建供應商對比表
+    # 建立供應商對比表
     provider_df = pd.DataFrame([
         {
             '供應商': provider,
             '成本($)': f"{data['cost']:.4f}",
-            '調用次數': data['requests'],
+            '呼叫次數': data['requests'],
             '輸入Token': f"{data['input_tokens']:,}",
             '輸出Token': f"{data['output_tokens']:,}",
             '平均成本($)': f"{data['cost']/data['requests']:.4f}" if data['requests'] > 0 else "0.0000"
@@ -235,13 +235,13 @@ def render_provider_statistics(stats: Dict[str, Any]):
         st.plotly_chart(fig_bar, use_container_width=True)
     
     with col2:
-        # 調用次數對比
+        # 呼叫次數對比
         requests_data = {provider: data['requests'] for provider, data in provider_stats.items()}
         fig_requests = px.bar(
             x=list(requests_data.keys()),
             y=list(requests_data.values()),
-            title="各供應商調用次數對比",
-            labels={'x': '供應商', 'y': '調用次數'},
+            title="各供應商呼叫次數對比",
+            labels={'x': '供應商', 'y': '呼叫次數'},
             color=list(requests_data.values()),
             color_continuous_scale='Plasma'
         )
@@ -272,7 +272,7 @@ def render_cost_trends(records: List[UsageRecord]):
         'tokens': 'sum'
     }).reset_index()
     
-    # 創建雙軸圖表
+    # 建立雙軸圖表
     fig = make_subplots(
         specs=[[{"secondary_y": True}]],
         subplot_titles=["每日成本和Token使用趨勢"]
@@ -318,7 +318,7 @@ def render_detailed_records_table(records: List[UsageRecord]):
         st.info("暫無詳細記錄")
         return
     
-    # 創建記錄表格
+    # 建立記錄表格
     records_df = pd.DataFrame([
         {
             '時間': datetime.fromisoformat(record.timestamp).strftime('%Y-%m-%d %H:%M:%S'),
@@ -377,7 +377,7 @@ def export_statistics_data(days: int):
         stats = config_manager.get_usage_statistics(days)
         records = load_detailed_records(days)
         
-        # 創建匯出資料
+        # 建立匯出資料
         export_data = {
             'summary': stats,
             'detailed_records': [

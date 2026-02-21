@@ -94,8 +94,8 @@ def check_basic_dependencies():
     return missing_packages
 
 def create_fallback_config():
-    """創建無資料庫的備用配置"""
-    logger.info(f"\n 創建備用配置...")
+    """建立無資料庫的備用配置"""
+    logger.info(f"\n 建立備用配置...")
     
     fallback_config = {
         "cache": {
@@ -130,9 +130,9 @@ def test_cache_without_database():
         from tradingagents.dataflows.cache_manager import get_cache
 
         
-        # 創建快取實例
+        # 建立快取實例
         cache = get_cache()
-        logger.info(f" 快取實例創建成功: {type(cache).__name__}")
+        logger.info(f" 快取實例建立成功: {type(cache).__name__}")
         
         # 測試基本功能
         test_data = "測試資料 - 無資料庫模式"
@@ -218,7 +218,7 @@ docker run -d -p 6379:6379 --name redis redis:alpine
 系統會自動檢測可用的服務：
 1. 如果MongoDB/Redis可用，自動使用資料庫快取
 2. 如果不可用，自動降級到檔案快取
-3. 功能完全兼容，性能略有差異
+3. 功能完全相容，性能略有差異
 """
     
     return guide

@@ -39,14 +39,14 @@ class DatabaseManager:
             from dotenv import load_dotenv
             load_dotenv()
         except ImportError:
-            self.logger.info("python-dotenv未安裝，直接讀取環境變量")
+            self.logger.info("python-dotenv未安裝，直接讀取環境變數")
 
-        # 使用強健的布爾值解析（兼容Python 3.13+）
+        # 使用強健的布爾值解析（相容Python 3.13+）
         from .env_utils import parse_bool_env
         self.mongodb_enabled = parse_bool_env("MONGODB_ENABLED", False)
         self.redis_enabled = parse_bool_env("REDIS_ENABLED", False)
 
-        # 從環境變量讀取MongoDB配置
+        # 從環境變數讀取MongoDB配置
         self.mongodb_config = {
             "enabled": self.mongodb_enabled,
             "host": os.getenv("MONGODB_HOST", "localhost"),
@@ -58,7 +58,7 @@ class DatabaseManager:
             "timeout": 2000
         }
 
-        # 從環境變量讀取Redis配置
+        # 從環境變數讀取Redis配置
         self.redis_config = {
             "enabled": self.redis_enabled,
             "host": os.getenv("REDIS_HOST", "localhost"),

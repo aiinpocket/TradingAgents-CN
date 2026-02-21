@@ -111,7 +111,7 @@ class DatabaseCacheManager:
             self.mongodb_client.admin.command('ping')
             self.mongodb_db = self.mongodb_client[self.mongodb_db_name]
 
-            # 創建索引
+            # 建立索引
             self._create_mongodb_indexes()
 
             logger.info("MongoDB連接成功")
@@ -157,7 +157,7 @@ class DatabaseCacheManager:
             self.redis_client = None
     
     def _create_mongodb_indexes(self):
-        """創建MongoDB索引"""
+        """建立MongoDB索引"""
         if self.mongodb_db is None:
             return
         
@@ -190,10 +190,10 @@ class DatabaseCacheManager:
             ])
             fundamentals_collection.create_index([("created_at", 1)])
             
-            logger.info("MongoDB索引創建完成")
+            logger.info("MongoDB索引建立完成")
             
         except Exception as e:
-            logger.error(f"MongoDB索引創建失敗: {e}")
+            logger.error(f"MongoDB索引建立失敗: {e}")
     
     def _generate_cache_key(self, data_type: str, symbol: str, **kwargs) -> str:
         """生成快取鍵"""
@@ -234,7 +234,7 @@ class DatabaseCacheManager:
             # 統一視為美股
             market_type = "us"
         
-        # 準備文檔資料
+        # 準備文件資料
         doc = {
             "_id": cache_key,
             "symbol": symbol,

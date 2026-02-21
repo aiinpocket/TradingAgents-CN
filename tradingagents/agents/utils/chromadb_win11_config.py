@@ -57,7 +57,7 @@ def get_optimal_chromadb_client():
             # Windows 11 或更新版本
             return get_win11_chromadb_client()
         else:
-            # Windows 10 或更老版本，使用兼容配置
+            # Windows 10 或更老版本，使用相容配置
             from .chromadb_win10_config import get_win10_chromadb_client
             return get_win10_chromadb_client()
     else:

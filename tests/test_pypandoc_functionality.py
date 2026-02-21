@@ -172,9 +172,9 @@ def test_report_exporter():
     try:
         from web.utils.report_exporter import ReportExporter
         
-        # 創建匯出器實例
+        # 建立匯出器實例
         exporter = ReportExporter()
-        print(f" 報告匯出器創建成功")
+        print(f" 報告匯出器建立成功")
         print(f"   匯出功能可用: {exporter.export_available}")
         print(f"   Pandoc可用: {exporter.pandoc_available}")
         

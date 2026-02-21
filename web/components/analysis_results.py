@@ -27,9 +27,9 @@ except ImportError as e:
     MONGODB_AVAILABLE = False
 
 def safe_timestamp_to_datetime(timestamp_value):
-    """安全地將時間戳轉換為datetime對象"""
+    """安全地將時間戳轉換為datetime物件"""
     if isinstance(timestamp_value, datetime):
-        # 如果已經是datetime對象（來自MongoDB）
+        # 如果已經是datetime物件（來自MongoDB）
         return timestamp_value
     elif isinstance(timestamp_value, (int, float)):
         # 如果是時間戳數字（來自檔案系統）
@@ -239,7 +239,7 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
                         except Exception as e:
                             timestamp = datetime.now().timestamp()
 
-                        # 創建分析結果條目
+                        # 建立分析結果條目
                         analysis_id = f"{stock_code}_{date_str}_{int(timestamp)}"
 
                         # 嘗試從中繼資料檔中讀取真實的研究深度和分析師資訊
@@ -722,7 +722,7 @@ def render_tags_management(results: List[Dict[str, Any]]):
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            # 創建標籤云可視化
+            # 建立標籤云可視化
             if tag_counts:
                 fig = px.bar(
                     x=list(tag_counts.keys()),
@@ -1024,7 +1024,7 @@ def render_results_comparison(results: List[Dict[str, Any]]):
         ('final_trade_decision', '最終交易決策')
     ]
     
-    # 創建對比標籤頁
+    # 建立對比標籤頁
     available_fields = []
     for field_key, field_name in comparison_fields:
         if (field_key in result_a and result_a[field_key]) or (field_key in result_b and result_b[field_key]):
@@ -1140,11 +1140,11 @@ def render_detailed_analysis_content(selected_result):
             return
         
         # 除錯資訊：顯示所有可用的報告
-        logger.debug(f"[彈窗調試] 資料來源: {selected_result.get('source', '未知')}")
-        logger.debug(f"[彈窗調試] 可用報告數量: {len(reports)}")
-        logger.debug(f"[彈窗調試] 報告類型: {list(reports.keys())}")
+        logger.debug(f"[彈窗除錯] 資料來源: {selected_result.get('source', '未知')}")
+        logger.debug(f"[彈窗除錯] 可用報告數量: {len(reports)}")
+        logger.debug(f"[彈窗除錯] 報告類型: {list(reports.keys())}")
 
-        # 創建標籤頁顯示不同的報告
+        # 建立標籤頁顯示不同的報告
         report_tabs = list(reports.keys())
 
         # 為報告名稱添加中文標題和圖標
@@ -1160,14 +1160,14 @@ def render_detailed_analysis_content(selected_result):
             'social_media_report': '社交媒體分析'
         }
         
-        # 創建顯示名稱列表
+        # 建立顯示名稱列表
         tab_names = []
         for report_key in report_tabs:
             display_name = report_display_names.get(report_key, f"{report_key.replace('_', '').title()}")
             tab_names.append(display_name)
-            logger.debug(f"[彈窗調試] 添加標籤: {display_name}")
+            logger.debug(f"[彈窗除錯] 添加標籤: {display_name}")
 
-        logger.debug(f"[彈窗調試] 總標籤數: {len(tab_names)}")
+        logger.debug(f"[彈窗除錯] 總標籤數: {len(tab_names)}")
         
         if len(tab_names) == 1:
             # 只有一個報告，直接顯示
@@ -1286,7 +1286,7 @@ def render_detailed_analysis_content(selected_result):
                         analysis_data[key] = value
         
         if analysis_data:
-            # 創建動態標籤頁顯示所有分析資料
+            # 建立動態標籤頁顯示所有分析資料
             tab_names = []
             tab_data = []
             
@@ -1307,7 +1307,7 @@ def render_detailed_analysis_content(selected_result):
                 tab_names.append(tab_name)
                 tab_data.append((key, value))
             
-            # 創建標籤頁
+            # 建立標籤頁
             tabs = st.tabs(tab_names)
             
             for i, (tab, (key, value)) in enumerate(zip(tabs, tab_data)):
@@ -1349,7 +1349,7 @@ def render_detailed_analysis_content(selected_result):
                 st.json(selected_result)
         return
 
-    # 只為有資料的模組創建標籤頁
+    # 只為有資料的模組建立標籤頁
     tabs = st.tabs([module['title'] for module in available_modules])
 
     for i, (tab, module) in enumerate(zip(tabs, available_modules)):
@@ -1419,7 +1419,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
     try:
         from web.utils.async_progress_tracker import safe_serialize
 
-        # 創建結果條目，使用安全序列化
+        # 建立結果條目，使用安全序列化
         result_entry = {
             'analysis_id': analysis_id,
             'timestamp': datetime.now().timestamp(),
@@ -1432,7 +1432,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
             'full_data': safe_serialize(result_data)
         }
 
-        # 1. 保存到檔案系統（保持兼容性）
+        # 1. 保存到檔案系統（保持相容性）
         results_dir = get_analysis_results_dir()
         result_file = results_dir / f"analysis_{analysis_id}.json"
 
@@ -1517,7 +1517,7 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
 def show_expanded_detail(result):
     """顯示展開的詳情內容"""
 
-    # 創建詳情容器
+    # 建立詳情容器
     with st.container():
         st.markdown("---")
         st.markdown("### 詳細分析報告")
@@ -1550,7 +1550,7 @@ def show_expanded_detail(result):
                             available_reports.append((field_key, field_name, full_data[field_key]))
 
                     if available_reports:
-                        # 創建標籤頁顯示分析內容
+                        # 建立標籤頁顯示分析內容
                         tab_names = [name for _, name, _ in available_reports]
                         tabs = st.tabs(tab_names)
 
@@ -1602,7 +1602,7 @@ def show_expanded_detail(result):
             'investment_debate_state': '投資討論狀態'
         }
 
-        # 創建標籤頁顯示不同的報告
+        # 建立標籤頁顯示不同的報告
         report_tabs = list(reports.keys())
         tab_names = []
         for report_key in report_tabs:

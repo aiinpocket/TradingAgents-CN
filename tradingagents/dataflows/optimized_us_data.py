@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 優化的美股資料取得工具
-集成快取策略，減少API調用，提高響應速度
+集成快取策略，減少API呼叫，提高回應速度
 """
 
 import time
@@ -25,7 +25,7 @@ class OptimizedUSDataProvider:
         self.cache = get_cache()
         self.config = get_config()
         self.last_api_call = 0
-        self.min_api_interval = 1.0  # 最小API調用間隔（秒）
+        self.min_api_interval = 1.0  # 最小API呼叫間隔（秒）
         
         logger.info("優化美股資料提供器初始化完成")
     
@@ -100,7 +100,7 @@ class OptimizedUSDataProvider:
                 formatted_data = None
 
         except Exception as e:
-            logger.error(f"FINNHUB API調用失敗: {e}")
+            logger.error(f"FINNHUB API呼叫失敗: {e}")
             formatted_data = None
 
         # 備用方案：使用 Yahoo Finance 取得資料

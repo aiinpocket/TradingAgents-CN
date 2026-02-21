@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 確保logs目錄存在的腳本
-在啟動Docker容器前執行，創建必要的logs目錄
+在啟動Docker容器前執行，建立必要的logs目錄
 """
 
 import os
@@ -19,10 +19,10 @@ def ensure_logs_directory():
     print(f" 項目根目錄: {project_root}")
     print(f" 日誌目錄: {logs_dir}")
     
-    # 創建logs目錄
+    # 建立logs目錄
     if not logs_dir.exists():
         logs_dir.mkdir(parents=True, exist_ok=True)
-        print(" 創建logs目錄")
+        print(" 建立logs目錄")
     else:
         print(" logs目錄已存在")
     
@@ -34,13 +34,13 @@ def ensure_logs_directory():
         except Exception as e:
             print(f" 設定權限失敗: {e}")
     
-    # 創建.gitkeep檔案
+    # 建立.gitkeep檔案
     gitkeep_file = logs_dir / ".gitkeep"
     if not gitkeep_file.exists():
         gitkeep_file.touch()
-        print(" 創建.gitkeep檔案")
+        print(" 建立.gitkeep檔案")
     
-    # 創建README檔案
+    # 建立README檔案
     readme_file = logs_dir / "README.md"
     if not readme_file.exists():
         readme_content = """# TradingAgents 日誌目錄
@@ -75,7 +75,7 @@ Get-Content logs/tradingagents.log -Wait
 ```
 """
         readme_file.write_text(readme_content, encoding='utf-8')
-        print(" 創建README.md檔案")
+        print(" 建立README.md檔案")
     
     # 檢查現有日誌檔案
     log_files = list(logs_dir.glob("*.log*"))

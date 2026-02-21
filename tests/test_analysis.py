@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-# 載入環境變量
+# 載入環境變數
 load_dotenv(project_root / ".env", override=True)
 
 def test_basic_imports():
@@ -28,7 +28,7 @@ def test_basic_imports():
         return False
 
 def test_environment_variables():
-    """測試環境變量"""
+    """測試環境變數"""
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     
     print(f"FINNHUB_API_KEY: {'已設定' if finnhub_key else '未設定'}")
@@ -41,7 +41,7 @@ def test_graph_initialization():
         from tradingagents.graph.trading_graph import TradingAgentsGraph
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config["deep_think_llm"] = "gpt-4o"
         config["quick_think_llm"] = "gpt-4o"
@@ -53,7 +53,7 @@ def test_graph_initialization():
         config["results_dir"] = str(project_root / "results")
         config["data_cache_dir"] = str(project_root / "tradingagents" / "dataflows" / "data_cache")
         
-        # 創建目錄
+        # 建立目錄
         os.makedirs(config["data_dir"], exist_ok=True)
         os.makedirs(config["results_dir"], exist_ok=True)
         os.makedirs(config["data_cache_dir"], exist_ok=True)
@@ -97,10 +97,10 @@ def main():
     if not test_basic_imports():
         return
     
-    # 測試環境變量
-    print("\n2. 測試環境變量...")
+    # 測試環境變數
+    print("\n2. 測試環境變數...")
     if not test_environment_variables():
-        print(" 環境變量未正確配置")
+        print(" 環境變數未正確配置")
         return
     
     # 測試圖初始化

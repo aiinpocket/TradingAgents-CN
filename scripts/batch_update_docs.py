@@ -45,7 +45,7 @@ class DocumentationUpdater:
         ]
     
     def create_version_header(self, status: str = "待更新") -> str:
-        """創建版本資訊頭部"""
+        """建立版本資訊頭部"""
         return f"""---
 version: {self.current_version}
 last_updated: {self.current_date}
@@ -202,7 +202,7 @@ status: {status}
 
 1. **繼續更新其他檔案**: 還有更多檔案需要添加版本頭部
 2. **驗證代碼示例**: 檢查修復後的代碼塊是否正確
-3. **更新API參考**: 創建或更新API參考檔案
+3. **更新API參考**: 建立或更新API參考檔案
 4. **建立定期檢查**: 設定定期的檔案一致性檢查
 
 ## 質量檢查

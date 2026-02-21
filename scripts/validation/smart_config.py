@@ -229,7 +229,7 @@ class SmartConfigManager:
             logger.info(f"  快取性能: 極快 (<0.001秒)")
         else:
             logger.info(f"  快取性能: 很快 (<0.01秒)")
-        logger.info(f"  相比API調用: 99%+ 性能提升")
+        logger.info(f"  相比API呼叫: 99%+ 性能提升")
 
 
 # 全局配置管理器實例
@@ -265,7 +265,7 @@ def main():
     logger.info(f" TradingAgents 智能配置系統")
     logger.info(f"=")
     
-    # 創建配置管理器
+    # 建立配置管理器
     config_manager = get_smart_config()
     
     # 顯示狀態
@@ -274,10 +274,10 @@ def main():
     # 保存配置
     config_manager.save_config()
     
-    # 生成環境變量設定腳本
+    # 生成環境變數設定腳本
     config = config_manager.get_config()
     
-    env_script = f"""# 環境變量配置腳本
+    env_script = f"""# 環境變數配置腳本
 # 根據檢測結果自動生成
 
 # 快取配置
@@ -292,7 +292,7 @@ export REDIS_ENABLED="{str(config['database']['redis']['enabled']).lower()}"
 # TTL設定
 export US_STOCK_TTL="{config['cache']['ttl_settings']['us_stock_data']}"
 
-echo " 環境變量已設定"
+echo " 環境變數已設定"
 echo "快取後端: $CACHE_BACKEND"
 echo "MongoDB: $MONGODB_ENABLED"
 echo "Redis: $REDIS_ENABLED"
@@ -304,7 +304,7 @@ echo "Redis: $REDIS_ENABLED"
     logger.info(f"\n 環境配置腳本已生成: set_env.sh")
     
     # 生成PowerShell版本
-    ps_script = f"""# PowerShell環境變量配置腳本
+    ps_script = f"""# PowerShell環境變數配置腳本
 # 根據檢測結果自動生成
 
 # 快取配置
@@ -319,7 +319,7 @@ $env:REDIS_ENABLED = "{str(config['database']['redis']['enabled']).lower()}"
 # TTL設定
 $env:US_STOCK_TTL = "{config['cache']['ttl_settings']['us_stock_data']}"
 
-Write-Host " 環境變量已設定" -ForegroundColor Green
+Write-Host " 環境變數已設定" -ForegroundColor Green
 Write-Host "快取後端: $env:CACHE_BACKEND" -ForegroundColor Cyan
 Write-Host "MongoDB: $env:MONGODB_ENABLED" -ForegroundColor Cyan
 Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
@@ -332,7 +332,7 @@ Write-Host "Redis: $env:REDIS_ENABLED" -ForegroundColor Cyan
     
     logger.info(f"\n 下一步:")
     logger.info(f"1. 執行: python test_with_smart_config.py")
-    logger.info(f"2. 或者: .\set_env.ps1 (設定環境變量)")
+    logger.info(f"2. 或者: .\set_env.ps1 (設定環境變數)")
     logger.info(f"3. 然後: python quick_test.py")
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-分支管理工具 - 快速創建和管理開發分支
+分支管理工具 - 快速建立和管理開發分支
 """
 
 import subprocess
@@ -81,7 +81,7 @@ class BranchManager:
         return bool(result)
     
     def create_branch(self, branch_type, branch_name, description=None):
-        """創建新分支"""
+        """建立新分支"""
         if branch_type not in self.branch_types:
             logger.error(f" 不支援的分支類型: {branch_type}")
             logger.info(f"支援的類型: {', '.join(self.branch_types.keys())}")
@@ -91,7 +91,7 @@ class BranchManager:
         full_branch_name = f"{config['prefix']}{branch_name}"
         base_branch = config['base']
         
-        logger.info(f" 創建{config['description']}: {full_branch_name}")
+        logger.info(f" 建立{config['description']}: {full_branch_name}")
         logger.info(f" 基於分支: {base_branch}")
         
         # 檢查Git狀態
@@ -111,26 +111,26 @@ class BranchManager:
         if not self.run_git_command(f'git pull origin {base_branch}'):
             logger.error(f"  拉取基礎分支失敗，繼續使用本地版本")
         
-        # 創建新分支
-        logger.info(f" 創建分支 {full_branch_name}...")
+        # 建立新分支
+        logger.info(f" 建立分支 {full_branch_name}...")
         if not self.run_git_command(f'git checkout -b {full_branch_name}'):
             return False
         
         # 推送到遠程
         logger.info(f" 推送分支到遠程...")
         if not self.run_git_command(f'git push -u origin {full_branch_name}'):
-            logger.error(f"  推送到遠程失敗，分支僅在本地創建")
+            logger.error(f"  推送到遠程失敗，分支僅在本地建立")
         
-        # 創建分支資訊檔案
+        # 建立分支資訊檔案
         self.create_branch_info(full_branch_name, branch_type, description)
         
-        logger.info(f" 分支 {full_branch_name} 創建成功！")
+        logger.info(f" 分支 {full_branch_name} 建立成功！")
         logger.info(f" 現在可以開始在此分支上開發")
         
         return True
     
     def create_branch_info(self, branch_name, branch_type, description):
-        """創建分支資訊檔案"""
+        """建立分支資訊檔案"""
         info_dir = Path('.git/branch_info')
         info_dir.mkdir(exist_ok=True)
         
@@ -274,8 +274,8 @@ def main():
     parser = argparse.ArgumentParser(description="分支管理工具")
     subparsers = parser.add_subparsers(dest='command', help='可用命令')
     
-    # 創建分支
-    create_parser = subparsers.add_parser('create', help='創建新分支')
+    # 建立分支
+    create_parser = subparsers.add_parser('create', help='建立新分支')
     create_parser.add_argument('type', choices=['feature', 'enhancement', 'hotfix', 'release'], 
                               help='分支類型')
     create_parser.add_argument('name', help='分支名稱')

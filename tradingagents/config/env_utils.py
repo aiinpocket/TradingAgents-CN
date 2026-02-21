@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-環境變量解析工具
-提供兼容Python 3.13+的強健環境變量解析功能
+環境變數解析工具
+提供相容Python 3.13+的強健環境變數解析功能
 """
 
 import os
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def parse_bool_env(env_var: str, default: bool = False) -> bool:
     """
-    解析布爾類型環境變量，兼容多種格式
+    解析布爾類型環境變數，相容多種格式
     
     支持的格式：
     - true/True/TRUE
@@ -25,7 +25,7 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
     - off/Off/OFF
     
     Args:
-        env_var: 環境變量名
+        env_var: 環境變數名
         default: 預設值
         
     Returns:
@@ -63,16 +63,16 @@ def parse_bool_env(env_var: str, default: bool = False) -> bool:
         return False
     else:
         # 如果無法識別，記錄警告並返回預設值
-        logger.warning(f"無法解析環境變量 {env_var}='{value}'，使用預設值 {default}")
+        logger.warning(f"無法解析環境變數 {env_var}='{value}'，使用預設值 {default}")
         return default
 
 
 def parse_int_env(env_var: str, default: int = 0) -> int:
     """
-    解析整數類型環境變量
+    解析整數類型環境變數
     
     Args:
-        env_var: 環境變量名
+        env_var: 環境變數名
         default: 預設值
         
     Returns:
@@ -86,16 +86,16 @@ def parse_int_env(env_var: str, default: int = 0) -> int:
     try:
         return int(value.strip())
     except (ValueError, AttributeError):
-        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為整數，使用預設值 {default}")
+        logger.warning(f"無法解析環境變數 {env_var}='{value}' 為整數，使用預設值 {default}")
         return default
 
 
 def parse_float_env(env_var: str, default: float = 0.0) -> float:
     """
-    解析浮點數類型環境變量
+    解析浮點數類型環境變數
     
     Args:
-        env_var: 環境變量名
+        env_var: 環境變數名
         default: 預設值
         
     Returns:
@@ -109,16 +109,16 @@ def parse_float_env(env_var: str, default: float = 0.0) -> float:
     try:
         return float(value.strip())
     except (ValueError, AttributeError):
-        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為浮點數，使用預設值 {default}")
+        logger.warning(f"無法解析環境變數 {env_var}='{value}' 為浮點數，使用預設值 {default}")
         return default
 
 
 def parse_str_env(env_var: str, default: str = "") -> str:
     """
-    解析字串類型環境變量
+    解析字串類型環境變數
     
     Args:
-        env_var: 環境變量名
+        env_var: 環境變數名
         default: 預設值
         
     Returns:
@@ -134,10 +134,10 @@ def parse_str_env(env_var: str, default: str = "") -> str:
 
 def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] = None) -> list:
     """
-    解析列表類型環境變量
+    解析列表類型環境變數
     
     Args:
-        env_var: 環境變量名
+        env_var: 環境變數名
         separator: 分隔符
         default: 預設值
         
@@ -158,19 +158,19 @@ def parse_list_env(env_var: str, separator: str = ",", default: Optional[list] =
         # 過濾空字串
         return [item for item in items if item]
     except AttributeError:
-        logger.warning(f"無法解析環境變量 {env_var}='{value}' 為列表，使用預設值 {default}")
+        logger.warning(f"無法解析環境變數 {env_var}='{value}' 為列表，使用預設值 {default}")
         return default
 
 
 def get_env_info(env_var: str) -> dict:
     """
-    取得環境變量的詳細資訊
+    取得環境變數的詳細資訊
     
     Args:
-        env_var: 環境變量名
+        env_var: 環境變數名
         
     Returns:
-        dict: 環境變量資訊
+        dict: 環境變數資訊
     """
     value = os.getenv(env_var)
     
@@ -186,10 +186,10 @@ def get_env_info(env_var: str) -> dict:
 
 def validate_required_env_vars(required_vars: list) -> dict:
     """
-    驗證必需的環境變量是否已設定
+    驗證必需的環境變數是否已設定
     
     Args:
-        required_vars: 必需的環境變量列表
+        required_vars: 必需的環境變數列表
         
     Returns:
         dict: 驗證結果
@@ -216,19 +216,19 @@ def validate_required_env_vars(required_vars: list) -> dict:
     return results
 
 
-# 兼容性函數：保持向後兼容
+# 相容性函數：保持向後相容
 def get_bool_env(env_var: str, default: bool = False) -> bool:
-    """向後兼容的布爾值解析函數"""
+    """向後相容的布爾值解析函數"""
     return parse_bool_env(env_var, default)
 
 
 def get_int_env(env_var: str, default: int = 0) -> int:
-    """向後兼容的整數解析函數"""
+    """向後相容的整數解析函數"""
     return parse_int_env(env_var, default)
 
 
 def get_str_env(env_var: str, default: str = "") -> str:
-    """向後兼容的字串解析函數"""
+    """向後相容的字串解析函數"""
     return parse_str_env(env_var, default)
 
 
@@ -241,7 +241,7 @@ __all__ = [
     'parse_list_env',
     'get_env_info',
     'validate_required_env_vars',
-    'get_bool_env',  # 向後兼容
-    'get_int_env',   # 向後兼容
-    'get_str_env'    # 向後兼容
+    'get_bool_env',  # 向後相容
+    'get_int_env',   # 向後相容
+    'get_str_env'    # 向後相容
 ]

@@ -112,8 +112,8 @@ def test_get_finnhub_news():
     print(f"是否包含錯誤訊息: {'無法取得' in result}")
 
 def create_sample_data_structure():
-    """創建示例資料目錄結構"""
-    print("\n=== 創建示例資料目錄結構 ===")
+    """建立示例資料目錄結構"""
+    print("\n=== 建立示例資料目錄結構 ===")
     
     config = get_config()
     data_dir = config.get('data_dir')
@@ -122,15 +122,15 @@ def create_sample_data_structure():
         print(" 資料目錄未配置")
         return
     
-    # 創建目錄結構
+    # 建立目錄結構
     finnhub_dir = os.path.join(data_dir, "finnhub_data")
     news_dir = os.path.join(finnhub_dir, "news_data")
     
     try:
         os.makedirs(news_dir, exist_ok=True)
-        print(f" 創建目錄結構: {news_dir}")
+        print(f" 建立目錄結構: {news_dir}")
         
-        # 創建示例資料檔案
+        # 建立示例資料檔案
         sample_file = os.path.join(news_dir, "AAPL_data_formatted.json")
         sample_data = {
             "2025-01-01": [
@@ -145,10 +145,10 @@ def create_sample_data_structure():
         with open(sample_file, 'w', encoding='utf-8') as f:
             json.dump(sample_data, f, ensure_ascii=False, indent=2)
         
-        print(f" 創建示例資料檔案: {sample_file}")
+        print(f" 建立示例資料檔案: {sample_file}")
         
     except Exception as e:
-        print(f" 創建目錄結構失敗: {e}")
+        print(f" 建立目錄結構失敗: {e}")
 
 def main():
     """主測試函數"""
@@ -165,14 +165,14 @@ def main():
     test_get_data_in_range()
     test_get_finnhub_news()
     
-    # 如果資料不存在，創建示例結構
+    # 如果資料不存在，建立示例結構
     if not news_exists:
         create_sample_data_structure()
         print("\n重新測試新聞資料路徑:")
         test_finnhub_news_path()
     
     print("\n=== 測試總結 ===")
-    print("1. 資料目錄路徑已修複為跨平台兼容")
+    print("1. 資料目錄路徑已修複為跨平台相容")
     print("2. 添加了詳細的錯誤處理和除錯資訊")
     print("3. 當資料檔案不存在時會提供清晰的錯誤提示")
     print("4. 建議下載或配置正確的Finnhub資料")

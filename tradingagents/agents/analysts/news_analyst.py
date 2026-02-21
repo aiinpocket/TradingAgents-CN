@@ -52,9 +52,9 @@ def create_news_analyst(llm, toolkit):
         company_name = _get_company_name(ticker, market_info)
         logger.info(f"[新聞分析師] 公司名稱: {company_name}")
         
-        # 使用統一新聞工具，簡化工具調用
+        # 使用統一新聞工具，簡化工具呼叫
         logger.info("[新聞分析師] 使用統一新聞工具，自動識別股票類型並取得相應新聞")
-   # 創建統一新聞工具
+   # 建立統一新聞工具
         unified_news_tool = create_unified_news_tool(toolkit)
         unified_news_tool.name = "get_stock_news_unified"
 
@@ -116,23 +116,23 @@ def create_news_analyst(llm, toolkit):
                     "\n[強制要求] CRITICAL REQUIREMENT - 絕對強制要求："
                     "\n"
                     "\n[禁止] 禁止行為："
-                    "\n- 絕對禁止在沒有調用工具的情況下直接回答"
+                    "\n- 絕對禁止在沒有呼叫工具的情況下直接回答"
                     "\n- 絕對禁止基於推測或假設生成任何分析內容"
-                    "\n- 絕對禁止跳過工具調用步驟"
+                    "\n- 絕對禁止跳過工具呼叫步驟"
                     "\n- 絕對禁止說'我無法取得即時資料'等借口"
                     "\n"
                     "\n[必須] 強制執行步驟："
-                    "\n1. 您的第一個動作必須是調用 get_stock_news_unified 工具"
+                    "\n1. 您的第一個動作必須是呼叫 get_stock_news_unified 工具"
                     "\n2. 該工具會自動取得美股相關新聞"
                     "\n3. 只有在成功取得新聞資料後，才能開始分析"
                     "\n4. 您的回答必須基於工具返回的真實資料"
                     "\n"
-                    "\n[工具] 工具調用格式示例："
-                    "\n調用: get_stock_news_unified(stock_code='{ticker}', max_news=10)"
+                    "\n[工具] 工具呼叫格式示例："
+                    "\n呼叫: get_stock_news_unified(stock_code='{ticker}', max_news=10)"
                     "\n"
-                    "\n注意：如果您不調用工具，您的回答將被視為無效並被拒絕。"
-                    "\n注意：您必須先調用工具取得資料，然後基於資料進行分析。"
-                    "\n注意：沒有例外，沒有借口，必須調用工具。"
+                    "\n注意：如果您不呼叫工具，您的回答將被視為無效並被拒絕。"
+                    "\n注意：您必須先呼叫工具取得資料，然後基於資料進行分析。"
+                    "\n注意：沒有例外，沒有借口，必須呼叫工具。"
                     "\n"
                     "\n您可以訪問以下工具：{tool_names}。"
                     "\n{system_message}"
@@ -158,28 +158,28 @@ def create_news_analyst(llm, toolkit):
         except Exception as e:
             model_info = "Unknown"
         
-        logger.info(f"[新聞分析師] 準備調用LLM進行新聞分析，模型: {model_info}")
+        logger.info(f"[新聞分析師] 準備呼叫LLM進行新聞分析，模型: {model_info}")
         
-        # 使用統一的工具調用處理器
+        # 使用統一的工具呼叫處理器
         llm_start_time = datetime.now()
         chain = prompt | llm.bind_tools(tools)
-        logger.info(f"[新聞分析師] 開始LLM調用，分析 {ticker} 的新聞")
+        logger.info(f"[新聞分析師] 開始LLM呼叫，分析 {ticker} 的新聞")
         result = chain.invoke(state["messages"])
         
         llm_end_time = datetime.now()
         llm_time_taken = (llm_end_time - llm_start_time).total_seconds()
-        logger.info(f"[新聞分析師] LLM調用完成，耗時: {llm_time_taken:.2f}秒")
+        logger.info(f"[新聞分析師] LLM呼叫完成，耗時: {llm_time_taken:.2f}秒")
 
-        # 檢查工具調用情況
+        # 檢查工具呼叫情況
         tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
-        logger.info(f"[新聞分析師] LLM 調用了 {tool_call_count} 個工具")
+        logger.info(f"[新聞分析師] LLM 呼叫了 {tool_call_count} 個工具")
 
         if tool_call_count == 0:
-                logger.warning(f"[新聞分析師] {llm.__class__.__name__} 沒有調用任何工具，啟動補救機制...")
+                logger.warning(f"[新聞分析師] {llm.__class__.__name__} 沒有呼叫任何工具，啟動補救機制...")
                 
                 try:
                     # 強制取得新聞資料
-                    logger.info("[新聞分析師] 強制調用統一新聞工具取得新聞資料...")
+                    logger.info("[新聞分析師] 強制呼叫統一新聞工具取得新聞資料...")
                     forced_news = unified_news_tool(stock_code=ticker, max_news=10, model_info="")
                     
                     if forced_news and len(forced_news.strip()) > 100:
@@ -215,14 +215,14 @@ def create_news_analyst(llm, toolkit):
                     logger.error(f"[新聞分析師] 強制補救過程失敗: {e}")
                     report = result.content
         else:
-            # 有工具調用，直接使用結果
+            # 有工具呼叫，直接使用結果
             report = result.content
         
         total_time_taken = (datetime.now() - start_time).total_seconds()
         logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")
 
         # 修複死循環問題：返回清潔的AIMessage，不包含tool_calls
-        # 這確保工作流圖能正確判斷分析已完成，避免重複調用
+        # 這確保工作流圖能正確判斷分析已完成，避免重複呼叫
         from langchain_core.messages import AIMessage
         clean_message = AIMessage(content=report)
         

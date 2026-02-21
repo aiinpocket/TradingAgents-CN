@@ -14,7 +14,7 @@ class RedisPerformanceTester:
     """Redis性能測試器"""
     
     def __init__(self, host=None, port=None, password=None, db=None):
-        # 從環境變量取得配置，如果沒有則使用預設值
+        # 從環境變數取得配置，如果沒有則使用預設值
         self.host = host or os.getenv('REDIS_HOST', 'localhost')
         self.port = port or int(os.getenv('REDIS_PORT', 6379))
         self.password = password or os.getenv('REDIS_PASSWORD')
@@ -158,7 +158,7 @@ class RedisPerformanceTester:
         def worker_task(thread_id):
             """工作線程任務"""
             try:
-                # 每個線程創建自己的Redis連接
+                # 每個線程建立自己的Redis連接
                 client = redis.Redis(
                     host=self.host,
                     port=self.port,

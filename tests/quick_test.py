@@ -47,15 +47,15 @@ try:
     from tradingagents.dataflows.cache_manager import get_cache, StockDataCache
     print(" cache_manager 匯入成功")
     
-    # 創建快取實例
+    # 建立快取實例
     cache = get_cache()
-    print(f" 快取實例創建成功: {type(cache).__name__}")
+    print(f" 快取實例建立成功: {type(cache).__name__}")
     
     # 檢查快取目錄
     if hasattr(cache, 'cache_dir'):
         print(f" 快取目錄: {cache.cache_dir}")
         if cache.cache_dir.exists():
-            print(" 快取目錄已創建")
+            print(" 快取目錄已建立")
         else:
             print(" 快取目錄不存在")
     
@@ -68,9 +68,9 @@ try:
     from tradingagents.dataflows.optimized_us_data import get_optimized_us_data_provider
     print(" optimized_us_data 匯入成功")
     
-    # 創建資料提供器
+    # 建立資料提供器
     provider = get_optimized_us_data_provider()
-    print(f" 資料提供器創建成功: {type(provider).__name__}")
+    print(f" 資料提供器建立成功: {type(provider).__name__}")
     
 except Exception as e:
     print(f" optimized_us_data 匯入失敗: {e}")
@@ -193,7 +193,7 @@ print("6. 統計資訊: 取得快取使用統計")
 
 print("\n 下一步:")
 print("1. 如果測試通過，可以開始清理中文內容")
-print("2. 添加英文檔案和註釋")
-print("3. 創建完整的測試用例")
+print("2. 添加英文件案和註釋")
+print("3. 建立完整的測試用例")
 print("4. 準備性能基準報告")
 print("5. 聯系上游項目維護者")

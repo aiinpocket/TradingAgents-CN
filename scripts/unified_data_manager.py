@@ -67,7 +67,7 @@ class UnifiedDataDirectoryManager:
             'temp_processing': 'data/temp/processing',
         }
         
-        # 環境變量映射
+        # 環境變數映射
         self._env_mapping = {
             'data_root': 'TRADINGAGENTS_DATA_DIR',
             'cache': 'TRADINGAGENTS_CACHE_DIR',
@@ -84,12 +84,12 @@ class UnifiedDataDirectoryManager:
         
         Args:
             key: 目錄鍵名
-            create: 是否自動創建目錄
+            create: 是否自動建立目錄
             
         Returns:
-            Path: 目錄路徑對象
+            Path: 目錄路徑物件
         """
-        # 首先檢查環境變量
+        # 首先檢查環境變數
         env_key = self._env_mapping.get(key)
         if env_key and os.getenv(env_key):
             path_str = os.getenv(env_key)
@@ -105,7 +105,7 @@ class UnifiedDataDirectoryManager:
         else:
             path = self.project_root / path_str
         
-        # 創建目錄
+        # 建立目錄
         if create:
             path.mkdir(parents=True, exist_ok=True)
         
@@ -116,7 +116,7 @@ class UnifiedDataDirectoryManager:
         取得所有資料目錄路徑
         
         Args:
-            create: 是否自動創建目錄
+            create: 是否自動建立目錄
             
         Returns:
             Dict[str, Path]: 所有目錄路徑的字典
@@ -132,24 +132,24 @@ class UnifiedDataDirectoryManager:
     
     def create_all_directories(self) -> bool:
         """
-        創建所有資料目錄
+        建立所有資料目錄
         
         Returns:
-            bool: 是否成功創建所有目錄
+            bool: 是否成功建立所有目錄
         """
         try:
-            logger.info(" 創建統一資料目錄結構...")
+            logger.info(" 建立統一資料目錄結構...")
             
             paths = self.get_all_paths(create=True)
             
             for key, path in paths.items():
                 logger.info(f"   {key}: {path}")
             
-            logger.info(" 統一資料目錄結構創建完成")
+            logger.info(" 統一資料目錄結構建立完成")
             return True
             
         except Exception as e:
-            logger.error(f" 創建目錄結構失敗: {e}")
+            logger.error(f" 建立目錄結構失敗: {e}")
             return False
     
     def get_config_summary(self) -> Dict[str, str]:
@@ -164,7 +164,7 @@ class UnifiedDataDirectoryManager:
             'data_root': str(self.get_path('data_root', create=False)),
         }
         
-        # 添加環境變量狀態
+        # 添加環境變數狀態
         for key, env_key in self._env_mapping.items():
             env_value = os.getenv(env_key)
             summary[f'env_{key}'] = env_value if env_value else '未設定'
@@ -244,7 +244,7 @@ def get_data_path(key: str, create: bool = True) -> Path:
     
     Args:
         key: 目錄鍵名
-        create: 是否自動創建目錄
+        create: 是否自動建立目錄
         
     Returns:
         Path: 目錄路徑
@@ -257,7 +257,7 @@ def main():
     
     parser = argparse.ArgumentParser(description='統一資料目錄配置管理器')
     parser.add_argument('--project-root', help='項目根目錄路徑')
-    parser.add_argument('--create', action='store_true', help='創建所有目錄')
+    parser.add_argument('--create', action='store_true', help='建立所有目錄')
     parser.add_argument('--validate', action='store_true', help='驗證目錄結構')
     parser.add_argument('--show-config', action='store_true', help='顯示配置摘要')
     parser.add_argument('--show-structure', action='store_true', help='顯示目錄結構')

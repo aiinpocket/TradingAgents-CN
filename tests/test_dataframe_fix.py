@@ -27,9 +27,9 @@ def test_safe_dataframe():
             '結果B': ['MSFT', '2025-07-31 13:00', 2, 4]
         }
         
-        # 使用安全函數創建DataFrame
+        # 使用安全函數建立DataFrame
         df = safe_dataframe(mixed_data)
-        print(f" 安全DataFrame創建成功，形狀: {df.shape}")
+        print(f" 安全DataFrame建立成功，形狀: {df.shape}")
         
         # 檢查資料類型
         print(" 資料類型檢查:")
@@ -48,7 +48,7 @@ def test_safe_dataframe():
         ]
         
         df_list = safe_dataframe(list_data)
-        print(f" 列表資料DataFrame創建成功，形狀: {df_list.shape}")
+        print(f" 列表資料DataFrame建立成功，形狀: {df_list.shape}")
         
         return True
         
@@ -58,11 +58,11 @@ def test_safe_dataframe():
 
 
 def test_comparison_data():
-    """測試對比資料創建"""
+    """測試對比資料建立"""
     try:
         from web.components.analysis_results import safe_dataframe
         
-        print("\n 測試對比資料創建...")
+        print("\n 測試對比資料建立...")
         
         # 模擬對比資料
         comparison_data = {
@@ -86,7 +86,7 @@ def test_comparison_data():
         }
         
         df = safe_dataframe(comparison_data)
-        print(f" 對比資料DataFrame創建成功")
+        print(f" 對比資料DataFrame建立成功")
         
         # 驗證所有資料都是字串
         all_string = all(df[col].dtype == 'object' for col in df.columns)
@@ -103,11 +103,11 @@ def test_comparison_data():
 
 
 def test_timeline_data():
-    """測試時間線資料創建"""
+    """測試時間線資料建立"""
     try:
         from web.components.analysis_results import safe_dataframe
         
-        print("\n 測試時間線資料創建...")
+        print("\n 測試時間線資料建立...")
         
         # 模擬時間線資料
         timeline_data = []
@@ -121,7 +121,7 @@ def test_timeline_data():
             })
         
         df = safe_dataframe(timeline_data)
-        print(f" 時間線資料DataFrame創建成功，行數: {len(df)}")
+        print(f" 時間線資料DataFrame建立成功，行數: {len(df)}")
         
         # 檢查序號列是否為字串
         if df['序號'].dtype == 'object':
@@ -144,7 +144,7 @@ def test_arrow_conversion():
         
         print("\n 測試Arrow轉換...")
         
-        # 創建可能導致Arrow錯誤的資料
+        # 建立可能導致Arrow錯誤的資料
         problematic_data = {
             '文本列': ['text1', 'text2', 'text3'],
             '數字列': [1, 2, 3],  # 整數
@@ -176,8 +176,8 @@ def main():
     
     tests = [
         ("安全DataFrame函數", test_safe_dataframe),
-        ("對比資料創建", test_comparison_data),
-        ("時間線資料創建", test_timeline_data),
+        ("對比資料建立", test_comparison_data),
+        ("時間線資料建立", test_timeline_data),
         ("Arrow轉換", test_arrow_conversion)
     ]
     

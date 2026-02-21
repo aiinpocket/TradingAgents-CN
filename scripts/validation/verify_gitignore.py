@@ -93,7 +93,7 @@ def main():
     
     test_file = contribution_path / "test_ignore.txt"
     try:
-        # 創建測試檔案
+        # 建立測試檔案
         with open(test_file, 'w', encoding='utf-8') as f:
             f.write("測試檔案")
         

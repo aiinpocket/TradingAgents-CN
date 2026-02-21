@@ -17,7 +17,7 @@ def test_env_reading():
         print(" .env 檔案不存在")
         return False
     
-    # 讀取環境變量
+    # 讀取環境變數
     print("\n 資料庫配置:")
     
     # MongoDB配置

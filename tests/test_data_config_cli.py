@@ -41,9 +41,9 @@ def test_data_dir_configuration():
         current_data_dir = get_data_dir()
         print(f"當前資料目錄 | Current data directory: {current_data_dir}")
         
-        # 驗證目錄是否創建
+        # 驗證目錄是否建立
         if os.path.exists(custom_data_dir):
-            print(" 自定義資料目錄創建成功 | Custom data directory created successfully")
+            print(" 自定義資料目錄建立成功 | Custom data directory created successfully")
             
             # 檢查子目錄結構
             expected_subdirs = [
@@ -60,28 +60,28 @@ def test_data_dir_configuration():
                 else:
                     print(f"   子目錄缺失 | Subdirectory missing: {subdir}")
         else:
-            print(" 自定義資料目錄創建失敗 | Custom data directory creation failed")
+            print(" 自定義資料目錄建立失敗 | Custom data directory creation failed")
     
-    # 3. 測試環境變量配置
-    print("\n3. 測試環境變量配置 | Testing Environment Variable Configuration")
+    # 3. 測試環境變數配置
+    print("\n3. 測試環境變數配置 | Testing Environment Variable Configuration")
     with tempfile.TemporaryDirectory() as temp_dir:
         env_data_dir = os.path.join(temp_dir, "env_trading_data")
         
-        # 設定環境變量
+        # 設定環境變數
         os.environ["TRADINGAGENTS_DATA_DIR"] = env_data_dir
-        print(f"設定環境變量 | Setting environment variable: TRADINGAGENTS_DATA_DIR={env_data_dir}")
+        print(f"設定環境變數 | Setting environment variable: TRADINGAGENTS_DATA_DIR={env_data_dir}")
         
-        # 重新初始化配置以讀取環境變量
+        # 重新初始化配置以讀取環境變數
         initialize_config()
         env_current_data_dir = get_data_dir()
-        print(f"環境變量資料目錄 | Environment variable data directory: {env_current_data_dir}")
+        print(f"環境變數資料目錄 | Environment variable data directory: {env_current_data_dir}")
         
         if env_current_data_dir == env_data_dir:
-            print(" 環境變量配置生效 | Environment variable configuration effective")
+            print(" 環境變數配置生效 | Environment variable configuration effective")
         else:
-            print(" 環境變量配置未生效 | Environment variable configuration not effective")
+            print(" 環境變數配置未生效 | Environment variable configuration not effective")
         
-        # 清理環境變量
+        # 清理環境變數
         del os.environ["TRADINGAGENTS_DATA_DIR"]
     
     # 4. 測試配置管理器集成
@@ -92,10 +92,10 @@ def test_data_dir_configuration():
         if 'dir' in key.lower():
             print(f"  {key}: {value}")
     
-    # 5. 測試目錄自動創建功能
-    print("\n5. 測試目錄自動創建功能 | Testing Auto Directory Creation")
+    # 5. 測試目錄自動建立功能
+    print("\n5. 測試目錄自動建立功能 | Testing Auto Directory Creation")
     config_manager.ensure_directories_exist()
-    print(" 目錄自動創建功能測試完成 | Auto directory creation test completed")
+    print(" 目錄自動建立功能測試完成 | Auto directory creation test completed")
     
     print("\n=== 資料目錄配置測試完成 | Data Directory Configuration Test Completed ===")
 
@@ -143,10 +143,10 @@ def main():
         print("\n 總結 | Summary:")
         print(" 資料目錄配置功能已實現 | Data directory configuration feature implemented")
         print(" 支持自定義路徑設定 | Custom path setting supported")
-        print(" 支持環境變量配置 | Environment variable configuration supported")
+        print(" 支持環境變數配置 | Environment variable configuration supported")
         print(" 集成配置管理器 | Configuration manager integrated")
         print(" CLI命令界面完整 | CLI command interface complete")
-        print(" 自動目錄創建功能 | Auto directory creation feature")
+        print(" 自動目錄建立功能 | Auto directory creation feature")
         
     except Exception as e:
         print(f"\n 測試過程中出現錯誤 | Error during testing: {e}")

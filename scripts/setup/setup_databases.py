@@ -186,7 +186,7 @@ def setup_docker_option():
     """)
 
 def create_env_template():
-    """創建環境變量模板"""
+    """建立環境變數模板"""
     logger.info(f" 資料庫配置已整合到主要的 .env 檔案中")
     logger.info(f"請參考 .env.example 檔案進行配置")
 
@@ -248,7 +248,7 @@ def main():
     # Docker選項
     setup_docker_option()
     
-    # 創建配置檔
+    # 建立配置檔
     create_env_template()
     
     logger.info(f"\n")

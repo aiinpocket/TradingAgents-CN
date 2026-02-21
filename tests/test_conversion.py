@@ -90,7 +90,7 @@ def test_word_conversion(md_content):
     print("\n 測試Word轉換...")
     
     try:
-        # 創建暫存檔案
+        # 建立暫存檔案
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as tmp_file:
             output_file = tmp_file.name
         
@@ -159,7 +159,7 @@ def test_pdf_conversion(md_content):
     print("\n 測試PDF轉換...")
     
     try:
-        # 創建暫存檔案
+        # 建立暫存檔案
         with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
             output_file = tmp_file.name
         

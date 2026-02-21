@@ -47,7 +47,7 @@ class FileSessionManager:
                 st.session_state.file_session_fingerprint = fingerprint
                 return fingerprint
 
-            # 方法3：創建新的session
+            # 方法3：建立新的session
             fingerprint = f"session_{uuid.uuid4().hex[:12]}"
             st.session_state.file_session_fingerprint = fingerprint
             return fingerprint

@@ -11,7 +11,7 @@ logger = get_logger("agents.utils.memory")
 
 
 class ChromaDBManager:
-    """單例ChromaDB管理器，避免並發創建集合的衝突"""
+    """單例ChromaDB管理器，避免並發建立集合的衝突"""
 
     _instance = None
     _lock = threading.Lock()
@@ -42,10 +42,10 @@ class ChromaDBManager:
                         self._client = get_win11_chromadb_client()
                         logger.info(f"[ChromaDB] Windows 11優化配置初始化完成 (構建號: {platform.version()})")
                     else:
-                        # Windows 10 或更老版本，使用兼容配置
+                        # Windows 10 或更老版本，使用相容配置
                         from .chromadb_win10_config import get_win10_chromadb_client
                         self._client = get_win10_chromadb_client()
-                        logger.info("[ChromaDB] Windows 10兼容配置初始化完成")
+                        logger.info("[ChromaDB] Windows 10相容配置初始化完成")
                 else:
                     # 非Windows系統，使用標準配置
                     settings = Settings(
@@ -75,7 +75,7 @@ class ChromaDBManager:
                 self._initialized = True
 
     def get_or_create_collection(self, name: str):
-        """線程安全地取得或創建集合"""
+        """線程安全地取得或建立集合"""
         with self._lock:
             if name in self._collections:
                 logger.info(f"[ChromaDB] 使用快取集合: {name}")
@@ -87,14 +87,14 @@ class ChromaDBManager:
                 logger.info(f"[ChromaDB] 取得現有集合: {name}")
             except Exception as e:
                 try:
-                    # 創建新集合
+                    # 建立新集合
                     collection = self._client.create_collection(name=name)
-                    logger.info(f"[ChromaDB] 創建新集合: {name}")
+                    logger.info(f"[ChromaDB] 建立新集合: {name}")
                 except Exception as e:
-                    # 可能是並發創建，再次嘗試取得
+                    # 可能是並發建立，再次嘗試取得
                     try:
                         collection = self._client.get_collection(name=name)
-                        logger.info(f"[ChromaDB] 並發創建後取得集合: {name}")
+                        logger.info(f"[ChromaDB] 並發建立後取得集合: {name}")
                     except Exception as final_error:
                         logger.error(f"[ChromaDB] 集合操作失敗: {name}, 錯誤: {final_error}")
                         raise final_error
@@ -139,7 +139,7 @@ class FinancialSituationMemory:
         self.situation_collection = self.chroma_manager.get_or_create_collection(name)
 
     def _smart_text_truncation(self, text, max_length=8192):
-        """智能文本截斷，保持語義完整性和快取兼容性"""
+        """智能文本截斷，保持語義完整性和快取相容性"""
         if len(text) <= max_length:
             return text, False  # 返回原文本和是否截斷的標誌
         
@@ -225,7 +225,7 @@ class FinancialSituationMemory:
         }
 
         if True:
-            # 使用OpenAI兼容的嵌入模型
+            # 使用OpenAI相容的嵌入模型
             if self.client is None:
                 logger.warning("嵌入客戶端未初始化，返回空向量")
                 return [0.0] * 1024  # 返回空向量
@@ -234,7 +234,7 @@ class FinancialSituationMemory:
                 logger.debug("內存功能已禁用，返回空向量")
                 return [0.0] * 1024  # 返回1024維的零向量
 
-            # 嘗試調用OpenAI兼容的embedding API
+            # 嘗試呼叫OpenAI相容的embedding API
             try:
                 response = self.client.embeddings.create(
                     model=self.embedding,
@@ -262,13 +262,13 @@ class FinancialSituationMemory:
                 else:
                     # 其他類型的錯誤
                     if 'attributeerror' in error_str:
-                        logger.error(f"{self.llm_provider} API調用錯誤: {str(e)}")
+                        logger.error(f"{self.llm_provider} API呼叫錯誤: {str(e)}")
                     elif 'connectionerror' in error_str or 'connection' in error_str:
                         logger.error(f"{self.llm_provider}網路連接錯誤: {str(e)}")
                     elif 'timeout' in error_str:
                         logger.error(f"{self.llm_provider}請求超時: {str(e)}")
                     elif 'keyerror' in error_str:
-                        logger.error(f"{self.llm_provider}響應格式錯誤: {str(e)}")
+                        logger.error(f"{self.llm_provider}回應格式錯誤: {str(e)}")
                     else:
                         logger.error(f"{self.llm_provider} embedding異常: {str(e)}")
                 
@@ -329,7 +329,7 @@ class FinancialSituationMemory:
             logger.debug("記憶庫為空，返回空結果")
             return []
         
-        # 調整查詢數量，不能超過集合中的文檔數量
+        # 調整查詢數量，不能超過集合中的文件數量
         actual_n_matches = min(n_matches, collection_count)
         
         try:
@@ -373,7 +373,7 @@ class FinancialSituationMemory:
             return []
 
     def get_cache_info(self):
-        """取得快取相關資訊，用於調試和監控"""
+        """取得快取相關資訊，用於除錯和監控"""
         info = {
             'collection_count': self.situation_collection.count(),
             'client_status': 'enabled' if self.client != "DISABLED" else 'disabled',

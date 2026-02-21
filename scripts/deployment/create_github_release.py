@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-創建GitHub Release的腳本
+建立GitHub Release的腳本
 """
 
 import os
@@ -31,7 +31,7 @@ def run_command(command, cwd=None):
         return False, "", str(e)
 
 def create_release_notes():
-    """創建發布說明"""
+    """建立發布說明"""
     release_notes = """
 ## Web管理界面與多LLM提供商支援
 
@@ -44,7 +44,7 @@ TradingAgents-CN v0.1.2 帶來了重大更新，新增了完整的Web管理界�
 - 直觀的使用者界面和即時進度顯示
 - 支援多種LLM提供商選擇（OpenAI / Anthropic）
 - 視覺化的分析結果展示
-- 響應式設計，支援行動裝置存取
+- 回應式設計，支援行動裝置存取
 
 #### 多LLM提供商支援
 - OpenAI（GPT-4、GPT-4o-mini）
@@ -153,7 +153,7 @@ def show_release_info():
 
 def main():
     """主函數"""
-    logger.info(f" 創建GitHub Release")
+    logger.info(f" 建立GitHub Release")
     logger.info(f"=")
     
     # 檢查是否在正確的分支
@@ -191,8 +191,8 @@ def main():
     
     logger.info(f" 發布說明已生成")
     
-    # 顯示GitHub Release創建指南
-    logger.info(f"\n GitHub Release創建指南:")
+    # 顯示GitHub Release建立指南
+    logger.info(f"\n GitHub Release建立指南:")
     logger.info(f"=")
     logger.info(f"1. 訪問: https://github.com/aiinpocket/TradingAgents-CN/releases/new")
     logger.info(f"2. 選擇標籤: cn-v0.1.2")
@@ -210,7 +210,7 @@ if __name__ == "__main__":
     success = main()
     if success:
         logger.info(f"\n GitHub Release準備完成！")
-        logger.info(f"請按照上述指南在GitHub上創建Release")
+        logger.info(f"請按照上述指南在GitHub上建立Release")
     else:
         logger.error(f"\n GitHub Release準備失敗")
         sys.exit(1)

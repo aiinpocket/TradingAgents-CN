@@ -47,7 +47,7 @@ import os
 import sys
 sys.path.insert(0, '/app')
 
-# 設定環境變量
+# 設定環境變數
 os.environ['DOCKER_CONTAINER'] = 'true'
 os.environ['TRADINGAGENTS_LOG_DIR'] = '/app/logs'
 

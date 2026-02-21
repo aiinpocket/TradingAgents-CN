@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-工具調用日誌裝飾器
-為所有工具調用添加統一的日誌記錄
+工具呼叫日誌裝飾器
+為所有工具呼叫添加統一的日誌記錄
 """
 
 import time
@@ -15,13 +15,13 @@ from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.logging_manager import get_logger, get_logger_manager
 logger = get_logger('agents')
 
-# 工具調用日誌器
+# 工具呼叫日誌器
 tool_logger = get_logger("tools")
 
 
 def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_result: bool = False):
     """
-    工具調用日誌裝飾器
+    工具呼叫日誌裝飾器
     
     Args:
         tool_name: 工具名稱，如果不提供則使用函數名
@@ -51,9 +51,9 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                         for k, v in kwargs.items()
                     }
             
-            # 記錄工具調用開始
+            # 記錄工具呼叫開始
             tool_logger.info(
-                f"[工具調用] {name} - 開始",
+                f"[工具呼叫] {name} - 開始",
                 extra={
                     'tool_name': name,
                     'event_type': 'tool_call_start',
@@ -75,9 +75,9 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                     result_str = str(result)
                     result_info = result_str[:200] + '...' if len(result_str) > 200 else result_str
                 
-                # 記錄工具調用成功
+                # 記錄工具呼叫成功
                 tool_logger.info(
-                    f"[工具調用] {name} - 完成 (耗時: {duration:.2f}s)",
+                    f"[工具呼叫] {name} - 完成 (耗時: {duration:.2f}s)",
                     extra={
                         'tool_name': name,
                         'event_type': 'tool_call_success',
@@ -93,9 +93,9 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
                 # 計算執行時間
                 duration = time.time() - start_time
                 
-                # 記錄工具調用失敗
+                # 記錄工具呼叫失敗
                 tool_logger.error(
-                    f"[工具調用] {name} - 失敗 (耗時: {duration:.2f}s): {str(e)}",
+                    f"[工具呼叫] {name} - 失敗 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'tool_name': name,
                         'event_type': 'tool_call_error',
@@ -115,7 +115,7 @@ def log_tool_call(tool_name: Optional[str] = None, log_args: bool = True, log_re
 
 def log_data_source_call(source_name: str):
     """
-    資料來源調用專用日誌裝飾器
+    資料來源呼叫專用日誌裝飾器
     
     Args:
         source_name: 資料來源名稱（如：yfinance、finnhub、googlenews 等）
@@ -128,7 +128,7 @@ def log_data_source_call(source_name: str):
             # 提取股票代碼（通常是第一個參數）
             symbol = args[0] if args else kwargs.get('symbol', kwargs.get('ticker', 'unknown'))
             
-            # 記錄資料來源調用開始
+            # 記錄資料來源呼叫開始
             tool_logger.info(
                 f"[資料來源] {source_name} - 取得 {symbol} 資料",
                 extra={
@@ -196,7 +196,7 @@ def log_data_source_call(source_name: str):
 
 def log_llm_call(provider: str, model: str):
     """
-    LLM調用專用日誌裝飾器
+    LLM呼叫專用日誌裝飾器
     
     Args:
         provider: LLM 提供商（如：openai、anthropic）
@@ -207,9 +207,9 @@ def log_llm_call(provider: str, model: str):
         def wrapper(*args, **kwargs):
             start_time = time.time()
             
-            # 記錄LLM調用開始
+            # 記錄LLM呼叫開始
             tool_logger.info(
-                f"[LLM調用] {provider}/{model} - 開始",
+                f"[LLM呼叫] {provider}/{model} - 開始",
                 extra={
                     'llm_provider': provider,
                     'llm_model': model,
@@ -223,7 +223,7 @@ def log_llm_call(provider: str, model: str):
                 duration = time.time() - start_time
                 
                 tool_logger.info(
-                    f"[LLM調用] {provider}/{model} - 完成 (耗時: {duration:.2f}s)",
+                    f"[LLM呼叫] {provider}/{model} - 完成 (耗時: {duration:.2f}s)",
                     extra={
                         'llm_provider': provider,
                         'llm_model': model,
@@ -239,7 +239,7 @@ def log_llm_call(provider: str, model: str):
                 duration = time.time() - start_time
                 
                 tool_logger.error(
-                    f"[LLM調用] {provider}/{model} - 失敗 (耗時: {duration:.2f}s): {str(e)}",
+                    f"[LLM呼叫] {provider}/{model} - 失敗 (耗時: {duration:.2f}s): {str(e)}",
                     extra={
                         'llm_provider': provider,
                         'llm_model': model,

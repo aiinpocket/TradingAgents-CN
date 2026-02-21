@@ -75,11 +75,11 @@ def create_market_analyst_react(llm, toolkit):
 
             class USStockDataTool(BaseTool):
                 name: str = "get_us_stock_data"
-                description: str = f"取得美股{ticker}的市場資料和技術指標。直接調用，無需參數。"
+                description: str = f"取得美股{ticker}的市場資料和技術指標。直接呼叫，無需參數。"
 
                 def _run(self, query: str = "") -> str:
                     try:
-                        logger.debug(f"USStockDataTool 調用，股票代碼: {ticker}")
+                        logger.debug(f"USStockDataTool 呼叫，股票代碼: {ticker}")
                         from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
                         return get_us_stock_data_cached(
                             symbol=ticker,
@@ -100,11 +100,11 @@ def create_market_analyst_react(llm, toolkit):
 
             class FinnhubNewsTool(BaseTool):
                 name: str = "get_finnhub_news"
-                description: str = f"取得美股{ticker}的最新新聞和市場情緒（透過 FINNHUB API）。直接調用，無需參數。"
+                description: str = f"取得美股{ticker}的最新新聞和市場情緒（透過 FINNHUB API）。直接呼叫，無需參數。"
 
                 def _run(self, query: str = "") -> str:
                     try:
-                        logger.debug(f"FinnhubNewsTool 調用，股票代碼: {ticker}")
+                        logger.debug(f"FinnhubNewsTool 呼叫，股票代碼: {ticker}")
                         return toolkit.get_finnhub_news.invoke({
                             'ticker': ticker,
                             'start_date': _calc_start_date(current_date),
@@ -199,7 +199,7 @@ def create_market_analyst(llm, toolkit):
             # 使用統一的市場資料工具和 FinnHub 技術訊號
             logger.info("[市場分析師] 使用統一市場資料工具和 FinnHub 技術訊號")
             tools = [toolkit.get_stock_market_data_unified, toolkit.get_finnhub_technical_signals]
-            # 安全地取得工具名稱用於調試
+            # 安全地取得工具名稱用於除錯
             tool_names_debug = []
             for tool in tools:
                 if hasattr(tool, 'name'):
@@ -231,12 +231,12 @@ def create_market_analyst(llm, toolkit):
 - 所屬市場：{market_info['market_name']}
 - 計價貨幣：{market_info['currency_name']}（{market_info['currency_symbol']}）
 
-**工具調用指令：**
-你有一個工具叫做get_stock_market_data_unified，你必須立即調用這個工具來取得{company_name}（{ticker}）的市場資料。
-不要說你將要調用工具，直接調用工具。
+**工具呼叫指令：**
+你有一個工具叫做get_stock_market_data_unified，你必須立即呼叫這個工具來取得{company_name}（{ticker}）的市場資料。
+不要說你將要呼叫工具，直接呼叫工具。
 
 **分析要求：**
-1. 調用工具後，基於取得的真實資料進行技術分析
+1. 呼叫工具後，基於取得的真實資料進行技術分析
 2. 分析移動平均線、MACD、RSI、布林帶等技術指標
 3. 參考 FinnHub 技術分析綜合訊號（買入/賣出信號統計、ADX趨勢強度）和支撐壓力位補充你的技術分析
 4. 考慮{market_info['market_name']}市場特點進行分析
@@ -278,7 +278,7 @@ def create_market_analyst(llm, toolkit):
         )
 
         prompt = prompt.partial(system_message=system_message)
-        # 安全地取得工具名稱，處理函數和工具對象
+        # 安全地取得工具名稱，處理函數和工具物件
         tool_names = []
         for tool in tools:
             if hasattr(tool, 'name'):
@@ -299,12 +299,12 @@ def create_market_analyst(llm, toolkit):
 
         # 處理市場分析報告
         if len(result.tool_calls) == 0:
-            # 沒有工具調用，直接使用LLM的回覆
+            # 沒有工具呼叫，直接使用LLM的回覆
             report = result.content
             logger.info(f"[市場分析師] 直接回覆，長度: {len(report)}")
         else:
-            # 有工具調用，執行工具並生成完整分析報告
-            logger.info(f"[市場分析師] 工具調用: {[call.get('name', 'unknown') for call in result.tool_calls]}")
+            # 有工具呼叫，執行工具並生成完整分析報告
+            logger.info(f"[市場分析師] 工具呼叫: {[call.get('name', 'unknown') for call in result.tool_calls]}")
 
             try:
                 from langchain_core.messages import ToolMessage, HumanMessage
@@ -376,7 +376,7 @@ def create_market_analyst(llm, toolkit):
             except Exception as e:
                 logger.error(f"[市場分析師] 工具執行或分析生成失敗: {e}", exc_info=True)
 
-                report = f"市場分析師調用了工具但分析生成失敗: {[call.get('name', 'unknown') for call in result.tool_calls]}"
+                report = f"市場分析師呼叫了工具但分析生成失敗: {[call.get('name', 'unknown') for call in result.tool_calls]}"
 
                 return {
                     "messages": [result],

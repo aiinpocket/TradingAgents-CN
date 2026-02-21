@@ -15,8 +15,8 @@ from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('async_progress')
 
 def safe_serialize(obj):
-    """安全序列化對象，處理不可序列化的類型"""
-    # 特殊處理LangChain訊息對象
+    """安全序列化物件，處理不可序列化的類型"""
+    # 特殊處理LangChain訊息物件
     if hasattr(obj, '__class__') and 'Message' in obj.__class__.__name__:
         try:
             # 嘗試使用LangChain的序列化方法
@@ -40,13 +40,13 @@ def safe_serialize(obj):
             }
     
     if hasattr(obj, 'dict'):
-        # Pydantic對象
+        # Pydantic物件
         try:
             return obj.dict()
         except Exception as e:
             return str(obj)
     elif hasattr(obj, '__dict__'):
-        # 普通對象，轉換為字典
+        # 普通物件，轉換為字典
         result = {}
         for key, value in obj.__dict__.items():
             if not key.startswith('_'):  # 跳過私有屬性
@@ -143,7 +143,7 @@ class AsyncProgressTracker:
     def _init_redis(self) -> bool:
         """初始化Redis連接"""
         try:
-            # 首先檢查REDIS_ENABLED環境變量
+            # 首先檢查REDIS_ENABLED環境變數
             redis_enabled_raw = os.getenv('REDIS_ENABLED', 'false')
             redis_enabled = redis_enabled_raw.lower()
             logger.info(f"[Redis檢查] REDIS_ENABLED原值='{redis_enabled_raw}' -> 處理後='{redis_enabled}'")
@@ -154,13 +154,13 @@ class AsyncProgressTracker:
 
             import redis
 
-            # 從環境變量取得Redis配置
+            # 從環境變數取得Redis配置
             redis_host = os.getenv('REDIS_HOST', 'localhost')
             redis_port = int(os.getenv('REDIS_PORT', 6379))
             redis_password = os.getenv('REDIS_PASSWORD', None)
             redis_db = int(os.getenv('REDIS_DB', 0))
 
-            # 創建Redis連接
+            # 建立Redis連接
             if redis_password:
                 self.redis_client = redis.Redis(
                     host=redis_host,
@@ -190,7 +190,7 @@ class AsyncProgressTracker:
         steps = [
             {"name": "準備階段", "description": "驗證股票代碼，檢查資料來源可用性", "weight": 0.05},
             {"name": "環境檢查", "description": "檢查API密鑰配置，確保資料取得正常", "weight": 0.02},
-            {"name": "成本估算", "description": "根據分析深度預估API調用成本", "weight": 0.01},
+            {"name": "成本估算", "description": "根據分析深度預估API呼叫成本", "weight": 0.01},
             {"name": "參數設定", "description": "配置分析參數和AI模型選擇", "weight": 0.02},
             {"name": "啟動引擎", "description": "初始化AI分析引擎，準備開始分析", "weight": 0.05},
         ]
@@ -240,7 +240,7 @@ class AsyncProgressTracker:
         return steps
     
     def _get_analyst_display_name(self, analyst: str) -> str:
-        """取得分析師顯示名稱（保留兼容性）"""
+        """取得分析師顯示名稱（保留相容性）"""
         name_map = {
             'market': '市場分析師',
             'fundamentals': '基本面分析師',
@@ -308,11 +308,11 @@ class AsyncProgressTracker:
             'anthropic': 1.0,
         }.get(self.llm_provider, 1.0)
         
-        # 研究深度額外影響（工具調用複雜度）
+        # 研究深度額外影響（工具呼叫複雜度）
         depth_multiplier = {
-            1: 0.8,  # 快速分析，較少工具調用
-            2: 1.0,  # 基礎分析，標準工具調用
-            3: 1.3   # 標準分析，更多工具調用和推理
+            1: 0.8,  # 快速分析，較少工具呼叫
+            2: 1.0,  # 基礎分析，標準工具呼叫
+            3: 1.3   # 標準分析，更多工具呼叫和推理
         }.get(self.research_depth, 1.0)
         
         total_time = (base_time + analyst_time) * model_multiplier * depth_multiplier
@@ -344,9 +344,9 @@ class AsyncProgressTracker:
         # 更新進度資料
         current_step_info = self.analysis_steps[self.current_step] if self.current_step < len(self.analysis_steps) else self.analysis_steps[-1]
 
-        # 特殊處理工具調用訊息，更新步驟描述但不改變步驟
+        # 特殊處理工具呼叫訊息，更新步驟描述但不改變步驟
         step_description = current_step_info['description']
-        if "工具調用" in message:
+        if "工具呼叫" in message:
             # 提取工具名稱並更新描述
             if "get_stock_market_data_unified" in message:
                 step_description = "正在取得市場資料和技術指標..."
@@ -357,7 +357,7 @@ class AsyncProgressTracker:
             elif "get_us_fundamentals" in message:
                 step_description = "正在取得美股基本面資料..."
             else:
-                step_description = "正在調用分析工具..."
+                step_description = "正在呼叫分析工具..."
         elif "模組開始" in message:
             step_description = f"開始{current_step_info['name']}..."
         elif "模組完成" in message:
@@ -434,8 +434,8 @@ class AsyncProgressTracker:
                 return self._find_step_by_keyword(["風險控制", "控制"])
             elif "graph_signal_processing" in message or "signal" in message:
                 return self._find_step_by_keyword(["生成報告", "報告"])
-        # 工具調用日誌 - 不推進步驟，只更新描述
-        elif "工具調用" in message:
+        # 工具呼叫日誌 - 不推進步驟，只更新描述
+        elif "工具呼叫" in message:
             # 保持當前步驟，不推進
             return None
         # 模組完成日誌 - 推進到下一步
@@ -600,7 +600,7 @@ class AsyncProgressTracker:
 def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
     """根據分析ID取得進度"""
     try:
-        # 檢查REDIS_ENABLED環境變量
+        # 檢查REDIS_ENABLED環境變數
         redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower() == 'true'
 
         # 如果Redis啟用，先嘗試Redis
@@ -608,13 +608,13 @@ def get_progress_by_id(analysis_id: str) -> Optional[Dict[str, Any]]:
             try:
                 import redis
 
-                # 從環境變量取得Redis配置
+                # 從環境變數取得Redis配置
                 redis_host = os.getenv('REDIS_HOST', 'localhost')
                 redis_port = int(os.getenv('REDIS_PORT', 6379))
                 redis_password = os.getenv('REDIS_PASSWORD', None)
                 redis_db = int(os.getenv('REDIS_DB', 0))
 
-                # 創建Redis連接
+                # 建立Redis連接
                 if redis_password:
                     redis_client = redis.Redis(
                         host=redis_host,
@@ -664,7 +664,7 @@ def format_time(seconds: float) -> str:
 def get_latest_analysis_id() -> Optional[str]:
     """取得最新的分析ID"""
     try:
-        # 檢查REDIS_ENABLED環境變量
+        # 檢查REDIS_ENABLED環境變數
         redis_enabled = os.getenv('REDIS_ENABLED', 'false').lower() == 'true'
 
         # 如果Redis啟用，先嘗試從Redis取得
@@ -672,13 +672,13 @@ def get_latest_analysis_id() -> Optional[str]:
             try:
                 import redis
 
-                # 從環境變量取得Redis配置
+                # 從環境變數取得Redis配置
                 redis_host = os.getenv('REDIS_HOST', 'localhost')
                 redis_port = int(os.getenv('REDIS_PORT', 6379))
                 redis_password = os.getenv('REDIS_PASSWORD', None)
                 redis_db = int(os.getenv('REDIS_DB', 0))
 
-                # 創建Redis連接
+                # 建立Redis連接
                 if redis_password:
                     redis_client = redis.Redis(
                         host=redis_host,

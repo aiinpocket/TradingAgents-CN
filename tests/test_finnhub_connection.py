@@ -14,7 +14,7 @@ def test_finnhub_api():
     # 檢查API密鑰
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     if not finnhub_key:
-        print(" 請設定 FINNHUB_API_KEY 環境變量")
+        print(" 請設定 FINNHUB_API_KEY 環境變數")
         return False
     
     print(f" FINNHUB API密鑰已配置: {finnhub_key[:10]}...")
@@ -23,11 +23,11 @@ def test_finnhub_api():
         from tradingagents.agents.utils.agent_utils import Toolkit
         from tradingagents.default_config import DEFAULT_CONFIG
         
-        # 創建配置
+        # 建立配置
         config = DEFAULT_CONFIG.copy()
         config['online_tools'] = True
         
-        # 創建工具包
+        # 建立工具包
         toolkit = Toolkit()
         toolkit.update_config(config)
         
@@ -39,7 +39,7 @@ def test_finnhub_api():
                 'start_date': '2025-06-25',
                 'end_date': '2025-06-29'
             })
-            print(f" FINNHUB新聞API調用成功")
+            print(f" FINNHUB新聞API呼叫成功")
             print(f"新聞資料長度: {len(news_result) if news_result else 0}")
             if news_result and len(news_result) > 100:
                 print(f"新聞內容前200字符:")
@@ -47,7 +47,7 @@ def test_finnhub_api():
             else:
                 print(f"新聞內容: {news_result}")
         except Exception as e:
-            print(f" FINNHUB新聞API調用失敗: {e}")
+            print(f" FINNHUB新聞API呼叫失敗: {e}")
         
         # 測試Yahoo Finance資料API
         print(f"\n 測試Yahoo Finance資料API...")
@@ -57,7 +57,7 @@ def test_finnhub_api():
                 'start_date': '2025-06-25',
                 'end_date': '2025-06-29'
             })
-            print(f" Yahoo Finance API調用成功")
+            print(f" Yahoo Finance API呼叫成功")
             print(f"股票資料長度: {len(stock_result) if stock_result else 0}")
             if stock_result and len(stock_result) > 100:
                 print(f"股票資料前200字符:")
@@ -65,7 +65,7 @@ def test_finnhub_api():
             else:
                 print(f"股票資料: {stock_result}")
         except Exception as e:
-            print(f" Yahoo Finance API調用失敗: {e}")
+            print(f" Yahoo Finance API呼叫失敗: {e}")
         
         # 測試OpenAI基本面API
         print(f"\n 測試OpenAI基本面API...")
@@ -74,7 +74,7 @@ def test_finnhub_api():
                 'ticker': 'AAPL',
                 'curr_date': '2025-06-29'
             })
-            print(f" OpenAI基本面API調用成功")
+            print(f" OpenAI基本面API呼叫成功")
             print(f"基本面資料長度: {len(fundamentals_result) if fundamentals_result else 0}")
             if fundamentals_result and len(fundamentals_result) > 100:
                 print(f"基本面資料前200字符:")
@@ -82,7 +82,7 @@ def test_finnhub_api():
             else:
                 print(f"基本面資料: {fundamentals_result}")
         except Exception as e:
-            print(f" OpenAI基本面API調用失敗: {e}")
+            print(f" OpenAI基本面API呼叫失敗: {e}")
         
         return True
         
