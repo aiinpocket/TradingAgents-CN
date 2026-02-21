@@ -248,7 +248,7 @@ docker-compose restart
 ### 參與貢獻
 
 - [回報問題](https://github.com/aiinpocket/TradingAgents-CN/issues)
-- [功能建議](https://github.com/aiinpocket/TradingAgents-CN/discussions)
+- [功能建議](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - [提交程式碼](https://github.com/aiinpocket/TradingAgents-CN/pulls)
 - [完善文件](https://github.com/aiinpocket/TradingAgents-CN/tree/develop/docs)
 

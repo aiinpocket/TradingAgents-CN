@@ -209,7 +209,7 @@ python examples/simple_analysis_demo.py
 
 1. 查看 [故障排除指南](../docs/troubleshooting/)
 2. 提交 [Issue](https://github.com/aiinpocket/TradingAgents-CN/issues)
-3. 加入我們的社群討論
+3. 回報問題或提出建議
 
 ## 授權
 

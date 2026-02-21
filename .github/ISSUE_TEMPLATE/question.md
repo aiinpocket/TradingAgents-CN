@@ -121,5 +121,5 @@ If helpful, please add screenshots.
 - [配置說明](../README.md#配置api密鑰)
 
 **社區支持 / Community Support:**
--  [GitHub Discussions](https://github.com/aiinpocket/TradingAgents-CN/discussions)
+-  [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
 -  郵箱: hsliup@163.com

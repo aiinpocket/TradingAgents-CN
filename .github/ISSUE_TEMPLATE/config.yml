@@ -8,10 +8,6 @@ contact_links:
     url: https://github.com/aiinpocket/TradingAgents-CN/blob/main/docs/DOCKER_GUIDE.md
     about: "Detailed guide for Docker containerized deployment"
 
-  - name: "Discussions"
-    url: https://github.com/aiinpocket/TradingAgents-CN/discussions
-    about: "Technical discussions, idea sharing and community communication"
-
   - name: "Original Project"
     url: https://github.com/TauricResearch/TradingAgents
     about: "View the original TradingAgents project"

@@ -298,9 +298,7 @@ print(':', data[:200] if data else '')
 
 ## 
 
-- **GitHub Issues**https://github.com/aiinpocket/TradingAgents-CN/issues
-- ****GitHub Discussions
-- ****Issue@aiinpocket
+- **GitHub Issues**: https://github.com/aiinpocket/TradingAgents-CN/issues
 
 ---
 

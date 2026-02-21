@@ -706,8 +706,7 @@ pip install -r requirements.txt
 - ****: https://github.com/aiinpocket/TradingAgents-CN/issues
 
 ### 
-- **GitHub Issues**: 
-- **GitHub Discussions**: 
+- **GitHub Issues**:
 - **Email **: 
 
 ### 

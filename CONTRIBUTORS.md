@@ -93,7 +93,7 @@
 - **測試用戶** - 感謝您們在開發過程中的測試和反饋
 - **文檔貢獻者** - 感謝您們對項目文檔的完善和改進
 
-###  社區推廣
+###  專案推廣
 
 - **技術博客作者** - 感謝您們撰寫技術文章推廣項目
 - **社交媒體推廣者** - 感謝您們在各平台分享項目信息
@@ -112,7 +112,7 @@
 ###  非技術貢獻
 
 - **用戶反饋**：使用體驗反饋、功能需求建議
-- **社區建設**：回答問題、幫助新用戶、組織活動
+- **使用者支援**：回答問題、幫助新使用者
 - **推廣宣傳**：撰寫文章、社交媒體分享、會議演講
 
 ###  貢獻流程
@@ -129,7 +129,7 @@
 如果您想成為貢獻者或有任何問題，請通過以下方式聯系我們：
 
 - **GitHub Issues**: [提交問題或建議](https://github.com/aiinpocket/TradingAgents-CN/issues)
-- **GitHub Discussions**: [參與社區討論](https://github.com/aiinpocket/TradingAgents-CN/discussions)
+- **問題回報**: [提交 Issue](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - **Pull Requests**: [提交代碼貢獻](https://github.com/aiinpocket/TradingAgents-CN/pulls)
 - 加入到ＱＱ群：782124367
 

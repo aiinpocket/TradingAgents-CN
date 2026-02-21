@@ -422,7 +422,7 @@ REDIS_PASSWORD=secure_redis_password
 Docker
 
 - [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
-- [GitHub Discussions](https://github.com/aiinpocket/TradingAgents-CN/discussions)
+- [GitHub Issues](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - [Docker](https://docs.docker.com/)
 
 ---

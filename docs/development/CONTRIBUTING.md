@@ -121,9 +121,7 @@ Issue
 
 ## 
 
-- **GitHub Issues**: 
-- **GitHub Discussions**: 
-- ****: 
+- **GitHub Issues**: https://github.com/aiinpocket/TradingAgents-CN/issues
 
 ## 
 
