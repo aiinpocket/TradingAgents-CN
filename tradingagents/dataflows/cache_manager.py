@@ -92,11 +92,6 @@ class StockDataCache:
             if openai_key.startswith('sk-') and len(openai_key) >= 40:
                 available_providers.append('openai')
         
-        # 檢查Google AI
-        google_key = os.getenv("GOOGLE_API_KEY")
-        if google_key and google_key.strip():
-            available_providers.append('google')
-        
         # 檢查Anthropic
         anthropic_key = os.getenv("ANTHROPIC_API_KEY")
         if anthropic_key and anthropic_key.strip():

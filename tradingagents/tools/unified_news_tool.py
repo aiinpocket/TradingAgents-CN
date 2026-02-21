@@ -145,83 +145,12 @@ class UnifiedNewsAnalyzer:
         """格式化新聞結果"""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # 添加調試日誌：打印原始新聞內容
-        logger.info(f"[統一新聞工具] 原始新聞內容預覽 (前500字符): {news_content[:500]}")
-        logger.info(f"[統一新聞工具] 原始內容長度: {len(news_content)} 字符")
-        
-        # 檢測是否為Google/Gemini模型
-        is_google_model = any(keyword in model_info.lower() for keyword in ['google', 'gemini', 'gemma'])
-        original_length = len(news_content)
-        google_control_applied = False
-        
-        # 添加Google模型檢測日誌
-        if is_google_model:
-            logger.info(f"[統一新聞工具] 檢測到Google模型，啟用特殊處理")
-        
-        # 對Google模型進行特殊的長度控制
-        if is_google_model and len(news_content) > 5000:  # 降低閾值到5000字符
-            logger.warning(f"[統一新聞工具] 檢測到Google模型，新聞內容過長({len(news_content)}字符)，進行長度控制...")
-            
-            # 更嚴格的長度控制策略
-            lines = news_content.split('\n')
-            important_lines = []
-            char_count = 0
-            target_length = 3000  # 目標長度設為3000字符
-            
-            # 第一輪：優先保留包含關鍵詞的重要行
-            for line in lines:
-                line = line.strip()
-                if not line:
-                    continue
-                    
-                # 檢查是否包含重要關鍵詞
-                important_keywords = ['股票', '公司', '財報', '業績', '漲跌', '價格', '市值', '營收', '利潤',
-                                    '增長', '下跌', '上漲', '盈利', '虧損', '投資', '分析', '預期', '公告']
-                
-                is_important = any(keyword in line for keyword in important_keywords)
-                
-                if is_important and char_count + len(line) < target_length:
-                    important_lines.append(line)
-                    char_count += len(line)
-                elif not is_important and char_count + len(line) < target_length * 0.7:  # 非重要內容更嚴格限制
-                    important_lines.append(line)
-                    char_count += len(line)
-                
-                # 如果已達到目標長度，停止添加
-                if char_count >= target_length:
-                    break
-            
-            # 如果提取的重要內容仍然過長，進行進一步截斷
-            if important_lines:
-                processed_content = '\n'.join(important_lines)
-                if len(processed_content) > target_length:
-                    processed_content = processed_content[:target_length] + "...(內容已智能截斷)"
-                
-                news_content = processed_content
-                google_control_applied = True
-                logger.info(f"[統一新聞工具] Google模型智能長度控制完成，從{original_length}字符壓縮至{len(news_content)}字符")
-            else:
-                # 如果沒有重要行，直接截斷到目標長度
-                news_content = news_content[:target_length] + "...(內容已強制截斷)"
-                google_control_applied = True
-                logger.info(f"[統一新聞工具] Google模型強制截斷至{target_length}字符")
-        
-        # 計算最終的格式化結果長度，確保總長度合理
-        base_format_length = 300  # 格式化模板的大概長度
-        if is_google_model and (len(news_content) + base_format_length) > 4000:
-            # 如果加上格式化後仍然過長，進一步壓縮新聞內容
-            max_content_length = 3500
-            if len(news_content) > max_content_length:
-                news_content = news_content[:max_content_length] + "...(已優化長度)"
-                google_control_applied = True
-                logger.info(f"[統一新聞工具] Google模型最終長度優化，內容長度: {len(news_content)}字符")
-        
+        logger.info(f"[統一新聞工具] 新聞內容長度: {len(news_content)} 字符")
+
         formatted_result = f"""
 === 新聞數據來源: {source} ===
 獲取時間: {timestamp}
 數據長度: {len(news_content)} 字符
-{f"模型類型: {model_info}" if model_info else ""}
-{f"Google模型長度控制已應用 (原長度: {original_length} 字符)" if google_control_applied else ""}
 
 === 新聞內容 ===
 {news_content}

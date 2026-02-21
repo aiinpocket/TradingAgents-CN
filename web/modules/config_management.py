@@ -151,7 +151,6 @@ def render_model_config():
     1. 打開專案根目錄的 `.env` 文件
     2. 添加相應的API密鑰環境變數：
        - OpenAI: `OPENAI_API_KEY=your_key`
-       - Google AI: `GOOGLE_API_KEY=your_key`
        - Anthropic: `ANTHROPIC_API_KEY=your_key`
     3. 重新啟動應用程式
     4. 系統會自動檢測並載入新配置的模型
@@ -234,8 +233,8 @@ def render_pricing_config():
     col1, col2 = st.columns(2)
     
     with col1:
-        new_provider = st.text_input("供應商", placeholder="例如: openai, google, anthropic", key="new_pricing_provider")
-        new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4, gemini-2.5-pro", key="new_pricing_model")
+        new_provider = st.text_input("供應商", placeholder="例如: openai, anthropic", key="new_pricing_provider")
+        new_model_name = st.text_input("模型名稱", placeholder="例如: gpt-4o, claude-sonnet-4-6", key="new_pricing_model")
         new_currency = st.selectbox("貨幣", ["USD", "EUR"], key="new_pricing_currency")
 
     with col2:
@@ -524,11 +523,10 @@ def render_env_status():
         with api_col1:
             st.write("**大模型API密鑰:**")
             for provider, configured in env_status["api_keys"].items():
-                if provider in ["openai", "google", "anthropic"]:
+                if provider in ["openai", "anthropic"]:
                     status = "已配置" if configured else "未配置"
                     provider_name = {
                         "openai": "OpenAI",
-                        "google": "Google AI",
                         "anthropic": "Anthropic"
                     }.get(provider, provider)
                     st.write(f"- {provider_name}: {status}")

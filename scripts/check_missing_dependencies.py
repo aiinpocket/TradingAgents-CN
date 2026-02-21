@@ -62,9 +62,7 @@ PACKAGE_NAME_MAPPING = {
     'dotenv': 'python-dotenv',
     'langchain_openai': 'langchain-openai',
     'langchain_anthropic': 'langchain-anthropic',
-    'langchain_google_genai': 'langchain-google-genai',
     'langchain_experimental': 'langchain-experimental',
-    'google': 'google-generativeai',  # 可能是多個包
     'dateutil': 'python-dateutil',
     'finnhub': 'finnhub-python',
 }

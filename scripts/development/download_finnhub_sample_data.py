@@ -63,7 +63,7 @@ def create_sample_news_data(ticker, data_dir, days=7):
         "GOOGL": [
             "谷歌搜索廣告收入穩定增長",
             "谷歌云計算業務競爭力提升",
-            "谷歌AI模型Gemini性能優異",
+            "谷歌雲端業務營收持續增長",
             "YouTube廣告收入超預期",
             "谷歌在量子計算領域取得進展"
         ],

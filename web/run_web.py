@@ -166,17 +166,15 @@ def check_api_keys():
     
     # 檢查至少一個 LLM 提供商的 API 密鑰已配置
     openai_key = os.getenv("OPENAI_API_KEY")
-    google_key = os.getenv("GOOGLE_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
     finnhub_key = os.getenv("FINNHUB_API_KEY")
 
-    llm_configured = openai_key or google_key or anthropic_key
+    llm_configured = openai_key or anthropic_key
 
     if not llm_configured:
         logger.warning(f"未檢測到任何 LLM 提供商的 API 密鑰")
         logger.info(f"請確保在.env文件中至少配置以下其中一個密鑰:")
         logger.info(f"- OPENAI_API_KEY (OpenAI GPT 模型)")
-        logger.info(f"- GOOGLE_API_KEY (Google Gemini 模型)")
         logger.info(f"- ANTHROPIC_API_KEY (Anthropic Claude 模型)")
         logger.info(f"\n配置方法:")
         logger.info(f"1. 複制 .env.example 為 .env")

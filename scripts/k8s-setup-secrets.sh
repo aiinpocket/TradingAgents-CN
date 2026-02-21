@@ -54,9 +54,7 @@ if [ "$MODE" = "argocd" ]; then
     echo "基本 secrets 已設定完成"
     echo ""
     echo "如需設定額外的 API 金鑰，請執行："
-    echo "  argocd app set $APP_NAME --helm-set-string 'secrets.googleApiKey=YOUR_KEY'"
     echo "  argocd app set $APP_NAME --helm-set-string 'secrets.anthropicApiKey=YOUR_KEY'"
-    echo "  argocd app set $APP_NAME --helm-set-string 'secrets.openrouterApiKey=YOUR_KEY'"
 
 elif [ "$MODE" = "kubectl" ]; then
     echo "=== 直接建立 K8s Secret ==="
@@ -76,14 +74,7 @@ elif [ "$MODE" = "kubectl" ]; then
         --from-literal="MONGODB_PASSWORD=$MONGO_PASS" \
         --from-literal="REDIS_PASSWORD=$REDIS_PASS" \
         --from-literal="COOKIE_SECRET_KEY=$COOKIE_KEY" \
-        --from-literal="GOOGLE_API_KEY=" \
         --from-literal="ANTHROPIC_API_KEY=" \
-        --from-literal="OPENROUTER_API_KEY=" \
-        --from-literal="CUSTOM_OPENAI_API_KEY=" \
-        --from-literal="CUSTOM_OPENAI_BASE_URL=" \
-        --from-literal="REDDIT_CLIENT_ID=" \
-        --from-literal="REDDIT_CLIENT_SECRET=" \
-        --from-literal="REDDIT_USER_AGENT=" \
         --dry-run=client -o yaml | kubectl apply -f -
 
     echo ""

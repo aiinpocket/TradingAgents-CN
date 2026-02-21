@@ -770,17 +770,13 @@ def main():
 
             1. **OpenAI API密鑰** (OPENAI_API_KEY)
                - 獲取地址: https://platform.openai.com/
-               - 用途: GPT-4、GPT-3.5 等模型
+               - 用途: GPT-4、GPT-4o-mini 等模型
 
-            2. **Google AI API密鑰** (GOOGLE_API_KEY)
-               - 獲取地址: https://ai.google.dev/
-               - 用途: Gemini 模型系列
-
-            3. **Anthropic API密鑰** (ANTHROPIC_API_KEY)
+            2. **Anthropic API密鑰** (ANTHROPIC_API_KEY)
                - 獲取地址: https://console.anthropic.com/
                - 用途: Claude 模型系列
 
-            4. **金融數據API密鑰** (FINNHUB_API_KEY，可選)
+            3. **金融數據API密鑰** (FINNHUB_API_KEY，可選)
                - 獲取地址: https://finnhub.io/
                - 用途: 美股數據（若無則部分功能受限）
 
@@ -793,7 +789,7 @@ def main():
             ```bash
             # .env 文件示例
             OPENAI_API_KEY=sk-your-openai-key
-            GOOGLE_API_KEY=your-google-key
+            ANTHROPIC_API_KEY=your-anthropic-key
             FINNHUB_API_KEY=your-finnhub-key
             ```
             """)
@@ -1293,10 +1289,6 @@ def main():
                 - `gpt-4o-mini`: 快速響應，適合日常分析，成本較低
                 - `gpt-4o`: 平衡性能，推薦日常使用
                 - `o1-mini` / `o1`: 深度推理，適合複雜分析
-
-                **Google Gemini 系列**:
-                - `gemini-2.0-flash`: 快速響應，適合即時查詢
-                - `gemini-2.5-pro`: 強大的分析與推理能力
 
                 **Anthropic Claude 系列**:
                 - `claude-haiku-4-5`: 快速且經濟

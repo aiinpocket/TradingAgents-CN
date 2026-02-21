@@ -141,7 +141,7 @@ class InstallationTester:
                 # 檢查是否有API密鑰配置
                 api_keys = [
                     'OPENAI_API_KEY',
-                    'GOOGLE_API_KEY'
+                    'ANTHROPIC_API_KEY'
                 ]
                 
                 configured_apis = []

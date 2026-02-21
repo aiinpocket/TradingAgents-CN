@@ -111,15 +111,8 @@ config:
 # =============================================================
 secrets:
   openaiApiKey: ""
-  googleApiKey: ""
   anthropicApiKey: ""
-  openrouterApiKey: ""
-  customOpenaiApiKey: ""
-  customOpenaiBaseUrl: ""
   finnhubApiKey: ""
-  redditClientId: ""
-  redditClientSecret: ""
-  redditUserAgent: ""
   cookieSecretKey: ""
   mongodbPassword: ""
   redisPassword: ""

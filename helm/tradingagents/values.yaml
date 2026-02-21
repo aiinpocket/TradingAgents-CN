@@ -76,7 +76,7 @@ config:
   timezone: "Asia/Taipei"
   # 日誌等級
   logLevel: "INFO"
-  # LLM 提供商（openai, google, anthropic, openrouter, ollama, custom_openai）
+  # LLM 提供商（openai, anthropic）
   llmProvider: "openai"
   # 記憶系統
   memoryEnabled: "true"
@@ -87,17 +87,9 @@ config:
 secrets:
   # LLM API 金鑰（至少需要一個）
   openaiApiKey: ""
-  googleApiKey: ""
   anthropicApiKey: ""
-  openrouterApiKey: ""
-  customOpenaiApiKey: ""
-  customOpenaiBaseUrl: ""
   # 資料源 API 金鑰
   finnhubApiKey: ""
-  # Reddit API（可選）
-  redditClientId: ""
-  redditClientSecret: ""
-  redditUserAgent: ""
   # Cookie 加密密鑰
   cookieSecretKey: ""
   # MongoDB 密碼

@@ -119,7 +119,7 @@ class FinancialSituationMemory:
         # 初始化降級選項標誌
         self.fallback_available = False
 
-        # 所有提供商統一使用 OpenAI embedding 或 Ollama 本地 embedding
+        # 統一使用 OpenAI embedding
         if config["backend_url"] == "http://localhost:11434/v1":
             self.embedding = "nomic-embed-text"
             self.client = OpenAI(base_url=config["backend_url"])

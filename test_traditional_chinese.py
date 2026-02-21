@@ -71,16 +71,14 @@ def test_simple_analysis():
 
         # 檢查API密鑰
         openai_key = os.getenv("OPENAI_API_KEY")
-        google_key = os.getenv("GOOGLE_API_KEY")
         anthropic_key = os.getenv("ANTHROPIC_API_KEY")
 
         print(f"\n檢查API密鑰配置:")
-        print(f"  OpenAI: {'✓ 已配置' if openai_key else '✗ 未配置'}")
-        print(f"  Google: {'✓ 已配置' if google_key else '✗ 未配置'}")
-        print(f"  Anthropic: {'✓ 已配置' if anthropic_key else '✗ 未配置'}")
+        print(f"  OpenAI: {'已配置' if openai_key else '未配置'}")
+        print(f"  Anthropic: {'已配置' if anthropic_key else '未配置'}")
 
-        if not (openai_key or google_key or anthropic_key):
-            print("\n⚠️ 警告：沒有配置任何LLM API密鑰，無法執行完整測試")
+        if not (openai_key or anthropic_key):
+            print("\n警告：沒有配置任何LLM API密鑰，無法執行完整測試")
             print("將進行系統提示詞檢查...")
             return test_prompts_only()
 
@@ -96,14 +94,6 @@ def test_simple_analysis():
                 api_key=openai_key
             )
             provider = "OpenAI"
-        elif google_key:
-            from langchain_google_genai import ChatGoogleGenerativeAI
-            llm = ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash-exp",
-                temperature=0.3,
-                google_api_key=google_key
-            )
-            provider = "Google"
         elif anthropic_key:
             from langchain_anthropic import ChatAnthropic
             llm = ChatAnthropic(

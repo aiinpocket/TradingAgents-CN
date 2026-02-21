@@ -64,16 +64,14 @@ def test_llm_output():
 
     # 檢查API密鑰
     openai_key = os.getenv("OPENAI_API_KEY")
-    google_key = os.getenv("GOOGLE_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
 
     print(f"\nAPI密鑰檢查:")
     print(f"  OpenAI: {'✓' if openai_key else '✗'}")
-    print(f"  Google: {'✓' if google_key else '✗'}")
     print(f"  Anthropic: {'✓' if anthropic_key else '✗'}")
 
-    if not (openai_key or google_key or anthropic_key):
-        print("\n⚠️ 沒有配置任何LLM API密鑰")
+    if not (openai_key or anthropic_key):
+        print("\n沒有配置任何LLM API密鑰")
         print("跳過LLM測試，只檢查agent文件配置...")
         return check_agent_files()
 
@@ -87,14 +85,6 @@ def test_llm_output():
                 api_key=openai_key
             )
             provider = "OpenAI (gpt-4o-mini)"
-        elif google_key:
-            from langchain_google_genai import ChatGoogleGenerativeAI
-            llm = ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash-exp",
-                temperature=0.3,
-                google_api_key=google_key
-            )
-            provider = "Google (gemini-2.0-flash-exp)"
         elif anthropic_key:
             from langchain_anthropic import ChatAnthropic
             llm = ChatAnthropic(

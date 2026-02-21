@@ -195,8 +195,8 @@ class ConfigManager:
                     enabled=False
                 ),
                 ModelConfig(
-                    provider="google",
-                    model_name="gemini-2.5-pro",
+                    provider="anthropic",
+                    model_name="claude-sonnet-4-6",
                     api_key="",
                     max_tokens=4000,
                     temperature=0.7,
@@ -225,27 +225,6 @@ class ConfigManager:
                 PricingConfig("openai", "gpt-4-turbo", 0.01, 0.03, "USD"),
                 PricingConfig("openai", "gpt-4", 0.03, 0.06, "USD"),
                 PricingConfig("openai", "gpt-3.5-turbo", 0.0005, 0.0015, "USD"),
-
-                # Google定價 (美元，每千token)
-                # Gemini 2.5系列 (2025年最新)
-                PricingConfig("google", "gemini-2.5-pro", 0.00125, 0.01, "USD"),
-                PricingConfig("google", "gemini-2.5-pro-002", 0.00125, 0.01, "USD"),
-                PricingConfig("google", "gemini-2.5-flash", 0.0003, 0.0025, "USD"),
-                PricingConfig("google", "gemini-2.5-flash-002", 0.0003, 0.0025, "USD"),
-                PricingConfig("google", "gemini-2.5-flash-preview-05-20", 0.0003, 0.0025, "USD"),
-                PricingConfig("google", "gemini-2.5-flash-lite", 0.0001, 0.0004, "USD"),
-                PricingConfig("google", "gemini-2.5-flash-lite-preview-06-17", 0.0001, 0.0004, "USD"),
-
-                # Gemini 2.0系列
-                PricingConfig("google", "gemini-2.0-flash", 0.00025, 0.0005, "USD"),
-                PricingConfig("google", "gemini-2.0-flash-lite", 0.0001, 0.0004, "USD"),
-                PricingConfig("google", "gemini-2.0-pro-experimental", 0.00125, 0.01, "USD"),
-
-                # Gemini 1.5系列
-                PricingConfig("google", "gemini-1.5-pro", 0.00025, 0.0005, "USD"),
-                PricingConfig("google", "gemini-1.5-flash", 0.00025, 0.0005, "USD"),
-                PricingConfig("google", "gemini-pro", 0.00025, 0.0005, "USD"),
-                PricingConfig("google", "gemini-pro-vision", 0.00025, 0.0005, "USD"),
 
                 # Anthropic Claude定價 (美元，每千token)
                 # Claude 4系列 (2025年最新)

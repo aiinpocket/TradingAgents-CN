@@ -129,7 +129,7 @@ def show_release_info():
     
     logger.info(f"\n 發布內容:")
     logger.info(f"  完整的Web管理界面")
-    logger.info(f"  多LLM提供商支援（OpenAI / Google AI / Anthropic）")
+    logger.info(f"  多LLM提供商支援（OpenAI / Anthropic）")
     logger.info(f"  完整的測試體系")
     logger.info(f"  詳細的使用文件")
     
@@ -145,7 +145,7 @@ def show_release_info():
     
     logger.info(f"\n主要特性:")
     logger.info(f"  Web界面股票分析")
-    logger.info(f"  多LLM提供商支援（OpenAI / Google AI / Anthropic）")
+    logger.info(f"  多LLM提供商支援（OpenAI / Anthropic）")
     logger.info(f"  即時分析進度顯示")
     logger.info(f"  多分析師協作決策")
     logger.info(f"  完整的繁體中文支援")
@@ -195,7 +195,7 @@ def main():
     logger.info(f"=")
     logger.info(f"1. 訪問: https://github.com/hsliuping/TradingAgents-CN/releases/new")
     logger.info(f"2. 選擇標簽: cn-v0.1.2")
-    logger.info(f"3. 發布標題: TradingAgents-CN v0.1.2 - Web管理界面和Google AI支持")
+    logger.info(f"3. 發布標題: TradingAgents-CN v0.1.2 - Web管理界面")
     logger.info(f"4. 複制 RELEASE_NOTES_v0.1.2.md 的內容到描述框")
     logger.info(f"5. 勾選 'Set as the latest release'")
     logger.info(f"6. 點擊 'Publish release'")

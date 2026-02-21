@@ -288,7 +288,7 @@ class LogAnalyzer:
             return entry['provider']
         
         # 從訊息中提取
-        providers = ['OpenAI', 'Google', 'Anthropic', 'Gemini', 'OpenRouter']
+        providers = ['OpenAI', 'Anthropic']
         for provider in providers:
             if provider in message:
                 return provider

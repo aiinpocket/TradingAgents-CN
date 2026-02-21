@@ -105,7 +105,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         analysis_date: 分析日期
         analysts: 分析師列表
         research_depth: 研究深度
-        llm_provider: LLM 提供商 (openai/google/anthropic/openrouter/ollama/custom_openai)
+        llm_provider: LLM 提供商 (openai/anthropic)
         llm_model: 大模型名稱
         progress_callback: 進度回調函數，用於更新UI狀態
     """

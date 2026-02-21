@@ -62,7 +62,7 @@ def test_cli_command_format_consistency():
     # 檢查主要文件文件
     docs_to_check = [
         "README-CN.md",
-        "docs/configuration/google-ai-setup.md"
+        "docs/configuration/config-guide.md"
     ]
     
     for doc_file in docs_to_check:

@@ -20,13 +20,13 @@ def quick_analysis_demo():
     logger.info("TradingAgents 快速投資分析演示")
     logger.info("=" * 60)
 
-    api_key = os.getenv("OPENAI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY") or os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
-        logger.error("請先設定 OPENAI_API_KEY 或 GOOGLE_API_KEY 環境變數")
+        logger.error("請先設定 OPENAI_API_KEY 或 ANTHROPIC_API_KEY 環境變數")
         logger.info("在 .env 檔案中添加:")
         logger.info("  OPENAI_API_KEY=your_api_key")
         logger.info("  或")
-        logger.info("  GOOGLE_API_KEY=your_api_key")
+        logger.info("  ANTHROPIC_API_KEY=your_api_key")
         return
 
     logger.info("環境檢查通過")

@@ -955,10 +955,6 @@ def check_api_keys(llm_provider: str) -> bool:
     elif "anthropic" in llm_provider.lower():
         if not os.getenv("ANTHROPIC_API_KEY"):
             missing_keys.append("ANTHROPIC_API_KEY")
-    elif "google" in llm_provider.lower():
-        if not os.getenv("GOOGLE_API_KEY"):
-            missing_keys.append("GOOGLE_API_KEY")
-
     # 檢查金融數據API密鑰
     if not os.getenv("FINNHUB_API_KEY"):
         missing_keys.append("FINNHUB_API_KEY (金融數據)")
@@ -1556,12 +1552,6 @@ def config():
     providers_table.add_column("說明 | Description")
 
     providers_table.add_row(
-        "Google AI",
-        "gemini-2.5-pro, gemini-2.5-flash",
-        "Recommended",
-        "Free tier available"
-    )
-    providers_table.add_row(
         "OpenAI",
         "gpt-4o, gpt-4o-mini, o1",
         "Supported",
@@ -1573,13 +1563,6 @@ def config():
         "Supported",
         "Excellent reasoning"
     )
-    providers_table.add_row(
-        "OpenRouter",
-        "Various models",
-        "Supported",
-        "Multi-provider access"
-    )
-
     console.print(providers_table)
 
     # 檢查API密鑰狀態
@@ -1594,7 +1577,6 @@ def config():
     openai_key = os.getenv("OPENAI_API_KEY")
     finnhub_key = os.getenv("FINNHUB_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
-    google_key = os.getenv("GOOGLE_API_KEY")
 
     api_keys_table.add_row(
         "FINNHUB_API_KEY",
@@ -1611,11 +1593,6 @@ def config():
         "已配置" if anthropic_key else "未配置",
         f"Anthropic | {anthropic_key[:DEFAULT_API_KEY_DISPLAY_LENGTH]}..." if anthropic_key else "Anthropic API密鑰"
     )
-    api_keys_table.add_row(
-        "GOOGLE_API_KEY",
-        "已配置" if google_key else "未配置",
-        f"Google AI | {google_key[:DEFAULT_API_KEY_DISPLAY_LENGTH]}..." if google_key else "Google AI API密鑰"
-    )
 
     console.print(api_keys_table)
 
@@ -1623,7 +1600,7 @@ def config():
     logger.info(f"1. Edit .env file in project root")
     logger.info(f"2. Or set environment variables:")
     logger.info(f"   - OPENAI_API_KEY (OpenAI)")
-    logger.info(f"   - GOOGLE_API_KEY (Google AI)")
+    logger.info(f"   - ANTHROPIC_API_KEY (Anthropic)")
     logger.info(f"   - FINNHUB_API_KEY (Financial data)")
 
     if not finnhub_key:
