@@ -297,7 +297,7 @@ LangGraph
 
 LLMToolNode
 
-#### 1⃣ 
+#### 1 
 ```python
 # 
 ****
@@ -305,19 +305,19 @@ get_stock_market_data_unified{company_name}{ticker}
 
 ```
 
-#### 2⃣ 
+#### 2 
 | | | | |
 |---------|------|-----------|--------|
 | `get_stock_market_data_unified` | **** | (3) | |
 | `get_YFin_data_online` | Retrieve stock price data from Yahoo Finance | (3) | |
 | `get_stockstats_indicators_report_online` | Retrieve stock stats indicators | (4) | |
 
-#### 3⃣ 
+#### 3 
 - `unified` = 
 - `online` = 
 - `indicators` = 
 
-#### 4⃣ 
+#### 4 
 ```python
 # - 3
 get_stock_market_data_unified(ticker, start_date, end_date)
@@ -439,21 +439,21 @@ else:
 
 ### 
 
-#### 1⃣ LLM
+#### 1 LLM
 LLM
 - **GPT**: 
 - **Claude**: 
 - **Google Gemini**: 
 
-#### 2⃣ 
+#### 2 
 LLM""
 
-#### 3⃣ 
+#### 3 
 LLM""
 
 ### 
 
-#### 1⃣ 
+#### 1 
 ```python
 # 
 " get_stock_fundamentals_unified "
@@ -461,11 +461,11 @@ LLM""
 ""
 ```
 
-#### 2⃣ 
+#### 2 
 - 
 - 
 
-#### 3⃣ 
+#### 3 
 - 
 - 
 - 

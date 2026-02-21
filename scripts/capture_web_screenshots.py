@@ -73,7 +73,7 @@ def start_web_service():
             time.sleep(2)
             if check_web_service():
                 return True
-            logger.info(f"⏳ 等待服務啟動... ({i+1}/30)")
+            logger.info(f" 等待服務啟動... ({i+1}/30)")
         
         logger.error(" Web服務啟動超時")
         return False

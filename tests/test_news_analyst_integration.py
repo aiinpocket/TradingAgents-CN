@@ -135,7 +135,7 @@ def test_news_analyst_integration():
                 })
                 end_time = datetime.now()
                 
-                print(f"⏱ 分析耗時: {(end_time - start_time).total_seconds():.2f}秒")
+                print(f" 分析耗時: {(end_time - start_time).total_seconds():.2f}秒")
                 
                 # 檢查結果
                 if result and "messages" in result and len(result["messages"]) > 0:

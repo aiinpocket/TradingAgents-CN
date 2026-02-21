@@ -725,7 +725,7 @@ python scripts/maintenance/cleanup_cache.py --days 7
 
 ****
 
-1. **🪟 Windows 10 ChromaDB**
+1. ** Windows 10 ChromaDB**
 
  ****Windows 10 `Configuration error: An instance of Chroma already exists for ephemeral with different settings` Windows 11
 

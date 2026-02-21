@@ -139,7 +139,7 @@ class DataDirectoryMigrator:
                 target = self.project_root / target_path
                 
                 if not source.exists():
-                    logger.info(f"  ⏭ 跳過不存在的路徑: {source_path}")
+                    logger.info(f"   跳過不存在的路徑: {source_path}")
                     continue
                 
                 # 確保目標目錄存在

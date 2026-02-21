@@ -4,43 +4,43 @@
 
 ## 目錄結構
 
-### 📦 setup/ - 安裝和配置腳本
+###  setup/ - 安裝和配置腳本
 - 環境設置
 - 依賴安裝
 - API配置
 - 資料庫設置
 
-### 🔍 validation/ - 驗證腳本
+###  validation/ - 驗證腳本
 - Git配置驗證
 - 依賴檢查
 - 配置驗證
 - API連接測試
 
-### 🔧 maintenance/ - 維護腳本
+###  maintenance/ - 維護腳本
 - 緩存清理
 - 資料備份
 - 依賴更新
 - 上游同步
 - 分支管理
 
-### 🛠️ development/ - 開發輔助腳本
+###  development/ - 開發輔助腳本
 - 代碼分析
 - 性能基準測試
 - 文檔生成
 - 貢獻準備
 - 資料下載
 
-### 🚀 deployment/ - 部署腳本
+###  deployment/ - 部署腳本
 - GitHub發布
 - 版本發布
 - 打包部署
 
-### 🐳 docker/ - Docker腳本
+###  docker/ - Docker腳本
 - Docker服務管理
 - 容器啟動停止
 - 資料庫初始化
 
-### 📋 git/ - Git工具腳本
+###  git/ - Git工具腳本
 - 上游同步
 - Fork環境設置
 - 貢獻工作流

@@ -97,14 +97,14 @@ def test_fundamentals_with_cache():
         start_time = time.time()
         result1 = get_fundamentals_finnhub(test_symbol, curr_date)
         first_time = time.time() - start_time
-        print(f"⏱ 第一次獲取耗時: {first_time:.2f}秒")
+        print(f" 第一次獲取耗時: {first_time:.2f}秒")
         print(f" 數據長度: {len(result1)}")
         
         print(f"\n 第二次獲取 {test_symbol} 基本面數據（應該從緩存獲取）...")
         start_time = time.time()
         result2 = get_fundamentals_finnhub(test_symbol, curr_date)
         second_time = time.time() - start_time
-        print(f"⏱ 第二次獲取耗時: {second_time:.2f}秒")
+        print(f" 第二次獲取耗時: {second_time:.2f}秒")
         print(f" 數據長度: {len(result2)}")
         
         # 驗證緩存效果

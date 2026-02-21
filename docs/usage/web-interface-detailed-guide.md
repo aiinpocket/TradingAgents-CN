@@ -28,7 +28,7 @@ TradingAgents-CN WebStreamlit
 
 ## 
 
-### 1⃣ 
+### 1 
 
 #### : 
 ```bash
@@ -50,7 +50,7 @@ docker-compose up -d
 docker-compose ps
 ```
 
-### 2⃣ 
+### 2 
 - : `http://localhost:8501`
 - 3-5
 

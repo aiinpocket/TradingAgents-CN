@@ -43,7 +43,7 @@ def test_finnhub_fundamentals_with_cache():
         
         if result1 and len(result1) > 100:
             print(f" {test_ticker} 基本面數據獲取成功，長度: {len(result1)}")
-            print(f"⏱ 第一次獲取耗時: {first_time:.2f}秒")
+            print(f" 第一次獲取耗時: {first_time:.2f}秒")
             print(f" 數據預覽: {result1[:200]}...")
             
             # 第二次獲取，應該從緩存讀取
@@ -52,7 +52,7 @@ def test_finnhub_fundamentals_with_cache():
             result2 = get_fundamentals_finnhub(test_ticker, curr_date)
             second_time = time.time() - start_time
             
-            print(f"⏱ 第二次獲取耗時: {second_time:.2f}秒")
+            print(f" 第二次獲取耗時: {second_time:.2f}秒")
             
             # 驗證緩存效果
             if second_time < first_time and result1 == result2:
@@ -102,7 +102,7 @@ def test_openai_fallback_with_cache():
         if result1 and "Finnhub" in result1:
             print(" OpenAI fallback機制工作正常，成功回退到Finnhub API")
             print(f" 數據長度: {len(result1)}")
-            print(f"⏱ 第一次獲取耗時: {first_time:.2f}秒")
+            print(f" 第一次獲取耗時: {first_time:.2f}秒")
             
             # 第二次獲取，應該從緩存讀取
             print(f"\n 第二次通過OpenAI接口獲取 {test_ticker} 數據（應從緩存獲取）...")
@@ -110,7 +110,7 @@ def test_openai_fallback_with_cache():
             result2 = get_fundamentals_openai(test_ticker, curr_date)
             second_time = time.time() - start_time
             
-            print(f"⏱ 第二次獲取耗時: {second_time:.2f}秒")
+            print(f" 第二次獲取耗時: {second_time:.2f}秒")
             
             # 驗證緩存效果
             if second_time < first_time and result1 == result2:

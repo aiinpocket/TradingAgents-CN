@@ -14,7 +14,7 @@ sys.path.insert(0, project_root)
 
 def test_time_estimation_display():
     """測試時間預估顯示"""
-    print("⏱ 測試時間預估顯示效果")
+    print(" 測試時間預估顯示效果")
     print("=" * 80)
     
     try:

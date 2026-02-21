@@ -248,7 +248,7 @@ class DataCallAnalyzer:
                 logger.info(f"  - {source}: {count} 次")
         
         if durations:
-            logger.info(f"\n⏱  性能統計:")
+            logger.info(f"\n  性能統計:")
             logger.info(f"  - 總耗時: {analysis['performance']['total_duration']:.2f}s")
             logger.info(f"  - 平均耗時: {analysis['performance']['avg_duration']:.2f}s")
             logger.info(f"  - 慢調用 (>5s): {len(analysis['performance']['slow_calls'])} 次")

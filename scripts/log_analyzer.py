@@ -134,7 +134,7 @@ class LogAnalyzer:
         
         if analysis['analysis_times']:
             avg_time = sum(analysis['analysis_times']) / len(analysis['analysis_times'])
-            logger.info(f"⏱  平均分析時間: {avg_time:.2f}s")
+            logger.info(f"  平均分析時間: {avg_time:.2f}s")
             logger.info(f" 分析次數: {len(analysis['analysis_times'])}")
         
         if analysis['cost_summary']['total_cost'] > 0:

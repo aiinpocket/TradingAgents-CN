@@ -125,17 +125,17 @@ llm_provider = "anthropic" # Anthropic Claude
 LangGraph
 
 ```
-1⃣ 
+1 
  ↓ ()
-2⃣ 
+2 
  ↓ ()
-3⃣ 
+3 
  ↓ ()
-4⃣ 
+4 
  ↓ ()
-5⃣ 
+5 
  ↓ ()
-6⃣ → 
+6 → 
 ```
 
 ****:
@@ -189,14 +189,14 @@ python web/run_web.py
 
 ### 
 ```
-1⃣ → 2⃣ → 3⃣ 
+1 → 2 → 3 
 ```
 
 ### 
 ```
-1⃣ LLM → 2⃣ → 3⃣ 
+1 LLM → 2 → 3 
  ↓ (LLM)
-4⃣ → 5⃣ 
+4 → 5 
 ```
 
 ### LLM
