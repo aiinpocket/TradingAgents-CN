@@ -43,19 +43,31 @@ except ImportError:
             except ImportError:
                 # 如果都失敗了，創建一個簡單的認證管理器
                 class SimpleAuthManager:
+                    """後備認證管理器，僅在主認證模組載入失敗時使用"""
+                    # 預設帳號的密碼雜湊值（SHA256）
+                    _default_credentials = {
+                        "admin": {
+                            "hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+                            "role": "admin"
+                        },
+                        "user": {
+                            "hash": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                            "role": "user"
+                        }
+                    }
+
                     def __init__(self):
                         self.authenticated = False
                         self.current_user = None
-                    
+
                     def is_authenticated(self):
                         return st.session_state.get('authenticated', False)
-                    
+
                     def authenticate(self, username, password):
-                        # 簡單的認證邏輯
-                        if username == "admin" and password == "admin123":
-                            return True, {"username": username, "role": "admin"}
-                        elif username == "user" and password == "user123":
-                            return True, {"username": username, "role": "user"}
+                        import hashlib
+                        cred = self._default_credentials.get(username)
+                        if cred and hashlib.sha256(password.encode()).hexdigest() == cred["hash"]:
+                            return True, {"username": username, "role": cred["role"]}
                         return False, None
                     
                     def logout(self):
