@@ -43,16 +43,12 @@ from components.sidebar import render_sidebar
 from components.header import render_header
 from components.analysis_form import render_analysis_form
 from components.results_display import render_results
-from components.login import render_login_form, check_authentication, render_user_info, render_sidebar_user_info, render_sidebar_logout, require_permission
-from components.user_activity_dashboard import render_user_activity_dashboard, render_activity_summary_widget
 from utils.api_checker import check_api_keys
 from utils.analysis_runner import run_stock_analysis, validate_analysis_params, format_analysis_results
 from utils.progress_tracker import SmartStreamlitProgressDisplay, create_smart_progress_callback
 from utils.async_progress_tracker import AsyncProgressTracker
 from components.async_progress_display import display_unified_progress
 from utils.smart_session_manager import get_persistent_analysis_id, set_persistent_analysis_id
-from utils.auth_manager import auth_manager
-from utils.user_activity_logger import user_activity_logger
 
 # 設置頁面配置
 st.set_page_config(
@@ -326,14 +322,6 @@ st.markdown("""
 
 def initialize_session_state():
     """初始化會話狀態"""
-    # 初始化認證相關狀態
-    if 'authenticated' not in st.session_state:
-        st.session_state.authenticated = False
-    if 'user_info' not in st.session_state:
-        st.session_state.user_info = None
-    if 'login_time' not in st.session_state:
-        st.session_state.login_time = None
-    
     # 初始化分析相關狀態
     if 'analysis_results' not in st.session_state:
         st.session_state.analysis_results = None
@@ -422,212 +410,13 @@ def initialize_session_state():
     except Exception as e:
         logger.warning(f"[配置恢複] 表單配置恢複失敗: {e}")
 
-def check_frontend_auth_cache():
-    """檢查前端緩存並嘗試恢複登錄狀態"""
-    from utils.auth_manager import auth_manager
-    
-    logger.info("開始檢查前端緩存恢複")
-    logger.info(f"當前認證狀態: {st.session_state.get('authenticated', False)}")
-    logger.info(f"URL參數: {dict(st.query_params)}")
-    
-    # 如果已經認證，確保狀態同步
-    if st.session_state.get('authenticated', False):
-        # 確保auth_manager也知道用戶已認證
-        if not auth_manager.is_authenticated() and st.session_state.get('user_info'):
-            logger.info("同步認證狀態到auth_manager")
-            try:
-                auth_manager.login_user(
-                    st.session_state.user_info, 
-                    st.session_state.get('login_time', time.time())
-                )
-                logger.info("認證狀態同步成功")
-            except Exception as e:
-                logger.warning(f"認證狀態同步失敗: {e}")
-        else:
-            logger.info("用戶已認證，跳過緩存檢查")
-        return
-    
-    # 檢查URL參數中是否有恢複信息
-    try:
-        import base64
-        restore_data = st.query_params.get('restore_auth')
-        
-        if restore_data:
-            logger.info("發現URL中的恢複參數，開始恢複登錄狀態")
-            # 解碼認證數據
-            auth_data = json.loads(base64.b64decode(restore_data).decode())
-            
-            # 兼容舊格式（直接是用戶信息）和新格式（包含loginTime）
-            if 'userInfo' in auth_data:
-                user_info = auth_data['userInfo']
-                # 使用當前時間作為新的登錄時間，避免超時問題
-                # 因為前端已經驗證了lastActivity沒有超時
-                login_time = time.time()
-            else:
-                # 舊格式兼容
-                user_info = auth_data
-                login_time = time.time()
-                
-            logger.info(f"成功解碼用戶信息: {user_info.get('username', 'Unknown')}")
-            logger.info(f"使用當前時間作為登錄時間: {login_time}")
-            
-            # 恢複登錄狀態
-            if auth_manager.restore_from_cache(user_info, login_time):
-                # 清除URL參數
-                del st.query_params['restore_auth']
-                logger.info(f"從前端緩存成功恢複用戶 {user_info['username']} 的登錄狀態")
-                logger.info("已清除URL恢複參數")
-                # 立即重新運行以應用恢複的狀態
-                logger.info("觸發頁面重新運行")
-                st.rerun()
-            else:
-                logger.error("恢複登錄狀態失敗")
-                # 恢複失敗，清除URL參數
-                del st.query_params['restore_auth']
-        else:
-            # 如果沒有URL參數，註入前端檢查腳本
-            logger.info("沒有URL恢複參數，註入前端檢查腳本")
-            inject_frontend_cache_check()
-    except Exception as e:
-        logger.warning(f"處理前端緩存恢複失敗: {e}")
-        # 如果恢複失敗，清除可能損壞的URL參數
-        if 'restore_auth' in st.query_params:
-            del st.query_params['restore_auth']
 
-def inject_frontend_cache_check():
-    """註入前端緩存檢查腳本"""
-    logger.info("準備註入前端緩存檢查腳本")
-    
-    # 如果已經註入過，不重複註入
-    if st.session_state.get('cache_script_injected', False):
-        logger.info("前端腳本已註入，跳過重複註入")
-        return
-    
-    # 標記已註入
-    st.session_state.cache_script_injected = True
-    logger.info("標記前端腳本已註入")
-    
-    cache_check_js = """
-    <script>
-    // 前端緩存檢查和恢複
-    function checkAndRestoreAuth() {
-        console.log('開始執行前端緩存檢查');
-        console.log('當前URL:', window.location.href);
-        
-        try {
-            // 檢查URL中是否已經有restore_auth參數
-            const currentUrl = new URL(window.location);
-            if (currentUrl.searchParams.has('restore_auth')) {
-                console.log('URL中已有restore_auth參數，跳過前端檢查');
-                return;
-            }
-            
-            const authData = localStorage.getItem('tradingagents_auth');
-            console.log('檢查localStorage中的認證數據:', authData ? '存在' : '不存在');
-            
-            if (!authData) {
-                console.log('前端緩存中沒有登錄狀態');
-                return;
-            }
-            
-            const data = JSON.parse(authData);
-            console.log('解析的認證數據:', data);
-            
-            // 驗證數據結構
-            if (!data.userInfo || !data.userInfo.username) {
-                console.log('認證數據結構無效，清除緩存');
-                localStorage.removeItem('tradingagents_auth');
-                return;
-            }
-            
-            const now = Date.now();
-            const timeout = 10 * 60 * 1000; // 10分鐘
-            const timeSinceLastActivity = now - data.lastActivity;
-            
-            console.log('時間檢查:', {
-                now: new Date(now).toLocaleString(),
-                lastActivity: new Date(data.lastActivity).toLocaleString(),
-                timeSinceLastActivity: Math.round(timeSinceLastActivity / 1000) + '秒',
-                timeout: Math.round(timeout / 1000) + '秒'
-            });
-            
-            // 檢查是否超時
-            if (timeSinceLastActivity > timeout) {
-                localStorage.removeItem('tradingagents_auth');
-                console.log('登錄狀態已過期，自動清除');
-                return;
-            }
-            
-            // 更新最後活動時間
-            data.lastActivity = now;
-            localStorage.setItem('tradingagents_auth', JSON.stringify(data));
-            console.log('更新最後活動時間');
-            
-            console.log('從前端緩存恢複登錄狀態:', data.userInfo.username);
-            
-            // 保留現有的URL參數，只添加restore_auth參數
-            // 傳遞完整的認證數據，包括原始登錄時間
-            const restoreData = {
-                userInfo: data.userInfo,
-                loginTime: data.loginTime
-            };
-            const restoreParam = btoa(JSON.stringify(restoreData));
-            console.log('生成恢複參數:', restoreParam);
-            
-            // 保留所有現有參數
-            const existingParams = new URLSearchParams(currentUrl.search);
-            existingParams.set('restore_auth', restoreParam);
-            
-            // 構建新URL，保留現有參數
-            const newUrl = currentUrl.origin + currentUrl.pathname + '?' + existingParams.toString();
-            console.log('準備跳轉到:', newUrl);
-            console.log('保留的URL參數:', Object.fromEntries(existingParams));
-            
-            window.location.href = newUrl;
-            
-        } catch (e) {
-            console.error('前端緩存恢複失敗:', e);
-            localStorage.removeItem('tradingagents_auth');
-        }
-    }
-    
-    // 延遲執行，確保頁面完全加載
-    console.log('設置1000ms延遲執行前端緩存檢查');
-    setTimeout(checkAndRestoreAuth, 1000);
-    </script>
-    """
-    
-    st.components.v1.html(cache_check_js, height=0)
 
 def main():
     """主應用程序"""
 
     # 初始化會話狀態
     initialize_session_state()
-
-    # 檢查前端緩存恢複
-    check_frontend_auth_cache()
-
-    # 檢查用戶認證狀態
-    if not auth_manager.is_authenticated():
-        # 最後一次嘗試從session state恢複認證狀態
-        if (st.session_state.get('authenticated', False) and 
-            st.session_state.get('user_info') and 
-            st.session_state.get('login_time')):
-            logger.info("從session state恢複認證狀態")
-            try:
-                auth_manager.login_user(
-                    st.session_state.user_info, 
-                    st.session_state.login_time
-                )
-                logger.info(f"成功從session state恢複用戶 {st.session_state.user_info.get('username', 'Unknown')} 的認證狀態")
-            except Exception as e:
-                logger.warning(f"從session state恢複認證狀態失敗: {e}")
-        
-        # 如果仍然未認證，顯示登錄頁面
-        if not auth_manager.is_authenticated():
-            render_login_form()
-            return
 
     # 全局側邊欄CSS樣式 - 確保所有頁面一致
     st.markdown("""
@@ -902,12 +691,6 @@ def main():
     st.sidebar.title("TradingAgents-CN")
     st.sidebar.markdown("---")
     
-    # 頁面導航 - 在標題下方顯示用戶信息
-    render_sidebar_user_info()
-
-    # 在用戶信息和功能導航之間添加分隔線
-    st.sidebar.markdown("---")
-
     # 添加功能切換標題
     st.sidebar.markdown("**功能導航**")
 
@@ -917,19 +700,6 @@ def main():
         label_visibility="collapsed"
     )
     
-    # 記錄頁面訪問活動
-    try:
-        user_activity_logger.log_page_visit(
-            page_name=page,
-            page_params={
-                "page_url": f"/app?page={page.split(' ')[1] if ' ' in page else page}",
-                "page_type": "main_navigation",
-                "access_method": "sidebar_selectbox"
-            }
-        )
-    except Exception as e:
-        logger.warning(f"記錄頁面訪問活動失敗: {e}")
-
     # 在功能選擇和AI模型配置之間添加分隔線
     st.sidebar.markdown("---")
 
@@ -944,9 +714,6 @@ def main():
             st.info("請確保已安裝所有依賴套件")
         return
     elif page == "配置管理":
-        # 檢查配置權限
-        if not require_permission("config"):
-            return
         try:
             from modules.config_management import render_config_management
             render_config_management()
@@ -955,9 +722,6 @@ def main():
             st.info("請確保已安裝所有依賴包")
         return
     elif page == "快取管理":
-        # 檢查管理員權限
-        if not require_permission("admin"):
-            return
         try:
             from modules.cache_management import main as cache_main
             cache_main()
@@ -965,9 +729,6 @@ def main():
             st.error(f"快取管理頁面載入失敗: {e}")
         return
     elif page == "Token統計":
-        # 檢查配置權限
-        if not require_permission("config"):
-            return
         try:
             from modules.token_statistics import render_token_statistics
             render_token_statistics()
@@ -976,9 +737,6 @@ def main():
             st.info("請確保已安裝所有依賴包")
         return
     elif page == "操作日誌":
-        # 檢查管理員權限
-        if not require_permission("admin"):
-            return
         try:
             from components.operation_logs import render_operation_logs
             render_operation_logs()
@@ -987,9 +745,6 @@ def main():
             st.info("請確保已安裝所有依賴包")
         return
     elif page == "分析結果":
-        # 檢查分析權限
-        if not require_permission("analysis"):
-            return
         try:
             from components.analysis_results import render_analysis_results
             render_analysis_results()
@@ -998,18 +753,11 @@ def main():
             st.info("請確保已安裝所有依賴包")
         return
     elif page == "系統狀態":
-        # 檢查管理員權限
-        if not require_permission("admin"):
-            return
         st.header("系統狀態")
         st.info("系統狀態功能開發中...")
         return
 
     # 默認顯示股票分析頁面
-    # 檢查分析權限
-    if not require_permission("analysis"):
-        return
-        
     # 檢查API密鑰
     api_status = check_api_keys()
     
@@ -1107,9 +855,6 @@ def main():
 
         st.sidebar.success("分析狀態已清理")
         st.rerun()
-
-    # 在側邊欄底部添加退出按鈕
-    render_sidebar_logout()
 
     # 主內容區域 - 根據是否顯示指南調整布局
     if show_guide:

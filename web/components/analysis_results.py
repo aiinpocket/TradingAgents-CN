@@ -333,21 +333,6 @@ def load_analysis_results(start_date=None, end_date=None, stock_symbol=None, ana
 def render_analysis_results():
     """渲染分析結果管理界面"""
     
-    # 檢查權限
-    try:
-        import sys
-        import os
-        sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-        from utils.auth_manager import auth_manager
-        
-        if not auth_manager or not auth_manager.check_permission("analysis"):
-            st.error("您沒有權限訪問分析結果")
-            st.info("提示：分析結果功能需要 'analysis'權限")
-            return
-    except Exception as e:
-        st.error(f"權限檢查失敗: {e}")
-        return
-    
     st.title("分析結果歷史記錄")
     
     # 側邊欄過濾選項

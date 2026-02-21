@@ -1,0 +1,138 @@
+# TradingAgents-CN Helm Chart - 預設值
+replicaCount: 1
+
+image:
+  repository: ghcr.io/aiinpocket/tradingagents-cn
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+# 服務連接埠（Streamlit 預設 8501）
+service:
+  type: ClusterIP
+  port: 8501
+
+# Ingress 設定
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    # WebSocket 支援（Streamlit 需要）
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+  hosts:
+    - host: tradingagents.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# 資源限制
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# 自動擴縮
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# 健康檢查（Streamlit 內建端點）
+healthCheck:
+  liveness:
+    path: /_stcore/health
+    initialDelaySeconds: 90
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readiness:
+    path: /_stcore/health
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# 應用程式配置（非敏感環境變數）
+config:
+  # 時區
+  timezone: "Asia/Taipei"
+  # 日誌等級
+  logLevel: "INFO"
+  # LLM 提供商（openai, google, anthropic, openrouter, ollama, custom_openai）
+  llmProvider: "openai"
+  # 記憶系統
+  memoryEnabled: "true"
+  # 快取類型
+  cacheType: "redis"
+
+# 敏感資訊（API 金鑰、密碼）
+secrets:
+  # LLM API 金鑰（至少需要一個）
+  openaiApiKey: ""
+  googleApiKey: ""
+  anthropicApiKey: ""
+  openrouterApiKey: ""
+  customOpenaiApiKey: ""
+  customOpenaiBaseUrl: ""
+  # 資料源 API 金鑰
+  finnhubApiKey: ""
+  # Reddit API（可選）
+  redditClientId: ""
+  redditClientSecret: ""
+  redditUserAgent: ""
+  # Cookie 加密密鑰
+  cookieSecretKey: ""
+  # MongoDB 密碼
+  mongodbPassword: ""
+  # Redis 密碼
+  redisPassword: ""
+
+# MongoDB Standalone 部署
+mongodb:
+  enabled: true
+  image: mongo:4.4
+  port: 27017
+  database: tradingagents
+  username: admin
+  storageClass: ""
+  storageSize: 5Gi
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+# Redis Standalone 部署
+redis:
+  enabled: true
+  image: redis:7-alpine
+  port: 6379
+  storageClass: ""
+  storageSize: 2Gi
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi

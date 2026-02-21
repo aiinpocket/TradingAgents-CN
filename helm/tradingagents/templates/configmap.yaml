@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tradingagents.fullname" . }}-config
+  labels:
+    {{- include "tradingagents.labels" . | nindent 4 }}
+data:
+  # 系統環境變數
+  PYTHONUNBUFFERED: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  TZ: {{ .Values.config.timezone | quote }}
+  DISPLAY: ":99"
+  DOCKER_CONTAINER: "true"
+  # 日誌配置
+  TRADINGAGENTS_LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  TRADINGAGENTS_LOG_DIR: "/app/logs"
+  # LLM 配置
+  LLM_PROVIDER: {{ .Values.config.llmProvider | quote }}
+  # 記憶系統
+  MEMORY_ENABLED: {{ .Values.config.memoryEnabled | quote }}
+  # 快取配置
+  TRADINGAGENTS_CACHE_TYPE: {{ .Values.config.cacheType | quote }}
+  {{- if .Values.mongodb.enabled }}
+  # MongoDB 連線（密碼從 Secret 注入）
+  MONGODB_ENABLED: "true"
+  TRADINGAGENTS_MONGODB_URL: "mongodb://{{ .Values.mongodb.username }}:$(MONGODB_PASSWORD)@{{ include "tradingagents.fullname" . }}-mongodb:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}?authSource=admin"
+  {{- else }}
+  MONGODB_ENABLED: "false"
+  {{- end }}
+  {{- if .Values.redis.enabled }}
+  # Redis 連線（密碼從 Secret 注入）
+  REDIS_ENABLED: "true"
+  TRADINGAGENTS_REDIS_URL: "redis://:$(REDIS_PASSWORD)@{{ include "tradingagents.fullname" . }}-redis:{{ .Values.redis.port }}"
+  {{- else }}
+  REDIS_ENABLED: "false"
+  {{- end }}

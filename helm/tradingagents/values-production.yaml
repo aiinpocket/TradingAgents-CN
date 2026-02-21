@@ -1,0 +1,161 @@
+# =============================================================
+# TradingAgents-CN - Production Values (kubeinpocket.com)
+# =============================================================
+# K8s Cluster: TaipeiCenter
+# Domain: https://stock-us.aiinpocket.com
+# Namespace: app
+# Registry: ghcr.io
+# Storage: NFS (nfs-client StorageClass)
+# TLS: Cloudflare Origin Certificate
+# =============================================================
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/aiinpocket/tradingagents-cn
+  pullPolicy: Always
+  tag: "latest"
+
+imagePullSecrets:
+  - name: ghcr-secret
+fullnameOverride: "tradingagents"
+
+podAnnotations: {}
+
+# =============================================================
+# Service
+# =============================================================
+service:
+  type: ClusterIP
+  port: 8501
+
+# =============================================================
+# Ingress - stock-us.aiinpocket.com
+# =============================================================
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+  hosts:
+    - host: stock-us.aiinpocket.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# =============================================================
+# Resources
+# =============================================================
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+# =============================================================
+# Autoscaling
+# =============================================================
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# =============================================================
+# Health Checks
+# =============================================================
+healthCheck:
+  liveness:
+    path: /_stcore/health
+    initialDelaySeconds: 120
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readiness:
+    path: /_stcore/health
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# =============================================================
+# Application Configuration
+# =============================================================
+config:
+  timezone: "Asia/Taipei"
+  logLevel: "INFO"
+  llmProvider: "openai"
+  memoryEnabled: "true"
+  cacheType: "redis"
+
+# =============================================================
+# Secrets - API 金鑰和密碼
+# 注意：生產環境的敏感值請透過以下方式設定：
+#   kubectl create secret generic tradingagents-secret \
+#     --namespace app \
+#     --from-literal=OPENAI_API_KEY=sk-xxx \
+#     --from-literal=FINNHUB_API_KEY=xxx \
+#     ...
+# 或使用 ArgoCD 的 --set 參數覆蓋
+# =============================================================
+secrets:
+  openaiApiKey: ""
+  googleApiKey: ""
+  anthropicApiKey: ""
+  openrouterApiKey: ""
+  customOpenaiApiKey: ""
+  customOpenaiBaseUrl: ""
+  finnhubApiKey: ""
+  redditClientId: ""
+  redditClientSecret: ""
+  redditUserAgent: ""
+  cookieSecretKey: ""
+  mongodbPassword: ""
+  redisPassword: ""
+
+# =============================================================
+# MongoDB - Standalone Deployment
+# =============================================================
+mongodb:
+  enabled: true
+  image: mongo:4.4
+  port: 27017
+  database: tradingagents
+  username: admin
+  storageClass: "nfs-client"
+  storageSize: 5Gi
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+# =============================================================
+# Redis - Standalone Deployment
+# =============================================================
+redis:
+  enabled: true
+  image: redis:7-alpine
+  port: 6379
+  storageClass: "nfs-client"
+  storageSize: 2Gi
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi

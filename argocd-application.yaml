@@ -1,0 +1,29 @@
+# ArgoCD Application CRD - TradingAgents-CN
+# 使用方式：kubectl apply -f argocd-application.yaml
+# 或加入 k8sdoc/manifests/argocd.yaml 中統一管理
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tradingagents
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aiinpocket/TradingAgents-CN.git
+    targetRevision: main
+    path: helm/tradingagents
+    helm:
+      valueFiles:
+        - values-production.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

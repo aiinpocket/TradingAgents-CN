@@ -146,21 +146,6 @@ def load_operation_logs(start_date=None, end_date=None, username=None, action_ty
 def render_operation_logs():
     """渲染操作日誌管理界面"""
     
-    # 檢查權限
-    try:
-        import sys
-        import os
-        sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-        from utils.auth_manager import auth_manager
-        
-        if not auth_manager or not auth_manager.check_permission("admin"):
-            st.error("您沒有權限訪問操作日誌")
-            st.info("提示：操作日誌功能需要 'admin' 權限")
-            return
-    except Exception as e:
-        st.error(f"權限檢查失敗: {e}")
-        return
-    
     st.title("操作日誌管理")
     
     # 側邊欄過濾選項

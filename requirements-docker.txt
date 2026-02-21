@@ -27,7 +27,6 @@ attrs==25.3.0
 backoff==2.2.1
 backports.asyncio.runner==1.2.0
 backtrader==1.9.78.123
-bcrypt==4.3.0
 beautifulsoup4==4.13.5
 bidict==0.23.1
 billiard==4.2.2

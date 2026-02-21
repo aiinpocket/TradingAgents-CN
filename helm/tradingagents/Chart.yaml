@@ -1,0 +1,15 @@
+apiVersion: v2
+name: tradingagents
+description: TradingAgents-CN - AI 驅動的美股交易分析多智慧體平台
+type: application
+version: 1.0.0
+appVersion: "0.1.18"
+keywords:
+  - trading
+  - stock
+  - ai
+  - multi-agent
+  - langchain
+  - streamlit
+maintainers:
+  - name: aiinpocket
