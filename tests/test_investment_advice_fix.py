@@ -148,7 +148,7 @@ def test_demo_data():
 **投資建議**: {action}
 
 **主要分析要點**:
-1. **技術面分析**: 當前價格趨勢顯示{'上漲' if action == '買入' else '下跌' if action == '賣出' else '橫盤'}信號
+1. **技術面分析**: 當前價格趨勢顯示{'上漲' if action == '買入' else '下跌' if action == '賣出' else '橫盤'}訊號
 2. **基本面評估**: 公司財務狀況{'良好' if action == '買入' else '一般' if action == '持有' else '需關註'}
 3. **市場情緒**: 投資者情緒{'樂觀' if action == '買入' else '中性' if action == '持有' else '謹慎'}
 4. **風險評估**: 當前風險水平為{'中等' if action == '持有' else '較低' if action == '買入' else '較高'}

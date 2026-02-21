@@ -74,9 +74,9 @@ def test_time_estimation_display():
         
         # 步驟4: 投資決策生成
         ui.show_step_header(4, "投資決策生成 | Investment Decision Generation")
-        ui.show_progress("正在處理投資信號...")
+        ui.show_progress("正在處理投資訊號...")
         time.sleep(0.5)
-        ui.show_success(" 投資信號處理完成")
+        ui.show_success(" 投資訊號處理完成")
         
         # 步驟5: 分析報告生成
         ui.show_step_header(5, "分析報告生成 | Analysis Report Generation")
@@ -246,7 +246,7 @@ def test_progress_communication():
         print(f"\n 溝通策略總結:")
         print(f"   1. 設定合理期望 - 告知預估時間")
         print(f"   2. 解釋複雜性 - 說明為什麼需要時間")
-        print(f"   3. 實時反饋 - 顯示當前進展")
+        print(f"   3. 實時回饋 - 顯示當前進展")
         print(f"   4. 裡程碑標記 - 提供進度感知")
         
         return True
@@ -311,7 +311,7 @@ def main():
         
         print("\n 實施建議:")
         print("- 可以根據選擇的分析師數量動態調整時間預估")
-        print("- 在長時間步驟中提供更多中間進度反饋")
+        print("- 在長時間步驟中提供更多中間進度回饋")
         print("- 考慮新增進度百分比顯示")
         print("- 提供取消或暫停分析的選項")
     else:

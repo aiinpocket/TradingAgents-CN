@@ -218,8 +218,8 @@ def main():
     process = None
     
     def signal_handler(signum, frame):
-        """信號處理函式"""
-        logger.info("\n\n 接收到停止信號，正在關閉Web應用...")
+        """訊號處理函式"""
+        logger.info("\n\n 接收到停止訊號，正在關閉Web應用...")
         if process:
             try:
                 # 終止行程及其子行程
@@ -237,7 +237,7 @@ def main():
                     process.kill()
         sys.exit(0)
     
-    # 註冊信號處理器
+    # 註冊訊號處理器
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     

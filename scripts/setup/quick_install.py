@@ -158,7 +158,7 @@ def local_install():
             print_colored(f" 虛擬環境建立失敗: {e}", Colors.RED)
             return False
     
-    # 激活虛擬環境的Python路徑
+    # 啟用虛擬環境的Python路徑
     if platform.system() == "Windows":
         python_path = venv_path / "Scripts" / "python.exe"
         pip_path = venv_path / "Scripts" / "pip.exe"

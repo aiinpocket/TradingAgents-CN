@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-測試信號處理模組的日誌記錄修複
+測試訊號處理模組的日誌記錄修複
 """
 
 import os
@@ -11,8 +11,8 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 def test_signal_processing_logging():
-    """測試信號處理模組的日誌記錄"""
-    print("\n 測試信號處理模組日誌記錄")
+    """測試訊號處理模組的日誌記錄"""
+    print("\n 測試訊號處理模組日誌記錄")
     print("=" * 80)
     
     try:
@@ -21,13 +21,13 @@ def test_signal_processing_logging():
         logger = get_logger("default")
         logger.setLevel("INFO")
         
-        print(" 建立信號處理器...")
+        print(" 建立訊號處理器...")
         
-        # 匯入信號處理器
+        # 匯入訊號處理器
         from tradingagents.graph.signal_processing import SignalProcessor
         
         processor = SignalProcessor()
-        print(" 信號處理器建立完成")
+        print(" 訊號處理器建立完成")
         
         # 測試不同的股票代碼
         test_cases = [
@@ -40,7 +40,7 @@ def test_signal_processing_logging():
             print(f"\n 測試股票: {stock_symbol} ({company_name})")
             print("-" * 60)
             
-            # 建立模擬的交易信號
+            # 建立模擬的交易訊號
             mock_signal = f"""
 # {company_name}({stock_symbol})投資分析報告
 
@@ -60,15 +60,15 @@ def test_signal_processing_logging():
 基於綜合分析，建議買入{company_name}({stock_symbol})。
 """
             
-            print(f" [測試] 呼叫信號處理器...")
+            print(f" [測試] 呼叫訊號處理器...")
             print(f"   股票代碼: {stock_symbol}")
-            print(f"   信號長度: {len(mock_signal)} 字元")
+            print(f"   訊號長度: {len(mock_signal)} 字元")
             
             try:
-                # 呼叫信號處理器（這裡應該會觸發日誌記錄）
+                # 呼叫訊號處理器（這裡應該會觸發日誌記錄）
                 result = processor.process_signal(mock_signal, stock_symbol)
                 
-                print(f" 信號處理完成")
+                print(f" 訊號處理完成")
                 print(f"   返回結果類型: {type(result)}")
                 
                 if isinstance(result, dict):
@@ -89,7 +89,7 @@ def test_signal_processing_logging():
                         print(f"   目標價格: {price}")
                 
             except Exception as e:
-                print(f" 信號處理失敗: {e}")
+                print(f" 訊號處理失敗: {e}")
                 import traceback
                 traceback.print_exc()
         
@@ -107,13 +107,13 @@ def test_logging_extraction():
     print("=" * 80)
     
     try:
-        # 模擬信號處理模組的呼叫
+        # 模擬訊號處理模組的呼叫
         from tradingagents.utils.tool_logging import log_graph_module
         
         # 建立一個測試函式來驗證日誌裝飾器
         @log_graph_module("signal_processing")
         def mock_process_signal(self, full_signal: str, stock_symbol: str = None) -> dict:
-            """模擬信號處理函式"""
+            """模擬訊號處理函式"""
             print(f" [模擬函式] 接收到的參數:")
             print(f"   full_signal 長度: {len(full_signal) if full_signal else 0}")
             print(f"   stock_symbol: {stock_symbol}")
@@ -140,7 +140,7 @@ def test_logging_extraction():
             print(f"\n 測試: {stock_symbol} ({call_type})")
             print("-" * 40)
             
-            mock_signal = f"測試信號 for {stock_symbol}"
+            mock_signal = f"測試訊號 for {stock_symbol}"
             
             try:
                 if call_type == "位置參數呼叫":
@@ -168,7 +168,7 @@ def test_logging_extraction():
 
 def main():
     """主測試函式"""
-    print(" 開始測試信號處理日誌記錄修複")
+    print(" 開始測試訊號處理日誌記錄修複")
     print("=" * 100)
     
     results = []
@@ -176,7 +176,7 @@ def main():
     # 測試1: 日誌裝飾器股票代碼提取
     results.append(test_logging_extraction())
     
-    # 測試2: 信號處理模組日誌記錄
+    # 測試2: 訊號處理模組日誌記錄
     results.append(test_signal_processing_logging())
     
     # 總結結果
@@ -189,7 +189,7 @@ def main():
     
     test_names = [
         "日誌裝飾器股票代碼提取",
-        "信號處理模組日誌記錄"
+        "訊號處理模組日誌記錄"
     ]
     
     for i, (name, result) in enumerate(zip(test_names, results)):
@@ -199,17 +199,17 @@ def main():
     print(f"\n 總體結果: {passed}/{total} 測試通過")
     
     if passed == total:
-        print(" 所有測試通過！信號處理日誌記錄修複成功")
+        print(" 所有測試通過！訊號處理日誌記錄修複成功")
         print("\n 修複效果:")
-        print("1.  正確提取信號處理模組的股票代碼")
+        print("1.  正確提取訊號處理模組的股票代碼")
         print("2.  日誌顯示準確的股票資訊")
         print("3.  避免顯示 'unknown' 股票代碼")
         print("4.  支援多種參數呼叫方式")
         
         print("\n 解決的問題:")
-        print("-  信號處理模組日誌顯示股票代碼為 'unknown'")
-        print("-  日誌裝飾器無法正確解析信號處理模組的參數")
-        print("-  股票代碼提取邏輯不適配信號處理模組")
+        print("-  訊號處理模組日誌顯示股票代碼為 'unknown'")
+        print("-  日誌裝飾器無法正確解析訊號處理模組的參數")
+        print("-  股票代碼提取邏輯不相容訊號處理模組")
     else:
         print(" 部分測試失敗，需要進一步優化")
     

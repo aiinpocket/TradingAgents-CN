@@ -115,7 +115,7 @@ def create_sample_report(stock_symbol: str, stock_name: str):
 - **換手率**: 3.2% (活躍)
 
 ##  操作建議
-### 買入信號
+### 買入訊號
 - 突破前期高點
 - 成交量配合
 - 技術指標向好

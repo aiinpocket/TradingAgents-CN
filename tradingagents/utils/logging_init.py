@@ -160,6 +160,6 @@ if __name__ == "__main__":
     dataflow_logger.info("資料流模組日誌測試")
     
     llm_logger = setup_llm_logging()
-    llm_logger.info("LLM適配器模組日誌測試")
+    llm_logger.info("LLM轉接器模組日誌測試")
     
     log_shutdown_info()

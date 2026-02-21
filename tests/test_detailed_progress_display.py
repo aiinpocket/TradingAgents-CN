@@ -100,9 +100,9 @@ def test_complete_analysis_flow():
         
         # 步驟4: 投資決策生成
         ui.show_step_header(4, "投資決策生成 | Investment Decision Generation")
-        ui.show_progress("正在處理投資信號...")
+        ui.show_progress("正在處理投資訊號...")
         time.sleep(0.5)
-        ui.show_success(" 投資信號處理完成")
+        ui.show_success(" 投資訊號處理完成")
         
         # 步驟5: 分析報告生成
         ui.show_step_header(5, "分析報告生成 | Analysis Report Generation")
@@ -206,7 +206,7 @@ def test_analysis_stages():
             },
             {
                 "name": "決策生成階段",
-                "analysts": [" 信號處理器"],
+                "analysts": [" 訊號處理器"],
                 "description": "生成最終投資決策"
             }
         ]

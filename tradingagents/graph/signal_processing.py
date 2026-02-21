@@ -30,25 +30,25 @@ class SignalProcessor:
 
         # 驗證輸入參數
         if not full_signal or not isinstance(full_signal, str) or len(full_signal.strip()) == 0:
-            logger.error(f" [SignalProcessor] 輸入信號為空或無效: {repr(full_signal)}")
+            logger.error(f" [SignalProcessor] 輸入訊號為空或無效: {repr(full_signal)}")
             return {
                 'action': '持有',
                 'target_price': None,
                 'confidence': 0.5,
                 'risk_score': 0.5,
-                'reasoning': '輸入信號無效，預設持有建議'
+                'reasoning': '輸入訊號無效，預設持有建議'
             }
 
-        # 清理和驗證信號內容
+        # 清理和驗證訊號內容
         full_signal = full_signal.strip()
         if len(full_signal) == 0:
-            logger.error(" [SignalProcessor] 信號內容為空")
+            logger.error(" [SignalProcessor] 訊號內容為空")
             return {
                 'action': '持有',
                 'target_price': None,
                 'confidence': 0.5,
                 'risk_score': 0.5,
-                'reasoning': '信號內容為空，預設持有建議'
+                'reasoning': '訊號內容為空，預設持有建議'
             }
 
         # 取得股票市場資訊（僅支援美股）
@@ -58,7 +58,7 @@ class SignalProcessor:
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.info(f"[SignalProcessor] 處理信號: 股票={stock_symbol}, 市場={market_info['market_name']}, 貨幣={currency}",
+        logger.info(f"[SignalProcessor] 處理訊號: 股票={stock_symbol}, 市場={market_info['market_name']}, 貨幣={currency}",
                    extra={'stock_symbol': stock_symbol, 'market': market_info['market_name'], 'currency': currency})
 
         messages = [
@@ -103,7 +103,7 @@ class SignalProcessor:
             logger.error(" [SignalProcessor] human訊息內容為空")
             return self._get_default_decision()
 
-        logger.debug(f"[SignalProcessor] 準備呼叫LLM，訊息數量: {len(messages)}, 信號長度: {len(full_signal)}")
+        logger.debug(f"[SignalProcessor] 準備呼叫LLM，訊息數量: {len(messages)}, 訊號長度: {len(full_signal)}")
 
         try:
             response = self.quick_thinking_llm.invoke(messages).content
@@ -207,7 +207,7 @@ class SignalProcessor:
                 return self._extract_simple_decision(response)
 
         except Exception as e:
-            logger.error(f"信號處理錯誤: {e}", exc_info=True, extra={'stock_symbol': stock_symbol})
+            logger.error(f"訊號處理錯誤: {e}", exc_info=True, extra={'stock_symbol': stock_symbol})
             # 回退到簡單提取
             return self._extract_simple_decision(full_signal)
 

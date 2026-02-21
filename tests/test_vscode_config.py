@@ -24,7 +24,7 @@ def test_python_environment():
     if venv_path:
         print(f" 虛擬環境: {venv_path}")
     else:
-        print(" 虛擬環境: 未激活")
+        print(" 虛擬環境: 未啟用")
     
     # 檢查工作目錄
     print(f"工作目錄: {os.getcwd()}")
@@ -210,7 +210,7 @@ def test_simple_functionality():
     
     try:
         # 測試TradingAgents匯入
-        print(" TradingAgents LLM適配器匯入成功")
+        print(" TradingAgents LLM轉接器匯入成功")
         
         # 測試資料流匯入
         from tradingagents.dataflows import interface
@@ -290,7 +290,7 @@ def main():
     print("   1. 確保在VSCode中選擇了正確的Python解釋器")
     print("   2. 重啟VSCode以應用新的配置")
     print("   3. 使用Ctrl+Shift+P -> 'Python: Select Interpreter'")
-    print("   4. 在集成終端中驗證虛擬環境已激活")
+    print("   4. 在集成終端中驗證虛擬環境已啟用")
 
 if __name__ == "__main__":
     main()

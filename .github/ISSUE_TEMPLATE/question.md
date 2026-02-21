@@ -33,7 +33,7 @@ assignees: ''
 ##  環境資訊 / Environment Info
 
 **系統環境 / System:**
-- 操作系統 / OS: [Windows/macOS/Linux]
+- 作業系統 / OS: [Windows/macOS/Linux]
 - Python版本 / Python Version:
 - 項目版本 / Project Version:
 

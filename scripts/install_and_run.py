@@ -17,12 +17,12 @@ def check_virtual_env():
     )
     
     if not in_venv:
-        print(" 請先激活虛擬環境:")
+        print(" 請先啟用虛擬環境:")
         print("   Windows: .\\env\\Scripts\\activate")
         print("   Linux/macOS: source env/bin/activate")
         return False
     
-    print(" 虛擬環境已激活")
+    print(" 虛擬環境已啟用")
     return True
 
 def install_project():

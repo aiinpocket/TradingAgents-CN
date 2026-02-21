@@ -315,9 +315,9 @@ def log_analysis_module(module_name: str, session_id: str = None):
             # 嘗試從參數中提取股票代碼
             symbol = None
 
-            # 特殊處理：信號處理模組的參數結構
+            # 特殊處理：訊號處理模組的參數結構
             if module_name == "graph_signal_processing":
-                # 信號處理模組：process_signal(self, full_signal, stock_symbol=None)
+                # 訊號處理模組：process_signal(self, full_signal, stock_symbol=None)
                 if len(args) >= 3:  # self, full_signal, stock_symbol
                     symbol = str(args[2]) if args[2] else None
                 elif 'stock_symbol' in kwargs:

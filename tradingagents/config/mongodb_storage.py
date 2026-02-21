@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MongoDB儲存適配器
+MongoDB儲存轉接器
 用於將token使用記錄儲存到MongoDB資料庫
 """
 
@@ -24,7 +24,7 @@ except ImportError:
 
 
 class MongoDBStorage:
-    """MongoDB儲存適配器"""
+    """MongoDB儲存轉接器"""
     
     def __init__(self, connection_string: str = None, database_name: str = "tradingagents"):
         if not MONGODB_AVAILABLE:

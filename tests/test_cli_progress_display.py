@@ -118,9 +118,9 @@ def test_analysis_flow_simulation():
         
         # 步驟4: 投資決策生成
         ui.show_step_header(4, "投資決策生成 | Investment Decision Generation")
-        ui.show_progress("正在處理投資信號...")
+        ui.show_progress("正在處理投資訊號...")
         time.sleep(1.0)
-        ui.show_success(" 投資信號處理完成")
+        ui.show_success(" 投資訊號處理完成")
         
         # 步驟5: 分析報告生成
         ui.show_step_header(5, "分析報告生成 | Analysis Report Generation")
@@ -188,8 +188,8 @@ def test_user_experience():
         ui.show_step_header(1, "清晰的步驟指示")
         print("    使用者知道當前在哪個階段")
         
-        # 及時的反饋
-        ui.show_progress("及時的進度反饋")
+        # 及時的回饋
+        ui.show_progress("及時的進度回饋")
         print("    使用者知道系統在工作")
         
         # 成功的確認
@@ -208,7 +208,7 @@ def test_user_experience():
         print(" 改進效果:")
         print("   - 介面清爽，沒有技術日誌干擾")
         print("   - 進度清晰，使用者不會感到等待焦慮")
-        print("   - 反饋及時，使用者體驗流暢")
+        print("   - 回饋及時，使用者體驗流暢")
         print("   - 資訊分層，重要內容突出")
         
         return True
@@ -260,7 +260,7 @@ def main():
     if passed == total:
         print(" 所有測試通過！CLI進度顯示效果優秀")
         print("\n 改進成果:")
-        print("1.  清晰的步驟指示和進度反饋")
+        print("1.  清晰的步驟指示和進度回饋")
         print("2.  使用者介面和系統日誌完全分離")
         print("3.  重要過程資訊及時顯示給使用者")
         print("4.  介面保持清爽美觀")

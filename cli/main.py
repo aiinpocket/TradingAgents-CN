@@ -1172,7 +1172,7 @@ def run_analysis():
             "fundamentals_report": "基本面分析師",
             "technical_report": "技術分析師",
             "sentiment_report": "情感分析師",
-            "final_report": "信號處理器"
+            "final_report": "訊號處理器"
         }
 
         # 追蹤已完成的分析師，避免重複提示
@@ -1480,13 +1480,13 @@ def run_analysis():
 
         # 顯示最終決策階段
         ui.show_step_header(5, "投資決策生成 | Investment Decision Generation")
-        ui.show_progress("正在處理投資信號...")
+        ui.show_progress("正在處理投資訊號...")
 
         # Get final state and decision
         final_state = trace[-1]
         decision = graph.process_signal(final_state["final_trade_decision"], selections['ticker'])
 
-        ui.show_success("投資信號處理完成")
+        ui.show_success("投資訊號處理完成")
 
         # Update all agent statuses to completed
         for agent in message_buffer.agent_status:
@@ -1524,7 +1524,7 @@ def run_analysis():
 )
 def analyze():
     """
-    啟動交互式股票分析工具
+    啟動互動式股票分析工具
     Launch interactive stock analysis tool
     """
     run_analysis()
@@ -1835,7 +1835,7 @@ def help_chinese():
     commands_table.add_row(
         "analyze",
         "股票分析 | Stock Analysis",
-        "啟動交互式多智慧體股票分析工具"
+        "啟動互動式多智慧體股票分析工具"
     )
     commands_table.add_row(
         "config",

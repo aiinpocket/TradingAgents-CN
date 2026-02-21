@@ -24,7 +24,7 @@ except ImportError:
     mongodb_report_manager = None
 
 
-# 匯入Docker適配器
+# 匯入Docker轉接器
 try:
     from .docker_pdf_adapter import (
         is_docker_environment,
@@ -34,7 +34,7 @@ try:
     DOCKER_ADAPTER_AVAILABLE = True
 except ImportError:
     DOCKER_ADAPTER_AVAILABLE = False
-    logger.warning("Docker適配器不可用")
+    logger.warning("Docker轉接器不可用")
 
 # 匯入匯出相關庫
 try:
@@ -852,7 +852,7 @@ def render_export_buttons(results: Dict[str, Any]):
             else:
                 st.warning(f"Docker環境PDF支援異常: {docker_status['dependency_message']}")
         else:
-            st.warning("Docker環境檢測到，但適配器不可用")
+            st.warning("Docker環境檢測到，但轉接器不可用")
 
         with st.expander("如何安裝pandoc"):
             st.markdown("""

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Docker環境PDF匯出適配器
+Docker環境PDF匯出轉接器
 處理Docker容器中的PDF生成特殊需求
 """
 
@@ -199,7 +199,7 @@ def get_docker_status_info():
     return info
 
 if __name__ == "__main__":
-    logger.info("Docker PDF適配器測試")
+    logger.info("Docker PDF轉接器測試")
     logger.info("=")
     
     status = get_docker_status_info()
