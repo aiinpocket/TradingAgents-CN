@@ -20,10 +20,6 @@ sys.path.insert(0, str(project_root))
 # 確保環境變量正確加載
 load_dotenv(project_root / ".env", override=True)
 
-# 導入統一日誌系統
-from tradingagents.utils.logging_init import setup_web_logging
-logger = setup_web_logging()
-
 # 添加配置管理器
 try:
     from tradingagents.config.config_manager import token_tracker
@@ -520,7 +516,7 @@ def format_analysis_results(results):
             'confidence': 0.7,  # 默認置信度
             'risk_score': 0.3,  # 默認風險分數
             'target_price': None,  # 字符串格式沒有目標價格
-            'reasoning': f'基於AI分析，建議{decision.strip().upper()}'
+            'reasoning': f'基於多維度分析，建議{decision.strip().upper()}'
         }
     elif isinstance(decision, dict):
         # 處理目標價格 - 確保正確提取數值
@@ -660,24 +656,4 @@ def validate_analysis_params(stock_symbol, analysis_date, analysts, research_dep
     
     return len(errors) == 0, errors
 
-def get_supported_stocks():
-    """獲取支持的股票列表"""
-    
-    # 常見的美股股票代碼
-    popular_stocks = [
-        {'symbol': 'AAPL', 'name': '蘋果公司', 'sector': '科技'},
-        {'symbol': 'MSFT', 'name': '微軟', 'sector': '科技'},
-        {'symbol': 'GOOGL', 'name': '谷歌', 'sector': '科技'},
-        {'symbol': 'AMZN', 'name': '亞馬遜', 'sector': '消費'},
-        {'symbol': 'TSLA', 'name': '特斯拉', 'sector': '汽車'},
-        {'symbol': 'NVDA', 'name': '輝達', 'sector': '科技'},
-        {'symbol': 'META', 'name': 'Meta', 'sector': '科技'},
-        {'symbol': 'NFLX', 'name': 'Netflix', 'sector': '媒體'},
-        {'symbol': 'AMD', 'name': 'AMD', 'sector': '科技'},
-        {'symbol': 'INTC', 'name': '英特爾', 'sector': '科技'},
-        {'symbol': 'SPY', 'name': 'S&P 500 ETF', 'sector': 'ETF'},
-        {'symbol': 'QQQ', 'name': '納斯達克100 ETF', 'sector': 'ETF'},
-    ]
-    
-    return popular_stocks
 

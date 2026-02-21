@@ -12,7 +12,6 @@ from typing import Dict, List, Any
 import json
 import os
 from pathlib import Path
-import hashlib
 import logging
 
 # MongoDB相關導入

@@ -63,7 +63,7 @@ class DatabaseCacheManager:
         self.mongodb_url = mongodb_url or os.getenv("MONGODB_URL")
         self.mongodb_host = "localhost"
         self.mongodb_port_num = int(mongodb_port)
-        self.mongodb_username = "admin" if mongodb_password else None
+        self.mongodb_username = os.getenv("MONGODB_USERNAME", "admin") if mongodb_password else None
         self.mongodb_password = mongodb_password or None
 
         self.redis_url = redis_url or os.getenv("REDIS_URL")

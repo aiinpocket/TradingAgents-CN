@@ -7,12 +7,10 @@
 import streamlit as st
 import json
 import os
-import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional
 import tempfile
-import base64
 
 # 導入日誌模塊
 from tradingagents.utils.logging_manager import get_logger
@@ -26,15 +24,6 @@ except ImportError:
     MONGODB_REPORT_AVAILABLE = False
     mongodb_report_manager = None
 
-# 配置日誌 - 確保輸出到stdout以便Docker logs可見
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(), # 輸出到stdout
-    ]
-)
-logger = logging.getLogger(__name__)
 
 # 導入Docker適配器
 try:
@@ -52,10 +41,6 @@ except ImportError:
 # 導入導出相關庫
 try:
     import markdown
-    import re
-    import tempfile
-    import os
-    from pathlib import Path
 
     # 導入pypandoc（用於markdown轉docx和pdf）
     import pypandoc
@@ -101,7 +86,6 @@ class ReportExporter:
         # Docker環境初始化
         if self.is_docker:
             logger.info("檢測到Docker環境，初始化PDF支持...")
-            logger.info(f"檢測到Docker環境，初始化PDF支持...")
             setup_xvfb_display()
     
     def _clean_text_for_markdown(self, text: str) -> str:
@@ -202,7 +186,7 @@ class ReportExporter:
 ## 分析配置信息
 
 - **LLM提供商**: {results.get('llm_provider', 'N/A')}
-- **AI模型**: {results.get('llm_model', 'N/A')}
+- **模型**: {results.get('llm_model', 'N/A')}
 - **分析師數量**: {len(results.get('analysts', []))}個
 - **研究深度**: {results.get('research_depth', 'N/A')}
 
@@ -958,7 +942,6 @@ def render_export_buttons(results: Dict[str, Any]):
     
     with col1:
         if st.button("導出 Markdown", help="導出為Markdown格式"):
-            logger.info(f"[EXPORT] 用戶點擊Markdown導出按鈕 - 股票: {stock_symbol}")
             logger.info(f"用戶點擊Markdown導出按鈕 - 股票: {stock_symbol}")
             # 1. 保存分模塊報告（CLI格式）
             logger.info("開始保存分模塊報告（CLI格式）...")
@@ -968,7 +951,6 @@ def render_export_buttons(results: Dict[str, Any]):
             content = report_exporter.export_report(results, 'markdown')
             if content:
                 filename = f"{stock_symbol}_analysis_{timestamp}.md"
-                logger.info(f"[EXPORT] Markdown導出成功，文件名: {filename}")
                 logger.info(f"Markdown導出成功，文件名: {filename}")
 
                 # 3. 保存彙總報告到results目錄
@@ -993,16 +975,13 @@ def render_export_buttons(results: Dict[str, Any]):
                     mime="text/markdown"
                 )
             else:
-                logger.error(f"[EXPORT] Markdown導出失敗，content為空")
                 logger.error("Markdown導出失敗，content為空")
     
     with col2:
         if st.button("導出 Word", help="導出為Word文檔格式"):
-            logger.info(f"[EXPORT] 用戶點擊Word導出按鈕 - 股票: {stock_symbol}")
             logger.info(f"用戶點擊Word導出按鈕 - 股票: {stock_symbol}")
             with st.spinner("正在生成Word文檔，請稍候..."):
                 try:
-                    logger.info(f"[EXPORT] 開始Word導出流程...")
                     logger.info("開始Word導出流程...")
 
                     # 1. 保存分模塊報告（CLI格式）
@@ -1013,7 +992,6 @@ def render_export_buttons(results: Dict[str, Any]):
                     content = report_exporter.export_report(results, 'docx')
                     if content:
                         filename = f"{stock_symbol}_analysis_{timestamp}.docx"
-                        logger.info(f"[EXPORT] Word導出成功，文件名: {filename}, 大小: {len(content)} 字節")
                         logger.info(f"Word導出成功，文件名: {filename}, 大小: {len(content)} 字節")
 
                         # 3. 保存Word彙總報告到results目錄
@@ -1040,11 +1018,9 @@ def render_export_buttons(results: Dict[str, Any]):
                             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         )
                     else:
-                        logger.error(f"[EXPORT] Word導出失敗，content為空")
                         logger.error("Word導出失敗，content為空")
                         st.error("Word文檔生成失敗")
                 except Exception as e:
-                    logger.error(f"[EXPORT] Word導出異常: {str(e)}")
                     logger.error(f"Word導出異常: {str(e)}", exc_info=True)
                     st.error(f"Word文檔生成失敗: {str(e)}")
 

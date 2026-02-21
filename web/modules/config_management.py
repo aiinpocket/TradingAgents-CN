@@ -5,10 +5,9 @@
 
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 import plotly.express as px
 import plotly.graph_objects as go
-from typing import List
 
 # 添加項目根目錄到路徑
 import sys

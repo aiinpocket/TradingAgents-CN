@@ -4,7 +4,6 @@
 """
 
 import streamlit as st
-import os
 from typing import Optional, Dict, Any
 
 class SmartSessionManager:
