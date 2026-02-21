@@ -5,7 +5,7 @@ TradingAgents-CN 核心模塊
 這是一個基於多智能體的股票分析系統，專注於美股的綜合分析。
 """
 
-__version__ = "0.1.8"
+__version__ = "0.1.19"
 __author__ = "TradingAgents-CN Team"
 __description__ = "Multi-agent stock analysis system for US markets"
 
