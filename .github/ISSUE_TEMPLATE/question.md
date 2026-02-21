@@ -15,7 +15,7 @@ assignees: ''
 - [ ]  安裝和配置 / Installation & Configuration
 - [ ]  使用方法 / Usage Instructions
 - [ ]  LLM配置 / LLM Configuration
-- [ ]  數據源設置 / Data Source Setup
+- [ ]  資料來源設定 / Data Source Setup
 - [ ]  Docker部署 / Docker Deployment
 - [ ]  功能理解 / Feature Understanding
 - [ ]  最佳實踐 / Best Practices
@@ -43,7 +43,7 @@ assignees: ''
 
 **配置狀態 / Configuration Status:**
 - [ ] 已配置API密鑰 / API keys configured
-- [ ] 已配置數據庫 / Database configured
+- [ ] 已配置資料庫 / Database configured
 - [ ] 已測試基本功能 / Basic functions tested
 
 ##  已嘗試的方法 / What You've Tried

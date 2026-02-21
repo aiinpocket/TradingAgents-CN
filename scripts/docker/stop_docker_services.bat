@@ -1,40 +1,40 @@
 @echo off
-REM TradingAgents Docker服務停止腳本
-REM 停止MongoDB、Redis和Redis Commander
+REM TradingAgents Docker
+REM MongoDBRedisRedis Commander
 
 echo ========================================
-echo TradingAgents Docker服務停止腳本
+echo TradingAgents Docker
 echo ========================================
 
-echo 🛑 停止TradingAgents相關服務...
+echo  TradingAgents...
 
-REM 停止Redis Commander
-echo 📊 停止Redis Commander...
+REM Redis Commander
+echo  Redis Commander...
 docker stop tradingagents-redis-commander 2>nul
 docker rm tradingagents-redis-commander 2>nul
 
-REM 停止Redis
-echo 📦 停止Redis...
+REM Redis
+echo  Redis...
 docker stop tradingagents-redis 2>nul
 docker rm tradingagents-redis 2>nul
 
-REM 停止MongoDB
-echo 📊 停止MongoDB...
+REM MongoDB
+echo  MongoDB...
 docker stop tradingagents-mongodb 2>nul
 docker rm tradingagents-mongodb 2>nul
 
 echo.
-echo 📋 檢查剩餘容器...
+echo  ...
 docker ps --filter "name=tradingagents-" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 echo.
 echo ========================================
-echo ✅ 所有TradingAgents服務已停止
+echo  TradingAgents
 echo ========================================
 echo.
-echo 💡 提示:
-echo    - 數據已保存在Docker卷中，下次啟動時會自動恢復
-echo    - 如需完全清理數據，請手動刪除Docker卷:
+echo  :
+echo    - Docker
+echo    - Docker:
 echo      docker volume rm mongodb_data redis_data
 echo.
 

@@ -1,29 +1,29 @@
-# Config 目錄
+# Config 
 
-此目錄用於儲存TradingAgents的配置檔案和使用統計資料。
+TradingAgents
 
-## 檔案說明
+## 
 
-- `usage.json` - Token使用統計資料（自動生成）
-- `models.json` - 模型配置檔案（自動生成）
-- `pricing.json` - 定價配置檔案（自動生成）
-- `settings.json` - 系統設定檔案（自動生成）
+- `usage.json` - Token
+- `models.json` - 
+- `pricing.json` - 
+- `settings.json` - 
 
-## 重要說明
+## 
 
-**資料持久化**：此目錄已在Docker Compose中配置為卷掛載，確保容器重啟後配置和統計資料不會丟失。
+****Docker Compose
 
-**安全提醒**：此目錄可能包含敏感的使用統計資訊，請勿將其提交到公共代碼倉庫。
+****
 
-## 備份建議
+## 
 
-建議定期備份此目錄中的重要配置檔案，特別是：
-- `usage.json` - 包含完整的Token使用歷史
-- `settings.json` - 包含個人化設定
 
-## 故障排除
+- `usage.json` - Token
+- `settings.json` - 
 
-如果遇到配置問題：
-1. 檢查檔案權限是否正確
-2. 確認Docker卷掛載是否正常
-3. 查看應用日誌獲取詳細錯誤資訊
+## 
+
+
+1. 
+2. Docker
+3. 

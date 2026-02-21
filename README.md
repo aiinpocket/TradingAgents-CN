@@ -285,7 +285,7 @@ v1.0.0-preview
 - ** **: 
 - ** **: 
 - ** **: 
-- **⌨ **: Enter
+- ** **: Enter
 - ** **: 
 
 > ****: Web [ Web](docs/usage/web-interface-detailed-guide.md)

@@ -1,25 +1,25 @@
 @echo off
-REM pip管理腳本 - 使用國內鏡像
+REM pip - 
 
-echo 🔧 pip管理工具
+echo  pip
 echo ================
 
 echo.
-echo 1. 升級pip
+echo 1. pip
 python -m pip install --upgrade pip
 
 echo.
-echo 2. 安裝常用包
+echo 2. 
 python -m pip install pymongo redis pandas requests
 
 echo.
-echo 3. 顯示已安裝包
+echo 3. 
 python -m pip list
 
 echo.
-echo 4. 檢查pip配置
+echo 4. pip
 python -m pip config list
 
 echo.
-echo ✅ 完成!
+echo  !
 pause

@@ -1,188 +1,188 @@
 #!/bin/bash
-# ChromaDB 問題診斷和修復腳本 (Linux/Mac版本)
-# 用於解決 "Configuration error: An instance of Chroma already exists for ephemeral with different settings" 錯誤
+# ChromaDB  (Linux/Mac)
+#  "Configuration error: An instance of Chroma already exists for ephemeral with different settings" 
 
-echo "=== ChromaDB 問題診斷和修復工具 ==="
-echo "適用環境: Linux/Mac Bash"
+echo "=== ChromaDB  ==="
+echo ": Linux/Mac Bash"
 echo ""
 
-# 1. 檢查Python進程中的ChromaDB實例
-echo "1. 檢查Python進程..."
+# 1. PythonChromaDB
+echo "1. Python..."
 python_pids=$(pgrep -f python)
 if [ ! -z "$python_pids" ]; then
-    echo "發現Python進程:"
-    ps aux | grep python | grep -v grep
-    echo ""
-    read -p "是否終止所有Python進程? (y/N): " choice
-    if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
-        pkill -f python
-        echo "✅ 已終止所有Python進程"
-        sleep 2
-    fi
+echo "Python:"
+ps aux | grep python | grep -v grep
+echo ""
+read -p "Python? (y/N): " choice
+if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
+pkill -f python
+echo " Python"
+sleep 2
+fi
 else
-    echo "✅ 未發現Python進程"
+echo " Python"
 fi
 
-# 2. 清理ChromaDB臨時文件和緩存
+# 2. ChromaDB
 echo ""
-echo "2. 清理ChromaDB臨時文件..."
+echo "2. ChromaDB..."
 
-# 清理臨時目錄中的ChromaDB文件
+# ChromaDB
 temp_paths=(
-    "/tmp/chroma*"
-    "$HOME/.chroma*"
-    "./chroma*"
-    "./.chroma*"
+"/tmp/chroma*"
+"$HOME/.chroma*"
+"./chroma*"
+"./.chroma*"
 )
 
 cleaned_files=0
 for path in "${temp_paths[@]}"; do
-    if ls $path 1> /dev/null 2>&1; then
-        echo "清理: $path"
-        rm -rf $path 2>/dev/null || echo "⚠️ 無法刪除: $path"
-        ((cleaned_files++))
-    fi
+if ls $path 1> /dev/null 2>&1; then
+echo ": $path"
+rm -rf $path 2>/dev/null || echo " : $path"
+((cleaned_files++))
+fi
 done
 
 if [ $cleaned_files -gt 0 ]; then
-    echo "✅ 已清理 $cleaned_files 個ChromaDB臨時文件"
+echo "  $cleaned_files ChromaDB"
 else
-    echo "✅ 未發現ChromaDB臨時文件"
+echo " ChromaDB"
 fi
 
-# 3. 清理Python緩存
+# 3. Python
 echo ""
-echo "3. 清理Python緩存..."
+echo "3. Python..."
 pycache_paths=(
-    "./__pycache__"
-    "./tradingagents/__pycache__"
-    "./tradingagents/agents/__pycache__"
-    "./tradingagents/agents/utils/__pycache__"
+"./__pycache__"
+"./tradingagents/__pycache__"
+"./tradingagents/agents/__pycache__"
+"./tradingagents/agents/utils/__pycache__"
 )
 
 cleaned_cache=0
 for path in "${pycache_paths[@]}"; do
-    if [ -d "$path" ]; then
-        rm -rf "$path"
-        echo "清理: $path"
-        ((cleaned_cache++))
-    fi
+if [ -d "$path" ]; then
+rm -rf "$path"
+echo ": $path"
+((cleaned_cache++))
+fi
 done
 
 if [ $cleaned_cache -gt 0 ]; then
-    echo "✅ 已清理 $cleaned_cache 個Python緩存目錄"
+echo "  $cleaned_cache Python"
 else
-    echo "✅ 未發現Python緩存目錄"
+echo " Python"
 fi
 
-# 4. 檢查ChromaDB版本兼容性
+# 4. ChromaDB
 echo ""
-echo "4. 檢查ChromaDB版本..."
+echo "4. ChromaDB..."
 chroma_version=$(python -c "import chromadb; print(chromadb.__version__)" 2>/dev/null)
 if [ ! -z "$chroma_version" ]; then
-    echo "ChromaDB版本: $chroma_version"
+echo "ChromaDB: $chroma_version"
     
-    # 檢查是否為推薦版本
-    if [[ "$chroma_version" == 1.0.* ]]; then
-        echo "✅ ChromaDB版本兼容"
-    else
-        echo "⚠️ 建議使用ChromaDB 1.0.x版本"
-        read -p "是否升級ChromaDB? (y/N): " upgrade
-        if [[ "$upgrade" == "y" || "$upgrade" == "Y" ]]; then
-            echo "升級ChromaDB..."
-            pip install --upgrade "chromadb>=1.0.12"
-        fi
-    fi
+# 
+if [[ "$chroma_version" == 1.0.* ]]; then
+echo " ChromaDB"
 else
-    echo "❌ 無法檢測ChromaDB版本"
+echo " ChromaDB 1.0.x"
+read -p "ChromaDB? (y/N): " upgrade
+if [[ "$upgrade" == "y" || "$upgrade" == "Y" ]]; then
+echo "ChromaDB..."
+pip install --upgrade "chromadb>=1.0.12"
+fi
+fi
+else
+echo " ChromaDB"
 fi
 
-# 5. 檢查環境變量衝突
+# 5. 
 echo ""
-echo "5. 檢查環境變量..."
+echo "5. ..."
 chroma_env_vars=(
-    "CHROMA_HOST"
-    "CHROMA_PORT"
-    "CHROMA_DB_IMPL"
-    "CHROMA_API_IMPL"
-    "CHROMA_TELEMETRY"
+"CHROMA_HOST"
+"CHROMA_PORT"
+"CHROMA_DB_IMPL"
+"CHROMA_API_IMPL"
+"CHROMA_TELEMETRY"
 )
 
 found_env_vars=()
 for var in "${chroma_env_vars[@]}"; do
-    value=$(printenv $var)
-    if [ ! -z "$value" ]; then
-        found_env_vars+=("$var=$value")
-    fi
+value=$(printenv $var)
+if [ ! -z "$value" ]; then
+found_env_vars+=("$var=$value")
+fi
 done
 
 if [ ${#found_env_vars[@]} -gt 0 ]; then
-    echo "發現ChromaDB環境變量:"
-    for var in "${found_env_vars[@]}"; do
-        echo "  $var"
-    done
-    echo "⚠️ 這些環境變量可能導致配置衝突"
+echo "ChromaDB:"
+for var in "${found_env_vars[@]}"; do
+echo "  $var"
+done
+echo " "
 else
-    echo "✅ 未發現ChromaDB環境變量衝突"
+echo " ChromaDB"
 fi
 
-# 6. 測試ChromaDB初始化
+# 6. ChromaDB
 echo ""
-echo "6. 測試ChromaDB初始化..."
+echo "6. ChromaDB..."
 test_script='
 import chromadb
 from chromadb.config import Settings
 import sys
 
 try:
-    # 測試基本初始化
-    client = chromadb.Client()
-    print("✅ 基本初始化成功")
+# 
+client = chromadb.Client()
+print(" ")
     
-    # 測試項目配置
-    settings = Settings(
-        allow_reset=True,
-        anonymized_telemetry=False,
-        is_persistent=False
-    )
-    client2 = chromadb.Client(settings)
-    print("✅ 項目配置初始化成功")
+# 
+settings = Settings(
+allow_reset=True,
+anonymized_telemetry=False,
+is_persistent=False
+)
+client2 = chromadb.Client(settings)
+print(" ")
     
-    # 測試集合創建
-    collection = client2.create_collection(name="test_collection")
-    print("✅ 集合創建成功")
+# 
+collection = client2.create_collection(name="test_collection")
+print(" ")
     
-    # 清理測試
-    client2.delete_collection(name="test_collection")
-    print("✅ ChromaDB測試完成")
+# 
+client2.delete_collection(name="test_collection")
+print(" ChromaDB")
     
 except Exception as e:
-    print(f"❌ ChromaDB測試失敗: {e}")
-    sys.exit(1)
+print(f" ChromaDB: {e}")
+sys.exit(1)
 '
 
 python -c "$test_script" 2>&1
 
-# 7. 提供解決方案建議
+# 7. 
 echo ""
-echo "=== 解決方案建議 ==="
-echo "如果問題仍然存在，請嘗試以下方案:"
+echo "===  ==="
+echo ":"
 echo ""
-echo "方案1: 重啟系統"
-echo "  - 完全清理內存中的ChromaDB實例"
+echo "1: "
+echo "  - ChromaDB"
 echo ""
-echo "方案2: 使用虛擬環境"
+echo "2: "
 echo "  python -m venv fresh_env"
 echo "  source fresh_env/bin/activate"
 echo "  pip install -r requirements.txt"
 echo ""
-echo "方案3: 重新安裝ChromaDB"
+echo "3: ChromaDB"
 echo "  pip uninstall chromadb -y"
 echo "  pip install chromadb==1.0.12"
 echo ""
-echo "方案4: 檢查Python版本兼容性"
-echo "  - 確保使用Python 3.8-3.11"
-echo "  - 避免使用Python 3.12+"
+echo "4: Python"
+echo "  - Python 3.8-3.11"
+echo "  - Python 3.12+"
 echo ""
 
-echo "🔧 修復完成！請重新運行應用程序。"
+echo " "

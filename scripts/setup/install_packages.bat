@@ -27,7 +27,7 @@ python -m pip list | findstr -i "pymongo redis pandas"
 echo.
 echo 套件安裝完成!
 echo.
-echo 下一步運行:
+echo 下一步執行:
 echo    python scripts\setup\initialize_system.py
 echo.
 

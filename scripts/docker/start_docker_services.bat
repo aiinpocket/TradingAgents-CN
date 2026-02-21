@@ -1,13 +1,13 @@
 @echo off
 chcp 65001 >nul
-REM TradingAgents Docker服務啟動腳本
+REM TradingAgents Docker服務啟動指令碼
 REM 啟動MongoDB、Redis和Redis Commander
 
 echo ========================================
 echo TradingAgents Docker Service Startup
 echo ========================================
 
-REM 檢查Docker是否運行
+REM 檢查Docker是否執行
 echo Checking Docker service status...
 docker version >nul 2>&1
 if %errorlevel% neq 0 (

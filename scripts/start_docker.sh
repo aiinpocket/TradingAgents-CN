@@ -1,86 +1,86 @@
 #!/bin/bash
-# TradingAgents Docker 啟動腳本
-# 自動創建必要目錄並啟動Docker容器
+# TradingAgents Docker 
+# Docker
 
-echo "🚀 TradingAgents Docker 啟動"
+echo " TradingAgents Docker "
 echo "=========================="
 
-# 檢查Docker是否運行
+# Docker
 if ! docker info >/dev/null 2>&1; then
-    echo "❌ Docker未運行，請先啟動Docker"
-    exit 1
+echo " DockerDocker"
+exit 1
 fi
 
-# 檢查docker-compose是否可用
+# docker-compose
 if ! command -v docker-compose >/dev/null 2>&1; then
-    echo "❌ docker-compose未安裝"
-    exit 1
+echo " docker-compose"
+exit 1
 fi
 
-# 創建logs目錄
-echo "📁 創建logs目錄..."
+# logs
+echo " logs..."
 mkdir -p logs
 chmod 755 logs 2>/dev/null || true
-echo "✅ logs目錄準備完成"
+echo " logs"
 
-# 檢查.env文件
+# .env
 if [ ! -f ".env" ]; then
-    echo "⚠️ .env文件不存在"
-    if [ -f ".env.example" ]; then
-        echo "📋 複製.env.example到.env"
-        cp .env.example .env
-        echo "✅ 請編輯.env文件配置API密鑰"
-    else
-        echo "❌ .env.example文件也不存在"
-        exit 1
-    fi
+echo " .env"
+if [ -f ".env.example" ]; then
+echo " .env.example.env"
+cp .env.example .env
+echo " .envAPI"
+else
+echo " .env.example"
+exit 1
+fi
 fi
 
-# 顯示當前配置
+# 
 echo ""
-echo "📋 當前配置:"
-echo "   項目目錄: $(pwd)"
-echo "   日誌目錄: $(pwd)/logs"
-echo "   配置文件: .env"
+echo " :"
+echo "   : $(pwd)"
+echo "   : $(pwd)/logs"
+echo "   : .env"
 
-# 啟動Docker容器
+# Docker
 echo ""
-echo "🐳 啟動Docker容器..."
+echo " Docker..."
 docker-compose up -d
 
-# 檢查啟動狀態
+# 
 echo ""
-echo "📊 檢查容器狀態..."
+echo " ..."
 docker-compose ps
 
-# 等待服務啟動
+# 
 echo ""
-echo "⏳ 等待服務啟動..."
+echo " ..."
 sleep 10
 
-# 檢查Web服務
+# Web
 echo ""
-echo "🌐 檢查Web服務..."
+echo " Web..."
 if curl -s http://localhost:8501/_stcore/health >/dev/null 2>&1; then
-    echo "✅ Web服務正常運行"
-    echo "🌐 訪問地址: http://localhost:8501"
+echo " Web"
+echo " : http://localhost:8501"
 else
-    echo "⚠️ Web服務可能還在啟動中..."
-    echo "💡 請稍等片刻後訪問: http://localhost:8501"
+echo " Web..."
+echo " : http://localhost:8501"
 fi
 
-# 顯示日誌信息
+# 
 echo ""
-echo "📋 日誌信息:"
-echo "   日誌目錄: ./logs/"
-echo "   實時查看: tail -f logs/tradingagents.log"
-echo "   Docker日誌: docker-compose logs -f web"
+echo " :"
+echo "   : ./logs/"
+echo "   : tail -f logs/tradingagents.log"
+echo "   Docker: docker-compose logs -f web"
 
 echo ""
-echo "🎉 啟動完成！"
+echo " "
 echo ""
-echo "💡 常用命令:"
-echo "   查看狀態: docker-compose ps"
-echo "   查看日誌: docker-compose logs -f web"
-echo "   停止服務: docker-compose down"
-echo "   重啟服務: docker-compose restart web"
+echo " :"
+echo "   : docker-compose ps"
+echo "   : docker-compose logs -f web"
+echo "   : docker-compose down"
+echo "   : docker-compose restart web"
