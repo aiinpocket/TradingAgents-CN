@@ -54,8 +54,7 @@ def render_analysis_form():
                 placeholder=t("analysis.stock_placeholder"),
                 help=t("analysis.stock_help"),
                 key="us_stock_input",
-                autocomplete="off"
-            ).upper().strip()
+                autocomplete="off").upper().strip()
 
             logger.debug(f"[FORM DEBUG] text_input: '{stock_symbol}'")
 
@@ -70,7 +69,7 @@ def render_analysis_form():
             # 研究深度（使用緩存的值）
             cached_depth = cached_config.get('research_depth', 3) if cached_config else 3
             research_depth = st.select_slider(
-                "研究深度 🔍",
+                "研究深度 ",
                 options=[1, 2, 3, 4, 5],
                 value=cached_depth,
                 format_func=lambda x: {
@@ -84,7 +83,7 @@ def render_analysis_form():
             )
         
         # 分析師團隊選擇
-        st.markdown("### 👥 選擇分析師團隊")
+        st.markdown("### 選擇分析師團隊")
 
         col1, col2 = st.columns(2)
 
@@ -94,26 +93,26 @@ def render_analysis_form():
 
         with col1:
             market_analyst = st.checkbox(
-                "📈 市場分析師",
+                "市場分析師",
                 value='market' in cached_analysts,
                 help="專註於技術面分析、價格趨勢、技術指標"
             )
 
             social_analyst = st.checkbox(
-                "💭 社交媒體分析師",
+                "社交媒體分析師",
                 value='social' in cached_analysts,
                 help="分析社交媒體情緒、投資者情緒指標"
             )
 
         with col2:
             news_analyst = st.checkbox(
-                "📰 新聞分析師",
+                "新聞分析師",
                 value='news' in cached_analysts,
                 help="分析相關新聞事件、市場動態影響"
             )
 
             fundamentals_analyst = st.checkbox(
-                "💰 基本面分析師",
+                "基本面分析師",
                 value='fundamentals' in cached_analysts,
                 help="分析財務數據、公司基本面、估值水平"
             )
@@ -136,7 +135,7 @@ def render_analysis_form():
             st.warning("請至少選擇一個分析師")
         
         # 高級選項
-        with st.expander("🔧 高級選項"):
+        with st.expander("高級選項"):
             include_sentiment = st.checkbox(
                 "包含情緒分析",
                 value=True,
@@ -157,9 +156,9 @@ def render_analysis_form():
 
         # 顯示輸入狀態提示
         if not stock_symbol:
-            st.info("💡 請在上方輸入股票代碼，輸入完成後按回車鍵確認")
+            st.info("請在上方輸入股票代碼，輸入完成後按回車鍵確認")
         else:
-            st.success(f"✅ 已輸入股票代碼: {stock_symbol}")
+            st.success(f"已輸入股票代碼: {stock_symbol}")
 
         # 添加JavaScript來改善用戶體驗
         st.markdown("""
@@ -206,13 +205,13 @@ def render_analysis_form():
                     market_type=market_type,
                     form_config=current_config
                 )
-                logger.debug(f"📊 [配置自動保存] 表單配置已更新")
+                logger.debug(f"[配置自動保存] 表單配置已更新")
             except Exception as e:
-                logger.warning(f"⚠️ [配置自動保存] 保存失敗: {e}")
+                logger.warning(f"[配置自動保存] 保存失敗: {e}")
 
         # 提交按鈕（不禁用，讓用戶可以點擊）
         submitted = st.form_submit_button(
-            "🚀 開始分析",
+            "開始分析",
             type="primary",
             use_container_width=True
         )
@@ -220,12 +219,12 @@ def render_analysis_form():
     # 只有在提交時才返回數據
     if submitted and stock_symbol:  # 確保有股票代碼才提交
         # 添加詳細日誌
-        logger.debug(f"🔍 [FORM DEBUG] ===== 分析表單提交 =====")
-        logger.debug(f"🔍 [FORM DEBUG] 用戶輸入的股票代碼: '{stock_symbol}'")
-        logger.debug(f"🔍 [FORM DEBUG] 市場類型: '{market_type}'")
-        logger.debug(f"🔍 [FORM DEBUG] 分析日期: '{analysis_date}'")
-        logger.debug(f"🔍 [FORM DEBUG] 選擇的分析師: {[a[0] for a in selected_analysts]}")
-        logger.debug(f"🔍 [FORM DEBUG] 研究深度: {research_depth}")
+        logger.debug(f"[FORM DEBUG] ===== 分析表單提交 =====")
+        logger.debug(f"[FORM DEBUG] 用戶輸入的股票代碼: '{stock_symbol}'")
+        logger.debug(f"[FORM DEBUG] 市場類型: '{market_type}'")
+        logger.debug(f"[FORM DEBUG] 分析日期: '{analysis_date}'")
+        logger.debug(f"[FORM DEBUG] 選擇的分析師: {[a[0] for a in selected_analysts]}")
+        logger.debug(f"[FORM DEBUG] 研究深度: {research_depth}")
 
         form_data = {
             'submitted': True,
@@ -264,7 +263,7 @@ def render_analysis_form():
                 form_config=form_config
             )
         except Exception as e:
-            logger.warning(f"⚠️ [配置持久化] 保存失敗: {e}")
+            logger.warning(f"[配置持久化] 保存失敗: {e}")
 
         # 記錄用戶分析請求活動
         if user_activity_logger:
@@ -282,20 +281,20 @@ def render_analysis_form():
                         'form_source': 'analysis_form'
                     }
                 )
-                logger.debug(f"📊 [用戶活動] 已記錄分析請求: {stock_symbol}")
+                logger.debug(f"[用戶活動] 已記錄分析請求: {stock_symbol}")
             except Exception as e:
-                logger.warning(f"⚠️ [用戶活動] 記錄失敗: {e}")
+                logger.warning(f"[用戶活動] 記錄失敗: {e}")
 
-        logger.info(f"📊 [配置緩存] 表單配置已保存: {form_config}")
+        logger.info(f"[配置緩存] 表單配置已保存: {form_config}")
 
-        logger.debug(f"🔍 [FORM DEBUG] 返回的表單數據: {form_data}")
-        logger.debug(f"🔍 [FORM DEBUG] ===== 表單提交結束 =====")
+        logger.debug(f"[FORM DEBUG] 返回的表單數據: {form_data}")
+        logger.debug(f"[FORM DEBUG] ===== 表單提交結束 =====")
 
         return form_data
     elif submitted and not stock_symbol:
         # 用戶點擊了提交但沒有輸入股票代碼
-        logger.error(f"🔍 [FORM DEBUG] 提交失敗：股票代碼為空")
-        st.error("❌ 請輸入股票代碼後再提交")
+        logger.error(f"[FORM DEBUG] 提交失敗：股票代碼為空")
+        st.error("請輸入股票代碼後再提交")
         return {'submitted': False}
     else:
         return {'submitted': False}

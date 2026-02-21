@@ -49,7 +49,7 @@ def test_complete_unified_architecture():
             return False
         
         # 檢查是否還有舊工具
-        old_tools = ['get_china_stock_data', 'get_china_fundamentals', 'get_fundamentals_openai']
+        old_tools = ['get_fundamentals_openai']
         for old_tool in old_tools:
             if old_tool in fundamentals_tool_names:
                 print(f"    ❌ 仍包含舊工具: {old_tool}")
@@ -178,9 +178,9 @@ def test_unified_tools_functionality():
         
         # 測試統一基本面工具
         test_cases = [
-            ("0700.HK", "港股", "HK$"),
-            ("600036", "中國A股", "¥"),
             ("AAPL", "美股", "$"),
+            ("MSFT", "美股", "$"),
+            ("GOOGL", "美股", "$"),
         ]
         
         for ticker, expected_market, expected_currency in test_cases:

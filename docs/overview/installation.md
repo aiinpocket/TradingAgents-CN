@@ -380,16 +380,16 @@ source venv/bin/activate  # Linux/macOS
 # venv\Scripts\activate  # Windows
 ```
 
-### 3. 網絡連接問題
+### 3. 網路連線問題
 ```bash
-# 問題: pip 安裝超時或連接失敗
+# 問題: pip 安裝超時或連線失敗
 # 解決方案:
 
-# 使用國內鏡像源
-pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
+# 增加超時時間
+pip install -r requirements.txt --timeout 120
 
-# 或配置永久鏡像源
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
+# 使用鎖定版本安裝（速度更快，無需依賴解析）
+pip install -r requirements-lock.txt
 ```
 
 ### 4. 依賴衝突問題

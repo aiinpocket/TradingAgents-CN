@@ -25,7 +25,7 @@ def create_risk_manager(llm, memory):
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記憶檢索")
+            logger.warning(f"[DEBUG] memory為None，跳過歷史記憶檢索")
             past_memories = []
 
         past_memory_str = ""
@@ -63,33 +63,33 @@ def create_risk_manager(llm, memory):
         
         while retry_count < max_retries:
             try:
-                logger.info(f"🔄 [Risk Manager] 調用LLM生成交易決策 (嘗試 {retry_count + 1}/{max_retries})")
+                logger.info(f"[Risk Manager] 調用LLM生成交易決策 (嘗試 {retry_count + 1}/{max_retries})")
                 response = llm.invoke(prompt)
                 
                 if response and hasattr(response, 'content') and response.content:
                     response_content = response.content.strip()
                     if len(response_content) > 10:  # 確保響應有實質內容
-                        logger.info(f"✅ [Risk Manager] LLM調用成功，生成決策長度: {len(response_content)} 字符")
+                        logger.info(f"[Risk Manager] LLM調用成功，生成決策長度: {len(response_content)} 字符")
                         break
                     else:
-                        logger.warning(f"⚠️ [Risk Manager] LLM響應內容過短: {len(response_content)} 字符")
+                        logger.warning(f"[Risk Manager] LLM響應內容過短: {len(response_content)} 字符")
                         response_content = ""
                 else:
-                    logger.warning(f"⚠️ [Risk Manager] LLM響應為空或無效")
+                    logger.warning(f"[Risk Manager] LLM響應為空或無效")
                     response_content = ""
                     
             except Exception as e:
-                logger.error(f"❌ [Risk Manager] LLM調用失敗 (嘗試 {retry_count + 1}): {str(e)}")
+                logger.error(f"[Risk Manager] LLM調用失敗 (嘗試 {retry_count + 1}): {str(e)}")
                 response_content = ""
             
             retry_count += 1
             if retry_count < max_retries and not response_content:
-                logger.info(f"🔄 [Risk Manager] 等待2秒後重試...")
+                logger.info(f"[Risk Manager] 等待2秒後重試...")
                 time.sleep(2)
         
         # 如果所有重試都失敗，生成默認決策
         if not response_content:
-            logger.error(f"❌ [Risk Manager] 所有LLM調用嘗試失敗，使用默認決策")
+            logger.error(f"[Risk Manager] 所有LLM調用嘗試失敗，使用默認決策")
             response_content = f"""**默認建議：持有**
 
 由於技術原因無法生成詳細分析，基於當前市場狀況和風險控制原則，建議對{company_name}採取持有策略。
@@ -119,7 +119,7 @@ def create_risk_manager(llm, memory):
             "count": risk_debate_state["count"],
         }
 
-        logger.info(f"📋 [Risk Manager] 最終決策生成完成，內容長度: {len(response_content)} 字符")
+        logger.info(f"[Risk Manager] 最終決策生成完成，內容長度: {len(response_content)} 字符")
         
         return {
             "risk_debate_state": new_risk_debate_state,

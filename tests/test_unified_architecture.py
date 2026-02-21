@@ -184,11 +184,11 @@ def test_stock_type_routing():
         toolkit = Toolkit(config)
         
         test_cases = [
-            ("0700.HK", "港股", "HK$"),
-            ("9988.HK", "港股", "HK$"),
-            ("000001", "中國A股", "¥"),
-            ("600036", "中國A股", "¥"),
             ("AAPL", "美股", "$"),
+            ("MSFT", "美股", "$"),
+            ("GOOGL", "美股", "$"),
+            ("TSLA", "美股", "$"),
+            ("AMZN", "美股", "$"),
         ]
         
         for ticker, expected_market, expected_currency in test_cases:

@@ -83,11 +83,8 @@ def init_mongodb():
                 "config_name": "ttl_settings",
                 "config_value": {
                     "us_stock_data": 7200,
-                    "china_stock_data": 3600,
                     "us_news": 21600,
-                    "china_news": 14400,
-                    "us_fundamentals": 86400,
-                    "china_fundamentals": 43200
+                    "us_fundamentals": 86400
                 },
                 "description": "緩存TTL配置",
                 "created_at": datetime.utcnow(),
@@ -159,11 +156,8 @@ def init_redis():
             "initialized_at": datetime.utcnow().isoformat(),
             "ttl_settings": {
                 "us_stock_data": 7200,
-                "china_stock_data": 3600,
                 "us_news": 21600,
-                "china_news": 14400,
-                "us_fundamentals": 86400,
-                "china_fundamentals": 43200
+                "us_fundamentals": 86400
             }
         }
         
@@ -216,7 +210,7 @@ def test_database_connection():
     logger.info(f"\n🔗 測試數據庫連接...")
     
     try:
-        from tradingagents.dataflows.database_manager import get_database_manager
+        from tradingagents.config.database_manager import get_database_manager
 
         
         db_manager = get_database_manager()

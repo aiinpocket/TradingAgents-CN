@@ -51,12 +51,12 @@ def render_results(results):
     error = results.get('error')
 
     st.markdown("---")
-    st.header(f"📊 {stock_symbol} 分析結果")
+    st.header(f"{stock_symbol} 分析結果")
 
     # 如果分析失敗，顯示錯誤信息
     if not success and error:
-        st.error(f"❌ **分析失敗**: {error}")
-        st.info("💡 **解決方案**: 請檢查API密鑰配置，確保網絡連接正常，然後重新運行分析。")
+        st.error(f"**分析失敗**: {error}")
+        st.info("**解決方案**: 請檢查API密鑰配置，確保網絡連接正常，然後重新運行分析。")
         return
 
     # 投資決策摘要
@@ -77,7 +77,7 @@ def render_results(results):
 def render_analysis_info(results):
     """渲染分析配置信息"""
 
-    with st.expander("📋 分析配置信息", expanded=False):
+    with st.expander("分析配置信息", expanded=False):
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -99,7 +99,7 @@ def render_analysis_info(results):
 
         with col2:
             llm_model = results.get('llm_model', 'N/A')
-            logger.debug(f"🔍 [DEBUG] llm_model from results: {llm_model}")
+            logger.debug(f"[DEBUG] llm_model from results: {llm_model}")
             model_display = {
                 'gpt-4o': 'GPT-4o',
                 'gpt-4o-mini': 'GPT-4o Mini',
@@ -121,7 +121,7 @@ def render_analysis_info(results):
 
         with col3:
             analysts = results.get('analysts', [])
-            logger.debug(f"🔍 [DEBUG] analysts from results: {analysts}")
+            logger.debug(f"[DEBUG] analysts from results: {analysts}")
             analysts_count = len(analysts) if analysts else 0
 
             st.metric(
@@ -134,20 +134,20 @@ def render_analysis_info(results):
         if analysts:
             st.write("**參與的分析師:**")
             analyst_names = {
-                'market': '📈 市場技術分析師',
-                'fundamentals': '💰 基本面分析師',
-                'news': '📰 新聞分析師',
-                'social_media': '💭 社交媒體分析師',
-                'risk': '⚠️ 風險評估師'
+                'market': '市場技術分析師',
+                'fundamentals': '基本面分析師',
+                'news': '新聞分析師',
+                'social_media': '社交媒體分析師',
+                'risk': '風險評估師'
             }
 
             analyst_list = [analyst_names.get(analyst, analyst) for analyst in analysts]
-            st.write(" • ".join(analyst_list))
+            st.write("• ".join(analyst_list))
 
 def render_decision_summary(decision, stock_symbol=None):
     """渲染投資決策摘要"""
 
-    st.subheader("🎯 投資決策摘要")
+    st.subheader("投資決策摘要")
 
     # 如果沒有決策數據，顯示占位符
     if not decision:
@@ -155,26 +155,26 @@ def render_decision_summary(decision, stock_symbol=None):
         <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
                     padding: 30px; border-radius: 15px; text-align: center;
                     border: 2px dashed #dee2e6; margin: 20px 0;">
-            <h4 style="color: #6c757d; margin-bottom: 15px;">📊 等待投資決策</h4>
+            <h4 style="color: #6c757d; margin-bottom: 15px;"> 等待投資決策</h4>
             <p style="color: #6c757d; font-size: 16px; margin-bottom: 20px;">
                 分析完成後，投資決策將在此處顯示
             </p>
             <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
                 <span style="background: white; padding: 8px 16px; border-radius: 20px;
                            color: #6c757d; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    📊 投資建議
+                     投資建議
                 </span>
                 <span style="background: white; padding: 8px 16px; border-radius: 20px;
                            color: #6c757d; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    💰 目標價位
+                     目標價位
                 </span>
                 <span style="background: white; padding: 8px 16px; border-radius: 20px;
                            color: #6c757d; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    ⚖️ 風險評級
+                     風險評級
                 </span>
                 <span style="background: white; padding: 8px 16px; border-radius: 20px;
                            color: #6c757d; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    🎯 置信度
+                     置信度
                 </span>
             </div>
         </div>
@@ -205,8 +205,7 @@ def render_decision_summary(decision, stock_symbol=None):
             'HOLD': 'off',
             '買入': 'normal',
             '賣出': 'inverse',
-            '持有': 'off'
-        }.get(action.upper(), 'normal')
+            '持有': 'off'}.get(action.upper(), 'normal')
 
         st.metric(
             label="投資建議",
@@ -249,8 +248,8 @@ def render_decision_summary(decision, stock_symbol=None):
 
     with col4:
         target_price = decision.get('target_price')
-        logger.debug(f"🔍 [DEBUG] target_price from decision: {target_price}, type: {type(target_price)}")
-        logger.debug(f"🔍 [DEBUG] decision keys: {list(decision.keys()) if isinstance(decision, dict) else 'Not a dict'}")
+        logger.debug(f"[DEBUG] target_price from decision: {target_price}, type: {type(target_price)}")
+        logger.debug(f"[DEBUG] decision keys: {list(decision.keys()) if isinstance(decision, dict) else 'Not a dict'}")
 
         # 僅支援美股，統一使用美元符號
         currency_symbol = "$"
@@ -271,13 +270,13 @@ def render_decision_summary(decision, stock_symbol=None):
     
     # 分析推理
     if 'reasoning' in decision and decision['reasoning']:
-        with st.expander("🧠 AI分析推理", expanded=True):
+        with st.expander("AI分析推理", expanded=True):
             st.markdown(decision['reasoning'])
 
 def render_detailed_analysis(state):
     """渲染詳細分析報告"""
 
-    st.subheader("📋 詳細分析報告")
+    st.subheader("詳細分析報告")
 
     # 添加自定義CSS樣式美化標簽页
     st.markdown("""
@@ -346,7 +345,7 @@ def render_detailed_analysis(state):
     """, unsafe_allow_html=True)
 
     # 調試信息：顯示實際的狀態鍵
-    if st.checkbox("🔍 顯示調試信息", key="debug_state_keys"):
+    if st.checkbox("顯示調試信息", key="debug_state_keys"):
         st.write("**實際狀態中的鍵：**")
         st.write(list(state.keys()))
         st.write("**各鍵的數據類型和內容預覽：**")
@@ -364,63 +363,63 @@ def render_detailed_analysis(state):
     analysis_modules = [
         {
             'key': 'market_report',
-            'title': '📈 市場技術分析',
-            'icon': '📈',
+            'title': '市場技術分析',
+            'icon': '',
             'description': '技術指標、價格趨勢、支撐阻力位分析'
         },
         {
             'key': 'fundamentals_report',
-            'title': '💰 基本面分析',
-            'icon': '💰',
+            'title': '基本面分析',
+            'icon': '',
             'description': '財務數據、估值水平、盈利能力分析'
         },
         {
             'key': 'sentiment_report',
-            'title': '💭 市場情緒分析',
-            'icon': '💭',
+            'title': '市場情緒分析',
+            'icon': '',
             'description': '投資者情緒、社交媒體情緒指標'
         },
         {
             'key': 'news_report',
-            'title': '📰 新聞事件分析',
-            'icon': '📰',
+            'title': '新聞事件分析',
+            'icon': '',
             'description': '相關新聞事件、市場動態影響分析'
         },
         {
             'key': 'risk_assessment',
-            'title': '⚠️ 風險評估',
-            'icon': '⚠️',
+            'title': '風險評估',
+            'icon': '',
             'description': '風險因素識別、風險等級評估'
         },
         {
             'key': 'investment_plan',
-            'title': '📋 投資建議',
-            'icon': '📋',
+            'title': '投資建議',
+            'icon': '',
             'description': '具體投資策略、倉位管理建議'
         },
         # 添加團隊決策報告模塊
         {
             'key': 'investment_debate_state',
-            'title': '🔬 研究團隊決策',
-            'icon': '🔬',
+            'title': '研究團隊決策',
+            'icon': '',
             'description': '多頭/空頭研究員辯論分析，研究經理綜合決策'
         },
         {
             'key': 'trader_investment_plan',
-            'title': '💼 交易團隊計劃',
-            'icon': '💼',
+            'title': '交易團隊計劃',
+            'icon': '',
             'description': '專業交易員制定的具體交易執行計劃'
         },
         {
             'key': 'risk_debate_state',
-            'title': '⚖️ 風險管理團隊',
-            'icon': '⚖️',
+            'title': '風險管理團隊',
+            'icon': '',
             'description': '激進/保守/中性分析師風險評估，投資組合經理最終決策'
         },
         {
             'key': 'final_trade_decision',
-            'title': '🎯 最終交易決策',
-            'icon': '🎯',
+            'title': '最終交易決策',
+            'icon': '',
             'description': '綜合所有團隊分析後的最終投資決策'
         }
     ]
@@ -475,38 +474,38 @@ def render_detailed_analysis(state):
 def render_investment_debate_content(content):
     """渲染研究團隊決策內容"""
     if content.get('bull_history'):
-        st.subheader("📈 多頭研究員分析")
+        st.subheader("多頭研究員分析")
         st.markdown(content['bull_history'])
         st.markdown("---")
 
     if content.get('bear_history'):
-        st.subheader("📉 空頭研究員分析")
+        st.subheader("空頭研究員分析")
         st.markdown(content['bear_history'])
         st.markdown("---")
 
     if content.get('judge_decision'):
-        st.subheader("🎯 研究經理綜合決策")
+        st.subheader("研究經理綜合決策")
         st.markdown(content['judge_decision'])
 
 def render_risk_debate_content(content):
     """渲染風險管理團隊決策內容"""
     if content.get('risky_history'):
-        st.subheader("🚀 激進分析師評估")
+        st.subheader("激進分析師評估")
         st.markdown(content['risky_history'])
         st.markdown("---")
 
     if content.get('safe_history'):
-        st.subheader("🛡️ 保守分析師評估")
+        st.subheader("保守分析師評估")
         st.markdown(content['safe_history'])
         st.markdown("---")
 
     if content.get('neutral_history'):
-        st.subheader("⚖️ 中性分析師評估")
+        st.subheader("中性分析師評估")
         st.markdown(content['neutral_history'])
         st.markdown("---")
 
     if content.get('judge_decision'):
-        st.subheader("🎯 投資組合經理最終決策")
+        st.subheader("投資組合經理最終決策")
         st.markdown(content['judge_decision'])
 
 def render_analysis_placeholder():
@@ -514,32 +513,32 @@ def render_analysis_placeholder():
 
     st.markdown("""
     <div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 10px; border: 2px dashed #dee2e6;">
-        <h3 style="color: #6c757d; margin-bottom: 20px;">📊 等待分析數據</h3>
+        <h3 style="color: #6c757d; margin-bottom: 20px;"> 等待分析數據</h3>
         <p style="color: #6c757d; font-size: 16px; margin-bottom: 30px;">
             請先配置API密鑰並運行股票分析，分析完成後詳細報告將在此處顯示
         </p>
 
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
-                <div style="font-size: 24px; margin-bottom: 8px;">📈</div>
+                <div style="font-size: 24px; margin-bottom: 8px;"></div>
                 <div style="font-weight: bold; color: #495057;">技術分析</div>
                 <div style="font-size: 12px; color: #6c757d;">價格趨勢、支撐阻力</div>
             </div>
 
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
-                <div style="font-size: 24px; margin-bottom: 8px;">💰</div>
+                <div style="font-size: 24px; margin-bottom: 8px;"></div>
                 <div style="font-weight: bold; color: #495057;">基本面分析</div>
                 <div style="font-size: 12px; color: #6c757d;">財務數據、估值分析</div>
             </div>
 
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
-                <div style="font-size: 24px; margin-bottom: 8px;">📰</div>
+                <div style="font-size: 24px; margin-bottom: 8px;"></div>
                 <div style="font-weight: bold; color: #495057;">新聞分析</div>
                 <div style="font-size: 12px; color: #6c757d;">市場情緒、事件影響</div>
             </div>
 
             <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px;">
-                <div style="font-size: 24px; margin-bottom: 8px;">⚖️</div>
+                <div style="font-size: 24px; margin-bottom: 8px;"></div>
                 <div style="font-weight: bold; color: #495057;">風險評估</div>
                 <div style="font-size: 12px; color: #6c757d;">風險控制、投資建議</div>
             </div>
@@ -547,7 +546,7 @@ def render_analysis_placeholder():
 
         <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px;">
             <p style="color: #1976d2; margin: 0; font-size: 14px;">
-                💡 <strong>提示</strong>: 配置API密鑰後，系統將生成包含多個智能體團隊分析的詳細投資報告
+                 <strong>提示</strong>: 配置API密鑰後，系統將生成包含多個智能體團隊分析的詳細投資報告
             </p>
         </div>
     </div>
@@ -557,7 +556,7 @@ def render_risk_warning():
     """渲染風險提示"""
 
     st.markdown("---")
-    st.subheader("⚠️ 重要風險提示")
+    st.subheader("重要風險提示")
 
     # 移除演示數據相關的提示，因為我們不再顯示演示數據
     st.error("""

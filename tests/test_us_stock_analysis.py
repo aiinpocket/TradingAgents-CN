@@ -28,7 +28,6 @@ def test_us_stock_market_analysis():
         # 檢查工具包是否有正確的方法
         print(f"✅ 工具包方法檢查:")
         print(f"  - get_YFin_data_online: {hasattr(toolkit, 'get_YFin_data_online')}")
-        print(f"  - get_china_stock_data: {hasattr(toolkit, 'get_china_stock_data')}")
         
         # 創建 OpenAI LLM
         llm = ChatOpenAI(model="gpt-4o-mini")

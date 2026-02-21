@@ -40,14 +40,14 @@ def test_signal_processor():
         result2 = processor._extract_target_price(test_text2, "0700.HK", "HKD")
         print(f"✅ 測試2 - 智能推算: {result2}")
         
-        # 測試用例3: A股示例
+        # 測試用例3: 美股示例
         test_text3 = """
-        貴州茅台(600519)現價1800元，基於估值分析，
-        合理價位區間為1900-2100元，建議持有。
+        NVDA 現價 900 美元，基於估值分析，
+        合理價位區間為 950-1050 美元，建議持有。
         """
-        
-        result3 = processor._extract_target_price(test_text3, "600519", "CNY")
-        print(f"✅ 測試3 - A股價格: {result3}")
+
+        result3 = processor._extract_target_price(test_text3, "NVDA", "USD")
+        print(f"測試3 - 美股價格推算: {result3}")
         
         return True
         

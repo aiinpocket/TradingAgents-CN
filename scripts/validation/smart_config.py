@@ -117,11 +117,8 @@ class SmartConfigManager:
                 "fallback_enabled": True,
                 "ttl_settings": {
                     "us_stock_data": 7200,      # 2小時
-                    "china_stock_data": 3600,   # 1小時
                     "us_news": 21600,           # 6小時
-                    "china_news": 14400,        # 4小時
                     "us_fundamentals": 86400,   # 24小時
-                    "china_fundamentals": 43200, # 12小時
                 }
             },
             "database": {
@@ -294,7 +291,6 @@ export REDIS_ENABLED="{str(config['database']['redis']['enabled']).lower()}"
 
 # TTL設置
 export US_STOCK_TTL="{config['cache']['ttl_settings']['us_stock_data']}"
-export CHINA_STOCK_TTL="{config['cache']['ttl_settings']['china_stock_data']}"
 
 echo "✅ 環境變量已設置"
 echo "緩存後端: $CACHE_BACKEND"
@@ -322,7 +318,6 @@ $env:REDIS_ENABLED = "{str(config['database']['redis']['enabled']).lower()}"
 
 # TTL設置
 $env:US_STOCK_TTL = "{config['cache']['ttl_settings']['us_stock_data']}"
-$env:CHINA_STOCK_TTL = "{config['cache']['ttl_settings']['china_stock_data']}"
 
 Write-Host "✅ 環境變量已設置" -ForegroundColor Green
 Write-Host "緩存後端: $env:CACHE_BACKEND" -ForegroundColor Cyan

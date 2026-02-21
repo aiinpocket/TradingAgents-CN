@@ -46,13 +46,9 @@ class AdaptiveCacheSystem:
         return hashlib.md5(key_data.encode()).hexdigest()
     
     def _get_ttl_seconds(self, symbol: str, data_type: str = "stock_data") -> int:
-        """獲取TTL秒數"""
-        # 判斷市場類型
-        if len(symbol) == 6 and symbol.isdigit():
-            market = "china"
-        else:
-            market = "us"
-        
+        """獲取TTL秒數（僅支援美股）"""
+        market = "us"
+
         # 獲取TTL配置
         ttl_key = f"{market}_{data_type}"
         ttl_seconds = self.cache_config["ttl_settings"].get(ttl_key, 7200)

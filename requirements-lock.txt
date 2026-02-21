@@ -1,12 +1,12 @@
 ﻿# ==================== 鎖定版本依賴文件 ====================
 #
 # 此文件包含所有依賴的精確版本號，確保：
-# ✅ 安裝速度極快（無需依賴解析）
-# ✅ 環境完全可重現
-# ✅ 避免版本冲突
+# - 安裝速度極快（無需依賴解析）
+# - 環境完全可重現
+# - 避免版本衝突
 #
 # 推薦安裝方式（最快）：
-#   pip install -r requirements-lock.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+#   pip install -r requirements-lock.txt
 #
 # 如需更新依賴版本，請使用 requirements.txt 或 pyproject.toml
 #

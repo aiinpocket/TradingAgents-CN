@@ -142,23 +142,23 @@ def test_cache_ttl():
             if 'fundamentals' in cache_type:
                 print(f"  - {cache_type}: TTL={config['ttl_hours']}小時, 描述={config['description']}")
         
-        # 測試美股和A股的不同TTL設置
-        us_symbol = "GOOGL"
-        china_symbol = "000001"  # 平安銀行
-        
-        print(f"\n🇺🇸 測試美股基本面緩存 ({us_symbol})...")
-        us_key = cache.find_cached_fundamentals_data(us_symbol, data_source="test")
-        if us_key:
-            print(f"找到美股緩存: {us_key}")
+        # 測試美股的TTL設置
+        us_symbol_1 = "GOOGL"
+        us_symbol_2 = "MSFT"
+
+        print(f"\n測試美股基本面緩存 ({us_symbol_1})...")
+        us_key_1 = cache.find_cached_fundamentals_data(us_symbol_1, data_source="test")
+        if us_key_1:
+            print(f"找到緩存: {us_key_1}")
         else:
-            print(f"未找到美股緩存")
-        
-        print(f"\n🇨🇳 測試A股基本面緩存 ({china_symbol})...")
-        china_key = cache.find_cached_fundamentals_data(china_symbol, data_source="test")
-        if china_key:
-            print(f"找到A股緩存: {china_key}")
+            print(f"未找到緩存")
+
+        print(f"\n測試美股基本面緩存 ({us_symbol_2})...")
+        us_key_2 = cache.find_cached_fundamentals_data(us_symbol_2, data_source="test")
+        if us_key_2:
+            print(f"找到緩存: {us_key_2}")
         else:
-            print(f"未找到A股緩存")
+            print(f"未找到緩存")
         
         return True
         

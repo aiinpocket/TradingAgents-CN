@@ -57,7 +57,7 @@ from utils.user_activity_logger import user_activity_logger
 # 設置頁面配置
 st.set_page_config(
     page_title="TradingAgents-CN 股票分析平台",
-    page_icon="📈",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items=None
@@ -374,10 +374,10 @@ def initialize_session_state():
                             st.session_state.last_stock_symbol = raw_results.get('stock_symbol', '')
                         if 'market_type' in raw_results:
                             st.session_state.last_market_type = raw_results.get('market_type', '')
-                        logger.info(f"📊 [結果恢複] 從分析 {latest_id} 恢複結果，狀態: {analysis_status}")
+                        logger.info(f"[結果恢複] 從分析 {latest_id} 恢複結果，狀態: {analysis_status}")
 
         except Exception as e:
-            logger.warning(f"⚠️ [結果恢複] 恢複失敗: {e}")
+            logger.warning(f"[結果恢複] 恢複失敗: {e}")
 
     # 使用cookie管理器恢複分析ID（優先級：session state > cookie > Redis/文件）
     try:
@@ -390,7 +390,7 @@ def initialize_session_state():
             # 只在狀態變化時記錄日誌，避免重複
             current_session_status = st.session_state.get('last_logged_status')
             if current_session_status != actual_status:
-                logger.info(f"📊 [狀態檢查] 分析 {persistent_analysis_id} 實際狀態: {actual_status}")
+                logger.info(f"[狀態檢查] 分析 {persistent_analysis_id} 實際狀態: {actual_status}")
                 st.session_state.last_logged_status = actual_status
 
             if actual_status == 'running':
@@ -400,12 +400,12 @@ def initialize_session_state():
                 st.session_state.analysis_running = False
                 st.session_state.current_analysis_id = persistent_analysis_id
             else:  # not_found
-                logger.warning(f"📊 [狀態檢查] 分析 {persistent_analysis_id} 未找到，清理狀態")
+                logger.warning(f"[狀態檢查] 分析 {persistent_analysis_id} 未找到，清理狀態")
                 st.session_state.analysis_running = False
                 st.session_state.current_analysis_id = None
     except Exception as e:
         # 如果恢複失敗，保持默認值
-        logger.warning(f"⚠️ [狀態恢複] 恢複分析狀態失敗: {e}")
+        logger.warning(f"[狀態恢複] 恢複分析狀態失敗: {e}")
         st.session_state.analysis_running = False
         st.session_state.current_analysis_id = None
 
@@ -418,33 +418,33 @@ def initialize_session_state():
             st.session_state.form_config = session_data['form_config']
             # 只在沒有分析運行時記錄日誌，避免重複
             if not st.session_state.get('analysis_running', False):
-                logger.info("📊 [配置恢複] 表單配置已恢複")
+                logger.info("[配置恢複] 表單配置已恢複")
     except Exception as e:
-        logger.warning(f"⚠️ [配置恢複] 表單配置恢複失敗: {e}")
+        logger.warning(f"[配置恢複] 表單配置恢複失敗: {e}")
 
 def check_frontend_auth_cache():
     """檢查前端緩存並嘗試恢複登錄狀態"""
     from utils.auth_manager import auth_manager
     
-    logger.info("🔍 開始檢查前端緩存恢複")
-    logger.info(f"📊 當前認證狀態: {st.session_state.get('authenticated', False)}")
-    logger.info(f"🔗 URL參數: {dict(st.query_params)}")
+    logger.info("開始檢查前端緩存恢複")
+    logger.info(f"當前認證狀態: {st.session_state.get('authenticated', False)}")
+    logger.info(f"URL參數: {dict(st.query_params)}")
     
     # 如果已經認證，確保狀態同步
     if st.session_state.get('authenticated', False):
         # 確保auth_manager也知道用戶已認證
         if not auth_manager.is_authenticated() and st.session_state.get('user_info'):
-            logger.info("🔄 同步認證狀態到auth_manager")
+            logger.info("同步認證狀態到auth_manager")
             try:
                 auth_manager.login_user(
                     st.session_state.user_info, 
                     st.session_state.get('login_time', time.time())
                 )
-                logger.info("✅ 認證狀態同步成功")
+                logger.info("認證狀態同步成功")
             except Exception as e:
-                logger.warning(f"⚠️ 認證狀態同步失敗: {e}")
+                logger.warning(f"認證狀態同步失敗: {e}")
         else:
-            logger.info("✅ 用戶已認證，跳過緩存檢查")
+            logger.info("用戶已認證，跳過緩存檢查")
         return
     
     # 檢查URL參數中是否有恢複信息
@@ -453,7 +453,7 @@ def check_frontend_auth_cache():
         restore_data = st.query_params.get('restore_auth')
         
         if restore_data:
-            logger.info("📥 發現URL中的恢複參數，開始恢複登錄狀態")
+            logger.info("發現URL中的恢複參數，開始恢複登錄狀態")
             # 解碼認證數據
             auth_data = json.loads(base64.b64decode(restore_data).decode())
             
@@ -468,74 +468,74 @@ def check_frontend_auth_cache():
                 user_info = auth_data
                 login_time = time.time()
                 
-            logger.info(f"✅ 成功解碼用戶信息: {user_info.get('username', 'Unknown')}")
-            logger.info(f"🕐 使用當前時間作為登錄時間: {login_time}")
+            logger.info(f"成功解碼用戶信息: {user_info.get('username', 'Unknown')}")
+            logger.info(f"使用當前時間作為登錄時間: {login_time}")
             
             # 恢複登錄狀態
             if auth_manager.restore_from_cache(user_info, login_time):
                 # 清除URL參數
                 del st.query_params['restore_auth']
-                logger.info(f"✅ 從前端緩存成功恢複用戶 {user_info['username']} 的登錄狀態")
-                logger.info("🧹 已清除URL恢複參數")
+                logger.info(f"從前端緩存成功恢複用戶 {user_info['username']} 的登錄狀態")
+                logger.info("已清除URL恢複參數")
                 # 立即重新運行以應用恢複的狀態
-                logger.info("🔄 觸發頁面重新運行")
+                logger.info("觸發頁面重新運行")
                 st.rerun()
             else:
-                logger.error("❌ 恢複登錄狀態失敗")
+                logger.error("恢複登錄狀態失敗")
                 # 恢複失敗，清除URL參數
                 del st.query_params['restore_auth']
         else:
             # 如果沒有URL參數，註入前端檢查腳本
-            logger.info("📝 沒有URL恢複參數，註入前端檢查腳本")
+            logger.info("沒有URL恢複參數，註入前端檢查腳本")
             inject_frontend_cache_check()
     except Exception as e:
-        logger.warning(f"⚠️ 處理前端緩存恢複失敗: {e}")
+        logger.warning(f"處理前端緩存恢複失敗: {e}")
         # 如果恢複失敗，清除可能損壞的URL參數
         if 'restore_auth' in st.query_params:
             del st.query_params['restore_auth']
 
 def inject_frontend_cache_check():
     """註入前端緩存檢查腳本"""
-    logger.info("📝 準備註入前端緩存檢查腳本")
+    logger.info("準備註入前端緩存檢查腳本")
     
     # 如果已經註入過，不重複註入
     if st.session_state.get('cache_script_injected', False):
-        logger.info("⚠️ 前端腳本已註入，跳過重複註入")
+        logger.info("前端腳本已註入，跳過重複註入")
         return
     
     # 標記已註入
     st.session_state.cache_script_injected = True
-    logger.info("✅ 標記前端腳本已註入")
+    logger.info("標記前端腳本已註入")
     
     cache_check_js = """
     <script>
     // 前端緩存檢查和恢複
     function checkAndRestoreAuth() {
-        console.log('🚀 開始執行前端緩存檢查');
-        console.log('📍 當前URL:', window.location.href);
+        console.log('開始執行前端緩存檢查');
+        console.log('當前URL:', window.location.href);
         
         try {
             // 檢查URL中是否已經有restore_auth參數
             const currentUrl = new URL(window.location);
             if (currentUrl.searchParams.has('restore_auth')) {
-                console.log('🔄 URL中已有restore_auth參數，跳過前端檢查');
+                console.log('URL中已有restore_auth參數，跳過前端檢查');
                 return;
             }
             
             const authData = localStorage.getItem('tradingagents_auth');
-            console.log('🔍 檢查localStorage中的認證數據:', authData ? '存在' : '不存在');
+            console.log('檢查localStorage中的認證數據:', authData ? '存在' : '不存在');
             
             if (!authData) {
-                console.log('🔍 前端緩存中沒有登錄狀態');
+                console.log('前端緩存中沒有登錄狀態');
                 return;
             }
             
             const data = JSON.parse(authData);
-            console.log('📊 解析的認證數據:', data);
+            console.log('解析的認證數據:', data);
             
             // 驗證數據結構
             if (!data.userInfo || !data.userInfo.username) {
-                console.log('❌ 認證數據結構無效，清除緩存');
+                console.log('認證數據結構無效，清除緩存');
                 localStorage.removeItem('tradingagents_auth');
                 return;
             }
@@ -544,7 +544,7 @@ def inject_frontend_cache_check():
             const timeout = 10 * 60 * 1000; // 10分鐘
             const timeSinceLastActivity = now - data.lastActivity;
             
-            console.log('⏰ 時間檢查:', {
+            console.log('時間檢查:', {
                 now: new Date(now).toLocaleString(),
                 lastActivity: new Date(data.lastActivity).toLocaleString(),
                 timeSinceLastActivity: Math.round(timeSinceLastActivity / 1000) + '秒',
@@ -554,16 +554,16 @@ def inject_frontend_cache_check():
             // 檢查是否超時
             if (timeSinceLastActivity > timeout) {
                 localStorage.removeItem('tradingagents_auth');
-                console.log('⏰ 登錄狀態已過期，自動清除');
+                console.log('登錄狀態已過期，自動清除');
                 return;
             }
             
             // 更新最後活動時間
             data.lastActivity = now;
             localStorage.setItem('tradingagents_auth', JSON.stringify(data));
-            console.log('🔄 更新最後活動時間');
+            console.log('更新最後活動時間');
             
-            console.log('✅ 從前端緩存恢複登錄狀態:', data.userInfo.username);
+            console.log('從前端緩存恢複登錄狀態:', data.userInfo.username);
             
             // 保留現有的URL參數，只添加restore_auth參數
             // 傳遞完整的認證數據，包括原始登錄時間
@@ -572,7 +572,7 @@ def inject_frontend_cache_check():
                 loginTime: data.loginTime
             };
             const restoreParam = btoa(JSON.stringify(restoreData));
-            console.log('📦 生成恢複參數:', restoreParam);
+            console.log('生成恢複參數:', restoreParam);
             
             // 保留所有現有參數
             const existingParams = new URLSearchParams(currentUrl.search);
@@ -580,13 +580,13 @@ def inject_frontend_cache_check():
             
             // 構建新URL，保留現有參數
             const newUrl = currentUrl.origin + currentUrl.pathname + '?' + existingParams.toString();
-            console.log('🔗 準備跳轉到:', newUrl);
-            console.log('📋 保留的URL參數:', Object.fromEntries(existingParams));
+            console.log('準備跳轉到:', newUrl);
+            console.log('保留的URL參數:', Object.fromEntries(existingParams));
             
             window.location.href = newUrl;
             
         } catch (e) {
-            console.error('❌ 前端緩存恢複失敗:', e);
+            console.error('前端緩存恢複失敗:', e);
             localStorage.removeItem('tradingagents_auth');
         }
     }
@@ -614,15 +614,15 @@ def main():
         if (st.session_state.get('authenticated', False) and 
             st.session_state.get('user_info') and 
             st.session_state.get('login_time')):
-            logger.info("🔄 從session state恢複認證狀態")
+            logger.info("從session state恢複認證狀態")
             try:
                 auth_manager.login_user(
                     st.session_state.user_info, 
                     st.session_state.login_time
                 )
-                logger.info(f"✅ 成功從session state恢複用戶 {st.session_state.user_info.get('username', 'Unknown')} 的認證狀態")
+                logger.info(f"成功從session state恢複用戶 {st.session_state.user_info.get('username', 'Unknown')} 的認證狀態")
             except Exception as e:
-                logger.warning(f"⚠️ 從session state恢複認證狀態失敗: {e}")
+                logger.warning(f"從session state恢複認證狀態失敗: {e}")
         
         # 如果仍然未認證，顯示登錄頁面
         if not auth_manager.is_authenticated():
@@ -891,7 +891,7 @@ def main():
 
     # 添加調試按鈕（僅在調試模式下顯示）
     if os.getenv('DEBUG_MODE') == 'true':
-        if st.button("🔄 清除會話狀態"):
+        if st.button("清除會話狀態"):
             st.session_state.clear()
             st.rerun()
 
@@ -899,7 +899,7 @@ def main():
     render_header()
 
     # 側邊欄布局 - 標題在最頂部
-    st.sidebar.title("🤖 TradingAgents-CN")
+    st.sidebar.title("TradingAgents-CN")
     st.sidebar.markdown("---")
     
     # 頁面導航 - 在標題下方顯示用戶信息
@@ -909,11 +909,11 @@ def main():
     st.sidebar.markdown("---")
 
     # 添加功能切換標題
-    st.sidebar.markdown("**🎯 功能導航**")
+    st.sidebar.markdown("**功能導航**")
 
     page = st.sidebar.selectbox(
         "切換功能模組",
-        ["📊 股票分析", "🔥 熱門特區", "⚙️ 配置管理", "💾 快取管理", "💰 Token統計", "📋 操作日誌", "📈 分析結果", "🔧 系統狀態"],
+        ["股票分析", "熱門特區", "配置管理", "快取管理", "Token統計", "操作日誌", "分析結果", "系統狀態"],
         label_visibility="collapsed"
     )
     
@@ -934,7 +934,7 @@ def main():
     st.sidebar.markdown("---")
 
     # 根據選擇的頁面渲染不同內容
-    if page == "🔥 熱門特區":
+    if page == "熱門特區":
         # 熱門特區 - 所有使用者皆可瀏覽
         try:
             from modules.hot_topics import render_hot_topics
@@ -943,7 +943,7 @@ def main():
             st.error(f"熱門特區模組載入失敗: {e}")
             st.info("請確保已安裝所有依賴套件")
         return
-    elif page == "⚙️ 配置管理":
+    elif page == "配置管理":
         # 檢查配置權限
         if not require_permission("config"):
             return
@@ -954,7 +954,7 @@ def main():
             st.error(f"配置管理模組載入失敗: {e}")
             st.info("請確保已安裝所有依賴包")
         return
-    elif page == "💾 快取管理":
+    elif page == "快取管理":
         # 檢查管理員權限
         if not require_permission("admin"):
             return
@@ -964,7 +964,7 @@ def main():
         except ImportError as e:
             st.error(f"快取管理頁面載入失敗: {e}")
         return
-    elif page == "💰 Token統計":
+    elif page == "Token統計":
         # 檢查配置權限
         if not require_permission("config"):
             return
@@ -975,7 +975,7 @@ def main():
             st.error(f"Token統計頁面載入失敗: {e}")
             st.info("請確保已安裝所有依賴包")
         return
-    elif page == "📋 操作日誌":
+    elif page == "操作日誌":
         # 檢查管理員權限
         if not require_permission("admin"):
             return
@@ -986,7 +986,7 @@ def main():
             st.error(f"操作日誌模組載入失敗: {e}")
             st.info("請確保已安裝所有依賴包")
         return
-    elif page == "📈 分析結果":
+    elif page == "分析結果":
         # 檢查分析權限
         if not require_permission("analysis"):
             return
@@ -997,11 +997,11 @@ def main():
             st.error(f"分析結果模組載入失敗: {e}")
             st.info("請確保已安裝所有依賴包")
         return
-    elif page == "🔧 系統狀態":
+    elif page == "系統狀態":
         # 檢查管理員權限
         if not require_permission("admin"):
             return
-        st.header("🔧 系統狀態")
+        st.header("系統狀態")
         st.info("系統狀態功能開發中...")
         return
 
@@ -1014,11 +1014,11 @@ def main():
     api_status = check_api_keys()
     
     if not api_status['all_configured']:
-        st.error("⚠️ API密鑰配置不完整，請先配置必要的API密鑰")
+        st.error("API密鑰配置不完整，請先配置必要的API密鑰")
         
-        with st.expander("📋 API密鑰配置指南", expanded=True):
+        with st.expander("API密鑰配置指南", expanded=True):
             st.markdown("""
-            ### 🔑 必需的API密鑰（至少配置一個 LLM 提供商）
+            ### 必需的API密鑰（至少配置一個 LLM 提供商）
 
             1. **OpenAI API密鑰** (OPENAI_API_KEY)
                - 獲取地址: https://platform.openai.com/
@@ -1036,7 +1036,7 @@ def main():
                - 獲取地址: https://finnhub.io/
                - 用途: 美股數據（若無則部分功能受限）
 
-            ### ⚙️ 配置方法
+            ### 配置方法
 
             1. 複制項目根目錄的 `.env.example` 為 `.env`
             2. 編輯 `.env` 文件，填入您的真實API密鑰
@@ -1051,12 +1051,12 @@ def main():
             """)
         
         # 顯示當前API密鑰狀態
-        st.subheader("🔍 當前API密鑰狀態")
+        st.subheader("當前API密鑰狀態")
         for key, status in api_status['details'].items():
             if status['configured']:
-                st.success(f"✅ {key}: {status['display']}")
+                st.success(f"{key}: {status['display']}")
             else:
-                st.error(f"❌ {key}: 未配置")
+                st.error(f"{key}: 未配置")
         
         return
     
@@ -1073,7 +1073,7 @@ def main():
         st.session_state.show_guide_preference = default_show_guide
     
     show_guide = st.sidebar.checkbox(
-        "📖 顯示使用指南", 
+        "顯示使用指南",
         value=st.session_state.get('show_guide_preference', default_show_guide), 
         help="顯示/隱藏右側使用指南",
         key="guide_checkbox"
@@ -1086,7 +1086,7 @@ def main():
 
     # 添加狀態清理按鈕
     st.sidebar.markdown("---")
-    if st.sidebar.button("🧹 清理分析狀態", help="清理僵屍分析狀態，解決頁面持續刷新問題"):
+    if st.sidebar.button("清理分析狀態", help="清理僵屍分析狀態，解決頁面持續刷新問題"):
         # 清理session state
         st.session_state.analysis_running = False
         st.session_state.current_analysis_id = None
@@ -1105,7 +1105,7 @@ def main():
         from utils.thread_tracker import cleanup_dead_analysis_threads
         cleanup_dead_analysis_threads()
 
-        st.sidebar.success("✅ 分析狀態已清理")
+        st.sidebar.success("分析狀態已清理")
         st.rerun()
 
     # 在側邊欄底部添加退出按鈕
@@ -1121,7 +1121,7 @@ def main():
     with col1:
         # 1. 分析配置區域
 
-        st.header("⚙️ 分析配置")
+        st.header("分析配置")
 
         # 渲染分析表單
         try:
@@ -1129,11 +1129,11 @@ def main():
 
             # 驗證表單數據格式
             if not isinstance(form_data, dict):
-                st.error(f"⚠️ 表單數據格式異常: {type(form_data)}")
+                st.error(f"表單數據格式異常: {type(form_data)}")
                 form_data = {'submitted': False}
 
         except Exception as e:
-            st.error(f"❌ 表單渲染失敗: {e}")
+            st.error(f"表單渲染失敗: {e}")
             form_data = {'submitted': False}
 
         # 避免顯示調試信息
@@ -1144,10 +1144,10 @@ def main():
 
         # 添加接收日誌
         if form_data.get('submitted', False):
-            logger.debug(f"🔍 [APP DEBUG] ===== 主應用接收表單數據 =====")
-            logger.debug(f"🔍 [APP DEBUG] 接收到的form_data: {form_data}")
-            logger.debug(f"🔍 [APP DEBUG] 股票代碼: '{form_data['stock_symbol']}'")
-            logger.debug(f"🔍 [APP DEBUG] 市場類型: '{form_data['market_type']}'")
+            logger.debug(f"[APP DEBUG] ===== 主應用接收表單數據 =====")
+            logger.debug(f"[APP DEBUG] 接收到的form_data: {form_data}")
+            logger.debug(f"[APP DEBUG] 股票代碼: '{form_data['stock_symbol']}'")
+            logger.debug(f"[APP DEBUG] 市場類型: '{form_data['market_type']}'")
 
         # 檢查是否提交了表單
         if form_data.get('submitted', False) and not st.session_state.get('analysis_running', False):
@@ -1170,12 +1170,12 @@ def main():
 
                 # 清空舊的分析結果
                 st.session_state.analysis_results = None
-                logger.info("🧹 [新分析] 清空舊的分析結果")
+                logger.info("[新分析] 清空舊的分析結果")
                 
                 # 自動隱藏使用指南（除非用戶明確設置要顯示）
                 if not st.session_state.get('user_set_guide_preference', False):
                     st.session_state.show_guide_preference = False
-                    logger.info("📖 [界面] 開始分析，自動隱藏使用指南")
+                    logger.info("[界面] 開始分析，自動隱藏使用指南")
 
                 # 生成分析ID
                 import uuid
@@ -1204,17 +1204,17 @@ def main():
                     async_tracker.update_progress(message, step)
 
                 # 顯示啟動成功訊息和加載動效
-                st.success(f"🚀 分析已啟動！分析ID: {analysis_id}")
+                st.success(f"分析已啟動！分析ID: {analysis_id}")
 
                 # 添加加載動效
-                with st.spinner("🔄 正在初始化分析..."):
+                with st.spinner("正在初始化分析..."):
                     time.sleep(1.5)  # 讓用戶看到反饋
 
-                st.info(f"📊 正在分析: {form_data.get('market_type', '美股')} {form_data['stock_symbol']}")
+                st.info(f"正在分析: {form_data.get('market_type', '美股')} {form_data['stock_symbol']}")
                 st.info("""
-                ⏱️ 頁面將在6秒後自動刷新...
+                頁面將在6秒後自動刷新...
 
-                📋 **查看分析進度：**
+                **查看分析進度：**
                 刷新後請向下捲動到 "股票分析" 部分查看實時進度
                 """)
 
@@ -1254,7 +1254,7 @@ def main():
                         )
 
                         # 標記分析完成並保存結果（不訪問session state）
-                        async_tracker.mark_completed("✅ 分析成功完成！", results=results)
+                        async_tracker.mark_completed("分析成功完成！", results=results)
 
                         # 自動保存分析結果到歷史記錄
                         try:
@@ -1270,14 +1270,14 @@ def main():
                             )
                             
                             if save_success:
-                                logger.info(f"💾 [後台保存] 分析結果已保存到歷史記錄: {analysis_id}")
+                                logger.info(f"[後台保存] 分析結果已保存到歷史記錄: {analysis_id}")
                             else:
-                                logger.warning(f"⚠️ [後台保存] 保存失敗: {analysis_id}")
+                                logger.warning(f"[後台保存] 保存失敗: {analysis_id}")
                                 
                         except Exception as save_error:
-                            logger.error(f"❌ [後台保存] 保存異常: {save_error}")
+                            logger.error(f"[後台保存] 保存異常: {save_error}")
 
-                        logger.info(f"✅ [分析完成] 股票分析成功完成: {analysis_id}")
+                        logger.info(f"[分析完成] 股票分析成功完成: {analysis_id}")
 
                     except Exception as e:
                         # 標記分析失敗（不訪問session state）
@@ -1295,18 +1295,18 @@ def main():
                                 result_data={"error": str(e)},
                                 status="failed"
                             )
-                            logger.info(f"💾 [失敗記錄] 分析失敗記錄已保存: {analysis_id}")
+                            logger.info(f"[失敗記錄] 分析失敗記錄已保存: {analysis_id}")
                             
                         except Exception as save_error:
-                            logger.error(f"❌ [失敗記錄] 保存異常: {save_error}")
+                            logger.error(f"[失敗記錄] 保存異常: {save_error}")
                         
-                        logger.error(f"❌ [分析失敗] {analysis_id}: {e}")
+                        logger.error(f"[分析失敗] {analysis_id}: {e}")
 
                     finally:
                         # 分析結束後註銷線程
                         from utils.thread_tracker import unregister_analysis_thread
                         unregister_analysis_thread(analysis_id)
-                        logger.info(f"🧵 [線程清理] 分析線程已註銷: {analysis_id}")
+                        logger.info(f"[線程清理] 分析線程已註銷: {analysis_id}")
 
                 # 啟動後台分析線程
                 analysis_thread = threading.Thread(target=run_analysis_in_background)
@@ -1317,13 +1317,13 @@ def main():
                 from utils.thread_tracker import register_analysis_thread
                 register_analysis_thread(analysis_id, analysis_thread)
 
-                logger.info(f"🧵 [後台分析] 分析線程已啟動: {analysis_id}")
+                logger.info(f"[後台分析] 分析線程已啟動: {analysis_id}")
 
                 # 分析已在背景執行緒中啟動，顯示啟動信息並刷新頁面
-                st.success("🚀 分析已啟動！正在後台運行...")
+                st.success("分析已啟動！正在後台運行...")
 
                 # 顯示啟動信息
-                st.info("⏱️ 頁面將自動刷新顯示分析進度...")
+                st.info("頁面將自動刷新顯示分析進度...")
 
                 # 等待2秒讓用戶看到啟動信息，然後刷新頁面
                 time.sleep(2)
@@ -1334,7 +1334,7 @@ def main():
         if current_analysis_id:
             st.markdown("---")
 
-            st.header("📊 股票分析")
+            st.header("股票分析")
 
             # 使用線程檢測來獲取真實狀態
             from utils.thread_tracker import check_analysis_status
@@ -1344,7 +1344,7 @@ def main():
             # 同步session state狀態
             if st.session_state.get('analysis_running', False) != is_running:
                 st.session_state.analysis_running = is_running
-                logger.info(f"🔄 [狀態同步] 更新分析狀態: {is_running} (基於線程檢測: {actual_status})")
+                logger.info(f"[狀態同步] 更新分析狀態: {is_running} (基於線程檢測: {actual_status})")
 
             # 獲取進度數據用於顯示
             from utils.async_progress_tracker import get_progress_by_id
@@ -1352,26 +1352,26 @@ def main():
 
             # 顯示分析信息
             if is_running:
-                st.info(f"🔄 正在分析: {current_analysis_id}")
+                st.info(f"正在分析: {current_analysis_id}")
             else:
                 if actual_status == 'completed':
-                    st.success(f"✅ 分析完成: {current_analysis_id}")
+                    st.success(f"分析完成: {current_analysis_id}")
 
                 elif actual_status == 'failed':
-                    st.error(f"❌ 分析失敗: {current_analysis_id}")
+                    st.error(f"分析失敗: {current_analysis_id}")
                 else:
-                    st.warning(f"⚠️ 分析狀態未知: {current_analysis_id}")
+                    st.warning(f"分析狀態未知: {current_analysis_id}")
 
             # 顯示進度（根據狀態決定是否顯示刷新控件）
             progress_col1, progress_col2 = st.columns([4, 1])
             with progress_col1:
-                st.markdown("### 📊 分析進度")
+                st.markdown("### 分析進度")
 
             is_completed = display_unified_progress(current_analysis_id, show_refresh_controls=is_running)
 
             # 如果分析正在進行，顯示提示信息（不添加額外的自動刷新）
             if is_running:
-                st.info("⏱️ 分析正在進行中，可以使用下方的自動刷新功能查看進度更新...")
+                st.info("分析正在進行中，可以使用下方的自動刷新功能查看進度更新...")
 
             # 如果分析剛完成，嘗試恢複結果
             if is_completed and not st.session_state.get('analysis_results') and progress_data:
@@ -1383,7 +1383,7 @@ def main():
                         if formatted_results:
                             st.session_state.analysis_results = formatted_results
                             st.session_state.analysis_running = False
-                            logger.info(f"📊 [結果同步] 恢複分析結果: {current_analysis_id}")
+                            logger.info(f"[結果同步] 恢複分析結果: {current_analysis_id}")
 
                             # 自動保存分析結果到歷史記錄
                             try:
@@ -1405,31 +1405,31 @@ def main():
                                 )
                                 
                                 if save_success:
-                                    logger.info(f"💾 [結果保存] 分析結果已保存到歷史記錄: {current_analysis_id}")
+                                    logger.info(f"[結果保存] 分析結果已保存到歷史記錄: {current_analysis_id}")
                                 else:
-                                    logger.warning(f"⚠️ [結果保存] 保存失敗: {current_analysis_id}")
+                                    logger.warning(f"[結果保存] 保存失敗: {current_analysis_id}")
                                     
                             except Exception as save_error:
-                                logger.error(f"❌ [結果保存] 保存異常: {save_error}")
+                                logger.error(f"[結果保存] 保存異常: {save_error}")
 
                             # 檢查是否已經刷新過，避免重複刷新
                             refresh_key = f"results_refreshed_{current_analysis_id}"
                             if not st.session_state.get(refresh_key, False):
                                 st.session_state[refresh_key] = True
-                                st.success("📊 分析結果已恢複並保存，正在刷新頁面...")
+                                st.success("分析結果已恢複並保存，正在刷新頁面...")
                                 # 使用st.rerun()代替meta refresh，保持側邊欄狀態
                                 time.sleep(1)
                                 st.rerun()
                             else:
                                 # 已經刷新過，不再刷新
-                                st.success("📊 分析結果已恢複並保存！")
+                                st.success("分析結果已恢複並保存！")
                     except Exception as e:
-                        logger.warning(f"⚠️ [結果同步] 恢複失敗: {e}")
+                        logger.warning(f"[結果同步] 恢複失敗: {e}")
 
             if is_completed and st.session_state.get('analysis_running', False):
                 # 分析剛完成，更新狀態
                 st.session_state.analysis_running = False
-                st.success("🎉 分析完成！正在刷新頁面顯示報告...")
+                st.success("分析完成！正在刷新頁面顯示報告...")
 
                 # 使用st.rerun()代替meta refresh，保持側邊欄狀態
                 time.sleep(1)
@@ -1454,7 +1454,7 @@ def main():
         )
 
         # 調試日誌
-        logger.info(f"🔍 [布局調試] 分析報告顯示檢查:")
+        logger.info(f"[布局調試] 分析報告顯示檢查:")
         logger.info(f"  - analysis_results存在: {bool(analysis_results)}")
         logger.info(f"  - analysis_running: {analysis_running}")
         logger.info(f"  - current_analysis_id: {current_analysis_id}")
@@ -1463,9 +1463,9 @@ def main():
 
         if should_show_results:
             st.markdown("---")
-            st.header("📋 分析報告")
+            st.header("分析報告")
             render_results(analysis_results)
-            logger.info(f"✅ [布局] 分析報告已顯示")
+            logger.info(f"[布局] 分析報告已顯示")
 
             # 清除查看報告按鈕狀態，避免重複觸發
             if show_results_button_clicked:
@@ -1474,17 +1474,17 @@ def main():
     # 只有在顯示指南時才渲染右側內容
     if show_guide and col2 is not None:
         with col2:
-            st.markdown("### ℹ️ 使用指南")
+            st.markdown("### 使用指南")
         
             # 快速開始指南
-            with st.expander("🎯 快速開始", expanded=True):
+            with st.expander("快速開始", expanded=True):
                 st.markdown("""
-                ### 📋 操作步驟
+                ### 操作步驟
 
                 1. **輸入股票代碼**
                    - 美股示例: `AAPL` (蘋果), `TSLA` (特斯拉), `MSFT` (微軟)
 
-                   ⚠️ **重要提示**: 輸入股票代碼後，請按 **回車鍵** 確認輸入！
+                   **重要提示**: 輸入股票代碼後，請按 **回車鍵** 確認輸入！
 
                 2. **選擇分析日期**
                    - 默認為今天
@@ -1503,7 +1503,7 @@ def main():
                    - 等待AI分析完成
                    - 查看詳細分析報告
 
-                ### 💡 使用技巧
+                ### 使用技巧
 
                 - **美股默認**: 系統默認分析美股，無需特殊設置
                 - **實時數據**: 獲取最新的市場數據和新聞
@@ -1511,36 +1511,36 @@ def main():
                 """)
 
             # 分析師說明
-            with st.expander("👥 分析師團隊說明"):
+            with st.expander("分析師團隊說明"):
                 st.markdown("""
-                ### 🎯 專業分析師團隊
+                ### 專業分析師團隊
 
-                - **📈 市場分析師**:
+                - **市場分析師**:
                   - 技術指標分析 (K線、均線、MACD等)
                   - 價格趨勢預測
                   - 支撐阻力位分析
 
-                - **💭 社交媒體分析師**:
+                - **社交媒體分析師**:
                   - 投資者情緒監測
                   - 社交媒體熱度分析
                   - 市場情緒指標
 
-                - **📰 新聞分析師**:
+                - **新聞分析師**:
                   - 重大新聞事件影響
                   - 政策解讀分析
                   - 行業動態跟蹤
 
-                - **💰 基本面分析師**:
+                - **基本面分析師**:
                   - 財務報表分析
                   - 估值模型計算
                   - 行業對比分析
                   - 盈利能力評估
 
-                💡 **建議**: 選擇多個分析師可獲得更全面的投資建議
+                **建議**: 選擇多個分析師可獲得更全面的投資建議
                 """)
 
             # 模型選擇說明
-            with st.expander("🧠 AI模型說明"):
+            with st.expander("AI模型說明"):
                 st.markdown("""
                 ### AI 模型選擇指南
 
@@ -1561,9 +1561,9 @@ def main():
                 """)
 
             # 常見問題
-            with st.expander("❓ 常見問題"):
+            with st.expander("常見問題"):
                 st.markdown("""
-                ### 🔍 常見問題解答
+                ### 常見問題解答
 
                 **Q: 為什麼輸入股票代碼沒有反應？**
                 A: 請確保輸入代碼後按 **回車鍵** 確認，這是Streamlit的默認行為。
@@ -1580,7 +1580,7 @@ def main():
 
             # 風險提示
             st.warning("""
-            ⚠️ **投資風險提示**
+            **投資風險提示**
 
             - 本系統提供的分析結果僅供參考，不構成投資建議
             - 投資有風險，入市需謹慎，請理性投資
@@ -1591,7 +1591,7 @@ def main():
         
         # 顯示系統狀態
         if st.session_state.last_analysis_time:
-            st.info(f"🕒 上次分析時間: {st.session_state.last_analysis_time.strftime('%Y-%m-%d %H:%M:%S')}")
+            st.info(f"上次分析時間: {st.session_state.last_analysis_time.strftime('%Y-%m-%d %H:%M:%S')}")
 
 if __name__ == "__main__":
     main()

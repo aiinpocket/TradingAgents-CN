@@ -30,7 +30,7 @@ try {
 
 # 升級 pip、setuptools、wheel
 Write-Host "`n升級 pip、setuptools、wheel..." -ForegroundColor Yellow
-$upgradeCmd = "$pythonCmd -m pip install --upgrade pip setuptools wheel -i https://pypi.tuna.tsinghua.edu.cn/simple"
+$upgradeCmd = "$pythonCmd -m pip install --upgrade pip setuptools wheel"
 Write-Host "執行: $upgradeCmd" -ForegroundColor Gray
 Invoke-Expression $upgradeCmd
 
@@ -41,7 +41,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # 安裝專案相依套件（使用 --only-binary 避免編譯 PyYAML）
 Write-Host "`n安裝專案相依套件（使用預編譯套件）..." -ForegroundColor Yellow
-$installCmd = "$pythonCmd -m pip install -e . --only-binary pyyaml -i https://pypi.tuna.tsinghua.edu.cn/simple"
+$installCmd = "$pythonCmd -m pip install -e . --only-binary pyyaml"
 Write-Host "執行: $installCmd" -ForegroundColor Gray
 Write-Host "使用 --only-binary pyyaml 避免編譯錯誤" -ForegroundColor Cyan
 

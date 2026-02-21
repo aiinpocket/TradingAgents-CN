@@ -36,52 +36,33 @@ class StockDataCache:
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(exist_ok=True)
 
-        # 創建子目錄 - 按市場分類
+        # 創建子目錄 - 美股市場分類
         self.us_stock_dir = self.cache_dir / "us_stocks"
-        self.china_stock_dir = self.cache_dir / "china_stocks"
         self.us_news_dir = self.cache_dir / "us_news"
-        self.china_news_dir = self.cache_dir / "china_news"
         self.us_fundamentals_dir = self.cache_dir / "us_fundamentals"
-        self.china_fundamentals_dir = self.cache_dir / "china_fundamentals"
         self.metadata_dir = self.cache_dir / "metadata"
 
         # 創建所有目錄
-        for dir_path in [self.us_stock_dir, self.china_stock_dir, self.us_news_dir,
-                        self.china_news_dir, self.us_fundamentals_dir,
-                        self.china_fundamentals_dir, self.metadata_dir]:
+        for dir_path in [self.us_stock_dir, self.us_news_dir,
+                        self.us_fundamentals_dir, self.metadata_dir]:
             dir_path.mkdir(exist_ok=True)
 
-        # 緩存配置 - 針對不同市場設置不同的TTL
+        # 緩存配置 - 美股市場TTL設定
         self.cache_config = {
             'us_stock_data': {
                 'ttl_hours': 2,  # 美股數據緩存2小時（考慮到API限制）
                 'max_files': 1000,
                 'description': '美股歷史數據'
             },
-            'china_stock_data': {
-                'ttl_hours': 2,  # 保留以相容舊資料，使用美股配置
-                'max_files': 1000,
-                'description': '美股歷史數據（相容）'
-            },
             'us_news': {
                 'ttl_hours': 6,  # 美股新聞緩存6小時
                 'max_files': 500,
                 'description': '美股新聞數據'
             },
-            'china_news': {
-                'ttl_hours': 6,  # 保留以相容舊資料，使用美股配置
-                'max_files': 500,
-                'description': '美股新聞數據（相容）'
-            },
             'us_fundamentals': {
                 'ttl_hours': 24,  # 美股基本面數據緩存24小時
                 'max_files': 200,
                 'description': '美股基本面數據'
-            },
-            'china_fundamentals': {
-                'ttl_hours': 24,  # 保留以相容舊資料，使用美股配置
-                'max_files': 200,
-                'description': '美股基本面數據（相容）'
             }
         }
 
@@ -174,19 +155,16 @@ class StockDataCache:
     
     def _get_cache_path(self, data_type: str, cache_key: str, file_format: str = "json", symbol: str = None) -> Path:
         """獲取緩存文件路徑 - 支持市場分類"""
-        if symbol:
-            market_type = self._determine_market_type(symbol)
-        else:
-            # 從緩存鍵中嘗試提取市場類型
-            market_type = 'us' if not cache_key.startswith(('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')) else 'china'
+        # 統一使用美股市場類型
+        market_type = 'us'
 
-        # 根據數據類型和市場類型選擇目錄
+        # 根據數據類型選擇對應的美股緩存目錄
         if data_type == "stock_data":
-            base_dir = self.china_stock_dir if market_type == 'china' else self.us_stock_dir
+            base_dir = self.us_stock_dir
         elif data_type == "news":
-            base_dir = self.china_news_dir if market_type == 'china' else self.us_news_dir
+            base_dir = self.us_news_dir
         elif data_type == "fundamentals":
-            base_dir = self.china_fundamentals_dir if market_type == 'china' else self.us_fundamentals_dir
+            base_dir = self.us_fundamentals_dir
         else:
             base_dir = self.cache_dir
 

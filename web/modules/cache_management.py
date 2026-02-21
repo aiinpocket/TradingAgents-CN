@@ -30,18 +30,18 @@ except ImportError as e:
 def main():
     st.set_page_config(
         page_title="緩存管理 - TradingAgents",
-        page_icon="💾",
+        page_icon="",
         layout="wide"
     )
     
     # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
-    st.title("💾 股票數據緩存管理")
+    st.title("股票數據緩存管理")
     st.markdown("---")
     
     if not CACHE_AVAILABLE:
-        st.error("❌ 緩存管理器不可用，請檢查系統配置")
+        st.error("緩存管理器不可用，請檢查系統配置")
         return
     
     # 獲取緩存實例
@@ -49,16 +49,16 @@ def main():
     
     # 側邊欄操作
     with st.sidebar:
-        st.header("🛠️ 緩存操作")
+        st.header("緩存操作")
         
         # 刷新按鈕
-        if st.button("🔄 刷新統計", type="primary"):
+        if st.button("刷新統計", type="primary"):
             st.rerun()
         
         st.markdown("---")
         
         # 清理操作
-        st.subheader("🧹 清理緩存")
+        st.subheader("清理緩存")
         
         max_age_days = st.slider(
             "清理多少天前的緩存",
@@ -68,17 +68,17 @@ def main():
             help="刪除指定天數之前的緩存文件"
         )
         
-        if st.button("🗑️ 清理過期緩存", type="secondary"):
+        if st.button("清理過期緩存", type="secondary"):
             with st.spinner("正在清理過期緩存..."):
                 cache.clear_old_cache(max_age_days)
-            st.success(f"✅ 已清理 {max_age_days} 天前的緩存")
+            st.success(f"已清理 {max_age_days} 天前的緩存")
             st.rerun()
     
     # 主要內容區域
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.subheader("📊 緩存統計")
+        st.subheader("緩存統計")
         
         # 獲取緩存統計
         try:
@@ -124,7 +124,7 @@ def main():
             st.error(f"獲取緩存統計失敗: {e}")
 
     with col2:
-        st.subheader("⚙️ 緩存配置")
+        st.subheader("緩存配置")
 
         # 顯示緩存配置信息
         if hasattr(cache, 'cache_config'):
@@ -141,7 +141,7 @@ def main():
 
     # 緩存測試功能
     st.markdown("---")
-    st.subheader("🧪 緩存測試")
+    st.subheader("緩存測試")
 
     if OPTIMIZED_PROVIDERS_AVAILABLE:
         test_col1, test_col2 = st.columns(2)
@@ -160,11 +160,11 @@ def main():
                                 start_date=(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'),
                                 end_date=datetime.now().strftime('%Y-%m-%d')
                             )
-                            st.success("✅ 美股緩存測試成功")
+                            st.success("美股緩存測試成功")
                             with st.expander("查看結果"):
                                 st.text(result[:500] + "..." if len(result) > 500 else result)
                         except Exception as e:
-                            st.error(f"❌ 美股緩存測試失敗: {e}")
+                            st.error(f"美股緩存測試失敗: {e}")
 
         with test_col2:
             st.markdown("**測試說明**")
@@ -174,53 +174,53 @@ def main():
 
     # 原有的緩存詳情部分
     with col2:
-        st.subheader("⚙️ 緩存配置")
+        st.subheader("緩存配置")
         
         # 緩存設置
         st.info("""
         **緩存機制說明：**
         
-        🔹 **股票數據緩存**：6小時有效期
+         **股票數據緩存**：6小時有效期
         - 減少API調用次數
         - 提高數據獲取速度
         - 支持離線分析
         
-        🔹 **新聞數據緩存**：24小時有效期
+         **新聞數據緩存**：24小時有效期
         - 避免重複獲取相同新聞
         - 節省API配額
         
-        🔹 **基本面數據緩存**：24小時有效期
+         **基本面數據緩存**：24小時有效期
         - 減少基本面分析API調用
         - 提高分析響應速度
         """)
         
         # 緩存目錄信息
         cache_dir = cache.cache_dir
-        st.markdown(f"**緩存目錄：** `{cache_dir}`")
+        st.markdown(f"**緩存目錄：**`{cache_dir}`")
         
         # 子目錄信息
         st.markdown("**子目錄結構：**")
         st.code(f"""
-📁 {cache_dir.name}/
-├── 📁 stock_data/     # 股票數據緩存
-├── 📁 news_data/      # 新聞數據緩存
-├── 📁 fundamentals/   # 基本面數據緩存
-└── 📁 metadata/       # 元數據文件
+ {cache_dir.name}/
+├──  stock_data/     # 股票數據緩存
+├──  news_data/      # 新聞數據緩存
+├──  fundamentals/   # 基本面數據緩存
+└──  metadata/       # 元數據文件
         """)
     
     st.markdown("---")
     
     # 緩存詳情
-    st.subheader("📋 緩存詳情")
+    st.subheader("緩存詳情")
     
     # 選擇查看的數據類型
     data_type = st.selectbox(
         "選擇數據類型",
         ["stock_data", "news", "fundamentals"],
         format_func=lambda x: {
-            "stock_data": "📈 股票數據",
-            "news": "📰 新聞數據", 
-            "fundamentals": "💼 基本面數據"
+            "stock_data": "股票數據",
+            "news": "新聞數據", 
+            "fundamentals": "基本面數據"
         }[x]
     )
     
@@ -273,11 +273,11 @@ def main():
                     }
                 )
                 
-                st.info(f"📊 找到 {len(cache_items)} 個 {data_type} 類型的緩存文件")
+                st.info(f"找到 {len(cache_items)} 個 {data_type} 類型的緩存文件")
             else:
-                st.info(f"📭 暫無 {data_type} 類型的緩存文件")
+                st.info(f"暫無 {data_type} 類型的緩存文件")
         else:
-            st.info("📭 暫無緩存文件")
+            st.info("暫無緩存文件")
             
     except Exception as e:
         st.error(f"讀取緩存詳情失敗: {e}")
@@ -286,8 +286,8 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666; font-size: 0.9em;'>
-        💾 緩存管理系統 | TradingAgents v0.1.2 | 
-        <a href='https://github.com/your-repo/TradingAgents' target='_blank'>GitHub</a>
+         緩存管理系統 | TradingAgents v0.1.2 | 
+        <a href='https://github.com/your-repo/TradingAgents'target='_blank'>GitHub</a>
     </div>
     """, unsafe_allow_html=True)
 

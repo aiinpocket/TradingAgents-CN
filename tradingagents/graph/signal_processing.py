@@ -171,7 +171,7 @@ class SignalProcessor:
 
                     # 如果仍然沒有找到價格，嘗試智能推算
                     if target_price is None or target_price == "null" or target_price == "":
-                        target_price = self._smart_price_estimation(full_text, action, False)
+                        target_price = self._smart_price_estimation(full_text, action)
                         if target_price:
                             logger.debug(f"🔍 [SignalProcessor] 智能推算目標價格: {target_price}")
                         else:
@@ -211,7 +211,7 @@ class SignalProcessor:
             # 回退到簡單提取
             return self._extract_simple_decision(full_signal)
 
-    def _smart_price_estimation(self, text: str, action: str, is_china: bool = False) -> float:
+    def _smart_price_estimation(self, text: str, action: str) -> float:
         """智能價格推算方法（僅支援美股）"""
         import re
         

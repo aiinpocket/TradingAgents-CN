@@ -22,7 +22,7 @@ def create_research_manager(llm, memory):
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記憶檢索")
+            logger.warning(f"[DEBUG] memory為None，跳過歷史記憶檢索")
             past_memories = []
 
         past_memory_str = ""
@@ -41,14 +41,14 @@ def create_research_manager(llm, memory):
 您的建議：基於最有說服力論點的明確立場。
 理由：解釋為什麼這些論點導致您的結論。
 戰略行動：實施建議的具體步驟。
-📊 目標價格分析：基於所有可用報告（基本面、新聞、情緒），提供全面的目標價格區間和具體價格目標。考慮：
+目標價格分析：基於所有可用報告（基本面、新聞、情緒），提供全面的目標價格區間和具體價格目標。考慮：
 - 基本面報告中的基本估值
 - 新聞對價格預期的影響
 - 情緒驅動的價格調整
 - 技術支撐/阻力位
 - 風險調整價格情景（保守、基準、樂觀）
 - 價格目標的時間範圍（1個月、3個月、6個月）
-💰 您必須提供具體的目標價格 - 不要回覆「無法確定」或「需要更多信息」。
+您必須提供具體的目標價格 - 不要回覆「無法確定」或「需要更多信息」。
 
 考慮您在類似情況下的過去錯誤。利用這些見解來完善您的決策制定，確保您在學習和改進。以對話方式呈現您的分析，就像自然說話一樣，不使用特殊格式。
 

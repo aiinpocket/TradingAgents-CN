@@ -28,10 +28,10 @@ logger = setup_web_logging()
 try:
     from tradingagents.config.config_manager import token_tracker
     TOKEN_TRACKING_ENABLED = True
-    logger.info("✅ Token跟蹤功能已啟用")
+    logger.info("Token跟蹤功能已啟用")
 except ImportError:
     TOKEN_TRACKING_ENABLED = False
-    logger.warning("⚠️ Token跟蹤功能未啟用")
+    logger.warning("Token跟蹤功能未啟用")
 
 def translate_analyst_labels(text):
     """將分析師的英文標簽轉換為中文"""
@@ -73,18 +73,18 @@ def extract_risk_assessment(state):
 
         # 格式化風險評估報告
         risk_assessment = f"""
-## ⚠️ 風險評估報告
+## 風險評估報告
 
-### 🔴 激進風險分析師觀點
+### 激進風險分析師觀點
 {risky_analysis if risky_analysis else '暫無激進風險分析'}
 
-### 🟡 中性風險分析師觀點
+### 中性風險分析師觀點
 {neutral_analysis if neutral_analysis else '暫無中性風險分析'}
 
-### 🟢 保守風險分析師觀點
+### 保守風險分析師觀點
 {safe_analysis if safe_analysis else '暫無保守風險分析'}
 
-### 🏛️ 風險管理委員會最終決議
+### 風險管理委員會最終決議
 {judge_decision if judge_decision else '暫無風險管理決議'}
 
 ---
@@ -120,7 +120,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     session_id = f"analysis_{uuid.uuid4().hex[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     # 1. 數據預獲取和驗證階段
-    update_progress("🔍 驗證股票代碼並預獲取數據...", 1, 10)
+    update_progress("驗證股票代碼並預獲取數據...", 1, 10)
 
     try:
         from tradingagents.utils.stock_validator import prepare_stock_data
@@ -134,7 +134,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         )
 
         if not preparation_result.is_valid:
-            error_msg = f"❌ 股票數據驗證失敗: {preparation_result.error_message}"
+            error_msg = f"股票數據驗證失敗: {preparation_result.error_message}"
             update_progress(error_msg)
             logger.error(f"[{session_id}] {error_msg}")
 
@@ -148,13 +148,13 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             }
 
         # 數據預獲取成功
-        success_msg = f"✅ 數據準備完成: {preparation_result.stock_name} ({preparation_result.market_type})"
+        success_msg = f"數據準備完成: {preparation_result.stock_name} ({preparation_result.market_type})"
         update_progress(success_msg)  # 使用智能檢測，不再硬編碼步驟
         logger.info(f"[{session_id}] {success_msg}")
         logger.info(f"[{session_id}] 緩存狀態: {preparation_result.cache_status}")
 
     except Exception as e:
-        error_msg = f"❌ 數據預獲取過程中發生錯誤: {str(e)}"
+        error_msg = f"數據預獲取過程中發生錯誤: {str(e)}"
         update_progress(error_msg)
         logger.error(f"[{session_id}] {error_msg}")
 
@@ -176,7 +176,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger, stock_symbol, "comprehensive_analysis", session_id
     )
 
-    logger.info(f"🚀 [分析開始] 股票分析啟動",
+    logger.info(f" [分析開始] 股票分析啟動",
                extra={
                    'stock_symbol': stock_symbol,
                    'analysis_date': analysis_date,
@@ -189,7 +189,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                    'event_type': 'web_analysis_start'
                })
 
-    update_progress("🚀 開始股票分析...")
+    update_progress("開始股票分析...")
 
     # 估算Token使用（用於成本預估）
     if TOKEN_TRACKING_ENABLED:
@@ -197,7 +197,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         estimated_output = 1000 * len(analysts)  # 估算每個分析師1000個輸出token
         estimated_cost = token_tracker.estimate_cost(llm_provider, llm_model, estimated_input, estimated_output)
 
-        update_progress(f"💰 預估分析成本: ¥{estimated_cost:.4f}")
+        update_progress(f"預估分析成本: ¥{estimated_cost:.4f}")
 
     # 驗證環境變量
     update_progress("檢查環境變量配置...")
@@ -207,7 +207,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     logger.info(f"  FINNHUB_API_KEY: {'已設置' if finnhub_key else '未設置'}")
 
     if not finnhub_key:
-        logger.warning("⚠️ FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
+        logger.warning("FINNHUB_API_KEY 未設置，部分美股數據功能可能受限")
 
     update_progress("環境變量驗證通過")
 
@@ -231,7 +231,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
             # 統一使用在線工具，避免離線工具的各種問題
             config["online_tools"] = True  # 所有市場都使用統一工具
-            logger.info(f"🔧 [快速分析] {market_type}使用統一工具，確保數據源正確和穩定性")
+            logger.info(f" [快速分析] {market_type}使用統一工具，確保數據源正確和穩定性")
         elif research_depth == 2:  # 2級 - 基礎分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
@@ -275,25 +275,25 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 config["quick_think_llm"] = "gemini-2.5-pro"  # 16.68s
                 config["deep_think_llm"] = "gemini-2.5-pro"  # 16.68s
             
-            logger.info(f"🤖 [Google AI] 快速模型: {config['quick_think_llm']}")
-            logger.info(f"🤖 [Google AI] 深度模型: {config['deep_think_llm']}")
+            logger.info(f" [Google AI] 快速模型: {config['quick_think_llm']}")
+            logger.info(f" [Google AI] 深度模型: {config['deep_think_llm']}")
         elif llm_provider == "openai":
             # OpenAI官方API
             config["backend_url"] = "https://api.openai.com/v1"
-            logger.info(f"🤖 [OpenAI] 使用模型: {llm_model}")
-            logger.info(f"🤖 [OpenAI] API端點: https://api.openai.com/v1")
+            logger.info(f" [OpenAI] 使用模型: {llm_model}")
+            logger.info(f" [OpenAI] API端點: https://api.openai.com/v1")
         elif llm_provider == "openrouter":
             # OpenRouter使用OpenAI兼容API
             config["backend_url"] = "https://openrouter.ai/api/v1"
-            logger.info(f"🌐 [OpenRouter] 使用模型: {llm_model}")
-            logger.info(f"🌐 [OpenRouter] API端點: https://openrouter.ai/api/v1")
+            logger.info(f" [OpenRouter] 使用模型: {llm_model}")
+            logger.info(f" [OpenRouter] API端點: https://openrouter.ai/api/v1")
         elif llm_provider == "custom_openai":
             # 自定義OpenAI端點
             custom_base_url = st.session_state.get("custom_openai_base_url", "https://api.openai.com/v1")
             config["backend_url"] = custom_base_url
             config["custom_openai_base_url"] = custom_base_url
-            logger.info(f"🔧 [自定義OpenAI] 使用模型: {llm_model}")
-            logger.info(f"🔧 [自定義OpenAI] API端點: {custom_base_url}")
+            logger.info(f" [自定義OpenAI] 使用模型: {llm_model}")
+            logger.info(f" [自定義OpenAI] API端點: {custom_base_url}")
 
         # 修複路徑問題 - 優先使用環境變量配置
         # 數據目錄：優先使用環境變量，否則使用默認路徑
@@ -333,12 +333,12 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 config["data_cache_dir"] = str(project_root / "tradingagents" / "dataflows" / "data_cache")
 
         # 確保目錄存在
-        update_progress("📁 創建必要的目錄...")
+        update_progress("創建必要的目錄...")
         os.makedirs(config["data_dir"], exist_ok=True)
         os.makedirs(config["results_dir"], exist_ok=True)
         os.makedirs(config["data_cache_dir"], exist_ok=True)
 
-        logger.info(f"📁 目錄配置:")
+        logger.info(f"目錄配置:")
         logger.info(f"  - 數據目錄: {config['data_dir']}")
         logger.info(f"  - 結果目錄: {config['results_dir']}")
         logger.info(f"  - 緩存目錄: {config['data_cache_dir']}")
@@ -350,35 +350,35 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.info(f"分析日期: {analysis_date}")
 
         # 調整股票代碼格式
-        logger.debug(f"🔍 [RUNNER DEBUG] ===== 股票代碼格式化 =====")
-        logger.debug(f"🔍 [RUNNER DEBUG] 原始股票代碼: '{stock_symbol}'")
+        logger.debug(f" [RUNNER DEBUG] ===== 股票代碼格式化 =====")
+        logger.debug(f" [RUNNER DEBUG] 原始股票代碼: '{stock_symbol}'")
 
         # 美股代碼轉為大寫
         formatted_symbol = stock_symbol.upper()
-        logger.debug(f"🔍 [RUNNER DEBUG] 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
+        logger.debug(f" [RUNNER DEBUG] 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
         update_progress(f"準備分析美股: {formatted_symbol}")
 
-        logger.debug(f"🔍 [RUNNER DEBUG] 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
+        logger.debug(f" [RUNNER DEBUG] 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
         # 初始化交易圖
-        update_progress("🔧 初始化分析引擎...")
+        update_progress("初始化分析引擎...")
         graph = TradingAgentsGraph(analysts, config=config, debug=False)
 
         # 執行分析
-        update_progress(f"📊 開始分析 {formatted_symbol} 股票，這可能需要几分鐘時間...")
-        logger.debug(f"🔍 [RUNNER DEBUG] ===== 調用graph.propagate =====")
-        logger.debug(f"🔍 [RUNNER DEBUG] 傳遞給graph.propagate的參數:")
-        logger.debug(f"🔍 [RUNNER DEBUG]   symbol: '{formatted_symbol}'")
-        logger.debug(f"🔍 [RUNNER DEBUG]   date: '{analysis_date}'")
+        update_progress(f"開始分析 {formatted_symbol} 股票，這可能需要几分鐘時間...")
+        logger.debug(f" [RUNNER DEBUG] ===== 調用graph.propagate =====")
+        logger.debug(f" [RUNNER DEBUG] 傳遞給graph.propagate的參數:")
+        logger.debug(f" [RUNNER DEBUG]   symbol: '{formatted_symbol}'")
+        logger.debug(f" [RUNNER DEBUG]   date: '{analysis_date}'")
 
         state, decision = graph.propagate(formatted_symbol, analysis_date)
 
         # 調試信息
-        logger.debug(f"🔍 [DEBUG] 分析完成，decision類型: {type(decision)}")
-        logger.debug(f"🔍 [DEBUG] decision內容: {decision}")
+        logger.debug(f" [DEBUG] 分析完成，decision類型: {type(decision)}")
+        logger.debug(f" [DEBUG] decision內容: {decision}")
 
         # 格式化結果
-        update_progress("📋 分析完成，正在整理結果...")
+        update_progress("分析完成，正在整理結果...")
 
         # 提取風險評估數據
         risk_assessment = extract_risk_assessment(state)
@@ -404,7 +404,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             )
 
             if usage_record:
-                update_progress(f"💰 記錄使用成本: ¥{usage_record.cost:.4f}")
+                update_progress(f"記錄使用成本: ¥{usage_record.cost:.4f}")
 
         results = {
             'stock_symbol': stock_symbol,
@@ -436,7 +436,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             analysis_duration, total_cost
         )
 
-        logger.info(f"✅ [分析完成] 股票分析成功完成",
+        logger.info(f" [分析完成] 股票分析成功完成",
                    extra={
                        'stock_symbol': stock_symbol,
                        'session_id': session_id,
@@ -449,41 +449,41 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 保存分析報告到本地和MongoDB
         try:
-            update_progress("💾 正在保存分析報告...")
+            update_progress("正在保存分析報告...")
             from .report_exporter import save_analysis_report, save_modular_reports_to_results_dir
             
             # 1. 保存分模塊報告到本地目錄
-            logger.info(f"📁 [本地保存] 開始保存分模塊報告到本地目錄")
+            logger.info(f" [本地保存] 開始保存分模塊報告到本地目錄")
             local_files = save_modular_reports_to_results_dir(results, stock_symbol)
             if local_files:
-                logger.info(f"✅ [本地保存] 已保存 {len(local_files)} 個本地報告文件")
+                logger.info(f" [本地保存] 已保存 {len(local_files)} 個本地報告文件")
                 for module, path in local_files.items():
                     logger.info(f"  - {module}: {path}")
             else:
-                logger.warning(f"⚠️ [本地保存] 本地報告文件保存失敗")
+                logger.warning(f" [本地保存] 本地報告文件保存失敗")
             
             # 2. 保存分析報告到MongoDB
-            logger.info(f"🗄️ [MongoDB保存] 開始保存分析報告到MongoDB")
+            logger.info(f" [MongoDB保存] 開始保存分析報告到MongoDB")
             save_success = save_analysis_report(
                 stock_symbol=stock_symbol,
                 analysis_results=results
             )
             
             if save_success:
-                logger.info(f"✅ [MongoDB保存] 分析報告已成功保存到MongoDB")
-                update_progress("✅ 分析報告已保存到數據庫和本地文件")
+                logger.info(f" [MongoDB保存] 分析報告已成功保存到MongoDB")
+                update_progress("分析報告已保存到數據庫和本地文件")
             else:
-                logger.warning(f"⚠️ [MongoDB保存] MongoDB報告保存失敗")
+                logger.warning(f" [MongoDB保存] MongoDB報告保存失敗")
                 if local_files:
-                    update_progress("✅ 本地報告已保存，但數據庫保存失敗")
+                    update_progress("本地報告已保存，但數據庫保存失敗")
                 else:
-                    update_progress("⚠️ 報告保存失敗，但分析已完成")
+                    update_progress("報告保存失敗，但分析已完成")
                 
         except Exception as save_error:
-            logger.error(f"❌ [報告保存] 保存分析報告時發生錯誤: {str(save_error)}")
-            update_progress("⚠️ 報告保存出錯，但分析已完成")
+            logger.error(f" [報告保存] 保存分析報告時發生錯誤: {str(save_error)}")
+            update_progress("報告保存出錯，但分析已完成")
 
-        update_progress("✅ 分析成功完成！")
+        update_progress("分析成功完成！")
         return results
 
     except Exception as e:
@@ -495,7 +495,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             analysis_duration, str(e)
         )
 
-        logger.error(f"❌ [分析失敗] 股票分析執行失敗",
+        logger.error(f" [分析失敗] 股票分析執行失敗",
                     extra={
                         'stock_symbol': stock_symbol,
                         'session_id': session_id,
@@ -764,7 +764,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         low_price = round(current_price * random.uniform(0.5, 0.8), 2)
 
         demo_state['market_report'] = f"""
-## 📈 {market_name}{stock_symbol} 技術面分析報告
+## {market_name}{stock_symbol} 技術面分析報告
 
 ### 價格趨勢分析
 - **當前價格**: {currency_symbol}{current_price}
@@ -786,7 +786,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
     if 'fundamentals' in analysts:
         demo_state['fundamentals_report'] = f"""
-## 💰 {stock_symbol} 基本面分析報告
+## {stock_symbol} 基本面分析報告
 
 ### 財務指標
 - **市盈率 (P/E)**: {round(random.uniform(15, 35), 1)}
@@ -809,7 +809,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
     if 'social' in analysts:
         demo_state['sentiment_report'] = f"""
-## 💭 {stock_symbol} 市場情緒分析報告
+## {stock_symbol} 市場情緒分析報告
 
 ### 社交媒體情緒
 - **整體情緒**: {'積極' if action == 'BUY' else '消極' if action == 'SELL' else '中性'}
@@ -830,7 +830,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
     if 'news' in analysts:
         demo_state['news_report'] = f"""
-## 📰 {stock_symbol} 新聞事件分析報告
+## {stock_symbol} 新聞事件分析報告
 
 ### 近期重要新聞
 1. **財報發布**: 公司發布{'超預期' if action == 'BUY' else '低於預期' if action == 'SELL' else '符合預期'}的季度財報
@@ -851,7 +851,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
     # 添加風險評估和投資建議
     demo_state['risk_assessment'] = f"""
-## ⚠️ {stock_symbol} 風險評估報告
+## {stock_symbol} 風險評估報告
 
 ### 主要風險因素
 1. **市場風險**: {'低' if action == 'BUY' else '高' if action == 'SELL' else '中等'}
@@ -866,7 +866,7 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
     """
 
     demo_state['investment_plan'] = f"""
-## 📋 {stock_symbol} 投資建議
+## {stock_symbol} 投資建議
 
 ### 具體操作建議
 - **操作方向**: {action}
@@ -884,16 +884,16 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
     # 添加團隊決策演示數據，確保與CLI端一致
     demo_state['investment_debate_state'] = {
         'bull_history': f"""
-## 📈 多頭研究員分析
+## 多頭研究員分析
 
 作為多頭研究員，我對{stock_symbol}持樂觀態度：
 
-### 🚀 投資亮點
+### 投資亮點
 1. **技術面突破**: 股價突破關鍵阻力位，技術形態良好
 2. **基本面支撐**: 公司業績穩健增長，財務狀況健康
 3. **市場機會**: 當前估值合理，具備上漲空間
 
-### 📊 數據支持
+### 數據支持
 - 近期成交量放大，資金流入明顯
 - 行業景氣度提升，政策環境有利
 - 機構投資者增持，市場信心增強
@@ -904,11 +904,11 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         """.strip(),
 
         'bear_history': f"""
-## 📉 空頭研究員分析
+## 空頭研究員分析
 
 作為空頭研究員，我對{stock_symbol}持謹慎態度：
 
-### ⚠️ 風險因素
+### 風險因素
 1. **估值偏高**: 當前市盈率超過行業平均水平
 2. **技術風險**: 短期漲幅過大，存在回調壓力
 3. **宏觀環境**: 市場整體波動加大，不確定性增加
@@ -924,16 +924,16 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         """.strip(),
 
         'judge_decision': f"""
-## 🎯 研究經理綜合決策
+## 研究經理綜合決策
 
 經過多頭和空頭研究員的充分辯論，我的綜合判斷如下：
 
-### 📊 綜合評估
+### 綜合評估
 - **多頭觀點**: 技術面和基本面都顯示積極信號
 - **空頭觀點**: 估值和短期風險需要關注
 - **平衡考慮**: 機會與風險並存，需要策略性操作
 
-### 🎯 最終建議
+### 最終建議
 基於當前市場環境和{stock_symbol}的具體情況，建議採取**{action}**策略：
 
 1. **操作建議**: {action}
@@ -947,21 +947,21 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
     }
 
     demo_state['trader_investment_plan'] = f"""
-## 💼 交易團隊執行計劃
+## 交易團隊執行計劃
 
 基於研究團隊的分析結果，制定如下交易執行計劃：
 
-### 🎯 交易策略
+### 交易策略
 - **交易方向**: {action}
 - **目標價位**: {currency_symbol}{round(random.uniform(*price_range) * 1.1, 2)}
 - **止損價位**: {currency_symbol}{round(random.uniform(*price_range) * 0.9, 2)}
 
-### 📊 倉位管理
+### 倉位管理
 - **建議倉位**: {'30-50%' if action == '買入' else '減倉至20%' if action == '賣出' else '維持現有倉位'}
 - **分批操作**: {'分3次建倉' if action == '買入' else '分2次減倉' if action == '賣出' else '暫不操作'}
 - **時間安排**: {'1-2周內完成' if action != '持有' else '持續觀察'}
 
-### ⚠️ 風險控制
+### 風險控制
 - **止損設置**: 跌破支撐位立即止損
 - **止盈策略**: 達到目標價位分批止盈
 - **監控要點**: 密切關注成交量和技術指標變化
@@ -971,16 +971,16 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
 
     demo_state['risk_debate_state'] = {
         'risky_history': f"""
-## 🚀 激進分析師風險評估
+## 激進分析師風險評估
 
 從激進投資角度分析{stock_symbol}：
 
-### 💪 風險承受能力
+### 風險承受能力
 - **高收益機會**: 當前市場提供了難得的投資機會
 - **風險可控**: 雖然存在波動，但長期趨勢向好
 - **時機把握**: 現在是積極布局的最佳時機
 
-### 🎯 激進策略
+### 激進策略
 - **加大倉位**: 建議將倉位提升至60-80%
 - **杠杆使用**: 可適度使用杠杆放大收益
 - **快速行動**: 機會稍縱即逝，需要果斷決策
@@ -991,16 +991,16 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         """.strip(),
 
         'safe_history': f"""
-## 🛡️ 保守分析師風險評估
+## 保守分析師風險評估
 
 從風險控制角度分析{stock_symbol}：
 
-### ⚠️ 風險識別
+### 風險識別
 - **市場波動**: 當前市場不確定性較高
 - **估值風險**: 部分股票估值已經偏高
 - **流動性風險**: 需要關注市場流動性變化
 
-### 🔒 保守策略
+### 保守策略
 - **控制倉位**: 建議倉位不超過30%
 - **分散投資**: 避免過度集中於單一標的
 - **安全邊際**: 確保有足夠的安全邊際
@@ -1011,16 +1011,16 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         """.strip(),
 
         'neutral_history': f"""
-## ⚖️ 中性分析師風險評估
+## 中性分析師風險評估
 
 從平衡角度分析{stock_symbol}：
 
-### 📊 客觀評估
+### 客觀評估
 - **機會與風險並存**: 當前市場既有機會也有風險
 - **適度參與**: 建議採取適度參與的策略
 - **靈活調整**: 根據市場變化及時調整策略
 
-### ⚖️ 平衡策略
+### 平衡策略
 - **中等倉位**: 建議倉位控制在40-50%
 - **動態調整**: 根據市場情況動態調整倉位
 - **風險監控**: 持續監控風險指標變化
@@ -1031,16 +1031,16 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
         """.strip(),
 
         'judge_decision': f"""
-## 🎯 投資組合經理最終風險決策
+## 投資組合經理最終風險決策
 
 綜合三位風險分析師的意见，最終風險管理決策如下：
 
-### 📊 風險綜合評估
+### 風險綜合評估
 - **激進觀點**: 高收益機會，建議積極參與
 - **保守觀點**: 風險較高，建議謹慎操作
 - **中性觀點**: 機會與風險並存，適度參與
 
-### 🎯 最終風險決策
+### 最終風險決策
 基於當前市場環境和{stock_symbol}的風險特征：
 
 1. **風險等級**: 中等風險
@@ -1055,28 +1055,28 @@ def generate_demo_results_deprecated(stock_symbol, analysis_date, analysts, rese
     }
 
     demo_state['final_trade_decision'] = f"""
-## 🎯 最終投資決策
+## 最終投資決策
 
 經過分析師團隊、研究團隊、交易團隊和風險管理團隊的全面分析，最終投資決策如下：
 
-### 📊 決策摘要
+### 決策摘要
 - **投資建議**: **{action}**
 - **置信度**: {confidence:.1%}
 - **風險評級**: 中等風險
 - **預期收益**: {'10-20%' if action == '買入' else '規避損失' if action == '賣出' else '穩健持有'}
 
-### 🎯 執行計劃
+### 執行計劃
 1. **操作方向**: {action}
 2. **目標倉位**: {'40%' if action == '買入' else '20%' if action == '賣出' else '維持現狀'}
 3. **執行時間**: {'1-2周內分批執行' if action != '持有' else '持續觀察'}
 4. **風險控制**: 嚴格執行止損止盈策略
 
-### 📈 預期目標
+### 預期目標
 - **目標價位**: {currency_symbol}{round(random.uniform(*price_range) * 1.15, 2)}
 - **止損價位**: {currency_symbol}{round(random.uniform(*price_range) * 0.85, 2)}
 - **投資期限**: {'3-6個月' if research_depth >= 3 else '1-3個月'}
 
-### ⚠️ 重要提醒
+### 重要提醒
 這是基於當前市場環境和{stock_symbol}基本面的綜合判斷。投資有風險，請根據個人風險承受能力謹慎決策。
 
 **免責聲明**: 本分析僅供參考，不構成投資建議。

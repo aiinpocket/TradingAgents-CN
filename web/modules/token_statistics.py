@@ -33,11 +33,11 @@ def render_token_statistics():
     # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
-    st.markdown("**💰 Token使用統計與成本分析**")
+    st.markdown("**Token使用統計與成本分析**")
     
     # 側邊欄控制
     with st.sidebar:
-        st.subheader("📊 統計設置")
+        st.subheader("統計設置")
         
         # 時間範圍選擇
         time_range = st.selectbox(
@@ -57,11 +57,11 @@ def render_token_statistics():
         days = days_map[time_range]
         
         # 刷新按鈕
-        if st.button("🔄 刷新數據", use_container_width=True):
+        if st.button("刷新數據", use_container_width=True):
             st.rerun()
         
         # 導出數據按鈕
-        if st.button("📥 導出統計數據", use_container_width=True):
+        if st.button("導出統計數據", use_container_width=True):
             export_statistics_data(days)
     
     # 獲取統計數據
@@ -70,9 +70,9 @@ def render_token_statistics():
         records = load_detailed_records(days)
         
         if not stats or stats.get('total_requests', 0) == 0:
-            st.info(f"📊 {time_range}內暫無Token使用記錄")
+            st.info(f" {time_range}內暫無Token使用記錄")
             st.markdown("""
-            ### 💡 如何開始記錄Token使用？
+            ### 如何開始記錄Token使用？
             
             1. **進行股票分析**: 使用主頁面的股票分析功能
             2. **確保API配置**: 檢查 LLM API 密鑰是否已在 .env 檔案中正確配置
@@ -100,26 +100,26 @@ def render_token_statistics():
         render_detailed_records_table(records)
         
     except Exception as e:
-        st.error(f"❌ 獲取統計數據失敗: {str(e)}")
+        st.error(f"獲取統計數據失敗: {str(e)}")
         st.info("請檢查配置文件和數據儲存是否正常")
 
 def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     """渲染概覽指標"""
-    st.markdown(f"**📈 {time_range}概覽**")
+    st.markdown(f"**{time_range}概覽**")
     
     # 創建指標卡片
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         st.metric(
-            label="💰 總成本",
+            label="總成本",
             value=f"¥{stats['total_cost']:.4f}",
             delta=None
         )
     
     with col2:
         st.metric(
-            label="🔢 總調用次數",
+            label="總調用次數",
             value=f"{stats['total_requests']:,}",
             delta=None
         )
@@ -127,7 +127,7 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     with col3:
         total_tokens = stats['total_input_tokens'] + stats['total_output_tokens']
         st.metric(
-            label="📊 總Token數",
+            label="總Token數",
             value=f"{total_tokens:,}",
             delta=None
         )
@@ -135,7 +135,7 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     with col4:
         avg_cost = stats['total_cost'] / stats['total_requests'] if stats['total_requests'] > 0 else 0
         st.metric(
-            label="📊 平均每次成本",
+            label="平均每次成本",
             value=f"¥{avg_cost:.4f}",
             delta=None
         )
@@ -145,27 +145,27 @@ def render_overview_metrics(stats: Dict[str, Any], time_range: str):
     
     with col1:
         st.metric(
-            label="📥 輸入Token",
+            label="輸入Token",
             value=f"{stats['total_input_tokens']:,}",
             delta=f"{stats['total_input_tokens']/(stats['total_input_tokens']+stats['total_output_tokens'])*100:.1f}%"
         )
     
     with col2:
         st.metric(
-            label="📤 輸出Token",
+            label="輸出Token",
             value=f"{stats['total_output_tokens']:,}",
             delta=f"{stats['total_output_tokens']/(stats['total_input_tokens']+stats['total_output_tokens'])*100:.1f}%"
         )
 
 def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
     """渲染詳細圖表"""
-    st.markdown("**📊 詳細分析圖表**")
+    st.markdown("**詳細分析圖表**")
     
     # Token使用分布饼圖
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("**🥧 Token使用分布**")
+        st.markdown("**Token使用分布**")
         
         # 創建饼圖數據
         token_data = {
@@ -183,7 +183,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
         st.plotly_chart(fig_pie, use_container_width=True)
     
     with col2:
-        st.markdown("**📈 成本vs Token關系**")
+        st.markdown("**成本vs Token關系**")
         
         # 創建散點圖
         df_records = pd.DataFrame([
@@ -210,7 +210,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
 
 def render_provider_statistics(stats: Dict[str, Any]):
     """渲染供應商統計"""
-    st.markdown("**🏢 供應商統計**")
+    st.markdown("**供應商統計**")
     
     provider_stats = stats.get('provider_stats', {})
     
@@ -264,7 +264,7 @@ def render_provider_statistics(stats: Dict[str, Any]):
 
 def render_cost_trends(records: List[UsageRecord]):
     """渲染成本趨勢圖"""
-    st.markdown("**📈 成本趨勢分析**")
+    st.markdown("**成本趨勢分析**")
     
     # 按日期聚合數據
     df_records = pd.DataFrame([
@@ -327,7 +327,7 @@ def render_cost_trends(records: List[UsageRecord]):
 
 def render_detailed_records_table(records: List[UsageRecord]):
     """渲染詳細記錄表"""
-    st.markdown("**📋 詳細使用記錄**")
+    st.markdown("**詳細使用記錄**")
     
     if not records:
         st.info("暫無詳細記錄")
@@ -416,22 +416,22 @@ def export_statistics_data(days: int):
         
         # 提供下載
         st.download_button(
-            label="📥 下載統計數據",
+            label="下載統計數據",
             data=json.dumps(export_data, ensure_ascii=False, indent=2),
             file_name=filename,
             mime="application/json"
         )
         
-        st.success(f"✅ 統計數據已準備好下載: {filename}")
+        st.success(f"統計數據已準備好下載: {filename}")
         
     except Exception as e:
-        st.error(f"❌ 導出失敗: {str(e)}")
+        st.error(f"導出失敗: {str(e)}")
 
 def main():
     """主函數"""
     st.set_page_config(
         page_title="Token統計 - TradingAgents",
-        page_icon="💰",
+        page_icon="",
         layout="wide"
     )
     

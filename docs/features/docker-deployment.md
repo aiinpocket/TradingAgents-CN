@@ -105,16 +105,12 @@ docker-compose ps
 #### 構建優化建議
 
 ```bash
-# 1. 使用國內鏡像源加速 (可選)
-# 編辑 Dockerfile，添加：
-# RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-
-# 2. 多階段構建緩存
+# 1. 多階段構建快取
 # 如果需要頻繁重建，可以分步構建：
 docker-compose build --no-cache  # 完全重建
-docker-compose build             # 使用緩存構建
+docker-compose build             # 使用快取構建
 
-# 3. 查看構建進度
+# 2. 查看構建進度
 docker-compose up --build        # 顯示詳細構建日誌
 ```
 

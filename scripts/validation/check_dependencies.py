@@ -104,11 +104,8 @@ def create_fallback_config():
             "file_cache_dir": "./tradingagents/dataflows/data_cache",
             "ttl_settings": {
                 "us_stock_data": 7200,      # 2小時
-                "china_stock_data": 3600,   # 1小時
                 "us_news": 21600,           # 6小時
-                "china_news": 14400,        # 4小時
                 "us_fundamentals": 86400,   # 24小時
-                "china_fundamentals": 43200, # 12小時
             }
         },
         "database": {

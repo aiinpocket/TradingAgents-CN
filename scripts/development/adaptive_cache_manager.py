@@ -68,11 +68,8 @@ class AdaptiveCacheManager:
                 "fallback_enabled": True,
                 "ttl_settings": {
                     "us_stock_data": 7200,
-                    "china_stock_data": 3600,
                     "us_news": 21600,
-                    "china_news": 14400,
                     "us_fundamentals": 86400,
-                    "china_fundamentals": 43200,
                 }
             }
         }
@@ -147,17 +144,11 @@ class AdaptiveCacheManager:
         return hashlib.md5(key_data.encode()).hexdigest()
     
     def _get_ttl_seconds(self, symbol: str, data_type: str = "stock_data") -> int:
-        """獲取TTL秒數"""
-        # 判斷市場類型
-        if len(symbol) == 6 and symbol.isdigit():
-            market = "china"
-        else:
-            market = "us"
-        
-        # 獲取TTL配置
-        ttl_key = f"{market}_{data_type}"
-        ttl_hours = self.ttl_settings.get(ttl_key, 7200)  # 默認2小時
-        return ttl_hours
+        """取得美股資料的 TTL 秒數"""
+        # 本專案僅支援美股，直接使用 us 前綴
+        ttl_key = f"us_{data_type}"
+        ttl_seconds = self.ttl_settings.get(ttl_key, 7200)  # 預設2小時
+        return ttl_seconds
     
     def _is_cache_valid(self, cache_time: datetime, ttl_seconds: int) -> bool:
         """檢查緩存是否有效"""

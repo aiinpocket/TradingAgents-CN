@@ -49,11 +49,11 @@ def test_final_integration():
         toolkit = MockToolkit()
         unified_tool = create_unified_news_tool(toolkit)
         
-        # 測試不同類型股票
+        # 測試不同美股股票
         test_cases = [
-            {"code": "000001", "type": "A股", "name": "平安銀行"},
-            {"code": "00700", "type": "港股", "name": "騰訊控股"},
-            {"code": "AAPL", "type": "美股", "name": "蘋果公司"}
+            {"code": "AAPL", "type": "美股", "name": "蘋果公司"},
+            {"code": "MSFT", "type": "美股", "name": "微軟"},
+            {"code": "GOOGL", "type": "美股", "name": "Alphabet"}
         ]
         
         for case in test_cases:
@@ -107,7 +107,7 @@ def test_final_integration():
         print(f"\n🎉 集成驗證總結")
         print("=" * 60)
         print("✅ 統一新聞工具創建成功")
-        print("✅ 支持A股、港股、美股自動識別")
+        print("✅ 支持美股自動識別")
         print("✅ 新聞分析師已集成統一工具")
         print("✅ 系統提示詞已更新")
         print("✅ 補救機制已優化")

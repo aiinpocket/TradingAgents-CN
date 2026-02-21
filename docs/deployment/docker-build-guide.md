@@ -119,17 +119,7 @@ COPY --from=builder /root/.local /root/.local
 COPY . /app
 ```
 
-### 3. 使用國內鏡像源
-
-```dockerfile
-# 加速pip安裝
-RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-
-# 加速apt安裝
-RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
-```
-
-### 4. .dockerignore優化
+### 3. .dockerignore 優化
 
 ```bash
 # .dockerignore文件內容
@@ -232,11 +222,11 @@ docker builder prune
 
 ### 1. 構建失敗
 
-#### 網絡問題
+#### 網路問題
 ```bash
 # 症狀: 下載依賴失敗
-# 解決: 使用國內鏡像源
-RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+# 解決: 增加超時時間或重試
+RUN pip install -r requirements.txt --timeout 120 --retries 5
 ```
 
 #### 內存不足
@@ -255,10 +245,10 @@ RUN chmod +x /app/scripts/*.sh
 
 ### 2. 構建緩慢
 
-#### 網絡優化
+#### 網路優化
 ```bash
-# 使用多線程下載
-RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn
+# 使用並行下載加速安裝
+RUN pip install -r requirements.txt --timeout 120 --retries 5
 ```
 
 #### 緩存優化

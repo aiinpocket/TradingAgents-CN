@@ -39,13 +39,13 @@ def test_selections_dictionary_keys():
             
             # 設置模擬返回值
             mock_market.return_value = {
-                'name': 'A股',
-                'name_en': 'China A-Share',
-                'default': '600036',
-                'pattern': r'^\d{6}$',
-                'data_source': 'china_stock'
+                'name': '美股',
+                'name_en': 'US Stock',
+                'default': 'AAPL',
+                'pattern': r'^[A-Z]{1,5}$',
+                'data_source': 'us_stock'
             }
-            mock_prompt.side_effect = ['600036', '2024-12-01']  # ticker, date
+            mock_prompt.side_effect = ['AAPL', '2024-12-01']  # ticker, date
             mock_analysts.return_value = [MagicMock(value='market')]
             mock_depth.return_value = 3
             mock_shallow.return_value = 'gpt-4o-mini'

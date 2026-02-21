@@ -27,20 +27,20 @@ def create_trader(llm, memory):
         logger.debug(f"[DEBUG] ===== 交易員節點開始 =====")
         logger.debug(f"[DEBUG] 交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
         logger.debug(f"[DEBUG] 貨幣符號: {currency_symbol}")
-        logger.debug(f"💰 [DEBUG] 基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"💰 [DEBUG] 基本面報告前200字符: {fundamentals_report[:200]}...")
+        logger.debug(f"[DEBUG] 基本面報告長度: {len(fundamentals_report)}")
+        logger.debug(f"[DEBUG] 基本面報告前200字符: {fundamentals_report[:200]}...")
 
         curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
 
         # 檢查memory是否可用
         if memory is not None:
-            logger.warning(f"⚠️ [DEBUG] memory可用，獲取歷史記憶")
+            logger.debug(f"[DEBUG] memory可用，獲取歷史記憶")
             past_memories = memory.get_memories(curr_situation, n_matches=2)
             past_memory_str = ""
             for i, rec in enumerate(past_memories, 1):
                 past_memory_str += rec["recommendation"] + "\n\n"
         else:
-            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記憶檢索")
+            logger.warning(f"[DEBUG] memory為None，跳過歷史記憶檢索")
             past_memories = []
             past_memory_str = "暫無歷史記憶數據可參考。"
 
@@ -56,9 +56,9 @@ def create_trader(llm, memory):
 
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 
-⚠️ 重要提醒：當前分析的股票代碼是 {company_name}，請使用正確的貨幣單位：{currency}（{currency_symbol}）
+重要提醒：當前分析的股票代碼是 {company_name}，請使用正確的貨幣單位：{currency}（{currency_symbol}）
 
-🔴 嚴格要求：
+嚴格要求：
 - 股票代碼 {company_name} 的公司名稱必須嚴格按照基本面報告中的真實數據
 - 絕對禁止使用錯誤的公司名稱或混淆不同的股票
 - 所有分析必須基於提供的真實數據，不允許假設或編造
@@ -66,7 +66,7 @@ def create_trader(llm, memory):
 
 請在您的分析中包含以下關鍵信息：
 1. **投資建議**: 明確的買入/持有/賣出決策
-2. **目標價位**: 基於分析的合理目標價格({currency}) - 🚨 強制要求提供具體數值
+2. **目標價位**: 基於分析的合理目標價格({currency}) - [強制要求] 提供具體數值
    - 買入建議：提供目標價位和預期漲幅
    - 持有建議：提供合理價格區間（如：{currency_symbol}XX-XX）
    - 賣出建議：提供止損價位和目標賣出價
@@ -74,7 +74,7 @@ def create_trader(llm, memory):
 4. **風險評分**: 投資風險等級(0-1之間，0為低風險，1為高風險)
 5. **詳細推理**: 支持決策的具體理由
 
-🎯 目標價位計算指導：
+目標價位計算指導：
 - 基於基本面分析中的估值數據（P/E、P/B、DCF等）
 - 參考技術分析的支撐位和阻力位
 - 考慮行業平均估值水平
@@ -94,15 +94,15 @@ def create_trader(llm, memory):
             context,
         ]
 
-        logger.debug(f"💰 [DEBUG] 準備調用LLM，系統提示包含貨幣: {currency}")
-        logger.debug(f"💰 [DEBUG] 系統提示中的關鍵部分: 目標價格({currency})")
+        logger.debug(f"[DEBUG] 準備調用LLM，系統提示包含貨幣: {currency}")
+        logger.debug(f"[DEBUG] 系統提示中的關鍵部分: 目標價格({currency})")
 
         result = llm.invoke(messages)
 
-        logger.debug(f"💰 [DEBUG] LLM調用完成")
-        logger.debug(f"💰 [DEBUG] 交易員回覆長度: {len(result.content)}")
-        logger.debug(f"💰 [DEBUG] 交易員回覆前500字符: {result.content[:500]}...")
-        logger.debug(f"💰 [DEBUG] ===== 交易員節點結束 =====")
+        logger.debug(f"[DEBUG] LLM調用完成")
+        logger.debug(f"[DEBUG] 交易員回覆長度: {len(result.content)}")
+        logger.debug(f"[DEBUG] 交易員回覆前500字符: {result.content[:500]}...")
+        logger.debug(f"[DEBUG] ===== 交易員節點結束 =====")
 
         return {
             "messages": [result],

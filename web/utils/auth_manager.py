@@ -21,7 +21,7 @@ try:
     from .user_activity_logger import user_activity_logger
 except ImportError:
     user_activity_logger = None
-    logger.warning("⚠️ 用戶活動記錄器導入失敗")
+    logger.warning("用戶活動記錄器導入失敗")
 
 class AuthManager:
     """用戶認證管理器"""
@@ -56,8 +56,8 @@ class AuthManager:
             with open(self.users_file, 'w', encoding='utf-8') as f:
                 json.dump(default_users, f, indent=2, ensure_ascii=False)
             
-            logger.info(f"✅ 用戶認證系統初始化完成")
-            logger.info(f"📁 用戶配置文件: {self.users_file}")
+            logger.info(f"用戶認證系統初始化完成")
+            logger.info(f"用戶配置文件: {self.users_file}")
     
     def _inject_auth_cache_js(self):
         """註入前端認證緩存JavaScript代碼"""
@@ -73,7 +73,7 @@ class AuthManager:
                     lastActivity: Date.now()
                 };
                 localStorage.setItem('tradingagents_auth', JSON.stringify(authData));
-                console.log('✅ 登錄狀態已保存到前端緩存');
+                console.log('登錄狀態已保存到前端緩存');
             },
             
             // 從localStorage獲取登錄狀態
@@ -89,7 +89,7 @@ class AuthManager:
                     // 檢查是否超時
                     if (now - data.lastActivity > timeout) {
                         this.clearAuth();
-                        console.log('⏰ 登錄狀態已過期，自動清除');
+                        console.log('登錄狀態已過期，自動清除');
                         return null;
                     }
                     
@@ -99,7 +99,7 @@ class AuthManager:
                     
                     return data.userInfo;
                 } catch (e) {
-                    console.error('❌ 讀取登錄狀態失敗:', e);
+                    console.error('讀取登錄狀態失敗:', e);
                     this.clearAuth();
                     return null;
                 }
@@ -108,7 +108,7 @@ class AuthManager:
             // 清除登錄狀態
             clearAuth: function() {
                 localStorage.removeItem('tradingagents_auth');
-                console.log('🧹 登錄狀態已清除');
+                console.log('登錄狀態已清除');
             },
             
             // 更新活動時間
@@ -120,7 +120,7 @@ class AuthManager:
                         data.lastActivity = Date.now();
                         localStorage.setItem('tradingagents_auth', JSON.stringify(data));
                     } catch (e) {
-                        console.error('❌ 更新活動時間失敗:', e);
+                        console.error('更新活動時間失敗:', e);
                     }
                 }
             }
@@ -137,7 +137,7 @@ class AuthManager:
         document.addEventListener('DOMContentLoaded', function() {
             const authInfo = window.AuthCache.getAuth();
             if (authInfo) {
-                console.log('🔄 從前端緩存恢複登錄狀態:', authInfo.username);
+                console.log('從前端緩存恢複登錄狀態:', authInfo.username);
                 // 通知Streamlit恢複登錄狀態
                 window.parent.postMessage({
                     type: 'restore_auth',
@@ -159,7 +159,7 @@ class AuthManager:
             with open(self.users_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
-            logger.error(f"❌ 加載用戶配置失敗: {e}")
+            logger.error(f"加載用戶配置失敗: {e}")
             return {}
     
     def authenticate(self, username: str, password: str) -> Tuple[bool, Optional[Dict]]:
@@ -176,7 +176,7 @@ class AuthManager:
         users = self._load_users()
         
         if username not in users:
-            logger.warning(f"⚠️ 用戶不存在: {username}")
+            logger.warning(f"用戶不存在: {username}")
             # 記錄登錄失敗
             if user_activity_logger:
                 user_activity_logger.log_login(username, False, "用戶不存在")
@@ -186,7 +186,7 @@ class AuthManager:
         password_hash = self._hash_password(password)
         
         if password_hash == user_info["password_hash"]:
-            logger.info(f"✅ 用戶登錄成功: {username}")
+            logger.info(f"用戶登錄成功: {username}")
             # 記錄登錄成功
             if user_activity_logger:
                 user_activity_logger.log_login(username, True)
@@ -196,7 +196,7 @@ class AuthManager:
                 "permissions": user_info["permissions"]
             }
         else:
-            logger.warning(f"⚠️ 密碼錯誤: {username}")
+            logger.warning(f"密碼錯誤: {username}")
             # 記錄登錄失敗
             if user_activity_logger:
                 user_activity_logger.log_login(username, False, "密碼錯誤")
@@ -227,22 +227,22 @@ class AuthManager:
         login_time = st.session_state.get('login_time', 0)
         current_time = time.time()
         
-        logger.debug(f"🔍 [認證檢查] authenticated: {authenticated}, login_time: {login_time}, current_time: {current_time}")
+        logger.debug(f"[認證檢查] authenticated: {authenticated}, login_time: {login_time}, current_time: {current_time}")
         
         if authenticated:
             # 檢查會話超時
             time_elapsed = current_time - login_time
-            logger.debug(f"🔍 [認證檢查] 會話時長: {time_elapsed:.1f}秒, 超時限制: {self.session_timeout}秒")
+            logger.debug(f"[認證檢查] 會話時長: {time_elapsed:.1f}秒, 超時限制: {self.session_timeout}秒")
             
             if time_elapsed > self.session_timeout:
-                logger.info(f"⏰ 會話超時，自動登出 (已過時間: {time_elapsed:.1f}秒)")
+                logger.info(f"會話超時，自動登出 (已過時間: {time_elapsed:.1f}秒)")
                 self.logout()
                 return False
             
-            logger.debug(f"✅ [認證檢查] 用戶已認證且未超時")
+            logger.debug(f"[認證檢查] 用戶已認證且未超時")
             return True
         
-        logger.debug(f"❌ [認證檢查] 用戶未認證")
+        logger.debug(f"[認證檢查] 用戶未認證")
         return False
     
     def login(self, username: str, password: str) -> bool:
@@ -274,19 +274,19 @@ class AuthManager:
             
             save_to_cache_js = f"""
             <script>
-            console.log('🔐 保存認證數據到localStorage');
+            console.log('保存認證數據到localStorage');
             try {{
                 const authData = {json.dumps(auth_data)};
                 localStorage.setItem('tradingagents_auth', JSON.stringify(authData));
-                console.log('✅ 認證數據已保存到localStorage:', authData);
+                console.log('認證數據已保存到localStorage:', authData);
             }} catch (e) {{
-                console.error('❌ 保存認證數據失敗:', e);
+                console.error('保存認證數據失敗:', e);
             }}
             </script>
             """
             st.components.v1.html(save_to_cache_js, height=0)
             
-            logger.info(f"✅ 用戶 {username} 登錄成功，已保存到前端緩存")
+            logger.info(f"用戶 {username} 登錄成功，已保存到前端緩存")
             return True
         else:
             st.session_state.authenticated = False
@@ -303,19 +303,19 @@ class AuthManager:
         # 清除前端緩存
         clear_cache_js = """
         <script>
-        console.log('🚪 清除認證數據');
+        console.log('清除認證數據');
         try {
             localStorage.removeItem('tradingagents_auth');
             localStorage.removeItem('tradingagents_last_activity');
-            console.log('✅ 認證數據已清除');
+            console.log('認證數據已清除');
         } catch (e) {
-            console.error('❌ 清除認證數據失敗:', e);
+            console.error('清除認證數據失敗:', e);
         }
         </script>
         """
         st.components.v1.html(clear_cache_js, height=0)
         
-        logger.info(f"✅ 用戶 {username} 登出，已清除前端緩存")
+        logger.info(f"用戶 {username} 登出，已清除前端緩存")
         
         # 記錄登出活動
         if user_activity_logger:
@@ -336,13 +336,13 @@ class AuthManager:
             # 驗證用戶信息的有效性
             username = user_info.get('username')
             if not username:
-                logger.warning(f"⚠️ 恢複失敗: 用戶信息中沒有用戶名")
+                logger.warning(f"恢複失敗: 用戶信息中沒有用戶名")
                 return False
             
             # 檢查用戶是否仍然存在
             users = self._load_users()
             if username not in users:
-                logger.warning(f"⚠️ 嘗試恢複不存在的用戶: {username}")
+                logger.warning(f"嘗試恢複不存在的用戶: {username}")
                 return False
             
             # 恢複登錄狀態，使用原始登錄時間或當前時間
@@ -352,12 +352,12 @@ class AuthManager:
             st.session_state.user_info = user_info
             st.session_state.login_time = restore_time
             
-            logger.info(f"✅ 從前端緩存恢複用戶 {username} 的登錄狀態")
-            logger.debug(f"🔍 [恢複狀態] login_time: {restore_time}, current_time: {time.time()}")
+            logger.info(f"從前端緩存恢複用戶 {username} 的登錄狀態")
+            logger.debug(f"[恢複狀態] login_time: {restore_time}, current_time: {time.time()}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 從前端緩存恢複登錄狀態失敗: {e}")
+            logger.error(f"從前端緩存恢複登錄狀態失敗: {e}")
             return False
     
     def get_current_user(self) -> Optional[Dict]:
@@ -377,7 +377,7 @@ class AuthManager:
             是否有權限
         """
         if not self.check_permission(permission):
-            st.error(f"❌ 您沒有 '{permission}' 權限，請聯系管理員")
+            st.error(f"您沒有 '{permission}'權限，請聯系管理員")
             return False
         return True
 

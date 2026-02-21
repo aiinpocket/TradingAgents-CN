@@ -354,7 +354,7 @@ def _format_change(value: float, suffix: str = "%") -> str:
         suffix: 後綴字元
 
     Returns:
-        格式化後的字串，例如 "+2.35%" 或 "-1.20%"
+        格式化後的字串，例如 "+2.35%"或 "-1.20%"
     """
     sign = "+" if value >= 0 else ""
     return f"{sign}{value:.2f}{suffix}"

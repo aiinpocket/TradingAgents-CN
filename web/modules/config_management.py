@@ -30,7 +30,7 @@ def render_config_management():
     # 應用隱藏Deploy按鈕的CSS樣式
     apply_hide_deploy_button_css()
     
-    st.title("⚙️ 配置管理")
+    st.title("配置管理")
 
     # 顯示.env配置狀態
     render_env_status()
@@ -54,7 +54,7 @@ def render_config_management():
 
 def render_model_config():
     """渲染模型配置頁面"""
-    st.markdown("**🤖 模型配置**")
+    st.markdown("**模型配置**")
 
     # 加載現有配置
     models = config_manager.load_models()
@@ -81,7 +81,7 @@ def render_model_config():
                 "API密鑰": api_key_display,
                 "最大Token": model.max_tokens,
                 "溫度": model.temperature,
-                "狀態": "✅ 啟用" if model.enabled else "❌ 禁用"
+                "狀態": "啟用" if model.enabled else "禁用"
             })
         
         df = pd.DataFrame(model_data)
@@ -89,7 +89,7 @@ def render_model_config():
         
         # 編輯模型參數（API密鑰不可修改）
         st.markdown("**編輯模型參數**")
-        st.info("🔒 **安全提示**: API密鑰只能通過 `.env` 文件配置，無法在Web界面修改")
+        st.info(" **安全提示**: API密鑰只能通過 `.env` 文件配置，無法在Web界面修改")
 
         # 選擇要編輯的模型
         model_options = [f"{m.provider} - {m.model_name}" for m in models]
@@ -105,11 +105,11 @@ def render_model_config():
 
             # 顯示API密鑰狀態（只讀）
             if env_has_key:
-                st.success(f"✅ API密鑰: 已從 `.env` 文件載入")
+                st.success(f"API密鑰: 已從 `.env` 文件載入")
             elif model.api_key:
-                st.warning(f"⚠️ API密鑰: 使用舊配置（建議遷移到 `.env`）")
+                st.warning(f"API密鑰: 使用舊配置（建議遷移到 `.env`）")
             else:
-                st.error(f"❌ API密鑰: 未配置（請在 `.env` 文件中設置）")
+                st.error(f"API密鑰: 未配置（請在 `.env` 文件中設置）")
 
             col1, col2 = st.columns(2)
 
@@ -134,7 +134,7 @@ def render_model_config():
                 )
 
                 config_manager.save_models(models)
-                st.success("✅ 配置已保存！")
+                st.success("配置已保存！")
                 st.rerun()
     
     else:
@@ -143,7 +143,7 @@ def render_model_config():
     # 添加新模型的說明
     st.markdown("**添加新模型**")
     st.info("""
-    🔒 **如何添加新模型：**
+     **如何添加新模型：**
 
     為了安全起見，新模型的配置（包括API密鑰）只能通過 `.env` 文件設置。
 
@@ -162,7 +162,7 @@ def render_model_config():
 
 def render_pricing_config():
     """渲染定價配置頁面"""
-    st.markdown("**💰 定價設置**")
+    st.markdown("**定價設置**")
 
     # 加載現有定價
     pricing_configs = config_manager.load_pricing()
@@ -225,7 +225,7 @@ def render_pricing_config():
                 )
                 
                 config_manager.save_pricing(pricing_configs)
-                st.success("✅ 定價已保存！")
+                st.success("定價已保存！")
                 st.rerun()
     
     # 添加新定價
@@ -254,7 +254,7 @@ def render_pricing_config():
             
             pricing_configs.append(new_pricing)
             config_manager.save_pricing(pricing_configs)
-            st.success("✅ 新定價已添加！")
+            st.success("新定價已添加！")
             st.rerun()
         else:
             st.error("請填寫供應商和模型名稱")
@@ -262,7 +262,7 @@ def render_pricing_config():
 
 def render_usage_statistics():
     """渲染使用統計頁面"""
-    st.markdown("**📊 使用統計**")
+    st.markdown("**使用統計**")
 
     # 時間範圍選擇
     col1, col2 = st.columns(2)
@@ -275,11 +275,11 @@ def render_usage_statistics():
     stats = config_manager.get_usage_statistics(days)
 
     if stats["total_requests"] == 0:
-        st.info("📝 暫無使用記錄")
+        st.info("暫無使用記錄")
         return
 
     # 總體統計
-    st.markdown("**📈 總體統計**")
+    st.markdown("**總體統計**")
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -297,7 +297,7 @@ def render_usage_statistics():
     
     # 按供應商統計
     if stats["provider_stats"]:
-        st.markdown("**🏢 按供應商統計**")
+        st.markdown("**按供應商統計**")
         
         provider_data = []
         for provider, data in stats["provider_stats"].items():
@@ -323,7 +323,7 @@ def render_usage_statistics():
             st.plotly_chart(fig, use_container_width=True)
     
     # 使用趨勢
-    st.markdown("**📈 使用趨勢**")
+    st.markdown("**使用趨勢**")
     
     records = config_manager.load_usage_records()
     if records:
@@ -374,7 +374,7 @@ def render_usage_statistics():
 
 def render_system_settings():
     """渲染系統設置頁面"""
-    st.markdown("**🔧 系統設置**")
+    st.markdown("**系統設置**")
 
     # 加載當前設置
     settings = config_manager.load_settings()
@@ -454,7 +454,7 @@ def render_system_settings():
         }
         
         config_manager.save_settings(new_settings)
-        st.success("✅ 設置已保存！")
+        st.success("設置已保存！")
         st.rerun()
     
     # 數據管理
@@ -471,12 +471,12 @@ def render_system_settings():
         if st.button("清空使用記錄", help="清空所有使用記錄", key="clear_usage_records"):
             if st.session_state.get("confirm_clear", False):
                 config_manager.save_usage_records([])
-                st.success("✅ 使用記錄已清空！")
+                st.success("使用記錄已清空！")
                 st.session_state.confirm_clear = False
                 st.rerun()
             else:
                 st.session_state.confirm_clear = True
-                st.warning("⚠️ 再次點擊確認清空")
+                st.warning("再次點擊確認清空")
     
     with col3:
         if st.button("重置配置", help="重置所有配置到默認值", key="reset_all_config"):
@@ -486,17 +486,17 @@ def render_system_settings():
                 if config_manager.config_dir.exists():
                     shutil.rmtree(config_manager.config_dir)
                 config_manager._init_default_configs()
-                st.success("✅ 配置已重置！")
+                st.success("配置已重置！")
                 st.session_state.confirm_reset = False
                 st.rerun()
             else:
                 st.session_state.confirm_reset = True
-                st.warning("⚠️ 再次點擊確認重置")
+                st.warning("再次點擊確認重置")
 
 
 def render_env_status():
     """顯示.env配置狀態"""
-    st.markdown("**📋 配置狀態概覽**")
+    st.markdown("**配置狀態概覽**")
 
     # 獲取.env配置狀態
     env_status = config_manager.get_env_config_status()
@@ -506,10 +506,10 @@ def render_env_status():
 
     with col1:
         if env_status["env_file_exists"]:
-            st.success("✅ .env 文件已存在")
+            st.success(" .env 文件已存在")
         else:
-            st.error("❌ .env 文件不存在")
-            st.info("💡 請複制 .env.example 為 .env 並配置API密鑰")
+            st.error(" .env 文件不存在")
+            st.info("請複制 .env.example 為 .env 並配置API密鑰")
 
     with col2:
         # 統計已配置的API密鑰數量
@@ -518,14 +518,14 @@ def render_env_status():
         st.metric("API密鑰配置", f"{configured_keys}/{total_keys}")
 
     # 詳細API密鑰狀態
-    with st.expander("🔑 API密鑰詳細狀態", expanded=False):
+    with st.expander("API密鑰詳細狀態", expanded=False):
         api_col1, api_col2 = st.columns(2)
 
         with api_col1:
             st.write("**大模型API密鑰:**")
             for provider, configured in env_status["api_keys"].items():
                 if provider in ["openai", "google", "anthropic"]:
-                    status = "✅ 已配置" if configured else "❌ 未配置"
+                    status = "已配置" if configured else "未配置"
                     provider_name = {
                         "openai": "OpenAI",
                         "google": "Google AI",
@@ -535,15 +535,15 @@ def render_env_status():
 
         with api_col2:
             st.write("**其他API密鑰:**")
-            finnhub_status = "✅ 已配置" if env_status["api_keys"]["finnhub"] else "❌ 未配置"
+            finnhub_status = "已配置" if env_status["api_keys"]["finnhub"] else "未配置"
             st.write(f"- FinnHub (金融數據): {finnhub_status}")
 
-            reddit_status = "✅ 已配置" if env_status["other_configs"]["reddit_configured"] else "❌ 未配置"
+            reddit_status = "已配置" if env_status["other_configs"]["reddit_configured"] else "未配置"
             st.write(f"- Reddit API: {reddit_status}")
 
     # 配置優先級說明
     st.info("""
-    📌 **配置優先級說明:**
+     **配置優先級說明:**
     - API密鑰優先從 `.env` 文件讀取
     - Web界面配置作為補充和管理工具
     - 修改 `.env` 文件後需重啟應用生效
@@ -557,7 +557,7 @@ def main():
     """主函數"""
     st.set_page_config(
         page_title="配置管理 - TradingAgents",
-        page_icon="⚙️",
+        page_icon="",
         layout="wide"
     )
     

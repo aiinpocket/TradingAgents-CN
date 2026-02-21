@@ -182,7 +182,7 @@ class DatabaseCacheManager:
             start_date: 開始日期
             end_date: 結束日期
             data_source: 數據源
-            market_type: 市場類型 (us/china)
+            market_type: 市場類型 (僅支援 us)
         
         Returns:
             cache_key: 緩存鍵

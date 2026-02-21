@@ -100,7 +100,7 @@ def test_news_analyst_integration():
                         # 模擬工具調用
                         self.tool_calls = [{
                             "name": "get_stock_news_unified",
-                            "args": {"stock_code": "000001", "max_news": 10}
+                            "args": {"stock_code": "AAPL", "max_news": 10}
                         }]
                 
                 return MockResult()
@@ -114,9 +114,9 @@ def test_news_analyst_integration():
         
         # 測試不同股票
         test_stocks = [
-            ("000001", "平安銀行 - A股"),
-            ("00700", "騰讯控股 - 港股"),
-            ("AAPL", "蘋果公司 - 美股")
+            ("AAPL", "蘋果公司 - 美股"),
+            ("MSFT", "微軟 - 美股"),
+            ("GOOGL", "Alphabet - 美股")
         ]
         
         for stock_code, description in test_stocks:

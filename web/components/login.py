@@ -233,7 +233,7 @@ def render_login_form():
     st.markdown("""
     <div class="login-container">
         <div class="login-header">
-            <h1 class="login-title">🚀 TradingAgents-CN</h1>
+            <h1 class="login-title"> TradingAgents-CN</h1>
             <p class="login-subtitle">AI驅動的股票交易分析平台 · 讓投資更智能</p>
         </div>
     </div>
@@ -245,7 +245,7 @@ def render_login_form():
 
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.markdown("### 🔐 用戶登錄")
+            st.markdown("### 用戶登錄")
 
             # 使用表單防止每次輸入都觸發頁面重新渲染
             with st.form(key="login_form", clear_on_submit=False):
@@ -265,19 +265,19 @@ def render_login_form():
 
                 st.markdown("<br>", unsafe_allow_html=True)
 
-                submit_button = st.form_submit_button("🚀 立即登錄", use_container_width=True)
+                submit_button = st.form_submit_button("立即登錄", use_container_width=True)
 
                 if submit_button:
                     if username and password:
                         # 使用auth_manager.login()方法來確保前端緩存被正確保存
                         if auth_manager.login(username, password):
-                            st.success("✅ 登錄成功！正在為您跳轉...")
+                            st.success("登錄成功！正在為您跳轉...")
                             time.sleep(1)
                             st.rerun()
                         else:
-                            st.error("❌ 用戶名或密碼錯誤，請重試")
+                            st.error("用戶名或密碼錯誤，請重試")
                     else:
-                        st.warning("⚠️ 請輸入完整的登錄信息")
+                        st.warning("請輸入完整的登錄信息")
 
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -285,22 +285,22 @@ def render_login_form():
     st.markdown("""
     <div class="feature-grid">
         <div class="feature-card">
-            <div class="feature-icon">📊</div>
+            <div class="feature-icon"></div>
             <div class="feature-title">智能分析</div>
             <div class="feature-desc">AI驅動的股票分析</div>
         </div>
         <div class="feature-card">
-            <div class="feature-icon">🔍</div>
+            <div class="feature-icon"></div>
             <div class="feature-title">深度研究</div>
             <div class="feature-desc">全方位市場洞察</div>
         </div>
         <div class="feature-card">
-            <div class="feature-icon">⚡</div>
+            <div class="feature-icon"></div>
             <div class="feature-title">實時數據</div>
             <div class="feature-desc">最新市場信息</div>
         </div>
         <div class="feature-card">
-            <div class="feature-icon">🛡️</div>
+            <div class="feature-icon"></div>
             <div class="feature-title">風險控制</div>
             <div class="feature-desc">智能風險評估</div>
         </div>
@@ -393,10 +393,10 @@ def render_sidebar_user_info():
     # 渲染用戶信息
     st.sidebar.markdown(f"""
     <div class="sidebar-user-info">
-        <div class="sidebar-user-name">👋 {user_info['username']}</div>
+        <div class="sidebar-user-name"> {user_info['username']}</div>
         <div class="sidebar-user-role">{role_display}</div>
         <div class="sidebar-user-status">
-            🌟 在線中 {f'· {login_time_str}登錄' if login_time_str else ''}
+             在線中 {f'· {login_time_str}登錄' if login_time_str else ''}
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -439,9 +439,9 @@ def render_sidebar_logout():
     
     # 添加分隔線和退出按鈕
     st.sidebar.markdown('<div class="sidebar-logout-container">', unsafe_allow_html=True)
-    if st.sidebar.button("🚪 安全退出", use_container_width=True, key="sidebar_logout_btn"):
+    if st.sidebar.button("安全退出", use_container_width=True, key="sidebar_logout_btn"):
         auth_manager.logout()
-        st.sidebar.success("✅ 已安全退出，感謝使用！")
+        st.sidebar.success("已安全退出，感謝使用！")
         time.sleep(1)
         st.rerun()
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
@@ -539,11 +539,11 @@ def render_user_info():
         <div class="user-info-container">
             <div class="user-welcome">
                 <div>
-                    <h3 class="user-name">👋 歡迎回來，{user_info['username']}</h3>
+                    <h3 class="user-name"> 歡迎回來，{user_info['username']}</h3>
                     <div class="user-details">
-                        <span>🎯 {role_display}</span>
-                        {f'<span>🕐 {login_time_str} 登錄</span>' if login_time_str else ''}
-                        <span>🌟 在線中</span>
+                        <span> {role_display}</span>
+                        {f'<span> {login_time_str} 登錄</span>' if login_time_str else ''}
+                        <span> 在線中</span>
                     </div>
                 </div>
                 <div class="user-role">{role_display}</div>
@@ -552,9 +552,9 @@ def render_user_info():
         """, unsafe_allow_html=True)
     
     with col2:
-        if st.button("🚪 安全退出", use_container_width=True, type="secondary", key="logout_btn"):
+        if st.button("安全退出", use_container_width=True, type="secondary", key="logout_btn"):
             auth_manager.logout()
-            st.success("✅ 已安全退出，感謝使用！")
+            st.success("已安全退出，感謝使用！")
             time.sleep(1)
             st.rerun()
 

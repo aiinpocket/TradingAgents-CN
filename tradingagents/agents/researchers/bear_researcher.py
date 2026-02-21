@@ -33,7 +33,7 @@ def create_bear_researcher(llm, memory):
         if memory is not None:
             past_memories = memory.get_memories(curr_situation, n_matches=2)
         else:
-            logger.warning(f"⚠️ [DEBUG] memory為None，跳過歷史記憶檢索")
+            logger.warning(f"[DEBUG] memory為None，跳過歷史記憶檢索")
             past_memories = []
 
         past_memory_str = ""
@@ -44,7 +44,7 @@ def create_bear_researcher(llm, memory):
 
 **重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
 
-⚠️ 重要提醒：當前分析的是 {market_info['market_name']}，所有價格和估值請使用 {currency}（{currency_symbol}）作為單位。
+重要提醒：當前分析的是 {market_info['market_name']}，所有價格和估值請使用 {currency}（{currency_symbol}）作為單位。
 
 你的目標是提出合理的論證，強調風險、挑戰和負面指標。利用提供的研究和數據來突出潛在的不利因素並有效反駁看漲論點。
 

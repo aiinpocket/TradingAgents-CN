@@ -213,8 +213,8 @@ def test_simple_functionality():
         print("✅ TradingAgents LLM適配器導入成功")
         
         # 測試數據流導入
-        from tradingagents.dataflows import get_china_stock_data_unified
-        print("✅ TradingAgents數據流導入成功")
+        from tradingagents.dataflows import interface
+        print("TradingAgents數據流導入成功")
         
         # 測試圖形導入
         from tradingagents.graph.trading_graph import TradingAgentsGraph

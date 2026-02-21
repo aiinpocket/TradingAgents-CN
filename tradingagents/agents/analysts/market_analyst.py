@@ -53,7 +53,7 @@ def create_market_analyst_react(llm, toolkit):
     """使用 ReAct Agent 模式的市場分析師"""
     @log_analyst_module("market_react")
     def market_analyst_react_node(state):
-        logger.debug(f"📈 [DEBUG] ===== ReAct市場分析師節點開始 =====")
+        logger.debug(f"[DEBUG] ===== ReAct市場分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
@@ -156,7 +156,7 @@ def create_market_analyst_react(llm, toolkit):
             # 離線模式，使用原有邏輯
             report = "離線模式，暫不支援"
 
-        logger.debug(f"📈 [DEBUG] ===== ReAct市場分析師節點結束 =====")
+        logger.debug(f"[DEBUG] ===== ReAct市場分析師節點結束 =====")
 
         return {
             "messages": [("assistant", report)],
@@ -169,29 +169,29 @@ def create_market_analyst_react(llm, toolkit):
 def create_market_analyst(llm, toolkit):
 
     def market_analyst_node(state):
-        logger.debug(f"📈 [DEBUG] ===== 市場分析師節點開始 =====")
+        logger.debug(f"[DEBUG] ===== 市場分析師節點開始 =====")
 
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
 
-        logger.debug(f"📈 [DEBUG] 輸入參數: ticker={ticker}, date={current_date}")
-        logger.debug(f"📈 [DEBUG] 當前狀態中的訊息數量: {len(state.get('messages', []))}")
-        logger.debug(f"📈 [DEBUG] 現有市場報告: {state.get('market_report', 'None')}")
+        logger.debug(f"[DEBUG] 輸入參數: ticker={ticker}, date={current_date}")
+        logger.debug(f"[DEBUG] 當前狀態中的訊息數量: {len(state.get('messages', []))}")
+        logger.debug(f"[DEBUG] 現有市場報告: {state.get('market_report', 'None')}")
 
         # 取得股票市場資訊（僅支援美股）
         from tradingagents.utils.stock_utils import get_stock_market_info
 
         market_info = get_stock_market_info(ticker)
 
-        logger.debug(f"📈 [DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
+        logger.debug(f"[DEBUG] 股票類型檢查: {ticker} -> {market_info['market_name']} ({market_info['currency_name']})")
 
         # 獲取公司名稱
         company_name = _get_company_name(ticker, market_info)
-        logger.debug(f"📈 [DEBUG] 公司名稱: {ticker} -> {company_name}")
+        logger.debug(f"[DEBUG] 公司名稱: {ticker} -> {company_name}")
 
         if toolkit.config["online_tools"]:
             # 使用統一的市場數據工具，工具內部會自動識別股票類型
-            logger.info(f"📊 [市場分析師] 使用統一市場數據工具，自動識別股票類型")
+            logger.info(f"[市場分析師] 使用統一市場數據工具，自動識別股票類型")
             tools = [toolkit.get_stock_market_data_unified]
             # 安全地獲取工具名稱用於調試
             tool_names_debug = []
@@ -202,8 +202,8 @@ def create_market_analyst(llm, toolkit):
                     tool_names_debug.append(tool.__name__)
                 else:
                     tool_names_debug.append(str(tool))
-            logger.debug(f"📊 [DEBUG] 選擇的工具: {tool_names_debug}")
-            logger.debug(f"📊 [DEBUG] 🔧 統一工具將自動處理: {market_info['market_name']}")
+            logger.debug(f"[DEBUG] 選擇的工具: {tool_names_debug}")
+            logger.debug(f"[DEBUG] 統一工具將自動處理: {market_info['market_name']}")
         else:
             tools = [
                 toolkit.get_YFin_data,
@@ -237,14 +237,14 @@ def create_market_analyst(llm, toolkit):
 6. 所有價格數據使用{market_info['currency_name']}（{market_info['currency_symbol']}）表示
 
 **輸出格式：**
-## 📊 股票基本信息
+## 股票基本信息
 - 公司名稱：{company_name}
 - 股票代碼：{ticker}
 - 所屬市場：{market_info['market_name']}
 
-## 📈 技術指標分析
-## 📉 價格趨勢分析
-## 💭 投資建議
+## 技術指標分析
+## 價格趨勢分析
+## 投資建議
 
 請使用中文，基於真實數據進行分析。確保在分析中正確使用公司名稱"{company_name}"和股票代碼"{ticker}"。"""
         )
@@ -291,7 +291,7 @@ def create_market_analyst(llm, toolkit):
 
         # 使用統一的Google工具調用處理器
         if GoogleToolCallHandler.is_google_model(llm):
-            logger.info(f"📊 [市場分析師] 檢測到Google模型，使用統一工具調用處理器")
+            logger.info(f"[市場分析師] 檢測到Google模型，使用統一工具調用處理器")
             
             # 創建分析提示詞
             analysis_prompt_template = GoogleToolCallHandler.create_analysis_prompt(
@@ -317,16 +317,16 @@ def create_market_analyst(llm, toolkit):
             }
         else:
             # 非Google模型的處理邏輯
-            logger.debug(f"📊 [DEBUG] 非Google模型 ({llm.__class__.__name__})，使用標準處理邏輯")
+            logger.debug(f"[DEBUG] 非Google模型 ({llm.__class__.__name__})，使用標準處理邏輯")
             
             # 處理市場分析報告
             if len(result.tool_calls) == 0:
                 # 沒有工具調用，直接使用LLM的回覆
                 report = result.content
-                logger.info(f"📊 [市場分析師] 直接回覆，長度: {len(report)}")
+                logger.info(f"[市場分析師] 直接回覆，長度: {len(report)}")
             else:
                 # 有工具調用，執行工具並生成完整分析報告
-                logger.info(f"📊 [市場分析師] 工具調用: {[call.get('name', 'unknown') for call in result.tool_calls]}")
+                logger.info(f"[市場分析師] 工具調用: {[call.get('name', 'unknown') for call in result.tool_calls]}")
 
                 try:
                     # 執行工具調用
@@ -338,7 +338,7 @@ def create_market_analyst(llm, toolkit):
                         tool_args = tool_call.get('args', {})
                         tool_id = tool_call.get('id')
 
-                        logger.debug(f"📊 [DEBUG] 執行工具: {tool_name}, 參數: {tool_args}")
+                        logger.debug(f"[DEBUG] 執行工具: {tool_name}, 參數: {tool_args}")
 
                         # 找到對應的工具並執行
                         tool_result = None
@@ -352,16 +352,11 @@ def create_market_analyst(llm, toolkit):
 
                             if current_tool_name == tool_name:
                                 try:
-                                    if tool_name == "get_china_stock_data":
-                                        # 中國股票數據工具
-                                        tool_result = tool.invoke(tool_args)
-                                    else:
-                                        # 其他工具
-                                        tool_result = tool.invoke(tool_args)
-                                    logger.debug(f"📊 [DEBUG] 工具執行成功，結果長度: {len(str(tool_result))}")
+                                    tool_result = tool.invoke(tool_args)
+                                    logger.debug(f"[DEBUG] 工具執行成功，結果長度: {len(str(tool_result))}")
                                     break
                                 except Exception as tool_error:
-                                    logger.error(f"❌ [DEBUG] 工具執行失敗: {tool_error}")
+                                    logger.error(f"[DEBUG] 工具執行失敗: {tool_error}")
                                     tool_result = f"工具執行失敗: {str(tool_error)}"
 
                         if tool_result is None:
@@ -398,7 +393,7 @@ def create_market_analyst(llm, toolkit):
                     final_result = llm.invoke(messages)
                     report = final_result.content
 
-                    logger.info(f"📊 [市場分析師] 生成完整分析報告，長度: {len(report)}")
+                    logger.info(f"[市場分析師] 生成完整分析報告，長度: {len(report)}")
 
                     # 返回包含工具調用和最終分析的完整訊息序列
                     return {
@@ -407,7 +402,7 @@ def create_market_analyst(llm, toolkit):
                     }
 
                 except Exception as e:
-                    logger.error(f"❌ [市場分析師] 工具執行或分析生成失敗: {e}")
+                    logger.error(f"[市場分析師] 工具執行或分析生成失敗: {e}")
                     traceback.print_exc()
 
                     # 降級處理：返回工具調用信息

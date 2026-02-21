@@ -14,7 +14,7 @@ try:
     COOKIES_AVAILABLE = True
 except ImportError:
     COOKIES_AVAILABLE = False
-    st.warning("⚠️ streamlit-cookies-manager 未安裝，Cookie功能不可用")
+    st.warning("streamlit-cookies-manager 未安裝，Cookie功能不可用")
 
 class CookieManager:
     """Cookie管理器，用於持久化儲存分析狀態"""
@@ -39,11 +39,11 @@ class CookieManager:
                 # 檢查Cookie管理器是否準備就緒
                 if not self.cookies.ready():
                     # 如果沒有準備就緒，先顯示等待信息，然後停止執行
-                    st.info("🔄 正在初始化Cookie管理器，請稍候...")
+                    st.info("正在初始化Cookie管理器，請稍候...")
                     st.stop()
 
             except Exception as e:
-                st.warning(f"⚠️ Cookie管理器初始化失敗: {e}")
+                st.warning(f"Cookie管理器初始化失敗: {e}")
                 self.cookies = None
         else:
             self.cookies = None
@@ -72,7 +72,7 @@ class CookieManager:
             return True
 
         except Exception as e:
-            st.error(f"❌ 設置分析狀態失敗: {e}")
+            st.error(f"設置分析狀態失敗: {e}")
             return False
     
     def get_analysis_state(self) -> Optional[Dict[str, Any]]:
@@ -102,7 +102,7 @@ class CookieManager:
             return None
 
         except Exception as e:
-            st.warning(f"⚠️ 獲取分析狀態失敗: {e}")
+            st.warning(f"獲取分析狀態失敗: {e}")
             return None
     
     def clear_analysis_state(self):
@@ -118,7 +118,7 @@ class CookieManager:
                 self.cookies.save()
 
         except Exception as e:
-            st.warning(f"⚠️ 清除分析狀態失敗: {e}")
+            st.warning(f"清除分析狀態失敗: {e}")
 
     def get_debug_info(self) -> Dict[str, Any]:
         """獲取調試信息"""
@@ -170,7 +170,7 @@ def get_persistent_analysis_id() -> Optional[str]:
         return None
         
     except Exception as e:
-        st.warning(f"⚠️ 獲取持久化分析ID失敗: {e}")
+        st.warning(f"獲取持久化分析ID失敗: {e}")
         return None
 
 def set_persistent_analysis_id(analysis_id: str, status: str = "running", 
@@ -185,4 +185,4 @@ def set_persistent_analysis_id(analysis_id: str, status: str = "running",
         cookie_manager.set_analysis_state(analysis_id, status, stock_symbol, market_type)
         
     except Exception as e:
-        st.warning(f"⚠️ 設置持久化分析ID失敗: {e}")
+        st.warning(f"設置持久化分析ID失敗: {e}")

@@ -93,7 +93,7 @@ def create_social_media_analyst(llm, toolkit):
 - 政策解讀和市場預期變化
 - 散戶情緒與機構觀點的差異
 
-📊 情緒價格影響分析要求：
+情緒價格影響分析要求：
 - 量化投資者情緒強度（樂觀/悲觀程度）
 - 評估情緒變化對短期股價的影響（1-5天）
 - 分析散戶情緒與股價走勢的相關性
@@ -102,7 +102,7 @@ def create_social_media_analyst(llm, toolkit):
 - 評估市場情緒對估值的影響程度
 - 不允許回覆'無法評估情緒影響'或'需要更多數據'
 
-💰 必須包含：
+必須包含：
 - 情緒指數評分（1-10分）
 - 預期價格波動幅度
 - 基於情緒的交易時機建議
@@ -149,7 +149,7 @@ def create_social_media_analyst(llm, toolkit):
 
         # 使用統一的Google工具調用處理器
         if GoogleToolCallHandler.is_google_model(llm):
-            logger.info(f"📊 [社交媒體分析師] 檢測到Google模型，使用統一工具調用處理器")
+            logger.info(f"[社交媒體分析師] 檢測到Google模型，使用統一工具調用處理器")
             
             # 創建分析提示詞
             analysis_prompt_template = GoogleToolCallHandler.create_analysis_prompt(
@@ -170,7 +170,7 @@ def create_social_media_analyst(llm, toolkit):
             )
         else:
             # 非Google模型的處理邏輯
-            logger.debug(f"📊 [DEBUG] 非Google模型 ({llm.__class__.__name__})，使用標準處理邏輯")
+            logger.debug(f"[DEBUG] 非Google模型 ({llm.__class__.__name__})，使用標準處理邏輯")
             
             report = ""
             if len(result.tool_calls) == 0:

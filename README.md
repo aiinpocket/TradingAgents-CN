@@ -412,14 +412,13 @@ chmod +x scripts/smart_start.sh && ./scripts/smart_start.sh
 python -m pip install --upgrade pip
 
 # 2. 安裝依賴（推薦使用鎖定版本，安裝速度最快）
-pip install -r requirements-lock.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install -r requirements-lock.txt
 pip install -e . --no-deps
 
 # 或一步安裝（會重新解析依賴，速度較慢）
-# pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
+# pip install -e .
 
-# 💡 國內用戶推薦使用鏡像加速（詳见 docs/installation-mirror.md）
-# ⚠️ Windows 用戶如遇到 PyYAML 編譯錯誤，使用鎖定版本可避免此問題
+# Windows 用戶如遇到 PyYAML 編譯錯誤，使用鎖定版本可避免此問題
 
 # 3. 啟動應用
 python start_web.py
@@ -577,10 +576,7 @@ python -m pip install --upgrade pip
 # 4. 安裝所有依賴
 pip install -e .
 
-# 💡 國內用戶推薦使用鏡像加速（詳见 docs/installation-mirror.md）
-# pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
-
-# 註意：requirements.txt已包含所有必需依賴：
+# 註意：requirements.txt 已包含所有必需依賴：
 # - 數據庫支持 (MongoDB + Redis)
 # - 美股資料來源 (Yahoo Finance, FinnHub)
 # - Web界面和報告導出功能
@@ -971,10 +967,7 @@ source env/bin/activate
 # 2. 安裝項目到虛擬環境（重要！）
 pip install -e .
 
-# 💡 國內用戶推薦使用鏡像加速（詳见 docs/installation-mirror.md）
-# pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
-
-# 3. 啟動Web管理界面
+# 3. 啟動 Web 管理界面
 # 方法1：使用項目啟動腳本（推薦）
 python start_web.py
 
