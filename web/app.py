@@ -48,9 +48,28 @@ st.set_page_config(
     menu_items=None
 )
 
-# 全域樣式 - 專業金融介面
+# 全域樣式 - 專業金融終端介面
 st.markdown("""
 <style>
+    /* CSS 變數 - 金融儀表板色彩系統 */
+    :root {
+        --bg-primary: #F8F9FA;
+        --bg-card: #FFFFFF;
+        --bg-sidebar: #F1F3F5;
+        --text-primary: #212529;
+        --text-secondary: #6C757D;
+        --text-muted: #ADB5BD;
+        --border-color: #DEE2E6;
+        --border-light: #E9ECEF;
+        --accent-blue: #1864AB;
+        --accent-blue-hover: #1971C2;
+        --profit-green: #2B8A3E;
+        --loss-red: #C92A2A;
+        --progress-bar: #1864AB;
+        --tab-active: #212529;
+        --input-focus: rgba(24, 100, 171, 0.15);
+    }
+
     /* 隱藏 Streamlit 預設元素 */
     .stAppToolbar,
     header[data-testid="stHeader"],
@@ -67,115 +86,127 @@ st.markdown("""
 
     /* 全域字型與背景 */
     .stApp {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        background-color: #F9FAFB;
-        color: #1F2937;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 14px;
+        line-height: 1.5;
     }
 
-    /* 主容器 */
+    /* 主容器 - 緊湊的數據密集型佈局 */
     .main .block-container {
-        padding: 1.5rem 2rem;
-        max-width: 1200px;
+        padding: 1rem 1.5rem;
+        max-width: 1280px;
     }
 
-    /* 按鈕 - 沉穩的深色調 */
+    /* 按鈕 - 沉穩的深藍色系 */
     .stButton > button {
-        background-color: #1E293B;
+        background-color: var(--accent-blue);
         color: white;
         border: none;
-        border-radius: 6px;
-        padding: 0.5rem 1.25rem;
-        font-size: 0.875rem;
+        border-radius: 4px;
+        padding: 0.4rem 1rem;
+        font-size: 0.8125rem;
         font-weight: 500;
-        transition: background-color 0.15s ease;
+        letter-spacing: 0.01em;
+        transition: background-color 0.12s ease;
     }
 
     .stButton > button:hover {
-        background-color: #334155;
+        background-color: var(--accent-blue-hover);
     }
 
-    /* Primary 按鈕保持強調色 */
+    /* Primary 按鈕 */
     .stButton > button[kind="primary"] {
-        background-color: #0F766E;
+        background-color: var(--accent-blue);
     }
 
     .stButton > button[kind="primary"]:hover {
-        background-color: #115E59;
+        background-color: var(--accent-blue-hover);
     }
 
     /* 輸入框 */
     .stTextInput > div > div > input,
     .stSelectbox > div > div > select,
     .stTextArea > div > div > textarea {
-        border: 1px solid #D1D5DB;
-        border-radius: 6px;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.875rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 0.4rem 0.625rem;
+        font-size: 0.8125rem;
+        background: var(--bg-card);
     }
 
     .stTextInput > div > div > input:focus,
     .stSelectbox > div > div > select:focus {
-        border-color: #6B7280;
-        box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.1);
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 2px var(--input-focus);
     }
 
-    /* 進度條 - 深青綠色 */
+    /* 進度條 */
     .stProgress > div > div > div > div {
-        background-color: #0F766E;
-        border-radius: 4px;
+        background-color: var(--progress-bar);
+        border-radius: 2px;
     }
 
     /* 標籤頁 */
     .stTabs [data-baseweb="tab-list"] {
         gap: 0;
-        border-bottom: 1px solid #E5E7EB;
+        border-bottom: 1px solid var(--border-color);
     }
 
     .stTabs [data-baseweb="tab"] {
         border-radius: 0;
         border-bottom: 2px solid transparent;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        color: #6B7280;
+        padding: 0.375rem 0.875rem;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
     }
 
     .stTabs [aria-selected="true"] {
-        border-bottom-color: #1E293B;
-        color: #111827;
+        border-bottom-color: var(--tab-active);
+        color: var(--text-primary);
         font-weight: 500;
     }
 
     /* 側邊欄 */
     section[data-testid="stSidebar"] {
-        background-color: #FFFFFF;
-        border-right: 1px solid #E5E7EB;
+        background-color: var(--bg-sidebar);
+        border-right: 1px solid var(--border-color);
+        width: 240px !important;
     }
 
     section[data-testid="stSidebar"] > div {
-        padding-top: 1rem;
+        padding-top: 0.75rem;
     }
 
     /* 展開器 */
     .streamlit-expanderHeader {
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         font-weight: 500;
+        color: var(--text-primary);
     }
 
     /* 數據框 */
     .dataframe {
-        border-radius: 6px;
-        border: 1px solid #E5E7EB;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+        font-size: 0.8125rem;
     }
 
-    /* 圖表 */
-    .js-plotly-plot {
-        border-radius: 6px;
-    }
-
-    /* Metric 數值 - 更專業的顯示 */
+    /* Metric 數值 */
     [data-testid="stMetricValue"] {
         font-weight: 600;
-        color: #111827;
+        font-size: 1.25rem;
+        color: var(--text-primary);
+    }
+
+    [data-testid="stMetricDelta"] > div {
+        font-size: 0.75rem;
+    }
+
+    /* 正面指標（盈利色） */
+    [data-testid="stMetricDelta"] svg[viewBox] + div {
+        font-weight: 500;
     }
 
     /* 隱藏側邊欄收合按鈕 */
@@ -183,6 +214,33 @@ st.markdown("""
     button[data-testid="collapsedControl"],
     [data-testid="collapsedControl"] {
         display: none !important;
+    }
+
+    /* 訊息區塊 - 降低視覺噪音 */
+    .stAlert {
+        border-radius: 4px;
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    /* Markdown 標題微調 */
+    .stMarkdown h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    /* 分隔線 */
+    .stMarkdown hr {
+        border-color: var(--border-light);
+        margin: 0.75rem 0;
+    }
+
+    /* caption 文字 */
+    .stCaption {
+        color: var(--text-muted);
+        font-size: 0.75rem;
     }
 </style>
 """, unsafe_allow_html=True)

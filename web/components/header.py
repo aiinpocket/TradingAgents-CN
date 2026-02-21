@@ -6,30 +6,28 @@ import streamlit as st
 
 
 def render_header():
-    """渲染頁面頭部 - 簡潔的平台名稱和狀態列"""
+    """渲染頁面頭部 - 簡潔的平台名稱"""
 
     st.markdown("""
     <div style="
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.75rem 0;
-        margin-bottom: 1rem;
-        border-bottom: 1px solid #E5E7EB;
+        align-items: baseline;
+        gap: 0.5rem;
+        padding: 0.5rem 0 0.625rem 0;
+        margin-bottom: 0.75rem;
+        border-bottom: 1px solid #DEE2E6;
     ">
-        <div>
-            <h1 style="
-                font-size: 1.5rem;
-                font-weight: 600;
-                color: #0F172A;
-                margin: 0;
-                letter-spacing: -0.025em;
-            ">TradingAgents</h1>
-            <p style="
-                font-size: 0.813rem;
-                color: #64748B;
-                margin: 0.125rem 0 0 0;
-            ">美股研究平台</p>
-        </div>
+        <h1 style="
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+            letter-spacing: -0.02em;
+        ">TradingAgents</h1>
+        <span style="
+            font-size: 0.75rem;
+            color: #ADB5BD;
+            font-weight: 400;
+        ">US Equities</span>
     </div>
     """, unsafe_allow_html=True)

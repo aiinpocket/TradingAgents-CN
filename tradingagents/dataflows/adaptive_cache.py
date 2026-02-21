@@ -6,7 +6,6 @@
 
 import os
 import json
-import pickle
 import hashlib
 import logging
 from datetime import datetime, timedelta
@@ -62,164 +61,205 @@ class AdaptiveCacheSystem:
         expiry_time = cache_time + timedelta(seconds=ttl_seconds)
         return datetime.now() < expiry_time
     
+    def _serialize_data(self, data: Any) -> dict:
+        """將數據序列化為 JSON 安全格式，避免使用 pickle"""
+        if isinstance(data, pd.DataFrame):
+            return {'_type': 'dataframe', '_value': data.to_json()}
+        elif isinstance(data, pd.Series):
+            return {'_type': 'series', '_value': data.to_json()}
+        elif isinstance(data, datetime):
+            return {'_type': 'datetime', '_value': data.isoformat()}
+        else:
+            return {'_type': 'raw', '_value': data}
+
+    def _deserialize_data(self, serialized: dict) -> Any:
+        """從 JSON 安全格式還原數據"""
+        data_type = serialized.get('_type', 'raw')
+        value = serialized.get('_value')
+        if data_type == 'dataframe':
+            return pd.read_json(value)
+        elif data_type == 'series':
+            return pd.read_json(value, typ='series')
+        elif data_type == 'datetime':
+            return datetime.fromisoformat(value)
+        else:
+            return value
+
     def _save_to_file(self, cache_key: str, data: Any, metadata: Dict) -> bool:
-        """保存到文件緩存"""
+        """保存到文件緩存（使用 JSON 格式取代 pickle）"""
         try:
-            cache_file = self.cache_dir / f"{cache_key}.pkl"
+            cache_file = self.cache_dir / f"{cache_key}.json"
             cache_data = {
-                'data': data,
+                'data': self._serialize_data(data),
                 'metadata': metadata,
-                'timestamp': datetime.now(),
+                'timestamp': datetime.now().isoformat(),
                 'backend': 'file'
             }
-            
-            with open(cache_file, 'wb') as f:
-                pickle.dump(cache_data, f)
-            
+
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                json.dump(cache_data, f, ensure_ascii=False, default=str)
+
             self.logger.debug(f"文件緩存保存成功: {cache_key}")
             return True
-            
+
         except Exception as e:
             self.logger.error(f"文件緩存保存失敗: {e}")
             return False
     
     def _load_from_file(self, cache_key: str) -> Optional[Dict]:
-        """從文件緩存加載"""
+        """從文件緩存加載（支援 JSON 格式，兼容舊 .pkl 檔案）"""
         try:
-            cache_file = self.cache_dir / f"{cache_key}.pkl"
-            if not cache_file.exists():
+            # 優先使用 JSON 格式
+            json_file = self.cache_dir / f"{cache_key}.json"
+            if json_file.exists():
+                with open(json_file, 'r', encoding='utf-8') as f:
+                    cache_data = json.load(f)
+                # 還原序列化的數據
+                cache_data['data'] = self._deserialize_data(cache_data['data'])
+                # 還原時間戳
+                if isinstance(cache_data['timestamp'], str):
+                    cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
+                self.logger.debug(f"文件緩存加載成功 (JSON): {cache_key}")
+                return cache_data
+
+            # 舊格式 .pkl 檔案不再支援載入（安全考量）
+            pkl_file = self.cache_dir / f"{cache_key}.pkl"
+            if pkl_file.exists():
+                self.logger.warning(f"發現舊格式 .pkl 快取檔案，已跳過（安全考量）: {cache_key}")
                 return None
-            
-            with open(cache_file, 'rb') as f:
-                cache_data = pickle.load(f)
-            
-            self.logger.debug(f"文件緩存加載成功: {cache_key}")
-            return cache_data
-            
+
+            return None
+
         except Exception as e:
             self.logger.error(f"文件緩存加載失敗: {e}")
             return None
     
     def _save_to_redis(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
-        """保存到Redis緩存"""
+        """保存到 Redis 緩存（使用 JSON 序列化）"""
         redis_client = self.db_manager.get_redis_client()
         if not redis_client:
             return False
-        
+
         try:
             cache_data = {
-                'data': data,
+                'data': self._serialize_data(data),
                 'metadata': metadata,
                 'timestamp': datetime.now().isoformat(),
                 'backend': 'redis'
             }
-            
-            serialized_data = pickle.dumps(cache_data)
+
+            serialized_data = json.dumps(cache_data, ensure_ascii=False, default=str)
             redis_client.setex(cache_key, ttl_seconds, serialized_data)
-            
+
             self.logger.debug(f"Redis緩存保存成功: {cache_key}")
             return True
-            
+
         except Exception as e:
             self.logger.error(f"Redis緩存保存失敗: {e}")
             return False
     
     def _load_from_redis(self, cache_key: str) -> Optional[Dict]:
-        """從Redis緩存加載"""
+        """從 Redis 緩存加載（使用 JSON 反序列化）"""
         redis_client = self.db_manager.get_redis_client()
         if not redis_client:
             return None
-        
+
         try:
             serialized_data = redis_client.get(cache_key)
             if not serialized_data:
                 return None
-            
-            cache_data = pickle.loads(serialized_data)
-            
+
+            # 解碼 bytes
+            if isinstance(serialized_data, bytes):
+                serialized_data = serialized_data.decode('utf-8')
+
+            cache_data = json.loads(serialized_data)
+            # 還原序列化的數據
+            cache_data['data'] = self._deserialize_data(cache_data['data'])
             # 轉換時間戳
             if isinstance(cache_data['timestamp'], str):
                 cache_data['timestamp'] = datetime.fromisoformat(cache_data['timestamp'])
-            
+
             self.logger.debug(f"Redis緩存加載成功: {cache_key}")
             return cache_data
-            
+
         except Exception as e:
             self.logger.error(f"Redis緩存加載失敗: {e}")
             return None
     
     def _save_to_mongodb(self, cache_key: str, data: Any, metadata: Dict, ttl_seconds: int) -> bool:
-        """保存到MongoDB緩存"""
+        """保存到 MongoDB 緩存（使用 JSON 序列化）"""
         mongodb_client = self.db_manager.get_mongodb_client()
         if not mongodb_client:
             return False
-        
+
         try:
             db = mongodb_client.tradingagents
             collection = db.cache
-            
-            # 序列化數據
-            if isinstance(data, pd.DataFrame):
-                serialized_data = data.to_json()
-                data_type = 'dataframe'
-            else:
-                serialized_data = pickle.dumps(data).hex()
-                data_type = 'pickle'
-            
+
+            # 統一使用 JSON 安全序列化
+            serialized = self._serialize_data(data)
+
             cache_doc = {
                 '_id': cache_key,
-                'data': serialized_data,
-                'data_type': data_type,
+                'data': json.dumps(serialized, ensure_ascii=False, default=str),
+                'data_type': 'json',
                 'metadata': metadata,
                 'timestamp': datetime.now(),
                 'expires_at': datetime.now() + timedelta(seconds=ttl_seconds),
                 'backend': 'mongodb'
             }
-            
+
             collection.replace_one({'_id': cache_key}, cache_doc, upsert=True)
-            
+
             self.logger.debug(f"MongoDB緩存保存成功: {cache_key}")
             return True
-            
+
         except Exception as e:
             self.logger.error(f"MongoDB緩存保存失敗: {e}")
             return False
     
     def _load_from_mongodb(self, cache_key: str) -> Optional[Dict]:
-        """從MongoDB緩存加載"""
+        """從 MongoDB 緩存加載（使用 JSON 反序列化）"""
         mongodb_client = self.db_manager.get_mongodb_client()
         if not mongodb_client:
             return None
-        
+
         try:
             db = mongodb_client.tradingagents
             collection = db.cache
-            
+
             doc = collection.find_one({'_id': cache_key})
             if not doc:
                 return None
-            
+
             # 檢查是否過期
             if doc.get('expires_at') and doc['expires_at'] < datetime.now():
                 collection.delete_one({'_id': cache_key})
                 return None
-            
+
             # 反序列化數據
-            if doc['data_type'] == 'dataframe':
+            if doc['data_type'] == 'json':
+                serialized = json.loads(doc['data'])
+                data = self._deserialize_data(serialized)
+            elif doc['data_type'] == 'dataframe':
+                # 兼容舊格式
                 data = pd.read_json(doc['data'])
             else:
-                data = pickle.loads(bytes.fromhex(doc['data']))
-            
+                # 舊 pickle 格式不再支援（安全考量）
+                self.logger.warning(f"MongoDB 快取包含不安全的 pickle 格式，已跳過: {cache_key}")
+                return None
+
             cache_data = {
                 'data': data,
                 'metadata': doc['metadata'],
                 'timestamp': doc['timestamp'],
                 'backend': 'mongodb'
             }
-            
+
             self.logger.debug(f"MongoDB緩存加載成功: {cache_key}")
             return cache_data
-            
+
         except Exception as e:
             self.logger.error(f"MongoDB緩存加載失敗: {e}")
             return None
@@ -316,7 +356,7 @@ class AdaptiveCacheSystem:
             'mongodb_available': self.db_manager.is_mongodb_available(),
             'redis_available': self.db_manager.is_redis_available(),
             'file_cache_directory': str(self.cache_dir),
-            'file_cache_count': len(list(self.cache_dir.glob("*.pkl"))),
+            'file_cache_count': len(list(self.cache_dir.glob("*.json"))),
         }
         
         # Redis統計
@@ -343,29 +383,42 @@ class AdaptiveCacheSystem:
     def clear_expired_cache(self):
         """清理過期緩存"""
         self.logger.info("開始清理過期緩存...")
-        
-        # 清理文件緩存
+
         cleared_files = 0
-        for cache_file in self.cache_dir.glob("*.pkl"):
+        # 清理 JSON 格式快取
+        for cache_file in self.cache_dir.glob("*.json"):
             try:
-                with open(cache_file, 'rb') as f:
-                    cache_data = pickle.load(f)
-                
+                with open(cache_file, 'r', encoding='utf-8') as f:
+                    cache_data = json.load(f)
+
                 symbol = cache_data['metadata'].get('symbol', '')
                 data_type = cache_data['metadata'].get('data_type', 'stock_data')
                 ttl_seconds = self._get_ttl_seconds(symbol, data_type)
-                
-                if not self._is_cache_valid(cache_data['timestamp'], ttl_seconds):
+
+                timestamp = cache_data.get('timestamp')
+                if isinstance(timestamp, str):
+                    timestamp = datetime.fromisoformat(timestamp)
+
+                if not self._is_cache_valid(timestamp, ttl_seconds):
                     cache_file.unlink()
                     cleared_files += 1
-                    
+
             except Exception as e:
                 self.logger.error(f"清理緩存文件失敗 {cache_file}: {e}")
-        
-        self.logger.info(f"文件緩存清理完成，刪除 {cleared_files} 個過期文件")
-        
-        # MongoDB會自動清理過期文檔（通過expires_at字段）
-        # Redis會自動清理過期鍵
+
+        # 同時清理舊的 .pkl 檔案（不安全格式，直接刪除）
+        for pkl_file in self.cache_dir.glob("*.pkl"):
+            try:
+                pkl_file.unlink()
+                cleared_files += 1
+                self.logger.info(f"已刪除不安全的舊格式快取: {pkl_file.name}")
+            except Exception as e:
+                self.logger.error(f"刪除舊快取檔案失敗 {pkl_file}: {e}")
+
+        self.logger.info(f"文件緩存清理完成，刪除 {cleared_files} 個過期/不安全文件")
+
+        # MongoDB 會自動清理過期文檔（通過 expires_at 字段）
+        # Redis 會自動清理過期鍵
 
 
 # 全局緩存系統實例
