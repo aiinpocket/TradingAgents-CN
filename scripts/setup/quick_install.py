@@ -213,10 +213,10 @@ def local_install():
     # 提供啟動命令
     if platform.system() == "Windows":
         activate_cmd = "env\\Scripts\\activate"
-        start_cmd = f"{activate_cmd} && python -m streamlit run web/app.py"
+        start_cmd = f"{activate_cmd} && python start_app.py"
     else:
         activate_cmd = "source env/bin/activate"
-        start_cmd = f"{activate_cmd} && python -m streamlit run web/app.py"
+        start_cmd = f"{activate_cmd} && python start_app.py"
     
     print_colored(f"\n 啟動命令:", Colors.BLUE)
     print_colored(f"  {start_cmd}", Colors.GREEN)

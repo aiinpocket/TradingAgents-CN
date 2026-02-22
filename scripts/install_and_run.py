@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 TradingAgents-CN 安裝和啟動指令碼
-解決模組匯入問題，提供一鍵安裝和啟動
+提供一鍵安裝依賴並啟動 FastAPI 應用
 """
 
 import os
@@ -9,153 +9,120 @@ import sys
 import subprocess
 from pathlib import Path
 
+
 def check_virtual_env():
     """檢查是否在虛擬環境中"""
     in_venv = (
-        hasattr(sys, 'real_prefix') or 
+        hasattr(sys, 'real_prefix') or
         (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
     )
-    
+
     if not in_venv:
-        print(" 請先啟用虛擬環境:")
-        print("   Windows: .\\env\\Scripts\\activate")
-        print("   Linux/macOS: source env/bin/activate")
+        print("請先啟用虛擬環境:")
+        print("  Windows: .\\env\\Scripts\\activate")
+        print("  Linux/macOS: source env/bin/activate")
         return False
-    
-    print(" 虛擬環境已啟用")
+
+    print("虛擬環境已啟用")
     return True
 
+
 def install_project():
-    """安裝項目到虛擬環境"""
-    print("\n 安裝項目到虛擬環境...")
-    
+    """安裝專案到虛擬環境"""
+    print("\n安裝專案依賴...")
+
     project_root = Path(__file__).parent.parent
-    
+
     try:
-        # 開發模式安裝
-        result = subprocess.run([
-            sys.executable, "-m", "pip", "install", "-e", "."
-        ], cwd=project_root, check=True, capture_output=True, text=True)
-        
-        print(" 項目安裝成功")
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "-e", "."],
+            cwd=project_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        print("專案安裝成功")
         return True
-        
+
     except subprocess.CalledProcessError as e:
-        print(f" 項目安裝失敗: {e}")
-        print(f"錯誤輸出: {e.stderr}")
+        print(f"專案安裝失敗: {e}")
+        if e.stderr:
+            print(f"錯誤輸出: {e.stderr[:500]}")
         return False
 
-def install_web_dependencies():
-    """安裝Web介面依賴"""
-    print("\n 安裝Web介面依賴...")
-    
-    web_deps = [
-        "streamlit>=1.28.0",
-        "plotly>=5.15.0", 
-        "altair>=5.0.0"
-    ]
-    
-    try:
-        for dep in web_deps:
-            print(f"   安裝 {dep}...")
-            subprocess.run([
-                sys.executable, "-m", "pip", "install", dep
-            ], check=True, capture_output=True)
-        
-        print(" Web依賴安裝成功")
-        return True
-        
-    except subprocess.CalledProcessError as e:
-        print(f" Web依賴安裝失敗: {e}")
-        return False
 
 def check_env_file():
-    """檢查.env 檔案"""
-    print("\n 檢查環境配置...")
-    
+    """檢查 .env 檔案"""
+    print("\n檢查環境配置...")
+
     project_root = Path(__file__).parent.parent
     env_file = project_root / ".env"
     env_example = project_root / ".env_example"
-    
+
     if not env_file.exists():
         if env_example.exists():
-            print(" .env 檔案不存在，正在從.env_example建立...")
+            print(".env 檔案不存在，正在從 .env_example 建立...")
             try:
                 import shutil
                 shutil.copy(env_example, env_file)
-                print(" .env 檔案已建立")
-                print(" 請編輯.env 檔案，配置您的API密鑰")
+                print(".env 檔案已建立，請編輯並配置 API 密鑰")
             except Exception as e:
-                print(f" 建立.env 檔案失敗: {e}")
+                print(f"建立 .env 檔案失敗: {e}")
                 return False
         else:
-            print(" 找不到.env_example檔案")
+            print("找不到 .env_example 檔案")
             return False
     else:
-        print(" .env 檔案存在")
-    
+        print(".env 檔案存在")
+
     return True
 
-def start_web_app():
-    """啟動Web應用"""
-    print("\n 啟動Web應用...")
-    
+
+def start_app():
+    """啟動 FastAPI 應用"""
+    print("\n啟動應用...")
+
     project_root = Path(__file__).parent.parent
-    web_dir = project_root / "web"
-    app_file = web_dir / "app.py"
-    
-    if not app_file.exists():
-        print(f" 找不到應用檔案: {app_file}")
+    start_file = project_root / "start_app.py"
+
+    if not start_file.exists():
+        print(f"找不到啟動檔案: {start_file}")
         return False
-    
-    # 構建啟動命令
-    cmd = [
-        sys.executable, "-m", "streamlit", "run",
-        str(app_file),
-        "--server.port", "8501",
-        "--server.address", "localhost",
-        "--browser.gatherUsageStats", "false"
-    ]
-    
-    print(" Web應用啟動中...")
-    print(" 瀏覽器將自動開啟 http://localhost:8501")
-    print("[STOP] 按 Ctrl+C 停止應用")
+
+    cmd = [sys.executable, str(start_file)]
+
+    print("應用啟動中...")
+    print("開啟瀏覽器存取 http://localhost:8501")
+    print("按 Ctrl+C 停止應用")
     print("=" * 50)
-    
+
     try:
-        # 啟動應用
         subprocess.run(cmd, cwd=project_root)
     except KeyboardInterrupt:
-        print("\n[STOP]Web應用已停止")
+        print("\n應用已停止")
     except Exception as e:
-        print(f"\n 啟動失敗: {e}")
+        print(f"\n啟動失敗: {e}")
         return False
-    
+
     return True
+
 
 def main():
     """主函式"""
-    print(" TradingAgents-CN 安裝和啟動工具")
+    print("TradingAgents-CN 安裝和啟動工具")
     print("=" * 50)
-    
-    # 檢查虛擬環境
+
     if not check_virtual_env():
         return
-    
-    # 安裝項目
+
     if not install_project():
         return
-    
-    # 安裝Web依賴
-    if not install_web_dependencies():
-        return
-    
-    # 檢查環境檔案
+
     if not check_env_file():
         return
-    
-    # 啟動Web應用
-    start_web_app()
+
+    start_app()
+
 
 if __name__ == "__main__":
     main()
