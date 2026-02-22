@@ -134,6 +134,10 @@ function tradingApp() {
     toggleLang() {
       this.lang = this.lang === 'zh-TW' ? 'en' : 'zh-TW';
       setLang(this.lang);
+      // 切換語言後重新載入 AI 分析（使用新語言）
+      if (this.tab === 'trending' && this.aiAnalysis.content) {
+        this.loadAiAnalysis(true);
+      }
     },
 
     async checkHealth() {
@@ -249,6 +253,12 @@ function tradingApp() {
       this.form.symbol = symbol;
       this.tab = 'analysis';
       window.scrollTo(0, 0);
+    },
+
+    // 指數代碼轉換為對應 ETF（可直接分析）
+    indexToEtf(symbol) {
+      const map = {'^GSPC': 'SPY', '^DJI': 'DIA', '^IXIC': 'QQQ', '^VIX': 'VIXY'};
+      return map[symbol] || symbol.replace(/[^A-Za-z0-9.-]/g, '');
     },
 
     navigateToAnalysis(symbol) {
