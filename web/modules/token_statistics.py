@@ -165,7 +165,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
             color_discrete_sequence=['#FF6B6B', '#4ECDC4']
         )
         fig_pie.update_traces(textposition='inside', textinfo='percent+label')
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width='stretch')
     
     with col2:
         st.markdown("**成本vs Token關系**")
@@ -191,7 +191,7 @@ def render_detailed_charts(records: List[UsageRecord], stats: Dict[str, Any]):
                 title="成本與Token使用量關系",
                 labels={'total_tokens': 'Token總數', 'cost': '成本($)'}
             )
-            st.plotly_chart(fig_scatter, use_container_width=True)
+            st.plotly_chart(fig_scatter, width='stretch')
 
 def render_provider_statistics(stats: Dict[str, Any]):
     """渲染供應商統計"""
@@ -216,7 +216,7 @@ def render_provider_statistics(stats: Dict[str, Any]):
         for provider, data in provider_stats.items()
     ])
     
-    st.dataframe(provider_df, use_container_width=True)
+    st.dataframe(provider_df, width='stretch')
     
     # 供應商成本對比圖
     col1, col2 = st.columns(2)
@@ -232,7 +232,7 @@ def render_provider_statistics(stats: Dict[str, Any]):
             color=list(cost_data.values()),
             color_continuous_scale='Viridis'
         )
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.plotly_chart(fig_bar, width='stretch')
     
     with col2:
         # 呼叫次數對比
@@ -245,7 +245,7 @@ def render_provider_statistics(stats: Dict[str, Any]):
             color=list(requests_data.values()),
             color_continuous_scale='Plasma'
         )
-        st.plotly_chart(fig_requests, use_container_width=True)
+        st.plotly_chart(fig_requests, width='stretch')
 
 def render_cost_trends(records: List[UsageRecord]):
     """渲染成本趨勢圖"""
@@ -308,7 +308,7 @@ def render_cost_trends(records: List[UsageRecord]):
     fig.update_yaxes(title_text="Token數量", secondary_y=True)
     
     fig.update_layout(height=400)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 def render_detailed_records_table(records: List[UsageRecord]):
     """渲染詳細記錄表"""
@@ -347,7 +347,7 @@ def render_detailed_records_table(records: List[UsageRecord]):
     else:
         display_df = records_df
     
-    st.dataframe(display_df, use_container_width=True)
+    st.dataframe(display_df, width='stretch')
 
 def load_detailed_records(days: int) -> List[UsageRecord]:
     """載入詳細記錄"""

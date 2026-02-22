@@ -74,7 +74,7 @@ def render_model_config():
             })
         
         df = pd.DataFrame(model_data)
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df, width='stretch')
         
         # 編輯模型參數（API密鑰不可修改）
         st.markdown("**編輯模型參數**")
@@ -171,7 +171,7 @@ def render_pricing_config():
             })
         
         df = pd.DataFrame(pricing_data)
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df, width='stretch')
         
         # 編輯定價
         st.markdown("**編輯定價**")
@@ -299,7 +299,7 @@ def render_usage_statistics():
             })
         
         df = pd.DataFrame(provider_data)
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df, width='stretch')
         
         # 成本分布餅圖
         if len(provider_data) > 1:
@@ -308,7 +308,7 @@ def render_usage_statistics():
                 names=list(stats["provider_stats"].keys()),
                 title="成本分布"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
     
     # 使用趨勢
     st.markdown("**使用趨勢**")
@@ -357,7 +357,7 @@ def render_usage_statistics():
                 hovermode='x unified'
             )
             
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
 
 
 def render_system_settings():

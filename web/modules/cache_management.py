@@ -241,7 +241,7 @@ def main():
                 
                 st.dataframe(
                     df,
-                    use_container_width=True,
+                    width='stretch',
                     hide_index=True,
                     column_config={
                         "symbol": st.column_config.TextColumn("股票代碼", width="small"),

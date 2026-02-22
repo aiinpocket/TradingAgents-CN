@@ -530,7 +530,7 @@ def render_results_table(results: List[Dict[str, Any]]):
     
     if table_data:
         df = pd.DataFrame(table_data)
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df, width='stretch')
 
 def render_results_cards(results: List[Dict[str, Any]]):
     """渲染卡片視圖"""
@@ -662,7 +662,7 @@ def render_results_charts(results: List[Dict[str, Any]]):
             color=counts,
             color_continuous_scale='viridis'
         )
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.plotly_chart(fig_bar, width='stretch')
     
     # 按時間統計
     st.subheader("每日分析趨勢")
@@ -691,7 +691,7 @@ def render_results_charts(results: List[Dict[str, Any]]):
             yaxis_title="分析數量",
             hovermode='x unified'
         )
-        st.plotly_chart(fig_line, use_container_width=True)
+        st.plotly_chart(fig_line, width='stretch')
     
     # 按分析師類型統計
     st.subheader("分析師使用分布")
@@ -708,7 +708,7 @@ def render_results_charts(results: List[Dict[str, Any]]):
             title="分析師使用分布",
             color_discrete_sequence=px.colors.qualitative.Set3
         )
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width='stretch')
     
     # 成功率統計
     st.subheader("分析成功率統計")
@@ -726,7 +726,7 @@ def render_results_charts(results: List[Dict[str, Any]]):
             title="分析成功率",
             color_discrete_map={'成功': '#4CAF50', '失敗': '#F44336'}
         )
-        st.plotly_chart(fig_success, use_container_width=True)
+        st.plotly_chart(fig_success, width='stretch')
     
     # 標籤使用統計
     tags_data = load_tags()
@@ -752,7 +752,7 @@ def render_results_charts(results: List[Dict[str, Any]]):
                 color_continuous_scale='plasma'
             )
             fig_tags.update_layout(xaxis_tickangle=-45)
-            st.plotly_chart(fig_tags, use_container_width=True)
+            st.plotly_chart(fig_tags, width='stretch')
 
 def _render_reports_as_tabs(reports: Dict[str, str]):
     """將報告字典渲染為標籤頁（共用邏輯）"""
