@@ -53,6 +53,7 @@ docstring_parser==0.17.0
 durationpy==0.10
 et_xmlfile==2.0.0
 exceptiongroup==1.3.0
+fastapi>=0.115.0
 feedparser==6.0.12
 filelock==3.20.3
 filetype==1.2.0
@@ -146,6 +147,7 @@ pytest==8.4.2
 pytest-asyncio==1.2.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.1
+python-multipart>=0.0.9
 pytz==2025.2
 PyYAML==6.0.2
 questionary==2.1.1
@@ -184,6 +186,7 @@ tzdata==2025.2
 tzlocal==5.3.1
 update-checker==0.18.0
 urllib3==2.6.3
+uvicorn[standard]>=0.34.0
 watchdog==6.0.0
 wcwidth==0.2.14
 webencodings==0.5.1
