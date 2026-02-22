@@ -416,11 +416,11 @@ Please write a daily market trend analysis report covering:
 Note: Do NOT provide any buy/sell recommendations for individual stocks. Keep the analysis purely objective and informational."""
 
 
-def _generate_ai_analysis(market_context: str, lang: str) -> str:
-    """呼叫 LLM 生成市場趨勢分析"""
+def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str]:
+    """呼叫 LLM 生成市場趨勢分析，回傳 (content, error)"""
     provider, model = _get_ai_provider()
     if not provider:
-        return ""
+        return "", "no_provider"
 
     try:
         if provider == "openai":
@@ -438,11 +438,12 @@ def _generate_ai_analysis(market_context: str, lang: str) -> str:
         ]
 
         response = llm.invoke(messages)
-        return response.content
+        return response.content, ""
 
     except Exception as e:
-        logger.error(f"AI 趨勢分析生成失敗: {e}")
-        return ""
+        error_msg = str(e)[:200]
+        logger.error(f"AI 趨勢分析生成失敗 ({provider}/{model}): {error_msg}")
+        return "", error_msg
 
 
 @router.get("/trending/ai-analysis")
@@ -507,7 +508,7 @@ async def get_ai_analysis(lang: str = "zh-TW"):
         }
 
     try:
-        content = await loop.run_in_executor(
+        content, error = await loop.run_in_executor(
             None, _generate_ai_analysis, market_context, lang
         )
 
@@ -517,6 +518,9 @@ async def get_ai_analysis(lang: str = "zh-TW"):
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "provider": provider,
         }
+
+        if error:
+            result["error"] = error
 
         if content:
             _set_cache(cache_key, result)
