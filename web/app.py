@@ -362,9 +362,8 @@ def main():
 
             analysis_thread = threading.Thread(target=run_analysis_in_background)
             analysis_thread.daemon = True
-            analysis_thread.start()
-
             register_analysis_thread(analysis_id, analysis_thread)
+            analysis_thread.start()
 
             logger.info(f"分析執行緒已啟動: {analysis_id}")
 

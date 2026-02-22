@@ -196,7 +196,8 @@ class AsyncProgressTracker:
         ]
 
         # 為每個分析師新增專門的步驟
-        analyst_base_weight = 0.6 / len(self.analysts)  # 60%的時間用於分析師工作
+        analyst_count = max(len(self.analysts), 1)
+        analyst_base_weight = 0.6 / analyst_count  # 60%的時間用於分析師工作
         for analyst in self.analysts:
             analyst_info = self._get_analyst_step_info(analyst)
             steps.append({

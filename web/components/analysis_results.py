@@ -597,8 +597,9 @@ def render_results_cards(results: List[Dict[str, Any]]):
                 st.write(f"**研究深度**: {result.get('research_depth', 'unknown')}")
 
                 # 顯示分析摘要
-                if result.get('summary'):
-                    summary = result['summary'][:150] + "..." if len(result['summary']) > 150 else result['summary']
+                raw_summary = result.get('summary', '')
+                if raw_summary:
+                    summary = raw_summary[:150] + "..." if len(raw_summary) > 150 else raw_summary
                     st.write(f"**摘要**: {summary}")
             
             with col2:
@@ -766,10 +767,11 @@ def _render_reports_as_tabs(reports: Dict[str, str]):
     ]
 
     if len(tab_names) == 1:
-        if not reports[report_keys[0]].strip().startswith('#'):
+        content = reports[report_keys[0]] or ''
+        if not str(content).strip().startswith('#'):
             st.markdown(f"### {tab_names[0]}")
             st.markdown("---")
-        st.markdown(reports[report_keys[0]])
+        st.markdown(str(content))
     else:
         tabs = st.tabs(tab_names)
         for tab, key in zip(tabs, report_keys):
