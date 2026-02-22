@@ -367,6 +367,20 @@
               </div>
             </div>
 
+            <!-- 股票即時行情預覽 -->
+            <div class="stock-preview" x-cloak x-show="getStockPreview()" x-transition.opacity.duration.150ms>
+              <template x-if="getStockPreview()">
+                <div class="stock-preview-inner">
+                  <span class="stock-preview-symbol" x-text="'$' + getStockPreview().symbol"></span>
+                  <span class="stock-preview-name" x-text="getStockPreview().name"></span>
+                  <span class="stock-preview-price" x-text="'$' + getStockPreview().price?.toFixed(2)"></span>
+                  <span class="stock-preview-change"
+                        :class="getStockPreview().change_pct >= 0 ? 'change-up' : 'change-down'"
+                        x-text="(getStockPreview().change_pct >= 0 ? '+' : '') + getStockPreview().change_pct?.toFixed(2) + '%'"></span>
+                </div>
+              </template>
+            </div>
+
             <div class="field">
               <label for="date" x-text="t('analysis.date')"></label>
               <input id="date" type="date" x-model="form.date" required aria-required="true"

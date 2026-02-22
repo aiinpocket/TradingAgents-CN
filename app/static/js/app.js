@@ -234,6 +234,17 @@ function tradingApp() {
       return { label: this.t('trending.market_mixed'), cls: 'sentiment-mixed', arrow: '&#9670;' };
     },
 
+    // 從已載入的熱門資料中查找股票即時行情
+    getStockPreview() {
+      const sym = (this.form.symbol || '').toUpperCase().trim();
+      if (!sym) return null;
+      const all = [
+        ...(this.trendingData.movers?.gainers || []),
+        ...(this.trendingData.movers?.losers || []),
+      ];
+      return all.find(s => s.symbol === sym) || null;
+    },
+
     quickAnalyze(symbol) {
       this.form.symbol = symbol;
       this.tab = 'analysis';
