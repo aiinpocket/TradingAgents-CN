@@ -66,7 +66,7 @@ function tradingApp() {
     _elapsedTimer: null,
 
     // 熱門特區
-    trendingData: {},
+    trendingData: { indices: [], movers: { gainers: [], losers: [] }, news: [] },
     trendingLoading: false,
     _trendingTimer: null,
 
@@ -572,6 +572,25 @@ function tradingApp() {
           .map(line => `<li>${line.replace(/^\d+\. /, '')}</li>`)
           .join('');
         return `<ol>${items}</ol>`;
+      });
+
+      // Markdown 表格解析
+      html = html.replace(/(?:^\|.+\|$\n?)+/gm, (block) => {
+        const rows = block.trim().split('\n').filter(r => r.trim());
+        if (rows.length < 2) return block;
+        // 檢查第二行是否為分隔線（|---|---|）
+        const sepTest = rows[1].replace(/\s/g, '');
+        if (!/^\|[-:|]+\|$/.test(sepTest)) return block;
+        const parseRow = (row) =>
+          row.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+        const headers = parseRow(rows[0]);
+        const thead = '<thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead>';
+        const bodyRows = rows.slice(2);
+        const tbody = '<tbody>' + bodyRows.map(row => {
+          const cells = parseRow(row);
+          return '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+        }).join('') + '</tbody>';
+        return `<table>${thead}${tbody}</table>`;
       });
 
       html = html.replace(/\n\n/g, '</p><p>');
