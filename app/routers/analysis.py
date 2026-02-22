@@ -300,6 +300,21 @@ async def _run_analysis(analysis_id: str):
         if result.get("success"):
             from web.utils.analysis_runner import format_analysis_results
             formatted = format_analysis_results(result)
+
+            # 翻譯成英文版本
+            data["progress"].append("正在生成英文版本...")
+            try:
+                translation = await loop.run_in_executor(
+                    None, _translate_result_to_english, formatted
+                )
+                if translation:
+                    if translation.get("state_en"):
+                        formatted["state_en"] = translation["state_en"]
+                    if translation.get("decision_en"):
+                        formatted["decision_en"] = translation["decision_en"]
+            except Exception as e:
+                logger.warning(f"翻譯步驟失敗（不影響主流程）: {e}")
+
             data["progress"].append("分析完成")
             _update_analysis_state(analysis_id, status="completed", result=formatted)
         else:
@@ -354,6 +369,128 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
         llm_model=model,
         progress_callback=progress_callback,
     )
+
+
+# ---------------------------------------------------------------------------
+# 分析結果翻譯（中文 -> 英文）
+# ---------------------------------------------------------------------------
+
+def _translate_result_to_english(formatted_result: dict) -> dict | None:
+    """用 gpt-4o-mini 將分析結果一次翻譯成英文，回傳 {state_en, decision_en}"""
+    try:
+        from openai import OpenAI
+    except ImportError:
+        logger.warning("openai SDK 未安裝，跳過翻譯")
+        return None
+
+    import os
+    api_key = os.environ.get("OPENAI_API_KEY", "")
+    if not api_key:
+        logger.info("OPENAI_API_KEY 未設定，跳過英文翻譯")
+        return None
+
+    state = formatted_result.get("state", {})
+    decision = formatted_result.get("decision", {})
+
+    # 收集需要翻譯的文字欄位
+    payload: dict = {}
+
+    # state 中的報告文字（字串型）
+    report_keys = [
+        "market_report", "fundamentals_report", "sentiment_report",
+        "news_report", "risk_assessment",
+    ]
+    for k in report_keys:
+        v = state.get(k)
+        if isinstance(v, str) and v.strip():
+            payload[f"state.{k}"] = v
+
+    # investment_debate_state（可能是字串或 dict）
+    debate = state.get("investment_debate_state")
+    if isinstance(debate, str) and debate.strip():
+        payload["state.investment_debate_state"] = debate
+    elif isinstance(debate, dict):
+        for dk in ("bull_history", "bear_history", "judge_decision"):
+            dv = debate.get(dk)
+            if isinstance(dv, str) and dv.strip():
+                payload[f"state.investment_debate_state.{dk}"] = dv
+
+    # decision 欄位
+    if decision.get("action"):
+        payload["decision.action"] = str(decision["action"])
+    if decision.get("reasoning"):
+        payload["decision.reasoning"] = str(decision["reasoning"])
+
+    if not payload:
+        return None
+
+    try:
+        client = OpenAI(api_key=api_key)
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            temperature=0.3,
+            response_format={"type": "json_object"},
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a professional financial translator. "
+                        "Translate the following JSON values from Traditional Chinese to English. "
+                        "Rules:\n"
+                        "1. Preserve all Markdown formatting (headers, tables, bullet points, bold)\n"
+                        "2. Use accurate financial terminology\n"
+                        "3. Keep stock symbols, numbers, dates, and percentages unchanged\n"
+                        "4. Return valid JSON with the exact same keys\n"
+                        "5. Only translate the values, not the keys"
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": json.dumps(payload, ensure_ascii=False),
+                },
+            ],
+        )
+
+        translated = json.loads(resp.choices[0].message.content)
+
+        # 重新組裝成 state_en / decision_en
+        state_en: dict = {}
+        decision_en: dict = {}
+
+        for k in report_keys:
+            tv = translated.get(f"state.{k}")
+            if tv:
+                state_en[k] = tv
+
+        # debate
+        if isinstance(debate, str):
+            tv = translated.get("state.investment_debate_state")
+            if tv:
+                state_en["investment_debate_state"] = tv
+        elif isinstance(debate, dict):
+            debate_en_parts: dict = {}
+            for dk in ("bull_history", "bear_history", "judge_decision"):
+                tv = translated.get(f"state.investment_debate_state.{dk}")
+                if tv:
+                    debate_en_parts[dk] = tv
+            if debate_en_parts:
+                state_en["investment_debate_state"] = {**debate, **debate_en_parts}
+
+        # decision
+        if translated.get("decision.action"):
+            decision_en["action"] = translated["decision.action"]
+        if translated.get("decision.reasoning"):
+            decision_en["reasoning"] = translated["decision.reasoning"]
+        # 數值欄位直接複製
+        for nk in ("confidence", "risk_score", "target_price"):
+            if decision.get(nk) is not None:
+                decision_en[nk] = decision[nk]
+
+        return {"state_en": state_en or None, "decision_en": decision_en or None}
+
+    except Exception as e:
+        logger.warning(f"翻譯分析結果失敗: {e}")
+        return None
 
 
 # ---------------------------------------------------------------------------

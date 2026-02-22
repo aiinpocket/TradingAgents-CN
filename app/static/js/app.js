@@ -506,6 +506,31 @@ function tradingApp() {
       }
     },
 
+    // 根據語言取得對應的 state（英文優先使用 state_en）
+    getState() {
+      if (!this.result) return null;
+      if (this.lang === 'en' && this.result.state_en) {
+        // 合併：英文版為主，中文版補缺
+        return { ...this.result.state, ...this.result.state_en };
+      }
+      return this.result.state;
+    },
+
+    // 根據語言取得報告內容
+    getReport(key) {
+      const st = this.getState();
+      return st ? st[key] : null;
+    },
+
+    // 根據語言取得 decision
+    getDecision() {
+      if (!this.result) return null;
+      if (this.lang === 'en' && this.result.decision_en) {
+        return { ...this.result.decision, ...this.result.decision_en };
+      }
+      return this.result.decision;
+    },
+
     selectFirstTab() {
       if (!this.result?.state) return;
       const tabs = ['market', 'fundamentals', 'news', 'sentiment', 'risk', 'debate'];

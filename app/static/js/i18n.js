@@ -149,12 +149,15 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': '確定清除所有追蹤？',
 
     // 頁尾
-    'footer.version': 'v0.3.5',
+    'footer.version': 'v0.3.6',
     'footer.open_source': '開源專案',
 
     // 主題
     'theme.to_dark': '切換深色模式',
     'theme.to_light': '切換淺色模式',
+
+    // 翻譯進度
+    'analysis.translating': '正在生成英文版本...',
 
     // 通知
     'analysis.completed': '分析完成',
@@ -326,12 +329,15 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': 'Clear all tracked stocks?',
 
     // Footer
-    'footer.version': 'v0.3.5',
+    'footer.version': 'v0.3.6',
     'footer.open_source': 'Open Source',
 
     // Theme
     'theme.to_dark': 'Switch to dark mode',
     'theme.to_light': 'Switch to light mode',
+
+    // Translation progress
+    'analysis.translating': 'Generating English version...',
 
     // Notifications
     'analysis.completed': 'analysis completed',
