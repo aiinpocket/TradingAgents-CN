@@ -103,22 +103,31 @@ config:
   cacheType: "redis"
 
 # =============================================================
-# Secrets - API 金鑰和密碼
-# 注意：生產環境的敏感值請透過以下方式設定：
+# Secrets - 由外部管理，Helm 不建立 Secret
+# =============================================================
+# 生產環境的敏感值請透過 kubectl 手動建立：
 #   kubectl create secret generic tradingagents-secret \
 #     --namespace app \
 #     --from-literal=OPENAI_API_KEY=sk-xxx \
+#     --from-literal=ANTHROPIC_API_KEY=sk-ant-xxx \
 #     --from-literal=FINNHUB_API_KEY=xxx \
-#     ...
-# 或使用 ArgoCD 的 --set 參數覆蓋
+#     --from-literal=COOKIE_SECRET_KEY=xxx \
+#     --from-literal=MONGODB_PASSWORD=xxx \
+#     --from-literal=REDIS_PASSWORD=xxx
+#
+# 或更新已存在的 Secret：
+#   kubectl create secret generic tradingagents-secret \
+#     --namespace app --dry-run=client -o yaml \
+#     --from-literal=OPENAI_API_KEY=sk-xxx \
+#     --from-literal=ANTHROPIC_API_KEY=sk-ant-xxx \
+#     --from-literal=FINNHUB_API_KEY=xxx \
+#     --from-literal=COOKIE_SECRET_KEY=xxx \
+#     --from-literal=MONGODB_PASSWORD=xxx \
+#     --from-literal=REDIS_PASSWORD=xxx \
+#     | kubectl apply -f -
 # =============================================================
 secrets:
-  openaiApiKey: ""
-  anthropicApiKey: ""
-  finnhubApiKey: ""
-  cookieSecretKey: ""
-  mongodbPassword: ""
-  redisPassword: ""
+  enabled: false
 
 # =============================================================
 # MongoDB - Standalone Deployment

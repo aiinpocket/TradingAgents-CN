@@ -84,7 +84,11 @@ config:
   cacheType: "redis"
 
 # 敏感資訊（API 金鑰、密碼）
+# 生產環境建議透過 kubectl 外部管理 Secret，不透過 Helm
 secrets:
+  # 設為 true 時 Helm 會建立 K8s Secret（僅限開發/測試環境）
+  # 生產環境請設為 false，改用 kubectl create secret 外部管理
+  enabled: false
   # LLM API 金鑰（至少需要一個）
   openaiApiKey: ""
   anthropicApiKey: ""
