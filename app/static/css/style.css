@@ -135,6 +135,9 @@ body {
 
 .topbar-right {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .status-indicator {
@@ -1045,6 +1048,66 @@ code {
 
 .footer-sep {
   margin: 0 6px;
+}
+
+/* ===== 暗色模式 ===== */
+
+[data-theme="dark"] {
+  --bg: #1a1d23;
+  --bg-panel: #22252b;
+  --bg-inset: #2a2d35;
+  --bg-hover: #2e3139;
+  --border: #383c44;
+  --border-light: #32363e;
+  --text: #e1e4e8;
+  --text-sub: #8b949e;
+  --text-faint: #6e7681;
+  --accent: #58a6ff;
+  --accent-hover: #79b8ff;
+  --accent-bg: rgba(56, 139, 253, 0.15);
+  --accent-text: #79b8ff;
+  --green: #3fb950;
+  --green-bg: rgba(46, 160, 67, 0.15);
+  --green-text: #56d364;
+  --red: #f85149;
+  --red-bg: rgba(248, 81, 73, 0.15);
+  --red-text: #ff7b72;
+  --amber: #d29922;
+  --amber-bg: rgba(187, 128, 9, 0.15);
+  --amber-text: #e3b341;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow: 0 1px 3px rgba(0,0,0,0.35), 0 0 1px rgba(0,0,0,0.2);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.4), 0 0 1px rgba(0,0,0,0.2);
+}
+
+[data-theme="dark"] .field input,
+[data-theme="dark"] .field select {
+  background: var(--bg-inset);
+  color: var(--text);
+}
+
+/* 暗色模式切換按鈕 */
+
+.theme-toggle {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-faint);
+  border-radius: var(--radius-sm);
+  transition: color 0.12s;
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+}
+
+.theme-icon {
+  width: 16px;
+  height: 16px;
 }
 
 /* ===== 動畫 ===== */

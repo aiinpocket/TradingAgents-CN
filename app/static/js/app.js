@@ -5,6 +5,7 @@
 function tradingApp() {
   return {
     // 狀態
+    darkMode: false,
     tab: 'analysis',
     apiReady: false,
     analysisRunning: false,
@@ -45,10 +46,25 @@ function tradingApp() {
     },
 
     async init() {
+      // 載入暗色模式偏好
+      const saved = localStorage.getItem('theme');
+      this.darkMode = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (this.darkMode) document.documentElement.setAttribute('data-theme', 'dark');
+
       await this.checkHealth();
       await this.loadModels();
-      // 設定預設日期為今天
       this.form.date = new Date().toISOString().split('T')[0];
+    },
+
+    toggleTheme() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      }
     },
 
     async checkHealth() {
