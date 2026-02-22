@@ -2304,7 +2304,8 @@ code {
   }
 
   .mover-name { display: none; }
-  .mover-action { display: none; }
+  .mover-action { opacity: 0.35; }
+  .mover-row:active .mover-action { opacity: 1; color: var(--accent); }
 
   .stock-preview-name { display: none; }
 
@@ -2387,6 +2388,10 @@ code {
   .mover-rank { width: 18px; height: 18px; font-size: 10px; }
   .mover-data { gap: 8px; }
   .mover-price { font-size: 12px; }
+
+  .sectors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
+  .sector-card { padding: 8px; }
+  .sector-change { font-size: 13px; }
 }
 
 @media (max-width: 320px) {
