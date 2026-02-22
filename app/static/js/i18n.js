@@ -133,7 +133,7 @@ const I18N_MESSAGES = {
     'trending.sectors_desc': 'S&P 500 各板塊 ETF 當日漲跌',
 
     // 頁尾
-    'footer.version': 'v0.3.0',
+    'footer.version': 'v0.3.3',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -162,6 +162,7 @@ const I18N_MESSAGES = {
     // 通用
     'common.no_data': '暫無資料',
     'common.error': '發生錯誤',
+    'common.close': '關閉',
   },
 
   'en': {
@@ -293,7 +294,7 @@ const I18N_MESSAGES = {
     'trending.sectors_desc': 'S&P 500 sector ETF daily changes',
 
     // Footer
-    'footer.version': 'v0.3.0',
+    'footer.version': 'v0.3.3',
     'footer.open_source': 'Open Source',
 
     // Theme
@@ -322,6 +323,7 @@ const I18N_MESSAGES = {
     // Common
     'common.no_data': 'No data',
     'common.error': 'Error occurred',
+    'common.close': 'Close',
   }
 };
 
