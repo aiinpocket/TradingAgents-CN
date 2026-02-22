@@ -56,6 +56,21 @@ const I18N_MESSAGES = {
     'depth.time.4': '約 5-8 分鐘',
     'depth.time.5': '約 8-15 分鐘',
 
+    // 分析流程
+    'workflow.title': '多代理協作分析流程',
+    'workflow.step1_title': '市場技術分析',
+    'workflow.step1_desc': '分析價格走勢、技術指標與交易量模式',
+    'workflow.step2_title': '基本面研究',
+    'workflow.step2_desc': '評估財報數據、營收成長與估值指標',
+    'workflow.step3_title': '新聞與輿情',
+    'workflow.step3_desc': '掃描即時新聞、社群媒體與分析師評論',
+    'workflow.step4_title': '多空辯論',
+    'workflow.step4_desc': '多頭與空頭研究員進行觀點交鋒',
+    'workflow.step5_title': '風險評估',
+    'workflow.step5_desc': '穩健型、積極型與中立型觀點綜合評估',
+    'workflow.step6_title': '最終決策',
+    'workflow.step6_desc': '綜合所有分析產出投資建議與信心度',
+
     // 結果
     'result.suggestion': '建議',
     'result.confidence': '信心度',
@@ -195,6 +210,21 @@ const I18N_MESSAGES = {
     'depth.time.3': '~3-5 min',
     'depth.time.4': '~5-8 min',
     'depth.time.5': '~8-15 min',
+
+    // Workflow
+    'workflow.title': 'Multi-Agent Analysis Pipeline',
+    'workflow.step1_title': 'Technical Analysis',
+    'workflow.step1_desc': 'Analyze price trends, indicators, and volume patterns',
+    'workflow.step2_title': 'Fundamentals',
+    'workflow.step2_desc': 'Evaluate earnings, revenue growth, and valuation metrics',
+    'workflow.step3_title': 'News & Sentiment',
+    'workflow.step3_desc': 'Scan real-time news, social media, and analyst opinions',
+    'workflow.step4_title': 'Bull vs Bear Debate',
+    'workflow.step4_desc': 'Bull and bear researchers debate opposing viewpoints',
+    'workflow.step5_title': 'Risk Assessment',
+    'workflow.step5_desc': 'Conservative, aggressive, and neutral perspectives combined',
+    'workflow.step6_title': 'Final Decision',
+    'workflow.step6_desc': 'Synthesize all analyses into recommendation with confidence',
 
     // Results
     'result.suggestion': 'Suggestion',
