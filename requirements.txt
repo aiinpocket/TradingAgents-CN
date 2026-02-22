@@ -17,7 +17,7 @@
 
 # ==================== 核心框架 ====================
 langchain>=0.3.0
-langchain-core>=0.3.81  # 安全性: 修復序列化注入漏洞 (GHSA-wrqx-xhp6-2r3v)
+langchain-core>=1.2.11  # 安全性: 修復 SSRF 漏洞 + 序列化注入漏洞
 langchain-openai>=0.3.23
 langchain-anthropic>=0.3.15
 langchain-experimental>=0.3.4
