@@ -114,7 +114,7 @@ const I18N_MESSAGES = {
     'trending.rank': '#',
 
     // 頁尾
-    'footer.version': 'v0.2.8',
+    'footer.version': 'v0.2.9',
 
     // 主題
     'theme.to_dark': '切換深色模式',
@@ -235,7 +235,7 @@ const I18N_MESSAGES = {
     'trending.rank': '#',
 
     // Footer
-    'footer.version': 'v0.2.8',
+    'footer.version': 'v0.2.9',
 
     // Theme
     'theme.to_dark': 'Switch to dark mode',
