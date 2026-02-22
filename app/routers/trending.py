@@ -300,16 +300,18 @@ async def get_indices():
 _ai_analysis_lock = threading.Lock()
 
 
-def _get_ai_provider() -> tuple[str, str]:
-    """偵測可用的 LLM 提供商與模型（優先用快速模型節省成本）"""
+def _get_ai_providers() -> list[tuple[str, str]]:
+    """取得所有可用的 LLM 提供商清單（依優先順序排列，快速模型優先）"""
+    providers = []
     openai_key = os.getenv("OPENAI_API_KEY", "")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY", "")
 
     if openai_key:
-        return "openai", "gpt-4o-mini"
-    elif anthropic_key:
-        return "anthropic", "claude-haiku-4-5-20251001"
-    return "", ""
+        providers.append(("openai", "gpt-4o-mini"))
+    if anthropic_key:
+        providers.append(("anthropic", "claude-haiku-4-5-20251001"))
+
+    return providers
 
 
 def _build_market_context(overview: dict) -> str:
@@ -416,34 +418,45 @@ Please write a daily market trend analysis report covering:
 Note: Do NOT provide any buy/sell recommendations for individual stocks. Keep the analysis purely objective and informational."""
 
 
-def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str]:
-    """呼叫 LLM 生成市場趨勢分析，回傳 (content, error)"""
-    provider, model = _get_ai_provider()
-    if not provider:
-        return "", "no_provider"
+def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str, str]:
+    """呼叫 LLM 生成市場趨勢分析（支援自動 fallback）。
 
-    try:
-        if provider == "openai":
-            from langchain_openai import ChatOpenAI
-            llm = ChatOpenAI(model=model, temperature=0.3, max_tokens=2000)
-        else:
-            from langchain_anthropic import ChatAnthropic
-            llm = ChatAnthropic(model=model, temperature=0.3, max_tokens=2000)
+    回傳 (content, error, actual_provider)。
+    如果第一個 provider 失敗，會自動嘗試下一個。
+    """
+    providers = _get_ai_providers()
+    if not providers:
+        return "", "no_provider", ""
 
-        from langchain_core.messages import SystemMessage, HumanMessage
+    from langchain_core.messages import SystemMessage, HumanMessage
+    messages = [
+        SystemMessage(content=_AI_SYSTEM_PROMPT),
+        HumanMessage(content=_build_user_prompt(market_context, lang)),
+    ]
 
-        messages = [
-            SystemMessage(content=_AI_SYSTEM_PROMPT),
-            HumanMessage(content=_build_user_prompt(market_context, lang)),
-        ]
+    last_error = ""
+    for provider, model in providers:
+        try:
+            if provider == "openai":
+                from langchain_openai import ChatOpenAI
+                llm = ChatOpenAI(model=model, temperature=0.3, max_tokens=2000)
+            else:
+                from langchain_anthropic import ChatAnthropic
+                llm = ChatAnthropic(model=model, temperature=0.3, max_tokens=2000)
 
-        response = llm.invoke(messages)
-        return response.content, ""
+            response = llm.invoke(messages)
+            logger.info(f"AI 趨勢分析生成成功 (provider={provider}, model={model})")
+            return response.content, "", provider
 
-    except Exception as e:
-        error_msg = str(e)[:200]
-        logger.error(f"AI 趨勢分析生成失敗 ({provider}/{model}): {error_msg}")
-        return "", error_msg
+        except Exception as e:
+            last_error = str(e)[:200]
+            logger.warning(
+                f"AI 趨勢分析 {provider}/{model} 失敗，嘗試下一個: {last_error}"
+            )
+            continue
+
+    logger.error(f"所有 LLM 提供商均失敗，最後錯誤: {last_error}")
+    return "", last_error, ""
 
 
 @router.get("/trending/ai-analysis")
@@ -459,8 +472,8 @@ async def get_ai_analysis(lang: str = "zh-TW"):
         return cached
 
     # 檢查是否有可用的 LLM
-    provider, model = _get_ai_provider()
-    if not provider:
+    providers = _get_ai_providers()
+    if not providers:
         return {
             "available": False,
             "content": "",
@@ -503,12 +516,12 @@ async def get_ai_analysis(lang: str = "zh-TW"):
             "available": True,
             "content": "",
             "updated_at": "",
-            "provider": provider,
+            "provider": providers[0][0] if providers else "",
             "error": "Analysis generation in progress, please retry",
         }
 
     try:
-        content, error = await loop.run_in_executor(
+        content, error, actual_provider = await loop.run_in_executor(
             None, _generate_ai_analysis, market_context, lang
         )
 
@@ -516,7 +529,7 @@ async def get_ai_analysis(lang: str = "zh-TW"):
             "available": True,
             "content": content,
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "provider": provider,
+            "provider": actual_provider or providers[0][0],
         }
 
         if error:
