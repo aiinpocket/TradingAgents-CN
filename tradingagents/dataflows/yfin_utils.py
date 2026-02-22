@@ -12,13 +12,6 @@ from .utils import SavePathType, decorate_all_methods
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
-# 匯入快取管理器
-try:
-    from tradingagents.dataflows.cache_manager import CacheManager
-    CACHE_AVAILABLE = True
-except ImportError:
-    CACHE_AVAILABLE = False
-    logger.warning("快取管理器不可用，將直接從API取得資料")
 
 
 def init_ticker(func: Callable) -> Callable:

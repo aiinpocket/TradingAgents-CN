@@ -296,10 +296,7 @@ def render_risk_debate_content(content):
 def render_analysis_placeholder():
     """渲染分析資料等待提示"""
 
-    st.info(
-        "請先配置 API 密鑰並執行股票分析。"
-        "分析完成後，將生成涵蓋技術面、基本面、新聞及風險評估的詳細投資報告。"
-    )
+    st.caption("尚無分析資料。請執行股票分析後查看報告。")
 
 
 def render_risk_warning():
@@ -307,11 +304,9 @@ def render_risk_warning():
 
     st.markdown("---")
 
-    st.warning(
-        "本分析結果僅供研究參考，不構成投資建議。"
-        "投資有風險，決策請結合多方資訊並諮詢專業顧問。"
+    st.caption(
+        f"分析生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | "
+        "本分析結果僅供研究參考，不構成投資建議。投資有風險，決策請結合多方資訊並諮詢專業顧問。"
     )
-
-    st.caption(f"分析生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 

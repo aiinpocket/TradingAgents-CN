@@ -76,7 +76,6 @@ def render_model_config():
         
         # 編輯模型參數（API密鑰不可修改）
         st.markdown("**編輯模型參數**")
-        st.info(" **安全提示**: API密鑰只能透過 `.env` 檔案配置，無法在Web介面修改")
 
         # 選擇要編輯的模型
         model_options = [f"{m.provider} - {m.model_name}" for m in models]
@@ -127,23 +126,7 @@ def render_model_config():
     else:
         st.warning("沒有找到模型配置")
 
-    # 新增新模型的說明
-    st.markdown("**新增新模型**")
-    st.info("""
-     **如何新增新模型：**
-
-    為了安全起見，新模型的配置（包括API密鑰）只能透過 `.env` 檔案設定。
-
-    **步驟：**
-    1. 開啟專案根目錄的 `.env` 檔案
-    2. 新增相應的API密鑰環境變數：
-       - OpenAI: `OPENAI_API_KEY=your_key`
-       - Anthropic: `ANTHROPIC_API_KEY=your_key`
-    3. 重新啟動應用程式
-    4. 系統會自動檢測並載入新配置的模型
-
-    **注意**: Web 介面不支援直接新增新模型，這是為了保護您的 API 密鑰安全。
-    """)
+    st.caption("新增模型: 在 .env 中配置對應 API 密鑰後重啟即可")
 
 
 def render_pricing_config():
