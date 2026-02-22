@@ -17,7 +17,7 @@ def test_finnhub_api_key():
     
     api_key = os.getenv('FINNHUB_API_KEY')
     if api_key:
-        print(f" Finnhub API密鑰已配置: {api_key[:8]}...")
+        print(" Finnhub API密鑰已配置")
         return True
     else:
         print(" 未配置FINNHUB_API_KEY環境變數")

@@ -135,7 +135,7 @@ if __name__ == "__main__":
     if not api_key:
         sys.exit(1)
     
-    print(f" API密鑰已配置: {api_key[:10]}...")
+    print(" API密鑰已配置")
     
     # 測試市場分析
     result1 = test_us_stock_market_analysis()

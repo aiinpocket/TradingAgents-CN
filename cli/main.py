@@ -1578,17 +1578,17 @@ def config():
     api_keys_table.add_row(
         "FINNHUB_API_KEY",
         "已配置" if finnhub_key else "未配置",
-        f"金融資料 | {finnhub_key[:DEFAULT_API_KEY_DISPLAY_LENGTH]}..." if finnhub_key else "金融資料API密鑰"
+        "金融資料 | 已配置" if finnhub_key else "金融資料API密鑰"
     )
     api_keys_table.add_row(
         "OPENAI_API_KEY",
         "已配置" if openai_key else "未配置",
-        f"OpenAI | {openai_key[:DEFAULT_API_KEY_DISPLAY_LENGTH]}..." if openai_key else "OpenAI API密鑰"
+        "OpenAI | 已配置" if openai_key else "OpenAI API密鑰"
     )
     api_keys_table.add_row(
         "ANTHROPIC_API_KEY",
         "已配置" if anthropic_key else "未配置",
-        f"Anthropic | {anthropic_key[:DEFAULT_API_KEY_DISPLAY_LENGTH]}..." if anthropic_key else "Anthropic API密鑰"
+        "Anthropic | 已配置" if anthropic_key else "Anthropic API密鑰"
     )
 
     console.print(api_keys_table)

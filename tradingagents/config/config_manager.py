@@ -103,7 +103,7 @@ class ConfigManager:
             # 對OpenAI密鑰進行格式驗證（始終啟用）
             if provider.lower() == "openai" and api_key:
                 if not self.validate_openai_api_key_format(api_key):
-                    logger.warning(f"OpenAI API密鑰格式不正確，將被忽略: {api_key[:10]}...")
+                    logger.warning("OpenAI API密鑰格式不正確，將被忽略")
                     return ""
             return api_key
         return ""

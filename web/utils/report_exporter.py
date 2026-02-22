@@ -568,6 +568,12 @@ def _format_team_decision_content(content: Dict[str, Any], module_key: str) -> s
 def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: str) -> Dict[str, str]:
     """保存分模組報告到results目錄（CLI版本格式）"""
     try:
+        # 股票代碼安全驗證，防止路徑穿越
+        import re
+        if not stock_symbol or not re.match(r'^[A-Za-z0-9.\-]{1,10}$', stock_symbol):
+            logger.error(f"無效的股票代碼格式: {stock_symbol}")
+            return {}
+
         # 取得專案根目錄
         current_file = Path(__file__)
         project_root = current_file.parent.parent.parent

@@ -70,7 +70,7 @@ class FinnhubDataDownloader:
         self.session = requests.Session()
         
         logger.info(f" 資料目錄: {self.data_dir}")
-        logger.info(f" API密鑰: {self.api_key[:8]}...")
+        logger.info(f" API密鑰: {'已配置' if self.api_key else '未配置'}")
     
     def _make_request(self, endpoint: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """

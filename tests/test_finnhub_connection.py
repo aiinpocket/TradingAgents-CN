@@ -17,7 +17,7 @@ def test_finnhub_api():
         print(" 請設定 FINNHUB_API_KEY 環境變數")
         return False
     
-    print(f" FINNHUB API密鑰已配置: {finnhub_key[:10]}...")
+    print(" FINNHUB API密鑰已配置")
     
     try:
         from tradingagents.agents.utils.agent_utils import Toolkit
