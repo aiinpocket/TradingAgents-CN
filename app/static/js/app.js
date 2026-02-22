@@ -59,6 +59,8 @@ function tradingApp() {
     eventSource: null,
     startTime: null,
     pollRetryCount: 0,
+    elapsedText: '',
+    _elapsedTimer: null,
 
     get canSubmit() {
       return this.apiReady &&
@@ -138,6 +140,11 @@ function tradingApp() {
       this.formError = null;
       this.submitting = true;
 
+      // 靜默請求桌面通知權限
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+
       try {
         const res = await fetch('/api/analysis/start', {
           method: 'POST',
@@ -168,6 +175,7 @@ function tradingApp() {
         this.connectionRetries = 0;
         this.pollRetryCount = 0;
 
+        this._startElapsedTimer();
         this.connectSSE();
 
       } catch (e) {
@@ -212,11 +220,13 @@ function tradingApp() {
             this.showResults = true;
             this.selectFirstTab();
             this.eventSource.close();
+            this._notifyCompletion(true);
 
           } else if (data.type === 'failed') {
             this.progressPercent = 100;
             this.progressMessages.push('分析失敗: ' + data.error);
             this.analysisRunning = false;
+            this._notifyCompletion(false);
             this.formError = data.error;
             this.eventSource.close();
           }
@@ -269,10 +279,12 @@ function tradingApp() {
             this.result = data.result;
             this.showResults = true;
             this.selectFirstTab();
+            this._notifyCompletion(true);
             return;
           } else if (data.status === 'failed') {
             this.analysisRunning = false;
             this.formError = data.error || '分析失敗';
+            this._notifyCompletion(false);
             return;
           }
         } catch (e) {
@@ -324,6 +336,7 @@ function tradingApp() {
       this.analysisId = null;
       this.connectionRetries = 0;
       this.pollRetryCount = 0;
+      this._stopElapsedTimer();
     },
 
     async loadHistory() {
@@ -401,6 +414,40 @@ function tradingApp() {
       a.download = `${this.result.stock_symbol || 'analysis'}_${this.result.analysis_date || 'report'}.json`;
       a.click();
       URL.revokeObjectURL(url);
+    },
+
+    _startElapsedTimer() {
+      this._stopElapsedTimer();
+      this.elapsedText = '已用時 00:00';
+      this._elapsedTimer = setInterval(() => {
+        if (!this.startTime) return;
+        const sec = Math.floor((Date.now() - this.startTime) / 1000);
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        this.elapsedText = `已用時 ${m}:${s}`;
+      }, 1000);
+    },
+
+    _stopElapsedTimer() {
+      if (this._elapsedTimer) {
+        clearInterval(this._elapsedTimer);
+        this._elapsedTimer = null;
+      }
+      this.elapsedText = '';
+    },
+
+    _notifyCompletion(success) {
+      const symbol = this.form.symbol || '';
+      const title = success
+        ? `${symbol} 分析完成`
+        : `${symbol} 分析失敗`;
+      // 更新頁面標題提示
+      document.title = title + ' - TradingAgents';
+      setTimeout(() => { document.title = 'TradingAgents - 美股交易分析'; }, 5000);
+      // 桌面通知（僅在頁面不可見時）
+      if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
+        new Notification('TradingAgents', { body: title, icon: '/static/favicon.svg' });
+      }
     },
 
     _sanitize(html) {
