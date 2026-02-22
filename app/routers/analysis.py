@@ -107,7 +107,8 @@ async def start_analysis(req: AnalysisRequest):
         raise HTTPException(status_code=400, detail=f"不支援的模型: {llm_model}")
 
     # 限制並行分析數量
-    running_count = sum(1 for d in _active_analyses.values() if d["status"] == "running")
+    with _analyses_lock:
+        running_count = sum(1 for d in _active_analyses.values() if d["status"] == "running")
     if running_count >= 3:
         raise HTTPException(status_code=429, detail="同時分析數量已達上限，請稍後再試")
 
@@ -143,15 +144,16 @@ async def start_analysis(req: AnalysisRequest):
 @router.get("/analysis/{analysis_id}/status")
 async def get_analysis_status(analysis_id: str):
     """取得分析狀態"""
-    if analysis_id not in _active_analyses:
+    with _analyses_lock:
+        data = _active_analyses.get(analysis_id)
+    if not data:
         raise HTTPException(status_code=404, detail="分析任務不存在")
 
-    data = _active_analyses[analysis_id]
     return AnalysisStatus(
         analysis_id=analysis_id,
         status=data["status"],
         stock_symbol=data["stock_symbol"],
-        progress=data["progress"],
+        progress=list(data["progress"]),
         result=data.get("result"),
         error=data.get("error"),
     )
@@ -160,8 +162,9 @@ async def get_analysis_status(analysis_id: str):
 @router.get("/analysis/{analysis_id}/stream")
 async def stream_analysis(analysis_id: str, request: Request):
     """SSE 串流分析進度"""
-    if analysis_id not in _active_analyses:
-        raise HTTPException(status_code=404, detail="分析任務不存在")
+    with _analyses_lock:
+        if analysis_id not in _active_analyses:
+            raise HTTPException(status_code=404, detail="分析任務不存在")
 
     async def event_generator():
         last_idx = 0
@@ -211,8 +214,10 @@ async def stream_analysis(analysis_id: str, request: Request):
 @router.get("/analysis/history")
 async def get_analysis_history():
     """取得分析歷史"""
+    with _analyses_lock:
+        snapshot = list(_active_analyses.items())
     history = []
-    for aid, data in _active_analyses.items():
+    for aid, data in snapshot:
         history.append({
             "analysis_id": aid,
             "status": data["status"],
@@ -229,7 +234,8 @@ async def get_analysis_history():
 
 async def _run_analysis(analysis_id: str):
     """背景執行分析"""
-    data = _active_analyses.get(analysis_id)
+    with _analyses_lock:
+        data = _active_analyses.get(analysis_id)
     if not data:
         return
 
