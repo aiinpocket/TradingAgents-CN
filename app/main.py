@@ -103,6 +103,12 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         )
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
         response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
+        # 快取策略：HTML 頁面不快取，靜態資源允許帶 query 快取
+        path = request.url.path
+        if path == "/" or path.endswith(".html"):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        elif path.startswith("/static/"):
+            response.headers["Cache-Control"] = "public, max-age=86400"
         # HSTS - 強制 HTTPS（部署在 TLS 後時生效）
         response.headers["Strict-Transport-Security"] = (
             "max-age=31536000; includeSubDomains"
