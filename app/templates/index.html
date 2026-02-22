@@ -37,8 +37,19 @@
     <!-- 分析頁面 -->
     <div x-show="tab === 'analysis'" x-transition>
 
+      <!-- API 未配置提示 -->
+      <section class="card alert-card" x-show="apiReady && availableProviders.length === 0 && !analysisRunning && !showResults">
+        <h2 class="card-title">API 密鑰未配置</h2>
+        <p class="card-desc">請在伺服器端的 <code>.env</code> 檔案中配置至少一個提供商的密鑰，然後重啟應用。</p>
+        <div class="config-links">
+          <a href="https://platform.openai.com/" target="_blank" rel="noopener" class="config-link">OpenAI: OPENAI_API_KEY</a>
+          <a href="https://console.anthropic.com/" target="_blank" rel="noopener" class="config-link">Anthropic: ANTHROPIC_API_KEY</a>
+          <a href="https://finnhub.io/" target="_blank" rel="noopener" class="config-link">FinnHub: FINNHUB_API_KEY (可選)</a>
+        </div>
+      </section>
+
       <!-- 分析表單 -->
-      <section class="card" x-show="!analysisRunning && !showResults">
+      <section class="card" x-show="!analysisRunning && !showResults && availableProviders.length > 0">
         <h2 class="card-title">股票分析</h2>
         <p class="card-desc">輸入美股代碼，系統將啟動多代理團隊進行全方位分析。</p>
 

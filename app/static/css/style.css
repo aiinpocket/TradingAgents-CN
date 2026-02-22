@@ -342,6 +342,15 @@ body {
   50% { opacity: 0.6; }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeIn 0.3s ease;
+}
+
 .progress-bar-container {
   height: 4px;
   background: var(--border-light);
@@ -700,6 +709,39 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+}
+
+/* ===== API 未配置提示 ===== */
+
+.alert-card {
+  border-left: 4px solid var(--yellow);
+  background: var(--yellow-bg);
+}
+
+.config-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.config-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.config-link:hover {
+  background: var(--accent-bg);
 }
 
 /* ===== 共用 ===== */
