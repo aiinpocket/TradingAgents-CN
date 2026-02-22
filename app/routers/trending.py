@@ -38,6 +38,21 @@ _INDICES = [
     {"symbol": "^VIX", "name": "VIX 恐慌指數", "name_en": "VIX"},
 ]
 
+# S&P 500 板塊 ETF
+_SECTORS = [
+    {"symbol": "XLK", "name": "科技", "name_en": "Technology"},
+    {"symbol": "XLF", "name": "金融", "name_en": "Financials"},
+    {"symbol": "XLE", "name": "能源", "name_en": "Energy"},
+    {"symbol": "XLV", "name": "醫療保健", "name_en": "Health Care"},
+    {"symbol": "XLY", "name": "非必需消費", "name_en": "Cons. Disc."},
+    {"symbol": "XLP", "name": "必需消費", "name_en": "Cons. Staples"},
+    {"symbol": "XLI", "name": "工業", "name_en": "Industrials"},
+    {"symbol": "XLB", "name": "原物料", "name_en": "Materials"},
+    {"symbol": "XLU", "name": "公用事業", "name_en": "Utilities"},
+    {"symbol": "XLRE", "name": "不動產", "name_en": "Real Estate"},
+    {"symbol": "XLC", "name": "通訊服務", "name_en": "Comm. Services"},
+]
+
 # 追蹤的熱門股票池（用於計算漲跌幅排行）
 _STOCK_UNIVERSE = [
     "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "BRK-B",
@@ -110,6 +125,53 @@ def _fetch_indices() -> list[dict]:
     except Exception as e:
         logger.error(f"批次取得指數資料失敗: {e}")
 
+    return results
+
+
+def _fetch_sectors() -> list[dict]:
+    """取得 S&P 500 板塊 ETF 表現"""
+    try:
+        import yfinance as yf
+    except ImportError:
+        logger.warning("yfinance 未安裝，無法取得板塊資料")
+        return []
+
+    results = []
+    symbols = [s["symbol"] for s in _SECTORS]
+
+    try:
+        tickers = yf.Tickers(" ".join(symbols))
+        for sector_info in _SECTORS:
+            sym = sector_info["symbol"]
+            try:
+                ticker = tickers.tickers.get(sym)
+                if not ticker:
+                    continue
+                hist = ticker.history(period="2d")
+                if hist.empty or len(hist) < 2:
+                    continue
+
+                current_price = float(hist["Close"].iloc[-1])
+                prev_price = float(hist["Close"].iloc[-2])
+                change = current_price - prev_price
+                change_pct = (change / prev_price) * 100 if prev_price else 0
+
+                results.append({
+                    "symbol": sym,
+                    "name": sector_info["name"],
+                    "name_en": sector_info["name_en"],
+                    "price": round(current_price, 2),
+                    "change": round(change, 2),
+                    "change_pct": round(change_pct, 2),
+                })
+            except Exception as e:
+                logger.debug(f"取得 {sym} 板塊資料失敗: {e}")
+                continue
+    except Exception as e:
+        logger.error(f"批次取得板塊資料失敗: {e}")
+
+    # 按漲跌幅排序（從高到低）
+    results.sort(key=lambda x: x["change_pct"], reverse=True)
     return results
 
 
@@ -272,15 +334,18 @@ async def get_market_overview():
     indices_task = loop.run_in_executor(None, _fetch_indices)
     movers_task = loop.run_in_executor(None, _fetch_movers)
     news_task = loop.run_in_executor(None, _fetch_market_news)
+    sectors_task = loop.run_in_executor(None, _fetch_sectors)
 
     indices = await indices_task
     movers = await movers_task
     news = await news_task
+    sectors = await sectors_task
 
     result = {
         "indices": indices,
         "movers": movers,
         "news": news,
+        "sectors": sectors,
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
@@ -341,6 +406,18 @@ def _build_market_context(overview: dict) -> str:
                 f"- {idx['name_en']}: {idx['price']:,.2f} "
                 f"({direction} {abs(idx.get('change', 0)):.2f}, "
                 f"{idx.get('change_pct', 0):+.2f}%)"
+            )
+        lines.append("")
+
+    # 板塊表現
+    sectors = overview.get("sectors", [])
+    if sectors:
+        lines.append("## S&P 500 Sector Performance")
+        for s in sectors:
+            direction = "UP" if s.get("change_pct", 0) >= 0 else "DOWN"
+            lines.append(
+                f"- {s['name_en']} ({s['symbol']}): "
+                f"{direction} {abs(s.get('change_pct', 0)):.2f}%"
             )
         lines.append("")
 

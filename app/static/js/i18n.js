@@ -129,9 +129,11 @@ const I18N_MESSAGES = {
     'trending.market_mixed': '震盪',
     'trending.quick_analyze': '快速分析',
     'trending.rank': '#',
+    'trending.sectors': '板塊表現',
+    'trending.sectors_desc': 'S&P 500 各板塊 ETF 當日漲跌',
 
     // 頁尾
-    'footer.version': 'v0.2.9',
+    'footer.version': 'v0.3.0',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -287,9 +289,11 @@ const I18N_MESSAGES = {
     'trending.market_mixed': 'Mixed',
     'trending.quick_analyze': 'Analyze',
     'trending.rank': '#',
+    'trending.sectors': 'Sector Performance',
+    'trending.sectors_desc': 'S&P 500 sector ETF daily changes',
 
     // Footer
-    'footer.version': 'v0.2.9',
+    'footer.version': 'v0.3.0',
     'footer.open_source': 'Open Source',
 
     // Theme

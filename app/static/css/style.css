@@ -1972,6 +1972,67 @@ code {
   background: var(--accent-bg);
   padding: 1px 6px;
   border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  line-height: 1.4;
+}
+
+.news-related-badge:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.news-related-badge:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 板塊表現網格 */
+.sectors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.sector-card {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-card);
+  text-align: center;
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+
+.sector-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sector-card.sector-up {
+  border-left: 3px solid var(--up);
+}
+
+.sector-card.sector-down {
+  border-left: 3px solid var(--down);
+}
+
+.sector-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.sector-symbol {
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-bottom: 4px;
+}
+
+.sector-change {
+  font-size: 14px;
+  font-weight: 700;
 }
 
 /* Skeleton 載入卡片 */
@@ -2248,6 +2309,7 @@ code {
   .stock-preview-name { display: none; }
 
   .workflow-grid { grid-template-columns: repeat(2, 1fr); }
+  .sectors-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
 
   .status-indicator span:not(.status-dot) { display: none; }
 

@@ -251,6 +251,13 @@ function tradingApp() {
       window.scrollTo(0, 0);
     },
 
+    navigateToAnalysis(symbol) {
+      if (!symbol) return;
+      // 移除 GSPC 等指數代碼的特殊字元
+      const clean = symbol.replace(/[^A-Za-z0-9.-]/g, '');
+      this.quickAnalyze(clean);
+    },
+
     async startAnalysis() {
       this.formError = null;
       this.submitting = true;
