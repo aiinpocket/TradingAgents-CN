@@ -77,13 +77,9 @@ cp .env.example .env
 # ANTHROPIC_API_KEY=your_anthropic_key  # Anthropic（可選）
 ```
 
-#### 3. 啟動Web介面
+#### 3. 啟動 Web 介面
 ```bash
-# 啟動Web管理介面
-python -m streamlit run web/app.py
-
-# 或使用啟動指令碼
-python start_web.py
+python start_app.py
 ```
 
 #### 4. 使用CLI工具
@@ -119,7 +115,7 @@ python cli/main.py --llm-provider anthropic --model claude-sonnet-4 --stock TSLA
 
 ---
 
-**立即體驗**: `python -m streamlit run web/app.py`
+**立即體驗**: `python start_app.py`
 """
     return release_notes.strip()
 
@@ -142,7 +138,7 @@ def show_release_info():
     logger.info(f"  1. git clone https://github.com/aiinpocket/TradingAgents-CN.git")
     logger.info(f"  2. cd TradingAgents-CN")
     logger.info(f"  3. pip install -r requirements.txt")
-    logger.info(f"  4. python -m streamlit run web/app.py")
+    logger.info(f"  4. python start_app.py")
     
     logger.info(f"\n主要特性:")
     logger.info(f"  Web介面股票分析")

@@ -31,7 +31,7 @@ TradingAgents-CN****
 ```mermaid
 graph TB
  subgraph " "
- WEB[Streamlit Web]
+ WEB[FastAPI Web]
  CLI[]
  API[Python API]
  end

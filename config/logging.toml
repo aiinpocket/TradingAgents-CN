@@ -54,7 +54,7 @@ level = "INFO"
 level = "INFO"
 
 # 第三方套件日誌（通常設定為WARNING減少雜訊）
-[logging.loggers.streamlit]
+[logging.loggers.uvicorn]
 level = "WARNING"
 
 [logging.loggers.urllib3]

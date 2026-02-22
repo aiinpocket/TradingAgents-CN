@@ -124,7 +124,7 @@ def main():
         
         logger.info(f"\n 配置遷移完成！")
         logger.info(f"\n 下一步:")
-        logger.info(f"1. 啟動Web介面: python -m streamlit run web/app.py")
+        logger.info(f"1. 啟動 Web 介面: python start_app.py")
         logger.info(f"2. 存取 ' 配置管理' 頁面查看遷移結果")
         logger.info(f"3. 根據需要調整模型參數和定價配置")
         logger.info(f"4. 可以繼續使用 .env 檔案，也可以完全使用Web配置")

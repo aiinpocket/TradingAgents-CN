@@ -18,8 +18,8 @@ try {
     pip install -e .
 }
 
-# 啟動 Streamlit 應用
-python start_web.py
+# 啟動 FastAPI 應用
+python start_app.py
 
 Write-Host "按任意鍵退出..." -ForegroundColor Yellow
 Read-Host

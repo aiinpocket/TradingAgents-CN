@@ -110,7 +110,7 @@ docker system prune -a -f
 
 ## 
 
-### Web (Streamlit)
+### Web (FastAPI)
 ```bash
 # Web
 docker-compose logs web

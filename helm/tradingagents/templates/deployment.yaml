@@ -34,14 +34,9 @@ spec:
           command: ["/usr/local/bin/start-xvfb.sh"]
           args:
             - python
-            - -m
-            - streamlit
-            - run
-            - web/app.py
-            - --server.address=0.0.0.0
-            - --server.port=8501
-            - --server.headless=true
-            - --browser.gatherUsageStats=false
+            - start_app.py
+            - --host=0.0.0.0
+            - --port=8501
           ports:
             - name: http
               containerPort: 8501

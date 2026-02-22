@@ -10,6 +10,6 @@ keywords:
   - ai
   - multi-agent
   - langchain
-  - streamlit
+  - fastapi
 maintainers:
   - name: aiinpocket

@@ -1,18 +1,18 @@
 @echo off
-echo  TradingAgents-CN Web...
+echo TradingAgents-CN Web 啟動中...
 echo.
 
-REM 
+REM 啟用虛擬環境
 call env\Scripts\activate.bat
 
-REM 
+REM 安裝套件（如未安裝）
 python -c "import tradingagents" 2>nul
 if errorlevel 1 (
-echo  ...
-pip install -e .
+    echo 安裝套件...
+    pip install -e .
 )
 
-REM Streamlit
-python start_web.py
+REM 啟動 FastAPI 應用
+python start_app.py
 
 pause

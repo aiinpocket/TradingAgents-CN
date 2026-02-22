@@ -12,7 +12,7 @@ fullnameOverride: ""
 
 podAnnotations: {}
 
-# 服務連接埠（Streamlit 預設 8501）
+# 服務連接埠
 service:
   type: ClusterIP
   port: 8501
@@ -25,7 +25,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
-    # WebSocket 支援（Streamlit 需要）
+    # WebSocket 支援（SSE 串流需要）
     nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
   hosts:
     - host: tradingagents.local

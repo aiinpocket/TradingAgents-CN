@@ -4,7 +4,7 @@
 
 ## 
 
-TradingAgents-CN WebStreamlit
+TradingAgents-CN WebFastAPI
 
 ### 
 

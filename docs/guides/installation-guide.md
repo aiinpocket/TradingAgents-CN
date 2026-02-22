@@ -160,7 +160,7 @@ python -c "import tradingagents; print('!')"
 #### 3: ()
 ```bash
 # 1. 
-pip install streamlit pandas numpy requests plotly
+pip install fastapi uvicorn pandas numpy requests plotly
 
 # 2. LLM
 pip install openai langchain langgraph 
@@ -345,13 +345,10 @@ docker exec -it mongodb mongosh
 python start_web.py
 ```
 
-#### 2: Streamlit
+#### 2: FastAPI
 ```bash
-# web
-cd web
-
-# Streamlit
-streamlit run app.py --server.port 8501
+# FastAPI Web
+python start_app.py
 ```
 
 #### 3: (Windows)
@@ -378,7 +375,7 @@ start_web.bat
 python -c "import tradingagents; print(' ')"
 
 # 
-python -c "import streamlit, pandas, yfinance; print(' ')"
+python -c "import fastapi, pandas, yfinance; print(' ')"
 
 # 
 python -c "from tradingagents.config import get_config; print(' ')"
@@ -431,17 +428,17 @@ which python
 
 ### 3. 
 ```bash
-# : Port 8501 is already in use
+# : Port 8000 is already in use
 # :
-streamlit run app.py --server.port 8502
+python start_app.py --port 8001
 
-# 
+#
 # Windows
-netstat -ano | findstr :8501
+netstat -ano | findstr :8000
 taskkill /PID <PID> /F
 
 # macOS/Linux
-lsof -ti:8501 | xargs kill -9
+lsof -ti:8000 | xargs kill -9
 ```
 
 ### 4. API

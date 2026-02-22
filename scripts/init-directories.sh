@@ -122,7 +122,7 @@ level = "DEBUG"
 handlers = ["console", "file", "error_file"]
 propagate = false
 
-[logging.loggers.streamlit]
+[logging.loggers.uvicorn]
 level = "INFO"
 handlers = ["console", "file"]
 propagate = false

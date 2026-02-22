@@ -15,7 +15,7 @@ TradingAgents-CN DockerWeb
  
  TradingAgents MongoDB Redis 
  Web Database Cache 
- (Streamlit) 
+ (FastAPI)
  
  
  
@@ -29,8 +29,8 @@ TradingAgents-CN DockerWeb
 ### 
 
 1. ** TradingAgents-Web**
- - Streamlit Web
- - : 8501
+ - FastAPI Web
+ - : 8000
  - : 
 
 2. ** MongoDB**

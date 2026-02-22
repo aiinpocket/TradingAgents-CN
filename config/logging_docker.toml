@@ -48,7 +48,7 @@ level = "INFO"
 [logging.loggers.llm]
 level = "INFO"
 
-[logging.loggers.streamlit]
+[logging.loggers.uvicorn]
 level = "WARNING"
 
 [logging.loggers.urllib3]

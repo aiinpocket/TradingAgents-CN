@@ -76,7 +76,7 @@ class InstallationTester:
         print(" ...")
         
         dependencies = [
-            ('streamlit', 'Web'),
+            ('fastapi', 'Web'),
             ('pandas', ''),
             ('numpy', ''),
             ('requests', 'HTTP'),

@@ -53,7 +53,7 @@ assignees: ''
 **依賴版本 / Dependencies:**
 ```bash
 # 請執行以下指令並貼上結果 / Please run the following command and paste the result
-pip list | grep -E "(streamlit|langchain|openai|requests|yfinance|finnhub)"
+pip list | grep -E "(fastapi|uvicorn|langchain|openai|requests|yfinance|finnhub)"
 ```
 
 **瀏覽器資訊 / Browser Info (僅 Web 介面問題):**

@@ -1,31 +1,16 @@
 #!/usr/bin/env python3
 """
-TradingAgents-CN 啟動指令碼
-設定 PYTHONPATH 後委託給 web/run_web.py
+此腳本已棄用，請改用 start_app.py
 """
 
-import os
 import sys
-from pathlib import Path
 
 
 def main():
-    """設定環境並啟動 Web 應用"""
-    project_root = Path(__file__).parent
-
-    # 確保專案根目錄在 Python 路徑中（未安裝套件時必要）
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
-
-    # 設定 PYTHONPATH 環境變數（子進程也能正確匯入）
-    current_path = os.environ.get('PYTHONPATH', '')
-    if str(project_root) not in current_path:
-        separator = os.pathsep if current_path else ''
-        os.environ['PYTHONPATH'] = f"{project_root}{separator}{current_path}"
-
-    # 委託給 web/run_web.py
-    from web.run_web import main as run_web_main
-    run_web_main()
+    print("start_web.py 已棄用，請改用 start_app.py")
+    print("  python start_app.py")
+    print("  python start_app.py --reload  # 開發模式")
+    sys.exit(0)
 
 
 if __name__ == "__main__":
