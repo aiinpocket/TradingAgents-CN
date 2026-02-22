@@ -42,7 +42,7 @@ TradingAgents-CN
 source env/bin/activate # Linux/macOS
 
 # Web
-python -m streamlit run web/app.py
+python start_app.py
 ```
 
 ### 2. 

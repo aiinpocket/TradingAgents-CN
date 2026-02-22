@@ -24,7 +24,7 @@
 ### 
 
 #### ****
-- ****: Streamlit FastAPI RESTful API
+- ****: FastAPI RESTful API
 - ****: Vue 3 + Element Plus
 - ****: MongoDB + Redis 10 
 - ****: Docker amd64 + arm64
@@ -50,8 +50,8 @@
 
 | | v0.1.x | v1.0.0-preview |
 |------|--------|----------------|
-| **** | Streamlit | FastAPI + Uvicorn |
-| **** | Streamlit | Vue 3 + Vite + Element Plus |
+| **** | FastAPI + Uvicorn | FastAPI + Uvicorn |
+| **** | Alpine.js | Vue 3 + Vite + Element Plus |
 | **** | MongoDB | MongoDB + Redis |
 | **API ** | | RESTful API + WebSocket |
 | **** | /Docker | Docker + GitHub Actions |
@@ -195,7 +195,7 @@ v1.0.0-preview
 
 ### 
 
-> **Web**: StreamlitWeb
+> **Web**: FastAPI + Alpine.js Web
 
 > ****: 
 
@@ -306,7 +306,7 @@ v1.0.0-preview
 | ** ** | v0.1.10 | |
 | ** ** | v0.1.10 | |
 | ** ** | v0.1.10 | |
-| ** Streamlit** | | |
+| ** FastAPI ** | | |
 | ** ** | | WebAPI |
 
 ### CLI **v0.1.9**
@@ -420,7 +420,7 @@ python start_web.py
 
 ## 
 
-****: Python 3.10+ | LangChain | Streamlit | MongoDB | Redis
+****: Python 3.10+ | LangChain | FastAPI | MongoDB | Redis
 **AI**: OpenAI | Anthropic
 ****: FinnHub | Yahoo Finance | Google News
 ****: Docker | Docker Compose | 
@@ -861,15 +861,8 @@ source env/bin/activate
 # 2. 
 pip install -e .
 
-# 3. Web 
-# 1
-python start_web.py
-
-# 2
-python web/run_web.py
-
-# 3streamlit
-streamlit run web/app.py
+# 3. Web
+python start_app.py
 ```
 
  `http://localhost:8501`

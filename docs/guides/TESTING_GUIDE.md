@@ -149,7 +149,7 @@ print(':', result)
 
 ```bash
 # Web
-streamlit run web/app.py
+python start_app.py
 ```
 
  http://localhost:8501 

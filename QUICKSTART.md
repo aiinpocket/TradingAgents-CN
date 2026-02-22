@@ -78,15 +78,8 @@ pip install -e . --no-deps
 cp .env.example .env
 #  .env 
 
-# 6. 
-#  1: 
-python start_web.py
-
-#  2: 
-python web/run_web.py
-
-#  3:  Streamlit
-streamlit run web/app.py
+# 6. Web
+python start_app.py
 ```
 
 ## 

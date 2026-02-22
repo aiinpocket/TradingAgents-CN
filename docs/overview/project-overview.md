@@ -46,7 +46,7 @@ TradingAgents AI
 - ****: MongoDB + Redis + 
 
 ### 5. Web **v0.1.2**
-- **Streamlit**: Web
+- **FastAPI**: Web 框架
 - ****: 
 - ****: API
 - **Token**: 

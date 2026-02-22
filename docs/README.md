@@ -74,7 +74,6 @@
 - [Docker ](./troubleshooting/docker-troubleshooting.md)
 - [](./troubleshooting/export-issues.md)
 - [FinnHub ](./troubleshooting/finnhub-news-data-setup.md)
-- [Streamlit FileWatcher ](./troubleshooting/streamlit-file-watcher-fix.md)
 - [Windows ChromaDB ](./troubleshooting/windows10-chromadb-fix.md)
 
 ## 

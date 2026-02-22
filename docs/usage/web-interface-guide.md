@@ -16,10 +16,7 @@ TradingAgents-CN Webv0.1.4TokenWeb
 ### 1. 
 ```bash
 # Web
-python -m streamlit run web/app.py
-
-# 
-streamlit run web/app.py
+python start_app.py
 ```
 
 ### 2. 

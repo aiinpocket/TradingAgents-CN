@@ -54,7 +54,7 @@ WORKDIR /app
 
 # 
 EXPOSE 8501
-CMD ["streamlit", "run", "web/app.py"]
+CMD ["python", "start_app.py", "--host", "0.0.0.0", "--port", "8501"]
 ```
 
 ### 

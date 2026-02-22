@@ -31,8 +31,8 @@ python examples/test_installation.py
 # Web
 python start_web.py
 
-# streamlit
-cd web && streamlit run app.py
+# FastAPI
+python start_app.py
 ```
 
 ### 3. 

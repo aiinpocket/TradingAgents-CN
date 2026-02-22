@@ -261,7 +261,7 @@ EXPORT_ENABLED=true
 # 
 docker-compose restart web
 # 
-streamlit run web/app.py
+python start_app.py
 ```
 
 #### 2. Word
