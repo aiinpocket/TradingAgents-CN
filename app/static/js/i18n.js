@@ -124,6 +124,17 @@ const I18N_MESSAGES = {
     'analysis.completed': '分析完成',
     'analysis.failed': '分析失敗',
 
+    // 錯誤訊息
+    'error.start_failed': '無法啟動分析',
+    'error.analysis_failed': '分析失敗',
+    'error.task_expired': '分析任務已過期，請重新開始',
+    'error.connection_timeout': '連線逾時，請檢查網路連線',
+
+    // 辯論標籤
+    'debate.bull_label': '多頭研究員',
+    'debate.bear_label': '空頭研究員',
+    'debate.judge_label': '研究經理決議',
+
     // 無障礙
     'a11y.analyze_stock': '分析股票',
     'a11y.switch_lang': '切換至英文',
@@ -252,6 +263,17 @@ const I18N_MESSAGES = {
     // Notifications
     'analysis.completed': 'analysis completed',
     'analysis.failed': 'analysis failed',
+
+    // Error messages
+    'error.start_failed': 'Failed to start analysis',
+    'error.analysis_failed': 'Analysis failed',
+    'error.task_expired': 'Analysis task expired, please restart',
+    'error.connection_timeout': 'Connection timeout, please check your network',
+
+    // Debate labels
+    'debate.bull_label': 'Bull Researcher',
+    'debate.bear_label': 'Bear Researcher',
+    'debate.judge_label': 'Research Manager',
 
     // Accessibility
     'a11y.analyze_stock': 'Analyze stock',

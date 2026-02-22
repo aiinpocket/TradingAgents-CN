@@ -276,7 +276,7 @@ function tradingApp() {
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.detail || 'Failed to start analysis');
+          throw new Error(err.detail || this.t('error.start_failed'));
         }
 
         const data = await res.json();
@@ -338,7 +338,7 @@ function tradingApp() {
 
           } else if (data.type === 'failed') {
             this.progressPercent = 100;
-            this.progressMessages.push('Analysis failed: ' + data.error);
+            this.progressMessages.push(this.t('error.analysis_failed') + ': ' + data.error);
             this.analysisRunning = false;
             this._stopElapsedTimer();
             this._notifyCompletion(false);
@@ -376,7 +376,7 @@ function tradingApp() {
           if (!res.ok) {
             if (res.status === 404) {
               this.analysisRunning = false;
-              this.formError = 'Analysis task expired, please restart';
+              this.formError = this.t('error.task_expired');
               return;
             }
             throw new Error(`HTTP ${res.status}`);
@@ -398,7 +398,7 @@ function tradingApp() {
           } else if (data.status === 'failed') {
             this.analysisRunning = false;
             this._stopElapsedTimer();
-            this.formError = data.error || 'Analysis failed';
+            this.formError = data.error || this.t('error.analysis_failed');
             this._notifyCompletion(false);
             return;
           }
@@ -414,7 +414,7 @@ function tradingApp() {
       if (this.analysisRunning) {
         this.analysisRunning = false;
         this._stopElapsedTimer();
-        this.formError = 'Connection timeout, please check your network';
+        this.formError = this.t('error.connection_timeout');
       }
     },
 
@@ -637,7 +637,7 @@ function tradingApp() {
       let html = '<div class="debate-content">';
 
       if (debateState.bull_history) {
-        const bullLabel = this.lang === 'en' ? 'Bull Researcher' : '多頭研究員';
+        const bullLabel = this.t('debate.bull_label');
         html += `<div class="debate-section debate-bull">
           <h4>${bullLabel}</h4>
           <div>${this.renderMarkdown(debateState.bull_history)}</div>
@@ -645,7 +645,7 @@ function tradingApp() {
       }
 
       if (debateState.bear_history) {
-        const bearLabel = this.lang === 'en' ? 'Bear Researcher' : '空頭研究員';
+        const bearLabel = this.t('debate.bear_label');
         html += `<div class="debate-section debate-bear">
           <h4>${bearLabel}</h4>
           <div>${this.renderMarkdown(debateState.bear_history)}</div>
@@ -653,7 +653,7 @@ function tradingApp() {
       }
 
       if (debateState.judge_decision) {
-        const judgeLabel = this.lang === 'en' ? 'Research Manager' : '研究經理決議';
+        const judgeLabel = this.t('debate.judge_label');
         html += `<div class="debate-section debate-judge">
           <h4>${judgeLabel}</h4>
           <div>${this.renderMarkdown(debateState.judge_decision)}</div>
