@@ -109,6 +109,12 @@
                        aria-required="true" aria-label="股票代碼"
                        @input="form.symbol = $event.target.value.toUpperCase().replace(/[^A-Z]/g, '')">
               </div>
+              <div class="quick-symbols">
+                <template x-for="s in ['AAPL','NVDA','TSLA','MSFT','GOOGL']" :key="s">
+                  <button type="button" class="chip-sm" @click="form.symbol = s" x-text="s"
+                          :class="{ 'chip-active': form.symbol === s }"></button>
+                </template>
+              </div>
             </div>
 
             <div class="field">
@@ -372,6 +378,16 @@
               </span>
             </div>
           </template>
+        </div>
+
+        <div class="config-help">
+          <h3>快速開始</h3>
+          <ol>
+            <li>在專案根目錄建立 <code>.env</code> 檔案</li>
+            <li>設定 <code>OPENAI_API_KEY=sk-...</code> 或 <code>ANTHROPIC_API_KEY=sk-ant-...</code></li>
+            <li>可選：設定 <code>FINNHUB_API_KEY</code> 以取得更豐富的市場資料</li>
+            <li>重新啟動應用即可使用</li>
+          </ol>
         </div>
       </section>
     </div>
