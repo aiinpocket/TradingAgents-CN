@@ -45,7 +45,10 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-  tls: []
+  tls:
+    - secretName: cloudflare-origin-cert-aiinpocket
+      hosts:
+        - stock-us.aiinpocket.com
 
 # =============================================================
 # Resources
