@@ -1,23 +1,7 @@
 {{- if .Values.redis.enabled }}
 # Redis Standalone Deployment
-# 不使用 Bitnami subchart，避免相容性問題
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ include "tradingagents.fullname" . }}-redis
-  labels:
-    {{- include "tradingagents.labels" . | nindent 4 }}
-    app.kubernetes.io/component: redis
-spec:
-  accessModes:
-    - ReadWriteOnce
-  {{- if .Values.redis.storageClass }}
-  storageClassName: {{ .Values.redis.storageClass | quote }}
-  {{- end }}
-  resources:
-    requests:
-      storage: {{ .Values.redis.storageSize }}
+# 使用 emptyDir 避免 NFS 權限問題
+# Redis 在此專案為快取層，Pod 重啟後資料會清空
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -42,8 +26,6 @@ spec:
     spec:
       containers:
         - name: redis
-          securityContext:
-            runAsUser: 0
           image: {{ .Values.redis.image }}
           command:
             - redis-server
@@ -85,8 +67,7 @@ spec:
             failureThreshold: 3
       volumes:
         - name: data
-          persistentVolumeClaim:
-            claimName: {{ include "tradingagents.fullname" . }}-redis
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

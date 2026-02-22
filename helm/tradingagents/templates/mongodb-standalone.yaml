@@ -1,23 +1,7 @@
 {{- if .Values.mongodb.enabled }}
 # MongoDB Standalone Deployment
-# 不使用 Bitnami subchart，避免相容性問題
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ include "tradingagents.fullname" . }}-mongodb
-  labels:
-    {{- include "tradingagents.labels" . | nindent 4 }}
-    app.kubernetes.io/component: mongodb
-spec:
-  accessModes:
-    - ReadWriteOnce
-  {{- if .Values.mongodb.storageClass }}
-  storageClassName: {{ .Values.mongodb.storageClass | quote }}
-  {{- end }}
-  resources:
-    requests:
-      storage: {{ .Values.mongodb.storageSize }}
+# 使用 emptyDir 避免 NFS + WiredTiger 不相容問題
+# MongoDB 在此專案為快取層，Pod 重啟後資料會清空
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -43,8 +27,6 @@ spec:
       containers:
         - name: mongodb
           image: {{ .Values.mongodb.image }}
-          securityContext:
-            runAsUser: 0
           ports:
             - containerPort: {{ .Values.mongodb.port }}
               protocol: TCP
@@ -85,8 +67,7 @@ spec:
             failureThreshold: 3
       volumes:
         - name: data
-          persistentVolumeClaim:
-            claimName: {{ include "tradingagents.fullname" . }}-mongodb
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
