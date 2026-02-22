@@ -195,10 +195,7 @@ def main():
     # 渲染頁面頭部
     render_header()
 
-    # 側邊欄標題和導航
-    st.sidebar.markdown("**TradingAgents**")
-    st.sidebar.markdown("---")
-
+    # 側邊欄導航
     page = st.sidebar.selectbox(
         "功能",
         ["股票分析", "分析結果", "配置管理", "快取管理", "Token統計"],
@@ -268,10 +265,6 @@ def main():
             st.rerun()
 
     # -- 股票分析主頁面 --
-
-    # 分析配置
-    st.markdown("#### 分析配置")
-
     try:
         form_data = render_analysis_form()
         if not isinstance(form_data, dict):

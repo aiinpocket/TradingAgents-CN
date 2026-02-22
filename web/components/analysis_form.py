@@ -23,9 +23,7 @@ def render_analysis_form():
         col1, col2 = st.columns(2)
 
         with col1:
-            # 市場選擇（固定為美股）
             market_type = "美股"
-            st.caption("支援美股 (NYSE/NASDAQ)")
 
             cached_stock = cached_config.get('stock_symbol', '') if cached_config else ''
 
@@ -62,7 +60,7 @@ def render_analysis_form():
             )
 
         # 分析師團隊選擇
-        st.markdown("**分析師團隊**")
+        st.caption("分析師")
 
         col1, col2 = st.columns(2)
 
@@ -129,10 +127,6 @@ def render_analysis_form():
                 help="輸入特定的分析要求（最多 500 字），系統會重點關注",
                 max_chars=500
             )
-
-        # 顯示輸入提示（僅在未輸入時）
-        if not stock_symbol:
-            st.caption("請輸入股票代碼後點擊「開始分析」")
 
         # 在提交按鈕前檢測配置變化並保存
         current_config = {
