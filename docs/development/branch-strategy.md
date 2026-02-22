@@ -167,8 +167,8 @@ feature/risk-management-enhancement
 
 # 
 enhancement/-
-enhancement/llm-baidu-integration
-enhancement/chinese-financial-terms
+enhancement/llm-provider-integration
+enhancement/financial-terms
 
 # Bug
 hotfix/
