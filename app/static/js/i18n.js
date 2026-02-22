@@ -116,6 +116,10 @@ const I18N_MESSAGES = {
     // 頁尾
     'footer.version': 'v0.2.8',
 
+    // 主題
+    'theme.to_dark': '切換深色模式',
+    'theme.to_light': '切換淺色模式',
+
     // 通用
     'common.no_data': '暫無資料',
     'common.error': '發生錯誤',
@@ -232,6 +236,10 @@ const I18N_MESSAGES = {
 
     // Footer
     'footer.version': 'v0.2.8',
+
+    // Theme
+    'theme.to_dark': 'Switch to dark mode',
+    'theme.to_light': 'Switch to light mode',
 
     // Common
     'common.no_data': 'No data',

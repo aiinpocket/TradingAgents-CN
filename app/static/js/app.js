@@ -237,6 +237,7 @@ function tradingApp() {
     quickAnalyze(symbol) {
       this.form.symbol = symbol;
       this.tab = 'analysis';
+      window.scrollTo(0, 0);
     },
 
     async startAnalysis() {
