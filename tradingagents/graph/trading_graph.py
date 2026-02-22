@@ -214,6 +214,8 @@ class TradingAgentsGraph:
                     logger.debug(f"[Debug] {msg_content[:200]}")
                     trace.append(chunk)
 
+            if not trace:
+                raise RuntimeError("Debug 模式未收到任何回應，請檢查 graph 設定")
             final_state = trace[-1]
         else:
             # Standard mode without tracing
@@ -230,35 +232,37 @@ class TradingAgentsGraph:
 
     def _log_state(self, trade_date, final_state):
         """Log the final state to a JSON file."""
-        self.log_states_dict[str(trade_date)] = {
-            "company_of_interest": final_state["company_of_interest"],
-            "trade_date": final_state["trade_date"],
-            "market_report": final_state["market_report"],
-            "sentiment_report": final_state["sentiment_report"],
-            "news_report": final_state["news_report"],
-            "fundamentals_report": final_state["fundamentals_report"],
-            "investment_debate_state": {
-                "bull_history": final_state["investment_debate_state"]["bull_history"],
-                "bear_history": final_state["investment_debate_state"]["bear_history"],
-                "history": final_state["investment_debate_state"]["history"],
-                "current_response": final_state["investment_debate_state"][
-                    "current_response"
-                ],
-                "judge_decision": final_state["investment_debate_state"][
-                    "judge_decision"
-                ],
-            },
-            "trader_investment_decision": final_state["trader_investment_plan"],
-            "risk_debate_state": {
-                "risky_history": final_state["risk_debate_state"]["risky_history"],
-                "safe_history": final_state["risk_debate_state"]["safe_history"],
-                "neutral_history": final_state["risk_debate_state"]["neutral_history"],
-                "history": final_state["risk_debate_state"]["history"],
-                "judge_decision": final_state["risk_debate_state"]["judge_decision"],
-            },
-            "investment_plan": final_state["investment_plan"],
-            "final_trade_decision": final_state["final_trade_decision"],
-        }
+        try:
+            invest_debate = final_state.get("investment_debate_state", {})
+            risk_debate = final_state.get("risk_debate_state", {})
+            self.log_states_dict[str(trade_date)] = {
+                "company_of_interest": final_state.get("company_of_interest", ""),
+                "trade_date": final_state.get("trade_date", ""),
+                "market_report": final_state.get("market_report", ""),
+                "sentiment_report": final_state.get("sentiment_report", ""),
+                "news_report": final_state.get("news_report", ""),
+                "fundamentals_report": final_state.get("fundamentals_report", ""),
+                "investment_debate_state": {
+                    "bull_history": invest_debate.get("bull_history", ""),
+                    "bear_history": invest_debate.get("bear_history", ""),
+                    "history": invest_debate.get("history", ""),
+                    "current_response": invest_debate.get("current_response", ""),
+                    "judge_decision": invest_debate.get("judge_decision", ""),
+                },
+                "trader_investment_decision": final_state.get("trader_investment_plan", ""),
+                "risk_debate_state": {
+                    "risky_history": risk_debate.get("risky_history", ""),
+                    "safe_history": risk_debate.get("safe_history", ""),
+                    "neutral_history": risk_debate.get("neutral_history", ""),
+                    "history": risk_debate.get("history", ""),
+                    "judge_decision": risk_debate.get("judge_decision", ""),
+                },
+                "investment_plan": final_state.get("investment_plan", ""),
+                "final_trade_decision": final_state.get("final_trade_decision", ""),
+            }
+        except Exception as e:
+            logger.error(f"記錄狀態時發生錯誤: {e}")
+            return
 
         # Save to file
         directory = Path(f"eval_results/{self.ticker}/TradingAgentsStrategy_logs/")
@@ -273,21 +277,25 @@ class TradingAgentsGraph:
 
     def reflect_and_remember(self, returns_losses):
         """Reflect on decisions and update memory based on returns."""
-        self.reflector.reflect_bull_researcher(
-            self.curr_state, returns_losses, self.bull_memory
-        )
-        self.reflector.reflect_bear_researcher(
-            self.curr_state, returns_losses, self.bear_memory
-        )
-        self.reflector.reflect_trader(
-            self.curr_state, returns_losses, self.trader_memory
-        )
-        self.reflector.reflect_invest_judge(
-            self.curr_state, returns_losses, self.invest_judge_memory
-        )
-        self.reflector.reflect_risk_manager(
-            self.curr_state, returns_losses, self.risk_manager_memory
-        )
+        if not self.curr_state:
+            logger.warning("尚無分析狀態，跳過反思")
+            return
+
+        memories = [
+            ("bull_researcher", self.bull_memory, self.reflector.reflect_bull_researcher),
+            ("bear_researcher", self.bear_memory, self.reflector.reflect_bear_researcher),
+            ("trader", self.trader_memory, self.reflector.reflect_trader),
+            ("invest_judge", self.invest_judge_memory, self.reflector.reflect_invest_judge),
+            ("risk_manager", self.risk_manager_memory, self.reflector.reflect_risk_manager),
+        ]
+        for name, memory, reflect_fn in memories:
+            if memory is None:
+                logger.debug(f"{name} 記憶系統未啟用，跳過反思")
+                continue
+            try:
+                reflect_fn(self.curr_state, returns_losses, memory)
+            except Exception as e:
+                logger.error(f"{name} 反思時發生錯誤: {e}")
 
     def process_signal(self, full_signal, stock_symbol=None):
         """Process a signal to extract the core decision."""

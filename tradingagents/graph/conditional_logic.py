@@ -15,43 +15,35 @@ class ConditionalLogic:
         self.max_debate_rounds = max_debate_rounds
         self.max_risk_discuss_rounds = max_risk_discuss_rounds
 
+    def _has_tool_calls(self, state: AgentState) -> bool:
+        """Check if the last message has tool calls."""
+        messages = state.get("messages", [])
+        if not messages:
+            return False
+        last_message = messages[-1]
+        return hasattr(last_message, 'tool_calls') and bool(last_message.tool_calls)
+
     def should_continue_market(self, state: AgentState):
         """Determine if market analysis should continue."""
-        messages = state["messages"]
-        last_message = messages[-1]
-
-        # 只有AIMessage才有tool_calls屬性
-        if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
+        if self._has_tool_calls(state):
             return "tools_market"
         return "Msg Clear Market"
 
     def should_continue_social(self, state: AgentState):
         """Determine if social media analysis should continue."""
-        messages = state["messages"]
-        last_message = messages[-1]
-
-        # 只有AIMessage才有tool_calls屬性
-        if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
+        if self._has_tool_calls(state):
             return "tools_social"
         return "Msg Clear Social"
 
     def should_continue_news(self, state: AgentState):
         """Determine if news analysis should continue."""
-        messages = state["messages"]
-        last_message = messages[-1]
-
-        # 只有AIMessage才有tool_calls屬性
-        if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
+        if self._has_tool_calls(state):
             return "tools_news"
         return "Msg Clear News"
 
     def should_continue_fundamentals(self, state: AgentState):
         """Determine if fundamentals analysis should continue."""
-        messages = state["messages"]
-        last_message = messages[-1]
-
-        # 只有AIMessage才有tool_calls屬性
-        if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
+        if self._has_tool_calls(state):
             return "tools_fundamentals"
         return "Msg Clear Fundamentals"
 
