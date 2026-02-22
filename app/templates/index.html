@@ -46,8 +46,9 @@
         </button>
       </nav>
       <div class="topbar-right">
-        <span class="status-indicator" :class="apiReady ? 'online' : 'offline'">
-          <span class="status-dot"></span>
+        <span class="status-indicator" :class="apiReady ? 'online' : 'offline'"
+              role="status" :aria-label="apiReady ? 'API 伺服器狀態：已連線' : 'API 伺服器狀態：離線'">
+          <span class="status-dot" aria-hidden="true"></span>
           <span x-text="apiReady ? '已連線' : '離線'"></span>
         </span>
         <button class="theme-toggle" @click="toggleTheme()" :title="darkMode ? '切換淺色模式' : '切換深色模式'">
@@ -349,7 +350,7 @@
   </main>
 
   <footer class="footer">
-    <span>TradingAgents v0.2.2</span>
+    <span>TradingAgents v0.2.3</span>
     <span class="footer-sep">&middot;</span>
     <a href="https://github.com/aiinpocket/TradingAgents-CN" target="_blank" rel="noopener">GitHub</a>
   </footer>

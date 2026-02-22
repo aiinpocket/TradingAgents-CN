@@ -33,7 +33,11 @@ class LLMProvider(str, Enum):
 # 允許的模型白名單
 _ALLOWED_MODELS = {
     "openai": {"o4-mini", "gpt-4o-mini", "gpt-4o", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano"},
-    "anthropic": {"claude-sonnet-4-20250514", "claude-haiku-4-20250514", "claude-opus-4-20250514"},
+    "anthropic": {
+        "claude-sonnet-4-6", "claude-opus-4-6",
+        "claude-haiku-4-5-20251001",
+        "claude-sonnet-4-20250514", "claude-opus-4-20250514",
+    },
 }
 
 

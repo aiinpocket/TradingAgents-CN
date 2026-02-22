@@ -618,7 +618,7 @@ body {
 }
 
 .log-container {
-  max-height: 280px;
+  max-height: clamp(200px, 40vh, 400px);
   overflow-y: auto;
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
@@ -851,7 +851,8 @@ body {
   line-height: 1.7;
 }
 
-.markdown-body ul {
+.markdown-body ul,
+.markdown-body ol {
   padding-left: 18px;
   margin-bottom: 10px;
 }

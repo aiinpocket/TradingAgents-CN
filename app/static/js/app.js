@@ -366,42 +366,69 @@ function tradingApp() {
       return map[status] || status;
     },
 
-    renderMarkdown(text) {
-      if (!text) return '<p class="empty-state">暫無資料</p>';
-      // 簡易 Markdown 渲染（先轉義，再轉為 HTML 結構）
-      let html = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/^### (.+)$/gm, '<h4>$1</h4>')
-        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
-        .replace(/^# (.+)$/gm, '<h2>$1</h2>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        .replace(/^- (.+)$/gm, '<li>$1</li>')
-        .replace(/^---$/gm, '<hr>')
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br>');
-
-      html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
-      html = `<div class="markdown-body"><p>${html}</p></div>`;
-
-      // DOMPurify 安全淨化 - 若 CDN 未載入則拒絕渲染
+    _sanitize(html) {
       if (typeof DOMPurify !== 'undefined') {
         return DOMPurify.sanitize(html);
       }
-      return '<p class="empty-state">安全模組載入失敗，無法顯示報告內容</p>';
+      // 降級：移除所有 HTML 標籤，顯示純文字
+      const text = html.replace(/<[^>]*>/g, '');
+      return `<pre style="white-space:pre-wrap">${text}</pre>`;
+    },
+
+    renderMarkdown(text) {
+      if (!text) return '<p class="empty-state">暫無資料</p>';
+
+      // 轉義 HTML 特殊字元
+      let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // 區塊元素
+      html = html
+        .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^---$/gm, '<hr>');
+
+      // 行內格式
+      html = html
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      // 清單：將連續的 - 項目包裝為 <ul>
+      html = html.replace(/(?:^- .+$\n?)+/gm, (match) => {
+        const items = match.trim().split('\n')
+          .map(line => `<li>${line.replace(/^- /, '')}</li>`)
+          .join('');
+        return `<ul>${items}</ul>`;
+      });
+
+      // 有序清單：將連續的 1. 2. 項目包裝為 <ol>
+      html = html.replace(/(?:^\d+\. .+$\n?)+/gm, (match) => {
+        const items = match.trim().split('\n')
+          .map(line => `<li>${line.replace(/^\d+\. /, '')}</li>`)
+          .join('');
+        return `<ol>${items}</ol>`;
+      });
+
+      // 段落分隔
+      html = html.replace(/\n\n/g, '</p><p>');
+      html = html.replace(/\n/g, '<br>');
+      html = `<div class="markdown-body"><p>${html}</p></div>`;
+
+      return this._sanitize(html);
     },
 
     renderDebate(debateState) {
       if (!debateState) return '<p class="empty-state">暫無辯論資料</p>';
 
-      let html = '<div class="debate-content">';
-
       if (typeof debateState === 'string') {
         return this.renderMarkdown(debateState);
       }
+
+      let html = '<div class="debate-content">';
 
       if (debateState.bull_history) {
         html += `<div class="debate-section debate-bull">
@@ -425,11 +452,7 @@ function tradingApp() {
       }
 
       html += '</div>';
-
-      if (typeof DOMPurify !== 'undefined') {
-        return DOMPurify.sanitize(html);
-      }
-      return '<p class="empty-state">安全模組載入失敗，無法顯示辯論內容</p>';
+      return this._sanitize(html);
     },
   };
 }

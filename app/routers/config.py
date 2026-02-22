@@ -49,9 +49,11 @@ async def get_available_models():
             {"id": "gpt-4.1-nano", "name": "GPT-4.1 Nano", "tier": "quick"},
         ],
         "anthropic": [
+            {"id": "claude-sonnet-4-6", "name": "Claude Sonnet 4.6", "tier": "deep"},
+            {"id": "claude-opus-4-6", "name": "Claude Opus 4.6", "tier": "deep"},
+            {"id": "claude-haiku-4-5-20251001", "name": "Claude Haiku 4.5", "tier": "quick"},
             {"id": "claude-sonnet-4-20250514", "name": "Claude Sonnet 4", "tier": "deep"},
             {"id": "claude-opus-4-20250514", "name": "Claude Opus 4", "tier": "deep"},
-            {"id": "claude-haiku-4-20250514", "name": "Claude Haiku 4", "tier": "quick"},
         ],
     }
 
