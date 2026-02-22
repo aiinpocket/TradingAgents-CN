@@ -74,6 +74,9 @@ function tradingApp() {
     aiAnalysis: { available: null, content: '', updated_at: '', provider: '' },
     aiAnalysisLoading: false,
 
+    // 追蹤清單（localStorage 持久化）
+    watchlist: [],
+
     get canSubmit() {
       return this.apiReady &&
              this.form.symbol.length > 0 &&
@@ -100,6 +103,9 @@ function tradingApp() {
         const meta = document.getElementById('theme-color-meta');
         if (meta) meta.content = '#161b22';
       }
+
+      // 載入追蹤清單
+      this._loadWatchlist();
 
       await this.checkHealth();
       await this.loadModels();
@@ -266,6 +272,66 @@ function tradingApp() {
       // 移除 GSPC 等指數代碼的特殊字元
       const clean = symbol.replace(/[^A-Za-z0-9.-]/g, '');
       this.quickAnalyze(clean);
+    },
+
+    // 追蹤清單方法
+    _loadWatchlist() {
+      try {
+        const raw = localStorage.getItem('watchlist');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          // 驗證格式：只接受字串陣列，限制長度
+          if (Array.isArray(parsed)) {
+            this.watchlist = parsed
+              .filter(s => typeof s === 'string' && /^[A-Z]{1,5}$/.test(s))
+              .slice(0, 20);
+          }
+        }
+      } catch {
+        this.watchlist = [];
+      }
+    },
+
+    _saveWatchlist() {
+      localStorage.setItem('watchlist', JSON.stringify(this.watchlist));
+    },
+
+    isInWatchlist(symbol) {
+      return this.watchlist.includes(symbol);
+    },
+
+    toggleWatchlist(symbol, event) {
+      if (event) event.stopPropagation();
+      if (!symbol || !/^[A-Z]{1,5}$/.test(symbol)) return;
+      const idx = this.watchlist.indexOf(symbol);
+      if (idx >= 0) {
+        this.watchlist.splice(idx, 1);
+      } else {
+        if (this.watchlist.length >= 20) return; // 追蹤上限
+        this.watchlist.push(symbol);
+      }
+      this._saveWatchlist();
+    },
+
+    clearWatchlist() {
+      this.watchlist = [];
+      this._saveWatchlist();
+    },
+
+    // 取得追蹤清單中的股票行情（從已載入的熱門資料中查找）
+    getWatchlistStocks() {
+      if (this.watchlist.length === 0) return [];
+      const all = [
+        ...(this.trendingData.movers?.gainers || []),
+        ...(this.trendingData.movers?.losers || []),
+      ];
+      const stockMap = {};
+      for (const s of all) {
+        stockMap[s.symbol] = s;
+      }
+      return this.watchlist
+        .map(sym => stockMap[sym] || { symbol: sym, name: '', price: null, change_pct: null })
+        .filter(Boolean);
     },
 
     async startAnalysis() {

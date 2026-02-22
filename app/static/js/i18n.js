@@ -132,8 +132,17 @@ const I18N_MESSAGES = {
     'trending.sectors': '板塊表現',
     'trending.sectors_desc': 'S&P 500 各板塊 ETF 當日漲跌',
 
+    // 追蹤清單
+    'watchlist.title': '我的追蹤',
+    'watchlist.empty': '尚未追蹤任何股票',
+    'watchlist.empty_desc': '點擊漲跌排行中的星號圖示加入追蹤清單',
+    'watchlist.add': '加入追蹤',
+    'watchlist.remove': '移除追蹤',
+    'watchlist.clear': '清除全部',
+    'watchlist.clear_confirm': '確定清除所有追蹤？',
+
     // 頁尾
-    'footer.version': 'v0.3.3',
+    'footer.version': 'v0.3.5',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -293,8 +302,17 @@ const I18N_MESSAGES = {
     'trending.sectors': 'Sector Performance',
     'trending.sectors_desc': 'S&P 500 sector ETF daily changes',
 
+    // Watchlist
+    'watchlist.title': 'My Watchlist',
+    'watchlist.empty': 'No stocks tracked yet',
+    'watchlist.empty_desc': 'Click the star icon on movers to add stocks to your watchlist',
+    'watchlist.add': 'Add to watchlist',
+    'watchlist.remove': 'Remove from watchlist',
+    'watchlist.clear': 'Clear all',
+    'watchlist.clear_confirm': 'Clear all tracked stocks?',
+
     // Footer
-    'footer.version': 'v0.3.3',
+    'footer.version': 'v0.3.5',
     'footer.open_source': 'Open Source',
 
     // Theme

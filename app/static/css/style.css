@@ -2115,6 +2115,157 @@ code {
   min-height: 42px;
 }
 
+.skeleton-line-tiny { width: 40%; }
+
+/* ===== 追蹤清單 ===== */
+
+.watchlist-panel {
+  border-top: 2px solid var(--accent);
+}
+
+.watchlist-count {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-faint);
+  margin-left: 4px;
+}
+
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.watchlist-card {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.12s, border-color 0.12s, box-shadow 0.15s, transform 0.1s;
+}
+
+.watchlist-card:hover {
+  background: var(--bg-hover);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.watchlist-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.watchlist-card:active {
+  transform: scale(0.97);
+}
+
+.watchlist-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.watchlist-symbol {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+.watchlist-star {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  color: var(--text-faint);
+  transition: color 0.12s, transform 0.1s;
+  line-height: 0;
+}
+
+.watchlist-star svg {
+  width: 14px;
+  height: 14px;
+}
+
+.watchlist-star.active {
+  color: var(--red);
+}
+
+.watchlist-star:hover {
+  transform: scale(1.15);
+}
+
+.watchlist-card-name {
+  font-size: 11px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+
+.watchlist-card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.watchlist-card-change {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+.watchlist-card-na {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-top: 4px;
+}
+
+/* 漲跌排行中的追蹤按鈕 */
+.watchlist-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-faint);
+  opacity: 0;
+  transition: opacity 0.12s, color 0.12s, transform 0.1s;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.watchlist-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mover-row:hover .watchlist-btn {
+  opacity: 0.6;
+}
+
+.watchlist-btn:hover {
+  opacity: 1 !important;
+  color: var(--amber);
+  transform: scale(1.2);
+}
+
+.watchlist-btn.active {
+  opacity: 1;
+  color: var(--amber);
+}
+
+.watchlist-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
 /* 開源標記 */
 .footer-open-source {
   font-weight: 500;
@@ -2378,6 +2529,11 @@ code {
   .mover-action { opacity: 0.35; }
   .mover-row:active .mover-action { opacity: 1; color: var(--accent); }
 
+  /* 追蹤清單 RWD */
+  .watchlist-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+  .watchlist-btn { opacity: 0.5; }
+  .watchlist-btn.active { opacity: 1; }
+
   .stock-preview-name { display: none; }
 
   .workflow-grid { grid-template-columns: repeat(2, 1fr); }
@@ -2461,6 +2617,11 @@ code {
   .mover-price { font-size: 12px; }
   .mover-bar { display: none; }
 
+  /* 追蹤清單 RWD */
+  .watchlist-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
+  .watchlist-card { padding: 10px; }
+  .watchlist-card-price { font-size: 13px; }
+
   .sectors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
   .sector-card { padding: 8px; }
   .sector-change { font-size: 13px; }
@@ -2484,7 +2645,8 @@ code {
 @media print {
   .topbar, .footer, .theme-toggle, .lang-toggle,
   .form-actions, .progress-footer,
-  .btn-outline, .btn-ghost, .nav-btn { display: none !important; }
+  .btn-outline, .btn-ghost, .nav-btn,
+  .watchlist-panel, .watchlist-btn { display: none !important; }
 
   body { background: #fff; color: #000; }
   .panel { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
