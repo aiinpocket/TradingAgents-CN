@@ -47,7 +47,15 @@ COPY . .
 # 安裝 tradingagents 套件本身（不安裝依賴）
 RUN pip install --no-deps -e .
 
+# 安全：以非 root 用戶執行
+RUN groupadd -r appuser && useradd -r -g appuser -d /app appuser \
+    && chown -R appuser:appuser /app
+USER appuser
+
 EXPOSE 8501
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8501/health || exit 1
 
 # 使用 FastAPI + Uvicorn 啟動
 CMD ["python", "start_app.py", "--host", "0.0.0.0", "--port", "8501"]
