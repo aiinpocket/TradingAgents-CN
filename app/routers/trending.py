@@ -236,10 +236,21 @@ def _fetch_market_news() -> list[dict]:
     except Exception as e:
         logger.error(f"取得市場新聞失敗: {e}")
 
+    # 過濾付費新聞來源（使用者無法免費閱讀全文）
+    _PAID_SOURCES = {
+        "the wall street journal", "wsj", "wall street journal",
+        "bloomberg", "financial times", "ft", "barron's", "barrons",
+        "the economist", "investor's business daily", "ibd",
+    }
+    free_news = [
+        item for item in news_list
+        if item.get("source", "").lower() not in _PAID_SOURCES
+    ]
+
     # 去重（依標題）
     seen_titles = set()
     unique_news = []
-    for item in news_list:
+    for item in free_news:
         if item["title"] not in seen_titles:
             seen_titles.add(item["title"])
             unique_news.append(item)
