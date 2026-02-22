@@ -74,12 +74,11 @@ class ReportExporter:
         self.pandoc_available = PANDOC_AVAILABLE
         self.is_docker = DOCKER_ADAPTER_AVAILABLE and is_docker_environment()
 
-        # 記錄初始化狀態
-        logger.info("ReportExporter初始化:")
-        logger.info(f"- export_available: {self.export_available}")
-        logger.info(f"- pandoc_available: {self.pandoc_available}")
-        logger.info(f"- is_docker: {self.is_docker}")
-        logger.info(f"- docker_adapter_available: {DOCKER_ADAPTER_AVAILABLE}")
+        # 記錄初始化狀態（詳細資訊只在 debug 等級輸出）
+        logger.debug(
+            "ReportExporter初始化: export=%s, pandoc=%s, docker=%s",
+            self.export_available, self.pandoc_available, self.is_docker
+        )
 
         # Docker環境初始化
         if self.is_docker:
@@ -473,10 +472,10 @@ class ReportExporter:
         """匯出報告為指定格式"""
 
         logger.info(f"開始匯出報告: format={format_type}")
-        logger.info("匯出狀態檢查:")
-        logger.info(f"- export_available: {self.export_available}")
-        logger.info(f"- pandoc_available: {self.pandoc_available}")
-        logger.info(f"- is_docker: {self.is_docker}")
+        logger.debug(
+            "匯出狀態: export=%s, pandoc=%s, docker=%s",
+            self.export_available, self.pandoc_available, self.is_docker
+        )
 
         if not self.export_available:
             logger.error("匯出功能不可用")

@@ -29,21 +29,25 @@ except ImportError:
 # 載入環境變數
 load_dotenv(project_root / ".env", override=True)
 
-# 自訂元件
+# 核心元件（每次載入都需要）
 from components.sidebar import render_sidebar
 from components.header import render_header
 from components.analysis_form import render_analysis_form
-from components.results_display import render_results
-from components.analysis_results import save_analysis_result
-from components.async_progress_display import display_unified_progress
 from utils.api_checker import check_api_keys
-from utils.analysis_runner import run_stock_analysis, validate_analysis_params, format_analysis_results
-from utils.async_progress_tracker import AsyncProgressTracker, get_latest_analysis_id, get_progress_by_id
+from utils.analysis_runner import validate_analysis_params, format_analysis_results
+from utils.async_progress_tracker import get_latest_analysis_id, get_progress_by_id
 from utils.smart_session_manager import get_persistent_analysis_id, set_persistent_analysis_id
 from utils.thread_tracker import (
     check_analysis_status, register_analysis_thread,
     unregister_analysis_thread, cleanup_dead_analysis_threads
 )
+
+# 延遲匯入的模組（僅在分析流程中使用，避免每次 rerun 都載入）
+# - components.results_display.render_results
+# - components.analysis_results.save_analysis_result
+# - components.async_progress_display.display_unified_progress
+# - utils.analysis_runner.run_stock_analysis
+# - utils.async_progress_tracker.AsyncProgressTracker
 
 # 頁面設定
 st.set_page_config(
@@ -54,12 +58,19 @@ st.set_page_config(
     menu_items=None
 )
 
+@st.cache_data
+def _load_css():
+    """讀取並快取 CSS 樣式，避免每次 rerun 重新讀檔"""
+    css_path = Path(__file__).parent / "styles" / "main.css"
+    if css_path.exists():
+        return css_path.read_text(encoding='utf-8')
+    logger.warning(f"CSS 檔案不存在: {css_path}")
+    return None
+
 # 載入外部 CSS 樣式
-_css_path = Path(__file__).parent / "styles" / "main.css"
-if _css_path.exists():
-    st.markdown(f"<style>{_css_path.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
-else:
-    logger.warning(f"CSS 檔案不存在: {_css_path}")
+_css_content = _load_css()
+if _css_content:
+    st.markdown(f"<style>{_css_content}</style>", unsafe_allow_html=True)
 
 def initialize_session_state():
     """初始化會話狀態"""
@@ -134,6 +145,7 @@ def _save_result_safe(analysis_id: str, stock_symbol: str,
                       result_data, status: str):
     """安全保存分析結果，統一異常處理"""
     try:
+        from components.analysis_results import save_analysis_result
         save_analysis_result(
             analysis_id=analysis_id,
             stock_symbol=stock_symbol,
@@ -295,6 +307,7 @@ def main():
                 form_config=form_config
             )
 
+            from utils.async_progress_tracker import AsyncProgressTracker
             async_tracker = AsyncProgressTracker(
                 analysis_id=analysis_id,
                 analysts=form_data['analysts'],
@@ -316,6 +329,7 @@ def main():
             def run_analysis_in_background():
                 """背景執行緒執行分析"""
                 try:
+                    from utils.analysis_runner import run_stock_analysis
                     results = run_stock_analysis(
                         stock_symbol=form_data['stock_symbol'],
                         analysis_date=form_data['analysis_date'],
@@ -379,6 +393,7 @@ def main():
         elif actual_status == 'failed':
             st.error(f"{display_symbol} 分析失敗" if display_symbol else "分析失敗")
 
+        from components.async_progress_display import display_unified_progress
         is_completed = display_unified_progress(current_analysis_id, show_refresh_controls=is_running)
 
         if is_running:
@@ -419,6 +434,7 @@ def main():
     if should_show_results:
         st.markdown("---")
         st.markdown("#### 分析報告")
+        from components.results_display import render_results
         render_results(analysis_results)
 
         if show_results_button_clicked:

@@ -26,10 +26,9 @@ def check_dependencies():
     required_packages = ['streamlit', 'plotly']
     missing_packages = []
 
+    import importlib.util
     for package in required_packages:
-        try:
-            __import__(package)
-        except ImportError:
+        if importlib.util.find_spec(package) is None:
             missing_packages.append(package)
 
     if missing_packages:
@@ -120,7 +119,6 @@ def clean_cache_files(force_clean=False):
         logger.info("強制清理所有快取檔案...")
         for cache_dir in cache_dirs:
             try:
-                import shutil
                 shutil.rmtree(cache_dir)
                 logger.info(f"已清理: {cache_dir.relative_to(project_root)}")
             except Exception as e:
