@@ -224,6 +224,16 @@ function tradingApp() {
       this.loadAiAnalysis(true);
     },
 
+    getMarketSentiment() {
+      const indices = this.trendingData.indices || [];
+      if (indices.length === 0) return { label: '', cls: '', arrow: '' };
+      const ups = indices.filter(i => i.change >= 0).length;
+      const ratio = ups / indices.length;
+      if (ratio >= 0.7) return { label: this.t('trending.market_up'), cls: 'sentiment-up', arrow: '&#9650;' };
+      if (ratio <= 0.3) return { label: this.t('trending.market_down'), cls: 'sentiment-down', arrow: '&#9660;' };
+      return { label: this.t('trending.market_mixed'), cls: 'sentiment-mixed', arrow: '&#9670;' };
+    },
+
     quickAnalyze(symbol) {
       this.form.symbol = symbol;
       this.tab = 'analysis';

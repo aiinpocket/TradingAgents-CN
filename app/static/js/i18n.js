@@ -106,9 +106,15 @@ const I18N_MESSAGES = {
     'trending.ai_refresh': '重新分析',
     'trending.ai_powered_by': '由 AI 生成',
     'trending.ai_error': 'AI 分析生成失敗，請稍後重試',
+    'trending.market_pulse': '市場脈動',
+    'trending.market_up': '偏多',
+    'trending.market_down': '偏空',
+    'trending.market_mixed': '震盪',
+    'trending.quick_analyze': '快速分析',
+    'trending.rank': '#',
 
     // 頁尾
-    'footer.version': 'v0.2.7',
+    'footer.version': 'v0.2.8',
 
     // 通用
     'common.no_data': '暫無資料',
@@ -217,9 +223,15 @@ const I18N_MESSAGES = {
     'trending.ai_refresh': 'Re-analyze',
     'trending.ai_powered_by': 'AI Generated',
     'trending.ai_error': 'Failed to generate AI analysis, please try again later',
+    'trending.market_pulse': 'Market Pulse',
+    'trending.market_up': 'Bullish',
+    'trending.market_down': 'Bearish',
+    'trending.market_mixed': 'Mixed',
+    'trending.quick_analyze': 'Analyze',
+    'trending.rank': '#',
 
     // Footer
-    'footer.version': 'v0.2.7',
+    'footer.version': 'v0.2.8',
 
     // Common
     'common.no_data': 'No data',
