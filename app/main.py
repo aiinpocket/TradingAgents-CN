@@ -47,7 +47,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
-    version="0.2.6",
+    version="0.2.7",
     lifespan=lifespan,
     docs_url="/api/docs",
     redoc_url=None,
@@ -196,7 +196,7 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     """健康檢查"""
-    return {"status": "ok", "version": "0.2.6"}
+    return {"status": "ok", "version": "0.2.7"}
 
 
 @app.get("/robots.txt", include_in_schema=False)

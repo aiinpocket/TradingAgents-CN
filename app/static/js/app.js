@@ -560,8 +560,12 @@ function tradingApp() {
         .replace(/\*(.+?)\*/g, (_, g) => `<em>${g}</em>`)
         .replace(/`([^`]+)`/g, (_, g) => `<code>${g}</code>`);
 
+      // 合併被空行分隔的列表項（LLM 常在項目間插入空行）
+      html = html.replace(/^(\d+\. .+)$(\n\n)(?=\d+\. )/gm, '$1\n');
+
       html = html.replace(/(?:^- .+$\n?)+/gm, (match) => {
         const items = match.trim().split('\n')
+          .filter(line => line.trim())
           .map(line => `<li>${line.replace(/^- /, '')}</li>`)
           .join('');
         return `<ul>${items}</ul>`;
@@ -569,6 +573,7 @@ function tradingApp() {
 
       html = html.replace(/(?:^\d+\. .+$\n?)+/gm, (match) => {
         const items = match.trim().split('\n')
+          .filter(line => line.trim())
           .map(line => `<li>${line.replace(/^\d+\. /, '')}</li>`)
           .join('');
         return `<ol>${items}</ol>`;

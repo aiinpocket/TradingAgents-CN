@@ -108,7 +108,7 @@ const I18N_MESSAGES = {
     'trending.ai_error': 'AI 分析生成失敗，請稍後重試',
 
     // 頁尾
-    'footer.version': 'v0.2.6',
+    'footer.version': 'v0.2.7',
 
     // 通用
     'common.no_data': '暫無資料',
@@ -219,7 +219,7 @@ const I18N_MESSAGES = {
     'trending.ai_error': 'Failed to generate AI analysis, please try again later',
 
     // Footer
-    'footer.version': 'v0.2.6',
+    'footer.version': 'v0.2.7',
 
     // Common
     'common.no_data': 'No data',
