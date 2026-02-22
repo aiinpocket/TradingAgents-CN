@@ -31,11 +31,11 @@
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"
           integrity="sha384-eEu5CTj3qGvu9PdJuS+YlkNi7d2XxQROAFYOr59zgObtlcux1ae1Il3u7jvdCSWu"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.2.4"></script>
+  <script src="/static/js/i18n.js?v=0.2.5"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"
           integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.2.4">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.2.5">
 </head>
 <body x-data="tradingApp()" x-init="init()">
 
@@ -89,31 +89,24 @@
 
       <!-- 市場指數概覽 -->
       <section class="indices-bar" x-cloak>
-        <template x-if="trendingData.indices && trendingData.indices.length > 0">
-          <div class="indices-grid">
-            <template x-for="idx in trendingData.indices" :key="idx.symbol">
-              <div class="index-card" :class="idx.change >= 0 ? 'index-up' : 'index-down'">
-                <div class="index-name" x-text="lang === 'en' ? idx.name_en : idx.name"></div>
-                <div class="index-price" x-text="idx.price?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})"></div>
-                <div class="index-change">
-                  <span x-text="(idx.change >= 0 ? '+' : '') + idx.change?.toFixed(2)"></span>
-                  <span x-text="'(' + (idx.change_pct >= 0 ? '+' : '') + idx.change_pct?.toFixed(2) + '%)'"></span>
-                </div>
+        <div class="indices-grid" x-show="trendingData.indices && trendingData.indices.length > 0">
+          <template x-for="idx in trendingData.indices" :key="idx.symbol">
+            <div class="index-card" :class="idx.change >= 0 ? 'index-up' : 'index-down'">
+              <div class="index-name" x-text="lang === 'en' ? idx.name_en : idx.name"></div>
+              <div class="index-price" x-text="idx.price?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})"></div>
+              <div class="index-change">
+                <span x-text="(idx.change >= 0 ? '+' : '') + idx.change?.toFixed(2)"></span>
+                <span x-text="'(' + (idx.change_pct >= 0 ? '+' : '') + idx.change_pct?.toFixed(2) + '%)'"></span>
               </div>
-            </template>
-          </div>
-        </template>
-        <template x-if="trendingLoading">
-          <div class="indices-grid">
-            <template x-for="i in 4" :key="i">
-              <div class="index-card skeleton-card">
-                <div class="skeleton skeleton-line-short"></div>
-                <div class="skeleton skeleton-line-medium"></div>
-                <div class="skeleton skeleton-line-short"></div>
-              </div>
-            </template>
-          </div>
-        </template>
+            </div>
+          </template>
+        </div>
+        <div class="indices-grid" x-show="trendingLoading">
+          <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
+          <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
+          <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
+          <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
+        </div>
       </section>
 
       <!-- 漲跌幅排行 -->
@@ -126,34 +119,30 @@
               <span x-text="t('trending.gainers')"></span>
             </h2>
           </div>
-          <template x-if="trendingData.movers?.gainers?.length > 0">
-            <div class="movers-list">
-              <template x-for="stock in trendingData.movers.gainers" :key="stock.symbol">
-                <div class="mover-row" role="button" tabindex="0"
-                     @click="quickAnalyze(stock.symbol)"
-                     @keydown.enter="quickAnalyze(stock.symbol)"
-                     :title="t('trending.analyze') + ' ' + stock.symbol">
-                  <div class="mover-info">
-                    <span class="mover-symbol" x-text="stock.symbol"></span>
-                    <span class="mover-name" x-text="stock.name"></span>
-                  </div>
-                  <div class="mover-data">
-                    <span class="mover-price" x-text="'$' + stock.price?.toFixed(2)"></span>
-                    <span class="mover-change change-up" x-text="'+' + stock.change_pct?.toFixed(2) + '%'"></span>
-                  </div>
+          <div class="movers-list" x-show="trendingData.movers?.gainers?.length > 0">
+            <template x-for="stock in trendingData.movers.gainers" :key="stock.symbol">
+              <div class="mover-row" role="button" tabindex="0"
+                   @click="quickAnalyze(stock.symbol)"
+                   @keydown.enter="quickAnalyze(stock.symbol)"
+                   :title="t('trending.analyze') + ' ' + stock.symbol">
+                <div class="mover-info">
+                  <span class="mover-symbol" x-text="stock.symbol"></span>
+                  <span class="mover-name" x-text="stock.name"></span>
                 </div>
-              </template>
-            </div>
-          </template>
-          <template x-if="trendingLoading">
-            <div class="movers-list">
-              <template x-for="i in 5" :key="i">
-                <div class="mover-row skeleton-row">
-                  <div class="skeleton skeleton-line-medium"></div>
+                <div class="mover-data">
+                  <span class="mover-price" x-text="'$' + stock.price?.toFixed(2)"></span>
+                  <span class="mover-change change-up" x-text="'+' + stock.change_pct?.toFixed(2) + '%'"></span>
                 </div>
-              </template>
-            </div>
-          </template>
+              </div>
+            </template>
+          </div>
+          <div class="movers-list" x-show="trendingLoading">
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+          </div>
           <div class="empty-state" x-show="!trendingLoading && (!trendingData.movers?.gainers || trendingData.movers.gainers.length === 0)">
             <p x-text="t('trending.no_data')"></p>
           </div>
@@ -167,34 +156,30 @@
               <span x-text="t('trending.losers')"></span>
             </h2>
           </div>
-          <template x-if="trendingData.movers?.losers?.length > 0">
-            <div class="movers-list">
-              <template x-for="stock in trendingData.movers.losers" :key="stock.symbol">
-                <div class="mover-row" role="button" tabindex="0"
-                     @click="quickAnalyze(stock.symbol)"
-                     @keydown.enter="quickAnalyze(stock.symbol)"
-                     :title="t('trending.analyze') + ' ' + stock.symbol">
-                  <div class="mover-info">
-                    <span class="mover-symbol" x-text="stock.symbol"></span>
-                    <span class="mover-name" x-text="stock.name"></span>
-                  </div>
-                  <div class="mover-data">
-                    <span class="mover-price" x-text="'$' + stock.price?.toFixed(2)"></span>
-                    <span class="mover-change change-down" x-text="stock.change_pct?.toFixed(2) + '%'"></span>
-                  </div>
+          <div class="movers-list" x-show="trendingData.movers?.losers?.length > 0">
+            <template x-for="stock in trendingData.movers.losers" :key="stock.symbol">
+              <div class="mover-row" role="button" tabindex="0"
+                   @click="quickAnalyze(stock.symbol)"
+                   @keydown.enter="quickAnalyze(stock.symbol)"
+                   :title="t('trending.analyze') + ' ' + stock.symbol">
+                <div class="mover-info">
+                  <span class="mover-symbol" x-text="stock.symbol"></span>
+                  <span class="mover-name" x-text="stock.name"></span>
                 </div>
-              </template>
-            </div>
-          </template>
-          <template x-if="trendingLoading">
-            <div class="movers-list">
-              <template x-for="i in 5" :key="i">
-                <div class="mover-row skeleton-row">
-                  <div class="skeleton skeleton-line-medium"></div>
+                <div class="mover-data">
+                  <span class="mover-price" x-text="'$' + stock.price?.toFixed(2)"></span>
+                  <span class="mover-change change-down" x-text="stock.change_pct?.toFixed(2) + '%'"></span>
                 </div>
-              </template>
-            </div>
-          </template>
+              </div>
+            </template>
+          </div>
+          <div class="movers-list" x-show="trendingLoading">
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+            <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
+          </div>
           <div class="empty-state" x-show="!trendingLoading && (!trendingData.movers?.losers || trendingData.movers.losers.length === 0)">
             <p x-text="t('trending.no_data')"></p>
           </div>
@@ -207,33 +192,80 @@
           <h2 x-text="t('trending.news')"></h2>
           <span class="hint" x-show="trendingData.updated_at" x-text="t('trending.updated') + ': ' + trendingData.updated_at"></span>
         </div>
-        <template x-if="trendingData.news?.length > 0">
-          <div class="news-grid">
-            <template x-for="item in trendingData.news" :key="item.title">
-              <a class="news-card" :href="item.url" target="_blank" rel="noopener noreferrer">
-                <div class="news-source" x-text="item.source"></div>
-                <div class="news-title" x-text="item.title"></div>
-                <div class="news-meta">
-                  <span x-text="item.date"></span>
-                  <span class="news-related" x-show="item.related" x-text="'$' + item.related"></span>
-                </div>
-              </a>
-            </template>
-          </div>
-        </template>
-        <template x-if="trendingLoading">
-          <div class="news-grid">
-            <template x-for="i in 4" :key="i">
-              <div class="news-card skeleton-card">
-                <div class="skeleton skeleton-line-short"></div>
-                <div class="skeleton skeleton-line"></div>
-                <div class="skeleton skeleton-line-medium"></div>
+        <div class="news-grid" x-show="trendingData.news?.length > 0">
+          <template x-for="item in trendingData.news" :key="item.title">
+            <a class="news-card" :href="item.url" target="_blank" rel="noopener noreferrer">
+              <div class="news-source" x-text="item.source"></div>
+              <div class="news-title" x-text="item.title"></div>
+              <div class="news-meta">
+                <span x-text="item.date"></span>
+                <span class="news-related" x-show="item.related" x-text="'$' + item.related"></span>
               </div>
-            </template>
-          </div>
-        </template>
+            </a>
+          </template>
+        </div>
+        <div class="news-grid" x-show="trendingLoading">
+          <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
+          <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
+          <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
+          <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
+        </div>
         <div class="empty-state" x-show="!trendingLoading && (!trendingData.news || trendingData.news.length === 0)">
           <p x-text="t('trending.no_data')"></p>
+        </div>
+      </section>
+
+      <!-- AI 趨勢分析 -->
+      <section class="panel ai-analysis-panel" x-cloak>
+        <div class="panel-header panel-header-row">
+          <div>
+            <h2>
+              <svg class="ai-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+              <span x-text="t('trending.ai_title')"></span>
+            </h2>
+            <p class="ai-analysis-desc" x-text="t('trending.ai_desc')"></p>
+          </div>
+          <div class="ai-analysis-actions" x-show="aiAnalysis.content">
+            <span class="hint" x-text="aiAnalysis.updated_at ? (t('trending.updated') + ': ' + aiAnalysis.updated_at) : ''"></span>
+            <button class="btn-ghost btn-sm" @click="refreshAiAnalysis()" :disabled="aiAnalysisLoading">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+              <span x-text="t('trending.ai_refresh')"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 載入中 -->
+        <div class="ai-loading" x-show="aiAnalysisLoading">
+          <div class="ai-loading-animation">
+            <div class="ai-pulse"></div>
+            <div class="ai-pulse delay-1"></div>
+            <div class="ai-pulse delay-2"></div>
+          </div>
+          <p x-text="t('trending.ai_loading')"></p>
+        </div>
+
+        <!-- AI 分析內容 -->
+        <div class="ai-analysis-content markdown-body" x-show="aiAnalysis.content && !aiAnalysisLoading"
+             x-html="renderMarkdown(aiAnalysis.content)">
+        </div>
+
+        <!-- AI 分析底部標記 -->
+        <div class="ai-analysis-footer" x-show="aiAnalysis.content && !aiAnalysisLoading">
+          <span class="ai-badge">
+            <svg viewBox="0 0 16 16" fill="currentColor" class="ai-badge-icon"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+            <span x-text="t('trending.ai_powered_by')"></span>
+            <span x-show="aiAnalysis.provider" x-text="'(' + (aiAnalysis.provider === 'openai' ? 'OpenAI' : 'Anthropic') + ')'"></span>
+          </span>
+        </div>
+
+        <!-- 無 API 密鑰提示 -->
+        <div class="ai-no-key" x-show="aiAnalysis.available === false && !aiAnalysisLoading">
+          <p x-text="t('trending.ai_no_key')"></p>
+        </div>
+
+        <!-- 錯誤 -->
+        <div class="empty-state" x-show="aiAnalysis.available === true && !aiAnalysis.content && !aiAnalysisLoading">
+          <p x-text="t('trending.ai_error')"></p>
         </div>
       </section>
 
@@ -363,12 +395,10 @@
           </div>
         </form>
 
-        <template x-if="formError">
-          <div id="form-error-msg" class="notice notice-error compact" role="alert">
-            <span x-text="formError"></span>
-            <button class="notice-dismiss" @click="formError = null" aria-label="Close">&times;</button>
-          </div>
-        </template>
+        <div id="form-error-msg" class="notice notice-error compact" role="alert" x-show="formError" x-cloak>
+          <span x-text="formError"></span>
+          <button class="notice-dismiss" @click="formError = null" aria-label="Close">&times;</button>
+        </div>
       </section>
 
       <!-- 分析進度 -->
@@ -496,12 +526,10 @@
             <span x-text="t('history.refresh')"></span>
           </button>
         </div>
-        <template x-if="historyList.length === 0">
-          <div class="empty-state">
-            <svg viewBox="0 0 48 48" fill="none" class="empty-icon"><rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" stroke-width="2"/><path d="M6 18h36M18 10v28" stroke="currentColor" stroke-width="2"/></svg>
-            <p x-text="t('history.empty')"></p>
-          </div>
-        </template>
+        <div class="empty-state" x-show="historyList.length === 0">
+          <svg viewBox="0 0 48 48" fill="none" class="empty-icon"><rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" stroke-width="2"/><path d="M6 18h36M18 10v28" stroke="currentColor" stroke-width="2"/></svg>
+          <p x-text="t('history.empty')"></p>
+        </div>
         <div class="history-table" x-show="historyList.length > 0">
           <div class="history-row history-header-row">
             <span class="h-symbol" x-text="t('history.col_symbol')"></span>
@@ -536,6 +564,6 @@
     <span class="footer-open-source">Open Source</span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.2.4"></script>
+  <script src="/static/js/app.js?v=0.2.5"></script>
 </body>
 </html>

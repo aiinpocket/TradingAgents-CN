@@ -1114,6 +1114,131 @@ body {
   font-size: 13px;
 }
 
+/* AI 趨勢分析區塊 */
+.ai-analysis-panel {
+  border-top: 3px solid var(--accent);
+}
+.ai-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+.ai-analysis-desc {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+.ai-analysis-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.ai-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  gap: 16px;
+}
+.ai-loading p {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+.ai-loading-animation {
+  display: flex;
+  gap: 8px;
+}
+.ai-pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: aiPulse 1.4s ease-in-out infinite;
+}
+.ai-pulse.delay-1 { animation-delay: 0.2s; }
+.ai-pulse.delay-2 { animation-delay: 0.4s; }
+@keyframes aiPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.ai-analysis-content {
+  padding: 4px 0 8px;
+  line-height: 1.7;
+}
+.ai-analysis-content h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 6px;
+}
+.ai-analysis-content h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 16px 0 6px;
+  color: var(--text);
+}
+.ai-analysis-content h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 12px 0 4px;
+  color: var(--text);
+}
+.ai-analysis-content p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: var(--text-sub);
+}
+.ai-analysis-content ul,
+.ai-analysis-content ol {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+.ai-analysis-content li {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin: 3px 0;
+  line-height: 1.6;
+}
+.ai-analysis-content strong {
+  color: var(--text);
+}
+.ai-analysis-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+  margin-top: 16px;
+}
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-faint);
+  background: var(--bg-inset);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+.ai-badge-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--accent);
+}
+.ai-no-key {
+  padding: 24px 16px;
+  text-align: center;
+}
+.ai-no-key p {
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
 .disclaimer {
   text-align: center;
   font-size: 12px;

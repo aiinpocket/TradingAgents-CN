@@ -70,6 +70,10 @@ function tradingApp() {
     trendingLoading: false,
     _trendingTimer: null,
 
+    // AI 趨勢分析
+    aiAnalysis: { available: null, content: '', updated_at: '', provider: '' },
+    aiAnalysisLoading: false,
+
     get canSubmit() {
       return this.apiReady &&
              this.form.symbol.length > 0 &&
@@ -179,6 +183,8 @@ function tradingApp() {
         const res = await fetch('/api/trending/overview');
         if (res.ok) {
           this.trendingData = await res.json();
+          // 市場資料載入後，非同步載入 AI 分析
+          this.loadAiAnalysis();
         }
       } catch (e) {
         console.error('Failed to load trending:', e);
@@ -191,6 +197,31 @@ function tradingApp() {
       this._trendingTimer = setTimeout(() => {
         if (this.tab === 'trending') this.loadTrending();
       }, CONFIG.TRENDING_REFRESH_MS);
+    },
+
+    // AI 趨勢分析
+    async loadAiAnalysis(force = false) {
+      if (this.aiAnalysisLoading) return;
+      // 如果已有內容且非強制重新載入，略過
+      if (!force && this.aiAnalysis.content) return;
+
+      this.aiAnalysisLoading = true;
+      try {
+        const url = `/api/trending/ai-analysis?lang=${encodeURIComponent(this.lang)}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          this.aiAnalysis = await res.json();
+        }
+      } catch (e) {
+        console.error('Failed to load AI analysis:', e);
+      } finally {
+        this.aiAnalysisLoading = false;
+      }
+    },
+
+    refreshAiAnalysis() {
+      this.aiAnalysis = { available: null, content: '', updated_at: '', provider: '' };
+      this.loadAiAnalysis(true);
     },
 
     quickAnalyze(symbol) {

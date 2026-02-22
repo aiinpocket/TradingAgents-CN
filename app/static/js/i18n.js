@@ -99,9 +99,16 @@ const I18N_MESSAGES = {
     'trending.view_more': '查看更多',
     'trending.no_data': '暫無資料',
     'trending.error': '載入失敗，請稍後重試',
+    'trending.ai_title': 'AI 趨勢分析',
+    'trending.ai_desc': '基於宏觀經濟、國際趨勢與市場新聞的每日綜合分析',
+    'trending.ai_loading': '正在生成 AI 分析...',
+    'trending.ai_no_key': 'AI 分析功能需要配置 LLM API 密鑰（OPENAI_API_KEY 或 ANTHROPIC_API_KEY）。',
+    'trending.ai_refresh': '重新分析',
+    'trending.ai_powered_by': '由 AI 生成',
+    'trending.ai_error': 'AI 分析生成失敗，請稍後重試',
 
     // 頁尾
-    'footer.version': 'v0.2.4',
+    'footer.version': 'v0.2.5',
 
     // 通用
     'common.no_data': '暫無資料',
@@ -203,9 +210,16 @@ const I18N_MESSAGES = {
     'trending.view_more': 'View more',
     'trending.no_data': 'No data available',
     'trending.error': 'Failed to load, please try again later',
+    'trending.ai_title': 'AI Trend Analysis',
+    'trending.ai_desc': 'Daily comprehensive analysis based on macro economics, global trends, and market news',
+    'trending.ai_loading': 'Generating AI analysis...',
+    'trending.ai_no_key': 'AI analysis requires an LLM API key (OPENAI_API_KEY or ANTHROPIC_API_KEY).',
+    'trending.ai_refresh': 'Re-analyze',
+    'trending.ai_powered_by': 'AI Generated',
+    'trending.ai_error': 'Failed to generate AI analysis, please try again later',
 
     // Footer
-    'footer.version': 'v0.2.4',
+    'footer.version': 'v0.2.5',
 
     // Common
     'common.no_data': 'No data',
