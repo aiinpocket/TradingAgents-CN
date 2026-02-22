@@ -17,7 +17,7 @@
 
 # ==================== 核心框架 ====================
 langchain>=0.3.0
-langchain-core>=1.2.11  # 安全性: 修復 SSRF 漏洞 + 序列化注入漏洞
+langchain-core>=0.3.83  # 安全性: 0.3.x 最高安全版本（SSRF 修復需 langchain 1.x 生態系升級）
 langchain-openai>=0.3.23
 langchain-anthropic>=0.3.15
 langchain-experimental>=0.3.4
