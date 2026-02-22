@@ -16,16 +16,14 @@ from tradingagents.config.config_manager import (
 
 def render_config_management():
     """渲染配置管理頁面"""
-    st.title("配置管理")
-
     # 顯示.env配置狀態
     render_env_status()
 
     # 側邊欄選擇功能
-    st.sidebar.title("配置選項")
     page = st.sidebar.selectbox(
-        "選擇功能",
-        ["模型配置", "定價設定", "使用統計", "系統設定"]
+        "功能",
+        ["模型配置", "定價設定", "使用統計", "系統設定"],
+        label_visibility="collapsed"
     )
     
     if page == "模型配置":
@@ -525,16 +523,7 @@ def render_env_status():
             finnhub_status = "已配置" if env_status["api_keys"]["finnhub"] else "未配置"
             st.write(f"- FinnHub (金融資料): {finnhub_status}")
 
-    # 配置優先級說明
-    st.info("""
-     **配置優先級說明:**
-    - API密鑰優先從 `.env` 檔案讀取
-    - Web介面配置作為補充和管理工具
-    - 修改 `.env` 檔案後需重啟應用生效
-    - 推薦使用 `.env` 檔案管理敏感資訊
-    """)
-
-    st.divider()
+    st.caption("密鑰透過 .env 檔案配置，修改後需重啟生效")
 
 
 if __name__ == "__main__":
