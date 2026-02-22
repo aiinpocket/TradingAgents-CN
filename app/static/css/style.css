@@ -1221,12 +1221,12 @@ body {
   border: 1px solid var(--border-light);
 }
 .ai-analysis-content th {
-  background: var(--bg-sunken);
+  background: var(--bg-inset);
   font-weight: 600;
   color: var(--text);
 }
 .ai-analysis-content td {
-  color: var(--text-secondary);
+  color: var(--text-sub);
 }
 .ai-analysis-content hr {
   border: none;
