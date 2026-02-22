@@ -3,14 +3,16 @@
 提供股票分析歷史結果的查看和管理功能
 """
 
-import streamlit as st
-import pandas as pd
+import json
+import os
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Dict, List, Any
+
 import plotly.express as px
 import plotly.graph_objects as go
-from datetime import datetime, timedelta
-from typing import Dict, List, Any
-import json
-from pathlib import Path
+import pandas as pd
+import streamlit as st
 
 try:
     from tradingagents.utils.logging_manager import get_logger
@@ -996,9 +998,6 @@ def save_analysis_result(analysis_id: str, stock_symbol: str, analysts: List[str
                 reports = {}
                 try:
                     # 構建報告目錄路徑
-                    from pathlib import Path
-                    import os
-
                     # 取得當前日期
                     current_date = datetime.now().strftime('%Y-%m-%d')
 

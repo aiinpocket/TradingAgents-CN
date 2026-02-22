@@ -7,7 +7,9 @@
 import streamlit as st
 import json
 import os
+import traceback
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, Any, Optional
 import tempfile
 
@@ -567,9 +569,6 @@ def _format_team_decision_content(content: Dict[str, Any], module_key: str) -> s
 def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: str) -> Dict[str, str]:
     """保存分模組報告到results目錄（CLI版本格式）"""
     try:
-        import os
-        from pathlib import Path
-
         # 取得專案根目錄
         current_file = Path(__file__)
         project_root = current_file.parent.parent.parent
@@ -721,31 +720,31 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
         logger.info(f"保存目錄: {os.path.normpath(str(reports_dir))}")
 
         # 同時保存到MongoDB
-        logger.info("[MongoDB除錯] 開始MongoDB保存流程")
-        logger.info(f"[MongoDB除錯] MONGODB_REPORT_AVAILABLE: {MONGODB_REPORT_AVAILABLE}")
-        logger.info(f"[MongoDB除錯] mongodb_report_manager存在: {mongodb_report_manager is not None}")
+        logger.debug("開始MongoDB保存流程")
+        logger.debug(f"MONGODB_REPORT_AVAILABLE: {MONGODB_REPORT_AVAILABLE}")
+        logger.debug(f"mongodb_report_manager存在: {mongodb_report_manager is not None}")
 
         if MONGODB_REPORT_AVAILABLE and mongodb_report_manager:
-            logger.info(f"[MongoDB除錯] MongoDB管理器連接狀態: {mongodb_report_manager.connected}")
+            logger.debug(f"MongoDB管理器連接狀態: {mongodb_report_manager.connected}")
             try:
                 # 收集所有報告內容
                 reports_content = {}
 
-                logger.info(f"[MongoDB除錯] 開始讀取 {len(saved_files)} 個報告檔案")
+                logger.debug(f"開始讀取 {len(saved_files)} 個報告檔案")
                 # 讀取已保存的檔案內容
                 for module_key, file_path in saved_files.items():
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
                             content = f.read()
                             reports_content[module_key] = content
-                            logger.info(f"[MongoDB除錯] 成功讀取 {module_key}: {len(content)} 字元")
+                            logger.debug(f"成功讀取 {module_key}: {len(content)} 字元")
                     except Exception as e:
                         logger.warning(f"讀取報告檔案失敗 {file_path}: {e}")
 
                 # 保存到MongoDB
                 if reports_content:
-                    logger.info(f"[MongoDB除錯] 準備保存到MongoDB，報告數量: {len(reports_content)}")
-                    logger.info(f"[MongoDB除錯] 報告類型: {list(reports_content.keys())}")
+                    logger.debug(f"準備保存到MongoDB，報告數量: {len(reports_content)}")
+                    logger.debug(f"報告類型: {list(reports_content.keys())}")
 
                     success = mongodb_report_manager.save_analysis_report(
                         stock_symbol=stock_symbol,
@@ -762,7 +761,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
 
             except Exception as e:
                 logger.error(f"MongoDB保存過程出錯: {e}")
-                import traceback
+
                 logger.error(f"MongoDB保存詳細錯誤: {traceback.format_exc()}")
                 # 不影響檔案保存的成功返回
         else:
@@ -772,7 +771,7 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
 
     except Exception as e:
         logger.error(f"保存分模組報告失敗: {e}")
-        import traceback
+
         logger.error(f"詳細錯誤: {traceback.format_exc()}")
         return {}
 
@@ -780,9 +779,6 @@ def save_modular_reports_to_results_dir(results: Dict[str, Any], stock_symbol: s
 def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str) -> str:
     """保存報告到results目錄"""
     try:
-        import os
-        from pathlib import Path
-
         # 取得專案根目錄（Web應用在web/子目錄中執行）
         current_file = Path(__file__)
         project_root = current_file.parent.parent.parent # web/utils/report_exporter.py -> 專案根目錄
@@ -818,9 +814,150 @@ def save_report_to_results_dir(content: bytes, filename: str, stock_symbol: str)
 
     except Exception as e:
         logger.error(f"保存報告到results目錄失敗: {e}")
-        import traceback
+
         logger.error(f"詳細錯誤: {traceback.format_exc()}")
         return ""
+
+
+# 匯出格式配置
+_EXPORT_CONFIGS = [
+    {
+        'format_type': 'markdown',
+        'label': 'Markdown',
+        'extension': '.md',
+        'mime': 'text/markdown',
+        'button_help': '匯出為Markdown格式',
+        'spinner_text': None,
+        'error_solution': None,
+        'fallback_hint': None,
+    },
+    {
+        'format_type': 'docx',
+        'label': 'Word',
+        'extension': '.docx',
+        'mime': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'button_help': '匯出為Word 檔案格式',
+        'spinner_text': '正在生成Word 檔案，請稍候...',
+        'error_solution': (
+            "**Word匯出需要pandoc工具，請檢查:**\n\n"
+            "1. **Docker環境**: 重新構建鏡像確保包含pandoc\n"
+            "2. **本地環境**: 安裝pandoc\n"
+            "```bash\n"
+            "# Windows\nchoco install pandoc\n\n"
+            "# macOS\nbrew install pandoc\n\n"
+            "# Linux\nsudo apt-get install pandoc\n"
+            "```\n\n"
+            "3. **替代方案**: 使用Markdown格式匯出"
+        ),
+        'fallback_hint': None,
+    },
+    {
+        'format_type': 'pdf',
+        'label': 'PDF',
+        'extension': '.pdf',
+        'mime': 'application/pdf',
+        'button_help': '匯出為PDF格式 (需要額外工具)',
+        'spinner_text': '正在生成PDF，請稍候...',
+        'error_solution': (
+            "**PDF匯出需要額外的工具，請選擇以下方案之一:**\n\n"
+            "**方案1: 安裝wkhtmltopdf (推薦)**\n"
+            "```bash\n"
+            "# Windows\nchoco install wkhtmltopdf\n\n"
+            "# macOS\nbrew install wkhtmltopdf\n\n"
+            "# Linux\nsudo apt-get install wkhtmltopdf\n"
+            "```\n\n"
+            "**方案2: 安裝LaTeX**\n"
+            "```bash\n"
+            "# Windows\nchoco install miktex\n\n"
+            "# macOS\nbrew install mactex\n\n"
+            "# Linux\nsudo apt-get install texlive-full\n"
+            "```\n\n"
+            "**方案3: 使用替代格式**\n"
+            "- Markdown格式 - 輕量級，相容性好\n"
+            "- Word格式 - 適合進一步編輯"
+        ),
+        'fallback_hint': '建議：您可以先使用Markdown或Word格式匯出，然後使用其他工具轉換為PDF',
+    },
+]
+
+
+def _show_export_results(modular_files: Dict[str, str], saved_path: str,
+                         label: str, show_generic_success: bool = False):
+    """顯示匯出保存結果（檔案列表與成功訊息）"""
+    if modular_files and saved_path:
+        st.success(f"已保存 {len(modular_files)} 個分模組報告 + 1個{label}彙總報告")
+        with st.expander("查看保存的檔案"):
+            st.write("**分模組報告:**")
+            for module, path in modular_files.items():
+                st.write(f"- {module}: `{path}`")
+            st.write(f"**{label}彙總報告:**")
+            st.write(f"- {label}報告: `{saved_path}`")
+    elif saved_path:
+        st.success(f"{label}已保存到: {saved_path}")
+    elif show_generic_success:
+        st.success(f"{label}生成成功！")
+
+
+def _execute_export(results: Dict[str, Any], stock_symbol: str,
+                    timestamp: str, config: Dict[str, Any]):
+    """執行單一格式的匯出流程（保存模組報告 -> 生成彙總 -> 顯示下載按鈕）"""
+    format_type = config['format_type']
+    label = config['label']
+    has_spinner = bool(config.get('spinner_text'))
+
+    def _do_export():
+        """核心匯出邏輯"""
+        # 1. 保存分模組報告（CLI格式）
+        logger.info("開始保存分模組報告（CLI格式）...")
+        modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
+
+        # 2. 生成彙總報告（下載用）
+        content = report_exporter.export_report(results, format_type)
+        if not content:
+            logger.error(f"{label}匯出失敗，content為空")
+            if has_spinner:
+                st.error(f"{label}生成失敗")
+            return
+
+        filename = f"{stock_symbol}_analysis_{timestamp}{config['extension']}"
+        if isinstance(content, bytes):
+            logger.info(f"{label}匯出成功，檔案名稱: {filename}, 大小: {len(content)} 位元組")
+        else:
+            logger.info(f"{label}匯出成功，檔案名稱: {filename}")
+
+        # 3. 保存彙總報告到results目錄
+        saved_path = save_report_to_results_dir(content, filename, stock_symbol)
+
+        # 4. 顯示保存結果和下載按鈕
+        _show_export_results(modular_files, saved_path, label,
+                             show_generic_success=has_spinner)
+        st.download_button(
+            label=f"下載 {label}",
+            data=content,
+            file_name=filename,
+            mime=config['mime']
+        )
+
+    logger.info(f"使用者點擊{label}匯出按鈕 - 股票: {stock_symbol}")
+
+    # Markdown 直接執行；Word/PDF 包裝 spinner 和錯誤處理
+    if has_spinner:
+        with st.spinner(config['spinner_text']):
+            try:
+                logger.info(f"開始{label}匯出流程...")
+                _do_export()
+            except Exception as e:
+                logger.error(f"{label}匯出異常: {str(e)}", exc_info=True)
+                st.error(f"{label}生成失敗")
+                with st.expander("查看詳細錯誤訊息"):
+                    st.text(str(e))
+                if config.get('error_solution'):
+                    with st.expander("解決方案"):
+                        st.markdown(config['error_solution'])
+                if config.get('fallback_hint'):
+                    st.info(config['fallback_hint'])
+    else:
+        _do_export()
 
 
 def render_export_buttons(results: Dict[str, Any]):
@@ -879,204 +1016,12 @@ def render_export_buttons(results: Dict[str, Any]):
     stock_symbol = results.get('stock_symbol', 'analysis')
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        if st.button("匯出 Markdown", help="匯出為Markdown格式"):
-            logger.info(f"使用者點擊Markdown匯出按鈕 - 股票: {stock_symbol}")
-            # 1. 保存分模組報告（CLI格式）
-            logger.info("開始保存分模組報告（CLI格式）...")
-            modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
-
-            # 2. 生成彙總報告（下載用）
-            content = report_exporter.export_report(results, 'markdown')
-            if content:
-                filename = f"{stock_symbol}_analysis_{timestamp}.md"
-                logger.info(f"Markdown匯出成功，檔案名稱: {filename}")
-
-                # 3. 保存彙總報告到results目錄
-                saved_path = save_report_to_results_dir(content, filename, stock_symbol)
-
-                # 4. 顯示保存結果
-                if modular_files and saved_path:
-                    st.success(f"已保存 {len(modular_files)} 個分模組報告 + 1個彙總報告")
-                    with st.expander("查看保存的檔案"):
-                        st.write("**分模組報告:**")
-                        for module, path in modular_files.items():
-                            st.write(f"- {module}: `{path}`")
-                        st.write("**彙總報告:**")
-                        st.write(f"- 彙總報告: `{saved_path}`")
-                elif saved_path:
-                    st.success(f"彙總報告已保存到: {saved_path}")
-
-                st.download_button(
-                    label="下載 Markdown",
-                    data=content,
-                    file_name=filename,
-                    mime="text/markdown"
-                )
-            else:
-                logger.error("Markdown匯出失敗，content為空")
-    
-    with col2:
-        if st.button("匯出 Word", help="匯出為Word 檔案格式"):
-            logger.info(f"使用者點擊Word匯出按鈕 - 股票: {stock_symbol}")
-            with st.spinner("正在生成Word 檔案，請稍候..."):
-                try:
-                    logger.info("開始Word匯出流程...")
-
-                    # 1. 保存分模組報告（CLI格式）
-                    logger.info("開始保存分模組報告（CLI格式）...")
-                    modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
-
-                    # 2. 生成Word彙總報告
-                    content = report_exporter.export_report(results, 'docx')
-                    if content:
-                        filename = f"{stock_symbol}_analysis_{timestamp}.docx"
-                        logger.info(f"Word匯出成功，檔案名稱: {filename}, 大小: {len(content)} 位元組")
-
-                        # 3. 保存Word彙總報告到results目錄
-                        saved_path = save_report_to_results_dir(content, filename, stock_symbol)
-
-                        # 4. 顯示保存結果
-                        if modular_files and saved_path:
-                            st.success(f"已保存 {len(modular_files)} 個分模組報告 + 1個Word彙總報告")
-                            with st.expander("查看保存的檔案"):
-                                st.write("**分模組報告:**")
-                                for module, path in modular_files.items():
-                                    st.write(f"- {module}: `{path}`")
-                                st.write("**Word彙總報告:**")
-                                st.write(f"- Word報告: `{saved_path}`")
-                        elif saved_path:
-                            st.success(f"Word 檔案已保存到: {saved_path}")
-                        else:
-                            st.success("Word 檔案生成成功！")
-
-                        st.download_button(
-                            label="下載 Word",
-                            data=content,
-                            file_name=filename,
-                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        )
-                    else:
-                        logger.error("Word匯出失敗，content為空")
-                        st.error("Word 檔案生成失敗")
-                except Exception as e:
-                    logger.error(f"Word匯出異常: {str(e)}", exc_info=True)
-                    st.error(f"Word 檔案生成失敗: {str(e)}")
-
-                    # 顯示詳細錯誤訊息
-                    with st.expander("查看詳細錯誤訊息"):
-                        st.text(str(e))
-
-                    # 提供解決方案
-                    with st.expander("解決方案"):
-                        st.markdown("""
-                        **Word匯出需要pandoc工具，請檢查:**
-
-                        1. **Docker環境**: 重新構建鏡像確保包含pandoc
-                        2. **本地環境**: 安裝pandoc
-                        ```bash
-                        # Windows
-                        choco install pandoc
-
-                        # macOS
-                        brew install pandoc
-
-                        # Linux
-                        sudo apt-get install pandoc
-                        ```
-
-                        3. **替代方案**: 使用Markdown格式匯出
-                        """)
-    
-    with col3:
-        if st.button("匯出 PDF", help="匯出為PDF格式 (需要額外工具)"):
-            logger.info(f"使用者點擊PDF匯出按鈕 - 股票: {stock_symbol}")
-            with st.spinner("正在生成PDF，請稍候..."):
-                try:
-                    logger.info("開始PDF匯出流程...")
-
-                    # 1. 保存分模組報告（CLI格式）
-                    logger.info("開始保存分模組報告（CLI格式）...")
-                    modular_files = save_modular_reports_to_results_dir(results, stock_symbol)
-
-                    # 2. 生成PDF彙總報告
-                    content = report_exporter.export_report(results, 'pdf')
-                    if content:
-                        filename = f"{stock_symbol}_analysis_{timestamp}.pdf"
-                        logger.info(f"PDF匯出成功，檔案名稱: {filename}, 大小: {len(content)} 位元組")
-
-                        # 3. 保存PDF彙總報告到results目錄
-                        saved_path = save_report_to_results_dir(content, filename, stock_symbol)
-
-                        # 4. 顯示保存結果
-                        if modular_files and saved_path:
-                            st.success(f"已保存 {len(modular_files)} 個分模組報告 + 1個PDF彙總報告")
-                            with st.expander("查看保存的檔案"):
-                                st.write("**分模組報告:**")
-                                for module, path in modular_files.items():
-                                    st.write(f"- {module}: `{path}`")
-                                st.write("**PDF彙總報告:**")
-                                st.write(f"- PDF報告: `{saved_path}`")
-                        elif saved_path:
-                            st.success(f"PDF已保存到: {saved_path}")
-                        else:
-                            st.success("PDF生成成功！")
-
-                        st.download_button(
-                            label="下載 PDF",
-                            data=content,
-                            file_name=filename,
-                            mime="application/pdf"
-                        )
-                    else:
-                        logger.error("PDF匯出失敗，content為空")
-                        st.error("PDF生成失敗")
-                except Exception as e:
-                    logger.error(f"PDF匯出異常: {str(e)}", exc_info=True)
-                    st.error(f"PDF生成失敗")
-
-                    # 顯示詳細錯誤訊息
-                    with st.expander("查看詳細錯誤訊息"):
-                        st.text(str(e))
-
-                    # 提供解決方案
-                    with st.expander("解決方案"):
-                        st.markdown("""
-                        **PDF匯出需要額外的工具，請選擇以下方案之一:**
-
-                        **方案1: 安裝wkhtmltopdf (推薦)**
-                        ```bash
-                        # Windows
-                        choco install wkhtmltopdf
-
-                        # macOS
-                        brew install wkhtmltopdf
-
-                        # Linux
-                        sudo apt-get install wkhtmltopdf
-                        ```
-
-                        **方案2: 安裝LaTeX**
-                        ```bash
-                        # Windows
-                        choco install miktex
-
-                        # macOS
-                        brew install mactex
-
-                        # Linux
-                        sudo apt-get install texlive-full
-                        ```
-
-                        **方案3: 使用替代格式**
-                        - Markdown格式 - 輕量級，相容性好
-                        - Word格式 - 適合進一步編輯
-                        """)
-
-                    # 建議使用其他格式
-                    st.info("建議：您可以先使用Markdown或Word格式匯出，然後使用其他工具轉換為PDF")
+    # 三欄匯出按鈕（Markdown / Word / PDF）
+    columns = st.columns(len(_EXPORT_CONFIGS))
+    for col, config in zip(columns, _EXPORT_CONFIGS):
+        with col:
+            if st.button(f"匯出 {config['label']}", help=config['button_help']):
+                _execute_export(results, stock_symbol, timestamp, config)
 
 
 def save_analysis_report(stock_symbol: str, analysis_results: Dict[str, Any], 

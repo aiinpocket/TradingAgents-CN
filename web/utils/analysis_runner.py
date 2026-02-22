@@ -649,7 +649,6 @@ def validate_analysis_params(stock_symbol, analysis_date, analysts, research_dep
     
     # 驗證分析日期
     try:
-        from datetime import datetime
         datetime.strptime(analysis_date, '%Y-%m-%d')
     except ValueError:
         errors.append("分析日期格式無效，應為YYYY-MM-DD格式")

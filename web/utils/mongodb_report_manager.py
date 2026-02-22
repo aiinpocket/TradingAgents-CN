@@ -195,7 +195,6 @@ class MongoDBReportManager:
                     timestamp = float(timestamp_value)
                 else:
                     # 其他情況，使用當前時間
-                    from datetime import datetime
                     timestamp = datetime.now().timestamp()
                 
                 # 轉換為Web應用期望的格式

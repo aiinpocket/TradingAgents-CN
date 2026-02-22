@@ -4,6 +4,9 @@
 使用者可以查看、管理和清理股票資料快取
 """
 
+import json
+from datetime import datetime, timedelta
+
 import streamlit as st
 
 try:
@@ -134,7 +137,6 @@ def main():
                 if us_symbol:
                     with st.spinner(f"測試 {us_symbol} 快取..."):
                         try:
-                            from datetime import datetime, timedelta
                             provider = get_optimized_us_data_provider()
                             result = provider.get_stock_data(
                                 symbol=us_symbol,
@@ -210,9 +212,6 @@ def main():
         metadata_files = list(cache.metadata_dir.glob("*_meta.json"))
         
         if metadata_files:
-            import json
-            from datetime import datetime
-            
             cache_items = []
             for metadata_file in metadata_files:
                 try:
