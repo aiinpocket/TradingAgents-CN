@@ -2,6 +2,18 @@
  * TradingAgents 前端應用
  */
 
+// 配置常數
+const CONFIG = {
+  SSE_MAX_RETRIES: 3,
+  SSE_BACKOFF_BASE_MS: 1000,
+  SSE_BACKOFF_MAX_MS: 8000,
+  POLL_MAX_RETRIES: 60,
+  POLL_BACKOFF_BASE_MS: 3000,
+  POLL_BACKOFF_MAX_MS: 15000,
+  PROGRESS_STEP_PERCENT: 8,
+  PROGRESS_MAX_PERCENT: 95,
+};
+
 // 全域錯誤處理
 window.onerror = function(msg, src, line) {
   console.error('JS error:', msg, src, line);
@@ -171,7 +183,7 @@ function tradingApp() {
 
           if (data.type === 'progress') {
             this.progressMessages.push(data.message);
-            this.progressPercent = Math.min(95, this.progressMessages.length * 8);
+            this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, this.progressMessages.length * CONFIG.PROGRESS_STEP_PERCENT);
             this.connectionRetries = 0;
 
             // 自動捲動到最新
@@ -204,9 +216,9 @@ function tradingApp() {
         this.eventSource.close();
         if (this.analysisRunning) {
           this.connectionRetries++;
-          if (this.connectionRetries <= 3) {
+          if (this.connectionRetries <= CONFIG.SSE_MAX_RETRIES) {
             // 短暫延遲後重試 SSE
-            const delay = Math.min(1000 * Math.pow(2, this.connectionRetries - 1), 8000);
+            const delay = Math.min(CONFIG.SSE_BACKOFF_BASE_MS * Math.pow(2, this.connectionRetries - 1), CONFIG.SSE_BACKOFF_MAX_MS);
             setTimeout(() => {
               if (this.analysisRunning) this.connectSSE();
             }, delay);
@@ -221,9 +233,7 @@ function tradingApp() {
     },
 
     async pollStatus() {
-      const maxRetries = 60;  // 最多輪詢 60 次
-
-      while (this.analysisRunning && this.pollRetryCount < maxRetries) {
+      while (this.analysisRunning && this.pollRetryCount < CONFIG.POLL_MAX_RETRIES) {
         try {
           const res = await fetch(`/api/analysis/${this.analysisId}/status`);
 
@@ -254,11 +264,11 @@ function tradingApp() {
           }
         } catch (e) {
           this.pollRetryCount++;
-          console.error(`輪詢錯誤 (${this.pollRetryCount}/${maxRetries}):`, e);
+          console.error(`輪詢錯誤 (${this.pollRetryCount}/${CONFIG.POLL_MAX_RETRIES}):`, e);
         }
 
-        // 指數退避：3s -> 6s -> 12s -> 最多 15s
-        const delay = Math.min(3000 * Math.pow(2, Math.min(this.pollRetryCount, 3)), 15000);
+        // 指數退避
+        const delay = Math.min(CONFIG.POLL_BACKOFF_BASE_MS * Math.pow(2, Math.min(this.pollRetryCount, 3)), CONFIG.POLL_BACKOFF_MAX_MS);
         await new Promise(r => setTimeout(r, delay));
       }
 

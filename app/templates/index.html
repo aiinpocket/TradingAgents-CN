@@ -134,7 +134,8 @@
                 <template x-for="d in [1,2,3,4,5]" :key="d">
                   <button type="button" class="depth-btn"
                           :class="{ active: form.depth === d }"
-                          @click="form.depth = d">
+                          @click="form.depth = d"
+                          :title="['約 1-2 分鐘','約 2-3 分鐘','約 3-5 分鐘','約 5-8 分鐘','約 8-15 分鐘'][d-1]">
                     <span class="depth-num" x-text="d"></span>
                     <span class="depth-label" x-text="['快速','基礎','標準','深度','全面'][d-1]"></span>
                   </button>
@@ -145,19 +146,23 @@
             <div class="field">
               <label>分析模組</label>
               <div class="module-selector">
-                <label class="module-chip" :class="{ active: form.analysts.includes('market') }">
+                <label class="module-chip" :class="{ active: form.analysts.includes('market') }"
+                       title="技術圖表、均線、動量指標">
                   <input type="checkbox" value="market" x-model="form.analysts">
                   <span>市場技術</span>
                 </label>
-                <label class="module-chip" :class="{ active: form.analysts.includes('fundamentals') }">
+                <label class="module-chip" :class="{ active: form.analysts.includes('fundamentals') }"
+                       title="財務比率、盈利能力、成長率">
                   <input type="checkbox" value="fundamentals" x-model="form.analysts">
                   <span>基本面</span>
                 </label>
-                <label class="module-chip" :class="{ active: form.analysts.includes('news') }">
+                <label class="module-chip" :class="{ active: form.analysts.includes('news') }"
+                       title="新聞報導、媒體評論、事件分析">
                   <input type="checkbox" value="news" x-model="form.analysts">
                   <span>新聞輿情</span>
                 </label>
-                <label class="module-chip" :class="{ active: form.analysts.includes('social') }">
+                <label class="module-chip" :class="{ active: form.analysts.includes('social') }"
+                       title="社群討論、投資人情緒、話題趨勢">
                   <input type="checkbox" value="social" x-model="form.analysts">
                   <span>社群情緒</span>
                 </label>
@@ -260,18 +265,19 @@
         </div>
 
         <!-- 報告分頁 -->
-        <div class="tab-bar">
-          <button class="tab-btn" :class="{ active: reportTab === 'market' }"
+        <div class="tab-bar" role="tablist" @keydown.arrow-right.prevent="$event.target.nextElementSibling?.click()"
+             @keydown.arrow-left.prevent="$event.target.previousElementSibling?.click()">
+          <button class="tab-btn" role="tab" :aria-selected="reportTab === 'market'" :class="{ active: reportTab === 'market' }"
                   @click="reportTab = 'market'" x-show="result?.state?.market_report">市場技術</button>
-          <button class="tab-btn" :class="{ active: reportTab === 'fundamentals' }"
+          <button class="tab-btn" role="tab" :aria-selected="reportTab === 'fundamentals'" :class="{ active: reportTab === 'fundamentals' }"
                   @click="reportTab = 'fundamentals'" x-show="result?.state?.fundamentals_report">基本面</button>
-          <button class="tab-btn" :class="{ active: reportTab === 'news' }"
+          <button class="tab-btn" role="tab" :aria-selected="reportTab === 'news'" :class="{ active: reportTab === 'news' }"
                   @click="reportTab = 'news'" x-show="result?.state?.news_report">新聞輿情</button>
-          <button class="tab-btn" :class="{ active: reportTab === 'sentiment' }"
+          <button class="tab-btn" role="tab" :aria-selected="reportTab === 'sentiment'" :class="{ active: reportTab === 'sentiment' }"
                   @click="reportTab = 'sentiment'" x-show="result?.state?.sentiment_report">社群情緒</button>
-          <button class="tab-btn" :class="{ active: reportTab === 'risk' }"
+          <button class="tab-btn" role="tab" :aria-selected="reportTab === 'risk'" :class="{ active: reportTab === 'risk' }"
                   @click="reportTab = 'risk'" x-show="result?.state?.risk_assessment">風險評估</button>
-          <button class="tab-btn" :class="{ active: reportTab === 'debate' }"
+          <button class="tab-btn" role="tab" :aria-selected="reportTab === 'debate'" :class="{ active: reportTab === 'debate' }"
                   @click="reportTab = 'debate'" x-show="result?.state?.investment_debate_state">投資辯論</button>
         </div>
 
