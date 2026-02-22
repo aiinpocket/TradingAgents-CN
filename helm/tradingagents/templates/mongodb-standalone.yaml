@@ -40,14 +40,11 @@ spec:
         {{- include "tradingagents.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: mongodb
     spec:
-      securityContext:
-        fsGroup: 999
       containers:
         - name: mongodb
           image: {{ .Values.mongodb.image }}
           securityContext:
-            runAsUser: 999
-            runAsGroup: 999
+            runAsUser: 0
           ports:
             - containerPort: {{ .Values.mongodb.port }}
               protocol: TCP

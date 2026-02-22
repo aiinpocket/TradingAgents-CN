@@ -40,13 +40,10 @@ spec:
         {{- include "tradingagents.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: redis
     spec:
-      securityContext:
-        fsGroup: 999
       containers:
         - name: redis
           securityContext:
-            runAsUser: 999
-            runAsGroup: 999
+            runAsUser: 0
           image: {{ .Values.redis.image }}
           command:
             - redis-server
