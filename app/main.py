@@ -102,6 +102,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "camera=(), microphone=(), geolocation=(), payment=()"
         )
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        # HSTS - 強制 HTTPS（部署在 TLS 後時生效）
+        response.headers["Strict-Transport-Security"] = (
+            "max-age=31536000; includeSubDomains"
+        )
         # CSP - 允許自身資源 + 特定 CDN（需與 HTML 中 SRI 配合）
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "

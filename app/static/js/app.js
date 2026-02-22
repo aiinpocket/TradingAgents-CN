@@ -71,7 +71,11 @@ function tradingApp() {
       // 載入暗色模式偏好
       const saved = localStorage.getItem('theme');
       this.darkMode = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (this.darkMode) document.documentElement.setAttribute('data-theme', 'dark');
+      if (this.darkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        const meta = document.getElementById('theme-color-meta');
+        if (meta) meta.content = '#161b22';
+      }
 
       await this.checkHealth();
       await this.loadModels();
@@ -80,12 +84,15 @@ function tradingApp() {
 
     toggleTheme() {
       this.darkMode = !this.darkMode;
+      const meta = document.getElementById('theme-color-meta');
       if (this.darkMode) {
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
+        if (meta) meta.content = '#161b22';
       } else {
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
+        if (meta) meta.content = '#0052cc';
       }
     },
 

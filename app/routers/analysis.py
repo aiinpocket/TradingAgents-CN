@@ -21,6 +21,7 @@ router = APIRouter(tags=["analysis"])
 # 進行中的分析任務（有上限的有序字典）
 _MAX_ANALYSES = 100
 _SSE_TIMEOUT_SECONDS = 1800  # 30 分鐘
+_ANALYSIS_EXPIRE_SECONDS = 7200  # 2 小時後自動清理已完成的分析
 _active_analyses: OrderedDict = OrderedDict()
 _analyses_lock = threading.Lock()
 
@@ -63,7 +64,18 @@ class AnalysisStatus(BaseModel):
 
 def _cleanup_old_analyses():
     """清理已完成的舊分析，保持在上限以下"""
+    now = time.time()
     with _analyses_lock:
+        # 先清理超時的已完成任務
+        expired = [
+            aid for aid, d in _active_analyses.items()
+            if d["status"] in ("completed", "failed")
+            and now - d.get("created_at", 0) > _ANALYSIS_EXPIRE_SECONDS
+        ]
+        for aid in expired:
+            _active_analyses.pop(aid, None)
+
+        # 再檢查數量上限
         while len(_active_analyses) >= _MAX_ANALYSES:
             # 移除最舊的已完成任務
             removed = False
@@ -92,6 +104,9 @@ async def start_analysis(req: AnalysisRequest):
         analysis_date_obj = datetime.strptime(req.analysis_date, "%Y-%m-%d")
     except ValueError:
         raise HTTPException(status_code=400, detail="日期格式錯誤，應為 YYYY-MM-DD")
+    _MIN_DATE = datetime(2000, 1, 1).date()
+    if analysis_date_obj.date() < _MIN_DATE:
+        raise HTTPException(status_code=400, detail="分析日期不能早於 2000-01-01")
     if analysis_date_obj.date() > datetime.now().date():
         raise HTTPException(status_code=400, detail="分析日期不能是未來日期")
 
