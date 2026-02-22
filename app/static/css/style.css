@@ -2001,12 +2001,23 @@ code {
   border-radius: var(--radius);
   border: 1px solid var(--border-card);
   text-align: center;
-  transition: transform 0.1s, box-shadow 0.15s;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s, background 0.12s;
 }
 
 .sector-card:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--bg-hover);
+}
+
+.sector-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.sector-card:active {
+  transform: scale(0.97);
 }
 
 .sector-card.sector-up {

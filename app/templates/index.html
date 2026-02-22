@@ -271,7 +271,11 @@
         </div>
         <div class="sectors-grid">
           <template x-for="sector in trendingData.sectors" :key="sector.symbol">
-            <div class="sector-card" :class="sector.change_pct >= 0 ? 'sector-up' : 'sector-down'">
+            <div class="sector-card" role="button" tabindex="0"
+                 :class="sector.change_pct >= 0 ? 'sector-up' : 'sector-down'"
+                 @click="quickAnalyze(sector.symbol)"
+                 @keydown.enter="quickAnalyze(sector.symbol)"
+                 :title="t('trending.quick_analyze') + ' ' + sector.symbol">
               <div class="sector-name" x-text="lang === 'en' ? sector.name_en : sector.name"></div>
               <div class="sector-symbol" x-text="sector.symbol"></div>
               <div class="sector-change" :class="sector.change_pct >= 0 ? 'text-up' : 'text-down'"
