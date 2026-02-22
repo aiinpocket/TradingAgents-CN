@@ -427,12 +427,14 @@ section[data-testid="stSidebar"] .stSelectbox {
     margin-bottom: -0.5rem;
 }
 
-/* 提交按鈕圓角收窄，降低 "demo" 感 */
+/* 提交按鈕 - 專業風格 */
 [data-testid="stFormSubmitButton"] button {
     border-radius: 6px !important;
     font-size: 0.875rem !important;
     padding: 0.5rem 1.5rem !important;
     letter-spacing: 0.02em;
+    max-width: 240px !important;
+    margin: 0 auto !important;
 }
 
 /* 側邊欄分隔線淡化 */
@@ -450,4 +452,20 @@ section[data-testid="stSidebar"] .stMarkdown hr {
 /* 頁面 h4 小標題 */
 .stMarkdown h4 {
     margin-top: 0.25rem;
+}
+
+/* 風險提示文字 - 降低視覺權重 */
+.stApp .stCaption {
+    font-size: 0.6875rem;
+}
+
+/* 進度條細化 */
+.stProgress > div > div {
+    height: 4px !important;
+}
+
+/* Streamlit Toast 通知 */
+[data-testid="stToast"] {
+    font-size: 0.8125rem;
+    border-radius: 6px;
 }
