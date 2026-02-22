@@ -120,6 +120,14 @@ const I18N_MESSAGES = {
     'theme.to_dark': '切換深色模式',
     'theme.to_light': '切換淺色模式',
 
+    // 通知
+    'analysis.completed': '分析完成',
+    'analysis.failed': '分析失敗',
+
+    // 無障礙
+    'a11y.analyze_stock': '分析股票',
+    'a11y.switch_lang': '切換至英文',
+
     // 通用
     'common.no_data': '暫無資料',
     'common.error': '發生錯誤',
@@ -240,6 +248,14 @@ const I18N_MESSAGES = {
     // Theme
     'theme.to_dark': 'Switch to dark mode',
     'theme.to_light': 'Switch to light mode',
+
+    // Notifications
+    'analysis.completed': 'analysis completed',
+    'analysis.failed': 'analysis failed',
+
+    // Accessibility
+    'a11y.analyze_stock': 'Analyze stock',
+    'a11y.switch_lang': 'Switch to Chinese',
 
     // Common
     'common.no_data': 'No data',

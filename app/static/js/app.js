@@ -544,8 +544,8 @@ function tradingApp() {
     _notifyCompletion(success) {
       const symbol = this.form.symbol || '';
       const title = success
-        ? `${symbol} ${this.lang === 'en' ? 'analysis completed' : '分析完成'}`
-        : `${symbol} ${this.lang === 'en' ? 'analysis failed' : '分析失敗'}`;
+        ? `${symbol} ${this.t('analysis.completed')}`
+        : `${symbol} ${this.t('analysis.failed')}`;
       document.title = title + ' - TradingAgents';
       setTimeout(() => { document.title = 'TradingAgents - AI Stock Analysis'; }, 5000);
       if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
