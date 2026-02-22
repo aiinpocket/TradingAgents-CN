@@ -29,6 +29,14 @@ except ImportError:
     TOKEN_TRACKING_ENABLED = False
     logger.warning("Token追蹤功能未啟用")
 
+# 英文投資建議與中文的映射
+_ACTION_TRANSLATION = {
+    'BUY': '買入', 'SELL': '賣出', 'HOLD': '持有',
+    'buy': '買入', 'sell': '賣出', 'hold': '持有',
+    'Buy': '買入', 'Sell': '賣出', 'Hold': '持有',
+}
+
+
 def translate_analyst_labels(text):
     """將分析師的英文標籤轉換為中文"""
     if not text:
@@ -485,9 +493,9 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             'state': {},  # 空狀態，將顯示占位符
             'decision': {},  # 空決策
             'success': False,
-            'error': str(e),
+            'error': '分析過程中發生錯誤，請查看伺服器日誌',
             'is_demo': False,
-            'error_reason': f"分析失敗: {str(e)}"
+            'error_reason': '分析失敗，請稍後重試或調整參數'
         }
 
 def format_analysis_results(results):
@@ -506,15 +514,7 @@ def format_analysis_results(results):
     # decision 可能是字串（如 "BUY", "SELL", "HOLD"）或字典
     if isinstance(decision, str):
         # 將英文投資建議轉換為中文
-        action_translation = {
-            'BUY': '買入',
-            'SELL': '賣出',
-            'HOLD': '持有',
-            'buy': '買入',
-            'sell': '賣出',
-            'hold': '持有'
-        }
-        action = action_translation.get(decision.strip(), decision.strip())
+        action = _ACTION_TRANSLATION.get(decision.strip(), decision.strip())
 
         formatted_decision = {
             'action': action,
@@ -543,16 +543,8 @@ def format_analysis_results(results):
             target_price = None
 
         # 將英文投資建議轉換為中文
-        action_translation = {
-            'BUY': '買入',
-            'SELL': '賣出',
-            'HOLD': '持有',
-            'buy': '買入',
-            'sell': '賣出',
-            'hold': '持有'
-        }
         action = decision.get('action', '持有')
-        chinese_action = action_translation.get(action, action)
+        chinese_action = _ACTION_TRANSLATION.get(action, action)
 
         formatted_decision = {
             'action': chinese_action,
