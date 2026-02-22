@@ -77,13 +77,13 @@ affinity: {}
 # =============================================================
 healthCheck:
   liveness:
-    path: /_stcore/health
+    path: /health
     initialDelaySeconds: 120
     periodSeconds: 15
     timeoutSeconds: 5
     failureThreshold: 5
   readiness:
-    path: /_stcore/health
+    path: /health
     initialDelaySeconds: 60
     periodSeconds: 10
     timeoutSeconds: 3

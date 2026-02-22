@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradingAgents - 美股交易分析</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body x-data="tradingApp()" x-init="init()">
+
+  <!-- 頂部導覽列 -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <span class="brand-icon">TA</span>
+        <span class="brand-name">TradingAgents</span>
+        <span class="brand-tag">US Equities</span>
+      </div>
+      <nav class="topbar-nav">
+        <button class="nav-btn" :class="{ active: tab === 'analysis' }" @click="tab = 'analysis'">分析</button>
+        <button class="nav-btn" :class="{ active: tab === 'history' }" @click="tab = 'history'; loadHistory()">歷史</button>
+        <button class="nav-btn" :class="{ active: tab === 'config' }" @click="tab = 'config'; loadConfig()">配置</button>
+      </nav>
+      <div class="topbar-status">
+        <span class="status-dot" :class="apiReady ? 'online' : 'offline'"></span>
+        <span class="status-text" x-text="apiReady ? '已連線' : '離線'"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 分析頁面 -->
+    <div x-show="tab === 'analysis'" x-transition>
+
+      <!-- 分析表單 -->
+      <section class="card" x-show="!analysisRunning && !showResults">
+        <h2 class="card-title">股票分析</h2>
+        <p class="card-desc">輸入美股代碼，系統將啟動多代理團隊進行全方位分析。</p>
+
+        <form @submit.prevent="startAnalysis()" class="form-grid">
+          <div class="form-group span-2">
+            <label for="symbol">股票代碼</label>
+            <input id="symbol" type="text" x-model="form.symbol" placeholder="例如 AAPL, TSLA, NVDA"
+                   maxlength="5" class="input-lg" required
+                   @input="form.symbol = $event.target.value.toUpperCase()">
+          </div>
+
+          <div class="form-group">
+            <label for="date">分析日期</label>
+            <input id="date" type="date" x-model="form.date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="depth">研究深度</label>
+            <select id="depth" x-model.number="form.depth">
+              <option value="1">Level 1 - 快速掃描</option>
+              <option value="2">Level 2 - 基礎分析</option>
+              <option value="3" selected>Level 3 - 標準分析</option>
+              <option value="4">Level 4 - 深度分析</option>
+              <option value="5">Level 5 - 全面分析</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="provider">LLM 提供商</label>
+            <select id="provider" x-model="form.provider" @change="updateModelOptions()">
+              <template x-for="p in availableProviders" :key="p">
+                <option :value="p" x-text="p === 'openai' ? 'OpenAI' : 'Anthropic'"></option>
+              </template>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="model">模型</label>
+            <select id="model" x-model="form.model">
+              <template x-for="m in currentModels" :key="m.id">
+                <option :value="m.id" x-text="m.name"></option>
+              </template>
+            </select>
+          </div>
+
+          <div class="form-group span-full">
+            <label>分析模組</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" value="market" x-model="form.analysts">
+                <span>市場技術</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="fundamentals" x-model="form.analysts">
+                <span>基本面</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="news" x-model="form.analysts">
+                <span>新聞輿情</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="social" x-model="form.analysts">
+                <span>社群情緒</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group span-full">
+            <button type="submit" class="btn-primary" :disabled="!canSubmit">
+              <span x-show="!submitting">開始分析</span>
+              <span x-show="submitting">提交中...</span>
+            </button>
+          </div>
+        </form>
+
+        <template x-if="formError">
+          <div class="alert alert-error" x-text="formError"></div>
+        </template>
+      </section>
+
+      <!-- 分析進度 -->
+      <section class="card" x-show="analysisRunning" x-transition>
+        <div class="progress-header">
+          <h2 class="card-title">
+            <span x-text="form.symbol"></span> 分析中
+          </h2>
+          <span class="progress-badge">進行中</span>
+        </div>
+
+        <div class="progress-bar-container">
+          <div class="progress-bar" :style="{ width: progressPercent + '%' }"></div>
+        </div>
+
+        <div class="progress-log" x-ref="progressLog">
+          <template x-for="(msg, idx) in progressMessages" :key="idx">
+            <div class="log-entry" :class="{ 'log-latest': idx === progressMessages.length - 1 }">
+              <span class="log-time" x-text="formatTime(idx)"></span>
+              <span class="log-msg" x-text="msg"></span>
+            </div>
+          </template>
+          <div class="log-entry log-waiting" x-show="progressMessages.length === 0">
+            <span class="log-msg">等待分析引擎啟動...</span>
+          </div>
+        </div>
+
+        <p class="progress-hint">
+          分析通常需要 2-8 分鐘，取決於研究深度和模型選擇。
+        </p>
+      </section>
+
+      <!-- 分析結果 -->
+      <section x-show="showResults" x-transition>
+        <div class="results-header">
+          <div>
+            <h2 class="results-title" x-text="result?.stock_symbol + ' 分析報告'"></h2>
+            <p class="results-meta">
+              <span x-text="result?.analysis_date"></span>
+              <span class="meta-sep">|</span>
+              <span x-text="result?.llm_provider?.toUpperCase()"></span>
+              <span class="meta-sep">|</span>
+              <span x-text="'深度 ' + result?.research_depth"></span>
+            </p>
+          </div>
+          <button class="btn-outline" @click="resetAnalysis()">新分析</button>
+        </div>
+
+        <!-- 交易決策摘要 -->
+        <div class="card decision-card" x-show="result?.decision">
+          <div class="decision-grid">
+            <div class="decision-action" :class="getActionClass(result?.decision?.action)">
+              <span class="decision-label">交易建議</span>
+              <span class="decision-value" x-text="result?.decision?.action || '-'"></span>
+            </div>
+            <div class="decision-metric">
+              <span class="decision-label">信心度</span>
+              <span class="decision-value" x-text="formatPercent(result?.decision?.confidence)"></span>
+            </div>
+            <div class="decision-metric">
+              <span class="decision-label">風險評分</span>
+              <span class="decision-value" x-text="formatPercent(result?.decision?.risk_score)"></span>
+            </div>
+            <div class="decision-metric" x-show="result?.decision?.target_price">
+              <span class="decision-label">目標價格</span>
+              <span class="decision-value" x-text="'$' + result?.decision?.target_price"></span>
+            </div>
+          </div>
+          <div class="decision-reasoning" x-show="result?.decision?.reasoning">
+            <p x-text="result?.decision?.reasoning"></p>
+          </div>
+        </div>
+
+        <!-- 分析報告內容 -->
+        <div class="report-tabs">
+          <button class="report-tab" :class="{ active: reportTab === 'market' }"
+                  @click="reportTab = 'market'" x-show="result?.state?.market_report">市場技術</button>
+          <button class="report-tab" :class="{ active: reportTab === 'fundamentals' }"
+                  @click="reportTab = 'fundamentals'" x-show="result?.state?.fundamentals_report">基本面</button>
+          <button class="report-tab" :class="{ active: reportTab === 'news' }"
+                  @click="reportTab = 'news'" x-show="result?.state?.news_report">新聞輿情</button>
+          <button class="report-tab" :class="{ active: reportTab === 'sentiment' }"
+                  @click="reportTab = 'sentiment'" x-show="result?.state?.sentiment_report">社群情緒</button>
+          <button class="report-tab" :class="{ active: reportTab === 'risk' }"
+                  @click="reportTab = 'risk'" x-show="result?.state?.risk_assessment">風險評估</button>
+          <button class="report-tab" :class="{ active: reportTab === 'debate' }"
+                  @click="reportTab = 'debate'" x-show="result?.state?.investment_debate_state">投資辯論</button>
+        </div>
+
+        <div class="card report-content">
+          <div x-show="reportTab === 'market'" x-html="renderMarkdown(result?.state?.market_report)"></div>
+          <div x-show="reportTab === 'fundamentals'" x-html="renderMarkdown(result?.state?.fundamentals_report)"></div>
+          <div x-show="reportTab === 'news'" x-html="renderMarkdown(result?.state?.news_report)"></div>
+          <div x-show="reportTab === 'sentiment'" x-html="renderMarkdown(result?.state?.sentiment_report)"></div>
+          <div x-show="reportTab === 'risk'" x-html="renderMarkdown(result?.state?.risk_assessment)"></div>
+          <div x-show="reportTab === 'debate'" x-html="renderDebate(result?.state?.investment_debate_state)"></div>
+        </div>
+
+        <!-- 風險提示 -->
+        <p class="disclaimer">分析結果僅供研究參考，不構成投資建議。請結合個人風險承受能力做出投資決策。</p>
+      </section>
+
+    </div>
+
+    <!-- 歷史頁面 -->
+    <div x-show="tab === 'history'" x-transition>
+      <section class="card">
+        <h2 class="card-title">分析歷史</h2>
+        <template x-if="historyList.length === 0">
+          <p class="empty-state">尚無分析記錄。</p>
+        </template>
+        <div class="history-list">
+          <template x-for="item in historyList" :key="item.analysis_id">
+            <div class="history-item" @click="loadAnalysisResult(item.analysis_id)">
+              <span class="history-symbol" x-text="item.stock_symbol"></span>
+              <span class="history-date" x-text="item.analysis_date"></span>
+              <span class="history-status" :class="'status-' + item.status" x-text="statusText(item.status)"></span>
+            </div>
+          </template>
+        </div>
+      </section>
+    </div>
+
+    <!-- 配置頁面 -->
+    <div x-show="tab === 'config'" x-transition>
+      <section class="card">
+        <h2 class="card-title">系統配置</h2>
+        <p class="card-desc">API 密鑰請在伺服器端的 <code>.env</code> 檔案中配置。</p>
+
+        <div class="config-grid">
+          <template x-for="(info, key) in configStatus?.keys || {}" :key="key">
+            <div class="config-item">
+              <div class="config-label" x-text="key.toUpperCase()"></div>
+              <div class="config-value">
+                <span class="config-status-dot" :class="info.configured ? 'online' : 'offline'"></span>
+                <span x-text="info.configured ? '已配置' : '未配置'"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="footer">
+    <span>TradingAgents</span>
+    <span class="footer-sep">|</span>
+    <a href="https://github.com/aiinpocket/TradingAgents-CN" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

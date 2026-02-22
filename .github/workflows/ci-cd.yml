@@ -115,7 +115,7 @@ jobs:
         run: |
           for i in 1 2 3 4 5; do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
-              https://stock-us.aiinpocket.com/_stcore/health || echo "000")
+              https://stock-us.aiinpocket.com/health || echo "000")
             echo "Attempt ${i}: ${STATUS}"
             [ "${STATUS}" = "200" ] && echo "PASSED" && exit 0
             sleep 30

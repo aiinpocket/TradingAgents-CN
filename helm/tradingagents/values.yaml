@@ -55,16 +55,16 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-# 健康檢查（Streamlit 內建端點）
+# 健康檢查（FastAPI 端點）
 healthCheck:
   liveness:
-    path: /_stcore/health
+    path: /health
     initialDelaySeconds: 90
     periodSeconds: 15
     timeoutSeconds: 5
     failureThreshold: 5
   readiness:
-    path: /_stcore/health
+    path: /health
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 3

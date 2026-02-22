@@ -12,8 +12,10 @@ dependencies = [
     "beautifulsoup4>=4.12.0",
     "chromadb>=1.0.12",
     "cryptography>=46.0.5",
+    "fastapi>=0.115.0",
     "feedparser>=6.0.11",
     "finnhub-python>=2.4.23",
+    "jinja2>=3.1.0",
     "langchain>=0.3.0",
     "langchain-anthropic>=0.3.15",
     "langchain-core>=0.3.81",
@@ -28,6 +30,7 @@ dependencies = [
     "pymongo>=4.0.0",
     "pypandoc>=1.11",
     "python-dotenv>=1.0.0",
+    "python-multipart>=0.0.9",
     "pytz>=2025.2",
     "questionary>=2.1.0",
     "redis>=6.2.0",
@@ -39,6 +42,7 @@ dependencies = [
     "streamlit-cookies-manager>=0.2.0",
     "tqdm>=4.67.1",
     "typer>=0.9.0",
+    "uvicorn[standard]>=0.34.0",
     "yfinance>=0.2.63",
 ]
 

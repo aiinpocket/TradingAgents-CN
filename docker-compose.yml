@@ -1,5 +1,5 @@
 services:
-  # Streamlit Web 應用服務
+  # Web 應用服務（FastAPI）
   web:
     build: .
     image: tradingagents-cn:latest
@@ -9,6 +9,7 @@ services:
     volumes:
       - .env:/app/.env
       # 開發環境程式碼映射
+      - ./app:/app/app
       - ./web:/app/web
       - ./tradingagents:/app/tradingagents
       - ./scripts:/app/scripts
@@ -36,7 +37,7 @@ services:
       # Docker 環境標識和 PDF 支援
       DOCKER_CONTAINER: "true"
       DISPLAY: ":99"
-    command: /usr/local/bin/start-xvfb.sh python -m streamlit run web/app.py --server.address=0.0.0.0 --server.port=8501
+    command: /usr/local/bin/start-xvfb.sh python start_app.py --host 0.0.0.0 --port 8501
     depends_on:
       - mongodb
       - redis
@@ -44,7 +45,7 @@ services:
       - tradingagents-network
     # 健康檢查
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8501/health"]
       interval: 30s
       timeout: 10s
       retries: 3
