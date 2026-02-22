@@ -1,10 +1,12 @@
 """
 TradingAgents FastAPI 應用程式
-取代 Streamlit，提供更快速的載入與更現代的介面
+提供快速載入與現代化的金融分析介面
 """
 
 import os
 import sys
+import time
+from collections import defaultdict
 from pathlib import Path
 from contextlib import asynccontextmanager
 
@@ -12,6 +14,9 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 from dotenv import load_dotenv
 
 # 專案根目錄
@@ -42,14 +47,98 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
-    version="0.2.0",
+    version="0.2.2",
     lifespan=lifespan,
     docs_url="/api/docs",
     redoc_url=None,
 )
 
-# CORS - 限制為同源請求，部署時可透過環境變數配置
-_cors_origins = os.getenv("CORS_ORIGINS", "").split(",") if os.getenv("CORS_ORIGINS") else []
+
+# 速率限制中介層
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    """簡易 IP 速率限制"""
+
+    def __init__(self, app, max_requests: int = 60, window_seconds: int = 60):
+        super().__init__(app)
+        self.max_requests = max_requests
+        self.window = window_seconds
+        self._hits: dict[str, list[float]] = defaultdict(list)
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        # 只限制 API 路徑
+        if not request.url.path.startswith("/api/"):
+            return await call_next(request)
+
+        client_ip = request.client.host if request.client else "unknown"
+        now = time.monotonic()
+        hits = self._hits[client_ip]
+
+        # 清除過期紀錄
+        cutoff = now - self.window
+        self._hits[client_ip] = [t for t in hits if t > cutoff]
+        hits = self._hits[client_ip]
+
+        if len(hits) >= self.max_requests:
+            return JSONResponse(
+                status_code=429,
+                content={"detail": "請求過於頻繁，請稍後再試"},
+                headers={"Retry-After": str(self.window)},
+            )
+
+        hits.append(now)
+        return await call_next(request)
+
+
+# 安全 Headers 中介層
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """新增安全相關 HTTP Headers"""
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = (
+            "camera=(), microphone=(), geolocation=(), payment=()"
+        )
+        response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        # CSP - 允許自身資源 + 特定 CDN（需與 HTML 中 SRI 配合）
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self' https://cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "font-src 'self' https://fonts.gstatic.com; "
+            "img-src 'self' data:; "
+            "connect-src 'self'; "
+            "frame-ancestors 'none'"
+        )
+        return response
+
+
+# 請求大小限制中介層
+class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
+    """限制請求 body 大小"""
+
+    MAX_BODY_SIZE = 64 * 1024  # 64 KB
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        content_length = request.headers.get("content-length")
+        if content_length and int(content_length) > self.MAX_BODY_SIZE:
+            return JSONResponse(
+                status_code=413,
+                content={"detail": "請求內容過大"},
+            )
+        return await call_next(request)
+
+
+# 中介層順序：外層先執行
+app.add_middleware(RequestSizeLimitMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RateLimitMiddleware, max_requests=60, window_seconds=60)
+
+# CORS
+_cors_env = os.getenv("CORS_ORIGINS", "").strip()
+_cors_origins = [o.strip() for o in _cors_env.split(",") if o.strip()] if _cors_env else []
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,
@@ -78,4 +167,4 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     """健康檢查"""
-    return {"status": "ok", "version": "0.2.0"}
+    return {"status": "ok", "version": "0.2.2"}

@@ -49,5 +49,5 @@ RUN pip install --no-deps -e .
 
 EXPOSE 8501
 
-# 預設使用 FastAPI 啟動（也保留 Streamlit 支援）
+# 使用 FastAPI + Uvicorn 啟動
 CMD ["python", "start_app.py", "--host", "0.0.0.0", "--port", "8501"]

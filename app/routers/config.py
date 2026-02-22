@@ -50,6 +50,7 @@ async def get_available_models():
         ],
         "anthropic": [
             {"id": "claude-sonnet-4-20250514", "name": "Claude Sonnet 4", "tier": "deep"},
+            {"id": "claude-opus-4-20250514", "name": "Claude Opus 4", "tier": "deep"},
             {"id": "claude-haiku-4-20250514", "name": "Claude Haiku 4", "tier": "quick"},
         ],
     }

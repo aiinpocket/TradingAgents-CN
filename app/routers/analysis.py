@@ -12,7 +12,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -33,7 +33,7 @@ class LLMProvider(str, Enum):
 # 允許的模型白名單
 _ALLOWED_MODELS = {
     "openai": {"o4-mini", "gpt-4o-mini", "gpt-4o", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano"},
-    "anthropic": {"claude-sonnet-4-20250514", "claude-haiku-4-20250514"},
+    "anthropic": {"claude-sonnet-4-20250514", "claude-haiku-4-20250514", "claude-opus-4-20250514"},
 }
 
 
@@ -158,7 +158,7 @@ async def get_analysis_status(analysis_id: str):
 
 
 @router.get("/analysis/{analysis_id}/stream")
-async def stream_analysis(analysis_id: str):
+async def stream_analysis(analysis_id: str, request: Request):
     """SSE 串流分析進度"""
     if analysis_id not in _active_analyses:
         raise HTTPException(status_code=404, detail="分析任務不存在")
@@ -167,6 +167,10 @@ async def stream_analysis(analysis_id: str):
         last_idx = 0
         start_time = time.time()
         while True:
+            # 偵測客戶端斷線
+            if await request.is_disconnected():
+                break
+
             # SSE 超時保護
             if time.time() - start_time > _SSE_TIMEOUT_SECONDS:
                 yield f"data: {json.dumps({'type': 'failed', 'error': '分析超時'}, ensure_ascii=False)}\n\n"
@@ -214,7 +218,12 @@ async def get_analysis_history():
             "status": data["status"],
             "stock_symbol": data["stock_symbol"],
             "analysis_date": data.get("analysis_date", ""),
+            "created_at": data.get("created_at", 0),
+            "llm_provider": data.get("llm_provider", ""),
+            "research_depth": data.get("research_depth", 3),
         })
+    # 按建立時間排序，最新的在後面
+    history.sort(key=lambda x: x["created_at"])
     return {"analyses": history[-20:]}
 
 

@@ -12,6 +12,7 @@ function tradingApp() {
     submitting: false,
     formError: null,
     reportTab: 'market',
+    connectionRetries: 0,
 
     // 表單
     form: {
@@ -35,6 +36,7 @@ function tradingApp() {
     analysisId: null,
     eventSource: null,
     startTime: null,
+    pollRetryCount: 0,
 
     get canSubmit() {
       return this.form.symbol.length > 0 &&
@@ -45,6 +47,8 @@ function tradingApp() {
     async init() {
       await this.checkHealth();
       await this.loadModels();
+      // 設定預設日期為今天
+      this.form.date = new Date().toISOString().split('T')[0];
     },
 
     async checkHealth() {
@@ -59,6 +63,7 @@ function tradingApp() {
     async loadModels() {
       try {
         const res = await fetch('/api/config/models');
+        if (!res.ok) return;
         const data = await res.json();
         this.allModels = data.models || {};
         this.availableProviders = Object.keys(this.allModels);
@@ -103,7 +108,7 @@ function tradingApp() {
         });
 
         if (!res.ok) {
-          const err = await res.json();
+          const err = await res.json().catch(() => ({}));
           throw new Error(err.detail || '啟動分析失敗');
         }
 
@@ -115,6 +120,8 @@ function tradingApp() {
         this.startTime = Date.now();
         this.result = null;
         this.showResults = false;
+        this.connectionRetries = 0;
+        this.pollRetryCount = 0;
 
         this.connectSSE();
 
@@ -139,6 +146,7 @@ function tradingApp() {
           if (data.type === 'progress') {
             this.progressMessages.push(data.message);
             this.progressPercent = Math.min(95, this.progressMessages.length * 8);
+            this.connectionRetries = 0;
 
             // 自動捲動到最新
             this.$nextTick(() => {
@@ -167,23 +175,46 @@ function tradingApp() {
       };
 
       this.eventSource.onerror = () => {
-        // 如果連線斷開，改用輪詢
         this.eventSource.close();
         if (this.analysisRunning) {
-          this.pollStatus();
+          this.connectionRetries++;
+          if (this.connectionRetries <= 3) {
+            // 短暫延遲後重試 SSE
+            const delay = Math.min(1000 * Math.pow(2, this.connectionRetries - 1), 8000);
+            setTimeout(() => {
+              if (this.analysisRunning) this.connectSSE();
+            }, delay);
+          } else {
+            // SSE 重試失敗，改用輪詢
+            this.pollRetryCount = 0;
+            this.pollStatus();
+          }
         }
       };
     },
 
     async pollStatus() {
-      while (this.analysisRunning) {
+      const maxRetries = 60;  // 最多輪詢 60 次
+
+      while (this.analysisRunning && this.pollRetryCount < maxRetries) {
         try {
           const res = await fetch(`/api/analysis/${this.analysisId}/status`);
-          const data = await res.json();
 
+          if (!res.ok) {
+            if (res.status === 404) {
+              this.analysisRunning = false;
+              this.formError = '分析任務已失效，請重新開始';
+              return;
+            }
+            throw new Error(`HTTP ${res.status}`);
+          }
+
+          const data = await res.json();
           this.progressMessages = data.progress || [];
+          this.pollRetryCount = 0;  // 成功時重設重試計數
 
           if (data.status === 'completed') {
+            this.progressPercent = 100;
             this.analysisRunning = false;
             this.result = data.result;
             this.showResults = true;
@@ -195,10 +226,18 @@ function tradingApp() {
             return;
           }
         } catch (e) {
-          console.error('輪詢錯誤:', e);
+          this.pollRetryCount++;
+          console.error(`輪詢錯誤 (${this.pollRetryCount}/${maxRetries}):`, e);
         }
 
-        await new Promise(r => setTimeout(r, 3000));
+        // 指數退避：3s -> 6s -> 12s -> 最多 15s
+        const delay = Math.min(3000 * Math.pow(2, Math.min(this.pollRetryCount, 3)), 15000);
+        await new Promise(r => setTimeout(r, delay));
+      }
+
+      if (this.analysisRunning) {
+        this.analysisRunning = false;
+        this.formError = '連線逾時，請檢查網路後重試';
       }
     },
 
@@ -222,6 +261,10 @@ function tradingApp() {
     },
 
     resetAnalysis() {
+      if (this.eventSource) {
+        this.eventSource.close();
+        this.eventSource = null;
+      }
       this.analysisRunning = false;
       this.showResults = false;
       this.result = null;
@@ -229,11 +272,14 @@ function tradingApp() {
       this.progressPercent = 0;
       this.formError = null;
       this.analysisId = null;
+      this.connectionRetries = 0;
+      this.pollRetryCount = 0;
     },
 
     async loadHistory() {
       try {
         const res = await fetch('/api/analysis/history');
+        if (!res.ok) return;
         const data = await res.json();
         this.historyList = (data.analyses || []).reverse();
       } catch (e) {
@@ -244,6 +290,7 @@ function tradingApp() {
     async loadAnalysisResult(analysisId) {
       try {
         const res = await fetch(`/api/analysis/${analysisId}/status`);
+        if (!res.ok) return;
         const data = await res.json();
         if (data.result) {
           this.result = data.result;
@@ -260,6 +307,7 @@ function tradingApp() {
     async loadConfig() {
       try {
         const res = await fetch('/api/config/status');
+        if (!res.ok) return;
         this.configStatus = await res.json();
       } catch (e) {
         console.error('載入配置失敗:', e);
@@ -312,8 +360,12 @@ function tradingApp() {
 
       html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
       html = `<div class="markdown-body"><p>${html}</p></div>`;
-      // DOMPurify 淨化，防止 XSS
-      return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(html) : html;
+
+      // DOMPurify 安全淨化 - 若 CDN 未載入則拒絕渲染
+      if (typeof DOMPurify !== 'undefined') {
+        return DOMPurify.sanitize(html);
+      }
+      return '<p class="empty-state">安全模組載入失敗，無法顯示報告內容</p>';
     },
 
     renderDebate(debateState) {
@@ -347,7 +399,11 @@ function tradingApp() {
       }
 
       html += '</div>';
-      return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(html) : html;
+
+      if (typeof DOMPurify !== 'undefined') {
+        return DOMPurify.sanitize(html);
+      }
+      return '<p class="empty-state">安全模組載入失敗，無法顯示辯論內容</p>';
     },
   };
 }
