@@ -16,6 +16,14 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
+try:
+    from tradingagents.utils.logging_manager import get_logger
+    logger = get_logger("analysis")
+except ImportError:
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger("analysis")
+
 router = APIRouter(tags=["analysis"])
 
 # 進行中的分析任務（有上限的有序字典）
@@ -346,3 +354,143 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
         llm_model=model,
         progress_callback=progress_callback,
     )
+
+
+# ---------------------------------------------------------------------------
+# 個股快照 API（即時行情 + 新聞）
+# ---------------------------------------------------------------------------
+_CONTEXT_CACHE: dict = {}
+_CONTEXT_CACHE_TTL = 600  # 10 分鐘
+
+_PAID_NEWS_SOURCES = {
+    "the wall street journal", "wsj", "wall street journal",
+    "bloomberg", "financial times", "ft", "barron's", "barrons",
+    "barrons.com", "the economist", "investor's business daily", "ibd",
+}
+
+
+def _fetch_stock_context(symbol: str) -> dict:
+    """取得個股即時行情、關鍵指標和近期新聞（同步，在 executor 中執行）"""
+    try:
+        import yfinance as yf
+    except ImportError:
+        return {"error": "yfinance not installed"}
+
+    result: dict = {"symbol": symbol}
+
+    try:
+        ticker = yf.Ticker(symbol)
+        info = ticker.info or {}
+
+        # 基本行情
+        price = info.get("currentPrice") or info.get("regularMarketPrice", 0)
+        prev_close = info.get("previousClose") or info.get("regularMarketPreviousClose", 0)
+        change = round(price - prev_close, 2) if price and prev_close else 0
+        change_pct = round((change / prev_close) * 100, 2) if prev_close else 0
+
+        result.update({
+            "name": info.get("shortName") or info.get("longName", symbol),
+            "price": price,
+            "change": change,
+            "change_pct": change_pct,
+            "volume": info.get("volume") or info.get("regularMarketVolume", 0),
+            "market_cap": info.get("marketCap", 0),
+            "pe_ratio": info.get("trailingPE") or info.get("forwardPE"),
+            "week52_high": info.get("fiftyTwoWeekHigh"),
+            "week52_low": info.get("fiftyTwoWeekLow"),
+            "beta": info.get("beta"),
+        })
+
+        # 近期新聞
+        news_list = []
+        try:
+            raw_news = ticker.news or []
+            for item in raw_news[:12]:
+                content = item.get("content", {}) if isinstance(item, dict) else {}
+                if content:
+                    title = content.get("title", "")
+                    canonical = content.get("canonicalUrl", {})
+                    link = canonical.get("url", "") if isinstance(canonical, dict) else ""
+                    provider = content.get("provider", {})
+                    publisher = provider.get("displayName", "") if isinstance(provider, dict) else ""
+                    pub_date_str = content.get("pubDate", "")
+                else:
+                    title = item.get("title", "")
+                    link = item.get("link", "")
+                    publisher = item.get("publisher", "")
+                    pub_date_ts = item.get("providerPublishTime", 0)
+                    pub_date_str = (
+                        datetime.fromtimestamp(pub_date_ts).strftime("%Y-%m-%d %H:%M")
+                        if pub_date_ts else ""
+                    )
+
+                if not title or not link:
+                    continue
+                if publisher.lower() in _PAID_NEWS_SOURCES:
+                    continue
+
+                date_display = ""
+                if pub_date_str and "T" in str(pub_date_str):
+                    try:
+                        dt = datetime.fromisoformat(str(pub_date_str).replace("Z", "+00:00"))
+                        date_display = dt.strftime("%Y-%m-%d %H:%M")
+                    except (ValueError, TypeError):
+                        date_display = str(pub_date_str)[:16]
+                elif pub_date_str:
+                    date_display = str(pub_date_str)
+
+                news_list.append({
+                    "title": title,
+                    "url": link,
+                    "source": publisher,
+                    "date": date_display,
+                })
+
+            # 去重
+            seen = set()
+            unique_news = []
+            for n in news_list:
+                if n["title"] not in seen:
+                    seen.add(n["title"])
+                    unique_news.append(n)
+            news_list = unique_news[:8]
+
+        except Exception as e:
+            logger.debug(f"取得 {symbol} 新聞失敗: {e}")
+
+        result["news"] = news_list
+
+    except Exception as e:
+        logger.error(f"取得 {symbol} 個股快照失敗: {e}")
+        result["error"] = str(e)
+
+    return result
+
+
+@router.get("/analysis/stock-context/{symbol}")
+async def get_stock_context(symbol: str):
+    """取得個股即時快照（行情 + 指標 + 新聞）"""
+    import re
+    symbol = symbol.upper().strip()
+    if not re.match(r"^[A-Z]{1,5}$", symbol):
+        raise HTTPException(status_code=400, detail="Invalid stock symbol")
+
+    # 快取檢查
+    cache_key = f"ctx_{symbol}"
+    cached = _CONTEXT_CACHE.get(cache_key)
+    if cached and time.time() - cached["_ts"] < _CONTEXT_CACHE_TTL:
+        return cached["data"]
+
+    loop = asyncio.get_event_loop()
+    data = await loop.run_in_executor(None, _fetch_stock_context, symbol)
+
+    # 寫入快取
+    _CONTEXT_CACHE[cache_key] = {"data": data, "_ts": time.time()}
+
+    # 清理過期快取（避免記憶體膨脹）
+    now = time.time()
+    expired = [k for k, v in _CONTEXT_CACHE.items() if now - v["_ts"] > _CONTEXT_CACHE_TTL * 2]
+    for k in expired:
+        _CONTEXT_CACHE.pop(k, None)
+
+    return data

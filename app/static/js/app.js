@@ -74,6 +74,10 @@ function tradingApp() {
     aiAnalysis: { available: null, content: '', updated_at: '', provider: '' },
     aiAnalysisLoading: false,
 
+    // 個股快照
+    stockContext: null,
+    stockContextLoading: false,
+
     // 追蹤清單（localStorage 持久化）
     watchlist: [],
 
@@ -375,6 +379,7 @@ function tradingApp() {
 
         this._startElapsedTimer();
         this.connectSSE();
+        this.fetchStockContext(this.form.symbol);
 
       } catch (e) {
         this.formError = e.message;
@@ -534,7 +539,33 @@ function tradingApp() {
       this.analysisId = null;
       this.connectionRetries = 0;
       this.pollRetryCount = 0;
+      this.stockContext = null;
+      this.stockContextLoading = false;
       this._stopElapsedTimer();
+    },
+
+    async fetchStockContext(symbol) {
+      this.stockContextLoading = true;
+      this.stockContext = null;
+      try {
+        const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`);
+        if (res.ok) {
+          this.stockContext = await res.json();
+        }
+      } catch (e) {
+        console.error('Stock context fetch error:', e);
+      } finally {
+        this.stockContextLoading = false;
+      }
+    },
+
+    formatLargeNumber(num) {
+      if (!num && num !== 0) return '-';
+      if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+      if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+      if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+      if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+      return num.toLocaleString();
     },
 
     async loadHistory() {

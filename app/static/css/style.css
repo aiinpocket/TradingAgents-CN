@@ -885,6 +885,163 @@ body {
   margin-top: 4px;
 }
 
+/* 個股快照面板 */
+
+.stock-context-panel {
+  margin-bottom: 16px;
+}
+
+.stock-context-header {
+  margin-bottom: 16px;
+}
+
+.stock-context-title h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stock-context-symbol {
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.stock-context-name {
+  font-weight: 400;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+.stock-context-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.stock-context-price {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+
+.stock-context-change {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+.stock-context-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.stock-context-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 80px;
+}
+
+.stock-context-metric-label {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stock-context-metric-value {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+.stock-context-news-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-sub);
+}
+
+.stock-context-news-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stock-context-news-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stock-context-news-link {
+  font-size: 13px;
+  color: var(--text);
+  text-decoration: none;
+  line-height: 1.4;
+  transition: color 0.15s;
+}
+
+.stock-context-news-link:hover {
+  color: var(--accent);
+}
+
+.stock-context-news-meta {
+  font-size: 11px;
+  color: var(--text-faint);
+  display: flex;
+  gap: 8px;
+}
+
+/* 骨架載入 */
+.stock-context-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.skeleton-line {
+  height: 16px;
+  border-radius: 4px;
+  background: var(--bg-inset);
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+.skeleton-w40 { width: 40%; }
+.skeleton-w60 { width: 60%; }
+.skeleton-w80 { width: 80%; }
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@media (max-width: 480px) {
+  .stock-context-metrics {
+    gap: 8px 16px;
+  }
+  .stock-context-metric {
+    min-width: 70px;
+  }
+  .stock-context-price {
+    font-size: 20px;
+  }
+}
+
 /* 決策面板 */
 
 .decision-panel {

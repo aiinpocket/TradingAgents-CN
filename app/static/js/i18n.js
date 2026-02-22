@@ -84,6 +84,13 @@ const I18N_MESSAGES = {
     'result.tab_debate': '投資辯論',
     'result.disclaimer': '分析結果僅供研究參考，不構成投資建議。請結合個人風險承受能力做出投資決策。',
 
+    // 個股快照
+    'context.market_cap': '市值',
+    'context.volume': '成交量',
+    'context.pe_ratio': '本益比',
+    'context.week52': '52 週區間',
+    'context.news_title': '近期新聞',
+
     // API 密鑰提示
     'api.not_configured': 'API 密鑰未配置',
     'api.config_hint': '請在伺服器端的 .env 檔案中配置至少一個 LLM 提供商的密鑰，然後重啟應用。',
@@ -253,6 +260,13 @@ const I18N_MESSAGES = {
     'result.tab_risk': 'Risk',
     'result.tab_debate': 'Debate',
     'result.disclaimer': 'Analysis results are for research only and do not constitute investment advice. Please make investment decisions based on your own risk tolerance.',
+
+    // Stock context
+    'context.market_cap': 'Market Cap',
+    'context.volume': 'Volume',
+    'context.pe_ratio': 'P/E Ratio',
+    'context.week52': '52W Range',
+    'context.news_title': 'Recent News',
 
     // API key notice
     'api.not_configured': 'API Key Not Configured',

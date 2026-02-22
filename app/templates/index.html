@@ -646,6 +646,78 @@
         </div>
       </section>
 
+      <!-- 個股快照 -->
+      <section x-cloak x-show="stockContext || stockContextLoading" x-transition.opacity.duration.200ms>
+        <!-- 載入中骨架 -->
+        <div class="panel stock-context-panel" x-show="stockContextLoading && !stockContext">
+          <div class="stock-context-skeleton">
+            <div class="skeleton-line skeleton-w60"></div>
+            <div class="skeleton-line skeleton-w40"></div>
+            <div class="skeleton-line skeleton-w80"></div>
+          </div>
+        </div>
+
+        <!-- 個股快照內容 -->
+        <div class="panel stock-context-panel" x-show="stockContext && !stockContext.error">
+          <!-- 行情頭部 -->
+          <div class="stock-context-header">
+            <div class="stock-context-title">
+              <h3>
+                <span class="stock-context-symbol" x-text="'$' + stockContext?.symbol"></span>
+                <span class="stock-context-name" x-text="stockContext?.name"></span>
+              </h3>
+              <div class="stock-context-price-row">
+                <span class="stock-context-price" x-text="stockContext?.price ? ('$' + Number(stockContext.price).toFixed(2)) : '-'"></span>
+                <span class="stock-context-change" :class="(stockContext?.change ?? 0) >= 0 ? 'text-up' : 'text-down'"
+                      x-text="((stockContext?.change ?? 0) >= 0 ? '+' : '') + Number(stockContext?.change || 0).toFixed(2) + ' (' + Number(stockContext?.change_pct || 0).toFixed(2) + '%)'"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 關鍵指標 -->
+          <div class="stock-context-metrics">
+            <div class="stock-context-metric">
+              <span class="stock-context-metric-label" x-text="t('context.market_cap')"></span>
+              <span class="stock-context-metric-value" x-text="formatLargeNumber(stockContext?.market_cap)"></span>
+            </div>
+            <div class="stock-context-metric">
+              <span class="stock-context-metric-label" x-text="t('context.volume')"></span>
+              <span class="stock-context-metric-value" x-text="formatLargeNumber(stockContext?.volume)"></span>
+            </div>
+            <div class="stock-context-metric" x-show="stockContext?.pe_ratio">
+              <span class="stock-context-metric-label" x-text="t('context.pe_ratio')"></span>
+              <span class="stock-context-metric-value" x-text="stockContext?.pe_ratio ? Number(stockContext.pe_ratio).toFixed(1) : '-'"></span>
+            </div>
+            <div class="stock-context-metric" x-show="stockContext?.beta">
+              <span class="stock-context-metric-label">Beta</span>
+              <span class="stock-context-metric-value" x-text="stockContext?.beta ? Number(stockContext.beta).toFixed(2) : '-'"></span>
+            </div>
+            <div class="stock-context-metric" x-show="stockContext?.week52_high">
+              <span class="stock-context-metric-label" x-text="t('context.week52')"></span>
+              <span class="stock-context-metric-value" x-text="'$' + Number(stockContext?.week52_low || 0).toFixed(0) + ' - $' + Number(stockContext?.week52_high || 0).toFixed(0)"></span>
+            </div>
+          </div>
+
+          <!-- 近期新聞 -->
+          <template x-if="stockContext?.news?.length > 0">
+            <div class="stock-context-news">
+              <h4 class="stock-context-news-title" x-text="t('context.news_title')"></h4>
+              <ul class="stock-context-news-list">
+                <template x-for="(item, idx) in stockContext.news" :key="idx">
+                  <li>
+                    <a :href="item.url" target="_blank" rel="noopener noreferrer" class="stock-context-news-link" x-text="item.title"></a>
+                    <span class="stock-context-news-meta">
+                      <span x-text="item.source" x-show="item.source"></span>
+                      <span x-text="item.date" x-show="item.date"></span>
+                    </span>
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </template>
+        </div>
+      </section>
+
       <!-- 分析結果 -->
       <section x-cloak x-show="showResults" x-transition.opacity.duration.200ms>
         <div class="results-header">
