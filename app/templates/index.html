@@ -103,7 +103,8 @@
 
             <div class="field">
               <label for="date">分析日期</label>
-              <input id="date" type="date" x-model="form.date" required aria-required="true">
+              <input id="date" type="date" x-model="form.date" required aria-required="true"
+                     :max="new Date().toISOString().split('T')[0]">
             </div>
 
             <div class="field">

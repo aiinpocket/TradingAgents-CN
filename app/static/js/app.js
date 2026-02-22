@@ -49,7 +49,8 @@ function tradingApp() {
     pollRetryCount: 0,
 
     get canSubmit() {
-      return this.form.symbol.length > 0 &&
+      return this.apiReady &&
+             this.form.symbol.length > 0 &&
              this.form.analysts.length > 0 &&
              !this.submitting;
     },
@@ -211,6 +212,7 @@ function tradingApp() {
             }, delay);
           } else {
             // SSE 重試失敗，改用輪詢
+            this.progressMessages.push('即時連線中斷，已切換至輪詢模式，分析仍在進行中...');
             this.pollRetryCount = 0;
             this.pollStatus();
           }
