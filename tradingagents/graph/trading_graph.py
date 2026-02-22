@@ -186,13 +186,22 @@ class TradingAgentsGraph:
 
     def propagate(self, company_name, trade_date):
         """Run the trading agents graph for a company on a specific date."""
+        import re
+
+        # 驗證股票代碼格式，防止路徑穿越攻擊
+        if not company_name or not re.match(r"^[A-Za-z]{1,5}$", str(company_name).strip()):
+            raise ValueError(f"無效的股票代碼: {company_name}")
+
+        # 驗證日期格式
+        if not trade_date or not re.match(r"^\d{4}-\d{2}-\d{2}$", str(trade_date).strip()):
+            raise ValueError(f"無效的日期格式: {trade_date}")
 
         # 新增詳細的接收日誌
         logger.debug("===== TradingAgentsGraph.propagate 接收參數 =====")
         logger.debug(f"接收到的company_name: '{company_name}' (類型: {type(company_name)})")
         logger.debug(f"接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")
 
-        self.ticker = company_name
+        self.ticker = company_name.upper().strip()
         logger.debug(f"設定self.ticker: '{self.ticker}'")
 
         # Initialize state

@@ -16,6 +16,7 @@ logger = get_logger('dataflows')
 # 報告快取（模組層級，同行程內所有使用者共享）
 # 格式: { "report_type:TICKER:date": {"data": str, "timestamp": float} }
 _report_cache: dict = {}
+_MAX_CACHE_ENTRIES = 500  # 快取上限，防止記憶體無限增長
 
 # 各報告類型的快取有效期（秒）
 _CACHE_TTL = {
@@ -39,8 +40,26 @@ def _get_cached_report(report_type: str, ticker: str, extra_key: str = "") -> st
     return entry["data"]
 
 
+def _evict_expired_cache() -> None:
+    """清理過期快取項目"""
+    now = time.time()
+    expired = [
+        k for k, v in _report_cache.items()
+        if now - v["timestamp"] > _CACHE_TTL.get(k.split(":")[0], 3600)
+    ]
+    for k in expired:
+        _report_cache.pop(k, None)
+
+
 def _set_cached_report(report_type: str, ticker: str, data: str, extra_key: str = "") -> None:
     """將報告存入快取"""
+    # 超過上限時清理過期項目
+    if len(_report_cache) >= _MAX_CACHE_ENTRIES:
+        _evict_expired_cache()
+    # 仍超過上限則移除最舊的項目
+    while len(_report_cache) >= _MAX_CACHE_ENTRIES:
+        oldest_key = min(_report_cache, key=lambda k: _report_cache[k]["timestamp"])
+        _report_cache.pop(oldest_key, None)
     cache_key = f"{report_type}:{ticker}:{extra_key}"
     _report_cache[cache_key] = {"data": data, "timestamp": time.time()}
 

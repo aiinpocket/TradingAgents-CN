@@ -3,7 +3,7 @@ from chromadb.config import Settings
 from openai import OpenAI
 import os
 import threading
-from typing import Dict
+from typing import Any, Dict
 
 # 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
@@ -15,8 +15,9 @@ class ChromaDBManager:
 
     _instance = None
     _lock = threading.Lock()
-    _collections: Dict[str, any] = {}
+    _collections: Dict[str, Any] = {}
     _client = None
+    _initialized = False
 
     def __new__(cls):
         if cls._instance is None:
