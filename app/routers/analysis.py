@@ -26,6 +26,118 @@ except ImportError:
 
 router = APIRouter(tags=["analysis"])
 
+
+# ---------------------------------------------------------------------------
+# 後端 i18n 錯誤訊息
+# ---------------------------------------------------------------------------
+_ERROR_MESSAGES: dict[str, dict[str, str]] = {
+    "invalid_symbol": {
+        "zh-TW": "股票代碼格式錯誤，應為 1-5 位英文字母",
+        "en": "Invalid stock symbol. Must be 1-5 alphabetical characters.",
+    },
+    "invalid_date_format": {
+        "zh-TW": "日期格式錯誤，應為 YYYY-MM-DD",
+        "en": "Invalid date format. Expected YYYY-MM-DD.",
+    },
+    "date_too_old": {
+        "zh-TW": "分析日期不能早於 2000-01-01",
+        "en": "Analysis date cannot be earlier than 2000-01-01.",
+    },
+    "date_future": {
+        "zh-TW": "分析日期不能是未來日期",
+        "en": "Analysis date cannot be a future date.",
+    },
+    "no_analysts": {
+        "zh-TW": "必須至少選擇一個分析模組",
+        "en": "At least one analysis module must be selected.",
+    },
+    "invalid_analysts": {
+        "zh-TW": "無效的分析師類型: {detail}",
+        "en": "Invalid analyst type: {detail}",
+    },
+    "unsupported_model": {
+        "zh-TW": "不支援的模型: {detail}",
+        "en": "Unsupported model: {detail}",
+    },
+    "analyses_limit": {
+        "zh-TW": "同時分析數量已達上限，請稍後再試",
+        "en": "Maximum concurrent analyses reached. Please try again later.",
+    },
+    "task_not_found": {
+        "zh-TW": "分析任務不存在",
+        "en": "Analysis task not found.",
+    },
+    "analysis_timeout": {
+        "zh-TW": "分析超時",
+        "en": "Analysis timed out.",
+    },
+    "unknown_error": {
+        "zh-TW": "未知錯誤",
+        "en": "Unknown error.",
+    },
+    "engine_starting": {
+        "zh-TW": "啟動分析引擎...",
+        "en": "Starting analysis engine...",
+    },
+    "generating_english": {
+        "zh-TW": "正在生成英文版本...",
+        "en": "Generating English version...",
+    },
+    "analysis_complete": {
+        "zh-TW": "分析完成",
+        "en": "Analysis complete.",
+    },
+    "analysis_failed": {
+        "zh-TW": "分析失敗",
+        "en": "Analysis failed.",
+    },
+    "analysis_error": {
+        "zh-TW": "分析過程中發生錯誤",
+        "en": "An error occurred during analysis.",
+    },
+    "internal_error": {
+        "zh-TW": "分析過程中發生內部錯誤，請查看伺服器日誌",
+        "en": "Internal error during analysis. Please check server logs.",
+    },
+    "invalid_symbol_short": {
+        "zh-TW": "股票代碼格式錯誤",
+        "en": "Invalid stock symbol.",
+    },
+}
+
+
+def _get_lang(request: Request | None = None) -> str:
+    """從 query param 或 Accept-Language header 解析語言偏好，預設繁體中文"""
+    if request is None:
+        return "zh-TW"
+    # 優先使用 query param（SSE 不支援自訂 header）
+    lang_param = request.query_params.get("lang", "")
+    if lang_param == "en":
+        return "en"
+    if lang_param == "zh-TW":
+        return "zh-TW"
+    # fallback 到 Accept-Language header
+    accept = request.headers.get("accept-language", "")
+    if "en" in accept.lower() and "zh" not in accept.lower():
+        return "en"
+    return "zh-TW"
+
+
+def _t(key: str, request: Request | None = None, **kwargs) -> str:
+    """取得 i18n 錯誤訊息（從 Request header 推斷語言）"""
+    lang = _get_lang(request)
+    return _t_lang(key, lang, **kwargs)
+
+
+def _t_lang(key: str, lang: str = "zh-TW", **kwargs) -> str:
+    """取得 i18n 錯誤訊息（直接指定語言）"""
+    msgs = _ERROR_MESSAGES.get(key, {})
+    msg = msgs.get(lang, msgs.get("zh-TW", key))
+    if kwargs:
+        msg = msg.format(**kwargs)
+    return msg
+
+
 # 進行中的分析任務（有上限的有序字典）
 _MAX_ANALYSES = 100
 _SSE_TIMEOUT_SECONDS = 1800  # 30 分鐘
@@ -98,33 +210,36 @@ def _cleanup_old_analyses():
 
 
 @router.post("/analysis/start")
-async def start_analysis(req: AnalysisRequest):
+async def start_analysis(req: AnalysisRequest, request: Request):
     """啟動股票分析"""
     import re
 
     # 驗證股票代碼
     symbol = req.stock_symbol.upper().strip()
     if not re.match(r"^[A-Z]{1,5}$", symbol):
-        raise HTTPException(status_code=400, detail="股票代碼格式錯誤，應為 1-5 位英文字母")
+        raise HTTPException(status_code=400, detail=_t("invalid_symbol", request))
 
     # 驗證日期
     try:
         analysis_date_obj = datetime.strptime(req.analysis_date, "%Y-%m-%d")
     except ValueError:
-        raise HTTPException(status_code=400, detail="日期格式錯誤，應為 YYYY-MM-DD")
+        raise HTTPException(status_code=400, detail=_t("invalid_date_format", request))
     _MIN_DATE = datetime(2000, 1, 1).date()
     if analysis_date_obj.date() < _MIN_DATE:
-        raise HTTPException(status_code=400, detail="分析日期不能早於 2000-01-01")
+        raise HTTPException(status_code=400, detail=_t("date_too_old", request))
     if analysis_date_obj.date() > datetime.now().date():
-        raise HTTPException(status_code=400, detail="分析日期不能是未來日期")
+        raise HTTPException(status_code=400, detail=_t("date_future", request))
 
     # 驗證分析師
     if not req.analysts:
-        raise HTTPException(status_code=400, detail="必須至少選擇一個分析模組")
+        raise HTTPException(status_code=400, detail=_t("no_analysts", request))
     valid_analysts = {"market", "social", "news", "fundamentals"}
     invalid = set(req.analysts) - valid_analysts
     if invalid:
-        raise HTTPException(status_code=400, detail=f"無效的分析師類型: {', '.join(invalid)}")
+        raise HTTPException(
+            status_code=400,
+            detail=_t("invalid_analysts", request, detail=", ".join(invalid)),
+        )
 
     # 驗證模型
     provider = req.llm_provider.value
@@ -135,19 +250,25 @@ async def start_analysis(req: AnalysisRequest):
         else:
             llm_model = "claude-sonnet-4-20250514"
     elif llm_model not in _ALLOWED_MODELS.get(provider, set()):
-        raise HTTPException(status_code=400, detail=f"不支援的模型: {llm_model}")
+        raise HTTPException(
+            status_code=400,
+            detail=_t("unsupported_model", request, detail=llm_model),
+        )
 
     # 限制並行分析數量
     with _analyses_lock:
         running_count = sum(1 for d in _active_analyses.values() if d["status"] == "running")
     if running_count >= 3:
-        raise HTTPException(status_code=429, detail="同時分析數量已達上限，請稍後再試")
+        raise HTTPException(status_code=429, detail=_t("analyses_limit", request))
 
     # 清理舊任務
     _cleanup_old_analyses()
 
     # 使用安全隨機 ID
     analysis_id = f"analysis_{secrets.token_urlsafe(16)}"
+
+    # 保存語言偏好，供背景任務使用
+    lang = _get_lang(request)
 
     with _analyses_lock:
         _active_analyses[analysis_id] = {
@@ -162,6 +283,7 @@ async def start_analysis(req: AnalysisRequest):
             "result": None,
             "error": None,
             "created_at": time.time(),
+            "lang": lang,
         }
 
     # 在背景執行分析
@@ -173,12 +295,12 @@ async def start_analysis(req: AnalysisRequest):
 
 
 @router.get("/analysis/{analysis_id}/status")
-async def get_analysis_status(analysis_id: str):
+async def get_analysis_status(analysis_id: str, request: Request):
     """取得分析狀態"""
     with _analyses_lock:
         data = _active_analyses.get(analysis_id)
     if not data:
-        raise HTTPException(status_code=404, detail="分析任務不存在")
+        raise HTTPException(status_code=404, detail=_t("task_not_found", request))
 
     return AnalysisStatus(
         analysis_id=analysis_id,
@@ -193,9 +315,10 @@ async def get_analysis_status(analysis_id: str):
 @router.get("/analysis/{analysis_id}/stream")
 async def stream_analysis(analysis_id: str, request: Request):
     """SSE 串流分析進度"""
+    lang = _get_lang(request)
     with _analyses_lock:
         if analysis_id not in _active_analyses:
-            raise HTTPException(status_code=404, detail="分析任務不存在")
+            raise HTTPException(status_code=404, detail=_t("task_not_found", request))
 
     async def event_generator():
         last_idx = 0
@@ -207,7 +330,7 @@ async def stream_analysis(analysis_id: str, request: Request):
 
             # SSE 超時保護
             if time.time() - start_time > _SSE_TIMEOUT_SECONDS:
-                yield f"data: {json.dumps({'type': 'failed', 'error': '分析超時'}, ensure_ascii=False)}\n\n"
+                yield f"data: {json.dumps({'type': 'failed', 'error': _t('analysis_timeout', request)}, ensure_ascii=False)}\n\n"
                 break
 
             data = _active_analyses.get(analysis_id)
@@ -226,7 +349,8 @@ async def stream_analysis(analysis_id: str, request: Request):
                 yield f"data: {json.dumps({'type': 'completed', 'result': data.get('result', {})}, ensure_ascii=False)}\n\n"
                 break
             elif data["status"] == "failed":
-                yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', '未知錯誤')}, ensure_ascii=False)}\n\n"
+                fallback_err = _t("unknown_error", request)
+                yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False)}\n\n"
                 break
 
             await asyncio.sleep(1)
@@ -280,8 +404,9 @@ async def _run_analysis(analysis_id: str):
     if not data:
         return
 
+    lang = data.get("lang", "zh-TW")
     _update_analysis_state(analysis_id, status="running")
-    data["progress"].append("啟動分析引擎...")
+    data["progress"].append(_t_lang("engine_starting", lang))
 
     try:
         loop = asyncio.get_event_loop()
@@ -302,7 +427,7 @@ async def _run_analysis(analysis_id: str):
             formatted = format_analysis_results(result)
 
             # 翻譯成英文版本
-            data["progress"].append("正在生成英文版本...")
+            data["progress"].append(_t_lang("generating_english", lang))
             try:
                 translation = await loop.run_in_executor(
                     None, _translate_result_to_english, formatted
@@ -315,20 +440,20 @@ async def _run_analysis(analysis_id: str):
             except Exception as e:
                 logger.warning(f"翻譯步驟失敗（不影響主流程）: {e}")
 
-            data["progress"].append("分析完成")
+            data["progress"].append(_t_lang("analysis_complete", lang))
             _update_analysis_state(analysis_id, status="completed", result=formatted)
         else:
-            error_msg = result.get("error", "分析失敗")
-            data["progress"].append(f"分析失敗: {error_msg}")
+            error_msg = result.get("error", _t_lang("analysis_failed", lang))
+            data["progress"].append(f"{_t_lang('analysis_failed', lang)}: {error_msg}")
             _update_analysis_state(analysis_id, status="failed", error=error_msg)
 
     except Exception as e:
         # 不洩漏內部錯誤細節給前端
-        data["progress"].append("分析過程中發生錯誤")
+        data["progress"].append(_t_lang("analysis_error", lang))
         _update_analysis_state(
             analysis_id,
             status="failed",
-            error="分析過程中發生內部錯誤，請查看伺服器日誌",
+            error=_t_lang("internal_error", lang),
         )
         try:
             from tradingagents.utils.logging_manager import get_logger
@@ -605,12 +730,12 @@ def _fetch_stock_context(symbol: str) -> dict:
 
 
 @router.get("/analysis/stock-context/{symbol}")
-async def get_stock_context(symbol: str):
+async def get_stock_context(symbol: str, request: Request):
     """取得個股即時快照（行情 + 指標 + 新聞）"""
     import re
     symbol = symbol.upper().strip()
     if not re.match(r"^[A-Z]{1,5}$", symbol):
-        raise HTTPException(status_code=400, detail="Invalid stock symbol")
+        raise HTTPException(status_code=400, detail=_t("invalid_symbol_short", request))
 
     # 快取檢查
     cache_key = f"ctx_{symbol}"

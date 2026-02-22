@@ -44,12 +44,16 @@ async def lifespan(app: FastAPI):
     logger.info("TradingAgents API 關閉")
 
 
+# 生產環境關閉 Swagger UI，防止 API 結構資訊洩漏
+_is_production = os.getenv("ENVIRONMENT", "").lower() == "production"
+
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
     version="0.2.9",
     lifespan=lifespan,
-    docs_url="/api/docs",
+    docs_url=None if _is_production else "/api/docs",
+    openapi_url=None if _is_production else "/openapi.json",
     redoc_url=None,
 )
 

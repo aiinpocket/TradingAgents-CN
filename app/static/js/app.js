@@ -350,7 +350,7 @@ function tradingApp() {
       try {
         const res = await fetch('/api/analysis/start', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this._langHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({
             stock_symbol: this.form.symbol,
             analysis_date: this.form.date,
@@ -393,7 +393,8 @@ function tradingApp() {
         this.eventSource.close();
       }
 
-      this.eventSource = new EventSource(`/api/analysis/${this.analysisId}/stream`);
+      const sseLang = this.lang === 'en' ? 'en' : 'zh-TW';
+      this.eventSource = new EventSource(`/api/analysis/${this.analysisId}/stream?lang=${sseLang}`);
 
       this.eventSource.onmessage = (event) => {
         try {
@@ -459,7 +460,9 @@ function tradingApp() {
     async pollStatus() {
       while (this.analysisRunning && this.pollRetryCount < CONFIG.POLL_MAX_RETRIES) {
         try {
-          const res = await fetch(`/api/analysis/${this.analysisId}/status`);
+          const res = await fetch(`/api/analysis/${this.analysisId}/status`, {
+            headers: this._langHeaders(),
+          });
 
           if (!res.ok) {
             if (res.status === 404) {
@@ -573,7 +576,9 @@ function tradingApp() {
       this.stockContextLoading = true;
       this.stockContext = null;
       try {
-        const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`);
+        const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`, {
+          headers: this._langHeaders(),
+        });
         if (res.ok) {
           this.stockContext = await res.json();
         }
@@ -595,7 +600,7 @@ function tradingApp() {
 
     async loadHistory() {
       try {
-        const res = await fetch('/api/analysis/history');
+        const res = await fetch('/api/analysis/history', { headers: this._langHeaders() });
         if (!res.ok) return;
         const data = await res.json();
         this.historyList = (data.analyses || []).reverse();
@@ -606,7 +611,9 @@ function tradingApp() {
 
     async loadAnalysisResult(analysisId) {
       try {
-        const res = await fetch(`/api/analysis/${analysisId}/status`);
+        const res = await fetch(`/api/analysis/${analysisId}/status`, {
+          headers: this._langHeaders(),
+        });
         if (!res.ok) return;
         const data = await res.json();
         if (data.result) {
@@ -692,14 +699,23 @@ function tradingApp() {
       }
     },
 
+    // 產生帶有語言偏好的 HTTP headers
+    _langHeaders(extra = {}) {
+      return { 'Accept-Language': this.lang === 'en' ? 'en' : 'zh-TW', ...extra };
+    },
+
     _sanitize(html) {
       if (typeof DOMPurify !== 'undefined') {
         return DOMPurify.sanitize(html);
       }
-      const tmp = document.createElement('div');
-      tmp.innerHTML = html;
-      const text = tmp.textContent || tmp.innerText || '';
-      return `<pre style="white-space:pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
+      // DOMPurify 未載入時，直接做字元跳脫，避免使用 innerHTML 造成 XSS
+      const escaped = String(html)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+      return `<pre style="white-space:pre-wrap">${escaped}</pre>`;
     },
 
     renderMarkdown(text) {

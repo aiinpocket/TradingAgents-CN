@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
 router = APIRouter(tags=["config"])
 
@@ -14,10 +15,9 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 @router.get("/config/status")
 async def get_config_status():
-    """取得 API 配置狀態"""
+    """取得 API 配置狀態（僅回傳前端必要資訊，避免過度揭露）"""
     openai_key = os.getenv("OPENAI_API_KEY", "")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY", "")
-    finnhub_key = os.getenv("FINNHUB_API_KEY", "")
 
     providers = []
     if openai_key:
@@ -25,15 +25,15 @@ async def get_config_status():
     if anthropic_key:
         providers.append("anthropic")
 
-    return {
-        "configured": bool(openai_key or anthropic_key),
+    # 精簡回應：只回傳前端所需的 configured + available_providers
+    content = {
+        "configured": bool(providers),
         "available_providers": providers,
-        "keys": {
-            "openai": {"configured": bool(openai_key)},
-            "anthropic": {"configured": bool(anthropic_key)},
-            "finnhub": {"configured": bool(finnhub_key)},
-        },
     }
+    return JSONResponse(
+        content=content,
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @router.get("/config/models")

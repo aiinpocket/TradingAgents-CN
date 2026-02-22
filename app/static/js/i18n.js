@@ -90,6 +90,7 @@ const I18N_MESSAGES = {
     'context.pe_ratio': '本益比',
     'context.week52': '52 週區間',
     'context.news_title': '近期新聞',
+    'context.beta': 'Beta',
 
     // API 密鑰提示
     'api.not_configured': 'API 密鑰未配置',
@@ -270,6 +271,7 @@ const I18N_MESSAGES = {
     'context.pe_ratio': 'P/E Ratio',
     'context.week52': '52W Range',
     'context.news_title': 'Recent News',
+    'context.beta': 'Beta',
 
     // API key notice
     'api.not_configured': 'API Key Not Configured',
