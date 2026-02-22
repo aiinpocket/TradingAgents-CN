@@ -106,17 +106,22 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         progress_callback: 進度回呼函式，用於更新UI狀態
     """
 
+    _total_steps = 8
+
     def update_progress(message, step=None, total_steps=None):
-        """更新進度"""
+        """更新進度，自動加入步驟前綴"""
+        ts = total_steps or _total_steps
+        prefix = f"[{step}/{ts}] " if step else ""
+        full_msg = f"{prefix}{message}"
         if progress_callback:
-            progress_callback(message, step, total_steps)
-        logger.info(f"[進度] {message}")
+            progress_callback(full_msg, step, ts)
+        logger.info(f"[進度] {full_msg}")
 
     # 生成會話ID用於Token追蹤和日誌關聯
     session_id = f"analysis_{uuid.uuid4().hex[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     # 1. 資料預取得和驗證階段
-    update_progress("驗證股票代碼並預取得資料...", 1, 10)
+    update_progress("驗證股票代碼並預取得資料...", 1)
 
     try:
         from tradingagents.utils.stock_validator import prepare_stock_data
@@ -185,7 +190,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                    'event_type': 'web_analysis_start'
                })
 
-    update_progress("開始股票分析...")
+    update_progress("開始股票分析...", 2)
 
     # 估算Token使用（用於成本預估）
     if TOKEN_TRACKING_ENABLED:
@@ -196,7 +201,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         update_progress(f"預估分析成本: ${estimated_cost:.4f}")
 
     # 驗證環境變數
-    update_progress("檢查環境變數配置...")
+    update_progress("檢查環境變數配置...", 3)
     finnhub_key = os.getenv("FINNHUB_API_KEY")
 
     logger.info("環境變數檢查:")
@@ -213,7 +218,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         from tradingagents.default_config import DEFAULT_CONFIG
 
         # 建立配置
-        update_progress("配置分析參數...")
+        update_progress("配置分析參數...", 4)
         config = DEFAULT_CONFIG.copy()
         config["llm_provider"] = llm_provider
         config["deep_think_llm"] = llm_model
@@ -323,11 +328,11 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.debug(f" 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
         # 初始化交易圖
-        update_progress("初始化分析引擎...")
+        update_progress("初始化分析引擎...", 5)
         graph = TradingAgentsGraph(analysts, config=config, debug=False)
 
         # 執行分析
-        update_progress(f"開始分析 {formatted_symbol}，預計需要數分鐘...")
+        update_progress(f"開始分析 {formatted_symbol}，預計需要數分鐘...", 6)
         logger.debug(" ===== 呼叫graph.propagate =====")
         logger.debug(" 傳遞給graph.propagate的參數:")
         logger.debug(f" symbol: '{formatted_symbol}'")
@@ -340,7 +345,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.debug(f" decision內容: {decision}")
 
         # 格式化結果
-        update_progress("分析完成，正在整理結果...")
+        update_progress("分析完成，正在整理結果...", 7)
 
         # 提取風險評估資料
         risk_assessment = extract_risk_assessment(state)
@@ -445,7 +450,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             logger.error(f" [報告保存] 保存分析報告時發生錯誤: {str(save_error)}")
             update_progress("報告保存出錯，但分析已完成")
 
-        update_progress("分析成功完成！")
+        update_progress("分析成功完成！", 8)
         return results
 
     except Exception as e:

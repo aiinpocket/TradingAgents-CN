@@ -183,7 +183,13 @@ function tradingApp() {
 
           if (data.type === 'progress') {
             this.progressMessages.push(data.message);
-            this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, this.progressMessages.length * CONFIG.PROGRESS_STEP_PERCENT);
+            // 解析步驟前綴 [N/M] 來計算精確進度
+            const stepMatch = data.message.match(/^\[(\d+)\/(\d+)\]/);
+            if (stepMatch) {
+              this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, Math.round((parseInt(stepMatch[1]) / parseInt(stepMatch[2])) * CONFIG.PROGRESS_MAX_PERCENT));
+            } else {
+              this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, this.progressMessages.length * CONFIG.PROGRESS_STEP_PERCENT);
+            }
             this.connectionRetries = 0;
 
             // 自動捲動到最新
