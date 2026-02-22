@@ -688,6 +688,12 @@ body {
   margin-bottom: 20px;
 }
 
+.results-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .results-symbol {
   font-size: 20px;
   font-weight: 700;
@@ -932,13 +938,22 @@ body {
   align-items: center;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  cursor: pointer;
+  cursor: default;
   transition: background 0.1s;
   font-size: 13px;
 }
 
-.history-row:hover:not(.history-header-row) {
+.history-row.history-clickable {
+  cursor: pointer;
+}
+
+.history-row.history-clickable:hover {
   background: var(--bg-hover);
+}
+
+.history-row.history-clickable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .history-header-row {

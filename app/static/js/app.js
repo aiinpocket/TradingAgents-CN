@@ -391,6 +391,18 @@ function tradingApp() {
       return map[status] || status;
     },
 
+    exportResult() {
+      if (!this.result) return;
+      const data = JSON.stringify(this.result, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${this.result.stock_symbol || 'analysis'}_${this.result.analysis_date || 'report'}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+
     _sanitize(html) {
       if (typeof DOMPurify !== 'undefined') {
         return DOMPurify.sanitize(html);
