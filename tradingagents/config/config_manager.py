@@ -177,7 +177,7 @@ class ConfigManager:
             default_models = [
                 ModelConfig(
                     provider="openai",
-                    model_name="gpt-3.5-turbo",
+                    model_name="gpt-4o-mini",
                     api_key="",
                     max_tokens=4000,
                     temperature=0.7,
@@ -185,7 +185,7 @@ class ConfigManager:
                 ),
                 ModelConfig(
                     provider="openai",
-                    model_name="gpt-4",
+                    model_name="gpt-4o",
                     api_key="",
                     max_tokens=8000,
                     temperature=0.7,
@@ -211,32 +211,22 @@ class ConfigManager:
                 PricingConfig("openai", "gpt-5-mini", 0.00025, 0.002, "USD"),
                 PricingConfig("openai", "gpt-5-nano", 0.00005, 0.0004, "USD"),
 
-                # o系列推理模型
-                PricingConfig("openai", "o1", 0.015, 0.06, "USD"),
-                PricingConfig("openai", "o1-mini", 0.003, 0.012, "USD"),
-                PricingConfig("openai", "o1-preview", 0.015, 0.06, "USD"),
+                # o 系列推理模型
+                PricingConfig("openai", "o4-mini", 0.0011, 0.0044, "USD"),
 
-                # GPT-4系列
+                # GPT-4 系列
+                PricingConfig("openai", "gpt-4.1", 0.002, 0.008, "USD"),
+                PricingConfig("openai", "gpt-4.1-mini", 0.0004, 0.0016, "USD"),
+                PricingConfig("openai", "gpt-4.1-nano", 0.0001, 0.0004, "USD"),
                 PricingConfig("openai", "gpt-4o", 0.0025, 0.01, "USD"),
                 PricingConfig("openai", "gpt-4o-mini", 0.00015, 0.0006, "USD"),
-                PricingConfig("openai", "gpt-4-turbo", 0.01, 0.03, "USD"),
-                PricingConfig("openai", "gpt-4", 0.03, 0.06, "USD"),
-                PricingConfig("openai", "gpt-3.5-turbo", 0.0005, 0.0015, "USD"),
 
-                # Anthropic Claude定價 (美元，每千token)
-                # Claude 4系列 (2025年最新)
-                PricingConfig("anthropic", "claude-opus-4.1", 0.015, 0.075, "USD"),
-                PricingConfig("anthropic", "claude-sonnet-4.5", 0.003, 0.015, "USD"),
-                PricingConfig("anthropic", "claude-haiku-4.5", 0.001, 0.005, "USD"),
-                PricingConfig("anthropic", "claude-opus-4", 0.015, 0.075, "USD"),
-                PricingConfig("anthropic", "claude-sonnet-4", 0.003, 0.015, "USD"),
-                PricingConfig("anthropic", "claude-haiku-4", 0.001, 0.005, "USD"),
-
-                # Claude 3系列
-                PricingConfig("anthropic", "claude-3-opus-20240229", 0.015, 0.075, "USD"),
-                PricingConfig("anthropic", "claude-3-sonnet-20240229", 0.003, 0.015, "USD"),
-                PricingConfig("anthropic", "claude-3-haiku-20240307", 0.00025, 0.00125, "USD"),
-                PricingConfig("anthropic", "claude-3-5-sonnet-20241022", 0.003, 0.015, "USD"),
+                # Anthropic Claude 定價 (美元，每千 token)
+                PricingConfig("anthropic", "claude-opus-4-6", 0.015, 0.075, "USD"),
+                PricingConfig("anthropic", "claude-sonnet-4-6", 0.003, 0.015, "USD"),
+                PricingConfig("anthropic", "claude-haiku-4-5-20251001", 0.001, 0.005, "USD"),
+                PricingConfig("anthropic", "claude-opus-4-20250514", 0.015, 0.075, "USD"),
+                PricingConfig("anthropic", "claude-sonnet-4-20250514", 0.003, 0.015, "USD"),
             ]
             self.save_pricing(default_pricing)
         

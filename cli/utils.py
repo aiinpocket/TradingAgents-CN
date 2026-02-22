@@ -142,10 +142,9 @@ def select_shallow_thinking_agent(provider) -> str:
             ("GPT-4o - Standard model with solid capabilities", "gpt-4o"),
         ],
         "anthropic": [
-            ("Claude Haiku 3.5 - Fast inference and standard capabilities", "claude-3-5-haiku-latest"),
-            ("Claude Sonnet 3.5 - Highly capable standard model", "claude-3-5-sonnet-latest"),
-            ("Claude Sonnet 3.7 - Exceptional hybrid reasoning and agentic capabilities", "claude-3-7-sonnet-latest"),
-            ("Claude Sonnet 4 - High performance and excellent reasoning", "claude-sonnet-4-0"),
+            ("Claude Haiku 4.5 - 快速推論與標準效能", "claude-haiku-4-5-20251001"),
+            ("Claude Sonnet 4 - 高效能與優秀推理", "claude-sonnet-4-20250514"),
+            ("Claude Sonnet 4.6 - 最新高效能模型", "claude-sonnet-4-6"),
         ],
     }
 
@@ -190,16 +189,13 @@ def select_deep_thinking_agent(provider) -> str:
             ("GPT-4.1-mini - Compact model with good performance", "gpt-4.1-mini"),
             ("GPT-4o - Standard model with solid capabilities", "gpt-4o"),
             ("o4-mini - Specialized reasoning model (compact)", "o4-mini"),
-            ("o3-mini - Advanced reasoning model (lightweight)", "o3-mini"),
-            ("o3 - Full advanced reasoning model", "o3"),
-            ("o1 - Premier reasoning and problem-solving model", "o1"),
         ],
         "anthropic": [
-            ("Claude Haiku 3.5 - Fast inference and standard capabilities", "claude-3-5-haiku-latest"),
-            ("Claude Sonnet 3.5 - Highly capable standard model", "claude-3-5-sonnet-latest"),
-            ("Claude Sonnet 3.7 - Exceptional hybrid reasoning and agentic capabilities", "claude-3-7-sonnet-latest"),
-            ("Claude Sonnet 4 - High performance and excellent reasoning", "claude-sonnet-4-0"),
-            ("Claude Opus 4 - Most powerful Anthropic model", "claude-opus-4-0"),
+            ("Claude Haiku 4.5 - 快速推論與標準效能", "claude-haiku-4-5-20251001"),
+            ("Claude Sonnet 4 - 高效能與優秀推理", "claude-sonnet-4-20250514"),
+            ("Claude Sonnet 4.6 - 最新高效能模型", "claude-sonnet-4-6"),
+            ("Claude Opus 4 - 最強大推理模型", "claude-opus-4-20250514"),
+            ("Claude Opus 4.6 - 最新最強大模型", "claude-opus-4-6"),
         ],
     }
 
