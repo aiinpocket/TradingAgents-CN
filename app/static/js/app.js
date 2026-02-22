@@ -575,7 +575,8 @@ function tradingApp() {
         .replace(/^### (.+)$/gm, (_, g) => `<h4>${g}</h4>`)
         .replace(/^## (.+)$/gm, (_, g) => `<h3>${g}</h3>`)
         .replace(/^# (.+)$/gm, (_, g) => `<h2>${g}</h2>`)
-        .replace(/^---$/gm, '<hr>');
+        .replace(/^---$/gm, '<hr>')
+        .replace(/^#{1,6}\s*$/gm, '');
 
       html = html
         .replace(/\*\*(.+?)\*\*/g, (_, g) => `<strong>${g}</strong>`)
