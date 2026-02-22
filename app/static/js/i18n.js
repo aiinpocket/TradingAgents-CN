@@ -132,6 +132,7 @@ const I18N_MESSAGES = {
 
     // 頁尾
     'footer.version': 'v0.2.9',
+    'footer.open_source': '開源專案',
 
     // 主題
     'theme.to_dark': '切換深色模式',
@@ -289,6 +290,7 @@ const I18N_MESSAGES = {
 
     // Footer
     'footer.version': 'v0.2.9',
+    'footer.open_source': 'Open Source',
 
     // Theme
     'theme.to_dark': 'Switch to dark mode',
