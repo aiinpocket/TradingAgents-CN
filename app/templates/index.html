@@ -105,11 +105,13 @@
         </template>
         <template x-if="trendingLoading">
           <div class="indices-grid">
-            <div class="index-card skeleton-card" x-for="i in 4" :key="i">
-              <div class="skeleton skeleton-line-short"></div>
-              <div class="skeleton skeleton-line-medium"></div>
-              <div class="skeleton skeleton-line-short"></div>
-            </div>
+            <template x-for="i in 4" :key="i">
+              <div class="index-card skeleton-card">
+                <div class="skeleton skeleton-line-short"></div>
+                <div class="skeleton skeleton-line-medium"></div>
+                <div class="skeleton skeleton-line-short"></div>
+              </div>
+            </template>
           </div>
         </template>
       </section>
@@ -145,9 +147,11 @@
           </template>
           <template x-if="trendingLoading">
             <div class="movers-list">
-              <div class="mover-row skeleton-row" x-for="i in 5" :key="i">
-                <div class="skeleton skeleton-line-medium"></div>
-              </div>
+              <template x-for="i in 5" :key="i">
+                <div class="mover-row skeleton-row">
+                  <div class="skeleton skeleton-line-medium"></div>
+                </div>
+              </template>
             </div>
           </template>
           <div class="empty-state" x-show="!trendingLoading && (!trendingData.movers?.gainers || trendingData.movers.gainers.length === 0)">
@@ -184,9 +188,11 @@
           </template>
           <template x-if="trendingLoading">
             <div class="movers-list">
-              <div class="mover-row skeleton-row" x-for="i in 5" :key="i">
-                <div class="skeleton skeleton-line-medium"></div>
-              </div>
+              <template x-for="i in 5" :key="i">
+                <div class="mover-row skeleton-row">
+                  <div class="skeleton skeleton-line-medium"></div>
+                </div>
+              </template>
             </div>
           </template>
           <div class="empty-state" x-show="!trendingLoading && (!trendingData.movers?.losers || trendingData.movers.losers.length === 0)">
@@ -217,11 +223,13 @@
         </template>
         <template x-if="trendingLoading">
           <div class="news-grid">
-            <div class="news-card skeleton-card" x-for="i in 4" :key="i">
-              <div class="skeleton skeleton-line-short"></div>
-              <div class="skeleton skeleton-line"></div>
-              <div class="skeleton skeleton-line-medium"></div>
-            </div>
+            <template x-for="i in 4" :key="i">
+              <div class="news-card skeleton-card">
+                <div class="skeleton skeleton-line-short"></div>
+                <div class="skeleton skeleton-line"></div>
+                <div class="skeleton skeleton-line-medium"></div>
+              </div>
+            </template>
           </div>
         </template>
         <div class="empty-state" x-show="!trendingLoading && (!trendingData.news || trendingData.news.length === 0)">
