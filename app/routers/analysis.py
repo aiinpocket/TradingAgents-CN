@@ -89,11 +89,15 @@ async def start_analysis(req: AnalysisRequest):
 
     # 驗證日期
     try:
-        datetime.strptime(req.analysis_date, "%Y-%m-%d")
+        analysis_date_obj = datetime.strptime(req.analysis_date, "%Y-%m-%d")
     except ValueError:
         raise HTTPException(status_code=400, detail="日期格式錯誤，應為 YYYY-MM-DD")
+    if analysis_date_obj.date() > datetime.now().date():
+        raise HTTPException(status_code=400, detail="分析日期不能是未來日期")
 
     # 驗證分析師
+    if not req.analysts:
+        raise HTTPException(status_code=400, detail="必須至少選擇一個分析模組")
     valid_analysts = {"market", "social", "news", "fundamentals"}
     invalid = set(req.analysts) - valid_analysts
     if invalid:
@@ -281,18 +285,24 @@ async def _run_analysis(analysis_id: str):
             from tradingagents.utils.logging_manager import get_logger
             get_logger("api").error(f"分析 {analysis_id} 異常: {e}", exc_info=True)
         except ImportError:
-            pass
+            import logging
+            logging.getLogger("api").error(f"分析 {analysis_id} 異常: {e}", exc_info=True)
 
 
 def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, model):
     """同步執行分析（在執行緒池中執行）"""
     data = _active_analyses.get(analysis_id)
 
+    _MAX_PROGRESS_MESSAGES = 500
+
     def progress_callback(message, step=None, total_steps=None):
         if data:
             # 限制單條訊息長度，防止記憶體濫用
             if len(message) > 1000:
                 message = message[:1000] + "..."
+            # 限制訊息總數，防止記憶體溢出
+            if len(data["progress"]) >= _MAX_PROGRESS_MESSAGES:
+                return
             data["progress"].append(message)
 
     from web.utils.analysis_runner import run_stock_analysis
