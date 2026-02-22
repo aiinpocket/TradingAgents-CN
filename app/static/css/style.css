@@ -460,6 +460,15 @@ body {
 
 .form-actions {
   padding-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  flex-shrink: 0;
 }
 
 .btn-primary {
@@ -473,7 +482,7 @@ body {
   cursor: pointer;
   font-family: var(--font);
   transition: background 0.12s;
-  width: 100%;
+  flex: 1;
   height: 42px;
 }
 

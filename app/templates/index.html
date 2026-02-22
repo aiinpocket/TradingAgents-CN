@@ -86,7 +86,7 @@
           <p>輸入美股代碼，啟動多代理協作分析。</p>
         </div>
 
-        <form @submit.prevent="startAnalysis()" class="form-layout">
+        <form @submit.prevent="startAnalysis()" @keydown.ctrl.enter.prevent="canSubmit && startAnalysis()" class="form-layout">
           <!-- 股票代碼 - 主要輸入 -->
           <div class="form-row">
             <div class="field field-symbol">
@@ -168,6 +168,7 @@
               <span x-show="!submitting">開始分析</span>
               <span x-cloak x-show="submitting" class="btn-loading">提交中</span>
             </button>
+            <span class="form-hint">Ctrl+Enter 快速提交</span>
           </div>
         </form>
 

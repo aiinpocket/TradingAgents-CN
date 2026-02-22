@@ -327,7 +327,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         graph = TradingAgentsGraph(analysts, config=config, debug=False)
 
         # 執行分析
-        update_progress(f"開始分析 {formatted_symbol} 股票，這可能需要几分鐘時間...")
+        update_progress(f"開始分析 {formatted_symbol}，預計需要數分鐘...")
         logger.debug(" ===== 呼叫graph.propagate =====")
         logger.debug(" 傳遞給graph.propagate的參數:")
         logger.debug(f" symbol: '{formatted_symbol}'")
@@ -353,8 +353,8 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         if TOKEN_TRACKING_ENABLED:
             # 在實際應用中，這些值應該從LLM回應中取得
             # 這裡使用基於分析師數量和研究深度的估算
-            actual_input_tokens = len(analysts) * (1500 if research_depth == "快速" else 2500 if research_depth == "標準" else 4000)
-            actual_output_tokens = len(analysts) * (800 if research_depth == "快速" else 1200 if research_depth == "標準" else 2000)
+            actual_input_tokens = len(analysts) * (1500 if research_depth <= 2 else 2500 if research_depth <= 3 else 4000)
+            actual_output_tokens = len(analysts) * (800 if research_depth <= 2 else 1200 if research_depth <= 3 else 2000)
 
             usage_record = token_tracker.track_usage(
                 provider=llm_provider,
