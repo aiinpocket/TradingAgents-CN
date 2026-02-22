@@ -14,7 +14,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from dotenv import load_dotenv
@@ -185,3 +185,9 @@ async def index(request: Request):
 async def health():
     """健康檢查"""
     return {"status": "ok", "version": "0.2.3"}
+
+
+@app.get("/robots.txt", include_in_schema=False)
+async def robots():
+    """robots.txt for SEO"""
+    return FileResponse(Path(__file__).parent / "static" / "robots.txt", media_type="text/plain")
