@@ -17,11 +17,11 @@
 
 # ==================== 核心框架 ====================
 langchain>=0.3.0
-langchain-core>=1.2.11
+langchain-core>=0.3.81  # 安全性: 修復序列化注入漏洞 (GHSA-wrqx-xhp6-2r3v)
 langchain-openai>=0.3.23
 langchain-anthropic>=0.3.15
 langchain-experimental>=0.3.4
-langgraph>=0.4.8
+langgraph>=0.6.11
 typer>=0.9.0
 
 # ==================== LLM API 客戶端 ====================
