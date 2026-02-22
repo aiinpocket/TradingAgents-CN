@@ -96,6 +96,7 @@ healthCheck:
 # Application Configuration
 # =============================================================
 config:
+  environment: "production"
   timezone: "Asia/Taipei"
   logLevel: "INFO"
   llmProvider: "openai"
