@@ -72,7 +72,9 @@ function tradingApp() {
     async init() {
       // 載入暗色模式偏好
       const saved = localStorage.getItem('theme');
-      this.darkMode = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      // 驗證 localStorage 值，防止注入非預期值
+      const validTheme = (saved === 'dark' || saved === 'light') ? saved : null;
+      this.darkMode = validTheme === 'dark' || (!validTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
       if (this.darkMode) {
         document.documentElement.setAttribute('data-theme', 'dark');
         const meta = document.getElementById('theme-color-meta');
@@ -82,6 +84,14 @@ function tradingApp() {
       await this.checkHealth();
       await this.loadModels();
       this.form.date = new Date().toISOString().split('T')[0];
+
+      // 分析進行中離開頁面時警告
+      window.addEventListener('beforeunload', (e) => {
+        if (this.analysisRunning) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      });
     },
 
     toggleTheme() {
@@ -220,12 +230,14 @@ function tradingApp() {
             this.showResults = true;
             this.selectFirstTab();
             this.eventSource.close();
+            this._stopElapsedTimer();
             this._notifyCompletion(true);
 
           } else if (data.type === 'failed') {
             this.progressPercent = 100;
             this.progressMessages.push('分析失敗: ' + data.error);
             this.analysisRunning = false;
+            this._stopElapsedTimer();
             this._notifyCompletion(false);
             this.formError = data.error;
             this.eventSource.close();
@@ -279,10 +291,12 @@ function tradingApp() {
             this.result = data.result;
             this.showResults = true;
             this.selectFirstTab();
+            this._stopElapsedTimer();
             this._notifyCompletion(true);
             return;
           } else if (data.status === 'failed') {
             this.analysisRunning = false;
+            this._stopElapsedTimer();
             this.formError = data.error || '分析失敗';
             this._notifyCompletion(false);
             return;
@@ -299,6 +313,7 @@ function tradingApp() {
 
       if (this.analysisRunning) {
         this.analysisRunning = false;
+        this._stopElapsedTimer();
         this.formError = '連線逾時，請檢查網路後重試';
       }
     },
@@ -454,9 +469,11 @@ function tradingApp() {
       if (typeof DOMPurify !== 'undefined') {
         return DOMPurify.sanitize(html);
       }
-      // 降級：移除所有 HTML 標籤，顯示純文字
-      const text = html.replace(/<[^>]*>/g, '');
-      return `<pre style="white-space:pre-wrap">${text}</pre>`;
+      // 降級：使用 DOM API 安全擷取純文字，避免正則遺漏
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      const text = tmp.textContent || tmp.innerText || '';
+      return `<pre style="white-space:pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
     },
 
     renderMarkdown(text) {
@@ -468,18 +485,18 @@ function tradingApp() {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-      // 區塊元素
+      // 區塊元素（使用函式替換防止反向引用注入）
       html = html
-        .replace(/^### (.+)$/gm, '<h4>$1</h4>')
-        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
-        .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^### (.+)$/gm, (_, g) => `<h4>${g}</h4>`)
+        .replace(/^## (.+)$/gm, (_, g) => `<h3>${g}</h3>`)
+        .replace(/^# (.+)$/gm, (_, g) => `<h2>${g}</h2>`)
         .replace(/^---$/gm, '<hr>');
 
       // 行內格式
       html = html
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>');
+        .replace(/\*\*(.+?)\*\*/g, (_, g) => `<strong>${g}</strong>`)
+        .replace(/\*(.+?)\*/g, (_, g) => `<em>${g}</em>`)
+        .replace(/`([^`]+)`/g, (_, g) => `<code>${g}</code>`);
 
       // 清單：將連續的 - 項目包裝為 <ul>
       html = html.replace(/(?:^- .+$\n?)+/gm, (match) => {

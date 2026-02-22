@@ -486,6 +486,9 @@ def get_stockstats_indicator(
     curr_date = datetime.strptime(curr_date, "%Y-%m-%d")
     curr_date = curr_date.strftime("%Y-%m-%d")
 
+    if StockstatsUtils is None:
+        return f"[{symbol}] stockstats 工具不可用，無法計算 {indicator} 技術指標"
+
     try:
         indicator_value = StockstatsUtils.get_stock_stats(
             symbol,
@@ -498,7 +501,7 @@ def get_stockstats_indicator(
         logger.error(
             f"Error getting stockstats indicator data for indicator {indicator} on {curr_date}: {e}"
         )
-        return f"[{symbol}] 無法取得 {indicator} 技術指標資料: {e}"
+        return f"[{symbol}] 無法取得 {indicator} 技術指標資料"
 
     return str(indicator_value)
 
@@ -831,7 +834,7 @@ def get_fundamentals_finnhub(ticker, curr_date):
         return "錯誤：未安裝finnhub-python庫，請執行: pip install finnhub-python"
     except Exception as e:
         logger.error(f"Finnhub基本面資料取得失敗: {str(e)}")
-        return f"Finnhub基本面資料取得失敗: {str(e)}"
+        return "Finnhub基本面資料取得失敗，請檢查API密鑰及網路連線"
 
 
 def get_fundamentals_openai(ticker, curr_date):
@@ -941,4 +944,4 @@ def get_stock_data_by_market(symbol: str, start_date: str = None, end_date: str 
 
     except Exception as e:
         logger.error(f"[get_stock_data_by_market] 取得股票資料失敗: {e}")
-        return f"取得股票 {symbol} 資料失敗: {e}"
+        return f"取得股票 {symbol} 資料失敗，請檢查代碼及資料來源"

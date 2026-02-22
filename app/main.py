@@ -102,6 +102,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "camera=(), microphone=(), geolocation=(), payment=()"
         )
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         # HSTS - 強制 HTTPS（部署在 TLS 後時生效）
         response.headers["Strict-Transport-Security"] = (
             "max-age=31536000; includeSubDomains"

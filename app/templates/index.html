@@ -107,6 +107,8 @@
                 <input id="symbol" type="text" x-model="form.symbol" placeholder="AAPL"
                        maxlength="5" required autocomplete="off" spellcheck="false"
                        aria-required="true" aria-label="股票代碼"
+                       :aria-invalid="formError ? 'true' : undefined"
+                       aria-errormessage="form-error-msg"
                        @input="form.symbol = $event.target.value.toUpperCase().replace(/[^A-Z]/g, '')">
               </div>
               <div class="quick-symbols">
@@ -197,7 +199,7 @@
         </form>
 
         <template x-if="formError">
-          <div class="notice notice-error compact" role="alert">
+          <div id="form-error-msg" class="notice notice-error compact" role="alert">
             <span x-text="formError"></span>
             <button class="notice-dismiss" @click="formError = null" aria-label="關閉錯誤訊息">&times;</button>
           </div>

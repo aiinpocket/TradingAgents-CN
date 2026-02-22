@@ -255,6 +255,16 @@ async def get_analysis_history():
     return {"analyses": history[-20:]}
 
 
+def _update_analysis_state(analysis_id: str, **updates):
+    """執行緒安全地更新分析狀態"""
+    with _analyses_lock:
+        data = _active_analyses.get(analysis_id)
+        if data:
+            for key, value in updates.items():
+                data[key] = value
+    return data
+
+
 async def _run_analysis(analysis_id: str):
     """背景執行分析"""
     with _analyses_lock:
@@ -262,7 +272,7 @@ async def _run_analysis(analysis_id: str):
     if not data:
         return
 
-    data["status"] = "running"
+    _update_analysis_state(analysis_id, status="running")
     data["progress"].append("啟動分析引擎...")
 
     try:
@@ -280,28 +290,29 @@ async def _run_analysis(analysis_id: str):
         )
 
         if result.get("success"):
-            data["status"] = "completed"
             from web.utils.analysis_runner import format_analysis_results
             formatted = format_analysis_results(result)
-            data["result"] = formatted
             data["progress"].append("分析完成")
+            _update_analysis_state(analysis_id, status="completed", result=formatted)
         else:
-            data["status"] = "failed"
             error_msg = result.get("error", "分析失敗")
-            data["error"] = error_msg
             data["progress"].append(f"分析失敗: {error_msg}")
+            _update_analysis_state(analysis_id, status="failed", error=error_msg)
 
     except Exception as e:
-        data["status"] = "failed"
         # 不洩漏內部錯誤細節給前端
-        data["error"] = "分析過程中發生內部錯誤，請查看伺服器日誌"
         data["progress"].append("分析過程中發生錯誤")
+        _update_analysis_state(
+            analysis_id,
+            status="failed",
+            error="分析過程中發生內部錯誤，請查看伺服器日誌",
+        )
         try:
             from tradingagents.utils.logging_manager import get_logger
-            get_logger("api").error(f"分析 {analysis_id} 異常: {e}", exc_info=True)
+            get_logger("api").error(f"分析 ...{analysis_id[-4:]} 異常: {e}", exc_info=True)
         except ImportError:
             import logging
-            logging.getLogger("api").error(f"分析 {analysis_id} 異常: {e}", exc_info=True)
+            logging.getLogger("api").error(f"分析 ...{analysis_id[-4:]} 異常: {e}", exc_info=True)
 
 
 def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, model):
@@ -314,6 +325,10 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
         if data:
             # 限制單條訊息長度，防止記憶體濫用
             if len(message) > 1000:
+                import logging
+                logging.getLogger("api").warning(
+                    f"分析 ...{analysis_id[-4:]} 進度訊息被截斷（{len(message)} 字元）"
+                )
                 message = message[:1000] + "..."
             # 限制訊息總數，防止記憶體溢出
             if len(data["progress"]) >= _MAX_PROGRESS_MESSAGES:
