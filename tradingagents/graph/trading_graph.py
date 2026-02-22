@@ -17,7 +17,7 @@ from tradingagents.agents.utils.memory import FinancialSituationMemory
 # 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
-from tradingagents.dataflows.interface import set_config
+from tradingagents.dataflows.config import set_config
 
 from .conditional_logic import ConditionalLogic
 from .setup import GraphSetup
