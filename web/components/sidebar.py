@@ -163,24 +163,38 @@ def render_sidebar():
 
         st.markdown("---")
 
-        # API 密鑰狀態
-        st.markdown("**API 狀態**")
-
-        def _show_key_status(label: str, env_name: str, prefix: str = "", min_len: int = 20):
-            """顯示 API 密鑰配置狀態（只顯示狀態，不洩露密鑰內容）"""
+        # API 密鑰狀態（緊湊行內顯示）
+        def _get_key_status(env_name: str, prefix: str = "", min_len: int = 20) -> str:
+            """檢查 API 密鑰配置狀態，回傳狀態文字"""
             key_val = os.getenv(env_name, "")
             if not key_val or key_val.startswith("your_") or key_val == "CHANGE_ME":
-                st.error(f"{label}: 未配置")
+                return "missing"
             elif prefix and not key_val.startswith(prefix):
-                st.warning(f"{label}: 已配置 (格式異常)")
+                return "warning"
             elif len(key_val) >= min_len:
-                st.success(f"{label}: 已配置")
-            else:
-                st.warning(f"{label}: 已配置 (格式異常)")
+                return "ok"
+            return "warning"
 
-        _show_key_status("OpenAI", "OPENAI_API_KEY", "sk-")
-        _show_key_status("Anthropic", "ANTHROPIC_API_KEY", "sk-")
-        _show_key_status("FinnHub", "FINNHUB_API_KEY")
+        api_keys = [
+            ("OpenAI", "OPENAI_API_KEY", "sk-"),
+            ("Anthropic", "ANTHROPIC_API_KEY", "sk-"),
+            ("FinnHub", "FINNHUB_API_KEY", ""),
+        ]
+        status_parts = []
+        has_missing = False
+        for label, env_name, prefix in api_keys:
+            status = _get_key_status(env_name, prefix)
+            if status == "ok":
+                status_parts.append(f"{label} &#10003;")
+            elif status == "warning":
+                status_parts.append(f"{label} &#9888;")
+            else:
+                status_parts.append(f"{label} &#10007;")
+                has_missing = True
+
+        st.caption(" | ".join(status_parts))
+        if has_missing:
+            st.caption("請在 .env 檔案中配置缺少的 API 密鑰")
 
         st.markdown("---")
 

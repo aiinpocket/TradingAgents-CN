@@ -242,17 +242,18 @@ def main():
     # 渲染側邊欄模型配置
     config = render_sidebar()
 
-    # 狀態清理按鈕
-    if st.sidebar.button("清理分析狀態", help="清理僵屍分析狀態"):
-        st.session_state.analysis_running = False
-        st.session_state.current_analysis_id = None
-        st.session_state.analysis_results = None
-        keys_to_remove = [k for k in st.session_state.keys() if 'auto_refresh' in k]
-        for key in keys_to_remove:
-            del st.session_state[key]
-        cleanup_dead_analysis_threads()
-        st.sidebar.success("已清理")
-        st.rerun()
+    # 狀態清理按鈕（僅除錯模式顯示）
+    if config.get("enable_debug"):
+        if st.sidebar.button("清理分析狀態", help="清理僵屍分析狀態"):
+            st.session_state.analysis_running = False
+            st.session_state.current_analysis_id = None
+            st.session_state.analysis_results = None
+            keys_to_remove = [k for k in st.session_state.keys() if 'auto_refresh' in k]
+            for key in keys_to_remove:
+                del st.session_state[key]
+            cleanup_dead_analysis_threads()
+            st.sidebar.success("已清理")
+            st.rerun()
 
     # -- 股票分析主頁面 --
 

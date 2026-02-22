@@ -402,3 +402,52 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     color: var(--text-muted);
     font-weight: 400;
 }
+
+/* 側邊欄緊湊間距 */
+section[data-testid="stSidebar"] .stMarkdown {
+    margin-bottom: -0.25rem;
+}
+
+section[data-testid="stSidebar"] hr {
+    margin: 0.5rem 0;
+}
+
+section[data-testid="stSidebar"] .stSelectbox {
+    margin-bottom: -0.25rem;
+}
+
+/* 表單內部間距緊湊化 */
+[data-testid="stForm"] .stTextInput,
+[data-testid="stForm"] .stDateInput,
+[data-testid="stForm"] .stSelectSlider {
+    margin-bottom: -0.25rem;
+}
+
+[data-testid="stForm"] .stCheckbox {
+    margin-bottom: -0.5rem;
+}
+
+/* 提交按鈕圓角收窄，降低 "demo" 感 */
+[data-testid="stFormSubmitButton"] button {
+    border-radius: 6px !important;
+    font-size: 0.875rem !important;
+    padding: 0.5rem 1.5rem !important;
+    letter-spacing: 0.02em;
+}
+
+/* 側邊欄分隔線淡化 */
+section[data-testid="stSidebar"] .stMarkdown hr {
+    border-color: var(--border-light);
+    opacity: 0.6;
+}
+
+/* Expander 展開器內的表單進階選項更緊湊 */
+[data-testid="stForm"] [data-testid="stExpander"] {
+    border: none;
+    margin-bottom: 0;
+}
+
+/* 頁面 h4 小標題 */
+.stMarkdown h4 {
+    margin-top: 0.25rem;
+}
