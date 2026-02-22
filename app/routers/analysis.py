@@ -286,6 +286,9 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
 
     def progress_callback(message, step=None, total_steps=None):
         if data:
+            # 限制單條訊息長度，防止記憶體濫用
+            if len(message) > 1000:
+                message = message[:1000] + "..."
             data["progress"].append(message)
 
     from web.utils.analysis_runner import run_stock_analysis

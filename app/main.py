@@ -135,14 +135,27 @@ class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
+# 全域例外處理器（防止洩漏內部錯誤細節）
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"未預期的錯誤: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "伺服器內部錯誤，請查看日誌"},
+    )
+
+
 # 中介層順序：外層先執行
 app.add_middleware(RequestSizeLimitMiddleware)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RateLimitMiddleware, max_requests=60, window_seconds=60)
 
-# CORS
+# CORS（拒絕萬用字元以防止設定錯誤）
 _cors_env = os.getenv("CORS_ORIGINS", "").strip()
 _cors_origins = [o.strip() for o in _cors_env.split(",") if o.strip()] if _cors_env else []
+if "*" in _cors_origins:
+    logger.warning("CORS_ORIGINS 包含萬用字元 '*'，已忽略以防止安全風險")
+    _cors_origins = []
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,

@@ -2,6 +2,15 @@
  * TradingAgents 前端應用
  */
 
+// 全域錯誤處理
+window.onerror = function(msg, src, line) {
+  console.error('JS error:', msg, src, line);
+  return false;
+};
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('Unhandled promise:', e.reason);
+});
+
 function tradingApp() {
   return {
     // 狀態
@@ -369,6 +378,7 @@ function tradingApp() {
         .replace(/^# (.+)$/gm, '<h2>$1</h2>')
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
         .replace(/^- (.+)$/gm, '<li>$1</li>')
         .replace(/^---$/gm, '<hr>')
         .replace(/\n\n/g, '</p><p>')
