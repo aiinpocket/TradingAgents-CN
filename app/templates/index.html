@@ -26,11 +26,11 @@
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"
           integrity="sha384-eEu5CTj3qGvu9PdJuS+YlkNi7d2XxQROAFYOr59zgObtlcux1ae1Il3u7jvdCSWu"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.3.1"></script>
+  <script src="/static/js/i18n.js?v=0.3.2"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"
           integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.3.1">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.3.2">
 </head>
 <body x-data="tradingApp()" x-init="init()">
 
@@ -162,6 +162,7 @@
                 <div class="mover-data">
                   <span class="mover-price" x-text="'$' + stock.price?.toFixed(2)"></span>
                   <span class="mover-change change-up" x-text="'+' + stock.change_pct?.toFixed(2) + '%'"></span>
+                  <span class="mover-bar" aria-hidden="true"><span class="mover-bar-fill bar-up" :style="'width:' + Math.min(stock.change_pct * 12, 100) + '%'"></span></span>
                 </div>
                 <span class="mover-action" aria-hidden="true">
                   <svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z"/></svg>
@@ -204,6 +205,7 @@
                 <div class="mover-data">
                   <span class="mover-price" x-text="'$' + stock.price?.toFixed(2)"></span>
                   <span class="mover-change change-down" x-text="stock.change_pct?.toFixed(2) + '%'"></span>
+                  <span class="mover-bar" aria-hidden="true"><span class="mover-bar-fill bar-down" :style="'width:' + Math.min(Math.abs(stock.change_pct) * 12, 100) + '%'"></span></span>
                 </div>
                 <span class="mover-action" aria-hidden="true">
                   <svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z"/></svg>
@@ -711,6 +713,6 @@
     <span class="footer-open-source" x-text="t('footer.open_source')"></span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.3.1"></script>
+  <script src="/static/js/app.js?v=0.3.2"></script>
 </body>
 </html>

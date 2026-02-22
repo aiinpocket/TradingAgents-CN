@@ -1893,6 +1893,27 @@ code {
 .change-up { color: var(--green); }
 .change-down { color: var(--red); }
 
+/* 漲跌幅微型條 */
+.mover-bar {
+  display: inline-block;
+  width: 40px;
+  height: 4px;
+  background: var(--bg-inset);
+  border-radius: 2px;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.mover-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.mover-bar-fill.bar-up { background: var(--green); }
+.mover-bar-fill.bar-down { background: var(--red); }
+
 /* 市場新聞 */
 .news-grid {
   display: grid;
@@ -2399,6 +2420,7 @@ code {
   .mover-rank { width: 18px; height: 18px; font-size: 10px; }
   .mover-data { gap: 8px; }
   .mover-price { font-size: 12px; }
+  .mover-bar { display: none; }
 
   .sectors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
   .sector-card { padding: 8px; }
