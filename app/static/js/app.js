@@ -1,5 +1,6 @@
 /**
  * TradingAgents 前端應用
+ * 支援 i18n 國際化、熱門特區、股票分析
  */
 
 // 配置常數
@@ -12,6 +13,7 @@ const CONFIG = {
   POLL_BACKOFF_MAX_MS: 15000,
   PROGRESS_STEP_PERCENT: 8,
   PROGRESS_MAX_PERCENT: 95,
+  TRENDING_REFRESH_MS: 600000, // 10 分鐘自動重新整理
 };
 
 // 全域錯誤處理
@@ -27,7 +29,8 @@ function tradingApp() {
   return {
     // 狀態
     darkMode: false,
-    tab: 'analysis',
+    lang: 'zh-TW',
+    tab: 'trending',
     apiReady: false,
     analysisRunning: false,
     showResults: false,
@@ -62,6 +65,11 @@ function tradingApp() {
     elapsedText: '',
     _elapsedTimer: null,
 
+    // 熱門特區
+    trendingData: {},
+    trendingLoading: false,
+    _trendingTimer: null,
+
     get canSubmit() {
       return this.apiReady &&
              this.form.symbol.length > 0 &&
@@ -69,10 +77,18 @@ function tradingApp() {
              !this.submitting;
     },
 
+    // i18n 翻譯函式
+    t(key) {
+      return i18n(key, this.lang);
+    },
+
     async init() {
+      // 載入語言偏好
+      this.lang = getCurrentLang();
+      document.documentElement.setAttribute('lang', this.lang === 'zh-TW' ? 'zh-Hant' : 'en');
+
       // 載入暗色模式偏好
       const saved = localStorage.getItem('theme');
-      // 驗證 localStorage 值，防止注入非預期值
       const validTheme = (saved === 'dark' || saved === 'light') ? saved : null;
       this.darkMode = validTheme === 'dark' || (!validTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
       if (this.darkMode) {
@@ -84,6 +100,9 @@ function tradingApp() {
       await this.checkHealth();
       await this.loadModels();
       this.form.date = new Date().toISOString().split('T')[0];
+
+      // 預設載入熱門特區
+      this.loadTrending();
 
       // 分析進行中離開頁面時警告
       window.addEventListener('beforeunload', (e) => {
@@ -106,6 +125,11 @@ function tradingApp() {
         localStorage.setItem('theme', 'light');
         if (meta) meta.content = '#0052cc';
       }
+    },
+
+    toggleLang() {
+      this.lang = this.lang === 'zh-TW' ? 'en' : 'zh-TW';
+      setLang(this.lang);
     },
 
     async checkHealth() {
@@ -132,7 +156,7 @@ function tradingApp() {
           this.updateModelOptions();
         }
       } catch (e) {
-        console.error('載入模型失敗:', e);
+        console.error('Failed to load models:', e);
       }
     },
 
@@ -144,6 +168,34 @@ function tradingApp() {
           this.form.model = this.currentModels[0].id;
         }
       }
+    },
+
+    // 熱門特區
+    async loadTrending() {
+      if (this.trendingLoading) return;
+      this.trendingLoading = true;
+
+      try {
+        const res = await fetch('/api/trending/overview');
+        if (res.ok) {
+          this.trendingData = await res.json();
+        }
+      } catch (e) {
+        console.error('Failed to load trending:', e);
+      } finally {
+        this.trendingLoading = false;
+      }
+
+      // 設定自動重新整理
+      if (this._trendingTimer) clearTimeout(this._trendingTimer);
+      this._trendingTimer = setTimeout(() => {
+        if (this.tab === 'trending') this.loadTrending();
+      }, CONFIG.TRENDING_REFRESH_MS);
+    },
+
+    quickAnalyze(symbol) {
+      this.form.symbol = symbol;
+      this.tab = 'analysis';
     },
 
     async startAnalysis() {
@@ -171,7 +223,7 @@ function tradingApp() {
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.detail || '啟動分析失敗');
+          throw new Error(err.detail || 'Failed to start analysis');
         }
 
         const data = await res.json();
@@ -208,7 +260,6 @@ function tradingApp() {
 
           if (data.type === 'progress') {
             this.progressMessages.push(data.message);
-            // 解析步驟前綴 [N/M] 來計算精確進度
             const stepMatch = data.message.match(/^\[(\d+)\/(\d+)\]/);
             if (stepMatch) {
               this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, Math.round((parseInt(stepMatch[1]) / parseInt(stepMatch[2])) * CONFIG.PROGRESS_MAX_PERCENT));
@@ -217,7 +268,6 @@ function tradingApp() {
             }
             this.connectionRetries = 0;
 
-            // 自動捲動到最新
             this.$nextTick(() => {
               const log = this.$refs.progressLog;
               if (log) log.scrollTop = log.scrollHeight;
@@ -235,7 +285,7 @@ function tradingApp() {
 
           } else if (data.type === 'failed') {
             this.progressPercent = 100;
-            this.progressMessages.push('分析失敗: ' + data.error);
+            this.progressMessages.push('Analysis failed: ' + data.error);
             this.analysisRunning = false;
             this._stopElapsedTimer();
             this._notifyCompletion(false);
@@ -243,7 +293,7 @@ function tradingApp() {
             this.eventSource.close();
           }
         } catch (e) {
-          console.error('SSE 解析錯誤:', e);
+          console.error('SSE parse error:', e);
         }
       };
 
@@ -252,14 +302,12 @@ function tradingApp() {
         if (this.analysisRunning) {
           this.connectionRetries++;
           if (this.connectionRetries <= CONFIG.SSE_MAX_RETRIES) {
-            // 短暫延遲後重試 SSE
             const delay = Math.min(CONFIG.SSE_BACKOFF_BASE_MS * Math.pow(2, this.connectionRetries - 1), CONFIG.SSE_BACKOFF_MAX_MS);
             setTimeout(() => {
               if (this.analysisRunning) this.connectSSE();
             }, delay);
           } else {
-            // SSE 重試失敗，改用輪詢
-            this.progressMessages.push('即時連線中斷，已切換至輪詢模式，分析仍在進行中...');
+            this.progressMessages.push(this.t('analysis.reconnecting'));
             this.pollRetryCount = 0;
             this.pollStatus();
           }
@@ -275,7 +323,7 @@ function tradingApp() {
           if (!res.ok) {
             if (res.status === 404) {
               this.analysisRunning = false;
-              this.formError = '分析任務已失效，請重新開始';
+              this.formError = 'Analysis task expired, please restart';
               return;
             }
             throw new Error(`HTTP ${res.status}`);
@@ -283,7 +331,7 @@ function tradingApp() {
 
           const data = await res.json();
           this.progressMessages = data.progress || [];
-          this.pollRetryCount = 0;  // 成功時重設重試計數
+          this.pollRetryCount = 0;
 
           if (data.status === 'completed') {
             this.progressPercent = 100;
@@ -297,16 +345,15 @@ function tradingApp() {
           } else if (data.status === 'failed') {
             this.analysisRunning = false;
             this._stopElapsedTimer();
-            this.formError = data.error || '分析失敗';
+            this.formError = data.error || 'Analysis failed';
             this._notifyCompletion(false);
             return;
           }
         } catch (e) {
           this.pollRetryCount++;
-          console.error(`輪詢錯誤 (${this.pollRetryCount}/${CONFIG.POLL_MAX_RETRIES}):`, e);
+          console.error(`Poll error (${this.pollRetryCount}/${CONFIG.POLL_MAX_RETRIES}):`, e);
         }
 
-        // 指數退避
         const delay = Math.min(CONFIG.POLL_BACKOFF_BASE_MS * Math.pow(2, Math.min(this.pollRetryCount, 3)), CONFIG.POLL_BACKOFF_MAX_MS);
         await new Promise(r => setTimeout(r, delay));
       }
@@ -314,7 +361,7 @@ function tradingApp() {
       if (this.analysisRunning) {
         this.analysisRunning = false;
         this._stopElapsedTimer();
-        this.formError = '連線逾時，請檢查網路後重試';
+        this.formError = 'Connection timeout, please check your network';
       }
     },
 
@@ -361,7 +408,7 @@ function tradingApp() {
         const data = await res.json();
         this.historyList = (data.analyses || []).reverse();
       } catch (e) {
-        console.error('載入歷史失敗:', e);
+        console.error('Failed to load history:', e);
       }
     },
 
@@ -378,17 +425,7 @@ function tradingApp() {
           this.selectFirstTab();
         }
       } catch (e) {
-        console.error('載入結果失敗:', e);
-      }
-    },
-
-    async loadConfig() {
-      try {
-        const res = await fetch('/api/config/status');
-        if (!res.ok) return;
-        this.configStatus = await res.json();
-      } catch (e) {
-        console.error('載入配置失敗:', e);
+        console.error('Failed to load result:', e);
       }
     },
 
@@ -415,8 +452,8 @@ function tradingApp() {
     },
 
     statusText(status) {
-      const map = { pending: '待處理', running: '進行中', completed: '已完成', failed: '失敗' };
-      return map[status] || status;
+      const key = 'history.status_' + status;
+      return this.t(key);
     },
 
     exportResult() {
@@ -433,13 +470,13 @@ function tradingApp() {
 
     _startElapsedTimer() {
       this._stopElapsedTimer();
-      this.elapsedText = '已用時 00:00';
+      this.elapsedText = this.t('analysis.elapsed') + ' 00:00';
       this._elapsedTimer = setInterval(() => {
         if (!this.startTime) return;
         const sec = Math.floor((Date.now() - this.startTime) / 1000);
         const m = String(Math.floor(sec / 60)).padStart(2, '0');
         const s = String(sec % 60).padStart(2, '0');
-        this.elapsedText = `已用時 ${m}:${s}`;
+        this.elapsedText = `${this.t('analysis.elapsed')} ${m}:${s}`;
       }, 1000);
     },
 
@@ -454,12 +491,10 @@ function tradingApp() {
     _notifyCompletion(success) {
       const symbol = this.form.symbol || '';
       const title = success
-        ? `${symbol} 分析完成`
-        : `${symbol} 分析失敗`;
-      // 更新頁面標題提示
+        ? `${symbol} ${this.lang === 'en' ? 'analysis completed' : '分析完成'}`
+        : `${symbol} ${this.lang === 'en' ? 'analysis failed' : '分析失敗'}`;
       document.title = title + ' - TradingAgents';
-      setTimeout(() => { document.title = 'TradingAgents - 美股交易分析'; }, 5000);
-      // 桌面通知（僅在頁面不可見時）
+      setTimeout(() => { document.title = 'TradingAgents - AI Stock Analysis'; }, 5000);
       if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
         new Notification('TradingAgents', { body: title, icon: '/static/favicon.svg' });
       }
@@ -469,7 +504,6 @@ function tradingApp() {
       if (typeof DOMPurify !== 'undefined') {
         return DOMPurify.sanitize(html);
       }
-      // 降級：使用 DOM API 安全擷取純文字，避免正則遺漏
       const tmp = document.createElement('div');
       tmp.innerHTML = html;
       const text = tmp.textContent || tmp.innerText || '';
@@ -477,28 +511,24 @@ function tradingApp() {
     },
 
     renderMarkdown(text) {
-      if (!text) return '<p class="empty-state">暫無資料</p>';
+      if (!text) return '<p class="empty-state">' + this.t('common.no_data') + '</p>';
 
-      // 轉義 HTML 特殊字元
       let html = text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-      // 區塊元素（使用函式替換防止反向引用注入）
       html = html
         .replace(/^### (.+)$/gm, (_, g) => `<h4>${g}</h4>`)
         .replace(/^## (.+)$/gm, (_, g) => `<h3>${g}</h3>`)
         .replace(/^# (.+)$/gm, (_, g) => `<h2>${g}</h2>`)
         .replace(/^---$/gm, '<hr>');
 
-      // 行內格式
       html = html
         .replace(/\*\*(.+?)\*\*/g, (_, g) => `<strong>${g}</strong>`)
         .replace(/\*(.+?)\*/g, (_, g) => `<em>${g}</em>`)
         .replace(/`([^`]+)`/g, (_, g) => `<code>${g}</code>`);
 
-      // 清單：將連續的 - 項目包裝為 <ul>
       html = html.replace(/(?:^- .+$\n?)+/gm, (match) => {
         const items = match.trim().split('\n')
           .map(line => `<li>${line.replace(/^- /, '')}</li>`)
@@ -506,7 +536,6 @@ function tradingApp() {
         return `<ul>${items}</ul>`;
       });
 
-      // 有序清單：將連續的 1. 2. 項目包裝為 <ol>
       html = html.replace(/(?:^\d+\. .+$\n?)+/gm, (match) => {
         const items = match.trim().split('\n')
           .map(line => `<li>${line.replace(/^\d+\. /, '')}</li>`)
@@ -514,7 +543,6 @@ function tradingApp() {
         return `<ol>${items}</ol>`;
       });
 
-      // 段落分隔
       html = html.replace(/\n\n/g, '</p><p>');
       html = html.replace(/\n/g, '<br>');
       html = `<div class="markdown-body"><p>${html}</p></div>`;
@@ -523,7 +551,7 @@ function tradingApp() {
     },
 
     renderDebate(debateState) {
-      if (!debateState) return '<p class="empty-state">暫無辯論資料</p>';
+      if (!debateState) return '<p class="empty-state">' + this.t('common.no_data') + '</p>';
 
       if (typeof debateState === 'string') {
         return this.renderMarkdown(debateState);
@@ -532,22 +560,25 @@ function tradingApp() {
       let html = '<div class="debate-content">';
 
       if (debateState.bull_history) {
+        const bullLabel = this.lang === 'en' ? 'Bull Researcher' : '多頭研究員';
         html += `<div class="debate-section debate-bull">
-          <h4>多頭研究員</h4>
+          <h4>${bullLabel}</h4>
           <div>${this.renderMarkdown(debateState.bull_history)}</div>
         </div>`;
       }
 
       if (debateState.bear_history) {
+        const bearLabel = this.lang === 'en' ? 'Bear Researcher' : '空頭研究員';
         html += `<div class="debate-section debate-bear">
-          <h4>空頭研究員</h4>
+          <h4>${bearLabel}</h4>
           <div>${this.renderMarkdown(debateState.bear_history)}</div>
         </div>`;
       }
 
       if (debateState.judge_decision) {
+        const judgeLabel = this.lang === 'en' ? 'Research Manager' : '研究經理決議';
         html += `<div class="debate-section debate-judge">
-          <h4>研究經理決議</h4>
+          <h4>${judgeLabel}</h4>
           <div>${this.renderMarkdown(debateState.judge_decision)}</div>
         </div>`;
       }

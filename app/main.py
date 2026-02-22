@@ -47,7 +47,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
-    version="0.2.3",
+    version="0.2.4",
     lifespan=lifespan,
     docs_url="/api/docs",
     redoc_url=None,
@@ -114,7 +114,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
             "font-src 'self' https://fonts.gstatic.com; "
             "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
-            "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; "
+            "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://query1.finance.yahoo.com; "
             "frame-ancestors 'none'"
         )
         return response
@@ -174,10 +174,11 @@ app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
 # 註冊路由
-from app.routers import analysis, config as config_router
+from app.routers import analysis, config as config_router, trending
 
 app.include_router(analysis.router, prefix="/api")
 app.include_router(config_router.router, prefix="/api")
+app.include_router(trending.router, prefix="/api")
 
 
 @app.get("/")
@@ -189,7 +190,7 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     """健康檢查"""
-    return {"status": "ok", "version": "0.2.3"}
+    return {"status": "ok", "version": "0.2.4"}
 
 
 @app.get("/robots.txt", include_in_schema=False)
