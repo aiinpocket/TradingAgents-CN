@@ -1,5 +1,7 @@
 /* TradingAgents - 專業金融分析介面 */
 
+[x-cloak] { display: none !important; }
+
 :root {
   --bg: #fafbfc;
   --bg-panel: #ffffff;

@@ -64,7 +64,7 @@
     <div x-show="tab === 'analysis'" x-transition.opacity.duration.200ms>
 
       <!-- API 未配置提示 -->
-      <section class="notice notice-warn" x-show="apiReady && availableProviders.length === 0 && !analysisRunning && !showResults">
+      <section class="notice notice-warn" x-cloak x-show="apiReady && availableProviders.length === 0 && !analysisRunning && !showResults">
         <div class="notice-icon">
           <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
         </div>
@@ -80,7 +80,7 @@
       </section>
 
       <!-- 分析表單 -->
-      <section class="panel" x-show="!analysisRunning && !showResults && availableProviders.length > 0">
+      <section class="panel" x-cloak x-show="!analysisRunning && !showResults && availableProviders.length > 0">
         <div class="panel-header">
           <h2>股票分析</h2>
           <p>輸入美股代碼，啟動多代理協作分析。</p>
@@ -166,7 +166,7 @@
           <div class="form-actions">
             <button type="submit" class="btn-primary" :disabled="!canSubmit">
               <span x-show="!submitting">開始分析</span>
-              <span x-show="submitting" class="btn-loading">提交中</span>
+              <span x-cloak x-show="submitting" class="btn-loading">提交中</span>
             </button>
           </div>
         </form>
@@ -180,7 +180,7 @@
       </section>
 
       <!-- 分析進度 -->
-      <section class="panel" x-show="analysisRunning" x-transition.opacity.duration.200ms>
+      <section class="panel" x-cloak x-show="analysisRunning" x-transition.opacity.duration.200ms>
         <div class="progress-header">
           <div class="progress-title-row">
             <h2>
@@ -215,7 +215,7 @@
       </section>
 
       <!-- 分析結果 -->
-      <section x-show="showResults" x-transition.opacity.duration.200ms>
+      <section x-cloak x-show="showResults" x-transition.opacity.duration.200ms>
         <div class="results-header">
           <div>
             <h2 class="results-symbol">
@@ -287,7 +287,7 @@
     </div>
 
     <!-- 歷史頁面 -->
-    <div x-show="tab === 'history'" x-transition.opacity.duration.200ms>
+    <div x-cloak x-show="tab === 'history'" x-transition.opacity.duration.200ms>
       <section class="panel">
         <div class="panel-header panel-header-row">
           <h2>分析歷史</h2>
@@ -324,7 +324,7 @@
     </div>
 
     <!-- 配置頁面 -->
-    <div x-show="tab === 'config'" x-transition.opacity.duration.200ms>
+    <div x-cloak x-show="tab === 'config'" x-transition.opacity.duration.200ms>
       <section class="panel">
         <div class="panel-header">
           <h2>系統配置</h2>
