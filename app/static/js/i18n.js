@@ -142,6 +142,9 @@ const I18N_MESSAGES = {
     'watchlist.clear': '清除全部',
     'watchlist.clear_confirm': '確定清除所有追蹤？',
 
+    // 頁面標題
+    'meta.title': 'TradingAgents - AI 股票分析',
+
     // 頁尾
     'footer.version': 'v0.4.4',
     'footer.open_source': '開源專案',
@@ -320,6 +323,9 @@ const I18N_MESSAGES = {
     'watchlist.remove': 'Remove from watchlist',
     'watchlist.clear': 'Clear all',
     'watchlist.clear_confirm': 'Clear all tracked stocks?',
+
+    // Page title
+    'meta.title': 'TradingAgents - AI Stock Analysis',
 
     // Footer
     'footer.version': 'v0.4.4',

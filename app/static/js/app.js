@@ -123,6 +123,9 @@ function tradingApp() {
       this.$watch('form.symbol', () => { this.stockPreview = this._computeStockPreview(); });
       this.$watch('trendingData', () => { this.stockPreview = this._computeStockPreview(); });
 
+      // 根據語言設定頁面標題
+      document.title = this.t('meta.title');
+
       // 預設載入熱門特區
       this.loadTrending();
 
@@ -168,6 +171,8 @@ function tradingApp() {
     toggleLang() {
       this.lang = this.lang === 'zh-TW' ? 'en' : 'zh-TW';
       setLang(this.lang);
+      // 同步頁面標題語言
+      document.title = this.t('meta.title');
       // 切換語言後重新載入 AI 分析（使用新語言）
       if (this.tab === 'trending' && this.aiAnalysis.content) {
         this.loadAiAnalysis(true);
@@ -388,7 +393,7 @@ function tradingApp() {
 
       // 靜默請求桌面通知權限
       if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
+        Notification.requestPermission().catch(() => {});
       }
 
       try {
@@ -411,6 +416,10 @@ function tradingApp() {
         }
 
         const data = await res.json();
+        // 驗證 analysis_id 格式（與後端 _validate_analysis_id 一致）
+        if (!/^analysis_[A-Za-z0-9_-]{16,32}$/.test(data.analysis_id || '')) {
+          throw new Error(this.t('error.start_failed'));
+        }
         this.analysisId = data.analysis_id;
         this.analysisRunning = true;
         this.progressMessages = [];
@@ -754,7 +763,7 @@ function tradingApp() {
         ? `${symbol} ${this.t('analysis.completed')}`
         : `${symbol} ${this.t('analysis.failed')}`;
       document.title = title + ' - TradingAgents';
-      setTimeout(() => { document.title = 'TradingAgents - AI Stock Analysis'; }, 5000);
+      setTimeout(() => { document.title = this.t('meta.title'); }, 5000);
       if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
         new Notification('TradingAgents', { body: title, icon: '/static/favicon.svg' });
       }
@@ -790,7 +799,7 @@ function tradingApp() {
     },
 
     renderMarkdown(text) {
-      if (!text) return '<p class="empty-state">' + this.t('common.no_data') + '</p>';
+      if (!text) return '<p class="empty-state">' + this._sanitize(this.t('common.no_data')) + '</p>';
 
       let html = text
         .replace(/&/g, '&amp;')
@@ -859,7 +868,8 @@ function tradingApp() {
     },
 
     renderDebate(debateState) {
-      if (!debateState) return '<p class="empty-state">' + this.t('common.no_data') + '</p>';
+      const emptyHtml = '<p class="empty-state">' + this._sanitize(this.t('common.no_data')) + '</p>';
+      if (!debateState) return emptyHtml;
 
       if (typeof debateState === 'string') {
         return this.renderMarkdown(debateState);
@@ -867,7 +877,7 @@ function tradingApp() {
 
       // 所有欄位皆為空時顯示空狀態
       if (!debateState.bull_history && !debateState.bear_history && !debateState.judge_decision) {
-        return '<p class="empty-state">' + this.t('common.no_data') + '</p>';
+        return emptyHtml;
       }
 
       let html = '<div class="debate-content">';
@@ -897,7 +907,9 @@ function tradingApp() {
       }
 
       html += '</div>';
-      return this._sanitize(html);
+      // renderMarkdown 內部已呼叫 _sanitize()，外層不需重複清理
+      // 雙重 _sanitize 在 DOMPurify fallback 路徑下會破壞已生成的 HTML 標籤
+      return html;
     },
   };
 }

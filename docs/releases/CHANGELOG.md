@@ -29,6 +29,13 @@ v0.4.4 對趨勢資料抓取進行並行化改造，新增背景定時刷新機�
 - **符號驗證常數化**: 統一為預編譯 _SYMBOL_RE / _ANALYSIS_ID_RE，移除函式內散落的 import re
 - **移除已棄用 block-all-mixed-content**（upgrade-insecure-requests 已涵蓋）
 
+#### 前端程式碼品質修復
+- **renderDebate 雙重 _sanitize 移除**: renderMarkdown 內部已呼叫 _sanitize()，外層重複清理在 DOMPurify fallback 路徑下會破壞已生成的 HTML
+- **renderMarkdown/renderDebate 空狀態 XSS 防護**: 空狀態回傳的 i18n 文字經過 _sanitize() 清理
+- **Notification.requestPermission() Promise 捕獲**: 避免隱私模式瀏覽器的 unhandled rejection
+- **document.title i18n 化**: 新增 meta.title key，頁面標題隨語言切換同步更新
+- **analysisId 前端格式驗證**: 與後端 _validate_analysis_id 正則一致，防止異常 ID 注入 URL
+
 #### 並發安全與穩健性
 - **AI 分析 race condition 修復**: 全域 bool + asyncio.Event 替換為 asyncio.Lock，消除 TOCTOU 競爭，double-check 快取避免重複 LLM 呼叫
 - **分析啟動原子鎖**: start_analysis 的並行限制檢查與任務建立移入同一鎖區段，防止超額並發
