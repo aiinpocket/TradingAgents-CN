@@ -55,7 +55,7 @@ services:
 
   # MongoDB 資料庫服務
   mongodb:
-    image: mongo:4.4
+    image: mongo:7.0
     container_name: tradingagents-mongodb
     restart: unless-stopped
     # 僅綁定 localhost，防止外部直接存取
@@ -71,7 +71,7 @@ services:
     networks:
       - tradingagents-network
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 30s
       timeout: 10s
       retries: 3
