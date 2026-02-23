@@ -1725,6 +1725,7 @@ code {
   padding: 16px 20px;
   margin-bottom: 16px;
   box-shadow: var(--shadow-sm);
+  min-height: 98px; /* 匹配實際內容高度，防止骨架→資料切換 CLS */
 }
 
 .pulse-header {
@@ -1855,6 +1856,7 @@ code {
 /* 指數概覽列 */
 .indices-bar {
   margin-bottom: 16px;
+  min-height: 142px; /* 匹配實際內容高度，防止骨架→資料切換 CLS */
 }
 
 .indices-grid {
@@ -2753,10 +2755,11 @@ code {
   .h-provider { display: none; }
 
   /* 熱門特區 RWD */
-  .market-pulse { padding: 12px 14px; }
+  .market-pulse { padding: 12px 14px; min-height: 100px; }
   .pulse-bar { gap: 6px; }
   .pulse-item { min-width: 0; flex-basis: calc(50% - 3px); }
 
+  .indices-bar { min-height: 230px; } /* 2x2 格線較高 */
   .indices-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2836,7 +2839,8 @@ code {
   .h-date { display: none; }
 
   /* 熱門特區 RWD */
-  .market-pulse { padding: 10px 12px; }
+  .market-pulse { padding: 10px 12px; min-height: 190px; } /* 脈動項目堆疊較高 */
+  .indices-bar { min-height: 230px; }
   .pulse-header { flex-direction: column; gap: 8px; align-items: flex-start; }
   .pulse-bar { flex-direction: column; gap: 4px; }
   .pulse-item { min-width: 0; }
