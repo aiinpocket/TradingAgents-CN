@@ -24,11 +24,11 @@
   <script async src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.4.3b"></script>
+  <script src="/static/js/i18n.js?v=0.4.3c"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.4.3b">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.4.3c">
 </head>
 <body x-data="tradingApp()" x-init="init()">
 
@@ -44,15 +44,15 @@
         <span class="brand-name" x-text="t('nav.brand')">TradingAgents</span>
       </div>
       <nav class="topbar-nav" role="navigation" :aria-label="t('a11y.main_nav')">
-        <button class="nav-btn" :class="{ active: tab === 'trending' }" :aria-current="tab === 'trending' ? 'page' : false" @click="tab = 'trending'; loadTrending(); window.scrollTo(0, 0)">
+        <button class="nav-btn" :class="{ active: tab === 'trending' }" :aria-current="tab === 'trending' ? 'page' : null" @click="tab = 'trending'; loadTrending(); window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"/></svg>
           <span x-text="t('nav.trending')">熱門</span>
         </button>
-        <button class="nav-btn" :class="{ active: tab === 'analysis' }" :aria-current="tab === 'analysis' ? 'page' : false" @click="tab = 'analysis'; window.scrollTo(0, 0)">
+        <button class="nav-btn" :class="{ active: tab === 'analysis' }" :aria-current="tab === 'analysis' ? 'page' : null" @click="tab = 'analysis'; window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
           <span x-text="t('nav.analysis')">分析</span>
         </button>
-        <button class="nav-btn" :class="{ active: tab === 'history' }" :aria-current="tab === 'history' ? 'page' : false" @click="tab = 'history'; loadHistory(); window.scrollTo(0, 0)">
+        <button class="nav-btn" :class="{ active: tab === 'history' }" :aria-current="tab === 'history' ? 'page' : null" @click="tab = 'history'; loadHistory(); window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
           <span x-text="t('nav.history')">歷史</span>
         </button>
@@ -312,19 +312,17 @@
         </div>
         <div class="news-grid" x-show="trendingData.news?.length > 0">
           <template x-for="(item, idx) in trendingData.news" :key="item.title">
-            <a class="news-card" :class="'news-accent-' + (idx % 4)" :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer">
-              <div class="news-card-inner">
+            <div class="news-card" :class="'news-accent-' + (idx % 4)">
+              <a class="news-card-link" :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer">
                 <div class="news-source" x-text="item.source"></div>
                 <div class="news-title" x-text="item.title"></div>
-                <div class="news-meta">
-                  <span class="news-date" x-text="item.date"></span>
-                  <button class="news-related-badge" x-show="item.related" x-text="'$' + item.related"
-                          @click.prevent.stop="navigateToAnalysis(item.related)"
-                          :title="t('trending.quick_analyze') + ' ' + item.related"
-                          :aria-label="t('a11y.analyze_stock') + ' ' + item.related"></button>
-                </div>
-              </div>
-            </a>
+                <span class="news-date" x-text="item.date"></span>
+              </a>
+              <button class="news-related-badge" x-show="item.related" x-text="'$' + item.related"
+                      @click="navigateToAnalysis(item.related)"
+                      :title="t('trending.quick_analyze') + ' ' + item.related"
+                      :aria-label="t('a11y.analyze_stock') + ' ' + item.related"></button>
+            </div>
           </template>
         </div>
         <div class="news-grid" x-show="trendingLoading">
@@ -526,6 +524,7 @@
                 <template x-for="d in [1,2,3,4,5]" :key="d">
                   <button type="button" class="depth-btn"
                           :class="{ active: form.depth === d }"
+                          :aria-pressed="(form.depth === d).toString()"
                           @click="form.depth = d"
                           :title="t('depth.time.' + d)">
                     <span class="depth-num" x-text="d"></span>
@@ -888,6 +887,6 @@
     <span class="footer-open-source" x-text="t('footer.open_source')"></span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.4.3b"></script>
+  <script src="/static/js/app.js?v=0.4.3c"></script>
 </body>
 </html>

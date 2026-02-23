@@ -613,7 +613,18 @@ body {
   user-select: none;
 }
 
-.module-chip input { display: none; }
+/* sr-only：保留輔助技術可讀性，而非 display:none 完全移除 */
+.module-chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .module-chip:hover {
   border-color: var(--border);
@@ -1019,21 +1030,16 @@ body {
   padding: 8px 0;
 }
 
+/* 統一為靜態骨架，與 .skeleton 一致 */
 .skeleton-line {
   height: 16px;
   border-radius: 4px;
   background: var(--bg-inset);
-  animation: skeleton-pulse 1.2s ease-in-out infinite;
 }
 
 .skeleton-w40 { width: 40%; }
 .skeleton-w60 { width: 60%; }
 .skeleton-w80 { width: 80%; }
-
-@keyframes skeleton-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
 
 @media (max-width: 480px) {
   .stock-context-metrics {
@@ -2153,12 +2159,25 @@ code {
 
 .news-card {
   display: block;
+  position: relative;
   background: var(--bg-inset);
   border: 1px solid var(--border-light);
   border-radius: var(--radius);
-  text-decoration: none;
   transition: background-color 0.12s, border-color 0.12s, box-shadow 0.12s, transform 0.12s;
   overflow: hidden;
+}
+
+/* 卡片內連結區域（取代原 a.news-card 避免巢狀互動元素） */
+.news-card-link {
+  display: block;
+  padding: 14px 16px 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.news-card-link .news-date {
+  font-size: 11px;
+  color: var(--text-faint);
 }
 
 .news-card-inner {
@@ -2217,6 +2236,9 @@ code {
 }
 
 .news-related-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
   font-weight: 700;
   font-size: 10px;
   color: var(--accent-text);
@@ -2507,8 +2529,8 @@ code {
   --border-light: #32363e;
   --text: #e1e4e8;
   --text-sub: #9ca3af;
-  --text-faint: #9098a4;
-  --text-tertiary: #9098a4;
+  --text-faint: #a0a8b4;
+  --text-tertiary: #a0a8b4;
   --border-card: #383c44;
   --up: #3fb950;
   --down: #f85149;
