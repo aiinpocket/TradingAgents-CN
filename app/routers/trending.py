@@ -397,6 +397,66 @@ def _fetch_market_news() -> list[dict]:
     return unique_news[:12]
 
 
+def _translate_news_titles(news_items: list[dict]) -> list[dict]:
+    """批次翻譯新聞標題為繁體中文（使用 LLM，失敗時保留原文）"""
+    if not news_items:
+        return news_items
+
+    titles = [item["title"] for item in news_items]
+    providers = _get_ai_providers()
+    if not providers:
+        return news_items
+
+    import json as _json
+    from langchain_core.messages import SystemMessage, HumanMessage
+
+    system_msg = (
+        "You are a professional financial news translator. "
+        "Translate the following English news headlines into Traditional Chinese (繁體中文). "
+        "Keep financial terms, company names, and stock tickers in English. "
+        "Respond ONLY with a JSON array of translated strings, in the same order as input. "
+        "Example: [\"翻譯一\", \"翻譯二\"]"
+    )
+    user_msg = _json.dumps(titles, ensure_ascii=False)
+
+    messages = [
+        SystemMessage(content=system_msg),
+        HumanMessage(content=user_msg),
+    ]
+
+    for provider, model in providers:
+        try:
+            if provider == "openai":
+                from langchain_openai import ChatOpenAI
+                llm = ChatOpenAI(model=model, temperature=0, max_tokens=2000)
+            else:
+                from langchain_anthropic import ChatAnthropic
+                llm = ChatAnthropic(model=model, temperature=0, max_tokens=2000)
+
+            response = llm.invoke(messages)
+            text = response.content.strip()
+
+            # 解析 JSON（支援 markdown code fence 變體）
+            import re
+            fence_match = re.search(r"```(?:json)?\s*\n?(.*?)```", text, re.DOTALL)
+            if fence_match:
+                text = fence_match.group(1).strip()
+
+            translated = _json.loads(text)
+            if isinstance(translated, list) and len(translated) == len(news_items):
+                for i, item in enumerate(news_items):
+                    item["title_zh"] = translated[i]
+                logger.info(f"新聞標題翻譯完成 ({len(translated)} 則，provider={provider})")
+                return news_items
+
+            logger.warning(f"新聞翻譯結果長度不符: {len(translated)} vs {len(news_items)}")
+        except Exception as e:
+            logger.warning(f"新聞標題翻譯失敗 ({provider}): {str(e)[:100]}")
+            continue
+
+    return news_items
+
+
 @router.get("/trending/overview")
 async def get_market_overview():
     """取得市場概覽（主要指數 + 漲跌幅排行 + 新聞）"""
@@ -422,6 +482,16 @@ async def get_market_overview():
         _safe_exec(_fetch_market_news, []),
         _safe_exec(_fetch_sectors, []),
     )
+
+    # 批次翻譯新聞標題（背景執行，不阻塞回應）
+    if news:
+        try:
+            news = await asyncio.wait_for(
+                loop.run_in_executor(_TRENDING_EXECUTOR, _translate_news_titles, news),
+                timeout=30.0,
+            )
+        except (asyncio.TimeoutError, Exception) as exc:
+            logger.warning(f"新聞標題翻譯逾時或失敗: {exc}")
 
     result = {
         "indices": indices,
@@ -758,11 +828,55 @@ async def get_ai_analysis(lang: str = "zh-TW"):
 # 背景定時刷新
 # =============================================================
 
+async def _pregenerate_ai_analysis():
+    """預先產生中英文 AI 趨勢分析（背景呼叫）"""
+    overview = _get_cached("overview")
+    if not overview:
+        return
+
+    providers = _get_ai_providers()
+    if not providers:
+        return
+
+    market_context = _build_market_context(overview)
+    loop = asyncio.get_running_loop()
+
+    for lang in ("zh-TW", "en"):
+        cache_key = f"ai_analysis_{lang}"
+        # 已有快取且未過期，跳過
+        if _get_cached(cache_key, ttl=_AI_CACHE_TTL_SECONDS):
+            continue
+
+        try:
+            content, error, actual_provider = await asyncio.wait_for(
+                loop.run_in_executor(
+                    _TRENDING_EXECUTOR, _generate_ai_analysis, market_context, lang
+                ),
+                timeout=120.0,
+            )
+            if content:
+                result = {
+                    "available": True,
+                    "content": content,
+                    "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "provider": actual_provider or providers[0][0],
+                }
+                _set_cache(cache_key, result)
+                logger.info(f"AI 趨勢分析預產生完成 (lang={lang})")
+            elif error:
+                logger.warning(f"AI 趨勢分析預產生失敗 (lang={lang}): {error}")
+        except asyncio.TimeoutError:
+            logger.warning(f"AI 趨勢分析預產生逾時 (lang={lang})")
+        except Exception as e:
+            logger.warning(f"AI 趨勢分析預產生錯誤 (lang={lang}): {e}")
+
+
 async def start_background_refresh():
     """啟動背景定時刷新趨勢資料。
 
     每 5 分鐘（_BG_REFRESH_INTERVAL）+ 隨機 jitter 重新抓取市場概覽，
     確保快取始終有熱資料，使用者不需等待冷啟動。
+    每次刷新後，若 AI 分析快取已過期，自動預產生中英文版本。
     應在 FastAPI lifespan 中呼叫。
     """
     logger.info(f"背景趨勢刷新已啟動（基礎間隔 {_BG_REFRESH_INTERVAL} 秒）")
@@ -778,6 +892,13 @@ async def start_background_refresh():
             await asyncio.wait_for(get_market_overview(), timeout=60.0)
             logger.info("背景趨勢刷新完成")
             consecutive_failures = 0
+
+            # 市場資料更新後，背景預產生 AI 分析（不阻塞下次刷新）
+            try:
+                await _pregenerate_ai_analysis()
+            except Exception as e:
+                logger.warning(f"AI 分析預產生失敗（不影響正常運作）: {e}")
+
         except asyncio.TimeoutError:
             consecutive_failures += 1
             logger.warning(

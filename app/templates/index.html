@@ -335,7 +335,7 @@
             <div class="news-card" :class="'news-accent-' + (idx % 4)">
               <a class="news-card-link" :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer">
                 <div class="news-source" x-text="item.source"></div>
-                <div class="news-title" x-text="item.title"></div>
+                <div class="news-title" x-text="(lang === 'zh-TW' && item.title_zh) ? item.title_zh : item.title"></div>
                 <span class="news-date" x-text="item.date"></span>
               </a>
               <button class="news-related-badge" x-show="item.related" x-text="'$' + item.related"

@@ -77,12 +77,15 @@ async def lifespan(app: FastAPI):
 
     logger.info("TradingAgents API 啟動中...")
 
-    # 背景預熱趨勢資料快取，讓第一位使用者不需等待
+    # 背景預熱趨勢資料快取 + AI 分析，讓第一位使用者不需等待
     async def _prewarm_trending():
         try:
-            from app.routers.trending import get_market_overview
+            from app.routers.trending import get_market_overview, _pregenerate_ai_analysis
             await get_market_overview()
             logger.info("趨勢資料快取預熱完成")
+            # 市場資料就緒後，預產生中英文 AI 分析
+            await _pregenerate_ai_analysis()
+            logger.info("AI 趨勢分析預產生完成")
         except Exception as e:
             logger.warning(f"趨勢資料預熱失敗（不影響正常運作）: {e}")
 
