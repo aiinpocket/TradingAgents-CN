@@ -120,7 +120,12 @@
 
       <!-- 市場指數概覽（移除 x-cloak，骨架在 Alpine 前就可見，防止 CLS） -->
       <section class="indices-bar" :aria-busy="trendingLoading.toString()">
-        <div class="section-title">
+        <!-- 骨架標題佔位（與實際 section-title 同高，防止 CLS） -->
+        <div class="section-title" x-show="trendingLoading && !(trendingData.indices && trendingData.indices.length > 0)" aria-hidden="true">
+          <div class="skeleton" style="width:120px;height:13px;border-radius:4px"></div>
+          <div class="skeleton" style="width:160px;height:13px;border-radius:4px"></div>
+        </div>
+        <div class="section-title" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
           <svg class="section-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
           <span x-text="t('trending.indices')">主要指數</span>
           <span class="section-updated" x-show="trendingData.updated_at" x-text="t('trending.updated') + ' ' + trendingData.updated_at"></span>
