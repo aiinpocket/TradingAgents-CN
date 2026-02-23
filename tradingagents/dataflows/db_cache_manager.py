@@ -201,7 +201,7 @@ class DatabaseCacheManager:
         for key, value in sorted(kwargs.items()):
             params_str += f"_{key}_{value}"
         
-        cache_key = hashlib.md5(params_str.encode()).hexdigest()[:16]
+        cache_key = hashlib.sha256(params_str.encode()).hexdigest()[:16]
         return f"{data_type}:{symbol}:{cache_key}"
     
     def save_stock_data(self, symbol: str, data: Union[pd.DataFrame, str],

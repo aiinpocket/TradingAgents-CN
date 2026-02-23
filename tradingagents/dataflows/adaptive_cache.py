@@ -41,7 +41,7 @@ class AdaptiveCacheSystem:
                       data_source: str = "default", data_type: str = "stock_data") -> str:
         """生成快取鍵"""
         key_data = f"{symbol}_{start_date}_{end_date}_{data_source}_{data_type}"
-        return hashlib.md5(key_data.encode()).hexdigest()
+        return hashlib.sha256(key_data.encode()).hexdigest()
     
     def _get_ttl_seconds(self, symbol: str, data_type: str = "stock_data") -> int:
         """取得TTL秒數（僅支援美股）"""

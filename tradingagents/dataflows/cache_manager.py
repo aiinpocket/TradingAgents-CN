@@ -143,8 +143,8 @@ class StockDataCache:
         for key, value in sorted(kwargs.items()):
             params_str += f"_{key}_{value}"
         
-        # 使用MD5生成短的唯一標識
-        cache_key = hashlib.md5(params_str.encode()).hexdigest()[:12]
+        # 使用 SHA-256 生成短的唯一標識
+        cache_key = hashlib.sha256(params_str.encode()).hexdigest()[:12]
         return f"{symbol}_{data_type}_{cache_key}"
     
     def _get_cache_path(self, data_type: str, cache_key: str, file_format: str = "json", symbol: str = None) -> Path:
