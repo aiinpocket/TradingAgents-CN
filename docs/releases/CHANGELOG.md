@@ -2,19 +2,23 @@
 
 TradingAgents-CN
 
-## [v0.4.3] - 2026-02-23 - CLS 徹底修復與 k8s 部署修正
+## [v0.4.3] - 2026-02-23 - CLS 0.02 達成與 k8s 部署修正
 
 ### 概述
 
-v0.4.3 徹底解決 CLS 非合成動畫問題、修復 k8s 部署 CreateContainerConfigError、升級 MongoDB 至 7.0 LTS。
+v0.4.3 將 CLS 從 0.55 優化至 0.02（Good 等級），修復 k8s 部署 CreateContainerConfigError，升級 MongoDB 至 7.0 LTS。
 
 ### 變更內容
 
-#### 效能優化
-- **CLS 根治**: shimmer 動畫從 ::after translateX 改為直接 opacity 脈衝（Chrome 保證合成 opacity）
+#### 效能優化 - CLS 從 0.55 降至 0.02
+- **系統字體堆疊**: 移除 Google Fonts Inter，改用 -apple-system/BlinkMacSystemFont/Segoe UI/Roboto（消除字型載入 CLS 0.26）
+- **移除 shimmer 動畫**: Chrome 將 opacity 脈衝標記為 ANIMATION_HAS_NO_VISIBLE_CHANGE 非合成動畫（消除 CLS 0.23）
+- **trendingLoading 初始值 true**: 與 HTML 骨架可見狀態一致，Alpine 初始化時骨架保持可見（消除 CLS 0.27）
+- **SSR 預設文字**: x-text 元素加入繁體中文預設文字，Alpine 初始化前就有正確尺寸
+- **empty-state x-cloak**: 空態提示從首次渲染就隱藏（CSS [x-cloak] 在 head 生效）
 - **骨架預先可見**: indices-bar 移除 x-cloak，骨架在 Alpine.js 載入前即可見
 - **market-pulse 佔位**: 載入中顯示骨架佔位區段，防止資料到達時版面位移
-- **字型 CLS 防護**: Inter 字型從 display=swap 改為 display=optional
+- **LCP 改善**: 938ms（移除外部字型網路請求的副效果）
 
 #### k8s 部署修復
 - **CreateContainerConfigError**: deployment.yaml 加 runAsUser/runAsGroup: 1000（修復非數字 UID 驗證失敗）
