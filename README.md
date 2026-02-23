@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/Version-0.4.0-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/Version-0.4.1-green.svg)](./VERSION)
 [![Documentation](https://img.shields.io/badge/docs--green.svg)](./docs/)
 [![Original](https://img.shields.io/badge/-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
@@ -59,6 +59,31 @@
 ### 
 
 v1.0.0-preview 
+
+---
+
+## v0.4.1
+
+### Kubernetes 安全強化
+
+- **Pod SecurityContext**: 應用、MongoDB、Redis 全面啟用 `runAsNonRoot`、`drop ALL capabilities`、`allowPrivilegeEscalation: false`
+- **NetworkPolicy**: 生產環境限制 pod 間通訊，僅應用 pod 可存取 MongoDB/Redis
+- **Dockerfile UID/GID**: 明確指定 UID/GID 1000，與 Helm `fsGroup` 一致
+
+### 前端效能
+
+- **SSE 連接生命週期**: 修復 EventSource 關閉後未清空、重連計時器未儲存的問題
+- **CDN 預連接**: 新增 `<link rel="preconnect">` 加速 cdn.jsdelivr.net 資源載入
+- **非阻塞載入**: gtag-init.js 改為 async 載入，不再阻塞渲染
+
+### 無障礙與樣式
+
+- **暗色模式對比度**: `--text-faint` 修正為 #9098a4（WCAG AA 4.73:1）
+- **報告區域表格**: 新增 `.report-body table` 樣式，與 AI 分析內容表格一致
+
+### 依賴同步
+
+- **requirements.txt**: 同步 pyproject.toml 版本（langchain 1.x、openai 2.x）
 
 ---
 
@@ -1359,6 +1384,7 @@ TradingAgents-CN
 
 ## 
 
+- **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
 - **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化
 - **v0.1.13** (2025-08-02): OpenAILLM
 - **v0.1.12** (2025-07-29): 
