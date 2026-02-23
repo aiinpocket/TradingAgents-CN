@@ -91,6 +91,7 @@ const I18N_MESSAGES = {
     'context.week52': '52 週區間',
     'context.news_title': '近期新聞',
     'context.beta': 'Beta',
+    'context.snapshot': '個股快照',
 
     // API 密鑰提示
     'api.not_configured': 'API 密鑰未配置',
@@ -272,6 +273,7 @@ const I18N_MESSAGES = {
     'context.week52': '52W Range',
     'context.news_title': 'Recent News',
     'context.beta': 'Beta',
+    'context.snapshot': 'Snapshot',
 
     // API key notice
     'api.not_configured': 'API Key Not Configured',

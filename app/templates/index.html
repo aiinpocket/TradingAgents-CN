@@ -658,7 +658,7 @@
         </div>
 
         <!-- 個股快照內容 -->
-        <div class="panel stock-context-panel" role="region" :aria-label="stockContext?.symbol + ' snapshot'" x-show="stockContext && !stockContext.error">
+        <div class="panel stock-context-panel" role="region" :aria-label="stockContext?.symbol + ' ' + t('context.snapshot')" x-show="stockContext && !stockContext.error">
           <!-- 行情頭部 -->
           <div class="stock-context-header">
             <div class="stock-context-title">

@@ -736,11 +736,11 @@ function tradingApp() {
         .replace(/>/g, '&gt;');
 
       html = html
-        .replace(/^### (.+)$/gm, (_, g) => `<h4>${g}</h4>`)
-        .replace(/^## (.+)$/gm, (_, g) => `<h3>${g}</h3>`)
-        .replace(/^# (.+)$/gm, (_, g) => `<h2>${g}</h2>`)
-        .replace(/^---$/gm, '<hr>')
-        .replace(/^#{1,6}\s*$/gm, '');
+        .replace(/^#{1,6}\s*$/gm, '')
+        .replace(/^### (\S.*)$/gm, (_, g) => `<h4>${g.trim()}</h4>`)
+        .replace(/^## (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
+        .replace(/^# (\S.*)$/gm, (_, g) => `<h2>${g.trim()}</h2>`)
+        .replace(/^---$/gm, '<hr>');
 
       html = html
         .replace(/\*\*(.+?)\*\*/g, (_, g) => `<strong>${g}</strong>`)
