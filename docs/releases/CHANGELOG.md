@@ -2,6 +2,41 @@
 
 TradingAgents-CN
 
+## [v0.4.3d] - 2026-02-23 - CLS 0.00 + VIX 色彩修正 + 無障礙強化
+
+### 概述
+
+v0.4.3d 將 CLS 從 0.02 進一步優化至 0.00（Lighthouse），修復 VIX 恐慌指數色彩邏輯，全面強化無障礙支援。
+
+### 變更內容
+
+#### 效能優化 - CLS 從 0.02 降至 0.00
+- **trending-panel min-height**: 添加 310px 最小高度，防止骨架→空狀態切換時 120px 高度抖動
+- **indices 骨架標題佔位**: 新增與 section-title 同高的骨架列，消除資料載入時位置偏移
+- **板塊/AI 面板 x-cloak 移除**: 移除不必要的 x-cloak（已由 x-show 控制可見性）
+- **stockPreview 快取**: getStockPreview() 改為 $watch 驅動的快取屬性，模板 7 次重複計算降為 0
+
+#### VIX 恐慌指數色彩修正
+- **isPositiveForMarket()**: VIX 上漲時色彩反轉為紅色（恐慌指標，上漲=市場負面）
+- **getMarketSentiment()**: 情緒計算正確反映 VIX 反向關係
+- 箭頭方向保持不變（仍反映實際漲跌方向）
+
+#### 無障礙強化
+- **暗色模式對比度**: --text-faint 從 #9098a4 提升至 #a0a8b4（WCAG AA 合規）
+- **checkbox sr-only**: .module-chip input 從 display:none 改為 sr-only 模式
+- **新聞卡片巢狀修復**: `<a>` 內嵌 `<button>` 重構為同級元素
+- **depth-btn aria-pressed**: 深度按鈕添加 aria-pressed 狀態
+- **aria-current 修正**: false → null（符合 ARIA 規範）
+- **導覽列 aria-label i18n**: 硬編碼改為 t('a11y.main_nav')
+- **AI 分析 aria-live**: 內容區域添加 aria-live="polite"
+- **骨架 role=status**: 載入區域添加 role="status" + aria-label
+
+#### CDN 元件驗證
+- Alpine.js 3.15.8（最新）— SRI hash 驗證通過
+- DOMPurify 3.3.1（最新）— SRI hash 驗證通過
+
+---
+
 ## [v0.4.3] - 2026-02-23 - CLS 0.02 達成與 k8s 部署修正
 
 ### 概述
