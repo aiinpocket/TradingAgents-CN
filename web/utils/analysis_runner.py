@@ -129,6 +129,47 @@ _PROGRESS_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "分析失敗，請稍後重試或調整參數",
         "en": "Analysis failed, please try again later or adjust parameters",
     },
+    # 風險評估報告標題
+    "risk_report_title": {
+        "zh-TW": "風險評估報告",
+        "en": "Risk Assessment Report",
+    },
+    "risk_aggressive_title": {
+        "zh-TW": "激進風險分析師觀點",
+        "en": "Aggressive Risk Analyst's View",
+    },
+    "risk_neutral_title": {
+        "zh-TW": "中性風險分析師觀點",
+        "en": "Neutral Risk Analyst's View",
+    },
+    "risk_conservative_title": {
+        "zh-TW": "保守風險分析師觀點",
+        "en": "Conservative Risk Analyst's View",
+    },
+    "risk_committee_title": {
+        "zh-TW": "風險管理委員會最終決議",
+        "en": "Risk Management Committee Final Decision",
+    },
+    "risk_no_aggressive": {
+        "zh-TW": "暫無激進風險分析",
+        "en": "No aggressive risk analysis available",
+    },
+    "risk_no_neutral": {
+        "zh-TW": "暫無中性風險分析",
+        "en": "No neutral risk analysis available",
+    },
+    "risk_no_conservative": {
+        "zh-TW": "暫無保守風險分析",
+        "en": "No conservative risk analysis available",
+    },
+    "risk_no_committee": {
+        "zh-TW": "暫無風險管理決議",
+        "en": "No risk management decision available",
+    },
+    "risk_disclaimer": {
+        "zh-TW": "風險評估基於多角度分析，請結合個人風險承受能力做出投資決策",
+        "en": "Risk assessment is based on multi-perspective analysis. Please consider your personal risk tolerance when making investment decisions",
+    },
 }
 
 
@@ -173,8 +214,8 @@ def translate_analyst_labels(text):
 
     return text
 
-def extract_risk_assessment(state):
-    """從分析狀態中提取風險評估資料"""
+def extract_risk_assessment(state, lang="zh-TW"):
+    """從分析狀態中提取風險評估資料（支援 i18n）"""
     try:
         risk_debate_state = state.get('risk_debate_state', {})
 
@@ -187,24 +228,24 @@ def extract_risk_assessment(state):
         neutral_analysis = translate_analyst_labels(risk_debate_state.get('neutral_history', ''))
         judge_decision = translate_analyst_labels(risk_debate_state.get('judge_decision', ''))
 
-        # 格式化風險評估報告
+        # 格式化風險評估報告（使用 i18n 標題）
         risk_assessment = f"""
-## 風險評估報告
+## {_p("risk_report_title", lang)}
 
-### 激進風險分析師觀點
-{risky_analysis if risky_analysis else '暫無激進風險分析'}
+### {_p("risk_aggressive_title", lang)}
+{risky_analysis if risky_analysis else _p("risk_no_aggressive", lang)}
 
-### 中性風險分析師觀點
-{neutral_analysis if neutral_analysis else '暫無中性風險分析'}
+### {_p("risk_neutral_title", lang)}
+{neutral_analysis if neutral_analysis else _p("risk_no_neutral", lang)}
 
-### 保守風險分析師觀點
-{safe_analysis if safe_analysis else '暫無保守風險分析'}
+### {_p("risk_conservative_title", lang)}
+{safe_analysis if safe_analysis else _p("risk_no_conservative", lang)}
 
-### 風險管理委員會最終決議
-{judge_decision if judge_decision else '暫無風險管理決議'}
+### {_p("risk_committee_title", lang)}
+{judge_decision if judge_decision else _p("risk_no_committee", lang)}
 
 ---
-*風險評估基於多角度分析，請結合個人風險承受能力做出投資決策*
+*{_p("risk_disclaimer", lang)}*
         """.strip()
 
         return risk_assessment
@@ -468,8 +509,8 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 格式化結果
         update_progress(_p("formatting_results", lang), 7)
 
-        # 提取風險評估資料
-        risk_assessment = extract_risk_assessment(state)
+        # 提取風險評估資料（使用 i18n 標題）
+        risk_assessment = extract_risk_assessment(state, lang=lang)
 
         # 將風險評估新增到狀態中
         if risk_assessment:
@@ -611,7 +652,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             'error_reason': _p("analysis_retry_hint", lang)
         }
 
-def format_analysis_results(results):
+def format_analysis_results(results, lang="zh-TW"):
     """格式化分析結果用於顯示"""
     
     if not results['success']:
@@ -703,7 +744,7 @@ def format_analysis_results(results):
             formatted_state[key] = content
         elif key == 'risk_assessment':
             # 特殊處理：從 risk_debate_state 生成 risk_assessment
-            risk_assessment = extract_risk_assessment(state)
+            risk_assessment = extract_risk_assessment(state, lang=lang)
             if risk_assessment:
                 formatted_state[key] = risk_assessment
     

@@ -146,6 +146,12 @@ _active_analyses: OrderedDict = OrderedDict()
 _analyses_lock = threading.Lock()
 
 
+def _validate_analysis_id(analysis_id: str) -> bool:
+    """驗證 analysis_id 格式（analysis_ + 22 位 URL-safe base64）"""
+    import re
+    return bool(re.match(r"^analysis_[A-Za-z0-9_-]{16,32}$", analysis_id))
+
+
 class LLMProvider(str, Enum):
     openai = "openai"
     anthropic = "anthropic"
@@ -297,6 +303,8 @@ async def start_analysis(req: AnalysisRequest, request: Request):
 @router.get("/analysis/{analysis_id}/status")
 async def get_analysis_status(analysis_id: str, request: Request):
     """取得分析狀態"""
+    if not _validate_analysis_id(analysis_id):
+        raise HTTPException(status_code=400, detail=_t("task_not_found", request))
     with _analyses_lock:
         data = _active_analyses.get(analysis_id)
     if not data:
@@ -315,6 +323,8 @@ async def get_analysis_status(analysis_id: str, request: Request):
 @router.get("/analysis/{analysis_id}/stream")
 async def stream_analysis(analysis_id: str, request: Request):
     """SSE 串流分析進度"""
+    if not _validate_analysis_id(analysis_id):
+        raise HTTPException(status_code=400, detail=_t("task_not_found", request))
     lang = _get_lang(request)
     with _analyses_lock:
         if analysis_id not in _active_analyses:
@@ -425,7 +435,7 @@ async def _run_analysis(analysis_id: str):
 
         if result.get("success"):
             from web.utils.analysis_runner import format_analysis_results
-            formatted = format_analysis_results(result)
+            formatted = format_analysis_results(result, lang=lang)
 
             # 翻譯成英文版本
             data["progress"].append(_t_lang("generating_english", lang))
@@ -502,19 +512,25 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
 # 分析結果翻譯（中文 -> 英文）
 # ---------------------------------------------------------------------------
 
-def _translate_result_to_english(formatted_result: dict) -> dict | None:
-    """用 gpt-4o-mini 將分析結果一次翻譯成英文，回傳 {state_en, decision_en}"""
-    try:
-        from openai import OpenAI
-    except ImportError:
-        logger.warning("openai SDK 未安裝，跳過翻譯")
-        return None
+_TRANSLATE_SYSTEM_PROMPT = (
+    "You are a professional financial translator. "
+    "Translate the following JSON values from Traditional Chinese to English. "
+    "Rules:\n"
+    "1. Preserve all Markdown formatting (headers, tables, bullet points, bold)\n"
+    "2. Use accurate financial terminology\n"
+    "3. Keep stock symbols, numbers, dates, and percentages unchanged\n"
+    "4. Return valid JSON with the exact same keys\n"
+    "5. Only translate the values, not the keys"
+)
 
+
+def _translate_result_to_english(formatted_result: dict) -> dict | None:
+    """將分析結果翻譯成英文，支援 OpenAI / Anthropic 自動 fallback。
+
+    嘗試順序：OpenAI gpt-4o-mini -> Anthropic claude-haiku-4-5-20251001
+    回傳 {state_en, decision_en} 或 None（翻譯不影響主流程）。
+    """
     import os
-    api_key = os.environ.get("OPENAI_API_KEY", "")
-    if not api_key:
-        logger.info("OPENAI_API_KEY 未設定，跳過英文翻譯")
-        return None
 
     state = formatted_result.get("state", {})
     decision = formatted_result.get("decision", {})
@@ -542,6 +558,16 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
             if isinstance(dv, str) and dv.strip():
                 payload[f"state.investment_debate_state.{dk}"] = dv
 
+    # risk_debate_state（風險辯論，可能是字串或 dict）
+    risk_debate = state.get("risk_debate_state")
+    if isinstance(risk_debate, str) and risk_debate.strip():
+        payload["state.risk_debate_state"] = risk_debate
+    elif isinstance(risk_debate, dict):
+        for rk in ("risky_history", "safe_history", "neutral_history", "judge_decision"):
+            rv = risk_debate.get(rk)
+            if isinstance(rv, str) and rv.strip():
+                payload[f"state.risk_debate_state.{rk}"] = rv
+
     # decision 欄位
     if decision.get("action"):
         payload["decision.action"] = str(decision["action"])
@@ -551,73 +577,112 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
     if not payload:
         return None
 
-    try:
-        client = OpenAI(api_key=api_key)
-        resp = client.chat.completions.create(
-            model="gpt-4o-mini",
-            temperature=0.3,
-            response_format={"type": "json_object"},
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a professional financial translator. "
-                        "Translate the following JSON values from Traditional Chinese to English. "
-                        "Rules:\n"
-                        "1. Preserve all Markdown formatting (headers, tables, bullet points, bold)\n"
-                        "2. Use accurate financial terminology\n"
-                        "3. Keep stock symbols, numbers, dates, and percentages unchanged\n"
-                        "4. Return valid JSON with the exact same keys\n"
-                        "5. Only translate the values, not the keys"
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": json.dumps(payload, ensure_ascii=False),
-                },
-            ],
-        )
-
-        translated = json.loads(resp.choices[0].message.content)
-
-        # 重新組裝成 state_en / decision_en
-        state_en: dict = {}
-        decision_en: dict = {}
-
-        for k in report_keys:
-            tv = translated.get(f"state.{k}")
-            if tv:
-                state_en[k] = tv
-
-        # debate
-        if isinstance(debate, str):
-            tv = translated.get("state.investment_debate_state")
-            if tv:
-                state_en["investment_debate_state"] = tv
-        elif isinstance(debate, dict):
-            debate_en_parts: dict = {}
-            for dk in ("bull_history", "bear_history", "judge_decision"):
-                tv = translated.get(f"state.investment_debate_state.{dk}")
-                if tv:
-                    debate_en_parts[dk] = tv
-            if debate_en_parts:
-                state_en["investment_debate_state"] = {**debate, **debate_en_parts}
-
-        # decision
-        if translated.get("decision.action"):
-            decision_en["action"] = translated["decision.action"]
-        if translated.get("decision.reasoning"):
-            decision_en["reasoning"] = translated["decision.reasoning"]
-        # 數值欄位直接複製
-        for nk in ("confidence", "risk_score", "target_price"):
-            if decision.get(nk) is not None:
-                decision_en[nk] = decision[nk]
-
-        return {"state_en": state_en or None, "decision_en": decision_en or None}
-
-    except Exception as e:
-        logger.warning(f"翻譯分析結果失敗: {e}")
+    # 組裝 LLM 提供商列表（按優先順序）
+    providers: list[tuple[str, str]] = []
+    if os.environ.get("OPENAI_API_KEY", ""):
+        providers.append(("openai", "gpt-4o-mini"))
+    if os.environ.get("ANTHROPIC_API_KEY", ""):
+        providers.append(("anthropic", "claude-haiku-4-5-20251001"))
+    if not providers:
+        logger.info("翻譯跳過：無可用的 LLM API 金鑰")
         return None
+
+    user_content = json.dumps(payload, ensure_ascii=False)
+    translated: dict | None = None
+    last_error = ""
+
+    for provider, model in providers:
+        try:
+            if provider == "openai":
+                from openai import OpenAI
+                client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+                resp = client.chat.completions.create(
+                    model=model,
+                    temperature=0.3,
+                    response_format={"type": "json_object"},
+                    messages=[
+                        {"role": "system", "content": _TRANSLATE_SYSTEM_PROMPT},
+                        {"role": "user", "content": user_content},
+                    ],
+                )
+                translated = json.loads(resp.choices[0].message.content)
+            else:
+                from anthropic import Anthropic
+                client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+                resp = client.messages.create(
+                    model=model,
+                    max_tokens=4096,
+                    temperature=0.3,
+                    system=_TRANSLATE_SYSTEM_PROMPT,
+                    messages=[{"role": "user", "content": user_content}],
+                )
+                # 從回應文字中解析 JSON
+                raw = resp.content[0].text
+                # 移除可能的 markdown code fence
+                if raw.strip().startswith("```"):
+                    raw = raw.strip().split("\n", 1)[1].rsplit("```", 1)[0]
+                translated = json.loads(raw)
+
+            logger.info(f"翻譯成功 (provider={provider}, model={model})")
+            break
+
+        except Exception as e:
+            last_error = str(e)[:200]
+            logger.warning(f"翻譯 {provider}/{model} 失敗，嘗試下一個: {last_error}")
+            continue
+
+    if translated is None:
+        logger.warning(f"所有翻譯提供商失敗，最後錯誤: {last_error}")
+        return None
+
+    # 重新組裝成 state_en / decision_en
+    state_en: dict = {}
+    decision_en: dict = {}
+
+    for k in report_keys:
+        tv = translated.get(f"state.{k}")
+        if tv:
+            state_en[k] = tv
+
+    # debate
+    if isinstance(debate, str):
+        tv = translated.get("state.investment_debate_state")
+        if tv:
+            state_en["investment_debate_state"] = tv
+    elif isinstance(debate, dict):
+        debate_en_parts: dict = {}
+        for dk in ("bull_history", "bear_history", "judge_decision"):
+            tv = translated.get(f"state.investment_debate_state.{dk}")
+            if tv:
+                debate_en_parts[dk] = tv
+        if debate_en_parts:
+            state_en["investment_debate_state"] = {**debate, **debate_en_parts}
+
+    # risk_debate
+    if isinstance(risk_debate, str):
+        tv = translated.get("state.risk_debate_state")
+        if tv:
+            state_en["risk_debate_state"] = tv
+    elif isinstance(risk_debate, dict):
+        risk_en_parts: dict = {}
+        for rk in ("risky_history", "safe_history", "neutral_history", "judge_decision"):
+            tv = translated.get(f"state.risk_debate_state.{rk}")
+            if tv:
+                risk_en_parts[rk] = tv
+        if risk_en_parts:
+            state_en["risk_debate_state"] = {**risk_debate, **risk_en_parts}
+
+    # decision
+    if translated.get("decision.action"):
+        decision_en["action"] = translated["decision.action"]
+    if translated.get("decision.reasoning"):
+        decision_en["reasoning"] = translated["decision.reasoning"]
+    # 數值欄位直接複製
+    for nk in ("confidence", "risk_score", "target_price"):
+        if decision.get(nk) is not None:
+            decision_en[nk] = decision[nk]
+
+    return {"state_en": state_en or None, "decision_en": decision_en or None}
 
 
 # ---------------------------------------------------------------------------

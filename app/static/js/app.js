@@ -766,13 +766,16 @@ function tradingApp() {
         return `<ol>${items}</ol>`;
       });
 
-      // Markdown 表格解析
+      // Markdown 表格解析（支援 LLM 常見的對齊標記變體）
       html = html.replace(/(?:^\|.+\|$\n?)+/gm, (block) => {
         const rows = block.trim().split('\n').filter(r => r.trim());
         if (rows.length < 2) return block;
-        // 檢查第二行是否為分隔線（|---|---|）
+        // 檢查第二行是否為分隔線，支援 |---|、| :--- |、|:---:|、| --- | 等變體
         const sepTest = rows[1].replace(/\s/g, '');
-        if (!/^\|[-:|]+\|$/.test(sepTest)) return block;
+        if (!/^\|[:|-]+\|$/.test(sepTest)) return block;
+        // 額外驗證：分隔行的每個格子必須含至少一個 -
+        const sepCells = rows[1].replace(/^\|/, '').replace(/\|$/, '').split('|');
+        if (!sepCells.every(c => c.trim().replace(/:/g, '').includes('-'))) return block;
         const parseRow = (row) =>
           row.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
         const headers = parseRow(rows[0]);
