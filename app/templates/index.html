@@ -339,7 +339,7 @@
       </section>
 
       <!-- 板塊表現 -->
-      <section class="panel" x-show="trendingData.sectors?.length > 0 || trendingLoading" x-cloak>
+      <section class="panel" x-show="trendingData.sectors?.length > 0 || trendingLoading">
         <div class="panel-header panel-header-row">
           <h2>
             <svg class="section-icon-inline" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/></svg>
@@ -374,14 +374,14 @@
       </section>
 
       <!-- AI 趨勢分析 -->
-      <section class="panel ai-analysis-panel" x-cloak>
+      <section class="panel ai-analysis-panel">
         <div class="panel-header panel-header-row">
           <div>
             <h2>
               <svg class="ai-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
-              <span x-text="t('trending.ai_title')"></span>
+              <span x-text="t('trending.ai_title')">AI 趨勢分析</span>
             </h2>
-            <p class="ai-analysis-desc" x-text="t('trending.ai_desc')"></p>
+            <p class="ai-analysis-desc" x-text="t('trending.ai_desc')">基於宏觀經濟、國際趨勢與市場新聞的每日綜合分析</p>
           </div>
           <div class="ai-analysis-actions" x-show="aiAnalysis.content">
             <span class="hint" x-text="aiAnalysis.updated_at ? (t('trending.updated') + ': ' + aiAnalysis.updated_at) : ''"></span>
