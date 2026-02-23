@@ -297,8 +297,14 @@ app.include_router(trending.router, prefix="/api")
 
 @app.get("/")
 async def index(request: Request):
-    """主頁面"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    """主頁面（含趨勢資料 SSR 預渲染以消除 CLS）"""
+    import json as _json
+    from app.routers.trending import get_cached_overview
+    ssr_data = get_cached_overview()
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "ssr_trending": _json.dumps(ssr_data, ensure_ascii=False) if ssr_data else "",
+    })
 
 
 @app.get("/health")

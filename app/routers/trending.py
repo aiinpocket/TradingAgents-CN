@@ -84,6 +84,11 @@ def _get_cached(key: str, ttl: int = _CACHE_TTL_SECONDS) -> Optional[dict]:
     return None
 
 
+def get_cached_overview() -> Optional[dict]:
+    """取得快取的市場概覽資料（供首頁 SSR 預渲染用）"""
+    return _get_cached("overview")
+
+
 def _set_cache(key: str, data: dict):
     """設定快取（超過上限時清理過期條目）"""
     now = time.time()

@@ -131,8 +131,32 @@ function tradingApp() {
       // 根據語言設定頁面標題
       document.title = this.t('meta.title');
 
-      // 預設載入熱門特區
-      this.loadTrending();
+      // SSR 預渲染：後端已將快取的趨勢資料注入 HTML，直接使用以消除 CLS
+      const ssrEl = document.getElementById('ssr-trending');
+      if (ssrEl) {
+        try {
+          const ssrData = JSON.parse(ssrEl.textContent);
+          if (ssrData && ssrData.indices) {
+            this.trendingData = ssrData;
+            this.trendingLoading = false;
+            this._trendingLoaded = true;
+            this._rebuildStockMap();
+            // 非同步載入 AI 分析（不阻塞渲染）
+            this.loadAiAnalysis();
+            // 排程下次自動重新整理（資料已存在，無需立即 fetch）
+            this._trendingTimer = setTimeout(() => {
+              if (this.tab === 'trending') this.loadTrending();
+            }, CONFIG.TRENDING_REFRESH_MS);
+          }
+        } catch (e) {
+          console.error('SSR trending data parse error:', e);
+        }
+      }
+
+      // 無 SSR 資料時走原始 API 載入路徑
+      if (this.trendingLoading) {
+        this.loadTrending();
+      }
 
       // 頁面可見性變更：隱藏時暫停重新整理，恢復時立即更新
       document.addEventListener('visibilitychange', () => {
