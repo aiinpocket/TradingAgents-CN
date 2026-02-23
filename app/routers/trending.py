@@ -411,9 +411,12 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
     from langchain_core.messages import SystemMessage, HumanMessage
 
     system_msg = (
-        "You are a professional financial news translator. "
+        "You are a professional financial news translator for Taiwanese readers. "
         "Translate the following English news headlines into Traditional Chinese (繁體中文). "
-        "Keep financial terms, company names, and stock tickers in English. "
+        "IMPORTANT: Use Taiwanese terminology, NOT mainland Chinese terminology. "
+        "Examples: Trump=川普 (NOT 特朗普), Nvidia=輝達 (NOT 英偉達), "
+        "Samsung=三星, Apple=蘋果, Google=Google, Amazon=Amazon. "
+        "Keep stock tickers (like AAPL, NVDA) in English. "
         "Respond ONLY with a JSON array of translated strings, in the same order as input. "
         "Example: [\"翻譯一\", \"翻譯二\"]"
     )
@@ -647,6 +650,11 @@ CRITICAL RULES:
 - Always include a disclaimer that this is for informational purposes only
 - Focus on explaining WHY the market is moving, not WHAT investors should do
 
+When writing in Traditional Chinese, use TAIWANESE terminology:
+- Trump = 川普 (NOT 特朗普), Nvidia = 輝達 (NOT 英偉達)
+- Use 標普500 or S&P 500 (NOT 標準普爾500)
+- Use 聯準會 (NOT 聯邦儲備/美聯儲), 那斯達克 (NOT 納斯達克)
+
 Respond in the language specified by the user."""
 
 
@@ -657,7 +665,7 @@ def _build_user_prompt(market_context: str, lang: str) -> str:
 
 {market_context}
 
-請用繁體中文撰寫一份今日市場趨勢分析報告，包含以下幾個部分：
+請用繁體中文（台灣用語）撰寫一份今日市場趨勢分析報告，包含以下幾個部分：
 
 1. **今日市場概況** - 整體市場表現摘要、主要指數走勢
 2. **熱門主題與板塊分析** - 根據漲跌幅排行，分析哪些板塊/主題受到關注，以及可能的驅動因素
