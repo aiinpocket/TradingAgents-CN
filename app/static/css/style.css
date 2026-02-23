@@ -408,6 +408,11 @@ body {
   color: var(--accent);
 }
 
+.chip-sm:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .chip-sm.chip-active {
   background: var(--accent-bg);
   border-color: var(--accent);
@@ -1141,6 +1146,11 @@ body {
 .tab-btn:hover {
   background: var(--bg-panel);
   color: var(--text);
+}
+
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .tab-btn.active {
@@ -2536,6 +2546,11 @@ code {
 
 .theme-toggle:hover {
   color: var(--text);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .theme-icon {

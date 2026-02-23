@@ -790,6 +790,11 @@ function tradingApp() {
         return this.renderMarkdown(debateState);
       }
 
+      // 所有欄位皆為空時顯示空狀態
+      if (!debateState.bull_history && !debateState.bear_history && !debateState.judge_decision) {
+        return '<p class="empty-state">' + this.t('common.no_data') + '</p>';
+      }
+
       let html = '<div class="debate-content">';
 
       if (debateState.bull_history) {
