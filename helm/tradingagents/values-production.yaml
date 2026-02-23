@@ -14,7 +14,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/aiinpocket/tradingagents-cn
   pullPolicy: Always
-  tag: "d84f6c6"
+  tag: "4f2739f"
 
 imagePullSecrets:
   - name: ghcr-secret
