@@ -2599,29 +2599,20 @@ code {
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 .panel {
   animation: fadeUp 0.2s ease;
 }
 
-/* Skeleton 載入狀態（GPU 合成，避免 background-position repaint） */
+/* Skeleton 載入狀態（opacity 脈衝，Chrome 保證合成 opacity 動畫） */
 .skeleton {
-  position: relative;
-  overflow: hidden;
   background: var(--bg-inset);
   border-radius: var(--radius-sm);
-}
-
-.skeleton::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 25%, var(--bg-hover) 50%, transparent 75%);
-  animation: shimmer 1.5s infinite;
-  will-change: transform;
+  animation: shimmer 1.5s ease-in-out infinite;
+  will-change: opacity;
 }
 
 .skeleton-line {
@@ -2670,7 +2661,7 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
   .panel { animation: none; }
-  .skeleton::after { animation: none; }
+  .skeleton { animation: none; }
   .btn-loading::after { animation-duration: 1.5s; }
   .mover-bar-fill { transition: none; }
   .ai-analysis-content { animation: none; }
