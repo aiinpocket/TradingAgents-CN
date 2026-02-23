@@ -60,12 +60,20 @@ class TradingAgentsGraph:
 
         if provider == "openai":
             # OpenAI 支援自訂 base_url（用於相容 API 代理等場景）
-            openai_kwargs = {"model": self.config["deep_think_llm"]}
+            # 強制使用 Chat Completions API，避免 Responses API 回傳
+            # ResponseFunctionWebSearch 等 LangGraph ToolNode 無法處理的物件
+            openai_kwargs = {
+                "model": self.config["deep_think_llm"],
+                "use_responses_api": False,
+            }
             if backend_url:
                 openai_kwargs["base_url"] = backend_url
             self.deep_thinking_llm = ChatOpenAI(**openai_kwargs)
 
-            openai_kwargs_quick = {"model": self.config["quick_think_llm"]}
+            openai_kwargs_quick = {
+                "model": self.config["quick_think_llm"],
+                "use_responses_api": False,
+            }
             if backend_url:
                 openai_kwargs_quick["base_url"] = backend_url
             self.quick_thinking_llm = ChatOpenAI(**openai_kwargs_quick)
