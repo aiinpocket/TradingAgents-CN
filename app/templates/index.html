@@ -299,7 +299,7 @@
         </div>
         <div class="news-grid" x-show="trendingData.news?.length > 0">
           <template x-for="(item, idx) in trendingData.news" :key="item.title">
-            <a class="news-card" :class="'news-accent-' + (idx % 4)" :href="item.url" target="_blank" rel="noopener noreferrer">
+            <a class="news-card" :class="'news-accent-' + (idx % 4)" :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer">
               <div class="news-card-inner">
                 <div class="news-source" x-text="item.source"></div>
                 <div class="news-title" x-text="item.title"></div>
@@ -710,7 +710,7 @@
               <ul class="stock-context-news-list">
                 <template x-for="(item, idx) in stockContext.news" :key="idx">
                   <li>
-                    <a :href="item.url" target="_blank" rel="noopener noreferrer" class="stock-context-news-link" x-text="item.title"></a>
+                    <a :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer" class="stock-context-news-link" x-text="item.title"></a>
                     <span class="stock-context-news-meta">
                       <span x-text="item.source" x-show="item.source"></span>
                       <span x-text="item.date" x-show="item.date"></span>

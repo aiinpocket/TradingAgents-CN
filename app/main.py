@@ -170,9 +170,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         )
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
         response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
-        # 快取策略：HTML 頁面不快取，靜態資源允許帶 query 快取
+        # 快取策略：HTML 頁面與 API 不快取，靜態資源允許帶 query 快取
         path = request.url.path
-        if path == "/" or path.endswith(".html"):
+        if path == "/" or path.endswith(".html") or path.startswith("/api/") or path == "/health":
             response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         elif path.startswith("/static/"):
             response.headers["Cache-Control"] = "public, max-age=86400"

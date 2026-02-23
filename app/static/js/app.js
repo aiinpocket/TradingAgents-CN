@@ -748,6 +748,15 @@ function tradingApp() {
       return { 'Accept-Language': this.lang === 'en' ? 'en' : 'zh-TW', ...extra };
     },
 
+    // 驗證 URL 協議，防止 javascript: 等注入
+    safeUrl(url) {
+      if (!url) return '#';
+      try {
+        const parsed = new URL(url, window.location.origin);
+        return ['http:', 'https:'].includes(parsed.protocol) ? url : '#';
+      } catch { return '#'; }
+    },
+
     _sanitize(html) {
       if (typeof DOMPurify !== 'undefined') {
         return DOMPurify.sanitize(html);
