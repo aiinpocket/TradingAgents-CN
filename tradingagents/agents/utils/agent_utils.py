@@ -1,4 +1,4 @@
-from langchain_core.messages import HumanMessage, RemoveMessage
+from langchain_core.messages import HumanMessage
 from typing import Annotated
 from langchain_core.tools import tool
 from datetime import datetime
@@ -19,18 +19,19 @@ logger = get_logger('agents')
 
 
 def create_msg_delete():
+    """建立訊息清理節點，用於分析師完成後清理對話歷史。
+
+    注意：由於 4 個分析師節點並行執行（fan-out from START），
+    使用 RemoveMessage 會在 fan-in 合併時產生重複刪除衝突
+    （ValueError: Attempting to delete a message with an ID that doesn't exist）。
+    因此改為僅回傳 placeholder，不刪除訊息。
+    分析報告已透過專用 state 欄位傳遞，不依賴 messages。
+    """
     def delete_messages(state):
-        """Clear messages and add placeholder for Anthropic compatibility"""
-        messages = state["messages"]
-        
-        # Remove all messages
-        removal_operations = [RemoveMessage(id=m.id) for m in messages]
-        
-        # Add a minimal placeholder message
+        """回傳 placeholder 訊息，確保 Anthropic 相容性"""
         placeholder = HumanMessage(content="Continue")
-        
-        return {"messages": removal_operations + [placeholder]}
-    
+        return {"messages": [placeholder]}
+
     return delete_messages
 
 
