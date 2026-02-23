@@ -86,7 +86,7 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"趨勢資料預熱失敗（不影響正常運作）: {e}")
 
-    asyncio.create_task(_prewarm_trending())
+    prewarm_task = asyncio.create_task(_prewarm_trending())
 
     # 啟動背景定時刷新（每 5 分鐘自動更新市場資料）
     from app.routers.trending import start_background_refresh
@@ -95,9 +95,10 @@ async def lifespan(app: FastAPI):
     yield
 
     # 關閉背景任務與執行緒池
+    prewarm_task.cancel()
     refresh_task.cancel()
     from app.routers.trending import _TRENDING_EXECUTOR
-    _TRENDING_EXECUTOR.shutdown(wait=False)
+    _TRENDING_EXECUTOR.shutdown(wait=True, cancel_futures=True)
     logger.info("TradingAgents API 關閉")
 
 
@@ -135,12 +136,31 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         for ip in stale:
             del self._hits[ip]
 
+    @staticmethod
+    def _get_client_ip(request: Request) -> str:
+        """取得真實客戶端 IP（Cloudflare -> Nginx Ingress -> Uvicorn 架構）
+
+        優先順序：
+        1. CF-Connecting-IP — Cloudflare 注入，不可偽造
+        2. X-Real-IP — Nginx Ingress 從最後一跳提取
+        3. request.client.host — 直連時的 socket 對端 IP
+        """
+        ip = (
+            request.headers.get("cf-connecting-ip")
+            or request.headers.get("x-real-ip")
+            or (request.client.host if request.client else "unknown")
+        )
+        # 正規化 IPv4-mapped IPv6（::ffff:1.2.3.4 -> 1.2.3.4）
+        if ip.startswith("::ffff:"):
+            ip = ip[7:]
+        return ip
+
     async def dispatch(self, request: Request, call_next) -> Response:
         # 只限制 API 路徑
         if not request.url.path.startswith("/api/"):
             return await call_next(request)
 
-        client_ip = request.client.host if request.client else "unknown"
+        client_ip = self._get_client_ip(request)
         now = time.monotonic()
 
         # 當追蹤 IP 數量超過上限時，清理過期條目
@@ -187,7 +207,11 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         if path == "/" or path.endswith(".html") or path.startswith("/api/") or path == "/health":
             response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         elif path.startswith("/static/"):
-            response.headers["Cache-Control"] = "public, max-age=86400"
+            # 帶版本戳的靜態檔案可長期快取（URL 變化即失效）
+            if request.url.query:
+                response.headers["Cache-Control"] = "public, max-age=2592000, immutable"
+            else:
+                response.headers["Cache-Control"] = "public, max-age=86400"
         # HSTS - 強制 HTTPS（部署在 TLS 後時生效）
         response.headers["Strict-Transport-Security"] = (
             "max-age=31536000; includeSubDomains; preload"
@@ -199,7 +223,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
             "font-src 'self' https://fonts.gstatic.com; "
             "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
-            "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://query1.finance.yahoo.com; "
+            "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; "
             "frame-ancestors 'none'; "
             "base-uri 'self'; "
             "form-action 'self'; "

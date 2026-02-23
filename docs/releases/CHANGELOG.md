@@ -29,6 +29,19 @@ v0.4.4 對趨勢資料抓取進行並行化改造，新增背景定時刷新機�
 - **符號驗證常數化**: 統一為預編譯 _SYMBOL_RE / _ANALYSIS_ID_RE，移除函式內散落的 import re
 - **移除已棄用 block-all-mixed-content**（upgrade-insecure-requests 已涵蓋）
 
+#### 安全中介層強化
+- **速率限制 IP 來源修復**: 改為 CF-Connecting-IP -> X-Real-IP -> client.host 優先順序，解決 reverse proxy 下所有使用者共用同一 IP 桶的問題
+- **IPv4-mapped IPv6 正規化**: ::ffff:x.x.x.x 正規化為 x.x.x.x，避免雙重計數
+- **CSP connect-src 精簡**: 移除前端未使用的 query1.finance.yahoo.com
+- **靜態檔案快取優化**: 帶版本戳 ?v= 的檔案使用 max-age=30 天 + immutable，未帶版本戳保持 1 天
+- **executor 優雅關閉**: shutdown(wait=True, cancel_futures=True) 取代 wait=False，避免遺留執行緒
+- **prewarm task 追蹤**: 預熱 task 在 lifespan 關閉時正確 cancel
+
+#### 前端效能優化
+- **共用 _stockMap 快取**: trendingData 變化時重建一次 symbol->stock 查詢表，_computeStockPreview 和 getWatchlistStocks 共用
+- **getWatchlistStocks 簡化**: 不再每次呼叫重建陣列和 stockMap
+- **getActionClass 擴充**: 新增做多/做空/加倉/減倉/long/short 匹配
+
 #### 前端程式碼品質修復
 - **renderDebate 雙重 _sanitize 移除**: renderMarkdown 內部已呼叫 _sanitize()，外層重複清理在 DOMPurify fallback 路徑下會破壞已生成的 HTML
 - **renderMarkdown/renderDebate 空狀態 XSS 防護**: 空狀態回傳的 i18n 文字經過 _sanitize() 清理

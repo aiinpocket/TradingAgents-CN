@@ -77,6 +77,8 @@ function tradingApp() {
 
     // 股票預覽快取（避免模板中重複計算）
     stockPreview: null,
+    // 共用股票查詢表（trendingData 變化時由 $watch 更新）
+    _stockMap: {},
 
     // 個股快照
     stockContext: null,
@@ -119,9 +121,12 @@ function tradingApp() {
       await this.loadModels();
       this.form.date = new Date().toISOString().split('T')[0];
 
-      // 股票預覽快取：symbol 或 movers 資料變化時更新
+      // 股票查詢表快取：trendingData 變化時重建一次，供 _computeStockPreview / getWatchlistStocks 共用
+      this.$watch('trendingData', () => {
+        this._rebuildStockMap();
+        this.stockPreview = this._computeStockPreview();
+      });
       this.$watch('form.symbol', () => { this.stockPreview = this._computeStockPreview(); });
-      this.$watch('trendingData', () => { this.stockPreview = this._computeStockPreview(); });
 
       // 根據語言設定頁面標題
       document.title = this.t('meta.title');
@@ -286,16 +291,21 @@ function tradingApp() {
       return { label: this.t('trending.market_mixed'), cls: 'sentiment-mixed', arrow: '&#9670;' };
     },
 
-    // 從已載入的熱門資料中查找股票即時行情
-    // 內部計算方法，由 $watch 呼叫，結果存入 stockPreview
+    // 重建 symbol -> stock 查詢表（trendingData 變化時呼叫一次）
+    _rebuildStockMap() {
+      const map = {};
+      const gainers = this.trendingData.movers?.gainers || [];
+      const losers = this.trendingData.movers?.losers || [];
+      for (const s of gainers) map[s.symbol] = s;
+      for (const s of losers) map[s.symbol] = s;
+      this._stockMap = map;
+    },
+
+    // 從快取查詢表中查找股票即時行情
     _computeStockPreview() {
       const sym = (this.form.symbol || '').toUpperCase().trim();
       if (!sym) return null;
-      const all = [
-        ...(this.trendingData.movers?.gainers || []),
-        ...(this.trendingData.movers?.losers || []),
-      ];
-      return all.find(s => s.symbol === sym) || null;
+      return this._stockMap[sym] || null;
     },
 
     quickAnalyze(symbol) {
@@ -362,19 +372,11 @@ function tradingApp() {
       this._saveWatchlist();
     },
 
-    // 取得追蹤清單中的股票行情（從已載入的熱門資料中查找）
+    // 取得追蹤清單中的股票行情（使用 _stockMap 快取查詢表）
     getWatchlistStocks() {
       if (this.watchlist.length === 0) return [];
-      const all = [
-        ...(this.trendingData.movers?.gainers || []),
-        ...(this.trendingData.movers?.losers || []),
-      ];
-      const stockMap = {};
-      for (const s of all) {
-        stockMap[s.symbol] = s;
-      }
       return this.watchlist
-        .map(sym => stockMap[sym] || { symbol: sym, name: '', price: null, change_pct: null })
+        .map(sym => this._stockMap[sym] || { symbol: sym, name: '', price: null, change_pct: null })
         .filter(Boolean);
     },
 
@@ -715,8 +717,9 @@ function tradingApp() {
     getActionClass(action) {
       if (!action) return '';
       const a = action.toLowerCase();
-      if (a.includes('buy') || a.includes('買入')) return 'action-buy';
-      if (a.includes('sell') || a.includes('賣出')) return 'action-sell';
+      // 匹配 LLM 可能回傳的多種中英文動作詞
+      if (a.includes('buy') || a.includes('買入') || a.includes('做多') || a.includes('加倉') || a.includes('long')) return 'action-buy';
+      if (a.includes('sell') || a.includes('賣出') || a.includes('做空') || a.includes('減倉') || a.includes('short')) return 'action-sell';
       return 'action-hold';
     },
 
