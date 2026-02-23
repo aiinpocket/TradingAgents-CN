@@ -20,10 +20,7 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HN1YQZJF1Z"></script>
   <script async src="/static/js/gtag-init.js"></script>
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional" rel="stylesheet">
   <script async src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
@@ -49,15 +46,15 @@
       <nav class="topbar-nav" role="navigation" aria-label="Main navigation">
         <button class="nav-btn" :class="{ active: tab === 'trending' }" :aria-current="tab === 'trending' ? 'page' : false" @click="tab = 'trending'; loadTrending(); window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"/></svg>
-          <span x-text="t('nav.trending')"></span>
+          <span x-text="t('nav.trending')">熱門</span>
         </button>
         <button class="nav-btn" :class="{ active: tab === 'analysis' }" :aria-current="tab === 'analysis' ? 'page' : false" @click="tab = 'analysis'; window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
-          <span x-text="t('nav.analysis')"></span>
+          <span x-text="t('nav.analysis')">分析</span>
         </button>
         <button class="nav-btn" :class="{ active: tab === 'history' }" :aria-current="tab === 'history' ? 'page' : false" @click="tab = 'history'; loadHistory(); window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
-          <span x-text="t('nav.history')"></span>
+          <span x-text="t('nav.history')">歷史</span>
         </button>
       </nav>
       <div class="topbar-right">
@@ -103,7 +100,7 @@
           <div class="pulse-header">
             <h2>
               <svg class="pulse-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>
-              <span x-text="t('trending.market_pulse')"></span>
+              <span x-text="t('trending.market_pulse')">市場脈動</span>
             </h2>
             <div class="pulse-sentiment" :class="getMarketSentiment().cls">
               <span class="pulse-arrow" x-html="getMarketSentiment().arrow" aria-hidden="true"></span>
@@ -125,9 +122,9 @@
       <section class="indices-bar" :aria-busy="trendingLoading.toString()">
         <div class="section-title" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
           <svg class="section-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
-          <span x-text="t('trending.indices')"></span>
+          <span x-text="t('trending.indices')">主要指數</span>
           <span class="section-updated" x-show="trendingData.updated_at" x-text="t('trending.updated') + ' ' + trendingData.updated_at"></span>
-          <span class="section-hint" x-text="t('trending.refresh_hint')"></span>
+          <span class="section-hint" x-text="t('trending.refresh_hint')">每 10 分鐘自動更新</span>
         </div>
         <div class="indices-grid" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
           <template x-for="idx in trendingData.indices" :key="idx.symbol">
@@ -208,7 +205,7 @@
           <div class="panel-header panel-header-row">
             <h2>
               <span class="trending-icon trending-up-icon" aria-hidden="true">&#9650;</span>
-              <span x-text="t('trending.gainers')"></span>
+              <span x-text="t('trending.gainers')">漲幅排行</span>
             </h2>
           </div>
           <div class="movers-list" x-show="trendingData.movers?.gainers?.length > 0">
@@ -258,7 +255,7 @@
           <div class="panel-header panel-header-row">
             <h2>
               <span class="trending-icon trending-down-icon" aria-hidden="true">&#9660;</span>
-              <span x-text="t('trending.losers')"></span>
+              <span x-text="t('trending.losers')">跌幅排行</span>
             </h2>
           </div>
           <div class="movers-list" x-show="trendingData.movers?.losers?.length > 0">
@@ -309,7 +306,7 @@
         <div class="panel-header panel-header-row">
           <h2>
             <svg class="section-icon-inline" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"/><path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"/></svg>
-            <span x-text="t('trending.news')"></span>
+            <span x-text="t('trending.news')">市場新聞</span>
           </h2>
           <span class="hint" x-show="trendingData.updated_at" x-text="t('trending.updated') + ': ' + trendingData.updated_at"></span>
         </div>
@@ -346,9 +343,9 @@
         <div class="panel-header panel-header-row">
           <h2>
             <svg class="section-icon-inline" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/></svg>
-            <span x-text="t('trending.sectors')"></span>
+            <span x-text="t('trending.sectors')">板塊表現</span>
           </h2>
-          <span class="hint" x-text="t('trending.sectors_desc')"></span>
+          <span class="hint" x-text="t('trending.sectors_desc')">S&amp;P 500 各板塊 ETF 當日漲跌</span>
         </div>
         <div class="sectors-grid" x-show="trendingData.sectors?.length > 0">
           <template x-for="sector in trendingData.sectors" :key="sector.symbol">
