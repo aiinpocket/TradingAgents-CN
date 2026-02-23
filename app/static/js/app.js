@@ -75,6 +75,9 @@ function tradingApp() {
     aiAnalysis: { available: null, content: '', updated_at: '', provider: '' },
     aiAnalysisLoading: false,
 
+    // 股票預覽快取（避免模板中重複計算）
+    stockPreview: null,
+
     // 個股快照
     stockContext: null,
     stockContextLoading: false,
@@ -115,6 +118,10 @@ function tradingApp() {
       await this.checkHealth();
       await this.loadModels();
       this.form.date = new Date().toISOString().split('T')[0];
+
+      // 股票預覽快取：symbol 或 movers 資料變化時更新
+      this.$watch('form.symbol', () => { this.stockPreview = this._computeStockPreview(); });
+      this.$watch('trendingData', () => { this.stockPreview = this._computeStockPreview(); });
 
       // 預設載入熱門特區
       this.loadTrending();
@@ -275,7 +282,8 @@ function tradingApp() {
     },
 
     // 從已載入的熱門資料中查找股票即時行情
-    getStockPreview() {
+    // 內部計算方法，由 $watch 呼叫，結果存入 stockPreview
+    _computeStockPreview() {
       const sym = (this.form.symbol || '').toUpperCase().trim();
       if (!sym) return null;
       const all = [

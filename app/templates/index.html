@@ -83,7 +83,7 @@
       <!-- 市場脈動摘要（骨架佔位防止 CLS） -->
       <section class="market-pulse">
         <!-- 載入中骨架 -->
-        <div x-show="trendingLoading && !(trendingData.indices && trendingData.indices.length > 0)">
+        <div x-show="trendingLoading && !(trendingData.indices && trendingData.indices.length > 0)" role="status" :aria-label="t('a11y.loading')">
           <div class="pulse-header">
             <div class="skeleton skeleton-line-medium" style="width:140px;height:20px"></div>
             <div class="skeleton skeleton-line-short" style="width:80px;height:24px;border-radius:12px"></div>
@@ -156,7 +156,7 @@
             </div>
           </template>
         </div>
-        <div class="indices-grid" x-show="trendingLoading">
+        <div class="indices-grid" x-show="trendingLoading" role="status" :aria-label="t('a11y.loading')">
           <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
@@ -407,7 +407,8 @@
 
         <!-- AI 分析內容 -->
         <div class="ai-analysis-content markdown-body" x-show="aiAnalysis.content && !aiAnalysisLoading"
-             x-html="renderMarkdown(aiAnalysis.content)">
+             x-html="renderMarkdown(aiAnalysis.content)"
+             aria-live="polite">
         </div>
 
         <!-- AI 分析底部標記 -->
@@ -480,16 +481,16 @@
                           :class="{ 'chip-active': form.symbol === s }"></button>
                 </template>
               </div>
-              <!-- 股票即時行情預覽 -->
-              <div class="stock-preview" x-cloak x-show="getStockPreview()" x-transition.opacity.duration.150ms>
-                <template x-if="getStockPreview()">
+              <!-- 股票即時行情預覽（stockPreview 由 $watch 快取，避免重複計算） -->
+              <div class="stock-preview" x-cloak x-show="stockPreview" x-transition.opacity.duration.150ms>
+                <template x-if="stockPreview">
                   <div class="stock-preview-inner">
-                    <span class="stock-preview-symbol" x-text="'$' + getStockPreview().symbol"></span>
-                    <span class="stock-preview-name" x-text="getStockPreview().name"></span>
-                    <span class="stock-preview-price" x-text="'$' + getStockPreview().price?.toFixed(2)"></span>
+                    <span class="stock-preview-symbol" x-text="'$' + stockPreview.symbol"></span>
+                    <span class="stock-preview-name" x-text="stockPreview.name"></span>
+                    <span class="stock-preview-price" x-text="'$' + stockPreview.price?.toFixed(2)"></span>
                     <span class="stock-preview-change"
-                          :class="getStockPreview().change_pct >= 0 ? 'change-up' : 'change-down'"
-                          x-text="(getStockPreview().change_pct >= 0 ? '+' : '') + getStockPreview().change_pct?.toFixed(2) + '%'"></span>
+                          :class="stockPreview.change_pct >= 0 ? 'change-up' : 'change-down'"
+                          x-text="(stockPreview.change_pct >= 0 ? '+' : '') + stockPreview.change_pct?.toFixed(2) + '%'"></span>
                   </div>
                 </template>
               </div>
