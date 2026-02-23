@@ -418,6 +418,11 @@ function tradingApp() {
     connectSSE() {
       if (this.eventSource) {
         this.eventSource.close();
+        this.eventSource = null;
+      }
+      if (this._reconnectTimer) {
+        clearTimeout(this._reconnectTimer);
+        this._reconnectTimer = null;
       }
 
       const sseLang = this.lang === 'en' ? 'en' : 'zh-TW';
@@ -453,6 +458,7 @@ function tradingApp() {
             this.showResults = true;
             this.selectFirstTab();
             this.eventSource.close();
+            this.eventSource = null;
             this._stopElapsedTimer();
             this._notifyCompletion(true);
 
@@ -464,6 +470,7 @@ function tradingApp() {
             this._notifyCompletion(false);
             this.formError = data.error;
             this.eventSource.close();
+            this.eventSource = null;
           }
         } catch (e) {
           console.error('SSE parse error:', e);
@@ -472,11 +479,13 @@ function tradingApp() {
 
       this.eventSource.onerror = () => {
         this.eventSource.close();
+        this.eventSource = null;
         if (this.analysisRunning) {
           this.connectionRetries++;
           if (this.connectionRetries <= CONFIG.SSE_MAX_RETRIES) {
             const delay = Math.min(CONFIG.SSE_BACKOFF_BASE_MS * Math.pow(2, this.connectionRetries - 1), CONFIG.SSE_BACKOFF_MAX_MS);
-            setTimeout(() => {
+            this._reconnectTimer = setTimeout(() => {
+              this._reconnectTimer = null;
               if (this.analysisRunning) this.connectSSE();
             }, delay);
           } else {
@@ -588,6 +597,10 @@ function tradingApp() {
       if (this.eventSource) {
         this.eventSource.close();
         this.eventSource = null;
+      }
+      if (this._reconnectTimer) {
+        clearTimeout(this._reconnectTimer);
+        this._reconnectTimer = null;
       }
       this.analysisRunning = false;
       this.showResults = false;
