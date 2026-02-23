@@ -98,7 +98,7 @@ _is_production = os.getenv("ENVIRONMENT", "").lower() == "production"
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
-    version="0.4.2",
+    version="0.4.3",
     lifespan=lifespan,
     docs_url=None if _is_production else "/api/docs",
     openapi_url=None if _is_production else "/openapi.json",
@@ -265,7 +265,7 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     """健康檢查"""
-    return {"status": "ok", "version": "0.4.2"}
+    return {"status": "ok", "version": "0.4.3"}
 
 
 @app.get("/robots.txt", include_in_schema=False)

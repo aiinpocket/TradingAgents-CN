@@ -2,32 +2,41 @@
 
 TradingAgents-CN
 
-## [v0.4.2] - 2026-02-23 - CLS 效能修復與安全掃描清理
+## [v0.4.3] - 2026-02-23 - CLS 徹底修復與 k8s 部署修正
 
 ### 概述
 
-v0.4.2 著重於 Core Web Vitals CLS 指標改善、Semgrep 安全掃描清理和快取雜湊演算法升級。
+v0.4.3 徹底解決 CLS 非合成動畫問題、修復 k8s 部署 CreateContainerConfigError、升級 MongoDB 至 7.0 LTS。
 
 ### 變更內容
 
 #### 效能優化
-- **CLS 修復**: shimmer 動畫從 background-position 改為 transform: translateX()（GPU 合成層）
-- **Skeleton 偽元素**: .skeleton 改用 ::after + will-change: transform，減少主執行緒 repaint
-- **骨架尺寸匹配**: skeleton-card min-height 調整至 88px/100px，減少內容替換時的版面位移
-- **DOMPurify async**: script 標籤加 async 屬性，不阻塞首次渲染
+- **CLS 根治**: shimmer 動畫從 ::after translateX 改為直接 opacity 脈衝（Chrome 保證合成 opacity）
+- **骨架預先可見**: indices-bar 移除 x-cloak，骨架在 Alpine.js 載入前即可見
+- **market-pulse 佔位**: 載入中顯示骨架佔位區段，防止資料到達時版面位移
+- **字型 CLS 防護**: Inter 字型從 display=swap 改為 display=optional
+
+#### k8s 部署修復
+- **CreateContainerConfigError**: deployment.yaml 加 runAsUser/runAsGroup: 1000（修復非數字 UID 驗證失敗）
+- **MongoDB 7.0 LTS**: 從 4.4（EOL）升級至 7.0（values.yaml + values-production.yaml）
+- **Redis 健康檢查**: redis-cli ping 加認證密碼（requirepass 相容）
 
 #### 安全強化
 - **快取雜湊升級**: MD5 → SHA-256（adaptive_cache、cache_manager、db_cache_manager）
+- **URL 協議驗證**: safeUrl() 防止 javascript: URI 注入
+- **API 快取控制**: /api/ 和 /health 端點加 Cache-Control: no-cache
 - **Semgrep 全掃描**: OWASP Top 10 + Python 規則集零發現
-- **依賴審計**: 所有關鍵 CVE 均已在現有版本中修復
-
-#### Helm 修正
-- MongoDB 健康檢查改 tcpSocket（相容新版映像）
-- Redis 密碼擴展改用 shell wrapper
-- MongoDB/Redis 資源配置提升
 
 #### 版本同步
-- 全專案版本統一至 0.4.2（VERSION、pyproject.toml、app/main.py、i18n、README）
+- 全專案版本統一至 0.4.3（VERSION、pyproject.toml、app/main.py、i18n、README）
+
+---
+
+## [v0.4.2] - 2026-02-23 - 安全掃描清理
+
+### 概述
+
+v0.4.2 初步嘗試 CLS 改善（後由 v0.4.3 徹底修復）、Semgrep 安全掃描清理。
 
 ---
 
