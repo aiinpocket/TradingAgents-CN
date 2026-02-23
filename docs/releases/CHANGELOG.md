@@ -2,6 +2,63 @@
 
 TradingAgents-CN
 
+## [v0.4.1] - 2026-02-23 - Helm 安全強化與效能優化
+
+### 概述
+
+v0.4.1 著重於 Kubernetes 部署安全性、後端效能優化和前端無障礙改善。
+
+### 變更內容
+
+#### Kubernetes 安全強化
+- **Pod SecurityContext**: 應用、MongoDB、Redis 全面啟用 runAsNonRoot、drop ALL capabilities
+- **NetworkPolicy**: 生產環境限制 pod 間通訊，僅應用 pod 可存取資料庫
+- **Dockerfile UID/GID**: 明確指定 UID/GID 1000，與 Helm fsGroup 一致
+
+#### 後端效能優化
+- **趨勢 API**: busy-wait 輪詢改 asyncio.Event 事件驅動，專用 ThreadPoolExecutor + 超時保護
+- **SSE 串流**: 輪詢間隔 1s -> 0.5s，進度訊息改 deque(maxlen=200) 防記憶體無限增長
+- **FinnHub 認證**: API 金鑰改用 X-Finnhub-Token header 認證，避免暴露於 URL
+
+#### 前端改善
+- **CDN 預連接**: 新增 preconnect 加速 cdn.jsdelivr.net 資源載入
+- **非阻塞載入**: gtag-init.js 改為 async 載入
+- **暗色模式對比度**: --text-faint 修正為 WCAG AA 4.73:1+
+- **報告區域表格**: .report-body table 樣式與 AI 分析區一致
+- **SSE 連接清理**: EventSource 關閉後清空、重連計時器正確清理
+
+#### 依賴同步
+- requirements.txt 同步 pyproject.toml（langchain 1.x、openai 2.x）
+- 版本號統一至 0.4.1（VERSION、pyproject.toml、app/main.py、README）
+
+---
+
+## [v0.4.0] - 2026-02-23 - 分析師並行化與安全強化
+
+### 概述
+
+v0.4.0 實現分析師並行執行、全面安全強化、CDN 升級和行動裝置優化。
+
+### 變更內容
+
+#### 效能與並行化
+- **分析師並行執行**: LangGraph fan-out/fan-in，4 位分析師同時啟動
+- **趨勢資料預熱**: 伺服器啟動時背景預載快取
+- **頁面可見性感知**: 瀏覽器分頁隱藏時暫停定時重新整理
+
+#### 安全強化
+- **速率限制器記憶體防護**: IP 追蹤上限 10,000 筆，自動清理
+- **API 錯誤脫敏**: 不回傳內部錯誤堆疊
+- **移除硬編碼密碼**: 開發腳本改用環境變數
+- **MongoDB 升級**: 4.4 (EOL) -> 7.0 LTS
+
+#### CDN 與前端
+- **Alpine.js**: 3.14.8 -> 3.15.8（含 SRI）
+- **DOMPurify**: 3.2.4 -> 3.3.1（含 SRI）
+- **行動裝置觸控優化**: 觸控目標符合 WCAG 2.5.5（>= 36px）
+
+---
+
 ## [v0.1.15] - 2025-01-15 - LLM
 
 ### 
