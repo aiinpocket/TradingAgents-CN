@@ -653,6 +653,9 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                         'event_type': 'web_analysis_error'
                     }, exc_info=True)
 
+        # 組合錯誤型別和摘要，方便前端除錯
+        error_detail = f"{type(e).__name__}: {str(e)[:200]}"
+
         # 如果真實分析失敗，返回錯誤訊息而不是誤導性演示資料
         return {
             'stock_symbol': stock_symbol,
@@ -664,7 +667,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             'state': {},  # 空狀態，將顯示占位符
             'decision': {},  # 空決策
             'success': False,
-            'error': _p("analysis_process_error", lang),
+            'error': f"{_p('analysis_process_error', lang)} ({error_detail})",
             'is_demo': False,
             'error_reason': _p("analysis_retry_hint", lang)
         }
