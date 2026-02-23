@@ -449,6 +449,24 @@ async def _run_analysis(analysis_id: str):
             from web.utils.analysis_runner import format_analysis_results
             formatted = format_analysis_results(result, lang=lang)
 
+            # 台灣術語確定性校正（中文報告欄位）
+            try:
+                from app.routers.trending import _normalize_tw_terminology
+                state_zh = formatted.get("state", {})
+                for sk, sv in state_zh.items():
+                    if isinstance(sv, str):
+                        state_zh[sk] = _normalize_tw_terminology(sv)
+                    elif isinstance(sv, dict):
+                        for dk, dv in sv.items():
+                            if isinstance(dv, str):
+                                sv[dk] = _normalize_tw_terminology(dv)
+                dec = formatted.get("decision", {})
+                for dk in ("action", "reasoning"):
+                    if isinstance(dec.get(dk), str):
+                        dec[dk] = _normalize_tw_terminology(dec[dk])
+            except Exception:
+                pass  # 術語校正非關鍵路徑
+
             # 翻譯成英文版本
             data["progress"].append(_t_lang("generating_english", lang))
             try:

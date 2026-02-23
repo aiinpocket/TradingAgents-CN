@@ -741,9 +741,9 @@ function tradingApp() {
     getActionClass(action) {
       if (!action) return '';
       const a = action.toLowerCase();
-      // 匹配 LLM 可能回傳的多種中英文動作詞
-      if (a.includes('buy') || a.includes('買入') || a.includes('做多') || a.includes('加倉') || a.includes('long')) return 'action-buy';
-      if (a.includes('sell') || a.includes('賣出') || a.includes('做空') || a.includes('減倉') || a.includes('short')) return 'action-sell';
+      // 匹配 LLM 可能回傳的多種中英文動作詞（含台灣與大陸用語）
+      if (a.includes('buy') || a.includes('買入') || a.includes('做多') || a.includes('作多') || a.includes('加倉') || a.includes('long')) return 'action-buy';
+      if (a.includes('sell') || a.includes('賣出') || a.includes('做空') || a.includes('放空') || a.includes('減倉') || a.includes('short')) return 'action-sell';
       return 'action-hold';
     },
 
