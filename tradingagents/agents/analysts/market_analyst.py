@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.agents import create_react_agent, AgentExecutor
-from langchain import hub
+from langchain_classic.agents import create_react_agent, AgentExecutor
+from langchain_classic import hub
 
 # 匯入分析模組日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
