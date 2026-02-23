@@ -183,6 +183,7 @@ const I18N_MESSAGES = {
     'a11y.analyze_stock': '分析股票',
     'a11y.view_analysis': '查看分析結果',
     'a11y.switch_lang': '切換至英文',
+    'a11y.main_nav': '主選單',
 
     // 通用
     'common.no_data': '暫無資料',
@@ -369,6 +370,7 @@ const I18N_MESSAGES = {
     'a11y.analyze_stock': 'Analyze stock',
     'a11y.view_analysis': 'View analysis for',
     'a11y.switch_lang': 'Switch to Chinese',
+    'a11y.main_nav': 'Main navigation',
 
     // Common
     'common.no_data': 'No data',

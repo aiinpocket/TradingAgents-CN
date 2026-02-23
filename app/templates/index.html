@@ -24,7 +24,7 @@
   <script async src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.4.3"></script>
+  <script src="/static/js/i18n.js?v=0.4.3b"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
@@ -43,7 +43,7 @@
         </svg>
         <span class="brand-name" x-text="t('nav.brand')">TradingAgents</span>
       </div>
-      <nav class="topbar-nav" role="navigation" aria-label="Main navigation">
+      <nav class="topbar-nav" role="navigation" :aria-label="t('a11y.main_nav')">
         <button class="nav-btn" :class="{ active: tab === 'trending' }" :aria-current="tab === 'trending' ? 'page' : false" @click="tab = 'trending'; loadTrending(); window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"/></svg>
           <span x-text="t('nav.trending')">熱門</span>
