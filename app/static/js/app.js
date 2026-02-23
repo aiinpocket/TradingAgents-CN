@@ -760,6 +760,7 @@ function tradingApp() {
 
       html = html
         .replace(/^#{1,6}\s*$/gm, '')
+        .replace(/^#{4,6} (\S.*)$/gm, (_, g) => `<h5>${g.trim()}</h5>`)
         .replace(/^### (\S.*)$/gm, (_, g) => `<h4>${g.trim()}</h4>`)
         .replace(/^## (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
         .replace(/^# (\S.*)$/gm, (_, g) => `<h2>${g.trim()}</h2>`)
