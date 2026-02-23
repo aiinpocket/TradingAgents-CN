@@ -80,7 +80,7 @@
   <main class="container">
 
     <!-- ==================== 熱門特區 ==================== -->
-    <div x-show="tab === 'trending'" x-transition.opacity.duration.200ms>
+    <div x-show="tab === 'trending'" x-transition.opacity.duration.200ms :inert="tab !== 'trending'">
 
       <!-- 市場脈動摘要 -->
       <section class="market-pulse" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
@@ -163,7 +163,8 @@
                  @click="quickAnalyze(stock.symbol)"
                  @keydown.enter="quickAnalyze(stock.symbol)"
                  @keydown.space.prevent="quickAnalyze(stock.symbol)"
-                 :title="t('trending.quick_analyze') + ' ' + stock.symbol">
+                 :title="t('trending.quick_analyze') + ' ' + stock.symbol"
+                 :aria-label="t('a11y.analyze_stock') + ' ' + stock.symbol">
               <div class="watchlist-card-top">
                 <span class="watchlist-symbol" x-text="stock.symbol"></span>
                 <button class="watchlist-star active" @click.stop="toggleWatchlist(stock.symbol)"
@@ -304,7 +305,8 @@
                   <span class="news-date" x-text="item.date"></span>
                   <button class="news-related-badge" x-show="item.related" x-text="'$' + item.related"
                           @click.prevent.stop="navigateToAnalysis(item.related)"
-                          :title="t('trending.quick_analyze') + ' ' + item.related"></button>
+                          :title="t('trending.quick_analyze') + ' ' + item.related"
+                          :aria-label="t('a11y.analyze_stock') + ' ' + item.related"></button>
                 </div>
               </div>
             </a>
@@ -337,7 +339,8 @@
                  @click="quickAnalyze(sector.symbol)"
                  @keydown.enter="quickAnalyze(sector.symbol)"
                  @keydown.space.prevent="quickAnalyze(sector.symbol)"
-                 :title="t('trending.quick_analyze') + ' ' + sector.symbol">
+                 :title="t('trending.quick_analyze') + ' ' + sector.symbol"
+                 :aria-label="t('a11y.analyze_stock') + ' ' + sector.symbol + ' ' + (lang === 'en' ? sector.name_en : sector.name)">
               <div class="sector-name" x-text="lang === 'en' ? sector.name_en : sector.name"></div>
               <div class="sector-symbol" x-text="sector.symbol"></div>
               <div class="sector-change" :class="sector.change_pct >= 0 ? 'text-up' : 'text-down'"
@@ -414,7 +417,7 @@
     </div>
 
     <!-- ==================== 分析頁面 ==================== -->
-    <div x-show="tab === 'analysis'" x-transition.opacity.duration.200ms>
+    <div x-show="tab === 'analysis'" x-transition.opacity.duration.200ms :inert="tab !== 'analysis'">
 
       <!-- API 未配置提示 -->
       <section class="notice notice-warn" x-cloak x-show="apiReady && availableProviders.length === 0 && !analysisRunning && !showResults">
@@ -627,7 +630,7 @@
           </div>
         </div>
 
-        <div class="log-container" x-ref="progressLog" aria-live="polite">
+        <div class="log-container" x-ref="progressLog" role="log" aria-live="polite" :aria-label="t('analysis.progress_log')">
           <template x-for="(msg, idx) in progressMessages" :key="idx">
             <div class="log-line" :class="{ 'log-latest': idx === progressMessages.length - 1 }">
               <span class="log-time" x-text="formatTime(idx)"></span>
@@ -813,7 +816,7 @@
     </div>
 
     <!-- ==================== 歷史頁面 ==================== -->
-    <div x-cloak x-show="tab === 'history'" x-transition.opacity.duration.200ms>
+    <div x-cloak x-show="tab === 'history'" x-transition.opacity.duration.200ms :inert="tab !== 'history'">
       <section class="panel">
         <div class="panel-header panel-header-row">
           <h2 x-text="t('history.title')"></h2>
