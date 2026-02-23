@@ -75,6 +75,59 @@ _STOCK_UNIVERSE = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# 台灣慣用術語校正（確定性後處理，不依賴 LLM prompt 遵從度）
+# ---------------------------------------------------------------------------
+# 大陸→台灣中文術語映射
+_TW_TERMINOLOGY: list[tuple[str, str]] = [
+    # 人名
+    ("特朗普", "川普"),
+    # 公司 / 品牌（中文大陸譯名→台灣譯名）
+    ("英偉達", "輝達"),
+    ("英伟达", "輝達"),
+    # 指數 / 機構（長字串優先處理，避免部分取代衝突）
+    ("標準普爾500", "標普500"),
+    ("標準普爾", "標普"),
+    ("标准普尔", "標普"),
+    ("道瓊斯工業平均指數", "道瓊工業指數"),
+    ("道瓊斯工業平均", "道瓊工業平均"),
+    ("道瓊斯", "道瓊"),
+    ("道琼斯", "道瓊"),
+    ("納斯達克", "那斯達克"),
+    ("纳斯达克", "那斯達克"),
+    ("美聯儲", "聯準會"),
+    ("美联储", "聯準會"),
+    ("聯邦儲備系統", "聯準會"),
+    ("聯邦儲備", "聯準會"),
+    ("联邦储备", "聯準會"),
+    ("聯邦準備理事會", "聯準會"),
+    ("聯邦準備", "聯準會"),
+    # 其他金融術語
+    ("做空", "放空"),
+    ("股指期貨", "股價期貨"),
+    ("互聯網", "網路"),
+    ("信息技術", "資訊科技"),
+]
+
+# 中文語境下英文公司名→台灣中文名映射（僅套用於中文翻譯結果）
+_EN_TO_TW_COMPANY: list[tuple[str, str]] = [
+    ("Nvidia", "輝達"),
+    ("NVIDIA", "輝達"),
+]
+
+
+def _normalize_tw_terminology(text: str) -> str:
+    """將大陸金融術語校正為台灣慣用說法（確定性取代）"""
+    for mainland, taiwan in _TW_TERMINOLOGY:
+        if mainland in text:
+            text = text.replace(mainland, taiwan)
+    # 中文語境：英文公司名轉為台灣慣用中文名
+    for en_name, tw_name in _EN_TO_TW_COMPANY:
+        if en_name in text:
+            text = text.replace(en_name, tw_name)
+    return text
+
+
 def _get_cached(key: str, ttl: int = _CACHE_TTL_SECONDS) -> Optional[dict]:
     """取得快取資料（如果未過期）"""
     with _cache_lock:
@@ -448,7 +501,8 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
             translated = _json.loads(text)
             if isinstance(translated, list) and len(translated) == len(news_items):
                 for i, item in enumerate(news_items):
-                    item["title_zh"] = translated[i]
+                    # 確定性術語校正：LLM 可能仍用大陸用語
+                    item["title_zh"] = _normalize_tw_terminology(translated[i])
                 logger.info(f"新聞標題翻譯完成 ({len(translated)} 則，provider={provider})")
                 return news_items
 
@@ -717,8 +771,12 @@ def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str, str
                 llm = ChatAnthropic(model=model, temperature=0.3, max_tokens=2000)
 
             response = llm.invoke(messages)
+            content = response.content
+            # 中文分析套用台灣術語校正
+            if lang == "zh-TW":
+                content = _normalize_tw_terminology(content)
             logger.info(f"AI 趨勢分析生成成功 (provider={provider}, model={model})")
-            return response.content, "", provider
+            return content, "", provider
 
         except Exception as e:
             last_error = str(e)[:200]
