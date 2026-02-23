@@ -1174,6 +1174,26 @@ body {
   border-radius: 0 var(--radius) var(--radius) var(--radius);
   min-height: 160px;
 }
+.report-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.report-body th,
+.report-body td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--border-light);
+}
+.report-body th {
+  background: var(--bg-inset);
+  font-weight: 600;
+  color: var(--text);
+}
+.report-body td {
+  color: var(--text-sub);
+}
 
 /* Markdown */
 
