@@ -153,7 +153,7 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': '確定清除所有追蹤？',
 
     // 頁尾
-    'footer.version': 'v0.4.0',
+    'footer.version': 'v0.4.1',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -168,6 +168,7 @@ const I18N_MESSAGES = {
     'analysis.failed': '分析失敗',
 
     // 錯誤訊息
+    'error.invalid_symbol': '請輸入有效的美股代碼（1-5 個英文字母）',
     'error.start_failed': '無法啟動分析',
     'error.analysis_failed': '分析失敗',
     'error.task_expired': '分析任務已過期，請重新開始',
@@ -180,6 +181,7 @@ const I18N_MESSAGES = {
 
     // 無障礙
     'a11y.analyze_stock': '分析股票',
+    'a11y.view_analysis': '查看分析結果',
     'a11y.switch_lang': '切換至英文',
 
     // 通用
@@ -337,7 +339,7 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': 'Clear all tracked stocks?',
 
     // Footer
-    'footer.version': 'v0.4.0',
+    'footer.version': 'v0.4.1',
     'footer.open_source': 'Open Source',
 
     // Theme
@@ -352,6 +354,7 @@ const I18N_MESSAGES = {
     'analysis.failed': 'analysis failed',
 
     // Error messages
+    'error.invalid_symbol': 'Please enter a valid US stock ticker (1-5 letters)',
     'error.start_failed': 'Failed to start analysis',
     'error.analysis_failed': 'Analysis failed',
     'error.task_expired': 'Analysis task expired, please restart',
@@ -364,6 +367,7 @@ const I18N_MESSAGES = {
 
     // Accessibility
     'a11y.analyze_stock': 'Analyze stock',
+    'a11y.view_analysis': 'View analysis for',
     'a11y.switch_lang': 'Switch to Chinese',
 
     // Common

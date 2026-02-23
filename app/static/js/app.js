@@ -358,6 +358,15 @@ function tradingApp() {
 
     async startAnalysis() {
       this.formError = null;
+
+      // 前端即時驗證：避免無效請求送到後端
+      const sym = (this.form.symbol || '').trim().toUpperCase();
+      if (!sym || !/^[A-Z]{1,5}$/.test(sym)) {
+        this.formError = this.t('error.invalid_symbol');
+        return;
+      }
+      this.form.symbol = sym;
+
       this.submitting = true;
 
       // 靜默請求桌面通知權限
