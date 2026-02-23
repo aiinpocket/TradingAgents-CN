@@ -214,16 +214,57 @@ def create_fundamentals_analyst(llm, toolkit):
         logger.debug(f"工具呼叫數量: {tool_call_count}")
 
         if tool_call_count > 0:
-            # 有工具呼叫，返回狀態讓工具執行
+            # 有工具呼叫，在內部手動執行工具避免 ToolNode 迴圈
+            # ToolNode 迴圈在並行 fan-in 時會導致 tool_calls 訊息交錯衝突
+            from langchain_core.messages import ToolMessage, HumanMessage, AIMessage
             tool_calls_info = []
             for tc in result.tool_calls:
                 tool_calls_info.append(tc['name'])
                 logger.debug(f"工具呼叫 {len(tool_calls_info)}: {tc}")
 
             logger.info(f"[基本面分析師] 工具呼叫: {tool_calls_info}")
+
+            tool_messages = []
+            for tool_call in result.tool_calls:
+                tool_name = tool_call.get('name')
+                tool_args = tool_call.get('args', {})
+                tool_id = tool_call.get('id')
+
+                logger.debug(f"[基本面分析師] 執行工具: {tool_name}, 參數: {tool_args}")
+
+                tool_result = None
+                for tool in tools:
+                    current_name = getattr(tool, 'name', getattr(tool, '__name__', str(tool)))
+                    if current_name == tool_name:
+                        try:
+                            tool_result = tool.invoke(tool_args)
+                            logger.debug(f"[基本面分析師] 工具執行成功，結果長度: {len(str(tool_result))}")
+                        except Exception as e:
+                            logger.error(f"[基本面分析師] 工具執行失敗: {e}")
+                            tool_result = f"工具執行失敗: {str(e)}"
+                        break
+
+                if tool_result is None:
+                    tool_result = f"未找到工具: {tool_name}"
+
+                tool_messages.append(ToolMessage(content=str(tool_result), tool_call_id=tool_id))
+
+            # 將工具結果傳回 LLM 生成完整基本面分析報告
+            currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
+            analysis_prompt = (
+                f"現在請基於上述工具取得的資料，對{company_name}（股票代碼：{ticker}）"
+                f"進行詳細的基本面分析報告。價格使用{currency_info}。"
+                "報告必須使用繁體中文。"
+            )
+            messages_for_llm = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
+            final_result = fresh_llm.invoke(messages_for_llm)
+            report = final_result.content
+
+            logger.info(f"[基本面分析師] 工具執行完成，報告長度: {len(report)}")
+
             return {
-                "messages": [result],
-                "fundamentals_report": result.content if hasattr(result, 'content') else str(result)
+                "messages": [result] + tool_messages + [final_result],
+                "fundamentals_report": report,
             }
 
         # 沒有工具呼叫，使用強制工具呼叫修復

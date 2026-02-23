@@ -215,17 +215,62 @@ def create_news_analyst(llm, toolkit):
                     logger.error(f"[新聞分析師] 強制補救過程失敗: {e}")
                     report = result.content
         else:
-            # 有工具呼叫，直接使用結果
-            report = result.content
-        
+            # 有工具呼叫，在內部手動執行工具避免 ToolNode 迴圈
+            # ToolNode 迴圈在並行 fan-in 時會導致 tool_calls 訊息交錯衝突
+            from langchain_core.messages import ToolMessage, HumanMessage
+            logger.info(f"[新聞分析師] 工具呼叫: {[tc.get('name', 'unknown') for tc in result.tool_calls]}")
+
+            tool_messages = []
+            for tool_call in result.tool_calls:
+                tool_name = tool_call.get('name')
+                tool_args = tool_call.get('args', {})
+                tool_id = tool_call.get('id')
+
+                logger.debug(f"[新聞分析師] 執行工具: {tool_name}")
+
+                tool_result = None
+                for tool in tools:
+                    current_name = getattr(tool, 'name', getattr(tool, '__name__', str(tool)))
+                    if current_name == tool_name:
+                        try:
+                            tool_result = tool.invoke(tool_args)
+                            logger.debug(f"[新聞分析師] 工具執行成功，結果長度: {len(str(tool_result))}")
+                        except Exception as e:
+                            logger.error(f"[新聞分析師] 工具執行失敗: {e}")
+                            tool_result = f"工具執行失敗: {str(e)}"
+                        break
+
+                if tool_result is None:
+                    tool_result = f"未找到工具: {tool_name}"
+
+                tool_messages.append(ToolMessage(content=str(tool_result), tool_call_id=tool_id))
+
+            # 將工具結果傳回 LLM 生成完整新聞分析報告
+            analysis_prompt = (
+                f"現在請基於上述工具取得的資料，對 {ticker} 撰寫詳細的財經新聞分析報告。"
+                "報告必須使用繁體中文。"
+            )
+            messages_for_llm = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
+            final_result = llm.invoke(messages_for_llm)
+            report = final_result.content
+
+            logger.info(f"[新聞分析師] 工具執行完成，報告長度: {len(report)}")
+
+            total_time_taken = (datetime.now() - start_time).total_seconds()
+            logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")
+
+            return {
+                "messages": [result] + tool_messages + [final_result],
+                "news_report": report,
+            }
+
+        # 無工具呼叫路徑（補救機制）的返回
         total_time_taken = (datetime.now() - start_time).total_seconds()
         logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")
 
-        # 修復死迴圈問題：返回清潔的AIMessage，不包含tool_calls
-        # 這確保工作流圖能正確判斷分析已完成，避免重複呼叫
         from langchain_core.messages import AIMessage
         clean_message = AIMessage(content=report)
-        
+
         logger.info(f"[新聞分析師] 返回清潔訊息，報告長度: {len(report)} 字元")
 
         return {
