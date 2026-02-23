@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional" rel="stylesheet">
   <script async src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
@@ -83,25 +83,41 @@
     <!-- ==================== 熱門特區 ==================== -->
     <div x-show="tab === 'trending'" x-transition.opacity.duration.200ms :inert="tab !== 'trending'">
 
-      <!-- 市場脈動摘要 -->
-      <section class="market-pulse" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
-        <div class="pulse-header">
-          <h2>
-            <svg class="pulse-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>
-            <span x-text="t('trending.market_pulse')"></span>
-          </h2>
-          <div class="pulse-sentiment" :class="getMarketSentiment().cls">
-            <span class="pulse-arrow" x-html="getMarketSentiment().arrow" aria-hidden="true"></span>
-            <span x-text="getMarketSentiment().label"></span>
+      <!-- 市場脈動摘要（骨架佔位防止 CLS） -->
+      <section class="market-pulse">
+        <!-- 載入中骨架 -->
+        <div x-show="trendingLoading && !(trendingData.indices && trendingData.indices.length > 0)">
+          <div class="pulse-header">
+            <div class="skeleton skeleton-line-medium" style="width:140px;height:20px"></div>
+            <div class="skeleton skeleton-line-short" style="width:80px;height:24px;border-radius:12px"></div>
+          </div>
+          <div class="pulse-bar">
+            <div class="skeleton pulse-item" style="height:28px"></div>
+            <div class="skeleton pulse-item" style="height:28px"></div>
+            <div class="skeleton pulse-item" style="height:28px"></div>
+            <div class="skeleton pulse-item" style="height:28px"></div>
           </div>
         </div>
-        <div class="pulse-bar">
-          <template x-for="idx in trendingData.indices" :key="idx.symbol">
-            <div class="pulse-item" :class="idx.change >= 0 ? 'pulse-up' : 'pulse-down'">
-              <span class="pulse-name" x-text="lang === 'en' ? idx.name_en : idx.name"></span>
-              <span class="pulse-pct" x-text="(idx.change_pct >= 0 ? '+' : '') + idx.change_pct?.toFixed(2) + '%'"></span>
+        <!-- 實際內容 -->
+        <div x-show="trendingData.indices && trendingData.indices.length > 0" x-cloak>
+          <div class="pulse-header">
+            <h2>
+              <svg class="pulse-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>
+              <span x-text="t('trending.market_pulse')"></span>
+            </h2>
+            <div class="pulse-sentiment" :class="getMarketSentiment().cls">
+              <span class="pulse-arrow" x-html="getMarketSentiment().arrow" aria-hidden="true"></span>
+              <span x-text="getMarketSentiment().label"></span>
             </div>
-          </template>
+          </div>
+          <div class="pulse-bar">
+            <template x-for="idx in trendingData.indices" :key="idx.symbol">
+              <div class="pulse-item" :class="idx.change >= 0 ? 'pulse-up' : 'pulse-down'">
+                <span class="pulse-name" x-text="lang === 'en' ? idx.name_en : idx.name"></span>
+                <span class="pulse-pct" x-text="(idx.change_pct >= 0 ? '+' : '') + idx.change_pct?.toFixed(2) + '%'"></span>
+              </div>
+            </template>
+          </div>
         </div>
       </section>
 

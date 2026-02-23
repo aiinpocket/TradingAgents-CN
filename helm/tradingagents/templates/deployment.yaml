@@ -29,6 +29,8 @@ spec:
       # 安全上下文：強制非 root 執行、禁止提權
       securityContext:
         runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
         fsGroup: 1000
       containers:
         - name: {{ .Chart.Name }}

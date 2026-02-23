@@ -108,7 +108,7 @@ networkPolicy:
 # MongoDB Standalone 部署
 mongodb:
   enabled: true
-  image: mongo:4.4
+  image: mongo:7.0
   port: 27017
   database: tradingagents
   username: admin
