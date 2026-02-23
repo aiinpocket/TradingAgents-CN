@@ -267,27 +267,25 @@ async def start_analysis(req: AnalysisRequest, request: Request):
             detail=_t("unsupported_model", request, detail=llm_model),
         )
 
-    # 限制並行分析數量
-    with _analyses_lock:
-        running_count = sum(1 for d in _active_analyses.values() if d["status"] == "running")
-    if running_count >= 3:
-        raise HTTPException(status_code=429, detail=_t("analyses_limit", request))
+    # 去除重複的分析師（保留順序）
+    req_analysts = list(dict.fromkeys(req.analysts))
 
-    # 清理舊任務
+    # 清理舊任務 + 原子性地檢查並發限制 + 建立新分析
     _cleanup_old_analyses()
 
-    # 使用安全隨機 ID
     analysis_id = f"analysis_{secrets.token_urlsafe(16)}"
-
-    # 保存語言偏好，供背景任務使用
     lang = _get_lang(request)
 
     with _analyses_lock:
+        running_count = sum(1 for d in _active_analyses.values() if d["status"] == "running")
+        if running_count >= 3:
+            raise HTTPException(status_code=429, detail=_t("analyses_limit", request))
+
         _active_analyses[analysis_id] = {
             "status": "pending",
             "stock_symbol": symbol,
             "analysis_date": req.analysis_date,
-            "analysts": req.analysts,
+            "analysts": req_analysts,
             "research_depth": req.research_depth,
             "llm_provider": provider,
             "llm_model": llm_model,
@@ -339,12 +337,11 @@ async def stream_analysis(analysis_id: str, request: Request):
     async def event_generator():
         last_idx = 0
         start_time = time.time()
+        last_heartbeat = time.time()
         while True:
-            # 偵測客戶端斷線
             if await request.is_disconnected():
                 break
 
-            # SSE 超時保護
             if time.time() - start_time > _SSE_TIMEOUT_SECONDS:
                 yield f"data: {json.dumps({'type': 'failed', 'error': _t('analysis_timeout', request)}, ensure_ascii=False)}\n\n"
                 break
@@ -353,18 +350,16 @@ async def stream_analysis(analysis_id: str, request: Request):
             if not data:
                 break
 
-            # 發送新的進度訊息
-            progress = data["progress"]
-            current_len = len(progress)
+            # 在鎖內快照 progress，避免 deque 旋轉導致 IndexError
+            with _analyses_lock:
+                progress_snapshot = list(data["progress"])
+            current_len = len(progress_snapshot)
             if current_len > last_idx:
-                # deque 不支援切片，用索引逐一取出新訊息
                 for i in range(last_idx, current_len):
-                    try:
-                        msg = progress[i]
-                    except IndexError:
-                        break
+                    msg = progress_snapshot[i]
                     yield f"data: {json.dumps({'type': 'progress', 'message': msg}, ensure_ascii=False)}\n\n"
                 last_idx = current_len
+                last_heartbeat = time.time()
 
             # 檢查完成狀態
             if data["status"] == "completed":
@@ -374,6 +369,11 @@ async def stream_analysis(analysis_id: str, request: Request):
                 fallback_err = _t("unknown_error", request)
                 yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False)}\n\n"
                 break
+
+            # SSE heartbeat：每 15 秒發送一次，防止 proxy 因閒置斷線
+            if time.time() - last_heartbeat > 15:
+                yield ": heartbeat\n\n"
+                last_heartbeat = time.time()
 
             await asyncio.sleep(0.5)
 
@@ -431,7 +431,7 @@ async def _run_analysis(analysis_id: str):
     data["progress"].append(_t_lang("engine_starting", lang))
 
     try:
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         result = await loop.run_in_executor(
             None,
             _sync_run_analysis,
@@ -471,19 +471,20 @@ async def _run_analysis(analysis_id: str):
             _update_analysis_state(analysis_id, status="failed", error=error_msg)
 
     except Exception as e:
-        # 不洩漏內部錯誤細節給前端
         data["progress"].append(_t_lang("analysis_error", lang))
         _update_analysis_state(
             analysis_id,
             status="failed",
             error=_t_lang("internal_error", lang),
         )
-        try:
-            from tradingagents.utils.logging_manager import get_logger
-            get_logger("api").error(f"分析 ...{analysis_id[-4:]} 異常: {e}", exc_info=True)
-        except ImportError:
-            import logging
-            logging.getLogger("api").error(f"分析 ...{analysis_id[-4:]} 異常: {e}", exc_info=True)
+        logger.error(f"分析 ...{analysis_id[-4:]} 異常: {e}", exc_info=True)
+
+    finally:
+        # 清理 asyncio.Task 引用，釋放記憶體
+        with _analyses_lock:
+            entry = _active_analyses.get(analysis_id)
+            if entry:
+                entry.pop("_task", None)
 
 
 def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, model, lang="zh-TW"):
@@ -625,9 +626,7 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
                 )
                 # 從回應文字中解析 JSON（穩健處理 code fence 變體）
                 raw = resp.content[0].text.strip()
-                # 移除 markdown code fence（```json ... ``` 或 ``` ... ```）
-                import re as _re
-                fence_match = _re.search(r"```(?:json)?[ \t]*\n([\s\S]*?)\n[ \t]*```", raw)
+                fence_match = re.search(r"```(?:json)?[ \t]*\n([\s\S]*?)\n[ \t]*```", raw)
                 if fence_match:
                     raw = fence_match.group(1)
                 translated = json.loads(raw)
@@ -699,6 +698,7 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
 # ---------------------------------------------------------------------------
 _CONTEXT_CACHE: dict = {}
 _CONTEXT_CACHE_TTL = 600  # 10 分鐘
+_MAX_CONTEXT_CACHE = 200  # 快取條目上限
 
 _PAID_NEWS_SOURCES = {
     "the wall street journal", "wsj", "wall street journal",
@@ -800,7 +800,7 @@ def _fetch_stock_context(symbol: str) -> dict:
 
     except Exception as e:
         logger.error(f"取得 {symbol} 個股快照失敗: {e}")
-        result["error"] = _t("stock_context_error", request) if hasattr(request, 'headers') else "Failed to fetch stock data"
+        result["error"] = "Failed to fetch stock data"
 
     return result
 
@@ -818,16 +818,20 @@ async def get_stock_context(symbol: str, request: Request):
     if cached and time.time() - cached["_ts"] < _CONTEXT_CACHE_TTL:
         return cached["data"]
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     data = await loop.run_in_executor(None, _fetch_stock_context, symbol)
 
     # 寫入快取
-    _CONTEXT_CACHE[cache_key] = {"data": data, "_ts": time.time()}
-
-    # 清理過期快取（避免記憶體膨脹）
     now = time.time()
+    _CONTEXT_CACHE[cache_key] = {"data": data, "_ts": now}
+
+    # 清理過期快取 + 超過上限時淘汰最舊的條目
     expired = [k for k, v in _CONTEXT_CACHE.items() if now - v["_ts"] > _CONTEXT_CACHE_TTL * 2]
     for k in expired:
         _CONTEXT_CACHE.pop(k, None)
+    if len(_CONTEXT_CACHE) > _MAX_CONTEXT_CACHE:
+        sorted_keys = sorted(_CONTEXT_CACHE.keys(), key=lambda k: _CONTEXT_CACHE[k]["_ts"])
+        for k in sorted_keys[:len(_CONTEXT_CACHE) - _MAX_CONTEXT_CACHE]:
+            _CONTEXT_CACHE.pop(k, None)
 
     return data

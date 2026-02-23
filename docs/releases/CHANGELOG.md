@@ -29,6 +29,22 @@ v0.4.4 對趨勢資料抓取進行並行化改造，新增背景定時刷新機�
 - **符號驗證常數化**: 統一為預編譯 _SYMBOL_RE / _ANALYSIS_ID_RE，移除函式內散落的 import re
 - **移除已棄用 block-all-mixed-content**（upgrade-insecure-requests 已涵蓋）
 
+#### 並發安全與穩健性
+- **AI 分析 race condition 修復**: 全域 bool + asyncio.Event 替換為 asyncio.Lock，消除 TOCTOU 競爭，double-check 快取避免重複 LLM 呼叫
+- **分析啟動原子鎖**: start_analysis 的並行限制檢查與任務建立移入同一鎖區段，防止超額並發
+- **SSE progress 快照**: 在鎖內快照 deque，避免 deque 旋轉導致的 IndexError 與訊息遺失
+- **SSE heartbeat**: 每 15 秒發送 `: heartbeat` 註釋，防止反向代理因閒置斷線
+- **asyncio Task 引用清理**: _run_analysis 完成後 finally 清理 _task 引用，釋放記憶體
+- **asyncio.get_running_loop()**: 全面取代已棄用的 get_event_loop()（Python 3.12+ 相容）
+- **Executor 巢狀死鎖修復**: _fetch_movers / _fetch_market_news 改為序列處理，避免巢狀提交同一 executor
+- **AI 分析 fallback fetch**: 缺少 overview 時加入容錯並行抓取（含 sectors），個別失敗不中斷
+- **背景刷新 exponential backoff**: 連續失敗時逐步延長重試間隔（上限 30 分鐘）
+- **快取條目上限**: _cache（20）、_CONTEXT_CACHE（200）防止記憶體膨脹
+- **_fetch_stock_context 修復**: 移除未定義 request 變數的引用（避免 NameError）
+- **AI 分析 i18n**: 錯誤訊息改為 _t_trending() 雙語支援
+- **分析師去重**: AnalysisRequest 自動去除重複分析師
+- **清理未使用 import**: timedelta、json、as_completed、StreamingResponse、import re as _re
+
 #### i18n 清理
 - **移除 11 個未使用翻譯鍵**: status.api_label、analysis.symbol_placeholder、common.error、trending.title/subtitle/loading/error/view_more/rank、watchlist.empty/empty_desc
 - **更新 refresh_hint**: 反映後端 5 分鐘 + 前端 10 分鐘的雙層刷新機制

@@ -5,16 +5,14 @@
 
 import asyncio
 import os
-import json
 import random
 import time
 import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter
-from fastapi.responses import StreamingResponse
 
 # 日誌
 try:
@@ -31,8 +29,12 @@ router = APIRouter(tags=["trending"])
 _CACHE_TTL_SECONDS = 600  # 10 分鐘快取（市場資料）
 _AI_CACHE_TTL_SECONDS = 7200  # 2 小時快取（AI 分析）
 _BG_REFRESH_INTERVAL = 300  # 背景刷新間隔：5 分鐘
+_MAX_CACHE_ENTRIES = 20  # 快取條目上限，防止記憶體膨脹
 _cache: dict = {}
 _cache_lock = threading.Lock()
+
+# 專用執行緒池（放在模組頂部，確保所有函式可引用）
+_TRENDING_EXECUTOR = ThreadPoolExecutor(max_workers=12, thread_name_prefix="trending")
 
 # 公司名稱快取（由 _STOCK_UNIVERSE 限制，約 50 筆；加上 200 上限防護）
 _MAX_COMPANY_NAMES = 200
@@ -83,9 +85,18 @@ def _get_cached(key: str, ttl: int = _CACHE_TTL_SECONDS) -> Optional[dict]:
 
 
 def _set_cache(key: str, data: dict):
-    """設定快取"""
+    """設定快取（超過上限時清理過期條目）"""
+    now = time.time()
     with _cache_lock:
-        _cache[key] = {"data": data, "ts": time.time()}
+        _cache[key] = {"data": data, "ts": now}
+        # 超過條目上限時，清理過期條目
+        if len(_cache) > _MAX_CACHE_ENTRIES:
+            expired = [
+                k for k, v in _cache.items()
+                if now - v["ts"] > _AI_CACHE_TTL_SECONDS
+            ]
+            for k in expired:
+                del _cache[k]
 
 
 def _fetch_indices() -> list[dict]:
@@ -238,7 +249,7 @@ def _fetch_movers_batch(batch: list[str]) -> list[dict]:
 
 
 def _fetch_movers() -> dict:
-    """取得漲跌幅排行（批次並行抓取以降低延遲）"""
+    """取得漲跌幅排行（在同一執行緒中序列處理批次，避免巢狀提交造成執行緒池死鎖）"""
     try:
         import yfinance as yf  # noqa: F401 確保已安裝
     except ImportError:
@@ -249,34 +260,27 @@ def _fetch_movers() -> dict:
     batch_size = 25
 
     try:
-        # 將股票池分批，透過執行緒池並行抓取
         batches = [
             _STOCK_UNIVERSE[i:i + batch_size]
             for i in range(0, len(_STOCK_UNIVERSE), batch_size)
         ]
-
-        futures = {
-            _TRENDING_EXECUTOR.submit(_fetch_movers_batch, batch): batch
-            for batch in batches
-        }
-
-        for future in as_completed(futures, timeout=15):
+        # 序列處理：此函式已在 executor 執行緒中執行，
+        # 不再巢狀提交到同一個 _TRENDING_EXECUTOR 以避免死鎖風險
+        for batch in batches:
             try:
-                batch_results = future.result(timeout=10)
+                batch_results = _fetch_movers_batch(batch)
                 stock_data.extend(batch_results)
             except Exception as e:
                 logger.debug(f"批次取得股票資料失敗: {e}")
-                continue
 
     except Exception as e:
         logger.error(f"取得漲跌幅資料失敗: {e}")
 
-    # 按漲跌幅排序
     sorted_data = sorted(stock_data, key=lambda x: x["change_pct"], reverse=True)
 
     return {
         "gainers": sorted_data[:8],
-        "losers": sorted_data[-8:][::-1],  # 跌幅最大的反轉排列
+        "losers": sorted_data[-8:][::-1],
     }
 
 
@@ -347,7 +351,7 @@ _NEWS_SYMBOLS = ["^GSPC", "AAPL", "NVDA", "TSLA", "MSFT", "GOOGL"]
 
 
 def _fetch_market_news() -> list[dict]:
-    """取得市場新聞（並行抓取 6 個來源以降低延遲）"""
+    """取得市場新聞（序列抓取，避免巢狀提交造成執行緒池死鎖）"""
     try:
         import yfinance as yf  # noqa: F401 確保已安裝
     except ImportError:
@@ -355,21 +359,12 @@ def _fetch_market_news() -> list[dict]:
 
     news_list = []
     try:
-        # 透過執行緒池並行抓取每個 ticker 的新聞
-        futures = {
-            _TRENDING_EXECUTOR.submit(_fetch_news_for_symbol, sym): sym
-            for sym in _NEWS_SYMBOLS
-        }
-
-        for future in as_completed(futures, timeout=15):
+        for sym in _NEWS_SYMBOLS:
             try:
-                items = future.result(timeout=10)
+                items = _fetch_news_for_symbol(sym)
                 news_list.extend(items)
             except Exception as e:
-                sym = futures[future]
                 logger.debug(f"取得 {sym} 新聞失敗: {e}")
-                continue
-
     except Exception as e:
         logger.error(f"取得市場新聞失敗: {e}")
 
@@ -397,7 +392,7 @@ async def get_market_overview():
     if cached:
         return cached
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
 
     # 並行取得各項資料（使用專用執行緒池 + 超時保護）
     async def _safe_exec(fn, fallback):
@@ -435,7 +430,7 @@ async def get_indices():
     if cached:
         return cached
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     indices = await loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_indices)
     result = {"indices": indices, "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
     _set_cache("indices", result)
@@ -446,13 +441,8 @@ async def get_indices():
 # AI 趨勢分析
 # =============================================================
 
-# AI 分析事件，避免同時發起多次 LLM 呼叫
-# asyncio.Event 取代 threading.Lock 的 busy-wait 輪詢
-_ai_analysis_generating = False  # 是否正在生成 AI 分析
-_ai_analysis_done: Optional[asyncio.Event] = None  # 生成完成通知
-
-# 專用執行緒池，避免佔滿預設池
-_TRENDING_EXECUTOR = ThreadPoolExecutor(max_workers=12, thread_name_prefix="trending")
+# AI 分析鎖，保證同一時間只有一個 coroutine 呼叫 LLM
+_ai_analysis_lock = asyncio.Lock()
 
 
 def _get_ai_providers() -> list[tuple[str, str]]:
@@ -534,6 +524,31 @@ def _build_market_context(overview: dict) -> str:
         lines.append("")
 
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# i18n 錯誤訊息
+# ---------------------------------------------------------------------------
+_TRENDING_MESSAGES: dict[str, dict[str, str]] = {
+    "ai_in_progress": {
+        "zh-TW": "AI 分析正在生成中，請稍後重試",
+        "en": "AI analysis generation in progress, please retry shortly.",
+    },
+    "ai_timeout": {
+        "zh-TW": "AI 分析生成逾時，請稍後重試",
+        "en": "AI analysis generation timed out. Please try again later.",
+    },
+    "no_provider": {
+        "zh-TW": "未配置 LLM API 金鑰",
+        "en": "No LLM API key configured.",
+    },
+}
+
+
+def _t_trending(key: str, lang: str) -> str:
+    """取得 trending 模組 i18n 訊息"""
+    msgs = _TRENDING_MESSAGES.get(key, {})
+    return msgs.get(lang, msgs.get("zh-TW", key))
 
 
 _AI_SYSTEM_PROMPT = """You are a professional financial market analyst providing daily market commentary.
@@ -628,8 +643,11 @@ def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str, str
 
 @router.get("/trending/ai-analysis")
 async def get_ai_analysis(lang: str = "zh-TW"):
-    """取得 AI 市場趨勢分析（每 2 小時更新一次）"""
-    # 驗證語言參數
+    """取得 AI 市場趨勢分析（每 2 小時更新一次）
+
+    使用 asyncio.Lock 保證同一時間只有一個 coroutine 執行 LLM 呼叫，
+    後續請求會在鎖內做 double-check 快取，避免重複生成。
+    """
     if lang not in ("zh-TW", "en"):
         lang = "zh-TW"
 
@@ -638,68 +656,60 @@ async def get_ai_analysis(lang: str = "zh-TW"):
     if cached:
         return cached
 
-    # 檢查是否有可用的 LLM
     providers = _get_ai_providers()
     if not providers:
-        return {
-            "available": False,
-            "content": "",
-            "updated_at": "",
-            "provider": "",
-        }
+        return {"available": False, "content": "", "updated_at": "", "provider": ""}
 
-    # 先取得市場資料（可能來自快取）
-    overview = _get_cached("overview")
-    if not overview:
-        loop = asyncio.get_event_loop()
-        indices = await asyncio.wait_for(
-            loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_indices), timeout=15.0
-        )
-        movers = await asyncio.wait_for(
-            loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_movers), timeout=15.0
-        )
-        news = await asyncio.wait_for(
-            loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_market_news), timeout=15.0
-        )
-        overview = {
-            "indices": indices,
-            "movers": movers,
-            "news": news,
-            "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        }
-        _set_cache("overview", overview)
-
-    market_context = _build_market_context(overview)
-
-    loop = asyncio.get_event_loop()
-    global _ai_analysis_generating, _ai_analysis_done
-
-    # 用事件驅動模型避免並發多次 LLM 呼叫（取代 busy-wait 輪詢）
-    if _ai_analysis_generating:
-        # 另一個請求正在生成中，等待完成事件
-        event = _ai_analysis_done
-        if event:
-            try:
-                await asyncio.wait_for(event.wait(), timeout=120.0)
-            except asyncio.TimeoutError:
-                pass
-        # 檢查快取是否已更新
-        cached = _get_cached(cache_key, ttl=_AI_CACHE_TTL_SECONDS)
-        if cached:
-            return cached
+    # 嘗試取得鎖；等待最多 120 秒（涵蓋一次完整 LLM 呼叫）
+    try:
+        acquired = await asyncio.wait_for(_ai_analysis_lock.acquire(), timeout=120.0)
+    except asyncio.TimeoutError:
         return {
             "available": True,
             "content": "",
             "updated_at": "",
-            "provider": providers[0][0] if providers else "",
-            "error": "Analysis generation in progress, please retry",
+            "provider": providers[0][0],
+            "error": _t_trending("ai_in_progress", lang),
         }
 
-    # 標記正在生成，建立通知事件
-    _ai_analysis_generating = True
-    _ai_analysis_done = asyncio.Event()
-
     try:
+        # double-check: 前一個請求可能已填入快取
+        cached = _get_cached(cache_key, ttl=_AI_CACHE_TTL_SECONDS)
+        if cached:
+            return cached
+
+        # 取得市場資料（帶容錯的並行抓取）
+        overview = _get_cached("overview")
+        if not overview:
+            loop = asyncio.get_running_loop()
+
+            async def _safe_fetch(fn, fallback):
+                try:
+                    return await asyncio.wait_for(
+                        loop.run_in_executor(_TRENDING_EXECUTOR, fn), timeout=15.0
+                    )
+                except (asyncio.TimeoutError, Exception) as exc:
+                    logger.warning(f"AI 分析取得市場資料失敗 ({fn.__name__}): {exc}")
+                    return fallback
+
+            indices, movers, news, sectors = await asyncio.gather(
+                _safe_fetch(_fetch_indices, []),
+                _safe_fetch(_fetch_movers, {"gainers": [], "losers": []}),
+                _safe_fetch(_fetch_market_news, []),
+                _safe_fetch(_fetch_sectors, []),
+            )
+            overview = {
+                "indices": indices,
+                "movers": movers,
+                "news": news,
+                "sectors": sectors,
+                "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            _set_cache("overview", overview)
+
+        market_context = _build_market_context(overview)
+        loop = asyncio.get_running_loop()
+
         content, error, actual_provider = await asyncio.wait_for(
             loop.run_in_executor(
                 _TRENDING_EXECUTOR, _generate_ai_analysis, market_context, lang
@@ -713,28 +723,23 @@ async def get_ai_analysis(lang: str = "zh-TW"):
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "provider": actual_provider or providers[0][0],
         }
-
         if error:
             result["error"] = error
-
         if content:
             _set_cache(cache_key, result)
-
         return result
+
     except asyncio.TimeoutError:
         logger.error("AI 分析生成逾時（120 秒）")
         return {
             "available": True,
             "content": "",
             "updated_at": "",
-            "provider": providers[0][0] if providers else "",
-            "error": "Analysis generation timed out",
+            "provider": providers[0][0],
+            "error": _t_trending("ai_timeout", lang),
         }
     finally:
-        _ai_analysis_generating = False
-        if _ai_analysis_done:
-            _ai_analysis_done.set()
-        _ai_analysis_done = None
+        _ai_analysis_lock.release()
 
 
 # =============================================================
@@ -751,11 +756,11 @@ async def start_background_refresh():
     logger.info(f"背景趨勢刷新已啟動（基礎間隔 {_BG_REFRESH_INTERVAL} 秒）")
     consecutive_failures = 0
     while True:
-        # 加入隨機 jitter（0~30 秒），避免多實例同時刷新
+        # exponential backoff：連續失敗時逐步拉長間隔（上限 30 分鐘）
+        backoff = min(_BG_REFRESH_INTERVAL * (2 ** consecutive_failures), 1800)
         jitter = random.uniform(0, 30)
-        await asyncio.sleep(_BG_REFRESH_INTERVAL + jitter)
+        await asyncio.sleep(backoff + jitter)
         try:
-            # 清除過期快取，強制重新抓取
             with _cache_lock:
                 _cache.pop("overview", None)
             await asyncio.wait_for(get_market_overview(), timeout=60.0)
@@ -764,10 +769,12 @@ async def start_background_refresh():
         except asyncio.TimeoutError:
             consecutive_failures += 1
             logger.warning(
-                f"背景趨勢刷新逾時 60 秒（連續第 {consecutive_failures} 次失敗）"
+                f"背景趨勢刷新逾時 60 秒"
+                f"（連續第 {consecutive_failures} 次，下次間隔 {backoff:.0f}s）"
             )
         except Exception as e:
             consecutive_failures += 1
             logger.warning(
-                f"背景趨勢刷新失敗（連續第 {consecutive_failures} 次）: {e}"
+                f"背景趨勢刷新失敗"
+                f"（連續第 {consecutive_failures} 次，下次間隔 {backoff:.0f}s）: {e}"
             )
