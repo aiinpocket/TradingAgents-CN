@@ -273,13 +273,13 @@ function tradingApp() {
     // 指數代碼轉換為對應 ETF（可直接分析）
     indexToEtf(symbol) {
       const map = {'^GSPC': 'SPY', '^DJI': 'DIA', '^IXIC': 'QQQ', '^VIX': 'VIXY'};
-      return map[symbol] || symbol.replace(/[^A-Za-z0-9.-]/g, '');
+      return map[symbol] || symbol.replace(/[^A-Za-z]/g, '');
     },
 
     navigateToAnalysis(symbol) {
       if (!symbol) return;
       // 移除 GSPC 等指數代碼的特殊字元
-      const clean = symbol.replace(/[^A-Za-z0-9.-]/g, '');
+      const clean = symbol.replace(/[^A-Za-z]/g, '');
       this.quickAnalyze(clean);
     },
 
@@ -323,6 +323,7 @@ function tradingApp() {
     },
 
     clearWatchlist() {
+      if (!confirm(this.t('watchlist.clear_confirm'))) return;
       this.watchlist = [];
       this._saveWatchlist();
     },
@@ -718,6 +719,7 @@ function tradingApp() {
         return DOMPurify.sanitize(html);
       }
       // DOMPurify 未載入時，直接做字元跳脫，避免使用 innerHTML 造成 XSS
+      console.warn('DOMPurify not loaded, falling back to character escaping');
       const escaped = String(html)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -779,7 +781,7 @@ function tradingApp() {
         const parseRow = (row) =>
           row.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
         const headers = parseRow(rows[0]);
-        const thead = '<thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead>';
+        const thead = '<thead><tr>' + headers.map(h => `<th scope="col">${h}</th>`).join('') + '</tr></thead>';
         const bodyRows = rows.slice(2);
         const tbody = '<tbody>' + bodyRows.map(row => {
           const cells = parseRow(row);

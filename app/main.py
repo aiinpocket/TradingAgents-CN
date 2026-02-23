@@ -159,7 +159,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "font-src 'self' https://fonts.gstatic.com; "
             "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
             "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://query1.finance.yahoo.com; "
-            "frame-ancestors 'none'"
+            "frame-ancestors 'none'; "
+            "upgrade-insecure-requests; "
+            "block-all-mixed-content"
         )
         return response
 
