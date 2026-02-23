@@ -2297,9 +2297,9 @@ code {
   font-weight: 700;
 }
 
-/* Skeleton 載入卡片 */
+/* Skeleton 載入卡片（min-height 匹配最終內容高度，減少 CLS） */
 .skeleton-card {
-  min-height: 80px;
+  min-height: 88px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -2307,7 +2307,12 @@ code {
 }
 
 .skeleton-row {
-  min-height: 42px;
+  min-height: 44px;
+}
+
+/* 新聞骨架卡片需更多高度 */
+.news-card.skeleton-card {
+  min-height: 100px;
 }
 
 .skeleton-line-tiny { width: 40%; }
@@ -2594,20 +2599,29 @@ code {
 }
 
 @keyframes shimmer {
-  0% { background-position: -200px 0; }
-  100% { background-position: calc(200px + 100%) 0; }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .panel {
   animation: fadeUp 0.2s ease;
 }
 
-/* Skeleton 載入狀態 */
+/* Skeleton 載入狀態（GPU 合成，避免 background-position repaint） */
 .skeleton {
-  background: linear-gradient(90deg, var(--bg-inset) 25%, var(--bg-hover) 50%, var(--bg-inset) 75%);
-  background-size: 200px 100%;
-  animation: shimmer 1.5s infinite;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-inset);
   border-radius: var(--radius-sm);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 25%, var(--bg-hover) 50%, transparent 75%);
+  animation: shimmer 1.5s infinite;
+  will-change: transform;
 }
 
 .skeleton-line {
@@ -2656,7 +2670,7 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
   .panel { animation: none; }
-  .skeleton { animation: none; }
+  .skeleton::after { animation: none; }
   .btn-loading::after { animation-duration: 1.5s; }
   .mover-bar-fill { transition: none; }
   .ai-analysis-content { animation: none; }

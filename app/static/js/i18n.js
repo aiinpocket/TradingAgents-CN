@@ -153,7 +153,7 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': '確定清除所有追蹤？',
 
     // 頁尾
-    'footer.version': 'v0.4.1',
+    'footer.version': 'v0.4.2',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -339,7 +339,7 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': 'Clear all tracked stocks?',
 
     // Footer
-    'footer.version': 'v0.4.1',
+    'footer.version': 'v0.4.2',
     'footer.open_source': 'Open Source',
 
     // Theme

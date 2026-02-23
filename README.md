@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/Version-0.4.1-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/Version-0.4.2-green.svg)](./VERSION)
 [![Documentation](https://img.shields.io/badge/docs--green.svg)](./docs/)
 [![Original](https://img.shields.io/badge/-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
