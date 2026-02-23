@@ -1982,6 +1982,7 @@ code {
 
 .trending-panel {
   margin-bottom: 0;
+  min-height: 310px; /* 防止骨架/空狀態切換時高度抖動造成 CLS */
 }
 
 .trending-panel-up {
