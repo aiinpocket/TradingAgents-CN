@@ -7,7 +7,7 @@
 [![Original](https://img.shields.io/badge/-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
 > 基於多智能體辯論的美股分析系統
-> **核心特性**: OpenAI | Anthropic Claude | 多智能體辯論 | LLM 可切換 | 完整 i18n（zh-TW / en） | Docker 部署 | 安全強化 | WCAG AA 無障礙 | 即時市場資料
+> **核心特性**: OpenAI | Anthropic Claude | 多智能體辯論 | LLM 可切換 | 完整 i18n（zh-TW / en） | 新聞標題翻譯 | AI 趨勢分析 | SSR 預渲染 (CLS 0.00) | Docker / K8s 部署 | 安全強化 | WCAG AA 無障礙
 
 ****
 
@@ -17,17 +17,26 @@
 
 ** **: AI
 
-## v0.4.4 - 效能並行化 + 安全強化 + 無障礙
+## v0.4.4 - SSR 預渲染 + 新聞 i18n + AI 趨勢分析
 
-> 最新版本：分析師並行執行、背景資料刷新、完整 i18n（zh-TW / en）、WCAG AA 無障礙合規
+> 最新版本：CLS 0.00 完美分數、新聞標題中英翻譯、AI 每日趨勢分析預產生、台灣術語校正
 
 ### 亮點
 
 #### 效能優化
+- **SSR 預渲染**: 後端注入快取 JSON 至 HTML，消除首屏 CLS（0.34 -> 0.00）
+- **CWV 指標**: LCP 796ms / CLS 0.00 / TTFB 308ms — 全部 Good 等級
 - **趨勢資料並行抓取**: ThreadPoolExecutor 批次並行，延遲降低約 50%
-- **背景定時刷新**: 每 5 分鐘自動更新市場資料快取，首頁說明更新頻率
-- **共用 _stockMap 快取**: trendingData 變化時重建一次 symbol->stock 查詢表，O(1) 查找
-- **公司名稱快取**: 避免重複的 ticker.info API 呼叫
+- **背景定時刷新**: 每 5 分鐘自動更新市場資料快取，前端每 10 分鐘重新載入
+- **AI 分析預產生**: 啟動時及背景刷新後自動生成中英文分析（2 小時 TTL）
+- **共用 _stockMap 快取**: trendingData 變化時重建一次 symbol->stock 查詢表
+
+#### i18n 國際化
+- **187+ 翻譯鍵**: zh-TW / en 完全對稱
+- **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
+- **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
+- **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
+- **document.title i18n**: 頁面標題隨語言切換
 
 #### 安全強化
 - **速率限制 IP 修復**: CF-Connecting-IP -> X-Real-IP -> client.host 優先順序
@@ -35,6 +44,7 @@
 - **HSTS preload**: 強制 HTTPS + preload 指令
 - **analysisId 前後端格式驗證**: 防止異常 ID 注入
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
+- **DOMPurify defer**: 修復 SSR 競爭條件（async -> defer 確保載入順序）
 
 #### 無障礙 (a11y)
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
@@ -42,10 +52,10 @@
 - **ARIA table 語意**: 歷史表格完整 role 標記
 - **觸控目標 44px**: 符合 WCAG 2.5.5 標準
 
-#### i18n 國際化
-- **141+ 翻譯鍵**: zh-TW / en 完全對稱
-- **document.title i18n**: 頁面標題隨語言切換
-- **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
+#### UI/UX
+- **漲跌排行 CSS Grid**: 固定欄寬跨行對齊，取代 flex 佈局
+- **RWD 響應式**: 桌面 1512px / 平板 768px / 手機 375px 三段式
+- **亮色/暗色主題**: 完整雙主題支援，一鍵切換
 
 ---
 
@@ -458,7 +468,7 @@ python start_web.py
 
 **後端**: Python 3.10+ | LangChain 1.x | LangGraph | FastAPI | MongoDB | Redis
 **AI 引擎**: OpenAI (GPT-4o, o4-mini) | Anthropic (Claude Opus 4.6, Sonnet 4.6)
-**前端**: Alpine.js 3.14+ | DOMPurify | Tailwind-inspired CSS | SSE 即時串流
+**前端**: Alpine.js 3.15.8 | DOMPurify 3.3.1 | CSS Grid | SSE 即時串流 | SSR 預渲染
 **資料來源**: FinnHub | Yahoo Finance | Google News
 **部署**: Docker | Docker Compose | Kubernetes (Helm) | GitHub Actions CI/CD
 
