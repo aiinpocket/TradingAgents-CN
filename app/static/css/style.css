@@ -2598,21 +2598,14 @@ code {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes shimmer {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
 .panel {
   animation: fadeUp 0.2s ease;
 }
 
-/* Skeleton 載入狀態（opacity 脈衝，Chrome 保證合成 opacity 動畫） */
+/* Skeleton 載入狀態（靜態背景，避免非合成動畫觸發 CLS） */
 .skeleton {
   background: var(--bg-inset);
   border-radius: var(--radius-sm);
-  animation: shimmer 1.5s ease-in-out infinite;
-  will-change: opacity;
 }
 
 .skeleton-line {
@@ -2661,7 +2654,7 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
   .panel { animation: none; }
-  .skeleton { animation: none; }
+  .skeleton { /* 已移除動畫 */ }
   .btn-loading::after { animation-duration: 1.5s; }
   .mover-bar-fill { transition: none; }
   .ai-analysis-content { animation: none; }
