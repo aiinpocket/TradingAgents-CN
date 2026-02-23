@@ -249,7 +249,7 @@ def _fetch_movers_batch(batch: list[str]) -> list[dict]:
 
 
 def _fetch_movers() -> dict:
-    """取得漲跌幅排行（在同一執行緒中序列處理批次，避免巢狀提交造成執行緒池死鎖）"""
+    """取得漲跌幅排行（使用臨時執行緒池並行處理批次，避免巢狀提交 _TRENDING_EXECUTOR 的死鎖風險）"""
     try:
         import yfinance as yf  # noqa: F401 確保已安裝
     except ImportError:
@@ -264,14 +264,17 @@ def _fetch_movers() -> dict:
             _STOCK_UNIVERSE[i:i + batch_size]
             for i in range(0, len(_STOCK_UNIVERSE), batch_size)
         ]
-        # 序列處理：此函式已在 executor 執行緒中執行，
-        # 不再巢狀提交到同一個 _TRENDING_EXECUTOR 以避免死鎖風險
-        for batch in batches:
-            try:
-                batch_results = _fetch_movers_batch(batch)
-                stock_data.extend(batch_results)
-            except Exception as e:
-                logger.debug(f"批次取得股票資料失敗: {e}")
+        # 使用臨時小型執行緒池並行處理批次，
+        # 不提交到 _TRENDING_EXECUTOR（避免巢狀死鎖）
+        from concurrent.futures import ThreadPoolExecutor as _TP, as_completed as _ac
+        with _TP(max_workers=len(batches), thread_name_prefix="movers") as pool:
+            futures = {pool.submit(_fetch_movers_batch, batch): batch for batch in batches}
+            for future in _ac(futures, timeout=15):
+                try:
+                    batch_results = future.result(timeout=10)
+                    stock_data.extend(batch_results)
+                except Exception as e:
+                    logger.debug(f"批次取得股票資料失敗: {e}")
 
     except Exception as e:
         logger.error(f"取得漲跌幅資料失敗: {e}")
@@ -351,7 +354,7 @@ _NEWS_SYMBOLS = ["^GSPC", "AAPL", "NVDA", "TSLA", "MSFT", "GOOGL"]
 
 
 def _fetch_market_news() -> list[dict]:
-    """取得市場新聞（序列抓取，避免巢狀提交造成執行緒池死鎖）"""
+    """取得市場新聞（臨時執行緒池並行抓取，避免巢狀提交 _TRENDING_EXECUTOR）"""
     try:
         import yfinance as yf  # noqa: F401 確保已安裝
     except ImportError:
@@ -359,12 +362,16 @@ def _fetch_market_news() -> list[dict]:
 
     news_list = []
     try:
-        for sym in _NEWS_SYMBOLS:
-            try:
-                items = _fetch_news_for_symbol(sym)
-                news_list.extend(items)
-            except Exception as e:
-                logger.debug(f"取得 {sym} 新聞失敗: {e}")
+        from concurrent.futures import ThreadPoolExecutor as _TP, as_completed as _ac
+        with _TP(max_workers=len(_NEWS_SYMBOLS), thread_name_prefix="news") as pool:
+            futures = {pool.submit(_fetch_news_for_symbol, sym): sym for sym in _NEWS_SYMBOLS}
+            for future in _ac(futures, timeout=15):
+                try:
+                    items = future.result(timeout=10)
+                    news_list.extend(items)
+                except Exception as e:
+                    sym = futures[future]
+                    logger.debug(f"取得 {sym} 新聞失敗: {e}")
     except Exception as e:
         logger.error(f"取得市場新聞失敗: {e}")
 
