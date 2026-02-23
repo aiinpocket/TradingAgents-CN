@@ -3,10 +3,12 @@
 提供市場概覽、漲跌幅排行、熱門新聞、AI 趨勢分析等資料
 """
 
+import asyncio
 import os
 import json
 import time
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -327,19 +329,24 @@ async def get_market_overview():
     if cached:
         return cached
 
-    import asyncio
     loop = asyncio.get_event_loop()
 
-    # 並行取得各項資料
-    indices_task = loop.run_in_executor(None, _fetch_indices)
-    movers_task = loop.run_in_executor(None, _fetch_movers)
-    news_task = loop.run_in_executor(None, _fetch_market_news)
-    sectors_task = loop.run_in_executor(None, _fetch_sectors)
+    # 並行取得各項資料（使用專用執行緒池 + 超時保護）
+    async def _safe_exec(fn, fallback):
+        try:
+            return await asyncio.wait_for(
+                loop.run_in_executor(_TRENDING_EXECUTOR, fn), timeout=15.0
+            )
+        except (asyncio.TimeoutError, Exception) as exc:
+            logger.warning(f"{fn.__name__} 執行逾時或失敗: {exc}")
+            return fallback
 
-    indices = await indices_task
-    movers = await movers_task
-    news = await news_task
-    sectors = await sectors_task
+    indices, movers, news, sectors = await asyncio.gather(
+        _safe_exec(_fetch_indices, []),
+        _safe_exec(_fetch_movers, {"gainers": [], "losers": []}),
+        _safe_exec(_fetch_market_news, []),
+        _safe_exec(_fetch_sectors, []),
+    )
 
     result = {
         "indices": indices,
@@ -360,9 +367,8 @@ async def get_indices():
     if cached:
         return cached
 
-    import asyncio
     loop = asyncio.get_event_loop()
-    indices = await loop.run_in_executor(None, _fetch_indices)
+    indices = await loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_indices)
     result = {"indices": indices, "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
     _set_cache("indices", result)
     return result
@@ -372,8 +378,13 @@ async def get_indices():
 # AI 趨勢分析
 # =============================================================
 
-# 分析鎖，避免同時發起多次 LLM 呼叫
-_ai_analysis_lock = threading.Lock()
+# AI 分析事件，避免同時發起多次 LLM 呼叫
+# asyncio.Event 取代 threading.Lock 的 busy-wait 輪詢
+_ai_analysis_generating = False  # 是否正在生成 AI 分析
+_ai_analysis_done: Optional[asyncio.Event] = None  # 生成完成通知
+
+# 專用執行緒池，避免佔滿預設池
+_TRENDING_EXECUTOR = ThreadPoolExecutor(max_workers=12, thread_name_prefix="trending")
 
 
 def _get_ai_providers() -> list[tuple[str, str]]:
@@ -572,11 +583,16 @@ async def get_ai_analysis(lang: str = "zh-TW"):
     # 先取得市場資料（可能來自快取）
     overview = _get_cached("overview")
     if not overview:
-        import asyncio
         loop = asyncio.get_event_loop()
-        indices = await loop.run_in_executor(None, _fetch_indices)
-        movers = await loop.run_in_executor(None, _fetch_movers)
-        news = await loop.run_in_executor(None, _fetch_market_news)
+        indices = await asyncio.wait_for(
+            loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_indices), timeout=15.0
+        )
+        movers = await asyncio.wait_for(
+            loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_movers), timeout=15.0
+        )
+        news = await asyncio.wait_for(
+            loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_market_news), timeout=15.0
+        )
         overview = {
             "indices": indices,
             "movers": movers,
@@ -587,19 +603,22 @@ async def get_ai_analysis(lang: str = "zh-TW"):
 
     market_context = _build_market_context(overview)
 
-    # 使用 run_in_executor 避免阻塞
-    import asyncio
     loop = asyncio.get_event_loop()
+    global _ai_analysis_generating, _ai_analysis_done
 
-    # 用鎖避免並發多次 LLM 呼叫
-    acquired = _ai_analysis_lock.acquire(blocking=False)
-    if not acquired:
-        # 另一個請求正在生成中，等待快取
-        for _ in range(30):
-            await asyncio.sleep(1)
-            cached = _get_cached(cache_key, ttl=_AI_CACHE_TTL_SECONDS)
-            if cached:
-                return cached
+    # 用事件驅動模型避免並發多次 LLM 呼叫（取代 busy-wait 輪詢）
+    if _ai_analysis_generating:
+        # 另一個請求正在生成中，等待完成事件
+        event = _ai_analysis_done
+        if event:
+            try:
+                await asyncio.wait_for(event.wait(), timeout=120.0)
+            except asyncio.TimeoutError:
+                pass
+        # 檢查快取是否已更新
+        cached = _get_cached(cache_key, ttl=_AI_CACHE_TTL_SECONDS)
+        if cached:
+            return cached
         return {
             "available": True,
             "content": "",
@@ -608,9 +627,16 @@ async def get_ai_analysis(lang: str = "zh-TW"):
             "error": "Analysis generation in progress, please retry",
         }
 
+    # 標記正在生成，建立通知事件
+    _ai_analysis_generating = True
+    _ai_analysis_done = asyncio.Event()
+
     try:
-        content, error, actual_provider = await loop.run_in_executor(
-            None, _generate_ai_analysis, market_context, lang
+        content, error, actual_provider = await asyncio.wait_for(
+            loop.run_in_executor(
+                _TRENDING_EXECUTOR, _generate_ai_analysis, market_context, lang
+            ),
+            timeout=120.0,
         )
 
         result = {
@@ -627,5 +653,17 @@ async def get_ai_analysis(lang: str = "zh-TW"):
             _set_cache(cache_key, result)
 
         return result
+    except asyncio.TimeoutError:
+        logger.error("AI 分析生成逾時（120 秒）")
+        return {
+            "available": True,
+            "content": "",
+            "updated_at": "",
+            "provider": providers[0][0] if providers else "",
+            "error": "Analysis generation timed out",
+        }
     finally:
-        _ai_analysis_lock.release()
+        _ai_analysis_generating = False
+        if _ai_analysis_done:
+            _ai_analysis_done.set()
+        _ai_analysis_done = None

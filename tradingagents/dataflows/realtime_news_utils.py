@@ -134,16 +134,15 @@ class RealtimeNewsAggregator:
             end_time = datetime.now()
             start_time = end_time - timedelta(hours=hours_back)
             
-            # FinnHub API呼叫
+            # FinnHub API 呼叫（使用 header 認證，避免金鑰暴露在 URL 參數中）
             url = "https://finnhub.io/api/v1/company-news"
             params = {
                 'symbol': ticker,
                 'from': start_time.strftime('%Y-%m-%d'),
                 'to': end_time.strftime('%Y-%m-%d'),
-                'token': self.finnhub_key
             }
-            
-            response = requests.get(url, params=params, headers=self.headers, timeout=(10, 30))
+            headers = {**self.headers, 'X-Finnhub-Token': self.finnhub_key}
+            response = requests.get(url, params=params, headers=headers, timeout=(10, 30))
             response.raise_for_status()
 
             news_data = response.json()

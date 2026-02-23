@@ -7,7 +7,7 @@ import json
 import secrets
 import threading
 import time
-from collections import OrderedDict
+from collections import OrderedDict, deque
 from datetime import datetime
 from enum import Enum
 from typing import Optional
@@ -289,7 +289,7 @@ async def start_analysis(req: AnalysisRequest, request: Request):
             "research_depth": req.research_depth,
             "llm_provider": provider,
             "llm_model": llm_model,
-            "progress": [],
+            "progress": deque(maxlen=200),
             "result": None,
             "error": None,
             "created_at": time.time(),
@@ -353,10 +353,16 @@ async def stream_analysis(analysis_id: str, request: Request):
 
             # 發送新的進度訊息
             progress = data["progress"]
-            if len(progress) > last_idx:
-                for msg in progress[last_idx:]:
+            current_len = len(progress)
+            if current_len > last_idx:
+                # deque 不支援切片，用索引逐一取出新訊息
+                for i in range(last_idx, current_len):
+                    try:
+                        msg = progress[i]
+                    except IndexError:
+                        break
                     yield f"data: {json.dumps({'type': 'progress', 'message': msg}, ensure_ascii=False)}\n\n"
-                last_idx = len(progress)
+                last_idx = current_len
 
             # 檢查完成狀態
             if data["status"] == "completed":
@@ -367,7 +373,7 @@ async def stream_analysis(analysis_id: str, request: Request):
                 yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False)}\n\n"
                 break
 
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.5)
 
     return StreamingResponse(
         event_generator(),
@@ -482,20 +488,15 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
     """同步執行分析（在執行緒池中執行）"""
     data = _active_analyses.get(analysis_id)
 
-    _MAX_PROGRESS_MESSAGES = 500
-
     def progress_callback(message, step=None, total_steps=None):
         if data:
             # 限制單條訊息長度，防止記憶體濫用
             if len(message) > 1000:
-                import logging
-                logging.getLogger("api").warning(
+                logger.warning(
                     f"分析 ...{analysis_id[-4:]} 進度訊息被截斷（{len(message)} 字元）"
                 )
                 message = message[:1000] + "..."
-            # 限制訊息總數，防止記憶體溢出
-            if len(data["progress"]) >= _MAX_PROGRESS_MESSAGES:
-                return
+            # deque(maxlen=200) 自動丟棄最舊訊息
             data["progress"].append(message)
 
     from web.utils.analysis_runner import run_stock_analysis
