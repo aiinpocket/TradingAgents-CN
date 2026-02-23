@@ -211,7 +211,7 @@
               <span x-text="t('trending.gainers')"></span>
             </h2>
           </div>
-          <div class="movers-list" x-show="trendingData.movers?.gainers?.length > 0">
+          <div class="movers-list" x-cloak x-show="trendingData.movers?.gainers?.length > 0">
             <template x-for="(stock, idx) in trendingData.movers.gainers" :key="stock.symbol">
               <div class="mover-row mover-row-up" role="button" tabindex="0"
                    @click="quickAnalyze(stock.symbol)"
@@ -248,7 +248,7 @@
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
           </div>
-          <div class="empty-state" x-show="!trendingLoading && (!trendingData.movers?.gainers || trendingData.movers.gainers.length === 0)">
+          <div class="empty-state" x-cloak x-show="!trendingLoading && (!trendingData.movers?.gainers || trendingData.movers.gainers.length === 0)">
             <p x-text="t('trending.no_data')"></p>
           </div>
         </section>
@@ -261,7 +261,7 @@
               <span x-text="t('trending.losers')"></span>
             </h2>
           </div>
-          <div class="movers-list" x-show="trendingData.movers?.losers?.length > 0">
+          <div class="movers-list" x-cloak x-show="trendingData.movers?.losers?.length > 0">
             <template x-for="(stock, idx) in trendingData.movers.losers" :key="stock.symbol">
               <div class="mover-row mover-row-down" role="button" tabindex="0"
                    @click="quickAnalyze(stock.symbol)"
@@ -298,7 +298,7 @@
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
           </div>
-          <div class="empty-state" x-show="!trendingLoading && (!trendingData.movers?.losers || trendingData.movers.losers.length === 0)">
+          <div class="empty-state" x-cloak x-show="!trendingLoading && (!trendingData.movers?.losers || trendingData.movers.losers.length === 0)">
             <p x-text="t('trending.no_data')"></p>
           </div>
         </section>
@@ -313,7 +313,7 @@
           </h2>
           <span class="hint" x-show="trendingData.updated_at" x-text="t('trending.updated') + ': ' + trendingData.updated_at"></span>
         </div>
-        <div class="news-grid" x-show="trendingData.news?.length > 0">
+        <div class="news-grid" x-cloak x-show="trendingData.news?.length > 0">
           <template x-for="(item, idx) in trendingData.news" :key="item.title">
             <a class="news-card" :class="'news-accent-' + (idx % 4)" :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer">
               <div class="news-card-inner">
@@ -336,7 +336,7 @@
           <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
           <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
         </div>
-        <div class="empty-state" x-show="!trendingLoading && (!trendingData.news || trendingData.news.length === 0)">
+        <div class="empty-state" x-cloak x-show="!trendingLoading && (!trendingData.news || trendingData.news.length === 0)">
           <p x-text="t('trending.no_data')"></p>
         </div>
       </section>
@@ -350,7 +350,7 @@
           </h2>
           <span class="hint" x-text="t('trending.sectors_desc')"></span>
         </div>
-        <div class="sectors-grid" x-show="trendingData.sectors?.length > 0">
+        <div class="sectors-grid" x-cloak x-show="trendingData.sectors?.length > 0">
           <template x-for="sector in trendingData.sectors" :key="sector.symbol">
             <div class="sector-card" role="button" tabindex="0"
                  :class="sector.change_pct >= 0 ? 'sector-up' : 'sector-down'"
