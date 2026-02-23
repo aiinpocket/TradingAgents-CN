@@ -65,7 +65,7 @@ healthCheck:
     failureThreshold: 5
   readiness:
     path: /health
-    initialDelaySeconds: 30
+    initialDelaySeconds: 45
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 3
@@ -116,11 +116,11 @@ mongodb:
   storageSize: 5Gi
   resources:
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 1000m
+      memory: 1Gi
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 250m
+      memory: 512Mi
 
 # Redis Standalone 部署
 redis:
@@ -131,8 +131,8 @@ redis:
   storageSize: 2Gi
   resources:
     limits:
-      cpu: 250m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 100m
+      memory: 128Mi

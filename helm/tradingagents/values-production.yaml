@@ -149,11 +149,11 @@ mongodb:
   storageSize: 5Gi
   resources:
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 2000m
+      memory: 2Gi
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 500m
+      memory: 1Gi
 
 # =============================================================
 # Redis - Standalone Deployment
@@ -166,8 +166,8 @@ redis:
   storageSize: 2Gi
   resources:
     limits:
-      cpu: 250m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 100m
+      memory: 128Mi
