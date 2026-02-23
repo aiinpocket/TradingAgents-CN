@@ -4,6 +4,7 @@
 
 import asyncio
 import json
+import re
 import secrets
 import threading
 import time
@@ -142,6 +143,10 @@ def _t_lang(key: str, lang: str = "zh-TW", **kwargs) -> str:
     return msg
 
 
+# 輸入驗證（預編譯正則表達式）
+_SYMBOL_RE = re.compile(r"^[A-Z]{1,5}$")
+_ANALYSIS_ID_RE = re.compile(r"^analysis_[A-Za-z0-9_-]{22}$")
+
 # 進行中的分析任務（有上限的有序字典）
 _MAX_ANALYSES = 100
 _SSE_TIMEOUT_SECONDS = 1800  # 30 分鐘
@@ -152,8 +157,7 @@ _analyses_lock = threading.Lock()
 
 def _validate_analysis_id(analysis_id: str) -> bool:
     """驗證 analysis_id 格式（analysis_ + 22 位 URL-safe base64）"""
-    import re
-    return bool(re.match(r"^analysis_[A-Za-z0-9_-]{22}$", analysis_id))
+    return bool(_ANALYSIS_ID_RE.match(analysis_id))
 
 
 class LLMProvider(str, Enum):
@@ -222,11 +226,9 @@ def _cleanup_old_analyses():
 @router.post("/analysis/start")
 async def start_analysis(req: AnalysisRequest, request: Request):
     """啟動股票分析"""
-    import re
-
     # 驗證股票代碼
     symbol = req.stock_symbol.upper().strip()
-    if not re.match(r"^[A-Z]{1,5}$", symbol):
+    if not _SYMBOL_RE.match(symbol):
         raise HTTPException(status_code=400, detail=_t("invalid_symbol", request))
 
     # 驗證日期
@@ -806,9 +808,8 @@ def _fetch_stock_context(symbol: str) -> dict:
 @router.get("/analysis/stock-context/{symbol}")
 async def get_stock_context(symbol: str, request: Request):
     """取得個股即時快照（行情 + 指標 + 新聞）"""
-    import re
     symbol = symbol.upper().strip()
-    if not re.match(r"^[A-Z]{1,5}$", symbol):
+    if not _SYMBOL_RE.match(symbol):
         raise HTTPException(status_code=400, detail=_t("invalid_symbol_short", request))
 
     # 快取檢查

@@ -173,9 +173,12 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["Permissions-Policy"] = (
-            "camera=(), microphone=(), geolocation=(), payment=()"
+            "camera=(), microphone=(), geolocation=(), payment=(), "
+            "accelerometer=(), gyroscope=(), magnetometer=(), usb=(), "
+            "bluetooth=(), screen-wake-lock=(), interest-cohort=()"
         )
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        response.headers["Cross-Origin-Resource-Policy"] = "same-origin"
         response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         # 快取策略：HTML 頁面與 API 不快取，靜態資源允許帶 query 快取
         path = request.url.path
@@ -185,7 +188,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             response.headers["Cache-Control"] = "public, max-age=86400"
         # HSTS - 強制 HTTPS（部署在 TLS 後時生效）
         response.headers["Strict-Transport-Security"] = (
-            "max-age=31536000; includeSubDomains"
+            "max-age=31536000; includeSubDomains; preload"
         )
         # CSP - 允許自身資源 + 特定 CDN（需與 HTML 中 SRI 配合）
         response.headers["Content-Security-Policy"] = (
@@ -196,8 +199,11 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
             "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://query1.finance.yahoo.com; "
             "frame-ancestors 'none'; "
-            "upgrade-insecure-requests; "
-            "block-all-mixed-content"
+            "base-uri 'self'; "
+            "form-action 'self'; "
+            "object-src 'none'; "
+            "worker-src 'self'; "
+            "upgrade-insecure-requests"
         )
         return response
 
