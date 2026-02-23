@@ -36,6 +36,40 @@ except ImportError:
     logger = logging.getLogger("api")
 
 
+# ---------------------------------------------------------------------------
+# 中介層用 i18n 錯誤訊息
+# ---------------------------------------------------------------------------
+_MW_ERROR_MESSAGES: dict[str, dict[str, str]] = {
+    "rate_limit": {
+        "zh-TW": "請求過於頻繁，請稍後再試",
+        "en": "Too many requests. Please try again later.",
+    },
+    "request_too_large": {
+        "zh-TW": "請求內容過大",
+        "en": "Request payload too large.",
+    },
+    "server_error": {
+        "zh-TW": "伺服器內部錯誤，請查看日誌",
+        "en": "Internal server error. Please check logs.",
+    },
+}
+
+
+def _mw_lang(request: Request) -> str:
+    """從 Accept-Language header 快速判斷語言（中介層專用）"""
+    accept = (request.headers.get("accept-language") or "").lower()
+    if "en" in accept and "zh" not in accept:
+        return "en"
+    return "zh-TW"
+
+
+def _mw_t(key: str, request: Request) -> str:
+    """取得中介層 i18n 錯誤訊息"""
+    lang = _mw_lang(request)
+    msgs = _MW_ERROR_MESSAGES.get(key, {})
+    return msgs.get(lang, msgs.get("zh-TW", key))
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """應用程式生命週期管理"""
@@ -85,7 +119,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if len(hits) >= self.max_requests:
             return JSONResponse(
                 status_code=429,
-                content={"detail": "請求過於頻繁，請稍後再試"},
+                content={"detail": _mw_t("rate_limit", request)},
                 headers={"Retry-After": str(self.window)},
             )
 
@@ -143,7 +177,7 @@ class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
                 if int(content_length) > self.MAX_BODY_SIZE:
                     return JSONResponse(
                         status_code=413,
-                        content={"detail": "請求內容過大"},
+                        content={"detail": _mw_t("request_too_large", request)},
                     )
             except (ValueError, TypeError):
                 pass
@@ -156,7 +190,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.error(f"未預期的錯誤: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={"detail": "伺服器內部錯誤，請查看日誌"},
+        content={"detail": _mw_t("server_error", request)},
     )
 
 
