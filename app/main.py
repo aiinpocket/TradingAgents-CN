@@ -265,7 +265,7 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     """健康檢查"""
-    return {"status": "ok", "version": "0.2.9"}
+    return {"status": "ok", "version": "0.4.1"}
 
 
 @app.get("/robots.txt", include_in_schema=False)
