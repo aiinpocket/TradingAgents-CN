@@ -3,11 +3,12 @@
 # 此文件從 requirements-lock.txt 衍生，移除了 Windows 專用套件
 # 適用於 Docker 容器和 Linux 環境
 #
-# 移除的 Windows 專用套件：
+# 移除的套件：
 # - pywin32 (Windows API 綁定)
 # - pyreadline3 (Windows readline 實現)
+# - streamlit (Docker 環境僅運行 FastAPI，不含 Streamlit 介面)
 #
-# 生成時間：2025-10-21
+# 生成時間：2026-02-23
 # Python 版本：3.10.8
 # ==================== 依賴列表 ====================
 
