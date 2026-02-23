@@ -149,7 +149,7 @@ _analyses_lock = threading.Lock()
 def _validate_analysis_id(analysis_id: str) -> bool:
     """驗證 analysis_id 格式（analysis_ + 22 位 URL-safe base64）"""
     import re
-    return bool(re.match(r"^analysis_[A-Za-z0-9_-]{16,32}$", analysis_id))
+    return bool(re.match(r"^analysis_[A-Za-z0-9_-]{22}$", analysis_id))
 
 
 class LLMProvider(str, Enum):
@@ -620,7 +620,7 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
                 raw = resp.content[0].text.strip()
                 # 移除 markdown code fence（```json ... ``` 或 ``` ... ```）
                 import re as _re
-                fence_match = _re.search(r"```(?:json)?\s*\n([\s\S]*?)\n\s*```", raw)
+                fence_match = _re.search(r"```(?:json)?[ \t]*\n([\s\S]*?)\n[ \t]*```", raw)
                 if fence_match:
                     raw = fence_match.group(1)
                 translated = json.loads(raw)

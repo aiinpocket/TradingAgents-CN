@@ -544,7 +544,7 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn-primary" :disabled="!canSubmit" aria-describedby="submit-hint">
+            <button type="submit" class="btn-primary" :disabled="!canSubmit || submitting" aria-describedby="submit-hint">
               <span x-show="!submitting" x-text="t('analysis.start')"></span>
               <span x-cloak x-show="submitting" class="btn-loading" x-text="t('analysis.submitting')"></span>
             </button>
@@ -552,7 +552,7 @@
           </div>
         </form>
 
-        <div id="form-error-msg" class="notice notice-error compact" role="alert" x-show="formError" x-cloak>
+        <div id="form-error-msg" class="notice notice-error compact" role="alert" aria-live="assertive" x-show="formError" x-cloak>
           <span x-text="formError"></span>
           <button class="notice-dismiss" @click="formError = null" :aria-label="t('common.close')">&times;</button>
         </div>
@@ -625,7 +625,7 @@
               <span x-text="connectionRetries > 0 ? t('analysis.reconnecting') : t('analysis.in_progress')"></span>
             </span>
           </div>
-          <div class="progress-track">
+          <div class="progress-track" role="progressbar" :aria-valuenow="progressPercent" aria-valuemin="0" aria-valuemax="100" :aria-label="t('analysis.running')">
             <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
           </div>
         </div>
@@ -661,7 +661,7 @@
         </div>
 
         <!-- 個股快照內容 -->
-        <div class="panel stock-context-panel" role="region" :aria-label="stockContext?.symbol + ' ' + t('context.snapshot')" x-show="stockContext && !stockContext.error">
+        <div class="panel stock-context-panel" role="region" :aria-label="(stockContext?.symbol || '') + ' ' + t('context.snapshot')" x-show="stockContext && !stockContext.error">
           <!-- 行情頭部 -->
           <div class="stock-context-header">
             <div class="stock-context-title">
@@ -826,7 +826,7 @@
           </button>
         </div>
         <div class="empty-state empty-state-rich" x-show="historyList.length === 0">
-          <svg viewBox="0 0 64 64" fill="none" class="empty-icon-lg">
+          <svg viewBox="0 0 64 64" fill="none" class="empty-icon-lg" aria-hidden="true">
             <rect x="8" y="12" width="48" height="40" rx="6" stroke="currentColor" stroke-width="2" opacity="0.3"/>
             <path d="M8 24h48" stroke="currentColor" stroke-width="2" opacity="0.3"/>
             <circle cx="32" cy="38" r="10" stroke="currentColor" stroke-width="2" opacity="0.5"/>
