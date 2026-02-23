@@ -84,7 +84,7 @@ _is_production = os.getenv("ENVIRONMENT", "").lower() == "production"
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
-    version="0.2.9",
+    version="0.3.0",
     lifespan=lifespan,
     docs_url=None if _is_production else "/api/docs",
     openapi_url=None if _is_production else "/openapi.json",

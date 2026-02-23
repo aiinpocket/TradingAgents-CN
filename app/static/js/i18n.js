@@ -115,7 +115,8 @@ const I18N_MESSAGES = {
 
     // 熱門特區
     'trending.title': '市場動態',
-    'trending.subtitle': '美股即時行情與熱門話題',
+    'trending.subtitle': '美股行情與熱門話題',
+    'trending.refresh_hint': '每 10 分鐘自動更新',
     'trending.indices': '主要指數',
     'trending.gainers': '漲幅排行',
     'trending.losers': '跌幅排行',
@@ -152,7 +153,7 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': '確定清除所有追蹤？',
 
     // 頁尾
-    'footer.version': 'v0.3.9',
+    'footer.version': 'v0.4.0',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -298,7 +299,8 @@ const I18N_MESSAGES = {
 
     // Trending
     'trending.title': 'Market Overview',
-    'trending.subtitle': 'Real-time US stock market data and trending topics',
+    'trending.subtitle': 'US stock market data and trending topics',
+    'trending.refresh_hint': 'Auto-refreshes every 10 minutes',
     'trending.indices': 'Major Indices',
     'trending.gainers': 'Top Gainers',
     'trending.losers': 'Top Losers',
@@ -335,7 +337,7 @@ const I18N_MESSAGES = {
     'watchlist.clear_confirm': 'Clear all tracked stocks?',
 
     // Footer
-    'footer.version': 'v0.3.9',
+    'footer.version': 'v0.4.0',
     'footer.open_source': 'Open Source',
 
     // Theme
