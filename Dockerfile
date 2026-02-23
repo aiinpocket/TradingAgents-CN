@@ -47,8 +47,8 @@ COPY . .
 # 安裝 tradingagents 套件本身（不安裝依賴）
 RUN pip install --no-deps -e .
 
-# 安全：以非 root 用戶執行
-RUN groupadd -r appuser && useradd -r -g appuser -d /app appuser \
+# 安全：以非 root 用戶執行（明確指定 UID/GID 1000，與 k8s fsGroup 一致）
+RUN groupadd -r -g 1000 appuser && useradd -r -u 1000 -g appuser -d /app appuser \
     && chown -R appuser:appuser /app
 USER appuser
 

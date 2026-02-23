@@ -24,9 +24,21 @@ spec:
         {{- include "tradingagents.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: mongodb
     spec:
+      # 安全上下文：限制提權
+      securityContext:
+        fsGroup: 999
       containers:
         - name: mongodb
           image: {{ .Values.mongodb.image }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN
+                - SETGID
+                - SETUID
           ports:
             - containerPort: {{ .Values.mongodb.port }}
               protocol: TCP

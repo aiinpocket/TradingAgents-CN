@@ -26,10 +26,19 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      # 安全上下文：強制非 root 執行、禁止提權
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1000
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           # 使用 start-xvfb.sh 啟動虛擬顯示器（PDF 匯出功能需要）
           command: ["/usr/local/bin/start-xvfb.sh"]
           args:

@@ -24,9 +24,19 @@ spec:
         {{- include "tradingagents.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: redis
     spec:
+      # 安全上下文：限制提權
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        fsGroup: 999
       containers:
         - name: redis
           image: {{ .Values.redis.image }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           command:
             - redis-server
             - --appendonly

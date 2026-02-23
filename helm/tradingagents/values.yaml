@@ -101,6 +101,10 @@ secrets:
   # Redis 密碼
   redisPassword: ""
 
+# 網路策略（限制 pod 間通訊）
+networkPolicy:
+  enabled: false
+
 # MongoDB Standalone 部署
 mongodb:
   enabled: true
