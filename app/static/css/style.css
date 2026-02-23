@@ -11,7 +11,7 @@
   --border-light: #ebecf0;
   --text: #172b4d;
   --text-sub: #5e6c84;
-  --text-faint: #97a0af;
+  --text-faint: #6b7585;
   --accent: #0052cc;
   --accent-hover: #0065ff;
   --accent-bg: #deebff;
@@ -2630,7 +2630,9 @@ code {
   .panel { animation: none; }
   .skeleton { animation: none; }
   .btn-loading::after { animation-duration: 1.5s; }
-  * { transition-duration: 0.01ms !important; }
+  .mover-bar-fill { transition: none; }
+  .ai-analysis-content { animation: none; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
 
 /* ===== RWD ===== */
