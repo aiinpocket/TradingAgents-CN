@@ -6,8 +6,8 @@
 [![Documentation](https://img.shields.io/badge/docs--green.svg)](./docs/)
 [![Original](https://img.shields.io/badge/-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
->
-> ****: OpenAI | Anthropic Claude | | LLM | | Docker | | | 
+> 基於多智能體辯論的美股分析系統
+> **核心特性**: OpenAI | Anthropic Claude | 多智能體辯論 | LLM 可切換 | 完整 i18n（zh-TW / en） | Docker 部署 | 安全強化 | WCAG AA 無障礙 | 即時市場資料
 
 ****
 
@@ -17,48 +17,35 @@
 
 ** **: AI
 
-## v1.0.0-preview - 
+## v0.4.4 - 效能並行化 + 安全強化 + 無障礙
 
-> ****: v1.0.0-preview FastAPI + Vue 3 
+> 最新版本：分析師並行執行、背景資料刷新、完整 i18n（zh-TW / en）、WCAG AA 無障礙合規
 
-### 
+### 亮點
 
-#### ****
-- ****: FastAPI RESTful API
-- ****: Vue 3 + Element Plus
-- ****: MongoDB + Redis 10 
-- ****: Docker amd64 + arm64
+#### 效能優化
+- **趨勢資料並行抓取**: ThreadPoolExecutor 批次並行，延遲降低約 50%
+- **背景定時刷新**: 每 5 分鐘自動更新市場資料快取，首頁說明更新頻率
+- **共用 _stockMap 快取**: trendingData 變化時重建一次 symbol->stock 查詢表，O(1) 查找
+- **公司名稱快取**: 避免重複的 ticker.info API 呼叫
 
-#### ****
-- ****: 
-- ****: 
-- ****: MongoDB/Redis/
-- ****: SSE 
+#### 安全強化
+- **速率限制 IP 修復**: CF-Connecting-IP -> X-Real-IP -> client.host 優先順序
+- **CSP 完整限制**: base-uri、form-action、object-src、worker-src、connect-src 精簡
+- **HSTS preload**: 強制 HTTPS + preload 指令
+- **analysisId 前後端格式驗證**: 防止異常 ID 注入
+- **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
 
-#### ****
-- ****: LLM 
-- ****: 
-- ****: Yahoo FinanceFinnHub
-- ****: Markdown/Word/PDF 
+#### 無障礙 (a11y)
+- **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
+- **WCAG AA 色彩對比**: 暗色模式文字對比 >= 4.5:1
+- **ARIA table 語意**: 歷史表格完整 role 標記
+- **觸控目標 44px**: 符合 WCAG 2.5.5 標準
 
-#### **Docker **
-- ****: x86_64 ARM64 Apple SiliconAWS Graviton
-- **GitHub Actions**: Docker 
-- ****: Docker Compose 5 
-
-### 
-
-| | v0.1.x | v1.0.0-preview |
-|------|--------|----------------|
-| **** | FastAPI + Uvicorn | FastAPI + Uvicorn |
-| **** | Alpine.js | Vue 3 + Vite + Element Plus |
-| **** | MongoDB | MongoDB + Redis |
-| **API ** | | RESTful API + WebSocket |
-| **** | /Docker | Docker + GitHub Actions |
-
-### 
-
-v1.0.0-preview 
+#### i18n 國際化
+- **141+ 翻譯鍵**: zh-TW / en 完全對稱
+- **document.title i18n**: 頁面標題隨語言切換
+- **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
 
 ---
 
@@ -374,7 +361,7 @@ v1.0.0-preview
 | | | | |
 | ----------------- | ---------------------------- | ----------------------- | -------- |
 | **OpenAI** | GPT-4o, GPT-4o-mini | | |
-| **Anthropic** | Claude Opus 4, Claude Sonnet 4 | | |
+| **Anthropic** | Claude Opus 4.6, Claude Sonnet 4.6, Claude Haiku 4.5 | | |
 
 ****: URL | ****: 
 
@@ -469,10 +456,11 @@ python start_web.py
 
 ## 
 
-****: Python 3.10+ | LangChain | FastAPI | MongoDB | Redis
-**AI**: OpenAI | Anthropic
-****: FinnHub | Yahoo Finance | Google News
-****: Docker | Docker Compose | 
+**後端**: Python 3.10+ | LangChain 1.x | LangGraph | FastAPI | MongoDB | Redis
+**AI 引擎**: OpenAI (GPT-4o, o4-mini) | Anthropic (Claude Opus 4.6, Sonnet 4.6)
+**前端**: Alpine.js 3.14+ | DOMPurify | Tailwind-inspired CSS | SSE 即時串流
+**資料來源**: FinnHub | Yahoo Finance | Google News
+**部署**: Docker | Docker Compose | Kubernetes (Helm) | GitHub Actions CI/CD
 
 ## 
 
@@ -1384,6 +1372,7 @@ TradingAgents-CN
 
 ## 
 
+- **v0.4.4** (2026-02-23): 效能並行化、安全強化、WCAG AA 無障礙、i18n 141+ key
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
 - **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化
 - **v0.1.13** (2025-08-02): OpenAILLM
