@@ -2,6 +2,31 @@
 
 TradingAgents-CN
 
+## [v0.4.4] - 2026-02-23 - 效能並行化 + 背景刷新 + i18n 清理
+
+### 概述
+
+v0.4.4 對趨勢資料抓取進行並行化改造，新增背景定時刷新機制，並清理未使用的 i18n 翻譯鍵。
+
+### 變更內容
+
+#### 效能優化 - 趨勢資料抓取並行化
+- **_fetch_movers() 批次並行**: 將 2 批 25 隻股票的串列抓取改為 ThreadPoolExecutor 並行，延遲降低約 50%
+- **公司名稱快取**: 新增 _company_names 模組級快取，避免重複的 ticker.info API 呼叫
+- **_fetch_market_news() 並行**: 6 個新聞來源從串列改為並行抓取，延遲降低約 70%
+- **背景定時刷新**: 新增 start_background_refresh()，每 5 分鐘自動更新市場資料快取
+- **960px RWD 斷點**: 表單 4 欄→2 欄斷點從 768px 提前至 960px
+
+#### i18n 清理
+- **移除 11 個未使用翻譯鍵**: status.api_label、analysis.symbol_placeholder、common.error、trending.title/subtitle/loading/error/view_more/rank、watchlist.empty/empty_desc
+- **更新 refresh_hint**: 反映後端 5 分鐘 + 前端 10 分鐘的雙層刷新機制
+- **鍵數**: 148 → 137（zh-TW/en 完全對稱）
+
+#### 版本更新
+- 版本升級至 0.4.4（VERSION、pyproject.toml、main.py、README.md、i18n footer）
+
+---
+
 ## [v0.4.3d] - 2026-02-23 - CLS 0.00 + VIX 色彩修正 + 無障礙強化
 
 ### 概述

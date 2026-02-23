@@ -8,7 +8,7 @@ import os
 import json
 import time
 import threading
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -29,8 +29,13 @@ router = APIRouter(tags=["trending"])
 # 快取設定
 _CACHE_TTL_SECONDS = 600  # 10 分鐘快取（市場資料）
 _AI_CACHE_TTL_SECONDS = 7200  # 2 小時快取（AI 分析）
+_BG_REFRESH_INTERVAL = 300  # 背景刷新間隔：5 分鐘
 _cache: dict = {}
 _cache_lock = threading.Lock()
+
+# 公司名稱快取（幾乎不會改變，只在第一次抓取時填充）
+_company_names: dict[str, str] = {}
+_company_names_lock = threading.Lock()
 
 # 主要美股指數
 _INDICES = [
@@ -177,51 +182,85 @@ def _fetch_sectors() -> list[dict]:
     return results
 
 
-def _fetch_movers() -> dict:
-    """取得漲跌幅排行"""
+def _fetch_movers_batch(batch: list[str]) -> list[dict]:
+    """取得單批股票的漲跌幅資料（由執行緒池並行呼叫）"""
+    import yfinance as yf
+
+    results = []
     try:
-        import yfinance as yf
+        tickers = yf.Tickers(" ".join(batch))
+        for sym in batch:
+            try:
+                ticker = tickers.tickers.get(sym)
+                if not ticker:
+                    continue
+                hist = ticker.history(period="2d")
+                if hist.empty or len(hist) < 2:
+                    continue
+
+                current_price = float(hist["Close"].iloc[-1])
+                prev_price = float(hist["Close"].iloc[-2])
+                change = current_price - prev_price
+                change_pct = (change / prev_price) * 100 if prev_price else 0
+
+                # 從快取取得公司名稱（避免昂貴的 ticker.info 呼叫）
+                with _company_names_lock:
+                    cached_name = _company_names.get(sym)
+
+                if cached_name:
+                    short_name = cached_name
+                else:
+                    try:
+                        info = ticker.info or {}
+                        short_name = info.get("shortName", sym)
+                    except Exception:
+                        short_name = sym
+                    with _company_names_lock:
+                        _company_names[sym] = short_name
+
+                results.append({
+                    "symbol": sym,
+                    "name": short_name,
+                    "price": round(current_price, 2),
+                    "change": round(change, 2),
+                    "change_pct": round(change_pct, 2),
+                })
+            except Exception as e:
+                logger.debug(f"取得 {sym} 資料失敗: {e}")
+                continue
+    except Exception as e:
+        logger.debug(f"批次取得股票資料失敗: {e}")
+
+    return results
+
+
+def _fetch_movers() -> dict:
+    """取得漲跌幅排行（批次並行抓取以降低延遲）"""
+    try:
+        import yfinance as yf  # noqa: F401 確保已安裝
     except ImportError:
         logger.warning("yfinance 未安裝，無法取得股票資料")
         return {"gainers": [], "losers": []}
 
     stock_data = []
+    batch_size = 25
 
     try:
-        # 分批取得，避免一次請求太多
-        batch_size = 25
-        for i in range(0, len(_STOCK_UNIVERSE), batch_size):
-            batch = _STOCK_UNIVERSE[i:i + batch_size]
+        # 將股票池分批，透過執行緒池並行抓取
+        batches = [
+            _STOCK_UNIVERSE[i:i + batch_size]
+            for i in range(0, len(_STOCK_UNIVERSE), batch_size)
+        ]
+
+        futures = {
+            _TRENDING_EXECUTOR.submit(_fetch_movers_batch, batch): batch
+            for batch in batches
+        }
+
+        for future in as_completed(futures, timeout=15):
             try:
-                tickers = yf.Tickers(" ".join(batch))
-                for sym in batch:
-                    try:
-                        ticker = tickers.tickers.get(sym)
-                        if not ticker:
-                            continue
-                        hist = ticker.history(period="2d")
-                        if hist.empty or len(hist) < 2:
-                            continue
-
-                        current_price = float(hist["Close"].iloc[-1])
-                        prev_price = float(hist["Close"].iloc[-2])
-                        change = current_price - prev_price
-                        change_pct = (change / prev_price) * 100 if prev_price else 0
-
-                        # 取得公司名稱
-                        info = ticker.info or {}
-                        short_name = info.get("shortName", sym)
-
-                        stock_data.append({
-                            "symbol": sym,
-                            "name": short_name,
-                            "price": round(current_price, 2),
-                            "change": round(change, 2),
-                            "change_pct": round(change_pct, 2),
-                        })
-                    except Exception as e:
-                        logger.debug(f"取得 {sym} 資料失敗: {e}")
-                        continue
+                batch_results = future.result(timeout=10)
+                stock_data.extend(batch_results)
             except Exception as e:
                 logger.debug(f"批次取得股票資料失敗: {e}")
                 continue
@@ -238,81 +277,107 @@ def _fetch_movers() -> dict:
     }
 
 
-def _fetch_market_news() -> list[dict]:
-    """取得市場新聞（相容 yfinance >= 1.0 新格式）"""
+def _fetch_news_for_symbol(sym: str) -> list[dict]:
+    """取得單一股票的新聞（由執行緒池並行呼叫）"""
+    import yfinance as yf
+
+    items = []
     try:
-        import yfinance as yf
+        ticker = yf.Ticker(sym)
+        news = ticker.news or []
+        for item in news[:3]:
+            # yfinance >= 1.0 新格式：{id, content: {title, pubDate, provider, canonicalUrl, ...}}
+            content = item.get("content", {}) if isinstance(item, dict) else {}
+            if content:
+                title = content.get("title", "")
+                canonical = content.get("canonicalUrl", {})
+                link = canonical.get("url", "") if isinstance(canonical, dict) else ""
+                provider = content.get("provider", {})
+                publisher = provider.get("displayName", "") if isinstance(provider, dict) else ""
+                pub_date_str = content.get("pubDate", "")
+            else:
+                # 舊版 yfinance 格式回退
+                title = item.get("title", "")
+                link = item.get("link", "")
+                publisher = item.get("publisher", "")
+                pub_date_ts = item.get("providerPublishTime", 0)
+                pub_date_str = datetime.fromtimestamp(pub_date_ts).strftime(
+                    "%Y-%m-%d %H:%M"
+                ) if pub_date_ts else ""
+
+            if title and link:
+                # 統一日期格式
+                date_display = ""
+                if pub_date_str and "T" in str(pub_date_str):
+                    try:
+                        dt = datetime.fromisoformat(
+                            str(pub_date_str).replace("Z", "+00:00")
+                        )
+                        date_display = dt.strftime("%Y-%m-%d %H:%M")
+                    except (ValueError, TypeError):
+                        date_display = str(pub_date_str)[:16]
+                elif pub_date_str:
+                    date_display = str(pub_date_str)
+
+                items.append({
+                    "title": title,
+                    "url": link,
+                    "source": publisher,
+                    "date": date_display,
+                    "related": sym.replace("^", ""),
+                })
+    except Exception as e:
+        logger.debug(f"取得 {sym} 新聞失敗: {e}")
+
+    return items
+
+
+# 付費新聞來源（使用者無法免費閱讀全文）
+_PAID_SOURCES = frozenset({
+    "the wall street journal", "wsj", "wall street journal",
+    "bloomberg", "financial times", "ft", "barron's", "barrons",
+    "the economist", "investor's business daily", "ibd",
+})
+
+# 新聞來源股票清單
+_NEWS_SYMBOLS = ["^GSPC", "AAPL", "NVDA", "TSLA", "MSFT", "GOOGL"]
+
+
+def _fetch_market_news() -> list[dict]:
+    """取得市場新聞（並行抓取 6 個來源以降低延遲）"""
+    try:
+        import yfinance as yf  # noqa: F401 確保已安裝
     except ImportError:
         return []
 
     news_list = []
     try:
-        # 從主要指數和熱門股票取得新聞
-        for sym in ["^GSPC", "AAPL", "NVDA", "TSLA", "MSFT", "GOOGL"]:
+        # 透過執行緒池並行抓取每個 ticker 的新聞
+        futures = {
+            _TRENDING_EXECUTOR.submit(_fetch_news_for_symbol, sym): sym
+            for sym in _NEWS_SYMBOLS
+        }
+
+        for future in as_completed(futures, timeout=15):
             try:
-                ticker = yf.Ticker(sym)
-                news = ticker.news or []
-                for item in news[:3]:
-                    # yfinance >= 1.0 新格式：{id, content: {title, pubDate, provider, canonicalUrl, ...}}
-                    content = item.get("content", {}) if isinstance(item, dict) else {}
-                    if content:
-                        title = content.get("title", "")
-                        canonical = content.get("canonicalUrl", {})
-                        link = canonical.get("url", "") if isinstance(canonical, dict) else ""
-                        provider = content.get("provider", {})
-                        publisher = provider.get("displayName", "") if isinstance(provider, dict) else ""
-                        pub_date_str = content.get("pubDate", "")
-                    else:
-                        # 舊版 yfinance 格式回退
-                        title = item.get("title", "")
-                        link = item.get("link", "")
-                        publisher = item.get("publisher", "")
-                        pub_date_ts = item.get("providerPublishTime", 0)
-                        pub_date_str = datetime.fromtimestamp(pub_date_ts).strftime(
-                            "%Y-%m-%d %H:%M"
-                        ) if pub_date_ts else ""
-
-                    if title and link:
-                        # 統一日期格式
-                        date_display = ""
-                        if pub_date_str and "T" in str(pub_date_str):
-                            try:
-                                dt = datetime.fromisoformat(
-                                    str(pub_date_str).replace("Z", "+00:00")
-                                )
-                                date_display = dt.strftime("%Y-%m-%d %H:%M")
-                            except (ValueError, TypeError):
-                                date_display = str(pub_date_str)[:16]
-                        elif pub_date_str:
-                            date_display = str(pub_date_str)
-
-                        news_list.append({
-                            "title": title,
-                            "url": link,
-                            "source": publisher,
-                            "date": date_display,
-                            "related": sym.replace("^", ""),
-                        })
+                items = future.result(timeout=10)
+                news_list.extend(items)
             except Exception as e:
+                sym = futures[future]
                 logger.debug(f"取得 {sym} 新聞失敗: {e}")
                 continue
 
     except Exception as e:
         logger.error(f"取得市場新聞失敗: {e}")
 
-    # 過濾付費新聞來源（使用者無法免費閱讀全文）
-    _PAID_SOURCES = {
-        "the wall street journal", "wsj", "wall street journal",
-        "bloomberg", "financial times", "ft", "barron's", "barrons",
-        "the economist", "investor's business daily", "ibd",
-    }
+    # 過濾付費新聞來源
     free_news = [
         item for item in news_list
         if item.get("source", "").lower() not in _PAID_SOURCES
     ]
 
     # 去重（依標題）
-    seen_titles = set()
+    seen_titles: set[str] = set()
     unique_news = []
     for item in free_news:
         if item["title"] not in seen_titles:
@@ -667,3 +732,27 @@ async def get_ai_analysis(lang: str = "zh-TW"):
         if _ai_analysis_done:
             _ai_analysis_done.set()
         _ai_analysis_done = None
+
+
+# =============================================================
+# 背景定時刷新
+# =============================================================
+
+async def start_background_refresh():
+    """啟動背景定時刷新趨勢資料。
+
+    每 5 分鐘（_BG_REFRESH_INTERVAL）重新抓取市場概覽，
+    確保快取始終有熱資料，使用者不需等待冷啟動。
+    應在 FastAPI lifespan 中呼叫。
+    """
+    logger.info(f"背景趨勢刷新已啟動（間隔 {_BG_REFRESH_INTERVAL} 秒）")
+    while True:
+        await asyncio.sleep(_BG_REFRESH_INTERVAL)
+        try:
+            # 清除過期快取，強制重新抓取
+            with _cache_lock:
+                _cache.pop("overview", None)
+            await get_market_overview()
+            logger.info("背景趨勢刷新完成")
+        except Exception as e:
+            logger.warning(f"背景趨勢刷新失敗（不影響正常運作）: {e}")

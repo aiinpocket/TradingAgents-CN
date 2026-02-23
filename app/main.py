@@ -88,7 +88,14 @@ async def lifespan(app: FastAPI):
 
     asyncio.create_task(_prewarm_trending())
 
+    # 啟動背景定時刷新（每 5 分鐘自動更新市場資料）
+    from app.routers.trending import start_background_refresh
+    refresh_task = asyncio.create_task(start_background_refresh())
+
     yield
+
+    # 關閉背景任務
+    refresh_task.cancel()
     logger.info("TradingAgents API 關閉")
 
 
@@ -98,7 +105,7 @@ _is_production = os.getenv("ENVIRONMENT", "").lower() == "production"
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
-    version="0.4.3",
+    version="0.4.4",
     lifespan=lifespan,
     docs_url=None if _is_production else "/api/docs",
     openapi_url=None if _is_production else "/openapi.json",

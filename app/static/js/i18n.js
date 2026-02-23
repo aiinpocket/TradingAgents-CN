@@ -14,13 +14,11 @@ const I18N_MESSAGES = {
     // 狀態
     'status.online': '已連線',
     'status.offline': '離線',
-    'status.api_label': 'API 伺服器狀態',
 
     // 分析頁面
     'analysis.title': '股票分析',
     'analysis.desc': '輸入美股代碼，啟動多代理協作分析。',
     'analysis.symbol': '股票代碼',
-    'analysis.symbol_placeholder': 'AAPL',
     'analysis.date': '分析日期',
     'analysis.provider': 'LLM 提供商',
     'analysis.model': '模型',
@@ -114,19 +112,14 @@ const I18N_MESSAGES = {
     'history.status_failed': '失敗',
 
     // 熱門特區
-    'trending.title': '市場動態',
-    'trending.subtitle': '美股行情與熱門話題',
-    'trending.refresh_hint': '每 10 分鐘自動更新',
+    'trending.refresh_hint': '每 5 分鐘背景更新、前端每 10 分鐘重新載入',
     'trending.indices': '主要指數',
     'trending.gainers': '漲幅排行',
     'trending.losers': '跌幅排行',
     'trending.news': '市場新聞',
-    'trending.loading': '載入中...',
     'trending.updated': '最後更新',
     'trending.analyze': '分析',
-    'trending.view_more': '查看更多',
     'trending.no_data': '暫無資料',
-    'trending.error': '載入失敗，請稍後重試',
     'trending.ai_title': 'AI 趨勢分析',
     'trending.ai_desc': '基於宏觀經濟、國際趨勢與市場新聞的每日綜合分析',
     'trending.ai_loading': '正在生成 AI 分析...',
@@ -139,21 +132,18 @@ const I18N_MESSAGES = {
     'trending.market_down': '偏空',
     'trending.market_mixed': '震盪',
     'trending.quick_analyze': '快速分析',
-    'trending.rank': '#',
     'trending.sectors': '板塊表現',
     'trending.sectors_desc': 'S&P 500 各板塊 ETF 當日漲跌',
 
     // 追蹤清單
     'watchlist.title': '我的追蹤',
-    'watchlist.empty': '尚未追蹤任何股票',
-    'watchlist.empty_desc': '點擊漲跌排行中的星號圖示加入追蹤清單',
     'watchlist.add': '加入追蹤',
     'watchlist.remove': '移除追蹤',
     'watchlist.clear': '清除全部',
     'watchlist.clear_confirm': '確定清除所有追蹤？',
 
     // 頁尾
-    'footer.version': 'v0.4.3',
+    'footer.version': 'v0.4.4',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -188,7 +178,6 @@ const I18N_MESSAGES = {
 
     // 通用
     'common.no_data': '暫無資料',
-    'common.error': '發生錯誤',
     'common.close': '關閉',
   },
 
@@ -202,13 +191,11 @@ const I18N_MESSAGES = {
     // Status
     'status.online': 'Online',
     'status.offline': 'Offline',
-    'status.api_label': 'API Server Status',
 
     // Analysis page
     'analysis.title': 'Stock Analysis',
     'analysis.desc': 'Enter a US stock ticker to start multi-agent analysis.',
     'analysis.symbol': 'Ticker',
-    'analysis.symbol_placeholder': 'AAPL',
     'analysis.date': 'Date',
     'analysis.provider': 'LLM Provider',
     'analysis.model': 'Model',
@@ -302,19 +289,14 @@ const I18N_MESSAGES = {
     'history.status_failed': 'Failed',
 
     // Trending
-    'trending.title': 'Market Overview',
-    'trending.subtitle': 'US stock market data and trending topics',
-    'trending.refresh_hint': 'Auto-refreshes every 10 minutes',
+    'trending.refresh_hint': 'Backend refreshes every 5 min, frontend reloads every 10 min',
     'trending.indices': 'Major Indices',
     'trending.gainers': 'Top Gainers',
     'trending.losers': 'Top Losers',
     'trending.news': 'Market News',
-    'trending.loading': 'Loading...',
     'trending.updated': 'Last updated',
     'trending.analyze': 'Analyze',
-    'trending.view_more': 'View more',
     'trending.no_data': 'No data available',
-    'trending.error': 'Failed to load, please try again later',
     'trending.ai_title': 'AI Trend Analysis',
     'trending.ai_desc': 'Daily comprehensive analysis based on macro economics, global trends, and market news',
     'trending.ai_loading': 'Generating AI analysis...',
@@ -327,21 +309,18 @@ const I18N_MESSAGES = {
     'trending.market_down': 'Bearish',
     'trending.market_mixed': 'Mixed',
     'trending.quick_analyze': 'Analyze',
-    'trending.rank': '#',
     'trending.sectors': 'Sector Performance',
     'trending.sectors_desc': 'S&P 500 sector ETF daily changes',
 
     // Watchlist
     'watchlist.title': 'My Watchlist',
-    'watchlist.empty': 'No stocks tracked yet',
-    'watchlist.empty_desc': 'Click the star icon on movers to add stocks to your watchlist',
     'watchlist.add': 'Add to watchlist',
     'watchlist.remove': 'Remove from watchlist',
     'watchlist.clear': 'Clear all',
     'watchlist.clear_confirm': 'Clear all tracked stocks?',
 
     // Footer
-    'footer.version': 'v0.4.3',
+    'footer.version': 'v0.4.4',
     'footer.open_source': 'Open Source',
 
     // Theme
@@ -376,7 +355,6 @@ const I18N_MESSAGES = {
 
     // Common
     'common.no_data': 'No data',
-    'common.error': 'Error occurred',
     'common.close': 'Close',
   }
 };
