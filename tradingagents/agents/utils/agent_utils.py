@@ -1,4 +1,4 @@
-from langchain_core.messages import HumanMessage, RemoveMessage
+from langchain_core.messages import HumanMessage
 from typing import Annotated
 from langchain_core.tools import tool
 from datetime import datetime
@@ -19,21 +19,17 @@ logger = get_logger('agents')
 
 
 def create_msg_delete():
-    """建立訊息清理節點，用於分析師完成後清理對話歷史。
+    """建立訊息清理節點，用於分析師完成後標記分支結束。
 
-    僅刪除分支本地訊息（messages[1:]），保留初始共用訊息（messages[0]）。
-    4 個分析師並行執行（fan-out from START），各分支新增的訊息 ID 互不重複，
-    因此只刪除 messages[1:] 不會在 fan-in 合併時產生重複刪除衝突。
+    不刪除任何訊息，僅回傳佔位訊息讓 LangGraph fan-in 能正常合併。
+    下游節點（Bull/Bear Researcher、Research Manager、Trader、Risk 節點）
+    都使用專用狀態欄位（market_report、sentiment_report 等），
+    不依賴 state["messages"]，因此不需要清理對話歷史。
+    使用 RemoveMessage 會在並行分支 fan-in 合併時產生 ID 不存在的衝突。
     """
     def delete_messages(state):
-        """刪除分支本地訊息，保留初始共用訊息"""
-        messages = state["messages"]
-
-        # 只刪除 messages[1:]（分支本地的工具呼叫訊息），保留 messages[0]（初始共用訊息）
-        removal_operations = [RemoveMessage(id=m.id) for m in messages[1:]]
-
-        placeholder = HumanMessage(content="Continue")
-        return {"messages": removal_operations + [placeholder]}
+        """回傳佔位訊息，不執行任何刪除操作"""
+        return {"messages": [HumanMessage(content="Continue")]}
 
     return delete_messages
 
