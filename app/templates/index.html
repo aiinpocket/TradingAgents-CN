@@ -28,7 +28,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.4.3a">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.4.3b">
 </head>
 <body x-data="tradingApp()" x-init="init()">
 
@@ -109,7 +109,7 @@
           </div>
           <div class="pulse-bar">
             <template x-for="idx in trendingData.indices" :key="idx.symbol">
-              <div class="pulse-item" :class="idx.change >= 0 ? 'pulse-up' : 'pulse-down'">
+              <div class="pulse-item" :class="isPositiveForMarket(idx) ? 'pulse-up' : 'pulse-down'">
                 <span class="pulse-name" x-text="lang === 'en' ? idx.name_en : idx.name"></span>
                 <span class="pulse-pct" x-text="(idx.change_pct >= 0 ? '+' : '') + idx.change_pct?.toFixed(2) + '%'"></span>
               </div>
@@ -128,7 +128,7 @@
         </div>
         <div class="indices-grid" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
           <template x-for="idx in trendingData.indices" :key="idx.symbol">
-            <div class="index-card" :class="idx.change >= 0 ? 'index-up' : 'index-down'"
+            <div class="index-card" :class="isPositiveForMarket(idx) ? 'index-up' : 'index-down'"
                  role="button" tabindex="0"
                  @click="quickAnalyze(indexToEtf(idx.symbol))"
                  @keydown.enter="quickAnalyze(indexToEtf(idx.symbol))"
@@ -137,14 +137,14 @@
                  :aria-label="t('a11y.analyze_stock') + ' ' + indexToEtf(idx.symbol)">
               <div class="index-top">
                 <div class="index-name" x-text="lang === 'en' ? idx.name_en : idx.name"></div>
-                <span class="index-arrow" :class="idx.change >= 0 ? 'arrow-up' : 'arrow-down'" aria-hidden="true">
+                <span class="index-arrow" :class="isPositiveForMarket(idx) ? 'arrow-up' : 'arrow-down'" aria-hidden="true">
                   <svg viewBox="0 0 12 12" fill="currentColor"><path x-show="idx.change >= 0" d="M6 2l4 6H2z"/><path x-show="idx.change < 0" d="M6 10L2 4h8z"/></svg>
                 </span>
               </div>
               <div class="index-price" x-text="idx.price?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})"></div>
               <div class="index-bottom">
                 <span class="index-change-val" x-text="(idx.change >= 0 ? '+' : '') + idx.change?.toFixed(2)"></span>
-                <span class="index-change-pct" :class="idx.change >= 0 ? 'pct-up' : 'pct-down'"
+                <span class="index-change-pct" :class="isPositiveForMarket(idx) ? 'pct-up' : 'pct-down'"
                       x-text="(idx.change_pct >= 0 ? '+' : '') + idx.change_pct?.toFixed(2) + '%'"></span>
               </div>
               <div class="index-etf-hint" aria-hidden="true" x-text="indexToEtf(idx.symbol)"></div>
@@ -888,6 +888,6 @@
     <span class="footer-open-source" x-text="t('footer.open_source')"></span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.4.3a"></script>
+  <script src="/static/js/app.js?v=0.4.3b"></script>
 </body>
 </html>

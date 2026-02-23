@@ -257,10 +257,17 @@ function tradingApp() {
       this.loadAiAnalysis(true);
     },
 
+    // VIX 為恐慌指數，上漲代表市場恐慌，色彩和情緒應反轉
+    isPositiveForMarket(idx) {
+      const up = idx.change >= 0;
+      return idx.symbol === '^VIX' ? !up : up;
+    },
+
     getMarketSentiment() {
       const indices = this.trendingData.indices || [];
       if (indices.length === 0) return { label: '', cls: '', arrow: '' };
-      const ups = indices.filter(i => i.change >= 0).length;
+      // 使用 isPositiveForMarket 計算，VIX 上漲視為市場負面
+      const ups = indices.filter(i => this.isPositiveForMarket(i)).length;
       const ratio = ups / indices.length;
       if (ratio >= 0.7) return { label: this.t('trending.market_up'), cls: 'sentiment-up', arrow: '&#9650;' };
       if (ratio <= 0.3) return { label: this.t('trending.market_down'), cls: 'sentiment-down', arrow: '&#9660;' };
