@@ -68,7 +68,7 @@ function tradingApp() {
 
     // 熱門特區
     trendingData: { indices: [], movers: { gainers: [], losers: [] }, news: [] },
-    trendingLoading: false,
+    trendingLoading: true,
     _trendingTimer: null,
 
     // AI 趨勢分析
@@ -207,7 +207,9 @@ function tradingApp() {
 
     // 熱門特區
     async loadTrending() {
-      if (this.trendingLoading) return;
+      // trendingLoading 初始值為 true（防止 CLS），首次載入不擋
+      if (this.trendingLoading && this._trendingLoaded) return;
+      this._trendingLoaded = true;
       this.trendingLoading = true;
 
       try {
