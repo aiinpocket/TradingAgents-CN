@@ -2027,14 +2027,14 @@ code {
 }
 
 .mover-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 24px 28px 55px 1fr 80px 65px 44px 20px;
   align-items: center;
-  justify-content: space-between;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.12s;
-  gap: 8px;
+  gap: 0 8px;
 }
 
 .mover-row:hover {
@@ -2100,11 +2100,7 @@ code {
 }
 
 .mover-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  flex: 1;
+  display: contents;
 }
 
 .mover-symbol {
@@ -2121,13 +2117,11 @@ code {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .mover-data {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
+  display: contents;
 }
 
 .mover-price {
@@ -2135,6 +2129,7 @@ code {
   font-weight: 500;
   color: var(--text);
   font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 .mover-change {
@@ -2351,6 +2346,10 @@ code {
 
 .skeleton-row {
   min-height: 44px;
+}
+
+.mover-row.skeleton-row {
+  display: flex;
 }
 
 /* 新聞骨架卡片需更多高度 */
@@ -2772,8 +2771,9 @@ code {
     grid-template-columns: 1fr;
   }
 
+  .mover-row { grid-template-columns: 22px 28px 55px 80px 65px 44px 28px; }
   .mover-name { display: none; }
-  .mover-action { opacity: 0.35; padding: 8px; width: 32px; height: 32px; }
+  .mover-action { opacity: 0.35; padding: 8px; width: 28px; height: 28px; }
   .mover-row:active .mover-action { opacity: 1; color: var(--accent); }
 
   /* 追蹤清單 RWD */
@@ -2864,8 +2864,8 @@ code {
   .index-arrow { width: 14px; height: 14px; }
   .index-arrow svg { width: 8px; height: 8px; }
 
+  .mover-row { grid-template-columns: 20px 28px 50px 70px 60px 24px; }
   .mover-rank { width: 18px; height: 18px; font-size: 10px; }
-  .mover-data { gap: 8px; }
   .mover-price { font-size: 12px; }
   .mover-bar { display: none; }
 
