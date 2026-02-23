@@ -103,6 +103,10 @@ _ERROR_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "股票代碼格式錯誤",
         "en": "Invalid stock symbol.",
     },
+    "stock_context_error": {
+        "zh-TW": "取得個股資料失敗，請稍後重試",
+        "en": "Failed to fetch stock data. Please try again later.",
+    },
 }
 
 
@@ -793,7 +797,7 @@ def _fetch_stock_context(symbol: str) -> dict:
 
     except Exception as e:
         logger.error(f"取得 {symbol} 個股快照失敗: {e}")
-        result["error"] = str(e)
+        result["error"] = _t("stock_context_error", request) if hasattr(request, 'headers') else "Failed to fetch stock data"
 
     return result
 

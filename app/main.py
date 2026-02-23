@@ -96,11 +96,21 @@ app = FastAPI(
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """簡易 IP 速率限制"""
 
+    # 最大追蹤 IP 數量，防止記憶體耗盡攻擊
+    _MAX_TRACKED_IPS = 10_000
+
     def __init__(self, app, max_requests: int = 60, window_seconds: int = 60):
         super().__init__(app)
         self.max_requests = max_requests
         self.window = window_seconds
         self._hits: dict[str, list[float]] = defaultdict(list)
+
+    def _evict_stale_ips(self, now: float) -> None:
+        """移除無活躍記錄的 IP，防止字典無限增長"""
+        cutoff = now - self.window
+        stale = [ip for ip, ts in self._hits.items() if not ts or ts[-1] <= cutoff]
+        for ip in stale:
+            del self._hits[ip]
 
     async def dispatch(self, request: Request, call_next) -> Response:
         # 只限制 API 路徑
@@ -109,6 +119,11 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         client_ip = request.client.host if request.client else "unknown"
         now = time.monotonic()
+
+        # 當追蹤 IP 數量超過上限時，清理過期條目
+        if len(self._hits) > self._MAX_TRACKED_IPS:
+            self._evict_stale_ips(now)
+
         hits = self._hits[client_ip]
 
         # 清除過期紀錄
