@@ -6,6 +6,16 @@ echo "========================================"
 echo "TradingAgents Docker"
 echo "========================================"
 
+# 從 .env 或環境變數讀取密碼，未設定時使用預設值
+DB_PASSWORD="${DB_PASSWORD:-${MONGODB_PASSWORD:-changeme}}"
+if [ "$DB_PASSWORD" = "changeme" ]; then
+  echo ""
+  echo "[WARNING] DB_PASSWORD 未設定，使用預設密碼 changeme"
+  echo "建議透過 .env 或環境變數設定安全密碼："
+  echo "  export DB_PASSWORD=your_secure_password"
+  echo ""
+fi
+
 # Docker
 echo "Docker..."
 if ! docker version >/dev/null 2>&1; then
@@ -23,7 +33,7 @@ docker run -d \
 --name tradingagents-mongodb \
 -p 27017:27017 \
 -e MONGO_INITDB_ROOT_USERNAME=admin \
--e MONGO_INITDB_ROOT_PASSWORD=tradingagents123 \
+-e MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD:-changeme} \
 -e MONGO_INITDB_DATABASE=tradingagents \
 -v mongodb_data:/data/db \
 --restart unless-stopped \
@@ -42,7 +52,7 @@ docker run -d \
 -p 6379:6379 \
 -v redis_data:/data \
 --restart unless-stopped \
-redis:latest redis-server --appendonly yes --requirepass tradingagents123
+redis:latest redis-server --appendonly yes --requirepass ${DB_PASSWORD:-changeme}
 
 if [ $? -eq 0 ]; then
 echo " Redis - : 6379"
@@ -59,7 +69,7 @@ echo " Redis Commander..."
 docker run -d \
 --name tradingagents-redis-commander \
 -p 8081:8081 \
--e REDIS_HOSTS=local:tradingagents-redis:6379:0:tradingagents123 \
+-e REDIS_HOSTS=local:tradingagents-redis:6379:0:${DB_PASSWORD:-changeme} \
 --link tradingagents-redis:redis \
 --restart unless-stopped \
 rediscommander/redis-commander:latest
@@ -80,15 +90,15 @@ echo " Docker"
 echo "========================================"
 echo ""
 echo " MongoDB:"
-echo "   - : mongodb://admin:tradingagents123@localhost:27017/tradingagents"
+echo "   - : mongodb://admin:${DB_PASSWORD:-changeme}@localhost:27017/tradingagents"
 echo "   - : 27017"
 echo "   - : admin"
-echo "   - : tradingagents123"
+echo "   - : ${DB_PASSWORD:-changeme}"
 echo ""
 echo " Redis:"
 echo "   - : redis://localhost:6379"
 echo "   - : 6379"
-echo "   - : tradingagents123"
+echo "   - : ${DB_PASSWORD:-changeme}"
 echo ""
 echo " Redis Commander:"
 echo "   - : http://localhost:8081"

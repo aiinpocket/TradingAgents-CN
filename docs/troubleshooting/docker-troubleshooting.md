@@ -129,7 +129,7 @@ docker-compose exec web pip list
 docker-compose logs mongodb
 
 # MongoDB
-docker-compose exec mongodb mongo -u admin -p tradingagents123
+docker-compose exec mongodb mongo -u admin -p <your-password>
 
 # 
 docker-compose exec mongodb mongo --eval "db.adminCommand('ping')"
@@ -141,10 +141,10 @@ docker-compose exec mongodb mongo --eval "db.adminCommand('ping')"
 docker-compose logs redis
 
 # Redis
-docker-compose exec redis redis-cli -a tradingagents123
+docker-compose exec redis redis-cli -a <your-password>
 
 # Redis
-docker-compose exec redis redis-cli -a tradingagents123 ping
+docker-compose exec redis redis-cli -a <your-password> ping
 ```
 
 ## 

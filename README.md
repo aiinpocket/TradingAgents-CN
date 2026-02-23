@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/Version-0.2.2-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/Version-0.4.0-green.svg)](./VERSION)
 [![Documentation](https://img.shields.io/badge/docs--green.svg)](./docs/)
 [![Original](https://img.shields.io/badge/-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
@@ -62,7 +62,31 @@ v1.0.0-preview
 
 ---
 
-## v0.1.15 
+## v0.4.0
+
+### 效能與並行化
+
+- **分析師並行執行**: LangGraph fan-out/fan-in 架構，4 位分析師（市場、社群、新聞、基本面）同時啟動，大幅縮短分析時間
+- **趨勢資料預熱**: 伺服器啟動時背景預載快取，第一位使用者無需等待
+- **頁面可見性感知**: 瀏覽器分頁隱藏時暫停定時重新整理，節省資源
+
+### 安全強化
+
+- **速率限制器記憶體防護**: IP 追蹤上限 10,000 筆，自動清理過期條目，防止記憶體耗盡攻擊
+- **API 錯誤脫敏**: 個股 API 不再回傳內部錯誤堆疊，改用 i18n 通用訊息
+- **移除硬編碼密碼**: 所有開發腳本改用環境變數 `DB_PASSWORD`
+- **MongoDB 升級**: 4.4 (EOL) -> 7.0 LTS
+
+### CDN 與前端
+
+- **Alpine.js**: 3.14.8 -> 3.15.8（含 SRI 完整性驗證）
+- **DOMPurify**: 3.2.4 -> 3.3.1（含 SRI 完整性驗證）
+- **更新頻率提示**: 首頁新增「每 10 分鐘自動更新」說明
+- **行動裝置觸控優化**: 觸控目標符合 WCAG 2.5.5 標準（>= 36px）
+
+---
+
+## v0.1.15
 
 ### LLM
 
@@ -1335,6 +1359,7 @@ TradingAgents-CN
 
 ## 
 
+- **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化
 - **v0.1.13** (2025-08-02): OpenAILLM
 - **v0.1.12** (2025-07-29): 
 - **v0.1.11** (2025-07-27): LLM

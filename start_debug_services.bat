@@ -3,6 +3,15 @@ echo ========================================
 echo Starting Debug MongoDB and Redis
 echo ========================================
 
+REM 從環境變數讀取密碼，未設定時使用預設值
+if "%DB_PASSWORD%"=="" set DB_PASSWORD=changeme
+if "%DB_PASSWORD%"=="changeme" (
+    echo.
+    echo [WARNING] DB_PASSWORD 未設定，使用預設密碼 changeme
+    echo 建議設定安全密碼: set DB_PASSWORD=your_secure_password
+    echo.
+)
+
 echo Checking Docker...
 docker version >nul 2>&1
 if %errorlevel% neq 0 (
@@ -20,10 +29,10 @@ docker run -d ^
     --name tradingagents-mongodb ^
     -p 27017:27017 ^
     -e MONGO_INITDB_ROOT_USERNAME=admin ^
-    -e MONGO_INITDB_ROOT_PASSWORD=tradingagents123 ^
+    -e MONGO_INITDB_ROOT_PASSWORD=%DB_PASSWORD% ^
     -e MONGO_INITDB_DATABASE=tradingagents ^
     --restart unless-stopped ^
-    mongo:4.4
+    mongo:7.0
 
 if %errorlevel% equ 0 (
     echo [OK] MongoDB started successfully
@@ -36,7 +45,7 @@ docker run -d ^
     --name tradingagents-redis ^
     -p 6379:6379 ^
     --restart unless-stopped ^
-    redis:latest redis-server --appendonly yes --requirepass tradingagents123
+    redis:latest redis-server --appendonly yes --requirepass %DB_PASSWORD%
 
 if %errorlevel% equ 0 (
     echo [OK] Redis started successfully
@@ -57,11 +66,11 @@ echo Debug Services Started!
 echo ========================================
 echo MongoDB: localhost:27017
 echo   Username: admin
-echo   Password: tradingagents123
+echo   Password: %DB_PASSWORD%
 echo   Database: tradingagents
 echo.
 echo Redis: localhost:6379
-echo   Password: tradingagents123
+echo   Password: %DB_PASSWORD%
 echo.
 echo To stop services: docker stop tradingagents-mongodb tradingagents-redis
 echo.

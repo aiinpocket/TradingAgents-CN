@@ -119,6 +119,18 @@ function tradingApp() {
       // 預設載入熱門特區
       this.loadTrending();
 
+      // 頁面可見性變更：隱藏時暫停重新整理，恢復時立即更新
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if (this._trendingTimer) {
+            clearTimeout(this._trendingTimer);
+            this._trendingTimer = null;
+          }
+        } else if (this.tab === 'trending') {
+          this.loadTrending();
+        }
+      });
+
       // 頁面卸載時清理 EventSource，並在分析進行中顯示警告
       window.addEventListener('beforeunload', (e) => {
         if (this.eventSource) {

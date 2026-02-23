@@ -7,6 +7,15 @@ echo ========================================
 echo TradingAgents Docker Service Startup
 echo ========================================
 
+REM 從環境變數讀取密碼，未設定時使用預設值
+if "%DB_PASSWORD%"=="" set DB_PASSWORD=changeme
+if "%DB_PASSWORD%"=="changeme" (
+    echo.
+    echo [WARNING] DB_PASSWORD 未設定，使用預設密碼 changeme
+    echo 建議設定安全密碼: set DB_PASSWORD=your_secure_password
+    echo.
+)
+
 REM 檢查Docker是否執行
 echo Checking Docker service status...
 docker version >nul 2>&1
@@ -27,11 +36,11 @@ docker run -d ^
     --name tradingagents-mongodb ^
     -p 27017:27017 ^
     -e MONGO_INITDB_ROOT_USERNAME=admin ^
-    -e MONGO_INITDB_ROOT_PASSWORD=tradingagents123 ^
+    -e MONGO_INITDB_ROOT_PASSWORD=%DB_PASSWORD% ^
     -e MONGO_INITDB_DATABASE=tradingagents ^
     -v mongodb_data:/data/db ^
     --restart unless-stopped ^
-    mongo:4.4
+    mongo:7.0
 
 if %errorlevel% equ 0 (
     echo [OK] MongoDB started successfully - Port: 27017
@@ -46,7 +55,7 @@ docker run -d ^
     -p 6379:6379 ^
     -v redis_data:/data ^
     --restart unless-stopped ^
-    redis:latest redis-server --appendonly yes --requirepass tradingagents123
+    redis:latest redis-server --appendonly yes --requirepass %DB_PASSWORD%
 
 if %errorlevel% equ 0 (
     echo [OK] Redis started successfully - Port: 6379
@@ -63,7 +72,7 @@ echo Starting Redis Commander...
 docker run -d ^
     --name tradingagents-redis-commander ^
     -p 8081:8081 ^
-    -e REDIS_HOSTS=local:tradingagents-redis:6379:0:tradingagents123 ^
+    -e REDIS_HOSTS=local:tradingagents-redis:6379:0:%DB_PASSWORD% ^
     --link tradingagents-redis:redis ^
     --restart unless-stopped ^
     rediscommander/redis-commander:latest
@@ -84,15 +93,15 @@ echo Docker services startup completed!
 echo ========================================
 echo.
 echo MongoDB:
-echo    - Connection: mongodb://admin:tradingagents123@localhost:27017/tradingagents
+echo    - Connection: mongodb://admin:%DB_PASSWORD%@localhost:27017/tradingagents
 echo    - Port: 27017
 echo    - Username: admin
-echo    - Password: tradingagents123
+echo    - Password: %DB_PASSWORD%
 echo.
 echo Redis:
 echo    - Connection: redis://localhost:6379
 echo    - Port: 6379
-echo    - Password: tradingagents123
+echo    - Password: %DB_PASSWORD%
 echo.
 echo Redis Commander:
 echo    - Web Interface: http://localhost:8081

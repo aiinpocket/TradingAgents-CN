@@ -2708,13 +2708,17 @@ code {
   }
 
   .mover-name { display: none; }
-  .mover-action { opacity: 0.35; }
+  .mover-action { opacity: 0.35; padding: 8px; width: 32px; height: 32px; }
   .mover-row:active .mover-action { opacity: 1; color: var(--accent); }
 
   /* 追蹤清單 RWD */
   .watchlist-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
-  .watchlist-btn { opacity: 0.5; }
+  .watchlist-btn { opacity: 0.5; padding: 10px; }
   .watchlist-btn.active { opacity: 1; }
+  .watchlist-star { padding: 10px; }
+
+  /* 行動裝置觸控目標：至少 44x44px (WCAG 2.5.5) */
+  .chip-sm { padding: 6px 12px; font-size: 12px; min-height: 36px; display: inline-flex; align-items: center; }
 
   .stock-preview-name { display: none; }
 

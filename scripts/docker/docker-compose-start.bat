@@ -6,6 +6,15 @@ echo ========================================
 echo TradingAgents Docker Compose
 echo ========================================
 
+REM 從環境變數讀取密碼，未設定時使用預設值
+if "%DB_PASSWORD%"=="" set DB_PASSWORD=changeme
+if "%DB_PASSWORD%"=="changeme" (
+    echo.
+    echo [WARNING] DB_PASSWORD 未設定，使用預設密碼 changeme
+    echo 建議設定安全密碼: set DB_PASSWORD=your_secure_password
+    echo.
+)
+
 REM Docker Compose
 echo Docker Compose...
 docker-compose --version >nul 2>&1
@@ -25,18 +34,18 @@ echo  ...
 docker-compose up -d mongodb redis redis-commander
 
 if %errorlevel% equ 0 (
-echo  
+echo
 ) else (
-echo  
+echo
 pause
 exit /b 1
 )
 
-REM 
+REM
 echo  ...
 timeout /t 10 /nobreak >nul
 
-REM 
+REM
 echo  ...
 docker-compose ps
 
@@ -50,35 +59,35 @@ timeout /t 5 /nobreak >nul
 goto healthcheck_loop
 )
 
-echo  
+echo
 
 echo.
 echo  :
 echo ========================================
 echo  MongoDB:
-echo    - : mongodb://admin:tradingagents123@localhost:27017/tradingagents
+echo    - : mongodb://admin:%DB_PASSWORD%@localhost:27017/tradingagents
 echo    - : 27017
 echo    - : admin
-echo    - : tradingagents123
+echo    - : %DB_PASSWORD%
 echo.
 echo  Redis:
 echo    - : redis://localhost:6379
 echo    - : 6379
-echo    - : tradingagents123
+echo    - : %DB_PASSWORD%
 echo.
 echo  :
 echo    - Redis Commander: http://localhost:8081
 echo    - Mongo Express: http://localhost:8082 ()
 echo.
 
-REM 
+REM
 set /p start_management="Mongo Express? (y/N): "
 if /i "%start_management%"=="y" (
 echo  Mongo Express...
 docker-compose --profile management up -d mongo-express
 if %errorlevel% equ 0 (
 echo  Mongo Express: http://localhost:8082
-echo    : admin, : tradingagents123
+echo    : admin, : %DB_PASSWORD%
 ) else (
 echo  Mongo Express
 )

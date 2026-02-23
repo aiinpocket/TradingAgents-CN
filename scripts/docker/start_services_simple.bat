@@ -5,6 +5,15 @@ echo ========================================
 echo TradingAgents Docker Services
 echo ========================================
 
+REM 從環境變數讀取密碼，未設定時使用預設值
+if "%DB_PASSWORD%"=="" set DB_PASSWORD=changeme
+if "%DB_PASSWORD%"=="changeme" (
+    echo.
+    echo [WARNING] DB_PASSWORD 未設定，使用預設密碼 changeme
+    echo 建議設定安全密碼: set DB_PASSWORD=your_secure_password
+    echo.
+)
+
 echo Checking Docker...
 docker version >nul 2>&1
 if %errorlevel% neq 0 (
@@ -14,16 +23,16 @@ if %errorlevel% neq 0 (
 )
 
 echo Starting MongoDB...
-docker run -d --name tradingagents-mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=tradingagents123 -e MONGO_INITDB_DATABASE=tradingagents -v mongodb_data:/data/db --restart unless-stopped mongo:4.4
+docker run -d --name tradingagents-mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=%DB_PASSWORD% -e MONGO_INITDB_DATABASE=tradingagents -v mongodb_data:/data/db --restart unless-stopped mongo:7.0
 
 echo Starting Redis...
-docker run -d --name tradingagents-redis -p 6379:6379 -v redis_data:/data --restart unless-stopped redis:latest redis-server --appendonly yes --requirepass tradingagents123
+docker run -d --name tradingagents-redis -p 6379:6379 -v redis_data:/data --restart unless-stopped redis:latest redis-server --appendonly yes --requirepass %DB_PASSWORD%
 
 echo Waiting 5 seconds...
 timeout /t 5 /nobreak >nul
 
 echo Starting Redis Commander...
-docker run -d --name tradingagents-redis-commander -p 8081:8081 -e REDIS_HOSTS=local:tradingagents-redis:6379:0:tradingagents123 --link tradingagents-redis:redis --restart unless-stopped rediscommander/redis-commander:latest
+docker run -d --name tradingagents-redis-commander -p 8081:8081 -e REDIS_HOSTS=local:tradingagents-redis:6379:0:%DB_PASSWORD% --link tradingagents-redis:redis --restart unless-stopped rediscommander/redis-commander:latest
 
 echo.
 echo Service Status:
@@ -34,11 +43,11 @@ echo ========================================
 echo Services Started!
 echo ========================================
 echo MongoDB: localhost:27017
-echo Redis: localhost:6379  
+echo Redis: localhost:6379
 echo Redis Commander: http://localhost:8081
 echo.
 echo Username: admin
-echo Password: tradingagents123
+echo Password: %DB_PASSWORD%
 echo.
 
 pause

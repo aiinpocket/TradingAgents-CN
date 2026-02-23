@@ -73,7 +73,21 @@ def _mw_t(key: str, request: Request) -> str:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """應用程式生命週期管理"""
+    import asyncio
+
     logger.info("TradingAgents API 啟動中...")
+
+    # 背景預熱趨勢資料快取，讓第一位使用者不需等待
+    async def _prewarm_trending():
+        try:
+            from app.routers.trending import get_market_overview
+            await get_market_overview()
+            logger.info("趨勢資料快取預熱完成")
+        except Exception as e:
+            logger.warning(f"趨勢資料預熱失敗（不影響正常運作）: {e}")
+
+    asyncio.create_task(_prewarm_trending())
+
     yield
     logger.info("TradingAgents API 關閉")
 
