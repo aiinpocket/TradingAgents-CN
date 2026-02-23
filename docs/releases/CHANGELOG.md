@@ -45,6 +45,18 @@ v0.4.4 對趨勢資料抓取進行並行化改造，新增背景定時刷新機�
 - **分析師去重**: AnalysisRequest 自動去除重複分析師
 - **清理未使用 import**: timedelta、json、as_completed、StreamingResponse、import re as _re
 
+#### 無障礙強化 (a11y)
+- **skip-to-content 快捷連結**: 鍵盤使用者可按 Tab 跳至主要內容，避免逐一 Tab 過導覽列
+- **AI loading role="status"**: 加入 aria-live="polite"，螢幕閱讀器自動朗讀載入狀態
+- **progress log aria-relevant**: 加入 aria-relevant="additions"，僅播報新增訊息
+- **tabpanel tabindex="0"**: 所有 tabpanel 可被鍵盤聚焦，符合 WAI-ARIA Tabs 規範
+- **歷史表格 ARIA table**: 加入 role="table/row/columnheader/cell"，螢幕閱讀器正確解讀表格結構
+- **WCAG AA 色彩對比**: 暗色模式 --text-sub #9ca3af -> #b0b8c4 (~5.0:1)、--text-faint #a0a8b4 -> #b4bcc8 (~5.2:1)
+- **section-hint 透明度移除**: 移除 opacity:0.7 避免與淺色文字疊加後低於 4.5:1
+- **行動版觸控目標**: .chip-sm min-height 36px -> 44px、.watchlist-star 44x44px
+- **watchlist-btn 鍵盤可見**: opacity 0 -> 0.15，鍵盤聚焦時可見
+- **新增 i18n key**: a11y.skip_to_content、a11y.history_table（zh-TW/en）
+
 #### i18n 清理
 - **移除 11 個未使用翻譯鍵**: status.api_label、analysis.symbol_placeholder、common.error、trending.title/subtitle/loading/error/view_more/rank、watchlist.empty/empty_desc
 - **更新 refresh_hint**: 反映後端 5 分鐘 + 前端 10 分鐘的雙層刷新機制

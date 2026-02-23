@@ -175,6 +175,8 @@ const I18N_MESSAGES = {
     'a11y.switch_lang': '切換至英文',
     'a11y.main_nav': '主選單',
     'a11y.loading': '載入中',
+    'a11y.skip_to_content': '跳至主要內容',
+    'a11y.history_table': '分析歷史記錄',
 
     // 通用
     'common.no_data': '暫無資料',
@@ -352,6 +354,8 @@ const I18N_MESSAGES = {
     'a11y.switch_lang': 'Switch to Chinese',
     'a11y.main_nav': 'Main navigation',
     'a11y.loading': 'Loading',
+    'a11y.skip_to_content': 'Skip to content',
+    'a11y.history_table': 'Analysis history',
 
     // Common
     'common.no_data': 'No data',

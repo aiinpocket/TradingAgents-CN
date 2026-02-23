@@ -1,5 +1,24 @@
 /* TradingAgents - 專業金融分析介面 */
 
+/* 無障礙快捷連結 - 預設隱藏，Tab 聚焦時顯示 */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 10000;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
 [x-cloak] { display: none !important; }
 
 :root {
@@ -1830,7 +1849,6 @@ code {
   font-size: 10px;
   font-weight: 400;
   color: var(--text-faint);
-  opacity: 0.7;
   margin-left: 8px;
 }
 
@@ -2457,7 +2475,7 @@ code {
   padding: 4px;
   cursor: pointer;
   color: var(--text-faint);
-  opacity: 0;
+  opacity: 0.15;
   transition: opacity 0.12s, color 0.12s, transform 0.1s;
   line-height: 0;
   flex-shrink: 0;
@@ -2529,9 +2547,9 @@ code {
   --border: #383c44;
   --border-light: #32363e;
   --text: #e1e4e8;
-  --text-sub: #9ca3af;
-  --text-faint: #a0a8b4;
-  --text-tertiary: #a0a8b4;
+  --text-sub: #b0b8c4;
+  --text-faint: #b4bcc8;
+  --text-tertiary: #b4bcc8;
   --border-card: #383c44;
   --up: #3fb950;
   --down: #f85149;
@@ -2759,10 +2777,10 @@ code {
   .watchlist-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
   .watchlist-btn { opacity: 0.5; padding: 10px; }
   .watchlist-btn.active { opacity: 1; }
-  .watchlist-star { padding: 10px; }
+  .watchlist-star { padding: 10px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 
   /* 行動裝置觸控目標：至少 44x44px (WCAG 2.5.5) */
-  .chip-sm { padding: 6px 12px; font-size: 12px; min-height: 36px; display: inline-flex; align-items: center; }
+  .chip-sm { padding: 6px 12px; font-size: 12px; min-height: 44px; display: inline-flex; align-items: center; }
 
   .stock-preview-name { display: none; }
 

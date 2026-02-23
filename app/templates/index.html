@@ -27,13 +27,16 @@
   <script async src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.4.4a"></script>
+  <script src="/static/js/i18n.js?v=0.4.4b"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4a">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4b">
 </head>
 <body x-data="tradingApp()" x-init="init()">
+
+  <!-- 跳至主要內容（無障礙快捷鍵） -->
+  <a href="#main-content" class="skip-link" x-text="t('a11y.skip_to_content')">Skip to content</a>
 
   <!-- 頂部導覽列 -->
   <header class="topbar">
@@ -78,7 +81,7 @@
     </div>
   </header>
 
-  <main class="container">
+  <main id="main-content" class="container">
 
     <!-- ==================== 熱門特區 ==================== -->
     <div x-show="tab === 'trending'" x-transition.opacity.duration.200ms :inert="tab !== 'trending'">
@@ -405,7 +408,7 @@
         </div>
 
         <!-- 載入中 -->
-        <div class="ai-loading" x-show="aiAnalysisLoading">
+        <div class="ai-loading" x-show="aiAnalysisLoading" role="status" aria-live="polite">
           <div class="ai-loading-animation">
             <div class="ai-pulse"></div>
             <div class="ai-pulse delay-1"></div>
@@ -659,7 +662,7 @@
           </div>
         </div>
 
-        <div class="log-container" x-ref="progressLog" role="log" aria-live="polite" :aria-label="t('analysis.progress_log')">
+        <div class="log-container" x-ref="progressLog" role="log" aria-live="polite" aria-relevant="additions" :aria-label="t('analysis.progress_log')">
           <template x-for="(msg, idx) in progressMessages" :key="idx">
             <div class="log-line" :class="{ 'log-latest': idx === progressMessages.length - 1 }">
               <span class="log-time" x-text="formatTime(idx)"></span>
@@ -831,12 +834,12 @@
         </div>
 
         <div class="panel report-body">
-          <div id="panel-market" role="tabpanel" aria-labelledby="tab-market" x-show="reportTab === 'market'" x-html="renderMarkdown(getReport('market_report'))"></div>
-          <div id="panel-fundamentals" role="tabpanel" aria-labelledby="tab-fundamentals" x-show="reportTab === 'fundamentals'" x-html="renderMarkdown(getReport('fundamentals_report'))"></div>
-          <div id="panel-news" role="tabpanel" aria-labelledby="tab-news" x-show="reportTab === 'news'" x-html="renderMarkdown(getReport('news_report'))"></div>
-          <div id="panel-sentiment" role="tabpanel" aria-labelledby="tab-sentiment" x-show="reportTab === 'sentiment'" x-html="renderMarkdown(getReport('sentiment_report'))"></div>
-          <div id="panel-risk" role="tabpanel" aria-labelledby="tab-risk" x-show="reportTab === 'risk'" x-html="renderMarkdown(getReport('risk_assessment'))"></div>
-          <div id="panel-debate" role="tabpanel" aria-labelledby="tab-debate" x-show="reportTab === 'debate'" x-html="renderDebate(getReport('investment_debate_state'))"></div>
+          <div id="panel-market" role="tabpanel" tabindex="0" aria-labelledby="tab-market" x-show="reportTab === 'market'" x-html="renderMarkdown(getReport('market_report'))"></div>
+          <div id="panel-fundamentals" role="tabpanel" tabindex="0" aria-labelledby="tab-fundamentals" x-show="reportTab === 'fundamentals'" x-html="renderMarkdown(getReport('fundamentals_report'))"></div>
+          <div id="panel-news" role="tabpanel" tabindex="0" aria-labelledby="tab-news" x-show="reportTab === 'news'" x-html="renderMarkdown(getReport('news_report'))"></div>
+          <div id="panel-sentiment" role="tabpanel" tabindex="0" aria-labelledby="tab-sentiment" x-show="reportTab === 'sentiment'" x-html="renderMarkdown(getReport('sentiment_report'))"></div>
+          <div id="panel-risk" role="tabpanel" tabindex="0" aria-labelledby="tab-risk" x-show="reportTab === 'risk'" x-html="renderMarkdown(getReport('risk_assessment'))"></div>
+          <div id="panel-debate" role="tabpanel" tabindex="0" aria-labelledby="tab-debate" x-show="reportTab === 'debate'" x-html="renderDebate(getReport('investment_debate_state'))"></div>
         </div>
 
         <p class="disclaimer" x-text="t('result.disclaimer')"></p>
@@ -866,24 +869,24 @@
           <p class="empty-desc" x-text="t('history.empty_desc')"></p>
           <button class="btn-accent btn-sm" @click="tab = 'analysis'" x-text="t('history.go_analyze')"></button>
         </div>
-        <div class="history-table" x-show="historyList.length > 0">
-          <div class="history-row history-header-row">
-            <span class="h-symbol" x-text="t('history.col_symbol')"></span>
-            <span class="h-date" x-text="t('history.col_date')"></span>
-            <span class="h-provider" x-text="t('history.col_provider')"></span>
-            <span class="h-status" x-text="t('history.col_status')"></span>
+        <div class="history-table" x-show="historyList.length > 0" role="table" :aria-label="t('a11y.history_table')">
+          <div class="history-row history-header-row" role="row">
+            <span class="h-symbol" role="columnheader" x-text="t('history.col_symbol')"></span>
+            <span class="h-date" role="columnheader" x-text="t('history.col_date')"></span>
+            <span class="h-provider" role="columnheader" x-text="t('history.col_provider')"></span>
+            <span class="h-status" role="columnheader" x-text="t('history.col_status')"></span>
           </div>
           <template x-for="item in historyList" :key="item.analysis_id">
-            <div class="history-row" role="button" tabindex="0"
+            <div class="history-row" role="row" tabindex="0"
                  @click="item.status === 'completed' && loadAnalysisResult(item.analysis_id)"
                  @keydown.enter="item.status === 'completed' && loadAnalysisResult(item.analysis_id)"
                  @keydown.space.prevent="item.status === 'completed' && loadAnalysisResult(item.analysis_id)"
                  :class="{ 'history-clickable': item.status === 'completed' }"
                  :aria-label="t('a11y.view_analysis') + ' ' + item.stock_symbol + ' ' + item.analysis_date">
-              <span class="h-symbol" x-text="'$' + item.stock_symbol"></span>
-              <span class="h-date" x-text="item.analysis_date"></span>
-              <span class="h-provider" x-text="(item.llm_provider || '').toUpperCase()"></span>
-              <span class="h-status">
+              <span class="h-symbol" role="cell" x-text="'$' + item.stock_symbol"></span>
+              <span class="h-date" role="cell" x-text="item.analysis_date"></span>
+              <span class="h-provider" role="cell" x-text="(item.llm_provider || '').toUpperCase()"></span>
+              <span class="h-status" role="cell">
                 <span class="status-badge" :class="'status-' + item.status" x-text="statusText(item.status)"></span>
               </span>
             </div>
@@ -902,6 +905,6 @@
     <span class="footer-open-source" x-text="t('footer.open_source')"></span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.4.4a"></script>
+  <script src="/static/js/app.js?v=0.4.4b"></script>
 </body>
 </html>
