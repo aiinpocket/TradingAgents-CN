@@ -29,6 +29,118 @@ except ImportError:
     TOKEN_TRACKING_ENABLED = False
     logger.warning("Token追蹤功能未啟用")
 
+# ---------------------------------------------------------------------------
+# 進度訊息 i18n（前端可見）
+# ---------------------------------------------------------------------------
+_PROGRESS_MESSAGES: dict[str, dict[str, str]] = {
+    "validating_data": {
+        "zh-TW": "驗證股票代碼並預取得資料...",
+        "en": "Validating stock symbol and pre-fetching data...",
+    },
+    "validation_failed": {
+        "zh-TW": "股票資料驗證失敗: {detail}",
+        "en": "Stock data validation failed: {detail}",
+    },
+    "data_ready": {
+        "zh-TW": "資料準備完成: {name} ({market})",
+        "en": "Data ready: {name} ({market})",
+    },
+    "prefetch_error": {
+        "zh-TW": "資料預取得過程中發生錯誤: {detail}",
+        "en": "Error during data pre-fetch: {detail}",
+    },
+    "retry_suggestion": {
+        "zh-TW": "請檢查網路連接或稍後重試",
+        "en": "Please check your network connection or try again later",
+    },
+    "starting_analysis": {
+        "zh-TW": "開始股票分析...",
+        "en": "Starting stock analysis...",
+    },
+    "estimated_cost": {
+        "zh-TW": "預估分析成本: ${cost}",
+        "en": "Estimated analysis cost: ${cost}",
+    },
+    "checking_env": {
+        "zh-TW": "檢查環境變數配置...",
+        "en": "Checking environment configuration...",
+    },
+    "env_verified": {
+        "zh-TW": "環境變數驗證通過",
+        "en": "Environment configuration verified",
+    },
+    "configuring": {
+        "zh-TW": "配置分析參數...",
+        "en": "Configuring analysis parameters...",
+    },
+    "creating_dirs": {
+        "zh-TW": "建立必要的目錄...",
+        "en": "Creating required directories...",
+    },
+    "preparing_us_stock": {
+        "zh-TW": "準備分析美股: {symbol}",
+        "en": "Preparing to analyze: {symbol}",
+    },
+    "initializing_engine": {
+        "zh-TW": "初始化分析引擎...",
+        "en": "Initializing analysis engine...",
+    },
+    "analyzing_symbol": {
+        "zh-TW": "開始分析 {symbol}，預計需要數分鐘...",
+        "en": "Analyzing {symbol}, this may take a few minutes...",
+    },
+    "formatting_results": {
+        "zh-TW": "分析完成，正在整理結果...",
+        "en": "Analysis complete, formatting results...",
+    },
+    "saving_report": {
+        "zh-TW": "正在保存分析報告...",
+        "en": "Saving analysis report...",
+    },
+    "report_saved_all": {
+        "zh-TW": "分析報告已保存到資料庫和本地檔案",
+        "en": "Report saved to database and local files",
+    },
+    "report_saved_local": {
+        "zh-TW": "本地報告已保存，但資料庫保存失敗",
+        "en": "Local report saved, but database save failed",
+    },
+    "report_save_failed": {
+        "zh-TW": "報告保存失敗，但分析已完成",
+        "en": "Report save failed, but analysis is complete",
+    },
+    "report_save_error": {
+        "zh-TW": "報告保存出錯，但分析已完成",
+        "en": "Report save error, but analysis is complete",
+    },
+    "analysis_success": {
+        "zh-TW": "分析成功完成！",
+        "en": "Analysis completed successfully!",
+    },
+    "cost_recorded": {
+        "zh-TW": "記錄使用成本: ${cost}",
+        "en": "Usage cost recorded: ${cost}",
+    },
+    "analysis_process_error": {
+        "zh-TW": "分析過程中發生錯誤，請查看伺服器日誌",
+        "en": "Error during analysis, please check server logs",
+    },
+    "analysis_retry_hint": {
+        "zh-TW": "分析失敗，請稍後重試或調整參數",
+        "en": "Analysis failed, please try again later or adjust parameters",
+    },
+}
+
+
+def _p(key: str, lang: str = "zh-TW", **kwargs) -> str:
+    """取得 i18n 進度訊息"""
+    msgs = _PROGRESS_MESSAGES.get(key, {})
+    msg = msgs.get(lang, msgs.get("zh-TW", key))
+    if kwargs:
+        msg = msg.format(**kwargs)
+    return msg
+
+
 # 英文投資建議與中文的映射
 _ACTION_TRANSLATION = {
     'BUY': '買入', 'SELL': '賣出', 'HOLD': '持有',
@@ -101,7 +213,7 @@ def extract_risk_assessment(state):
         logger.info(f"提取風險評估資料時出錯: {e}")
         return None
 
-def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, llm_provider, llm_model, market_type="美股", progress_callback=None):
+def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, llm_provider, llm_model, market_type="美股", progress_callback=None, lang="zh-TW"):
     """執行股票分析
 
     Args:
@@ -112,6 +224,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         llm_provider: LLM 提供商 (openai/anthropic)
         llm_model: 大模型名稱
         progress_callback: 進度回呼函式，用於更新UI狀態
+        lang: 語言偏好（zh-TW / en），用於進度訊息 i18n
     """
 
     _total_steps = 8
@@ -129,7 +242,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     session_id = f"analysis_{uuid.uuid4().hex[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     # 1. 資料預取得和驗證階段
-    update_progress("驗證股票代碼並預取得資料...", 1)
+    update_progress(_p("validating_data", lang), 1)
 
     try:
         from tradingagents.utils.stock_validator import prepare_stock_data
@@ -143,7 +256,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         )
 
         if not preparation_result.is_valid:
-            error_msg = f"股票資料驗證失敗: {preparation_result.error_message}"
+            error_msg = _p("validation_failed", lang, detail=preparation_result.error_message)
             update_progress(error_msg)
             logger.error(f"[{session_id}] {error_msg}")
 
@@ -157,20 +270,20 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             }
 
         # 資料預取得成功
-        success_msg = f"資料準備完成: {preparation_result.stock_name} ({preparation_result.market_type})"
+        success_msg = _p("data_ready", lang, name=preparation_result.stock_name, market=preparation_result.market_type)
         update_progress(success_msg)  # 使用智慧檢測，不再硬編碼步驟
         logger.info(f"[{session_id}] {success_msg}")
         logger.info(f"[{session_id}] 快取狀態: {preparation_result.cache_status}")
 
     except Exception as e:
-        error_msg = f"資料預取得過程中發生錯誤: {str(e)}"
+        error_msg = _p("prefetch_error", lang, detail=str(e))
         update_progress(error_msg)
         logger.error(f"[{session_id}] {error_msg}")
 
         return {
             'success': False,
             'error': error_msg,
-            'suggestion': "請檢查網路連接或稍後重試",
+            'suggestion': _p("retry_suggestion", lang),
             'stock_symbol': stock_symbol,
             'analysis_date': analysis_date,
             'session_id': session_id
@@ -198,7 +311,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                    'event_type': 'web_analysis_start'
                })
 
-    update_progress("開始股票分析...", 2)
+    update_progress(_p("starting_analysis", lang), 2)
 
     # 估算Token使用（用於成本預估）
     if TOKEN_TRACKING_ENABLED:
@@ -206,10 +319,10 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         estimated_output = 1000 * len(analysts)  # 估算每個分析師1000個輸出token
         estimated_cost = token_tracker.estimate_cost(llm_provider, llm_model, estimated_input, estimated_output)
 
-        update_progress(f"預估分析成本: ${estimated_cost:.4f}")
+        update_progress(_p("estimated_cost", lang, cost=f"{estimated_cost:.4f}"))
 
     # 驗證環境變數
-    update_progress("檢查環境變數配置...", 3)
+    update_progress(_p("checking_env", lang), 3)
     finnhub_key = os.getenv("FINNHUB_API_KEY")
 
     logger.info("環境變數檢查:")
@@ -218,7 +331,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     if not finnhub_key:
         logger.warning("FINNHUB_API_KEY 未設定，部分美股資料功能可能受限")
 
-    update_progress("環境變數驗證通過")
+    update_progress(_p("env_verified", lang))
 
     try:
         # 匯入必要的模組
@@ -226,7 +339,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         from tradingagents.default_config import DEFAULT_CONFIG
 
         # 建立配置
-        update_progress("配置分析參數...", 4)
+        update_progress(_p("configuring", lang), 4)
         config = DEFAULT_CONFIG.copy()
         config["llm_provider"] = llm_provider
         config["deep_think_llm"] = llm_model
@@ -308,7 +421,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
                 config["data_cache_dir"] = str(project_root / "tradingagents" / "dataflows" / "data_cache")
 
         # 確保目錄存在
-        update_progress("建立必要的目錄...")
+        update_progress(_p("creating_dirs", lang))
         os.makedirs(config["data_dir"], exist_ok=True)
         os.makedirs(config["results_dir"], exist_ok=True)
         os.makedirs(config["data_cache_dir"], exist_ok=True)
@@ -331,16 +444,16 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 美股代碼轉為大寫
         formatted_symbol = stock_symbol.upper()
         logger.debug(f" 美股代碼轉大寫: '{stock_symbol}' -> '{formatted_symbol}'")
-        update_progress(f"準備分析美股: {formatted_symbol}")
+        update_progress(_p("preparing_us_stock", lang, symbol=formatted_symbol))
 
         logger.debug(f" 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
         # 初始化交易圖
-        update_progress("初始化分析引擎...", 5)
+        update_progress(_p("initializing_engine", lang), 5)
         graph = TradingAgentsGraph(analysts, config=config, debug=False)
 
         # 執行分析
-        update_progress(f"開始分析 {formatted_symbol}，預計需要數分鐘...", 6)
+        update_progress(_p("analyzing_symbol", lang, symbol=formatted_symbol), 6)
         logger.debug(" ===== 呼叫graph.propagate =====")
         logger.debug(" 傳遞給graph.propagate的參數:")
         logger.debug(f" symbol: '{formatted_symbol}'")
@@ -353,7 +466,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         logger.debug(f" decision內容: {decision}")
 
         # 格式化結果
-        update_progress("分析完成，正在整理結果...", 7)
+        update_progress(_p("formatting_results", lang), 7)
 
         # 提取風險評估資料
         risk_assessment = extract_risk_assessment(state)
@@ -379,7 +492,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             )
 
             if usage_record:
-                update_progress(f"記錄使用成本: ${usage_record.cost:.4f}")
+                update_progress(_p("cost_recorded", lang, cost=f"{usage_record.cost:.4f}"))
 
         results = {
             'stock_symbol': stock_symbol,
@@ -424,7 +537,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         # 保存分析報告到本地和MongoDB
         try:
-            update_progress("正在保存分析報告...")
+            update_progress(_p("saving_report", lang))
             from .report_exporter import save_analysis_report, save_modular_reports_to_results_dir
             
             # 1. 保存分模組報告到本地目錄
@@ -446,19 +559,19 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             
             if save_success:
                 logger.info(" [MongoDB保存] 分析報告已成功保存到MongoDB")
-                update_progress("分析報告已保存到資料庫和本地檔案")
+                update_progress(_p("report_saved_all", lang))
             else:
                 logger.warning(" [MongoDB保存] MongoDB報告保存失敗")
                 if local_files:
-                    update_progress("本地報告已保存，但資料庫保存失敗")
+                    update_progress(_p("report_saved_local", lang))
                 else:
-                    update_progress("報告保存失敗，但分析已完成")
+                    update_progress(_p("report_save_failed", lang))
                 
         except Exception as save_error:
             logger.error(f" [報告保存] 保存分析報告時發生錯誤: {str(save_error)}")
-            update_progress("報告保存出錯，但分析已完成")
+            update_progress(_p("report_save_error", lang))
 
-        update_progress("分析成功完成！", 8)
+        update_progress(_p("analysis_success", lang), 8)
         return results
 
     except Exception as e:
@@ -493,9 +606,9 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             'state': {},  # 空狀態，將顯示占位符
             'decision': {},  # 空決策
             'success': False,
-            'error': '分析過程中發生錯誤，請查看伺服器日誌',
+            'error': _p("analysis_process_error", lang),
             'is_demo': False,
-            'error_reason': '分析失敗，請稍後重試或調整參數'
+            'error_reason': _p("analysis_retry_hint", lang)
         }
 
 def format_analysis_results(results):

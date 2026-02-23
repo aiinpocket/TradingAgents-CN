@@ -420,6 +420,7 @@ async def _run_analysis(analysis_id: str):
             data["research_depth"],
             data["llm_provider"],
             data["llm_model"],
+            lang,
         )
 
         if result.get("success"):
@@ -463,7 +464,7 @@ async def _run_analysis(analysis_id: str):
             logging.getLogger("api").error(f"分析 ...{analysis_id[-4:]} 異常: {e}", exc_info=True)
 
 
-def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, model):
+def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, model, lang="zh-TW"):
     """同步執行分析（在執行緒池中執行）"""
     data = _active_analyses.get(analysis_id)
 
@@ -493,6 +494,7 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
         llm_provider=provider,
         llm_model=model,
         progress_callback=progress_callback,
+        lang=lang,
     )
 
 

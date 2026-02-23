@@ -64,6 +64,7 @@ function tradingApp() {
     pollRetryCount: 0,
     elapsedText: '',
     _elapsedTimer: null,
+    _scrollPending: false,
 
     // 熱門特區
     trendingData: { indices: [], movers: { gainers: [], losers: [] }, news: [] },
@@ -118,8 +119,12 @@ function tradingApp() {
       // 預設載入熱門特區
       this.loadTrending();
 
-      // 分析進行中離開頁面時警告
+      // 頁面卸載時清理 EventSource，並在分析進行中顯示警告
       window.addEventListener('beforeunload', (e) => {
+        if (this.eventSource) {
+          this.eventSource.close();
+          this.eventSource = null;
+        }
         if (this.analysisRunning) {
           e.preventDefault();
           e.returnValue = '';
@@ -410,10 +415,14 @@ function tradingApp() {
             }
             this.connectionRetries = 0;
 
-            this.$nextTick(() => {
-              const log = this.$refs.progressLog;
-              if (log) log.scrollTop = log.scrollHeight;
-            });
+            if (!this._scrollPending) {
+              this._scrollPending = true;
+              setTimeout(() => {
+                this._scrollPending = false;
+                const log = this.$refs.progressLog;
+                if (log) log.scrollTop = log.scrollHeight;
+              }, 500);
+            }
 
           } else if (data.type === 'completed') {
             this.progressPercent = 100;
