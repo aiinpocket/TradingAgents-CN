@@ -616,11 +616,13 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
                     system=_TRANSLATE_SYSTEM_PROMPT,
                     messages=[{"role": "user", "content": user_content}],
                 )
-                # 從回應文字中解析 JSON
-                raw = resp.content[0].text
-                # 移除可能的 markdown code fence
-                if raw.strip().startswith("```"):
-                    raw = raw.strip().split("\n", 1)[1].rsplit("```", 1)[0]
+                # 從回應文字中解析 JSON（穩健處理 code fence 變體）
+                raw = resp.content[0].text.strip()
+                # 移除 markdown code fence（```json ... ``` 或 ``` ... ```）
+                import re as _re
+                fence_match = _re.search(r"```(?:json)?\s*\n([\s\S]*?)\n\s*```", raw)
+                if fence_match:
+                    raw = fence_match.group(1)
                 translated = json.loads(raw)
 
             logger.info(f"翻譯成功 (provider={provider}, model={model})")

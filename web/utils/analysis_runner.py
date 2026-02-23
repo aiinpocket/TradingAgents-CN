@@ -170,6 +170,23 @@ _PROGRESS_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "風險評估基於多角度分析，請結合個人風險承受能力做出投資決策",
         "en": "Risk assessment is based on multi-perspective analysis. Please consider your personal risk tolerance when making investment decisions",
     },
+    # format_analysis_results 預設值
+    "default_hold": {
+        "zh-TW": "持有",
+        "en": "Hold",
+    },
+    "default_reasoning": {
+        "zh-TW": "暫無分析推理",
+        "en": "No analysis reasoning available",
+    },
+    "default_reasoning_with_decision": {
+        "zh-TW": "基於多維度分析，建議{action}",
+        "en": "Based on multi-dimensional analysis, recommendation: {action}",
+    },
+    "default_reasoning_other": {
+        "zh-TW": "分析結果: {detail}",
+        "en": "Analysis result: {detail}",
+    },
 }
 
 
@@ -675,7 +692,7 @@ def format_analysis_results(results, lang="zh-TW"):
             'confidence': 0.7,  # 預設定信度
             'risk_score': 0.3,  # 預設風險分數
             'target_price': None,  # 字串格式沒有目標價格
-            'reasoning': f'基於多維度分析，建議{decision.strip().upper()}'
+            'reasoning': _p("default_reasoning_with_decision", lang, action=decision.strip().upper()),
         }
     elif isinstance(decision, dict):
         # 處理目標價格 - 確保正確提取數值
@@ -697,7 +714,7 @@ def format_analysis_results(results, lang="zh-TW"):
             target_price = None
 
         # 將英文投資建議轉換為中文
-        action = decision.get('action', '持有')
+        action = decision.get('action', _p("default_hold", lang))
         chinese_action = _ACTION_TRANSLATION.get(action, action)
 
         formatted_decision = {
@@ -705,16 +722,16 @@ def format_analysis_results(results, lang="zh-TW"):
             'confidence': decision.get('confidence', 0.5),
             'risk_score': decision.get('risk_score', 0.3),
             'target_price': target_price,
-            'reasoning': decision.get('reasoning', '暫無分析推理')
+            'reasoning': decision.get('reasoning', _p("default_reasoning", lang)),
         }
     else:
         # 處理其他類型
         formatted_decision = {
-            'action': '持有',
+            'action': _p("default_hold", lang),
             'confidence': 0.5,
             'risk_score': 0.3,
             'target_price': None,
-            'reasoning': f'分析結果: {str(decision)}'
+            'reasoning': _p("default_reasoning_other", lang, detail=str(decision)),
         }
     
     # 格式化狀態資訊
