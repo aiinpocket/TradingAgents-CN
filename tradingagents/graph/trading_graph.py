@@ -144,6 +144,8 @@ class TradingAgentsGraph:
                 [
                     # 統一工具
                     self.toolkit.get_stock_market_data_unified,
+                    # FinnHub 技術訊號（分析師 bind_tools 有用到）
+                    self.toolkit.get_finnhub_technical_signals,
                     # online tools
                     self.toolkit.get_YFin_data_online,
                     self.toolkit.get_stockstats_indicators_report_online,
@@ -174,6 +176,8 @@ class TradingAgentsGraph:
                 [
                     # 統一工具
                     self.toolkit.get_stock_fundamentals_unified,
+                    # 華爾街分析師共識資料（分析師 bind_tools 有用到）
+                    self.toolkit.get_finnhub_analyst_consensus,
                     # offline tools
                     self.toolkit.get_finnhub_company_insider_sentiment,
                     self.toolkit.get_finnhub_company_insider_transactions,
