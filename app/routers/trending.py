@@ -6,6 +6,7 @@
 import asyncio
 import os
 import json
+import random
 import time
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -33,7 +34,8 @@ _BG_REFRESH_INTERVAL = 300  # 背景刷新間隔：5 分鐘
 _cache: dict = {}
 _cache_lock = threading.Lock()
 
-# 公司名稱快取（幾乎不會改變，只在第一次抓取時填充）
+# 公司名稱快取（由 _STOCK_UNIVERSE 限制，約 50 筆；加上 200 上限防護）
+_MAX_COMPANY_NAMES = 200
 _company_names: dict[str, str] = {}
 _company_names_lock = threading.Lock()
 
@@ -216,7 +218,8 @@ def _fetch_movers_batch(batch: list[str]) -> list[dict]:
                     except Exception:
                         short_name = sym
                     with _company_names_lock:
-                        _company_names[sym] = short_name
+                        if len(_company_names) < _MAX_COMPANY_NAMES:
+                            _company_names[sym] = short_name
 
                 results.append({
                     "symbol": sym,
@@ -741,18 +744,30 @@ async def get_ai_analysis(lang: str = "zh-TW"):
 async def start_background_refresh():
     """啟動背景定時刷新趨勢資料。
 
-    每 5 分鐘（_BG_REFRESH_INTERVAL）重新抓取市場概覽，
+    每 5 分鐘（_BG_REFRESH_INTERVAL）+ 隨機 jitter 重新抓取市場概覽，
     確保快取始終有熱資料，使用者不需等待冷啟動。
     應在 FastAPI lifespan 中呼叫。
     """
-    logger.info(f"背景趨勢刷新已啟動（間隔 {_BG_REFRESH_INTERVAL} 秒）")
+    logger.info(f"背景趨勢刷新已啟動（基礎間隔 {_BG_REFRESH_INTERVAL} 秒）")
+    consecutive_failures = 0
     while True:
-        await asyncio.sleep(_BG_REFRESH_INTERVAL)
+        # 加入隨機 jitter（0~30 秒），避免多實例同時刷新
+        jitter = random.uniform(0, 30)
+        await asyncio.sleep(_BG_REFRESH_INTERVAL + jitter)
         try:
             # 清除過期快取，強制重新抓取
             with _cache_lock:
                 _cache.pop("overview", None)
-            await get_market_overview()
+            await asyncio.wait_for(get_market_overview(), timeout=60.0)
             logger.info("背景趨勢刷新完成")
+            consecutive_failures = 0
+        except asyncio.TimeoutError:
+            consecutive_failures += 1
+            logger.warning(
+                f"背景趨勢刷新逾時 60 秒（連續第 {consecutive_failures} 次失敗）"
+            )
         except Exception as e:
-            logger.warning(f"背景趨勢刷新失敗（不影響正常運作）: {e}")
+            consecutive_failures += 1
+            logger.warning(
+                f"背景趨勢刷新失敗（連續第 {consecutive_failures} 次）: {e}"
+            )

@@ -94,8 +94,10 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    # 關閉背景任務
+    # 關閉背景任務與執行緒池
     refresh_task.cancel()
+    from app.routers.trending import _TRENDING_EXECUTOR
+    _TRENDING_EXECUTOR.shutdown(wait=False)
     logger.info("TradingAgents API 關閉")
 
 
@@ -278,7 +280,7 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     """健康檢查"""
-    return {"status": "ok", "version": "0.4.3"}
+    return {"status": "ok", "version": "0.4.4"}
 
 
 @app.get("/robots.txt", include_in_schema=False)
