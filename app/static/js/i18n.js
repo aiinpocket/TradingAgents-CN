@@ -40,6 +40,7 @@ const I18N_MESSAGES = {
     'analysis.elapsed': '已用時',
     'analysis.progress_log': '分析進度日誌',
     'analysis.new': '新分析',
+    'analysis.from_cache': '快取結果',
     'analysis.export': '匯出',
     'analysis.report': '分析報告',
 
@@ -120,6 +121,8 @@ const I18N_MESSAGES = {
     'trending.updated': '最後更新',
     'trending.analyze': '分析',
     'trending.no_data': '暫無資料',
+    'trending.load_error': '市場資料載入失敗，請稍後再試',
+    'trending.retry': '重新載入',
     'trending.ai_title': 'AI 趨勢分析',
     'trending.ai_desc': '基於宏觀經濟、國際趨勢與市場新聞的每日綜合分析',
     'trending.ai_loading': '正在生成 AI 分析...',
@@ -222,6 +225,7 @@ const I18N_MESSAGES = {
     'analysis.elapsed': 'Elapsed',
     'analysis.progress_log': 'Analysis progress log',
     'analysis.new': 'New Analysis',
+    'analysis.from_cache': 'Cached',
     'analysis.export': 'Export',
     'analysis.report': 'Report',
 
@@ -302,6 +306,8 @@ const I18N_MESSAGES = {
     'trending.updated': 'Last updated',
     'trending.analyze': 'Analyze',
     'trending.no_data': 'No data available',
+    'trending.load_error': 'Failed to load market data. Please try again later.',
+    'trending.retry': 'Reload',
     'trending.ai_title': 'AI Trend Analysis',
     'trending.ai_desc': 'Daily comprehensive analysis based on macro economics, global trends, and market news',
     'trending.ai_loading': 'Generating AI analysis...',

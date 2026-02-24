@@ -270,6 +270,18 @@ async def start_analysis(req: AnalysisRequest, request: Request):
     # 去除重複的分析師（保留順序）
     req_analysts = list(dict.fromkeys(req.analysts))
 
+    # 查詢 MongoDB 快取：24 小時內同一股票同一日期的已完成報告
+    try:
+        from web.utils.mongodb_report_manager import MongoDBReportManager
+        _cache_mgr = MongoDBReportManager()
+        cached = _cache_mgr.get_latest_report(symbol, req.analysis_date)
+        if cached and cached.get("formatted_result"):
+            logger.info(f"分析快取命中: {symbol} @ {req.analysis_date}")
+            return {"analysis_id": "cached", "status": "cached",
+                    "result": cached["formatted_result"]}
+    except Exception as e:
+        logger.debug(f"MongoDB 快取查詢失敗（不影響正常流程）: {e}")
+
     # 清理舊任務 + 原子性地檢查並發限制 + 建立新分析
     _cleanup_old_analyses()
 
@@ -483,6 +495,21 @@ async def _run_analysis(analysis_id: str):
 
             data["progress"].append(_t_lang("analysis_complete", lang))
             _update_analysis_state(analysis_id, status="completed", result=formatted)
+
+            # 儲存格式化結果到 MongoDB 供後續快取查詢
+            try:
+                from web.utils.mongodb_report_manager import MongoDBReportManager
+                _save_mgr = MongoDBReportManager()
+                _save_mgr.save_analysis_report(
+                    stock_symbol=data["stock_symbol"],
+                    analysis_results=result,
+                    reports={},
+                    analysis_date=data.get("analysis_date", ""),
+                    formatted_result=formatted,
+                )
+            except Exception as e:
+                logger.warning(f"MongoDB 快取儲存失敗（不影響主流程）: {e}")
+
         else:
             error_msg = result.get("error", _t_lang("analysis_failed", lang))
             data["progress"].append(f"{_t_lang('analysis_failed', lang)}: {error_msg}")

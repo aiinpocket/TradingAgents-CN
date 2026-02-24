@@ -77,19 +77,33 @@ async def lifespan(app: FastAPI):
 
     logger.info("TradingAgents API 啟動中...")
 
-    # 背景預熱趨勢資料快取 + AI 分析，讓第一位使用者不需等待
+    # 背景預熱趨勢資料快取，讓第一位使用者不需等待白螢幕
     async def _prewarm_trending():
         try:
             from app.routers.trending import get_market_overview, _pregenerate_ai_analysis
-            await get_market_overview()
+            await asyncio.wait_for(get_market_overview(), timeout=45)
             logger.info("趨勢資料快取預熱完成")
-            # 市場資料就緒後，預產生中英文 AI 分析
-            await _pregenerate_ai_analysis()
-            logger.info("AI 趨勢分析預產生完成")
+            # AI 分析不阻塞啟動，改為 fire-and-forget
+            asyncio.create_task(_safe_pregenerate_ai())
+        except asyncio.TimeoutError:
+            logger.warning("趨勢資料預熱逾時 45 秒（不影響正常運作）")
         except Exception as e:
             logger.warning(f"趨勢資料預熱失敗（不影響正常運作）: {e}")
 
+    async def _safe_pregenerate_ai():
+        try:
+            from app.routers.trending import _pregenerate_ai_analysis
+            await _pregenerate_ai_analysis()
+            logger.info("AI 趨勢分析預產生完成")
+        except Exception as e:
+            logger.warning(f"AI 趨勢分析預產生失敗: {e}")
+
+    # 等待預熱完成（最多 50 秒），確保首頁有 SSR 資料
     prewarm_task = asyncio.create_task(_prewarm_trending())
+    try:
+        await asyncio.wait_for(asyncio.shield(prewarm_task), timeout=50)
+    except (asyncio.TimeoutError, Exception):
+        pass  # 逾時不阻塞啟動
 
     # 啟動背景定時刷新（每 5 分鐘自動更新市場資料）
     from app.routers.trending import start_background_refresh

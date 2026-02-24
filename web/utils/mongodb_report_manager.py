@@ -5,7 +5,7 @@ MongoDB報告管理器
 """
 
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 
 # 日誌模組
@@ -112,22 +112,33 @@ class MongoDBReportManager:
             logger.error(f"MongoDB索引建立失敗: {e}")
     
     def save_analysis_report(self, stock_symbol: str, analysis_results: Dict[str, Any],
-                           reports: Dict[str, str]) -> bool:
-        """保存分析報告到MongoDB"""
+                           reports: Dict[str, str],
+                           analysis_date: str = None,
+                           formatted_result: Dict[str, Any] = None) -> bool:
+        """保存分析報告到MongoDB
+
+        Args:
+            stock_symbol: 股票代碼
+            analysis_results: 原始分析結果
+            reports: 報告內容
+            analysis_date: 分析日期（YYYY-MM-DD），預設為今天
+            formatted_result: 前端可用的格式化結果（用於快取命中時直接返回）
+        """
         if not self.connected:
             logger.warning("MongoDB未連接，跳過保存")
             return False
 
         try:
-            # 生成分析ID
             timestamp = datetime.now()
             analysis_id = f"{stock_symbol}_{timestamp.strftime('%Y%m%d_%H%M%S')}"
 
-            # 構建檔案
+            # 使用傳入的分析日期，而非當前日期
+            report_date = analysis_date if analysis_date else timestamp.strftime('%Y-%m-%d')
+
             document = {
                 "analysis_id": analysis_id,
                 "stock_symbol": stock_symbol,
-                "analysis_date": timestamp.strftime('%Y-%m-%d'),
+                "analysis_date": report_date,
                 "timestamp": timestamp,
                 "status": "completed",
                 "source": "mongodb",
@@ -135,29 +146,65 @@ class MongoDBReportManager:
                 # 分析結果摘要
                 "summary": analysis_results.get("summary", ""),
                 "analysts": analysis_results.get("analysts", []),
-                "research_depth": analysis_results.get("research_depth", 1),  # 修正：從分析結果中取得真實的研究深度
+                "research_depth": analysis_results.get("research_depth", 1),
 
                 # 報告內容
                 "reports": reports,
+
+                # 前端格式化結果（快取用）
+                "formatted_result": formatted_result,
 
                 # 中繼資料
                 "created_at": timestamp,
                 "updated_at": timestamp
             }
-            
-            # 插入檔案
+
             result = self.collection.insert_one(document)
-            
+
             if result.inserted_id:
                 logger.info(f"分析報告已保存到MongoDB: {analysis_id}")
                 return True
             else:
                 logger.error("MongoDB插入失敗")
                 return False
-                
+
         except Exception as e:
             logger.error(f"保存分析報告到MongoDB失敗: {e}")
             return False
+
+    def get_latest_report(self, stock_symbol: str, analysis_date: str,
+                         max_age_hours: int = 24) -> Optional[Dict[str, Any]]:
+        """查詢最近的分析報告作為快取
+
+        Args:
+            stock_symbol: 股票代碼
+            analysis_date: 分析日期（YYYY-MM-DD）
+            max_age_hours: 最大快取有效期（小時）
+
+        Returns:
+            最近一筆符合條件的報告，或 None
+        """
+        if not self.connected:
+            return None
+
+        try:
+            cutoff = datetime.now() - timedelta(hours=max_age_hours)
+            doc = self.collection.find_one(
+                {
+                    "stock_symbol": stock_symbol,
+                    "analysis_date": analysis_date,
+                    "status": "completed",
+                    "formatted_result": {"$exists": True, "$ne": None},
+                    "timestamp": {"$gte": cutoff},
+                },
+                sort=[("timestamp", -1)],
+            )
+            if doc:
+                logger.info(f"MongoDB 快取命中: {stock_symbol} @ {analysis_date}")
+            return doc
+        except Exception as e:
+            logger.error(f"查詢 MongoDB 快取失敗: {e}")
+            return None
     
     def get_analysis_reports(self, limit: int = 100, stock_symbol: str = None,
                            start_date: str = None, end_date: str = None) -> List[Dict[str, Any]]:

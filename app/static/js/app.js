@@ -56,6 +56,7 @@ function tradingApp() {
     progressMessages: [],
     progressPercent: 0,
     result: null,
+    cachedResult: false,
     historyList: [],
     configStatus: null,
     analysisId: null,
@@ -69,6 +70,7 @@ function tradingApp() {
     // 熱門特區
     trendingData: { indices: [], movers: { gainers: [], losers: [] }, news: [] },
     trendingLoading: true,
+    trendingError: false,
     _trendingTimer: null,
 
     // AI 趨勢分析
@@ -252,25 +254,38 @@ function tradingApp() {
       if (this.trendingLoading && this._trendingLoaded) return;
       this._trendingLoaded = true;
       this.trendingLoading = true;
+      this.trendingError = false;
 
       try {
         const res = await fetch('/api/trending/overview');
         if (res.ok) {
           this.trendingData = await res.json();
+          this.trendingError = false;
           // 市場資料載入後，非同步載入 AI 分析
           this.loadAiAnalysis();
+        } else {
+          this.trendingError = true;
         }
       } catch (e) {
         console.error('Failed to load trending:', e);
+        this.trendingError = true;
       } finally {
         this.trendingLoading = false;
       }
 
-      // 設定自動重新整理
+      // 設定自動重新整理（錯誤時 30 秒後重試，正常時按設定間隔）
       if (this._trendingTimer) clearTimeout(this._trendingTimer);
+      const interval = this.trendingError ? 30000 : CONFIG.TRENDING_REFRESH_MS;
       this._trendingTimer = setTimeout(() => {
         if (this.tab === 'trending') this.loadTrending();
-      }, CONFIG.TRENDING_REFRESH_MS);
+      }, interval);
+    },
+
+    // 手動重試載入熱門資料
+    retryTrending() {
+      this._trendingLoaded = false;
+      this.trendingError = false;
+      this.loadTrending();
     },
 
     // AI 趨勢分析
@@ -442,6 +457,18 @@ function tradingApp() {
         }
 
         const data = await res.json();
+
+        // 快取命中：直接顯示結果，跳過 SSE 串流
+        if (data.status === 'cached' && data.result) {
+          this.result = data.result;
+          this.showResults = true;
+          this.analysisRunning = false;
+          this.cachedResult = true;
+          this.selectFirstTab();
+          this.fetchStockContext(this.form.symbol);
+          return;
+        }
+
         // 驗證 analysis_id 格式（與後端 _validate_analysis_id 一致）
         if (!/^analysis_[A-Za-z0-9_-]{16,32}$/.test(data.analysis_id || '')) {
           throw new Error(this.t('error.start_failed'));
@@ -453,6 +480,7 @@ function tradingApp() {
         this.startTime = Date.now();
         this.result = null;
         this.showResults = false;
+        this.cachedResult = false;
         this.connectionRetries = 0;
         this.pollRetryCount = 0;
 

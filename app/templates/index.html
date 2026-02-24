@@ -127,6 +127,15 @@
         </div>
       </section>
 
+      <!-- 載入錯誤提示 + 重試 -->
+      <div class="trending-error" x-cloak x-show="trendingError && !trendingLoading"
+           style="text-align:center;padding:2rem 1rem;color:var(--text-secondary)">
+        <p x-text="t('trending.load_error')" style="margin-bottom:0.75rem"></p>
+        <button @click="retryTrending()" class="btn btn-outline" style="font-size:0.85rem">
+          <span x-text="t('trending.retry')"></span>
+        </button>
+      </div>
+
       <!-- 市場指數概覽（移除 x-cloak，骨架在 Alpine 前就可見，防止 CLS） -->
       <section class="indices-bar" :aria-busy="trendingLoading.toString()">
         <!-- 骨架標題佔位（與實際 section-title 同高，防止 CLS） -->
@@ -768,6 +777,7 @@
               <span x-text="result?.analysis_date"></span>
               <span x-text="result?.llm_provider?.toUpperCase()"></span>
               <span x-text="t('analysis.depth') + ' ' + result?.research_depth"></span>
+              <span x-show="cachedResult" class="badge-cached" x-text="t('analysis.from_cache')"></span>
             </div>
           </div>
           <div class="results-actions">

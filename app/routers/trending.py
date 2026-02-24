@@ -954,11 +954,17 @@ async def start_background_refresh():
     """
     logger.info(f"背景趨勢刷新已啟動（基礎間隔 {_BG_REFRESH_INTERVAL} 秒）")
     consecutive_failures = 0
+    first_run = True
     while True:
-        # exponential backoff：連續失敗時逐步拉長間隔（上限 30 分鐘）
-        backoff = min(_BG_REFRESH_INTERVAL * (2 ** consecutive_failures), 1800)
-        jitter = random.uniform(0, 30)
-        await asyncio.sleep(backoff + jitter)
+        if first_run:
+            # 首次僅等待短暫時間，確保預熱完成後快速接續刷新
+            await asyncio.sleep(10 + random.uniform(0, 5))
+            first_run = False
+        else:
+            # exponential backoff：連續失敗時逐步拉長間隔（上限 30 分鐘）
+            backoff = min(_BG_REFRESH_INTERVAL * (2 ** consecutive_failures), 1800)
+            jitter = random.uniform(0, 30)
+            await asyncio.sleep(backoff + jitter)
         try:
             with _cache_lock:
                 _cache.pop("overview", None)
