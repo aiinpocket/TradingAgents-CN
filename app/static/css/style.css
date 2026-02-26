@@ -894,12 +894,14 @@ body {
 .log-line {
   display: flex;
   gap: 10px;
-  padding: 6px 12px;
+  padding: 7px 12px;
   font-size: 12px;
+  line-height: 1.5;
 }
 
 .log-line.log-latest {
   background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
 }
 
 .log-line.log-placeholder {
@@ -2720,17 +2722,17 @@ code {
 
 [data-theme="dark"] .notice-warn {
   background: var(--amber-bg);
-  border-color: rgba(187, 128, 9, 0.3);
+  border-color: rgba(187, 128, 9, 0.5);
 }
 
 [data-theme="dark"] .notice-error {
   background: var(--red-bg);
-  border-color: rgba(248, 81, 73, 0.3);
+  border-color: rgba(248, 81, 73, 0.5);
 }
 
 [data-theme="dark"] .notice-info {
   background: var(--accent-bg);
-  border-color: rgba(56, 132, 255, 0.3);
+  border-color: rgba(56, 132, 255, 0.5);
 }
 
 [data-theme="dark"] .notice-links a {
