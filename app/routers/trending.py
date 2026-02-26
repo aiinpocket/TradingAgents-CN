@@ -834,7 +834,7 @@ CRITICAL RULES:
 - NEVER make specific buy/sell/hold recommendations for individual stocks
 - NEVER provide price targets or suggest entry/exit points
 - NEVER use language that could be interpreted as investment solicitation
-- Always include a disclaimer that this is for informational purposes only
+- Do NOT include any disclaimer in your output (the frontend already displays one)
 - Focus on explaining WHY the market is moving, not WHAT investors should do
 
 LANGUAGE RULES (strictly follow):
