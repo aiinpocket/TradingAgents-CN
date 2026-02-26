@@ -246,6 +246,11 @@ _PROGRESS_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "分析結果: {detail}",
         "en": "Analysis result: {detail}",
     },
+    # 資料預載入進度訊息
+    "node_prefetch_started": {
+        "zh-TW": "正在預載入市場資料（並行 7 個 API）...",
+        "en": "Pre-fetching market data (7 APIs in parallel)...",
+    },
     # 節點級別即時進度訊息（由 graph.propagate 串流偵測觸發）
     "node_market_done": {
         "zh-TW": "市場技術分析完成",
@@ -518,14 +523,14 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             config["max_risk_discuss_rounds"] = 1
             config["memory_enabled"] = True
             config["online_tools"] = True
-        elif research_depth == 4:  # 4級 - 深度分析
-            config["max_debate_rounds"] = 2
-            config["max_risk_discuss_rounds"] = 2
+        elif research_depth == 4:  # 4級 - 深度分析（並行辯論，1 輪即可）
+            config["max_debate_rounds"] = 1
+            config["max_risk_discuss_rounds"] = 1
             config["memory_enabled"] = True
             config["online_tools"] = True
-        else:  # 5級 - 全面分析
-            config["max_debate_rounds"] = 3
-            config["max_risk_discuss_rounds"] = 3
+        else:  # 5級 - 全面分析（2 輪辯論，平衡深度與速度）
+            config["max_debate_rounds"] = 2
+            config["max_risk_discuss_rounds"] = 2
             config["memory_enabled"] = True
             config["online_tools"] = True
 

@@ -8,7 +8,7 @@ from typing import Dict, Any
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 
-from tradingagents.agents.utils.agent_utils import Toolkit, reset_tool_result_cache
+from tradingagents.agents.utils.agent_utils import Toolkit, reset_tool_result_cache, prefetch_analyst_data
 from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.agents.utils.memory import FinancialSituationMemory
 
@@ -176,6 +176,15 @@ class TradingAgentsGraph:
         reset_tool_result_cache()
 
         self.ticker = company_name.upper().strip()
+
+        # 資料預載入：在圖執行前並行載入所有分析師需要的資料到快取
+        # 7 個 API 呼叫合併為一批，分析師開始時直接命中快取
+        if progress_callback:
+            progress_callback("node_prefetch_started")
+        try:
+            prefetch_analyst_data(self.toolkit, self.ticker, str(trade_date))
+        except Exception as e:
+            logger.warning(f"[資料預載入] 部分失敗，分析師將自行重試: {e}")
 
         # 建立初始狀態
         init_agent_state = self.propagator.create_initial_state(

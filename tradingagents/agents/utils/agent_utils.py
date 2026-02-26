@@ -137,7 +137,9 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
     _log = logger_instance or logger
 
     def _invoke_one(tool, args):
-        """執行單一工具呼叫，帶分析層級快取"""
+        """執行單一工具呼叫，帶分析層級快取。
+        支援 LangChain 工具（有 .invoke 方法）和普通可呼叫物件（如函式）。
+        """
         name = getattr(tool, 'name', getattr(tool, '__name__', str(tool)))
         cache_key = _make_cache_key(name, args)
 
@@ -150,7 +152,13 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
             return cached
 
         try:
-            result = tool.invoke(args)
+            # 支援 LangChain 工具和普通可呼叫物件
+            if hasattr(tool, 'invoke'):
+                result = tool.invoke(args)
+            elif callable(tool):
+                result = tool(**args)
+            else:
+                raise TypeError(f"工具 {name} 既無 invoke 方法也不可呼叫")
             result_str = str(result)
             _log.debug(f"直接工具呼叫 {name} 成功，結果長度: {len(result_str)}")
 
@@ -179,6 +187,67 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
             results[idx] = future.result()
 
     return results
+
+
+def prefetch_analyst_data(toolkit, ticker: str, trade_date: str):
+    """在圖執行前預載入所有分析師需要的資料到快取中。
+
+    將 7 個獨立 API 呼叫合併為一批並行請求，
+    避免 4 個分析師各自建立執行緒池競爭資源。
+    分析師開始時所有資料已在快取中，零等待直接進入 LLM 推理。
+
+    Args:
+        toolkit: Toolkit 實例，包含所有工具
+        ticker: 股票代碼（如 AAPL）
+        trade_date: 分析日期（YYYY-MM-DD）
+    """
+    from datetime import datetime, timedelta
+
+    try:
+        dt = datetime.strptime(trade_date, "%Y-%m-%d")
+        start_date = (dt - timedelta(days=90)).strftime("%Y-%m-%d")
+    except (ValueError, TypeError):
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+
+    # 建立統一新聞工具（與新聞分析師使用相同的工具和參數）
+    from tradingagents.tools.unified_news_tool import create_unified_news_tool
+    unified_news_tool = create_unified_news_tool(toolkit)
+    unified_news_tool.name = "get_stock_news_unified"
+
+    # 收集 4 個分析師需要的所有 7 個不重複工具呼叫
+    tools = [
+        # 市場分析師需要的 2 個工具
+        toolkit.get_stock_market_data_unified,
+        toolkit.get_finnhub_technical_signals,
+        # 社交媒體分析師需要的 2 個工具
+        toolkit.get_stock_news_openai,
+        toolkit.get_finnhub_sentiment_data,  # 新聞分析師也需要，會快取命中
+        # 新聞分析師的統一新聞工具
+        unified_news_tool,
+        # 基本面分析師需要的 2 個工具
+        toolkit.get_stock_fundamentals_unified,
+        toolkit.get_finnhub_analyst_consensus,
+    ]
+
+    tool_args = [
+        {"ticker": ticker, "start_date": start_date, "end_date": trade_date},
+        {"ticker": ticker},
+        {"ticker": ticker, "curr_date": trade_date},
+        {"ticker": ticker, "curr_date": trade_date},
+        {"stock_code": ticker, "max_news": 10, "model_info": ""},
+        {"ticker": ticker, "start_date": start_date, "end_date": trade_date, "curr_date": trade_date},
+        {"ticker": ticker, "curr_date": trade_date},
+    ]
+
+    logger.info(f"[資料預載入] 開始並行載入 {len(tools)} 個工具結果到快取")
+    import time
+    t0 = time.time()
+
+    results = invoke_tools_direct(tools, tool_args, logger)
+
+    elapsed = time.time() - t0
+    ok_count = sum(1 for r in results if r and "失敗" not in r and "執行失敗" not in r)
+    logger.info(f"[資料預載入] 完成，{ok_count}/{len(results)} 個成功，耗時: {elapsed:.1f}秒")
 
 
 def create_msg_delete():

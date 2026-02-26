@@ -28,8 +28,8 @@ except ImportError:
 
 router = APIRouter(tags=["analysis"])
 
-# 專用執行緒池：分析任務獨立執行，避免與預設池搶資源
-_ANALYSIS_EXECUTOR = ThreadPoolExecutor(max_workers=4, thread_name_prefix="analysis")
+# 專用執行緒池：分析任務獨立執行，避免與預設池搶資源（8 workers 支援更多並行 API 呼叫）
+_ANALYSIS_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="analysis")
 # 個股快照用輕量執行緒池（yfinance I/O 密集）
 _CONTEXT_EXECUTOR = ThreadPoolExecutor(max_workers=6, thread_name_prefix="ctx")
 

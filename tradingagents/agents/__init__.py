@@ -1,4 +1,4 @@
-from .utils.agent_utils import Toolkit, create_msg_delete, execute_tools_parallel, reset_tool_result_cache
+from .utils.agent_utils import Toolkit, create_msg_delete, execute_tools_parallel, reset_tool_result_cache, prefetch_analyst_data
 from .utils.agent_states import AgentState, InvestDebateState, RiskDebateState
 from .utils.memory import FinancialSituationMemory
 
@@ -32,6 +32,7 @@ __all__ = [
     "create_msg_delete",
     "execute_tools_parallel",
     "reset_tool_result_cache",
+    "prefetch_analyst_data",
     "InvestDebateState",
     "RiskDebateState",
     "create_bear_researcher",
