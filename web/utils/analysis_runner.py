@@ -246,6 +246,43 @@ _PROGRESS_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "分析結果: {detail}",
         "en": "Analysis result: {detail}",
     },
+    # 節點級別即時進度訊息（由 graph.propagate 串流偵測觸發）
+    "node_market_done": {
+        "zh-TW": "市場技術分析完成",
+        "en": "Market technical analysis complete",
+    },
+    "node_social_done": {
+        "zh-TW": "社群情緒分析完成",
+        "en": "Social sentiment analysis complete",
+    },
+    "node_news_done": {
+        "zh-TW": "新聞事件分析完成",
+        "en": "News analysis complete",
+    },
+    "node_fundamentals_done": {
+        "zh-TW": "基本面分析完成",
+        "en": "Fundamentals analysis complete",
+    },
+    "node_invest_debate_started": {
+        "zh-TW": "多空辯論進行中...",
+        "en": "Bull/Bear debate in progress...",
+    },
+    "node_research_manager_done": {
+        "zh-TW": "研究經理整合報告完成",
+        "en": "Research manager report integration complete",
+    },
+    "node_trader_done": {
+        "zh-TW": "交易員制定策略完成",
+        "en": "Trader strategy formulation complete",
+    },
+    "node_risk_debate_started": {
+        "zh-TW": "風險評估辯論進行中...",
+        "en": "Risk assessment debate in progress...",
+    },
+    "node_risk_judge_done": {
+        "zh-TW": "風險管理委員會最終決議完成",
+        "en": "Risk management committee final decision complete",
+    },
 }
 
 
@@ -568,14 +605,18 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         update_progress(_p("initializing_engine", lang), 5)
         graph = _get_or_create_graph(config, analysts)
 
-        # 執行分析
+        # 執行分析（傳入節點級進度回呼，讓前端即時顯示各模組完成狀態）
         update_progress(_p("analyzing_symbol", lang, symbol=formatted_symbol), 6)
-        logger.debug(" ===== 呼叫graph.propagate =====")
-        logger.debug(" 傳遞給graph.propagate的參數:")
-        logger.debug(f" symbol: '{formatted_symbol}'")
-        logger.debug(f" date: '{analysis_date}'")
 
-        state, decision = graph.propagate(formatted_symbol, analysis_date)
+        def _node_progress(event_key: str):
+            """將圖節點進度事件轉換為 i18n 訊息並回報"""
+            msg = _p(event_key, lang)
+            if msg and msg != event_key:
+                update_progress(msg)
+
+        state, decision = graph.propagate(
+            formatted_symbol, analysis_date, progress_callback=_node_progress
+        )
 
         # 除錯資訊
         logger.debug(f" 分析完成，decision類型: {type(decision)}")

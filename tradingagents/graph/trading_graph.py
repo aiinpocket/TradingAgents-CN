@@ -141,8 +141,26 @@ class TradingAgentsGraph:
         # Set up the graph
         self.graph = self.graph_setup.setup_graph(selected_analysts)
 
-    def propagate(self, company_name, trade_date):
-        """Run the trading agents graph for a company on a specific date."""
+    # 節點級別進度偵測：狀態欄位 -> 進度事件標識
+    # 當串流中對應欄位從空值變為有值時，回報該進度事件
+    _PROGRESS_FIELDS = {
+        "market_report": "node_market_done",
+        "sentiment_report": "node_social_done",
+        "news_report": "node_news_done",
+        "fundamentals_report": "node_fundamentals_done",
+        "trader_investment_plan": "node_trader_done",
+        "investment_plan": "node_trader_done",
+        "final_trade_decision": "node_risk_judge_done",
+    }
+
+    def propagate(self, company_name, trade_date, progress_callback=None):
+        """執行交易智慧體圖分析。
+
+        Args:
+            company_name: 股票代碼
+            trade_date: 分析日期（YYYY-MM-DD）
+            progress_callback: 可選的進度回呼函式，接收進度事件標識字串
+        """
         import re
 
         # 驗證股票代碼格式，防止路徑穿越攻擊
@@ -153,48 +171,81 @@ class TradingAgentsGraph:
         if not trade_date or not re.match(r"^\d{4}-\d{2}-\d{2}$", str(trade_date).strip()):
             raise ValueError(f"無效的日期格式: {trade_date}")
 
-        # 新增詳細的接收日誌
-        logger.debug("===== TradingAgentsGraph.propagate 接收參數 =====")
-        logger.debug(f"接收到的company_name: '{company_name}' (類型: {type(company_name)})")
-        logger.debug(f"接收到的trade_date: '{trade_date}' (類型: {type(trade_date)})")
+        logger.debug(f"propagate 接收: company_name='{company_name}', trade_date='{trade_date}'")
 
         self.ticker = company_name.upper().strip()
-        logger.debug(f"設定self.ticker: '{self.ticker}'")
 
-        # Initialize state
-        logger.debug(f"建立初始狀態，傳遞參數: company_name='{company_name}', trade_date='{trade_date}'")
+        # 建立初始狀態
         init_agent_state = self.propagator.create_initial_state(
             company_name, trade_date
         )
-        logger.debug(f"初始狀態中的company_of_interest: '{init_agent_state.get('company_of_interest', 'NOT_FOUND')}'")
-        logger.debug(f"初始狀態中的trade_date: '{init_agent_state.get('trade_date', 'NOT_FOUND')}'")
         args = self.propagator.get_graph_args()
 
-        if self.debug:
-            # Debug mode with tracing
-            trace = []
-            for chunk in self.graph.stream(init_agent_state, **args):
-                if chunk["messages"]:
-                    last_msg = chunk["messages"][-1]
-                    msg_content = getattr(last_msg, 'content', str(last_msg))
-                    logger.debug(f"[Debug] {msg_content[:200]}")
-                    trace.append(chunk)
+        # 統一使用 graph.stream()：既能取得最終狀態，也能偵測中間進度
+        populated = set()
+        final_state = None
 
-            if not trace:
-                raise RuntimeError("Debug 模式未收到任何回應，請檢查 graph 設定")
-            final_state = trace[-1]
-        else:
-            # Standard mode without tracing
-            final_state = self.graph.invoke(init_agent_state, **args)
+        for chunk in self.graph.stream(init_agent_state, **args):
+            final_state = chunk
 
-        # Store current state for reflection
+            if self.debug and chunk.get("messages"):
+                last_msg = chunk["messages"][-1]
+                msg_content = getattr(last_msg, 'content', str(last_msg))
+                logger.debug(f"[Debug] {msg_content[:200]}")
+
+            # 偵測狀態欄位變化，回報節點級別進度
+            if progress_callback:
+                self._detect_progress(chunk, populated, progress_callback)
+
+        if final_state is None:
+            raise RuntimeError("圖執行未產生任何狀態，請檢查設定")
+
+        # 儲存當前狀態供反思使用
         self.curr_state = final_state
 
-        # Log state
+        # 記錄狀態
         self._log_state(trade_date, final_state)
 
-        # Return decision and processed signal
+        # 回傳決策和處理後的訊號
         return final_state, self.process_signal(final_state["final_trade_decision"], company_name)
+
+    def _detect_progress(self, chunk, populated, callback):
+        """偵測串流 chunk 中新出現的狀態欄位，回報對應進度事件。
+
+        Args:
+            chunk: graph.stream() 產出的完整狀態快照
+            populated: 已回報過的欄位集合（就地修改）
+            callback: 進度回呼函式
+        """
+        # 偵測分析報告欄位
+        for field, event in self._PROGRESS_FIELDS.items():
+            if field not in populated and chunk.get(field):
+                populated.add(field)
+                callback(event)
+
+        # 偵測投資辯論完成（judge_decision 出現）
+        debate = chunk.get("investment_debate_state", {})
+        if isinstance(debate, dict) and debate.get("judge_decision"):
+            if "invest_judge" not in populated:
+                populated.add("invest_judge")
+                callback("node_research_manager_done")
+        elif hasattr(debate, "get") and debate.get("judge_decision"):
+            if "invest_judge" not in populated:
+                populated.add("invest_judge")
+                callback("node_research_manager_done")
+
+        # 偵測多空辯論進行中（count 增加但 judge_decision 尚未出現）
+        if isinstance(debate, dict) and debate.get("count", 0) > 0:
+            if "invest_debate_started" not in populated and "invest_judge" not in populated:
+                populated.add("invest_debate_started")
+                callback("node_invest_debate_started")
+
+        # 偵測風險辯論進行中
+        risk = chunk.get("risk_debate_state", {})
+        if isinstance(risk, dict) and risk.get("count", 0) > 0:
+            if "risk_debate_started" not in populated:
+                populated.add("risk_debate_started")
+                callback("node_risk_debate_started")
 
     def _log_state(self, trade_date, final_state):
         """Log the final state to a JSON file."""
