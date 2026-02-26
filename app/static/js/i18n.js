@@ -37,7 +37,7 @@ const I18N_MESSAGES = {
     'analysis.retry': '重試',
     'analysis.in_progress': '進行中',
     'analysis.waiting': '等待分析引擎啟動...',
-    'analysis.time_hint': '分析通常需要 2-8 分鐘，取決於研究深度。',
+    'analysis.time_hint': '分析通常需要 1-10 分鐘，取決於研究深度。',
     'analysis.cancel': '取消',
     'analysis.elapsed': '已用時',
     'analysis.progress_log': '分析進度日誌',
@@ -55,8 +55,8 @@ const I18N_MESSAGES = {
     'depth.time.1': '約 1-2 分鐘',
     'depth.time.2': '約 2-3 分鐘',
     'depth.time.3': '約 3-5 分鐘',
-    'depth.time.4': '約 5-8 分鐘',
-    'depth.time.5': '約 8-15 分鐘',
+    'depth.time.4': '約 3-6 分鐘',
+    'depth.time.5': '約 5-10 分鐘',
 
     // 分析流程
     'workflow.title': '多代理協作分析流程',
@@ -233,7 +233,7 @@ const I18N_MESSAGES = {
     'analysis.retry': 'Retry',
     'analysis.in_progress': 'In Progress',
     'analysis.waiting': 'Waiting for analysis engine...',
-    'analysis.time_hint': 'Analysis usually takes 2-8 minutes depending on depth.',
+    'analysis.time_hint': 'Analysis usually takes 1-10 minutes depending on depth.',
     'analysis.cancel': 'Cancel',
     'analysis.elapsed': 'Elapsed',
     'analysis.progress_log': 'Analysis progress log',
@@ -251,8 +251,8 @@ const I18N_MESSAGES = {
     'depth.time.1': '~1-2 min',
     'depth.time.2': '~2-3 min',
     'depth.time.3': '~3-5 min',
-    'depth.time.4': '~5-8 min',
-    'depth.time.5': '~8-15 min',
+    'depth.time.4': '~3-6 min',
+    'depth.time.5': '~5-10 min',
 
     // Workflow
     'workflow.title': 'Multi-Agent Analysis Pipeline',

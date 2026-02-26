@@ -958,7 +958,7 @@ function tradingApp() {
     // DOMPurify 白名單配置（僅允許 Markdown 渲染所需標籤與屬性）
     _purifyConfig: {
       ALLOWED_TAGS: [
-        'p', 'h2', 'h3', 'h4', 'h5', 'strong', 'em', 'code', 'pre',
+        'p', 'h2', 'h3', 'h4', 'strong', 'em', 'code', 'pre',
         'ul', 'ol', 'li', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
         'br', 'hr', 'blockquote', 'div', 'a', 'span'
       ],
@@ -1004,12 +1004,11 @@ function tradingApp() {
       // HTML 實體編碼（代碼塊已單獨處理，單次掃描取代三次鏈式 replace）
       html = escHtml(html);
 
-      // 標題（結果區域容器為 h2，Markdown 標題從 h3 開始以維持正確層級）
+      // 標題（容器為 h2，Markdown 標題壓縮至 h3/h4 維持 WCAG 層級不跳級）
       html = html
         .replace(/^#{1,6}\s*$/gm, '')
-        .replace(/^#{4,6} (\S.*)$/gm, (_, g) => `<h6>${g.trim()}</h6>`)
-        .replace(/^### (\S.*)$/gm, (_, g) => `<h5>${g.trim()}</h5>`)
-        .replace(/^## (\S.*)$/gm, (_, g) => `<h4>${g.trim()}</h4>`)
+        .replace(/^#{3,6} (\S.*)$/gm, (_, g) => `<h4>${g.trim()}</h4>`)
+        .replace(/^## (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
         .replace(/^# (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
         .replace(/^---$/gm, '<hr>');
 
