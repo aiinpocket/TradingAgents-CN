@@ -824,6 +824,11 @@
           </div>
         </div>
 
+        <!-- 英文翻譯不可用時的降級提示 -->
+        <div class="notice notice-info compact" x-cloak x-show="lang === 'en' && result && !hasEnglishTranslation()">
+          <span x-text="t('analysis.en_unavailable')"></span>
+        </div>
+
         <!-- 交易決策 -->
         <div class="panel decision-panel" x-show="result?.decision">
           <div class="decision-row">

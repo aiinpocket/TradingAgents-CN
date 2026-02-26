@@ -629,11 +629,16 @@ function tradingApp() {
       }
     },
 
+    // 英文翻譯是否可用
+    hasEnglishTranslation() {
+      if (!this.result) return false;
+      return !!(this.result.state_en || this.result.decision_en);
+    },
+
     // 根據語言取得對應的 state（英文優先使用 state_en）
     getState() {
       if (!this.result) return null;
       if (this.lang === 'en' && this.result.state_en) {
-        // 合併：英文版為主，中文版補缺
         return { ...this.result.state, ...this.result.state_en };
       }
       return this.result.state;

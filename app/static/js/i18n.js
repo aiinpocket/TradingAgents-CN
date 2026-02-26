@@ -163,6 +163,7 @@ const I18N_MESSAGES = {
 
     // 通知
     'analysis.completed': '分析完成',
+    'analysis.en_unavailable': '英文版本暫時不可用，以下顯示中文分析結果。',
     'analysis.failed': '分析失敗',
 
     // 錯誤訊息
@@ -350,6 +351,7 @@ const I18N_MESSAGES = {
 
     // Notifications
     'analysis.completed': 'analysis completed',
+    'analysis.en_unavailable': 'English version is temporarily unavailable. Showing Chinese analysis results.',
     'analysis.failed': 'analysis failed',
 
     // Error messages

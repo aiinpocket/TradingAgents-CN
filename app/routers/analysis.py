@@ -324,7 +324,24 @@ async def get_analysis_status(analysis_id: str, request: Request):
         raise HTTPException(status_code=400, detail=_t("task_not_found", request))
     with _analyses_lock:
         data = _active_analyses.get(analysis_id)
+
+    # 記憶體中找不到時，嘗試從 MongoDB 取回已完成的報告
     if not data:
+        try:
+            from web.utils.mongodb_report_manager import MongoDBReportManager
+            mgr = MongoDBReportManager()
+            doc = mgr.get_report_by_id(analysis_id)
+            if doc and doc.get("formatted_result"):
+                return AnalysisStatus(
+                    analysis_id=analysis_id,
+                    status="completed",
+                    stock_symbol=doc.get("stock_symbol", ""),
+                    progress=[],
+                    result=doc["formatted_result"],
+                    error=None,
+                )
+        except Exception:
+            pass
         raise HTTPException(status_code=404, detail=_t("task_not_found", request))
 
     return AnalysisStatus(
@@ -404,11 +421,14 @@ async def stream_analysis(analysis_id: str, request: Request):
 
 @router.get("/analysis/history")
 async def get_analysis_history():
-    """取得分析歷史"""
+    """取得分析歷史（合併記憶體中的任務 + MongoDB 已完成報告）"""
+    # 1. 記憶體中的活躍/近期任務
     with _analyses_lock:
         snapshot = list(_active_analyses.items())
+    seen_ids: set[str] = set()
     history = []
     for aid, data in snapshot:
+        seen_ids.add(aid)
         history.append({
             "analysis_id": aid,
             "status": data["status"],
@@ -418,6 +438,29 @@ async def get_analysis_history():
             "llm_provider": data.get("llm_provider", ""),
             "research_depth": data.get("research_depth", 3),
         })
+
+    # 2. MongoDB 已完成報告（補充記憶體中沒有的歷史）
+    try:
+        from web.utils.mongodb_report_manager import MongoDBReportManager
+        mgr = MongoDBReportManager()
+        db_reports = mgr.get_analysis_reports(limit=30)
+        for doc in db_reports:
+            aid = doc.get("analysis_id", "")
+            if aid in seen_ids:
+                continue
+            seen_ids.add(aid)
+            history.append({
+                "analysis_id": aid,
+                "status": doc.get("status", "completed"),
+                "stock_symbol": doc.get("stock_symbol", ""),
+                "analysis_date": doc.get("analysis_date", ""),
+                "created_at": doc.get("timestamp", 0),
+                "llm_provider": doc.get("llm_provider", ""),
+                "research_depth": doc.get("research_depth", 3),
+            })
+    except Exception as e:
+        logger.debug(f"MongoDB 歷史查詢失敗（不影響記憶體結果）: {e}")
+
     # 按建立時間排序，最新的在後面
     history.sort(key=lambda x: x["created_at"])
     return {"analyses": history[-20:]}
