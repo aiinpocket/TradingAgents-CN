@@ -44,8 +44,10 @@
 
 #### 安全強化
 - **速率限制 IP 修復**: CF-Connecting-IP -> X-Real-IP -> client.host 優先順序
-- **CSP 完整限制**: base-uri、form-action、object-src、worker-src、connect-src 精簡
-- **SEO Open Graph**: og:url / og:site_name / og:locale 多語言標記
+- **CSP 完整限制**: base-uri、form-action、object-src、worker-src、connect-src 精確域名（無萬用字元）
+- **Swagger UI 安全預設**: 非 development 環境自動關閉 API 文件
+- **SSR XSS 防護**: JSON 注入 `</script>` 自動跳脫
+- **SEO Open Graph + JSON-LD**: og:url / og:site_name / og:locale + WebApplication schema
 - **HSTS preload**: 強制 HTTPS + preload 指令
 - **analysisId 前後端格式驗證**: 防止異常 ID 注入
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
@@ -1387,7 +1389,7 @@ TradingAgents-CN
 
 ## 
 
-- **v0.4.4** (2026-02-23): 效能並行化、安全強化、WCAG AA 無障礙、i18n 141+ key
+- **v0.4.4** (2026-02-26): 效能並行化、安全強化（CSP 精確域名 + SSR XSS 防護 + Swagger 安全預設）、JSON-LD SEO、重試按鈕、i18n 191 key
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
 - **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化
 - **v0.1.13** (2025-08-02): OpenAILLM
