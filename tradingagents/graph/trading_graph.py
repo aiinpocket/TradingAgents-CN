@@ -1,6 +1,7 @@
 # TradingAgents/graph/trading_graph.py
 
 import os
+import time
 from pathlib import Path
 import json
 from typing import Dict, Any
@@ -172,6 +173,10 @@ class TradingAgentsGraph:
 
         logger.debug(f"propagate 接收: company_name='{company_name}', trade_date='{trade_date}'")
 
+        # 效能計時：記錄各階段耗時供監控最佳化
+        t_start = time.monotonic()
+        stage_times: dict[str, float] = {}
+
         # 重置工具結果快取，確保本次分析使用新鮮資料
         reset_tool_result_cache()
 
@@ -181,10 +186,12 @@ class TradingAgentsGraph:
         # 7 個 API 呼叫合併為一批，分析師開始時直接命中快取
         if progress_callback:
             progress_callback("node_prefetch_started")
+        t_prefetch = time.monotonic()
         try:
             prefetch_analyst_data(self.toolkit, self.ticker, str(trade_date))
         except Exception as e:
             logger.warning(f"[資料預載入] 部分失敗，分析師將自行重試: {e}")
+        stage_times["prefetch"] = round(time.monotonic() - t_prefetch, 2)
 
         # 建立初始狀態
         init_agent_state = self.propagator.create_initial_state(
@@ -195,6 +202,7 @@ class TradingAgentsGraph:
         # 統一使用 graph.stream()：既能取得最終狀態，也能偵測中間進度
         populated = set()
         final_state = None
+        t_graph = time.monotonic()
 
         for chunk in self.graph.stream(init_agent_state, **args):
             final_state = chunk
@@ -211,6 +219,8 @@ class TradingAgentsGraph:
                 except Exception as e:
                     logger.warning(f"進度偵測回呼失敗: {e}")
 
+        stage_times["graph"] = round(time.monotonic() - t_graph, 2)
+
         if final_state is None:
             raise RuntimeError("圖執行未產生任何狀態，請檢查設定")
 
@@ -219,6 +229,16 @@ class TradingAgentsGraph:
 
         # 記錄狀態
         self._log_state(trade_date, final_state)
+
+        # 效能統計日誌
+        total = round(time.monotonic() - t_start, 2)
+        stage_times["total"] = total
+        logger.info(
+            f"[效能] {self.ticker} 分析完成: "
+            f"prefetch={stage_times['prefetch']}s, "
+            f"graph={stage_times['graph']}s, "
+            f"total={total}s"
+        )
 
         # 回傳決策和處理後的訊號
         return final_state, self.process_signal(final_state["final_trade_decision"], company_name)
