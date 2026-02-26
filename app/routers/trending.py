@@ -108,6 +108,8 @@ _STOCK_UNIVERSE = [
 # 台灣慣用術語校正（確定性後處理，不依賴 LLM prompt 遵從度）
 # ---------------------------------------------------------------------------
 # 大陸→台灣中文術語映射
+# 注意：左側「來源」欄位刻意保留簡體/大陸用語，因為這些是 LLM 實際輸出的文字，
+# 用於比對替換為右側的台灣正體中文。此處簡體字為比對需求，非顯示用途。
 _TW_TERMINOLOGY: list[tuple[str, str]] = [
     # 人名
     ("特朗普", "川普"),
@@ -330,7 +332,8 @@ def _fetch_movers_batch(batch: list[str]) -> list[dict]:
                     try:
                         info = ticker.info or {}
                         short_name = info.get("shortName", sym)
-                    except Exception:
+                    except Exception as e:
+                        logger.debug(f"取得 {sym} 公司名稱失敗: {e}")
                         short_name = sym
                     with _company_names_lock:
                         if len(_company_names) < _MAX_COMPANY_NAMES:

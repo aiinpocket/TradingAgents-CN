@@ -134,8 +134,8 @@ async def lifespan(app: FastAPI):
     refresh_task.cancel()
     try:
         await asyncio.gather(prewarm_task, refresh_task, return_exceptions=True)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(f"背景任務清理異常: {e}")
     # 關閉所有執行緒池，避免資源洩漏
     from app.routers.trending import _TRENDING_EXECUTOR
     _TRENDING_EXECUTOR.shutdown(wait=True, cancel_futures=True)
