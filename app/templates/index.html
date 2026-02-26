@@ -646,7 +646,7 @@
 
           <div class="form-actions">
             <button type="submit" class="btn-primary" :disabled="!canSubmit || submitting" :aria-busy="submitting.toString()" aria-describedby="submit-hint"
-                    :title="(!canSubmit && !submitting) ? (!apiReady ? t('status.offline') : !form.symbol ? t('analysis.symbol') : '') : ''">
+                    :title="(!canSubmit && !submitting) ? (!apiReady ? t('status.offline') : !form.symbol ? t('analysis.symbol') : !form.analysts.length ? t('analysis.select_module') : '') : ''">
               <span x-show="!submitting" x-text="t('analysis.start')"></span>
               <span x-cloak x-show="submitting" class="btn-loading" x-text="t('analysis.submitting')"></span>
             </button>
