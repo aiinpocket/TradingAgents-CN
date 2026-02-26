@@ -149,7 +149,6 @@ class TradingAgentsGraph:
         "news_report": "node_news_done",
         "fundamentals_report": "node_fundamentals_done",
         "trader_investment_plan": "node_trader_done",
-        "investment_plan": "node_trader_done",
         "final_trade_decision": "node_risk_judge_done",
     }
 
