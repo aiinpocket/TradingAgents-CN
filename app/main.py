@@ -239,10 +239,14 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
         response.headers["Cross-Origin-Resource-Policy"] = "same-origin"
         response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
+        response.headers["X-DNS-Prefetch-Control"] = "on"
         # 快取策略：HTML 頁面與 API 不快取，靜態資源允許帶 query 快取
         path = request.url.path
         if path == "/" or path.endswith(".html") or path.startswith("/api/") or path == "/health":
             response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        # 多語言 API 需要 Vary 確保 CDN 不混用不同語言快取
+        if path.startswith("/api/"):
+            response.headers["Vary"] = "Accept-Language"
         elif path.startswith("/static/"):
             # 帶版本戳的靜態檔案可長期快取（URL 變化即失效）
             if request.url.query:

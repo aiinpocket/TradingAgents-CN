@@ -94,6 +94,7 @@ const I18N_MESSAGES = {
     'context.news_title': '近期新聞',
     'context.beta': 'Beta',
     'context.snapshot': '個股快照',
+    'context.fetch_failed': '無法載入個股行情，請稍後再試',
 
     // API 密鑰提示
     'api.not_configured': 'API 密鑰未配置',
@@ -196,6 +197,7 @@ const I18N_MESSAGES = {
     // 通用
     'common.no_data': '暫無資料',
     'common.close': '關閉',
+    'common.retry': '重試',
   },
 
   'en': {
@@ -288,6 +290,7 @@ const I18N_MESSAGES = {
     'context.news_title': 'Recent News',
     'context.beta': 'Beta',
     'context.snapshot': 'Snapshot',
+    'context.fetch_failed': 'Failed to load stock snapshot. Please try again.',
 
     // API key notice
     'api.not_configured': 'API Key Not Configured',
@@ -390,6 +393,7 @@ const I18N_MESSAGES = {
     // Common
     'common.no_data': 'No data',
     'common.close': 'Close',
+    'common.retry': 'Retry',
   }
 };
 

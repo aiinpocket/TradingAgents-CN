@@ -583,6 +583,10 @@ function tradingApp() {
         if (this.analysisRunning) {
           this.connectionRetries++;
           if (this.connectionRetries <= CONFIG.SSE_MAX_RETRIES) {
+            // 記錄重連事件到進度日誌
+            this.progressMessages.push(
+              this.t('analysis.reconnecting') + ' (' + this.connectionRetries + '/' + CONFIG.SSE_MAX_RETRIES + ')'
+            );
             const delay = Math.min(CONFIG.SSE_BACKOFF_BASE_MS * Math.pow(2, this.connectionRetries - 1), CONFIG.SSE_BACKOFF_MAX_MS);
             this._reconnectTimer = setTimeout(() => {
               this._reconnectTimer = null;
@@ -728,18 +732,30 @@ function tradingApp() {
       this._stopElapsedTimer();
     },
 
-    async fetchStockContext(symbol) {
+    // 取得個股即時行情快照，自動重試最多 2 次（502 或網路錯誤）
+    async fetchStockContext(symbol, _retry = 0) {
+      const MAX_RETRY = 2;
       this.stockContextLoading = true;
-      this.stockContext = null;
+      if (_retry === 0) this.stockContext = null;
       try {
         const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`, {
           headers: this._langHeaders(),
         });
         if (res.ok) {
           this.stockContext = await res.json();
+        } else if (res.status >= 500 && _retry < MAX_RETRY) {
+          await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
+          return this.fetchStockContext(symbol, _retry + 1);
+        } else {
+          this.stockContext = { error: true };
         }
       } catch (e) {
         console.error('Stock context fetch error:', e);
+        if (_retry < MAX_RETRY) {
+          await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
+          return this.fetchStockContext(symbol, _retry + 1);
+        }
+        this.stockContext = { error: true };
       } finally {
         this.stockContextLoading = false;
       }

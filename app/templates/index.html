@@ -35,19 +35,22 @@
   <link rel="apple-touch-icon" href="/static/favicon.svg">
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HN1YQZJF1Z"></script>
-  <script async src="/static/js/gtag-init.js?v=0.4.4s"></script>
+  <script async src="/static/js/gtag-init.js?v=0.4.4t"></script>
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
   <link rel="dns-prefetch" href="https://www.google-analytics.com">
+  <!-- 預載入關鍵資源 -->
+  <link rel="preload" as="style" href="/static/css/style.css?v=0.4.4t">
+  <link rel="preload" as="script" href="/static/js/app.js?v=0.4.4t">
   <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.4.4s"></script>
+  <script src="/static/js/i18n.js?v=0.4.4t"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4s">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4t">
   <!-- JSON-LD 結構化資料 -->
   <script type="application/ld+json">
   {
@@ -712,7 +715,7 @@
               <span x-text="t('analysis.running')"></span>
             </h2>
             <span class="badge" :class="connectionRetries > 0 ? 'badge-warn' : 'badge-info'">
-              <span x-text="connectionRetries > 0 ? t('analysis.reconnecting') : t('analysis.in_progress')"></span>
+              <span x-text="connectionRetries > 0 ? t('analysis.reconnecting') + ' (' + connectionRetries + '/' + CONFIG.SSE_MAX_RETRIES + ')' : t('analysis.in_progress')"></span>
             </span>
           </div>
           <div class="progress-track" role="progressbar" :aria-valuenow="progressPercent" aria-valuemin="0" aria-valuemax="100" :aria-label="t('analysis.running')">
@@ -747,6 +750,14 @@
             <div class="skeleton-line skeleton-w60"></div>
             <div class="skeleton-line skeleton-w40"></div>
             <div class="skeleton-line skeleton-w80"></div>
+          </div>
+        </div>
+
+        <!-- 個股快照錯誤狀態 -->
+        <div class="panel stock-context-panel stock-context-error" x-show="stockContext && stockContext.error && !stockContextLoading">
+          <div class="stock-context-error-content">
+            <span x-text="t('context.fetch_failed')"></span>
+            <button class="btn-ghost btn-retry" @click="fetchStockContext(form.symbol)" :disabled="stockContextLoading" x-text="t('common.retry')"></button>
           </div>
         </div>
 
@@ -969,6 +980,6 @@
     <span class="footer-open-source" x-text="t('footer.open_source')"></span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.4.4s"></script>
+  <script src="/static/js/app.js?v=0.4.4t"></script>
 </body>
 </html>

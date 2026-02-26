@@ -977,6 +977,33 @@ body {
   margin-bottom: 16px;
 }
 
+/* 個股快照錯誤狀態 */
+.stock-context-error {
+  border-left: 3px solid var(--red);
+}
+
+.stock-context-error-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+  color: var(--text-sub);
+  font-size: 13px;
+}
+
+.btn-retry {
+  flex-shrink: 0;
+  font-size: 12px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.btn-retry:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .stock-context-header {
   margin-bottom: 16px;
 }
@@ -2868,13 +2895,28 @@ code {
   outline-color: var(--accent);
 }
 
+/* 無障礙：減少動態效果偏好 */
 @media (prefers-reduced-motion: reduce) {
-  .panel { animation: none; }
-  .skeleton { animation: none; }
-  .btn-loading::after { animation-duration: 1.5s; }
-  .mover-bar-fill { transition: none; }
-  .ai-analysis-content { animation: none; }
-  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .skeleton,
+  .skeleton-line {
+    background: var(--border-light);
+    animation: none !important;
+  }
+  .btn-loading::after {
+    content: '...';
+    animation: none !important;
+  }
+  .mover-bar-fill {
+    transition: none !important;
+  }
 }
 
 /* ===== RWD ===== */
