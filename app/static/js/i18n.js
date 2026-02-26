@@ -163,9 +163,6 @@ const I18N_MESSAGES = {
     'theme.to_dark': '切換深色模式',
     'theme.to_light': '切換淺色模式',
 
-    // 翻譯進度
-    'analysis.translating': '正在生成英文版本...',
-
     // 通知
     'analysis.completed': '分析完成',
     'analysis.en_unavailable': '英文版本暫時不可用，以下顯示中文分析結果。',
@@ -359,9 +356,6 @@ const I18N_MESSAGES = {
     // Theme
     'theme.to_dark': 'Switch to dark mode',
     'theme.to_light': 'Switch to light mode',
-
-    // Translation progress
-    'analysis.translating': 'Generating English version...',
 
     // Notifications
     'analysis.completed': 'analysis completed',
