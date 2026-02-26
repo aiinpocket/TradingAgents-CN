@@ -203,6 +203,7 @@ class TradingAgentsGraph:
         populated = set()
         final_state = None
         t_graph = time.monotonic()
+        node_timestamps = {}  # 節點級別計時
 
         for chunk in self.graph.stream(init_agent_state, **args):
             final_state = chunk
@@ -219,7 +220,19 @@ class TradingAgentsGraph:
                 except Exception as e:
                     logger.warning(f"進度偵測回呼失敗: {e}")
 
+            # 記錄節點完成時間戳（用於效能分析）
+            for field, event in self._PROGRESS_FIELDS.items():
+                if field not in node_timestamps and chunk.get(field):
+                    elapsed = round(time.monotonic() - t_graph, 2)
+                    node_timestamps[field] = elapsed
+
         stage_times["graph"] = round(time.monotonic() - t_graph, 2)
+
+        # 記錄節點級別耗時（幫助定位瓶頸）
+        if node_timestamps:
+            timing_parts = [f"{k.replace('_report','').replace('_plan','').replace('_decision','')}={v}s"
+                           for k, v in sorted(node_timestamps.items(), key=lambda x: x[1])]
+            logger.info(f"[效能-節點] {' | '.join(timing_parts)}")
 
         if final_state is None:
             raise RuntimeError("圖執行未產生任何狀態，請檢查設定")
