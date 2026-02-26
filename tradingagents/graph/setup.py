@@ -17,6 +17,7 @@ from tradingagents.agents import (
     create_risky_debator,
     create_safe_debator,
     create_neutral_debator,
+    create_parallel_risk_debate,
     create_trader,
     create_msg_delete,
     Toolkit,
@@ -124,7 +125,7 @@ class GraphSetup:
         )
         trader_node = create_trader(self.quick_thinking_llm, self.trader_memory)
 
-        # Create risk analysis nodes
+        # 建立風險分析節點
         risky_analyst = create_risky_debator(self.quick_thinking_llm)
         neutral_analyst = create_neutral_debator(self.quick_thinking_llm)
         safe_analyst = create_safe_debator(self.quick_thinking_llm)
@@ -132,10 +133,21 @@ class GraphSetup:
             self.deep_thinking_llm, self.risk_manager_memory
         )
 
-        # Create workflow
+        # 判斷是否使用並行風險辯論（僅一輪時可安全並行）
+        max_risk_rounds = self.conditional_logic.max_risk_discuss_rounds
+        use_parallel_risk = (max_risk_rounds == 1)
+        if use_parallel_risk:
+            parallel_risk_node = create_parallel_risk_debate(
+                risky_analyst, safe_analyst, neutral_analyst
+            )
+            logger.info("風險辯論模式: 並行（3 位分析師同時執行）")
+        else:
+            logger.info(f"風險辯論模式: 串行（{max_risk_rounds} 輪辯論）")
+
+        # 建立工作流程
         workflow = StateGraph(AgentState)
 
-        # Add analyst nodes to the graph
+        # 加入分析師節點
         for analyst_type, node in analyst_nodes.items():
             workflow.add_node(f"{analyst_type.capitalize()} Analyst", node)
             workflow.add_node(
@@ -143,14 +155,20 @@ class GraphSetup:
             )
             workflow.add_node(f"tools_{analyst_type}", tool_nodes[analyst_type])
 
-        # Add other nodes
+        # 加入其他節點
         workflow.add_node("Bull Researcher", bull_researcher_node)
         workflow.add_node("Bear Researcher", bear_researcher_node)
         workflow.add_node("Research Manager", research_manager_node)
         workflow.add_node("Trader", trader_node)
-        workflow.add_node("Risky Analyst", risky_analyst)
-        workflow.add_node("Neutral Analyst", neutral_analyst)
-        workflow.add_node("Safe Analyst", safe_analyst)
+
+        if use_parallel_risk:
+            # 並行模式：單一節點包裝三位分析師
+            workflow.add_node("Risk Debate", parallel_risk_node)
+        else:
+            # 串行模式：三個獨立節點依序執行
+            workflow.add_node("Risky Analyst", risky_analyst)
+            workflow.add_node("Neutral Analyst", neutral_analyst)
+            workflow.add_node("Safe Analyst", safe_analyst)
         workflow.add_node("Risk Judge", risk_manager_node)
 
         # 定義邊：使用 fan-out/fan-in 並行化分析師節點
@@ -192,31 +210,38 @@ class GraphSetup:
             },
         )
         workflow.add_edge("Research Manager", "Trader")
-        workflow.add_edge("Trader", "Risky Analyst")
-        workflow.add_conditional_edges(
-            "Risky Analyst",
-            self.conditional_logic.should_continue_risk_analysis,
-            {
-                "Safe Analyst": "Safe Analyst",
-                "Risk Judge": "Risk Judge",
-            },
-        )
-        workflow.add_conditional_edges(
-            "Safe Analyst",
-            self.conditional_logic.should_continue_risk_analysis,
-            {
-                "Neutral Analyst": "Neutral Analyst",
-                "Risk Judge": "Risk Judge",
-            },
-        )
-        workflow.add_conditional_edges(
-            "Neutral Analyst",
-            self.conditional_logic.should_continue_risk_analysis,
-            {
-                "Risky Analyst": "Risky Analyst",
-                "Risk Judge": "Risk Judge",
-            },
-        )
+
+        if use_parallel_risk:
+            # 並行模式：Trader -> Risk Debate（並行三位分析師）-> Risk Judge
+            workflow.add_edge("Trader", "Risk Debate")
+            workflow.add_edge("Risk Debate", "Risk Judge")
+        else:
+            # 串行模式：Trader -> Risky -> Safe -> Neutral -> ... -> Risk Judge
+            workflow.add_edge("Trader", "Risky Analyst")
+            workflow.add_conditional_edges(
+                "Risky Analyst",
+                self.conditional_logic.should_continue_risk_analysis,
+                {
+                    "Safe Analyst": "Safe Analyst",
+                    "Risk Judge": "Risk Judge",
+                },
+            )
+            workflow.add_conditional_edges(
+                "Safe Analyst",
+                self.conditional_logic.should_continue_risk_analysis,
+                {
+                    "Neutral Analyst": "Neutral Analyst",
+                    "Risk Judge": "Risk Judge",
+                },
+            )
+            workflow.add_conditional_edges(
+                "Neutral Analyst",
+                self.conditional_logic.should_continue_risk_analysis,
+                {
+                    "Risky Analyst": "Risky Analyst",
+                    "Risk Judge": "Risk Judge",
+                },
+            )
 
         workflow.add_edge("Risk Judge", END)
 
