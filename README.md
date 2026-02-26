@@ -36,7 +36,7 @@
 - **dns-prefetch**: Google Analytics 域名 DNS 預解析
 
 #### i18n 國際化
-- **146 翻譯鍵**: zh-TW / en 完全對稱
+- **146+ 翻譯鍵**: zh-TW / en 完全對稱
 - **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
 - **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
 - **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
@@ -55,9 +55,10 @@
 
 #### 無障礙 (a11y)
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
-- **WCAG AA 色彩對比**: 暗色模式文字對比 >= 4.5:1
-- **ARIA table 語意**: 歷史表格完整 role 標記
-- **觸控目標 44px**: 符合 WCAG 2.5.5 標準
+- **WCAG AA 色彩對比**: 亮/暗色模式文字對比 >= 4.5:1（--text-faint 5.3:1、--amber-text 5.2:1）
+- **ARIA table 語意**: 歷史表格完整 role 標記，報告區 tablist/tab/tabpanel 完整語意
+- **觸控目標 44px**: 符合 WCAG 2.5.5 標準（含 480px 斷點 nav-btn / mover-row）
+- **html lang 屬性**: 隨語言切換同步更新（zh-Hant / en）
 
 #### UI/UX
 - **漲跌排行 CSS Grid**: 固定欄寬跨行對齊，取代 flex 佈局
@@ -1396,7 +1397,7 @@ TradingAgents-CN
 
 ## 
 
-- **v0.4.4** (2026-02-26): 效能並行化、安全強化（CSP 精確域名 + SSR XSS 防護 + Swagger 安全預設）、JSON-LD SEO、重試按鈕、i18n 191 key
+- **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
 - **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化
 - **v0.1.13** (2025-08-02): OpenAILLM

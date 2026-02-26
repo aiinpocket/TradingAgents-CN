@@ -354,6 +354,8 @@ function tradingApp() {
       this.form.symbol = symbol;
       this.tab = 'analysis';
       window.scrollTo(0, 0);
+      // 預載個股即時行情，讓使用者進入分析頁時立即看到股價資訊
+      this.fetchStockContext(symbol);
     },
 
     // 指數代碼轉換為對應 ETF（可直接分析）
