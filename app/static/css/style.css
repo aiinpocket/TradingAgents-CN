@@ -85,6 +85,11 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 消除行動裝置 300ms 點擊延遲，提升觸控回應速度 */
+a, button, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
+}
+
 body {
   font-family: var(--font);
   background: var(--bg);

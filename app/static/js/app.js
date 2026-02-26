@@ -138,7 +138,14 @@ function tradingApp() {
         this.stockPreview = this._computeStockPreview();
         this._sentiment = this._computeSentiment();
       });
-      this.$watch('form.symbol', () => { this.stockPreview = this._computeStockPreview(); });
+      this.$watch('form.symbol', () => {
+        this.stockPreview = this._computeStockPreview();
+        // 使用者修改股票代號時自動清除過時的錯誤訊息
+        if (this.formError) this.formError = null;
+      });
+      // 使用者切換提供商或模型時自動清除錯誤訊息（避免殘留前次配置的錯誤）
+      this.$watch('form.provider', () => { if (this.formError) this.formError = null; });
+      this.$watch('form.model', () => { if (this.formError) this.formError = null; });
       // 切換到分析 tab 時更新日期上限，避免長時間開啟頁面導致日期過時
       this.$watch('tab', (val) => {
         if (val === 'analysis') {
