@@ -60,14 +60,14 @@ def create_social_media_analyst(llm, toolkit):
         if toolkit.config["online_tools"]:
             tools = [toolkit.get_stock_news_openai, toolkit.get_finnhub_sentiment_data]
             tool_args = [
-                {"ticker": ticker, "current_date": current_date},
-                {"ticker": ticker},
+                {"ticker": ticker, "curr_date": current_date},
+                {"ticker": ticker, "curr_date": current_date},
             ]
         else:
             tools = [toolkit.get_stock_sentiment_unified, toolkit.get_finnhub_sentiment_data]
             tool_args = [
-                {"ticker": ticker},
-                {"ticker": ticker},
+                {"ticker": ticker, "curr_date": current_date},
+                {"ticker": ticker, "curr_date": current_date},
             ]
 
         tool_results = invoke_tools_direct(tools, tool_args, logger)

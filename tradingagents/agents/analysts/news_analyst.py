@@ -62,7 +62,7 @@ def create_news_analyst(llm, toolkit):
         tools = [unified_news_tool, toolkit.get_finnhub_sentiment_data]
         tool_args = [
             {"stock_code": ticker, "max_news": 10, "model_info": ""},
-            {"ticker": ticker},
+            {"ticker": ticker, "curr_date": current_date},
         ]
         tool_results = invoke_tools_direct(tools, tool_args, logger)
 

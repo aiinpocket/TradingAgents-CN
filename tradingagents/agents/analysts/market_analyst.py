@@ -261,7 +261,7 @@ def create_market_analyst(llm, toolkit):
 
             tool_args = [
                 {"symbol": ticker, "start_date": _calc_start_date(current_date), "end_date": current_date},
-                {"symbol": ticker, "start_date": _calc_start_date(current_date), "end_date": current_date},
+                {"symbol": ticker, "indicator": "rsi_14", "curr_date": current_date},
                 {"ticker": ticker},
             ]
             tool_results = invoke_tools_direct(tools, tool_args, logger)

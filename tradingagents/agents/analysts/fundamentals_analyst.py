@@ -109,8 +109,11 @@ def create_fundamentals_analyst(llm, toolkit):
                 toolkit.get_finnhub_analyst_consensus,
             ]
             tool_args = [
-                {"ticker": ticker}, {"ticker": ticker},
-                {"ticker": ticker}, {"ticker": ticker}, {"ticker": ticker},
+                {"ticker": ticker, "curr_date": current_date},
+                {"ticker": ticker, "curr_date": current_date},
+                {"ticker": ticker, "freq": "quarterly"},
+                {"ticker": ticker, "freq": "quarterly"},
+                {"ticker": ticker, "freq": "quarterly"},
                 {"ticker": ticker, "curr_date": current_date},
             ]
             tool_results = invoke_tools_direct(tools, tool_args, logger)

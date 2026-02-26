@@ -3,7 +3,7 @@
 from typing import Dict, Any
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, StateGraph, START
-from langgraph.prebuilt import ToolNode
+from langgraph.prebuilt import ToolNode  # 保留：tool_nodes 參數型別提示
 
 from tradingagents.agents import (
     create_fundamentals_analyst,
@@ -49,7 +49,11 @@ class GraphSetup:
         config: Dict[str, Any] = None,
         react_llm = None,
     ):
-        """Initialize with required components."""
+        """Initialize with required components.
+
+        注意：tool_nodes 參數保留向後相容，但分析師已改為直接工具呼叫，
+        不再透過 LangGraph ToolNode 路由。
+        """
         self.quick_thinking_llm = quick_thinking_llm
         self.deep_thinking_llm = deep_thinking_llm
         self.toolkit = toolkit
@@ -78,40 +82,33 @@ class GraphSetup:
         if len(selected_analysts) == 0:
             raise ValueError("Trading Agents Graph Setup Error: no analysts selected!")
 
-        # Create analyst nodes
+        # 建立分析師節點（分析師已改為直接工具呼叫，無需 ToolNode）
         analyst_nodes = {}
         delete_nodes = {}
-        tool_nodes = {}
 
         if "market" in selected_analysts:
-            logger.debug("使用標準市場分析師")
             analyst_nodes["market"] = create_market_analyst(
                 self.quick_thinking_llm, self.toolkit
             )
             delete_nodes["market"] = create_msg_delete()
-            tool_nodes["market"] = self.tool_nodes["market"]
 
         if "social" in selected_analysts:
             analyst_nodes["social"] = create_social_media_analyst(
                 self.quick_thinking_llm, self.toolkit
             )
             delete_nodes["social"] = create_msg_delete()
-            tool_nodes["social"] = self.tool_nodes["social"]
 
         if "news" in selected_analysts:
             analyst_nodes["news"] = create_news_analyst(
                 self.quick_thinking_llm, self.toolkit
             )
             delete_nodes["news"] = create_msg_delete()
-            tool_nodes["news"] = self.tool_nodes["news"]
 
         if "fundamentals" in selected_analysts:
-            logger.debug("使用標準基本面分析師")
             analyst_nodes["fundamentals"] = create_fundamentals_analyst(
                 self.quick_thinking_llm, self.toolkit
             )
             delete_nodes["fundamentals"] = create_msg_delete()
-            tool_nodes["fundamentals"] = self.tool_nodes["fundamentals"]
 
         # Create researcher and manager nodes
         bull_researcher_node = create_bull_researcher(
@@ -147,13 +144,12 @@ class GraphSetup:
         # 建立工作流程
         workflow = StateGraph(AgentState)
 
-        # 加入分析師節點
+        # 加入分析師節點（直接工具呼叫，無需 ToolNode）
         for analyst_type, node in analyst_nodes.items():
             workflow.add_node(f"{analyst_type.capitalize()} Analyst", node)
             workflow.add_node(
                 f"Msg Clear {analyst_type.capitalize()}", delete_nodes[analyst_type]
             )
-            workflow.add_node(f"tools_{analyst_type}", tool_nodes[analyst_type])
 
         # 加入其他節點
         workflow.add_node("Bull Researcher", bull_researcher_node)
@@ -171,23 +167,17 @@ class GraphSetup:
             workflow.add_node("Safe Analyst", safe_analyst)
         workflow.add_node("Risk Judge", risk_manager_node)
 
-        # 定義邊：使用 fan-out/fan-in 並行化分析師節點
-        # 所有分析師從 START 同時啟動（並行執行），完成後匯合到 Bull Researcher
+        # 定義邊：fan-out/fan-in 並行分析師節點
+        # 分析師已改為直接工具呼叫，無需條件分支和工具節點迴圈
         for analyst_type in selected_analysts:
             current_analyst = f"{analyst_type.capitalize()} Analyst"
-            current_tools = f"tools_{analyst_type}"
             current_clear = f"Msg Clear {analyst_type.capitalize()}"
 
             # START -> 所有分析師（並行 fan-out）
             workflow.add_edge(START, current_analyst)
 
-            # 分析師的工具呼叫迴圈（條件分支）
-            workflow.add_conditional_edges(
-                current_analyst,
-                getattr(self.conditional_logic, f"should_continue_{analyst_type}"),
-                [current_tools, current_clear],
-            )
-            workflow.add_edge(current_tools, current_analyst)
+            # 分析師 -> 訊息清理（直接連接，無條件分支）
+            workflow.add_edge(current_analyst, current_clear)
 
             # 所有分析師完成後匯合到 Bull Researcher（fan-in）
             workflow.add_edge(current_clear, "Bull Researcher")
