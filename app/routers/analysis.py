@@ -673,7 +673,9 @@ async def _run_analysis(analysis_id: str):
             ))
 
         else:
-            error_msg = result.get("error", _t_lang("analysis_failed", lang))
+            raw_error = result.get("error", "")
+            # 清理錯誤訊息，避免洩漏內部路徑或金鑰
+            error_msg = _sanitize_error_message(raw_error) if raw_error else _t_lang("analysis_failed", lang)
             data["progress"].append(f"{_t_lang('analysis_failed', lang)}: {error_msg}")
             _update_analysis_state(analysis_id, status="failed", error=error_msg)
 
@@ -744,6 +746,48 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
         progress_callback=progress_callback,
         lang=lang,
     )
+
+
+# ---------------------------------------------------------------------------
+# Prompt Injection 清理（翻譯管線安全防護）
+# ---------------------------------------------------------------------------
+
+# 常見 prompt injection 標記：角色偽裝、指令覆蓋、特殊 token
+_INJECTION_RE = re.compile(
+    r"(?:^|\n)\s*(?:"
+    r"system\s*:|assistant\s*:|human\s*:|user\s*:|"
+    r"ignore\s+(?:all\s+)?(?:previous|above|prior)\s+instructions|"
+    r"you\s+are\s+now\s+|new\s+instructions?\s*:|"
+    r"<\|(?:im_start|im_end|system|endoftext)\|>|"
+    r"\[INST\]|\[/INST\]|<<SYS>>|<</SYS>>"
+    r")",
+    re.IGNORECASE,
+)
+
+
+def _sanitize_for_translation(text: str, max_length: int = 50000) -> str:
+    """清理文字以防止 prompt injection，用於 LLM 翻譯前處理。
+
+    移除常見的角色偽裝標記和指令覆蓋語句，截斷過長內容。
+    """
+    if not isinstance(text, str):
+        return str(text)[:max_length]
+    text = text[:max_length]
+    text = _INJECTION_RE.sub("", text)
+    return text
+
+
+def _sanitize_error_message(raw_error: str, max_length: int = 200) -> str:
+    """清理錯誤訊息，避免洩漏內部路徑、API 金鑰等敏感資訊。"""
+    if not isinstance(raw_error, str):
+        return ""
+    # 截斷
+    msg = raw_error[:max_length]
+    # 移除疑似檔案路徑
+    msg = re.sub(r"(?:/[\w./-]+){3,}", "[path]", msg)
+    # 移除疑似 API 金鑰（sk-xxx、key-xxx 等）
+    msg = re.sub(r"\b(?:sk|key|token|api)[_-][\w]{8,}\b", "[redacted]", msg, flags=re.IGNORECASE)
+    return msg
 
 
 # ---------------------------------------------------------------------------
@@ -832,6 +876,9 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
 
     if not payload:
         return None
+
+    # Prompt injection 防護：清理所有待翻譯文字
+    payload = {k: _sanitize_for_translation(v) for k, v in payload.items()}
 
     # 組裝 LLM 提供商列表（按優先順序）
     providers: list[tuple[str, str]] = []

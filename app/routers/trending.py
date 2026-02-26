@@ -496,6 +496,33 @@ def _fetch_market_news() -> list[dict]:
     return unique_news[:12]
 
 
+# Prompt injection 清理：移除新聞標題中可能被利用的指令標記
+_TITLE_INJECTION_RE = re.compile(
+    r"(?:system\s*:|assistant\s*:|human\s*:|user\s*:|"
+    r"ignore\s+(?:all\s+)?(?:previous|above|prior)\s+instructions|"
+    r"you\s+are\s+now\s+|new\s+instructions?\s*:|"
+    r"<\|(?:im_start|im_end|system|endoftext)\|>|"
+    r"\[INST\]|\[/INST\]|<<SYS>>|<</SYS>>)",
+    re.IGNORECASE,
+)
+
+
+def _sanitize_title(title: str, max_length: int = 300) -> str:
+    """清理新聞標題，防止 prompt injection。
+
+    新聞標題來自外部資料源（yfinance / Google News），
+    可能包含惡意內容。清理後再傳入 LLM 翻譯。
+    """
+    if not isinstance(title, str):
+        return ""
+    title = title[:max_length]
+    # 移除換行和多餘空白（標題不應有換行）
+    title = " ".join(title.split())
+    # 移除 prompt injection 標記
+    title = _TITLE_INJECTION_RE.sub("", title)
+    return title.strip()
+
+
 def _translate_news_titles(news_items: list[dict]) -> list[dict]:
     """批次翻譯新聞標題為繁體中文（增量翻譯：已快取標題直接複用，僅翻譯新標題）"""
     if not news_items:
@@ -536,7 +563,9 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
         "Respond ONLY with a JSON array of translated strings, in the same order as input. "
         "Example: [\"翻譯一\", \"翻譯二\"]"
     )
-    user_msg = _json.dumps(need_translate_titles, ensure_ascii=False)
+    # Prompt injection 防護：清理外部來源的新聞標題
+    sanitized_titles = [_sanitize_title(t) for t in need_translate_titles]
+    user_msg = _json.dumps(sanitized_titles, ensure_ascii=False)
 
     messages = [
         SystemMessage(content=system_msg),
