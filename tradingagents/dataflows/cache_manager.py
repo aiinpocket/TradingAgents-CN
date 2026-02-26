@@ -46,6 +46,11 @@ class StockDataCache:
                         self.us_fundamentals_dir, self.metadata_dir]:
             dir_path.mkdir(exist_ok=True)
 
+        # 記憶體 metadata 索引：避免重複掃描檔案系統
+        # 格式: {cache_key: metadata_dict}
+        self._metadata_index: Dict[str, Dict[str, Any]] = {}
+        self._metadata_index_built = False
+
         # 快取配置 - 美股市場TTL設定
         self.cache_config = {
             'us_stock_data': {
@@ -75,6 +80,56 @@ class StockDataCache:
         logger.info(f"快取管理器初始化完成，快取目錄: {self.cache_dir}")
         logger.info("資料庫快取管理器初始化完成")
         logger.info("   美股資料: 已配置")
+
+    def _build_metadata_index(self):
+        """建構記憶體 metadata 索引，避免每次查找都掃描檔案系統"""
+        if self._metadata_index_built:
+            return
+        try:
+            for metadata_file in self.metadata_dir.glob("*_meta.json"):
+                try:
+                    with open(metadata_file, 'r', encoding='utf-8') as f:
+                        metadata = json.load(f)
+                    cache_key = metadata_file.stem.replace('_meta', '')
+                    self._metadata_index[cache_key] = metadata
+                except (json.JSONDecodeError, IOError):
+                    continue
+            self._metadata_index_built = True
+            logger.debug(f"metadata 索引建構完成，共 {len(self._metadata_index)} 筆")
+        except OSError as e:
+            logger.warning(f"建構 metadata 索引失敗: {e}")
+
+    def _index_metadata(self, cache_key: str, metadata: Dict[str, Any]):
+        """將新的 metadata 加入記憶體索引"""
+        self._metadata_index[cache_key] = metadata
+
+    def _find_in_index(self, **filters) -> list:
+        """從記憶體索引中查找符合條件的 cache key 清單"""
+        self._build_metadata_index()
+        results = []
+        for cache_key, metadata in self._metadata_index.items():
+            match = True
+            for key, value in filters.items():
+                if value is not None and metadata.get(key) != value:
+                    match = False
+                    break
+            if match:
+                results.append(cache_key)
+        return results
+
+    @staticmethod
+    def _date_bucket(date_str: str, bucket_days: int = 3) -> str:
+        """將日期歸入桶，降低 cache key 對日期的敏感度
+        例如 bucket_days=3 時，同一個 3 天區間內的日期會產生相同的桶值"""
+        try:
+            dt = datetime.strptime(date_str, "%Y-%m-%d")
+            # 以 epoch 天數除以 bucket_days 取整
+            epoch = datetime(2020, 1, 1)
+            day_offset = (dt - epoch).days
+            bucket_id = day_offset // bucket_days
+            return str(bucket_id)
+        except (ValueError, TypeError):
+            return date_str or "none"
 
     def _determine_market_type(self, symbol: str) -> str:
         """根據股票代碼判斷市場類型（目前僅支援美股）"""
@@ -169,13 +224,16 @@ class StockDataCache:
         return self.metadata_dir / f"{cache_key}_meta.json"
     
     def _save_metadata(self, cache_key: str, metadata: Dict[str, Any]):
-        """保存中繼資料"""
+        """保存中繼資料（同時更新記憶體索引）"""
         metadata_path = self._get_metadata_path(cache_key)
-        metadata_path.parent.mkdir(parents=True, exist_ok=True)  # 確保目錄存在
+        metadata_path.parent.mkdir(parents=True, exist_ok=True)
         metadata['cached_at'] = datetime.now().isoformat()
-        
+
         with open(metadata_path, 'w', encoding='utf-8') as f:
             json.dump(metadata, f, ensure_ascii=False, indent=2)
+
+        # 同步更新記憶體索引
+        self._index_metadata(cache_key, metadata)
     
     def _load_metadata(self, cache_key: str) -> Optional[Dict[str, Any]]:
         """載入中繼資料"""
@@ -245,8 +303,8 @@ class StockDataCache:
             # 生成一個虛擬的快取鍵，但不實際保存
             market_type = self._determine_market_type(symbol)
             cache_key = self._generate_cache_key("stock_data", symbol,
-                                               start_date=start_date,
-                                               end_date=end_date,
+                                               start_bucket=self._date_bucket(start_date),
+                                               end_bucket=self._date_bucket(end_date),
                                                source=data_source,
                                                market=market_type,
                                                skipped=True)
@@ -254,9 +312,10 @@ class StockDataCache:
             return cache_key
 
         market_type = self._determine_market_type(symbol)
+        # 使用日期桶降低 key 對每日日期偏移的敏感度
         cache_key = self._generate_cache_key("stock_data", symbol,
-                                           start_date=start_date,
-                                           end_date=end_date,
+                                           start_bucket=self._date_bucket(start_date),
+                                           end_bucket=self._date_bucket(end_date),
                                            source=data_source,
                                            market=market_type)
 
@@ -334,37 +393,33 @@ class StockDataCache:
             cache_type = f"{market_type}_stock_data"
             max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
 
-        # 生成查找鍵
+        # 使用日期桶生成查找鍵（與 save_stock_data 對齊）
         search_key = self._generate_cache_key("stock_data", symbol,
-                                            start_date=start_date,
-                                            end_date=end_date,
+                                            start_bucket=self._date_bucket(start_date),
+                                            end_bucket=self._date_bucket(end_date),
                                             source=data_source,
                                             market=market_type)
 
-        # 檢查精確匹配
+        # 檢查精確匹配（日期桶相同時直接命中）
         if self.is_cache_valid(search_key, max_age_hours, symbol, 'stock_data'):
             desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '資料')
             logger.info(f"找到精確匹配的{desc}: {symbol} -> {search_key}")
             return search_key
 
-        # 如果沒有精確匹配，查找部分匹配（相同股票代碼的其他快取）
-        for metadata_file in self.metadata_dir.glob(f"*_meta.json"):
-            try:
-                with open(metadata_file, 'r', encoding='utf-8') as f:
-                    metadata = json.load(f)
-
-                if (metadata.get('symbol') == symbol and
-                    metadata.get('data_type') == 'stock_data' and
-                    metadata.get('market_type') == market_type and
-                    (data_source is None or metadata.get('data_source') == data_source)):
-
-                    cache_key = metadata_file.stem.replace('_meta', '')
-                    if self.is_cache_valid(cache_key, max_age_hours, symbol, 'stock_data'):
-                        desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '資料')
-                        logger.info(f"找到部分匹配的{desc}: {symbol} -> {cache_key}")
-                        return cache_key
-            except Exception as e:
+        # 如果沒有精確匹配，使用記憶體索引查找部分匹配
+        candidate_keys = self._find_in_index(
+            symbol=symbol,
+            data_type='stock_data',
+            market_type=market_type,
+        )
+        for cache_key in candidate_keys:
+            meta = self._metadata_index.get(cache_key, {})
+            if data_source is not None and meta.get('data_source') != data_source:
                 continue
+            if self.is_cache_valid(cache_key, max_age_hours, symbol, 'stock_data'):
+                desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '資料')
+                logger.info(f"找到部分匹配的{desc}: {symbol} -> {cache_key}")
+                return cache_key
 
         desc = self.cache_config.get(f"{market_type}_stock_data", {}).get('description', '資料')
         logger.error(f"未找到有效的{desc}快取: {symbol}")
@@ -412,24 +467,22 @@ class StockDataCache:
     
     def save_fundamentals_data(self, symbol: str, fundamentals_data: str,
                               data_source: str = "unknown") -> str:
-        """保存基本面資料到快取"""
+        """保存基本面資料到快取（key 不含日期，靠 TTL 控制新鮮度）"""
         # 檢查內容長度是否需要跳過快取
         if self.should_skip_cache_for_content(fundamentals_data, "基本面資料"):
-            # 生成一個虛擬的快取鍵，但不實際保存
             market_type = self._determine_market_type(symbol)
             cache_key = self._generate_cache_key("fundamentals", symbol,
                                                source=data_source,
                                                market=market_type,
-                                               date=datetime.now().strftime("%Y-%m-%d"),
                                                skipped=True)
             logger.info(f"基本面資料因內容過長被跳過快取: {symbol} -> {cache_key}")
             return cache_key
 
         market_type = self._determine_market_type(symbol)
+        # 移除 date 參數：同一 symbol+source 共用固定 key，靠 24h TTL 控制新鮮度
         cache_key = self._generate_cache_key("fundamentals", symbol,
                                            source=data_source,
-                                           market=market_type,
-                                           date=datetime.now().strftime("%Y-%m-%d"))
+                                           market=market_type)
         
         cache_path = self._get_cache_path("fundamentals", cache_key, "txt", symbol)
         cache_path.parent.mkdir(parents=True, exist_ok=True)  # 確保目錄存在
@@ -472,69 +525,80 @@ class StockDataCache:
                                     max_age_hours: int = None) -> Optional[str]:
         """
         查找匹配的基本面快取資料
-        
+        先嘗試精確 key 匹配（O(1)），再退化到記憶體索引掃描
+
         Args:
             symbol: 股票代碼
             data_source: 資料來源（如 "openai", "finnhub"）
             max_age_hours: 最大快取時間（小時），None時使用智慧配置
-        
+
         Returns:
             cache_key: 如果找到有效快取則返回快取鍵，否則返回None
         """
         market_type = self._determine_market_type(symbol)
-        
+
         # 如果沒有指定TTL，使用智慧配置
         if max_age_hours is None:
             cache_type = f"{market_type}_fundamentals"
             max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
-        
-        # 查找匹配的快取
-        for metadata_file in self.metadata_dir.glob(f"*_meta.json"):
-            try:
-                with open(metadata_file, 'r', encoding='utf-8') as f:
-                    metadata = json.load(f)
-                
-                if (metadata.get('symbol') == symbol and
-                    metadata.get('data_type') == 'fundamentals' and
-                    metadata.get('market_type') == market_type and
-                    (data_source is None or metadata.get('data_source') == data_source)):
-                    
-                    cache_key = metadata_file.stem.replace('_meta', '')
-                    if self.is_cache_valid(cache_key, max_age_hours, symbol, 'fundamentals'):
-                        desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面資料')
-                        logger.info(f"找到匹配的{desc}快取: {symbol} ({data_source}) -> {cache_key}")
-                        return cache_key
-            except Exception as e:
+
+        # 精確匹配：key 不含日期，同一 symbol+source 直接命中
+        if data_source is not None:
+            exact_key = self._generate_cache_key("fundamentals", symbol,
+                                                source=data_source,
+                                                market=market_type)
+            if self.is_cache_valid(exact_key, max_age_hours, symbol, 'fundamentals'):
+                desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面資料')
+                logger.info(f"找到精確匹配的{desc}快取: {symbol} ({data_source}) -> {exact_key}")
+                return exact_key
+
+        # 退化到記憶體索引掃描
+        candidate_keys = self._find_in_index(
+            symbol=symbol,
+            data_type='fundamentals',
+            market_type=market_type,
+        )
+        for cache_key in candidate_keys:
+            meta = self._metadata_index.get(cache_key, {})
+            if data_source is not None and meta.get('data_source') != data_source:
                 continue
-        
+            if self.is_cache_valid(cache_key, max_age_hours, symbol, 'fundamentals'):
+                desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面資料')
+                logger.info(f"找到匹配的{desc}快取: {symbol} ({data_source}) -> {cache_key}")
+                return cache_key
+
         desc = self.cache_config.get(f"{market_type}_fundamentals", {}).get('description', '基本面資料')
         logger.error(f"未找到有效的{desc}快取: {symbol} ({data_source})")
         return None
     
     def clear_old_cache(self, max_age_days: int = 7):
-        """清理過期快取"""
+        """清理過期快取（同步清理記憶體索引）"""
         cutoff_time = datetime.now() - timedelta(days=max_age_days)
         cleared_count = 0
-        
+
         for metadata_file in self.metadata_dir.glob("*_meta.json"):
             try:
                 with open(metadata_file, 'r', encoding='utf-8') as f:
                     metadata = json.load(f)
-                
+
                 cached_at = datetime.fromisoformat(metadata['cached_at'])
                 if cached_at < cutoff_time:
                     # 刪除資料檔案
                     data_file = Path(metadata['file_path'])
                     if data_file.exists():
                         data_file.unlink()
-                    
+
+                    # 從記憶體索引移除
+                    cache_key = metadata_file.stem.replace('_meta', '')
+                    self._metadata_index.pop(cache_key, None)
+
                     # 刪除中繼資料檔
                     metadata_file.unlink()
                     cleared_count += 1
-                    
+
             except Exception as e:
                 logger.warning(f"清理快取時出錯: {e}")
-        
+
         logger.info(f"已清理 {cleared_count} 個過期快取檔案")
     
     def get_cache_stats(self) -> Dict[str, Any]:

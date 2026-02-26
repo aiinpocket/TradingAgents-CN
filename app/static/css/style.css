@@ -222,6 +222,7 @@ body {
   padding: 24px;
   margin-bottom: 16px;
   box-shadow: var(--shadow-sm);
+  animation: fadeUp 0.2s ease;
 }
 
 .panel-header {
@@ -1134,16 +1135,11 @@ body {
   padding: 8px 0;
 }
 
-/* 骨架脈動動畫 */
-.skeleton {
-  animation: skeletonPulse 1.5s ease-in-out infinite;
-}
+/* 骨架脈動動畫（主定義在動畫區段的 .skeleton） */
 @keyframes skeletonPulse {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
-
-/* 統一為脈動骨架（主定義在 Skeleton 載入狀態區段） */
 
 .skeleton-w40 { width: 40%; }
 .skeleton-w60 { width: 60%; }
@@ -1548,69 +1544,6 @@ body {
 .status-running { background: var(--accent-bg); color: var(--accent-text); }
 .status-failed { background: var(--red-bg); color: var(--red-text); }
 .status-pending { background: var(--bg-inset); color: var(--text-faint); }
-
-/* ===== 配置 ===== */
-
-.config-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.config-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  background: var(--bg-inset);
-  border-radius: var(--radius-sm);
-}
-
-.config-key {
-  font-weight: 600;
-  font-size: 13px;
-  font-family: var(--mono);
-}
-
-.config-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-}
-
-.config-ok { color: var(--green-text); }
-.config-ok .status-dot { background: var(--green); }
-.config-missing { color: var(--text-faint); }
-.config-missing .status-dot { background: var(--border); }
-
-.config-help {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-light);
-}
-
-.config-help h3 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-
-.config-help ol {
-  margin: 0;
-  padding-left: 20px;
-  font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.8;
-}
-
-.config-help code {
-  background: var(--bg-inset);
-  padding: 1px 5px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-}
 
 /* ===== 共用 ===== */
 
@@ -2383,10 +2316,6 @@ code {
   color: var(--text-faint);
 }
 
-.news-card-inner {
-  padding: 14px 16px;
-}
-
 /* 新聞卡片左側色條 */
 .news-card.news-accent-0 { border-left: 3px solid var(--accent); }
 .news-card.news-accent-1 { border-left: 3px solid var(--green); }
@@ -2865,14 +2794,11 @@ code {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.panel {
-  animation: fadeUp 0.2s ease;
-}
-
-/* Skeleton 載入狀態（靜態背景，避免非合成動畫觸發 CLS） */
+/* Skeleton 載入狀態（靜態背景 + 脈動動畫） */
 .skeleton {
   background: var(--bg-inset);
   border-radius: var(--radius-sm);
+  animation: skeletonPulse 1.5s ease-in-out infinite;
 }
 
 .skeleton-line {
