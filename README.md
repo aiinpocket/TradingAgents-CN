@@ -28,7 +28,10 @@
 - **多空辯論並行化**: 單輪辯論時看漲/看跌研究員同時執行（parallel_invest_debate），串行 ~4s 降至 ~2s
 - **風險分析師並行化**: 單輪辯論時 3 位風險分析師（激進/保守/中立）同時執行，串行 ~6s 降至 ~2s
 - **分析師直接工具呼叫**: invoke_tools_direct() 跳過 LLM 工具決策，每位分析師節省 1 次 LLM 呼叫（2-5s）
+- **資料預載入**: prefetch_analyst_data() 在圖執行前並行載入 7 個 API 結果到快取，分析師開始時零等待
 - **工具結果快取**: 同一分析中多個分析師呼叫相同工具+參數時自動去重，避免重複 API 呼叫（如 FinnHub 情緒資料）
+- **辯論輪數精簡**: depth 4 從 2 輪降為 1 輪（啟用並行），depth 5 從 3 輪降為 2 輪，大幅加速高深度分析
+- **分析執行緒池擴容**: _ANALYSIS_EXECUTOR 4->8 workers，支援更高並行度
 - **快取 TTL 優化**: 市場資料 2h->4h、新聞 6h->8h，減少同一交易日內重複 API 呼叫
 - **MongoDB 連接池單例化**: 共享 MongoClient 單例（maxPoolSize=10），避免每次建立新連接
 - **Markdown 渲染記憶化**: renderMarkdown() 使用 Map 快取（上限 30 筆），Alpine 反應式更新不再重複解析
