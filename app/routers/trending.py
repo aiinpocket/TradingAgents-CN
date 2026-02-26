@@ -41,6 +41,29 @@ _MAX_COMPANY_NAMES = 200
 _company_names: dict[str, str] = {}
 _company_names_lock = threading.Lock()
 
+# LLM 客戶端快取（避免每次翻譯/分析都重新初始化連線）
+_llm_clients: dict[str, object] = {}
+_llm_clients_lock = threading.Lock()
+
+
+def _get_llm(provider: str, model: str, temperature: float = 0, max_tokens: int = 2000):
+    """取得或建立 LangChain LLM 客戶端（執行緒安全懶初始化）"""
+    key = f"{provider}:{model}:{temperature}"
+    with _llm_clients_lock:
+        if key not in _llm_clients:
+            if provider == "openai":
+                from langchain_openai import ChatOpenAI
+                _llm_clients[key] = ChatOpenAI(
+                    model=model, temperature=temperature, max_tokens=max_tokens
+                )
+            else:
+                from langchain_anthropic import ChatAnthropic
+                _llm_clients[key] = ChatAnthropic(
+                    model=model, temperature=temperature, max_tokens=max_tokens
+                )
+        return _llm_clients[key]
+
+
 # 主要美股指數
 _INDICES = [
     {"symbol": "^GSPC", "name": "S&P 500", "name_en": "S&P 500"},
@@ -489,12 +512,7 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
 
     for provider, model in providers:
         try:
-            if provider == "openai":
-                from langchain_openai import ChatOpenAI
-                llm = ChatOpenAI(model=model, temperature=0, max_tokens=2000)
-            else:
-                from langchain_anthropic import ChatAnthropic
-                llm = ChatAnthropic(model=model, temperature=0, max_tokens=2000)
+            llm = _get_llm(provider, model, temperature=0)
 
             response = llm.invoke(messages)
             text = response.content.strip()
@@ -770,12 +788,7 @@ def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str, str
     last_error = ""
     for provider, model in providers:
         try:
-            if provider == "openai":
-                from langchain_openai import ChatOpenAI
-                llm = ChatOpenAI(model=model, temperature=0.3, max_tokens=2000)
-            else:
-                from langchain_anthropic import ChatAnthropic
-                llm = ChatAnthropic(model=model, temperature=0.3, max_tokens=2000)
+            llm = _get_llm(provider, model, temperature=0.3)
 
             response = llm.invoke(messages)
             content = response.content
@@ -971,7 +984,8 @@ async def start_background_refresh():
                 entry = _cache.get("overview")
                 if entry:
                     _cache["overview"] = {"data": entry["data"], "ts": 0}
-            await asyncio.wait_for(get_market_overview(), timeout=60.0)
+            # 含 LLM 翻譯的市場資料取得，120 秒較寬鬆以涵蓋慢速 API
+            await asyncio.wait_for(get_market_overview(), timeout=120.0)
             logger.info("背景趨勢刷新完成")
             consecutive_failures = 0
 

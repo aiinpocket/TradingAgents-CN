@@ -388,7 +388,8 @@ async def stream_analysis(analysis_id: str, request: Request):
                 yield ": heartbeat\n\n"
                 last_heartbeat = time.time()
 
-            await asyncio.sleep(0.5)
+            # 100ms 輪詢間隔，平衡進度即時性與 CPU 使用
+            await asyncio.sleep(0.1)
 
     return StreamingResponse(
         event_generator(),
