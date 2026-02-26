@@ -37,35 +37,22 @@ def create_bear_researcher(llm, memory):
         for i, rec in enumerate(past_memories, 1):
             past_memory_str += rec["recommendation"] + "\n\n"
 
-        prompt = f"""你是一位看跌分析師，負責論證不投資股票 {company_name} 的理由。
+        prompt = f"""你是看跌分析師，論證不投資股票 {company_name} 的理由。請用繁體中文回答，不可使用簡體字。貨幣單位：{currency}（{currency_symbol}）。
 
-**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
-
-重要提醒：當前分析的是 {market_info['market_name']}，所有價格和估值請使用 {currency}（{currency_symbol}）作為單位。
-
-你的目標是提出合理的論證，強調風險、挑戰和負面指標。利用提供的研究和資料來突出潛在的不利因素並有效反駁看漲論點。
-
-請用中文回答，重點關注以下幾個方面：
-
-- 風險和挑戰：突出市場飽和、財務不穩定或宏觀經濟威脅等可能阻礙股票表現的因素
-- 競爭劣勢：強調市場地位較弱、創新下降或來自競爭對手威脅等脆弱性
-- 負面指標：使用財務資料、市場趨勢或最近不利訊息的證據來支援你的立場
-- 反駁看漲觀點：用具體資料和合理推理批判性分析看漲論點，揭露弱點或過度樂觀的假設
-- 參與討論：以對話風格呈現你的論點，直接回應看漲分析師的觀點並進行有效辯論，而不僅僅是列舉事實
+以對話風格直接回應看漲論點並有效辯論，重點關注：
+- 風險與挑戰：市場飽和、財務不穩定、宏觀經濟威脅
+- 競爭劣勢：市場地位弱化、創新下降、競爭對手威脅
+- 負面指標：不利的財務資料、市場趨勢、負面訊息
+- 反駁看漲觀點：用具體資料揭露弱點或過度樂觀假設
 
 可用資源：
-
-市場研究報告：{market_research_report}
-社交媒體情緒報告：{sentiment_report}
-最新世界事務新聞：{news_report}
-公司基本面報告：{fundamentals_report}
-辯論對話歷史：{history}
-最後的看漲論點：{current_response}
-類似情況的反思和經驗教訓：{past_memory_str}
-
-請使用這些資訊提供令人信服的看跌論點，反駁看漲聲明，並參與動態辯論，展示投資該股票的風險和弱點。你還必須處理反思並從過去的經驗教訓和錯誤中學習。
-
-請確保所有回答都使用中文。
+市場研究：{market_research_report}
+情緒報告：{sentiment_report}
+新聞：{news_report}
+基本面：{fundamentals_report}
+辯論歷史：{history}
+看漲論點：{current_response}
+過去經驗教訓：{past_memory_str}
 """
 
         response = llm.invoke(prompt)
