@@ -117,6 +117,8 @@ const I18N_MESSAGES = {
     // 熱門特區
     'trending.refresh_hint': '每 5 分鐘自動更新',
     'time.just_now': '剛剛更新',
+    'time.min_ago': ' 分鐘前',
+    'time.hour_ago': ' 小時前',
     'trending.indices': '主要指數',
     'trending.gainers': '漲幅排行',
     'trending.losers': '跌幅排行',
@@ -187,6 +189,9 @@ const I18N_MESSAGES = {
     'a11y.loading': '載入中',
     'a11y.skip_to_content': '跳至主要內容',
     'a11y.history_table': '分析歷史記錄',
+    'a11y.refresh_ai': '重新整理 AI 趨勢分析',
+    'a11y.export_result': '匯出分析結果',
+    'a11y.refresh_history': '重新整理歷史記錄',
 
     // 通用
     'common.no_data': '暫無資料',
@@ -306,6 +311,8 @@ const I18N_MESSAGES = {
     // Trending
     'trending.refresh_hint': 'Auto-refresh every 5 min',
     'time.just_now': 'Just updated',
+    'time.min_ago': ' min ago',
+    'time.hour_ago': 'h ago',
     'trending.indices': 'Major Indices',
     'trending.gainers': 'Top Gainers',
     'trending.losers': 'Top Losers',
@@ -376,6 +383,9 @@ const I18N_MESSAGES = {
     'a11y.loading': 'Loading',
     'a11y.skip_to_content': 'Skip to content',
     'a11y.history_table': 'Analysis history',
+    'a11y.refresh_ai': 'Refresh AI trend analysis',
+    'a11y.export_result': 'Export analysis result',
+    'a11y.refresh_history': 'Refresh history',
 
     // Common
     'common.no_data': 'No data',

@@ -1001,9 +1001,9 @@ async def get_stock_context(symbol: str, request: Request):
     loop = asyncio.get_running_loop()
     data = await loop.run_in_executor(None, _fetch_stock_context, symbol)
 
-    # 若取得行情失敗，回傳 502 而非假裝成功
+    # 若取得行情失敗，回傳 502 並使用 i18n 錯誤訊息
     if data.get("error"):
-        raise HTTPException(status_code=502, detail=data["error"])
+        raise HTTPException(status_code=502, detail=_t("stock_context_error", request))
 
     # 寫入快取
     now = time.time()

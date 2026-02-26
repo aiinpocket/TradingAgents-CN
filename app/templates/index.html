@@ -25,7 +25,7 @@
   <link rel="canonical" href="https://stock-us.aiinpocket.com/">
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HN1YQZJF1Z"></script>
-  <script async src="/static/js/gtag-init.js?v=0.4.4o"></script>
+  <script async src="/static/js/gtag-init.js?v=0.4.4p"></script>
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
@@ -33,11 +33,11 @@
   <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.4.4o"></script>
+  <script src="/static/js/i18n.js?v=0.4.4p"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4o">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4p">
   <!-- JSON-LD 結構化資料 -->
   <script type="application/ld+json">
   {
@@ -163,6 +163,7 @@
 
       <!-- 載入錯誤提示 + 重試 -->
       <div class="trending-error" x-cloak x-show="trendingError && !trendingLoading"
+           role="alert" aria-live="assertive"
            style="text-align:center;padding:2rem 1rem;color:var(--text-secondary)">
         <p x-text="t('trending.load_error')" style="margin-bottom:0.75rem"></p>
         <button @click="retryTrending()" class="btn btn-outline" style="font-size:0.85rem">
@@ -446,7 +447,7 @@
           </div>
           <div class="ai-analysis-actions" x-show="aiAnalysis.content">
             <span class="hint" x-text="aiAnalysis.updated_at ? (t('trending.updated') + ': ' + aiAnalysis.updated_at) : ''"></span>
-            <button class="btn-ghost btn-sm" @click="refreshAiAnalysis()" :disabled="aiAnalysisLoading">
+            <button class="btn-ghost btn-sm" @click="refreshAiAnalysis()" :disabled="aiAnalysisLoading" :aria-label="t('a11y.refresh_ai')">
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
               <span x-text="t('trending.ai_refresh')"></span>
             </button>
@@ -816,7 +817,7 @@
             </div>
           </div>
           <div class="results-actions">
-            <button class="btn-ghost btn-sm" @click="exportResult()">
+            <button class="btn-ghost btn-sm" @click="exportResult()" :aria-label="t('a11y.export_result')">
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
               <span x-text="t('analysis.export')"></span>
             </button>
@@ -905,7 +906,7 @@
       <section class="panel">
         <div class="panel-header panel-header-row">
           <h2 x-text="t('history.title')"></h2>
-          <button class="btn-ghost btn-sm" @click="loadHistory()">
+          <button class="btn-ghost btn-sm" @click="loadHistory()" :aria-label="t('a11y.refresh_history')">
             <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
             <span x-text="t('history.refresh')"></span>
           </button>
@@ -958,6 +959,6 @@
     <span class="footer-open-source" x-text="t('footer.open_source')"></span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.4.4o"></script>
+  <script src="/static/js/app.js?v=0.4.4p"></script>
 </body>
 </html>

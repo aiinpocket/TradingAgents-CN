@@ -739,11 +739,11 @@ function tradingApp() {
         if (diff < 60) return this.t('time.just_now');
         if (diff < 3600) {
           const mins = Math.floor(diff / 60);
-          return this.lang === 'zh-TW' ? mins + ' 分鐘前' : mins + ' min ago';
+          return mins + this.t('time.min_ago');
         }
         if (diff < 86400) {
           const hours = Math.floor(diff / 3600);
-          return this.lang === 'zh-TW' ? hours + ' 小時前' : hours + 'h ago';
+          return hours + this.t('time.hour_ago');
         }
         return dateStr;
       } catch { return dateStr; }
