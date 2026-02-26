@@ -1352,13 +1352,15 @@ body {
   font-weight: 600;
 }
 
-.markdown-body hr {
+/* 共用表格與分隔線樣式（markdown-body + ai-analysis-content） */
+.markdown-body hr,
+.ai-analysis-content hr {
   border: none;
   border-top: 1px solid var(--border-light);
   margin: 16px 0;
 }
-
-.markdown-body table {
+.markdown-body table,
+.ai-analysis-content table {
   width: 100%;
   max-width: 100%;
   border-collapse: collapse;
@@ -1366,17 +1368,21 @@ body {
   font-size: 13px;
 }
 .markdown-body th,
-.markdown-body td {
+.markdown-body td,
+.ai-analysis-content th,
+.ai-analysis-content td {
   padding: 8px 12px;
   text-align: left;
   border: 1px solid var(--border-light);
 }
-.markdown-body th {
+.markdown-body th,
+.ai-analysis-content th {
   background: var(--bg-inset);
   font-weight: 600;
   color: var(--text);
 }
-.markdown-body td {
+.markdown-body td,
+.ai-analysis-content td {
   color: var(--text-sub);
 }
 
@@ -1710,32 +1716,7 @@ body {
 .ai-analysis-content strong {
   color: var(--text);
 }
-.ai-analysis-content table {
-  width: 100%;
-  max-width: 100%;
-  border-collapse: collapse;
-  margin: 12px 0;
-  font-size: 13px;
-}
-.ai-analysis-content th,
-.ai-analysis-content td {
-  padding: 8px 12px;
-  text-align: left;
-  border: 1px solid var(--border-light);
-}
-.ai-analysis-content th {
-  background: var(--bg-inset);
-  font-weight: 600;
-  color: var(--text);
-}
-.ai-analysis-content td {
-  color: var(--text-sub);
-}
-.ai-analysis-content hr {
-  border: none;
-  border-top: 1px solid var(--border-light);
-  margin: 16px 0;
-}
+/* table/th/td/hr 已合併至共用選擇器（見 .markdown-body 區段） */
 .ai-analysis-footer {
   display: flex;
   justify-content: flex-end;
@@ -2726,11 +2707,14 @@ code {
   background: var(--bg-inset);
   border-left-color: var(--accent);
 }
-[data-theme="dark"] .markdown-body th {
+[data-theme="dark"] .markdown-body th,
+[data-theme="dark"] .ai-analysis-content th {
   background: var(--bg-inset);
 }
 [data-theme="dark"] .markdown-body th,
-[data-theme="dark"] .markdown-body td {
+[data-theme="dark"] .markdown-body td,
+[data-theme="dark"] .ai-analysis-content th,
+[data-theme="dark"] .ai-analysis-content td {
   border-color: var(--border-light);
 }
 
