@@ -20,26 +20,30 @@ logger = get_logger('agents')
 
 class OptimizedUSDataProvider:
     """優化的美股資料提供器 - 整合快取和API限制處理"""
-    
+
     def __init__(self):
         self.cache = get_cache()
         self.config = get_config()
-        self.last_api_call = 0
-        self.min_api_interval = 1.0  # 最小API呼叫間隔（秒）
-        
+        # 按 API 端點分離 rate limit，避免跨端點互相阻塞
+        self._rate_limits = {
+            "finnhub": {"last_call": 0, "interval": 0.3},   # FinnHub 60/min，0.3s 允許突發
+            "yfinance": {"last_call": 0, "interval": 0.1},  # Yahoo Finance 無嚴格限制
+        }
+
         logger.info("優化美股資料提供器初始化完成")
-    
-    def _wait_for_rate_limit(self):
-        """等待API限制"""
+
+    def _wait_for_rate_limit(self, api_name: str = "finnhub"):
+        """按端點等待 API 限制，避免跨端點互相阻塞"""
+        limit = self._rate_limits.get(api_name, {"last_call": 0, "interval": 0.3})
         current_time = time.time()
-        time_since_last_call = current_time - self.last_api_call
-        
-        if time_since_last_call < self.min_api_interval:
-            wait_time = self.min_api_interval - time_since_last_call
-            logger.info(f"API限制等待 {wait_time:.1f}s...")
+        time_since_last_call = current_time - limit["last_call"]
+
+        if time_since_last_call < limit["interval"]:
+            wait_time = limit["interval"] - time_since_last_call
+            logger.debug(f"{api_name} API 限制等待 {wait_time:.2f}s")
             time.sleep(wait_time)
-        
-        self.last_api_call = time.time()
+
+        limit["last_call"] = time.time()
     
     def get_stock_data(self, symbol: str, start_date: str, end_date: str, 
                       force_refresh: bool = False) -> str:
@@ -89,7 +93,7 @@ class OptimizedUSDataProvider:
         # 嘗試FINNHUB API（優先）
         try:
             logger.info(f"從FINNHUB API取得資料: {symbol}")
-            self._wait_for_rate_limit()
+            self._wait_for_rate_limit("finnhub")
 
             formatted_data = self._get_data_from_finnhub(symbol, start_date, end_date)
             if formatted_data and "錯誤訊息" not in formatted_data:
@@ -107,7 +111,7 @@ class OptimizedUSDataProvider:
         if not formatted_data:
             try:
                 logger.info(f"從Yahoo Finance API取得資料: {symbol}")
-                self._wait_for_rate_limit()
+                self._wait_for_rate_limit("yfinance")
 
                 ticker = yf.Ticker(symbol.upper())
                 data = ticker.history(start=start_date, end=end_date)

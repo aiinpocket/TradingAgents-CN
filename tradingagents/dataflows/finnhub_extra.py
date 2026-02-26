@@ -7,6 +7,7 @@ FinnHub 進階資料聚合模組
 
 import os
 import time
+import threading
 import finnhub
 from datetime import datetime, timedelta
 from tradingagents.utils.logging_manager import get_logger
@@ -17,6 +18,11 @@ logger = get_logger('dataflows')
 # 格式: { "report_type:TICKER:date": {"data": str, "timestamp": float} }
 _report_cache: dict = {}
 _MAX_CACHE_ENTRIES = 500  # 快取上限，防止記憶體無限增長
+
+# 執行緒鎖：避免並行分析師同時產生相同報告（如新聞+社群分析師同時查詢情緒資料）
+_cache_lock = threading.Lock()
+# 進行中的報告鍵集合，用於去重並行的 API 呼叫
+_pending_keys: dict = {}  # cache_key -> threading.Event
 
 # 各報告類型的快取有效期（秒）
 _CACHE_TTL = {
@@ -64,6 +70,17 @@ def _set_cached_report(report_type: str, ticker: str, data: str, extra_key: str 
     _report_cache[cache_key] = {"data": data, "timestamp": time.time()}
 
 
+# 鍵鎖池：為每個快取鍵提供獨立鎖，避免並行分析師重複呼叫相同 API
+_key_locks: dict = {}
+
+def _get_key_lock(cache_key: str) -> threading.Lock:
+    """取得指定快取鍵的專屬鎖（執行緒安全）"""
+    with _cache_lock:
+        if cache_key not in _key_locks:
+            _key_locks[cache_key] = threading.Lock()
+        return _key_locks[cache_key]
+
+
 def clear_finnhub_cache(ticker: str = None) -> None:
     """清除 FinnHub 報告快取，不指定 ticker 則清除全部"""
     if ticker:
@@ -94,11 +111,24 @@ def get_finnhub_sentiment_report(ticker: str, curr_date: str) -> str:
     Returns:
         str: Markdown 格式的情緒分析報告
     """
-    # 快取檢查
+    # 快取檢查（快速路徑，無鎖）
     cached = _get_cached_report("sentiment", ticker, curr_date)
     if cached:
         return cached
 
+    # 鍵鎖保護：同一股票+日期只允許一個執行緒呼叫 API
+    # 避免並行分析師（新聞+社群）重複呼叫相同情緒 API
+    key_lock = _get_key_lock(f"sentiment:{ticker}:{curr_date}")
+    with key_lock:
+        # 雙重檢查：其他執行緒可能已完成快取
+        cached = _get_cached_report("sentiment", ticker, curr_date)
+        if cached:
+            return cached
+        return _generate_sentiment_report(ticker, curr_date)
+
+
+def _generate_sentiment_report(ticker: str, curr_date: str) -> str:
+    """實際產生情緒報告的內部函式（由鍵鎖保護呼叫）"""
     client = _get_finnhub_client()
     if not client:
         return "FinnHub API 金鑰未設定，無法取得情緒資料"
@@ -229,11 +259,22 @@ def get_finnhub_analyst_report(ticker: str, curr_date: str) -> str:
     Returns:
         str: Markdown 格式的分析師共識報告
     """
-    # 快取檢查
+    # 快取檢查（快速路徑，無鎖）
     cached = _get_cached_report("analyst", ticker, curr_date)
     if cached:
         return cached
 
+    # 鍵鎖保護：同一股票+日期只呼叫一次 API
+    key_lock = _get_key_lock(f"analyst:{ticker}:{curr_date}")
+    with key_lock:
+        cached = _get_cached_report("analyst", ticker, curr_date)
+        if cached:
+            return cached
+        return _generate_analyst_report(ticker, curr_date)
+
+
+def _generate_analyst_report(ticker: str, curr_date: str) -> str:
+    """實際產生分析師共識報告的內部函式（由鍵鎖保護呼叫）"""
     client = _get_finnhub_client()
     if not client:
         return "FinnHub API 金鑰未設定，無法取得分析師資料"
@@ -436,11 +477,22 @@ def get_finnhub_technical_report(ticker: str, resolution: str = 'D') -> str:
     Returns:
         str: Markdown 格式的技術訊號報告
     """
-    # 快取檢查
+    # 快取檢查（快速路徑，無鎖）
     cached = _get_cached_report("technical", ticker, resolution)
     if cached:
         return cached
 
+    # 鍵鎖保護：同一股票+解析度只呼叫一次 API
+    key_lock = _get_key_lock(f"technical:{ticker}:{resolution}")
+    with key_lock:
+        cached = _get_cached_report("technical", ticker, resolution)
+        if cached:
+            return cached
+        return _generate_technical_report(ticker, resolution)
+
+
+def _generate_technical_report(ticker: str, resolution: str = 'D') -> str:
+    """實際產生技術訊號報告的內部函式（由鍵鎖保護呼叫）"""
     client = _get_finnhub_client()
     if not client:
         return "FinnHub API 金鑰未設定，無法取得技術訊號"
