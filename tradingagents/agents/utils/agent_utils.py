@@ -81,6 +81,51 @@ def execute_tools_parallel(tool_calls, tools, logger_instance=None):
     return results
 
 
+def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
+    """跳過 LLM 工具決策，直接以程式碼並行呼叫所有指定工具。
+
+    與 execute_tools_parallel 的差別：此函式不需要 LLM tool_calls，
+    而是直接傳入工具列表和對應參數，省去第一次 LLM 呼叫的延遲。
+
+    Args:
+        tools: 要呼叫的工具物件列表
+        tool_args_list: 每個工具對應的參數字典列表（與 tools 同序）
+        logger_instance: 日誌實例（可選）
+
+    Returns:
+        list[str]: 每個工具的回傳結果（字串列表，與 tools 同序）
+    """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    _log = logger_instance or logger
+
+    def _invoke_one(tool, args):
+        name = getattr(tool, 'name', getattr(tool, '__name__', str(tool)))
+        try:
+            result = tool.invoke(args)
+            _log.debug(f"直接工具呼叫 {name} 成功，結果長度: {len(str(result))}")
+            return str(result)
+        except Exception as e:
+            _log.error(f"直接工具呼叫 {name} 失敗: {e}")
+            return f"工具 {name} 執行失敗: {str(e)}"
+
+    if len(tools) <= 1:
+        return [_invoke_one(t, a) for t, a in zip(tools, tool_args_list)]
+
+    _log.info(f"直接並行呼叫 {len(tools)} 個工具")
+    results = [None] * len(tools)
+    with ThreadPoolExecutor(max_workers=len(tools)) as executor:
+        future_to_idx = {
+            executor.submit(_invoke_one, t, a): i
+            for i, (t, a) in enumerate(zip(tools, tool_args_list))
+        }
+        for future in as_completed(future_to_idx):
+            idx = future_to_idx[future]
+            results[idx] = future.result()
+
+    return results
+
+
 def create_msg_delete():
     """建立訊息清理節點，用於分析師完成後標記分支結束。
 

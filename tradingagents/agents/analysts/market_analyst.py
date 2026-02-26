@@ -195,164 +195,86 @@ def create_market_analyst(llm, toolkit):
         logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
         if toolkit.config["online_tools"]:
-            # 使用統一的市場資料工具和 FinnHub 技術訊號
-            logger.info("[市場分析師] 使用統一市場資料工具和 FinnHub 技術訊號")
+            # 直接呼叫工具取得資料（跳過 LLM 工具決策，節省一次 LLM 呼叫）
+            logger.info("[市場分析師] 直接呼叫工具取得市場資料和技術訊號")
+            start_date = _calc_start_date(current_date)
+
+            from tradingagents.agents.utils.agent_utils import invoke_tools_direct
             tools = [toolkit.get_stock_market_data_unified, toolkit.get_finnhub_technical_signals]
-            # 安全地取得工具名稱用於除錯
-            tool_names_debug = []
-            for tool in tools:
-                if hasattr(tool, 'name'):
-                    tool_names_debug.append(tool.name)
-                elif hasattr(tool, '__name__'):
-                    tool_names_debug.append(tool.__name__)
-                else:
-                    tool_names_debug.append(str(tool))
-            logger.debug(f"選擇的工具: {tool_names_debug}")
-            logger.debug(f"統一工具將自動處理: {market_info['market_name']}")
+            tool_args = [
+                {"ticker": ticker, "start_date": start_date, "end_date": current_date},
+                {"ticker": ticker},
+            ]
+            tool_results = invoke_tools_direct(tools, tool_args, logger)
+
+            market_data = tool_results[0]
+            technical_signals = tool_results[1]
+
+            # 單次 LLM 呼叫：基於已取得的工具資料生成分析報告
+            from langchain_core.messages import HumanMessage
+
+            analysis_prompt = f"""你是一位專業的股票技術分析師。
+
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。**
+
+請基於以下真實資料，對{company_name}（{ticker}）進行詳細的技術分析。
+當前日期：{current_date}
+所屬市場：{market_info['market_name']}
+計價貨幣：{market_info['currency_name']}（{market_info['currency_symbol']}）
+
+=== 市場資料 ===
+{market_data}
+
+=== FinnHub 技術訊號 ===
+{technical_signals}
+
+**分析要求：**
+1. 基於上述真實資料進行分析，不要編造數據
+2. 分析移動平均線、MACD、RSI、布林帶等技術指標
+3. 參考 FinnHub 技術分析綜合訊號和支撐壓力位
+4. 提供具體的數值和專業分析
+5. 給出明確的投資建議
+6. 所有價格使用{market_info['currency_name']}表示
+
+**輸出格式：**
+## 股票基本資訊
+## 技術指標分析
+## 價格趨勢分析
+## 投資建議"""
+
+            try:
+                result = llm.invoke([HumanMessage(content=analysis_prompt)])
+                report = result.content
+                logger.info(f"[市場分析師] 直接模式完成，報告長度: {len(report)}")
+            except Exception as e:
+                logger.error(f"[市場分析師] LLM 分析失敗: {e}", exc_info=True)
+                report = f"市場分析失敗: {str(e)}"
         else:
+            # 離線模式保留原有工具呼叫流程
             tools = [
                 toolkit.get_YFin_data,
                 toolkit.get_stockstats_indicators_report,
                 toolkit.get_finnhub_technical_signals,
             ]
+            from langchain_core.messages import HumanMessage
+            from tradingagents.agents.utils.agent_utils import invoke_tools_direct
 
-        # 統一的系統提示，適用於所有股票類型
-        system_message = (
-            f"""你是一位專業的股票技術分析師。
-
-**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
-
-你必須對{company_name}（股票代碼：{ticker}）進行詳細的技術分析。
-
-**股票資訊：**
-- 公司名稱：{company_name}
-- 股票代碼：{ticker}
-- 所屬市場：{market_info['market_name']}
-- 計價貨幣：{market_info['currency_name']}（{market_info['currency_symbol']}）
-
-**工具呼叫指令：**
-你有一個工具叫做get_stock_market_data_unified，你必須立即呼叫這個工具來取得{company_name}（{ticker}）的市場資料。
-不要說你將要呼叫工具，直接呼叫工具。
-
-**分析要求：**
-1. 呼叫工具後，基於取得的真實資料進行技術分析
-2. 分析移動平均線、MACD、RSI、布林帶等技術指標
-3. 參考 FinnHub 技術分析綜合訊號（買入/賣出訊號統計、ADX趨勢強度）和支撐壓力位補充你的技術分析
-4. 考慮{market_info['market_name']}市場特點進行分析
-5. 提供具體的數值和專業分析
-6. 給出明確的投資建議
-7. 所有價格資料使用{market_info['currency_name']}（{market_info['currency_symbol']}）表示
-
-**輸出格式：**
-## 股票基本資訊
-- 公司名稱：{company_name}
-- 股票代碼：{ticker}
-- 所屬市場：{market_info['market_name']}
-
-## 技術指標分析
-## 價格趨勢分析
-## 投資建議
-
-請使用中文，基於真實資料進行分析。確保在分析中正確使用公司名稱"{company_name}"和股票代碼"{ticker}"。"""
-        )
-
-
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "你是一位專業的股票技術分析師，與其他分析師協作。"
-                    "使用提供的工具來取得和分析股票資料。"
-                    "如果你無法完全回答，沒關係；其他分析師會從不同角度繼續分析。"
-                    "執行你能做的技術分析工作來取得進展。"
-                    "如果你有明確的技術面投資建議：**買入/持有/賣出**，"
-                    "請在你的回覆中明確標註，但不要使用'最終交易建議'前綴，因為最終決策需要綜合所有分析師的意見。"
-                    "你可以使用以下工具：{tool_names}。\n{system_message}"
-                    "供你參考，當前日期是{current_date}。"
-                    "我們要分析的是{company_name}（股票代碼：{ticker}）。"
-                    "請確保所有分析都使用中文，並在分析中正確區分公司名稱和股票代碼。",
-                ),
-                MessagesPlaceholder(variable_name="messages"),
+            tool_args = [
+                {"symbol": ticker, "start_date": _calc_start_date(current_date), "end_date": current_date},
+                {"symbol": ticker, "start_date": _calc_start_date(current_date), "end_date": current_date},
+                {"ticker": ticker},
             ]
-        )
+            tool_results = invoke_tools_direct(tools, tool_args, logger)
 
-        prompt = prompt.partial(system_message=system_message)
-        # 安全地取得工具名稱，處理函式和工具物件
-        tool_names = []
-        for tool in tools:
-            if hasattr(tool, 'name'):
-                tool_names.append(tool.name)
-            elif hasattr(tool, '__name__'):
-                tool_names.append(tool.__name__)
-            else:
-                tool_names.append(str(tool))
-
-        prompt = prompt.partial(tool_names=", ".join(tool_names))
-        prompt = prompt.partial(current_date=current_date)
-        prompt = prompt.partial(ticker=ticker)
-        prompt = prompt.partial(company_name=company_name)
-
-        chain = prompt | llm.bind_tools(tools)
-
-        result = chain.invoke(state["messages"])
-
-        # 處理市場分析報告
-        if len(result.tool_calls) == 0:
-            # 沒有工具呼叫，直接使用LLM的回覆
+            result = llm.invoke([HumanMessage(content=(
+                f"你是一位專業的股票技術分析師。請用繁體中文分析{ticker}。\n\n"
+                + "\n\n".join(f"工具結果 {i+1}:\n{r}" for i, r in enumerate(tool_results))
+                + "\n\n請生成完整的技術分析報告。"
+            ))])
             report = result.content
-            logger.info(f"[市場分析師] 直接回覆，長度: {len(report)}")
-        else:
-            # 有工具呼叫，執行工具並生成完整分析報告
-            logger.info(f"[市場分析師] 工具呼叫: {[call.get('name', 'unknown') for call in result.tool_calls]}")
-
-            try:
-                from langchain_core.messages import HumanMessage
-                from tradingagents.agents.utils.agent_utils import execute_tools_parallel
-
-                # 並行執行多個工具呼叫以提升效能
-                tool_messages = execute_tools_parallel(result.tool_calls, tools, logger)
-
-                # 基於工具結果生成完整分析報告
-                analysis_prompt = f"""現在請基於上述工具取得的資料，生成詳細的技術分析報告。
-
-要求：
-1. 報告必須基於工具返回的真實資料進行分析
-2. 包含具體的技術指標數值和專業分析
-3. 提供明確的投資建議和風險提示
-4. 報告長度不少於800字
-5. 使用中文撰寫
-
-請分析股票{ticker}的技術面情況，包括：
-- 價格趨勢分析
-- 技術指標解讀
-- 支撐阻力位分析
-- 成交量分析
-- 投資建議"""
-
-                messages = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
-
-                final_result = llm.invoke(messages)
-                report = final_result.content
-
-                logger.info(f"[市場分析師] 生成完整分析報告，長度: {len(report)}")
-
-                return {
-                    "messages": [result] + tool_messages + [final_result],
-                    "market_report": report,
-                }
-
-            except Exception as e:
-                logger.error(f"[市場分析師] 工具執行或分析生成失敗: {e}", exc_info=True)
-
-                report = f"市場分析師呼叫了工具但分析生成失敗: {[call.get('name', 'unknown') for call in result.tool_calls]}"
-
-                return {
-                    "messages": [result],
-                    "market_report": report,
-                }
 
         return {
-            "messages": [result],
+            "messages": [("assistant", report)],
             "market_report": report,
         }
 

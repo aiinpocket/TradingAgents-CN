@@ -52,208 +52,71 @@ def create_news_analyst(llm, toolkit):
         company_name = _get_company_name(ticker, market_info)
         logger.info(f"[新聞分析師] 公司名稱: {company_name}")
         
-        # 使用統一新聞工具，簡化工具呼叫
-        logger.info("[新聞分析師] 使用統一新聞工具，自動識別股票類型並取得相應新聞")
-   # 建立統一新聞工具
+        # 直接呼叫工具取得資料（跳過 LLM 工具決策步驟，節省一次 LLM 呼叫）
+        logger.info("[新聞分析師] 直接呼叫統一新聞工具和 FinnHub 情緒工具")
+
         unified_news_tool = create_unified_news_tool(toolkit)
         unified_news_tool.name = "get_stock_news_unified"
 
-        # 新增 FinnHub 情緒量化工具，提供客觀的新聞情緒評分
+        from tradingagents.agents.utils.agent_utils import invoke_tools_direct
         tools = [unified_news_tool, toolkit.get_finnhub_sentiment_data]
-        logger.info("[新聞分析師] 已載入統一新聞工具和 FinnHub 情緒工具")
+        tool_args = [
+            {"stock_code": ticker, "max_news": 10, "model_info": ""},
+            {"ticker": ticker},
+        ]
+        tool_results = invoke_tools_direct(tools, tool_args, logger)
 
-        system_message = (
-            """您是一位專業的財經新聞分析師，負責分析最新的市場新聞和事件對股票價格的潛在影響。
+        news_data = tool_results[0]
+        sentiment_data = tool_results[1]
 
-**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
+        tool_time = (datetime.now() - start_time).total_seconds()
+        logger.info(f"[新聞分析師] 工具呼叫完成，耗時: {tool_time:.2f}秒")
 
+        # 單次 LLM 呼叫：基於已取得的資料生成新聞分析報告
+        from langchain_core.messages import HumanMessage
 
-您的主要職責包括：
-1. 取得和分析最新的實時新聞（優先15-30分鐘內的新聞）
-2. 評估新聞事件的緊急程度和市場影響
-3. 識別可能影響股價的關鍵資訊
-4. 分析新聞的時效性和可靠性
-5. 提供基於新聞的交易建議和價格影響評估
+        analysis_prompt = f"""你是一位專業的財經新聞分析師。
 
-重點關注的新聞類型：
-- 財報發布和業績指導
-- 重大合作和並購訊息
-- 政策變化和監管動態
-- 突發事件和危機管理
-- 行業趨勢和技術突破
-- 管理層變動和戰略調整
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。**
 
-分析要點：
-- 新聞的時效性（發布時間距離現在多久）
-- 新聞的可信度（來源權威性）
-- 市場影響程度（對股價的潛在影響）
-- 投資者情緒變化（正面/負面/中性）
-- 與歷史類似事件的對比
-
-價格影響分析要求：
-- 評估新聞對股價的短期影響（1-3天）
-- 分析可能的價格波動幅度（百分比）
-- 提供基於新聞的價格調整建議
-- 識別關鍵價格支撐位和阻力位
-- 評估新聞對長期投資價值的影響
-- 不允許回覆'無法評估價格影響'或'需要更多資訊'
-
-請特別注意：
-- 使用 FinnHub 新聞情緒量化評分（bullish/bearish 比例、行業平均比較）來佐證你的分析判斷
-- 如果新聞資料存在滯後（超過2小時），請在分析中明確說明時效性限制
-- 優先分析最新的、高相關性的新聞事件
-- 提供新聞對股價影響的量化評估和具體價格預期
-- 必須包含基於新聞的價格影響分析和調整建議
-
-請撰寫詳細的中文分析報告，並在報告末尾附上Markdown表格總結關鍵發現。"""
-        )
-
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "您是一位專業的財經新聞分析師。"
-                    "\n[強制要求] CRITICAL REQUIREMENT - 絕對強制要求："
-                    "\n"
-                    "\n[禁止] 禁止行為："
-                    "\n- 絕對禁止在沒有呼叫工具的情況下直接回答"
-                    "\n- 絕對禁止基於推測或假設生成任何分析內容"
-                    "\n- 絕對禁止跳過工具呼叫步驟"
-                    "\n- 絕對禁止說'我無法取得即時資料'等借口"
-                    "\n"
-                    "\n[必須] 強制執行步驟："
-                    "\n1. 您的第一個動作必須是呼叫 get_stock_news_unified 工具"
-                    "\n2. 該工具會自動取得美股相關新聞"
-                    "\n3. 只有在成功取得新聞資料後，才能開始分析"
-                    "\n4. 您的回答必須基於工具返回的真實資料"
-                    "\n"
-                    "\n[工具] 工具呼叫格式示例："
-                    "\n呼叫: get_stock_news_unified(stock_code='{ticker}', max_news=10)"
-                    "\n"
-                    "\n注意：如果您不呼叫工具，您的回答將被視為無效並被拒絕。"
-                    "\n注意：您必須先呼叫工具取得資料，然後基於資料進行分析。"
-                    "\n注意：沒有例外，沒有借口，必須呼叫工具。"
-                    "\n"
-                    "\n您可以存取以下工具：{tool_names}。"
-                    "\n{system_message}"
-                    "\n供您參考，當前日期是{current_date}。我們正在查看公司{ticker}。"
-                    "\n請按照上述要求執行，用中文撰寫所有分析內容。",
-                ),
-                MessagesPlaceholder(variable_name="messages"),
-            ]
-        )
-
-        prompt = prompt.partial(system_message=system_message)
-        prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
-        prompt = prompt.partial(current_date=current_date)
-        prompt = prompt.partial(ticker=ticker)
-        
-        # 取得模型資訊用於統一新聞工具的特殊處理
-        model_info = ""
-        try:
-            if hasattr(llm, 'model_name'):
-                model_info = f"{llm.__class__.__name__}:{llm.model_name}"
-            else:
-                model_info = llm.__class__.__name__
-        except Exception as e:
-            model_info = "Unknown"
-        
-        logger.info(f"[新聞分析師] 準備呼叫LLM進行新聞分析，模型: {model_info}")
-        
-        # 使用統一的工具呼叫處理器
-        llm_start_time = datetime.now()
-        chain = prompt | llm.bind_tools(tools)
-        logger.info(f"[新聞分析師] 開始LLM呼叫，分析 {ticker} 的新聞")
-        result = chain.invoke(state["messages"])
-        
-        llm_end_time = datetime.now()
-        llm_time_taken = (llm_end_time - llm_start_time).total_seconds()
-        logger.info(f"[新聞分析師] LLM呼叫完成，耗時: {llm_time_taken:.2f}秒")
-
-        # 檢查工具呼叫情況
-        tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
-        logger.info(f"[新聞分析師] LLM 呼叫了 {tool_call_count} 個工具")
-
-        if tool_call_count == 0:
-                logger.warning(f"[新聞分析師] {llm.__class__.__name__} 沒有呼叫任何工具，啟動補救機制...")
-                
-                try:
-                    # 強制取得新聞資料
-                    logger.info("[新聞分析師] 強制呼叫統一新聞工具取得新聞資料...")
-                    forced_news = unified_news_tool(stock_code=ticker, max_news=10, model_info="")
-                    
-                    if forced_news and len(forced_news.strip()) > 100:
-                        logger.info(f"[新聞分析師] 強制取得新聞成功: {len(forced_news)} 字元")
-                        
-                        # 基於真實新聞資料重新生成分析
-                        forced_prompt = f"""
-您是一位專業的財經新聞分析師。請基於以下最新取得的新聞資料，對股票 {ticker} 進行詳細的新聞分析：
+請基於以下真實資料，對{company_name}（{ticker}）進行詳細的新聞與輿情分析。
+當前日期：{current_date}
 
 === 最新新聞資料 ===
-{forced_news}
+{news_data}
 
-=== 分析要求 ===
-{system_message}
+=== FinnHub 新聞情緒量化 ===
+{sentiment_data}
 
-請基於上述真實新聞資料撰寫詳細的中文分析報告。
-"""
-                        
-                        logger.info("[新聞分析師] 基於強制取得的新聞資料重新生成完整分析...")
-                        forced_result = llm.invoke([{"role": "user", "content": forced_prompt}])
-                        
-                        if hasattr(forced_result, 'content') and forced_result.content:
-                            report = forced_result.content
-                            logger.info(f"[新聞分析師] 強制補救成功，生成基於真實資料的報告，長度: {len(report)} 字元")
-                        else:
-                            logger.warning("[新聞分析師] 強制補救失敗，使用原始結果")
-                            report = result.content
-                    else:
-                        logger.warning("[新聞分析師] 統一新聞工具取得失敗，使用原始結果")
-                        report = result.content
-                        
-                except Exception as e:
-                    logger.error(f"[新聞分析師] 強制補救過程失敗: {e}")
-                    report = result.content
-        else:
-            # 有工具呼叫，在內部手動執行工具避免 ToolNode 迴圈
-            # ToolNode 迴圈在並行 fan-in 時會導致 tool_calls 訊息交錯衝突
-            from langchain_core.messages import HumanMessage
-            from tradingagents.agents.utils.agent_utils import execute_tools_parallel
-            logger.info(f"[新聞分析師] 工具呼叫: {[tc.get('name', 'unknown') for tc in result.tool_calls]}")
+**分析要求：**
+1. 基於上述真實新聞資料進行分析，不要編造
+2. 評估新聞事件的緊急程度和市場影響
+3. 使用 FinnHub 情緒量化評分佐證分析判斷
+4. 評估新聞對股價的短期影響（1-3天）和價格波動幅度
+5. 識別關鍵價格支撐位和阻力位
+6. 報告末尾附上 Markdown 表格總結關鍵發現
 
-            # 並行執行多個工具呼叫以提升效能
-            tool_messages = execute_tools_parallel(result.tool_calls, tools, logger)
+**輸出格式：**
+## 重要新聞摘要
+## 市場情緒分析
+## 價格影響評估
+## 投資建議"""
 
-            # 將工具結果傳回 LLM 生成完整新聞分析報告
-            analysis_prompt = (
-                f"現在請基於上述工具取得的資料，對 {ticker} 撰寫詳細的財經新聞分析報告。"
-                "報告必須使用繁體中文。"
-            )
-            messages_for_llm = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
-            final_result = llm.invoke(messages_for_llm)
-            report = final_result.content
+        try:
+            llm_start_time = datetime.now()
+            result = llm.invoke([HumanMessage(content=analysis_prompt)])
+            report = result.content
+            llm_time = (datetime.now() - llm_start_time).total_seconds()
+            logger.info(f"[新聞分析師] 直接模式完成，報告長度: {len(report)}，LLM耗時: {llm_time:.2f}秒")
+        except Exception as e:
+            logger.error(f"[新聞分析師] LLM 分析失敗: {e}", exc_info=True)
+            report = f"新聞分析失敗: {str(e)}"
 
-            logger.info(f"[新聞分析師] 工具執行完成，報告長度: {len(report)}")
-
-            total_time_taken = (datetime.now() - start_time).total_seconds()
-            logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")
-
-            return {
-                "messages": [result] + tool_messages + [final_result],
-                "news_report": report,
-            }
-
-        # 無工具呼叫路徑（補救機制）的返回
         total_time_taken = (datetime.now() - start_time).total_seconds()
         logger.info(f"[新聞分析師] 新聞分析完成，總耗時: {total_time_taken:.2f}秒")
 
-        from langchain_core.messages import AIMessage
-        clean_message = AIMessage(content=report)
-
-        logger.info(f"[新聞分析師] 返回清潔訊息，報告長度: {len(report)} 字元")
-
         return {
-            "messages": [clean_message],
+            "messages": [("assistant", report)],
             "news_report": report,
         }
 

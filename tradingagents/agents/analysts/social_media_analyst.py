@@ -52,127 +52,70 @@ def create_social_media_analyst(llm, toolkit):
         company_name = _get_company_name_for_social_media(ticker, market_info)
         logger.info(f"[社交媒體分析師] 公司名稱: {company_name}")
 
+        # 直接呼叫工具取得資料（跳過 LLM 工具決策步驟，節省一次 LLM 呼叫）
+        logger.info("[社交媒體分析師] 直接呼叫工具取得社群情緒資料")
+
+        from tradingagents.agents.utils.agent_utils import invoke_tools_direct
+
         if toolkit.config["online_tools"]:
             tools = [toolkit.get_stock_news_openai, toolkit.get_finnhub_sentiment_data]
+            tool_args = [
+                {"ticker": ticker, "current_date": current_date},
+                {"ticker": ticker},
+            ]
         else:
-            # 使用 FinnHub 情緒量化資料和統一情緒分析工具
-            tools = [
-                toolkit.get_stock_sentiment_unified,
-                toolkit.get_finnhub_sentiment_data,
+            tools = [toolkit.get_stock_sentiment_unified, toolkit.get_finnhub_sentiment_data]
+            tool_args = [
+                {"ticker": ticker},
+                {"ticker": ticker},
             ]
 
-        system_message = (
-            """您是一位專業的社交媒體和投資情緒分析師，負責分析投資者對特定美股的討論和情緒變化。
+        tool_results = invoke_tools_direct(tools, tool_args, logger)
+        social_data = tool_results[0]
+        sentiment_data = tool_results[1]
 
-**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**
-
-**使用 FinnHub 情緒量化資料**（新聞看多/看空比例、分析師共識評分），這些資料提供客觀的量化指標。
-搭配新聞分析來理解市場情緒的具體內容和變化趨勢。
-
-您的主要職責包括：
-1. 使用 FinnHub 情緒量化資料取得客觀的看多/看空比例和行業比較
-2. 監控財經媒體和新聞對股票的報導傾向
-3. 識別影響股價的熱點事件和市場傳言
-4. 評估散戶與機構投資者的觀點差異
-5. 分析政策變化對投資者情緒的影響
-6. 評估情緒變化對股價的潛在影響
-
-重點關注來源：
-- 財經新聞：Bloomberg、CNBC、Reuters、Yahoo Finance
-- 專業分析：各大券商研報、Seeking Alpha
-- FinnHub 情緒量化資料：新聞情緒評分、分析師共識
-
-分析要點：
-- FinnHub 新聞情緒量化指標（bullish/bearish 比例、與行業平均的比較）
-- 投資者情緒的變化趨勢和原因
-- 熱點事件對股價預期的影響
-- 散戶情緒與機構觀點的差異
-
-情緒價格影響分析要求：
-- 量化投資者情緒強度（樂觀/悲觀程度）
-- 評估情緒變化對短期股價的影響（1-5天）
-- 分析散戶情緒與股價走勢的相關性
-- 識別情緒驅動的價格支撐位和阻力位
-- 提供基於情緒分析的價格預期調整
-- 評估市場情緒對估值的影響程度
-- 不允許回覆'無法評估情緒影響'或'需要更多資料'
-
-必須包含：
-- 情緒指數評分（1-10分）
-- 預期價格波動幅度
-- 基於情緒的交易時機建議
-
-請撰寫詳細的中文分析報告，並在報告末尾附上Markdown表格總結關鍵發現。
-注意：如果特定平台的資料取得受限，請明確說明並提供替代分析建議。"""
-        )
-
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "您是一位有用的AI助手，與其他助手協作。"
-                    " 使用提供的工具來推進回答問題。"
-                    " 如果您無法完全回答，沒關係；具有不同工具的其他助手"
-                    " 將從您停下的地方繼續幫助。執行您能做的以取得進展。"
-                    " 如果您或任何其他助手有最終交易提案：**買入/持有/賣出**或可交付成果，"
-                    " 請在您的回應前加上最終交易提案：**買入/持有/賣出**，以便團隊知道停止。"
-                    " 您可以存取以下工具：{tool_names}。\n{system_message}"
-                    "供您參考，當前日期是{current_date}。我們要分析的當前公司是{ticker}。請用中文撰寫所有分析內容。",
-                ),
-                MessagesPlaceholder(variable_name="messages"),
-            ]
-        )
-
-        prompt = prompt.partial(system_message=system_message)
-        # 安全地取得工具名稱，處理函式和工具物件
-        tool_names = []
-        for tool in tools:
-            if hasattr(tool, 'name'):
-                tool_names.append(tool.name)
-            elif hasattr(tool, '__name__'):
-                tool_names.append(tool.__name__)
-            else:
-                tool_names.append(str(tool))
-
-        prompt = prompt.partial(tool_names=", ".join(tool_names))
-        prompt = prompt.partial(current_date=current_date)
-        prompt = prompt.partial(ticker=ticker)
-
-        chain = prompt | llm.bind_tools(tools)
-
-        result = chain.invoke(state["messages"])
-
-        report = ""
-        if len(result.tool_calls) == 0:
-            # 沒有工具呼叫，直接使用 LLM 回覆
-            report = result.content
-            return {
-                "messages": [result],
-                "sentiment_report": report,
-            }
-
-        # 有工具呼叫，在內部手動執行工具避免 ToolNode 迴圈
-        # ToolNode 迴圈在並行 fan-in 時會導致 tool_calls 訊息交錯衝突
+        # 單次 LLM 呼叫：基於已取得的資料生成情緒分析報告
         from langchain_core.messages import HumanMessage
-        from tradingagents.agents.utils.agent_utils import execute_tools_parallel
-        logger.info(f"[社交媒體分析師] 工具呼叫: {[tc.get('name', 'unknown') for tc in result.tool_calls]}")
 
-        # 並行執行多個工具呼叫以提升效能
-        tool_messages = execute_tools_parallel(result.tool_calls, tools, logger)
+        analysis_prompt = f"""你是一位專業的社交媒體和投資情緒分析師。
 
-        # 將工具結果傳回 LLM 生成完整情緒分析報告
-        analysis_prompt = (
-            f"現在請基於上述工具取得的資料，對 {ticker} 撰寫詳細的社交媒體和投資情緒分析報告。"
-            "報告必須使用繁體中文。"
-        )
-        messages_for_llm = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
-        final_result = llm.invoke(messages_for_llm)
-        report = final_result.content
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。**
 
-        logger.info(f"[社交媒體分析師] 工具執行完成，報告長度: {len(report)}")
+請基於以下真實資料，對{company_name}（{ticker}）進行詳細的社群情緒分析。
+當前日期：{current_date}
+
+=== 社群與新聞資料 ===
+{social_data}
+
+=== FinnHub 情緒量化 ===
+{sentiment_data}
+
+**分析要求：**
+1. 基於上述真實資料進行分析，不要編造
+2. 使用 FinnHub 情緒量化指標（bullish/bearish 比例、行業比較）
+3. 分析投資者情緒的變化趨勢和原因
+4. 量化投資者情緒強度，給出情緒指數評分（1-10分）
+5. 評估情緒變化對短期股價的影響（1-5天）
+6. 提供基於情緒的交易時機建議
+7. 報告末尾附上 Markdown 表格總結關鍵發現
+
+**輸出格式：**
+## 社群情緒概覽
+## FinnHub 情緒量化分析
+## 投資者情緒趨勢
+## 價格影響評估
+## 交易建議"""
+
+        try:
+            result = llm.invoke([HumanMessage(content=analysis_prompt)])
+            report = result.content
+            logger.info(f"[社交媒體分析師] 直接模式完成，報告長度: {len(report)}")
+        except Exception as e:
+            logger.error(f"[社交媒體分析師] LLM 分析失敗: {e}", exc_info=True)
+            report = f"社群情緒分析失敗: {str(e)}"
 
         return {
-            "messages": [result] + tool_messages + [final_result],
+            "messages": [("assistant", report)],
             "sentiment_report": report,
         }
 

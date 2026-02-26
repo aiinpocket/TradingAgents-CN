@@ -81,24 +81,25 @@ def create_fundamentals_analyst(llm, toolkit):
         company_name = _get_company_name_for_fundamentals(ticker, market_info)
         logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
-        # 選擇工具
+        # 直接呼叫工具取得資料（跳過 LLM 工具決策步驟，節省一次 LLM 呼叫）
+        currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
+
         if toolkit.config["online_tools"]:
-            # 使用統一的基本面分析工具和華爾街分析師共識資料
-            logger.info("[基本面分析師] 使用統一基本面分析工具和分析師共識資料")
+            logger.info("[基本面分析師] 直接呼叫工具取得基本面資料和分析師共識")
+
+            from tradingagents.agents.utils.agent_utils import invoke_tools_direct
             tools = [toolkit.get_stock_fundamentals_unified, toolkit.get_finnhub_analyst_consensus]
-            # 安全地取得工具名稱用於除錯
-            tool_names_debug = []
-            for tool in tools:
-                if hasattr(tool, 'name'):
-                    tool_names_debug.append(tool.name)
-                elif hasattr(tool, '__name__'):
-                    tool_names_debug.append(tool.__name__)
-                else:
-                    tool_names_debug.append(str(tool))
-            logger.debug(f"選擇的工具: {tool_names_debug}")
-            logger.debug(f"統一工具將自動處理: {market_info['market_name']}")
+            tool_args = [
+                {"ticker": ticker, "start_date": start_date, "end_date": current_date, "curr_date": current_date},
+                {"ticker": ticker, "curr_date": current_date},
+            ]
+            tool_results = invoke_tools_direct(tools, tool_args, logger)
+
+            fundamentals_data = tool_results[0]
+            analyst_consensus = tool_results[1]
         else:
-            # 離線模式：使用 FinnHub 和 SimFin 資料，加上分析師共識
+            logger.info("[基本面分析師] 離線模式，直接呼叫多個資料工具")
+            from tradingagents.agents.utils.agent_utils import invoke_tools_direct
             tools = [
                 toolkit.get_finnhub_company_insider_sentiment,
                 toolkit.get_finnhub_company_insider_transactions,
@@ -107,215 +108,55 @@ def create_fundamentals_analyst(llm, toolkit):
                 toolkit.get_simfin_income_stmt,
                 toolkit.get_finnhub_analyst_consensus,
             ]
+            tool_args = [
+                {"ticker": ticker}, {"ticker": ticker},
+                {"ticker": ticker}, {"ticker": ticker}, {"ticker": ticker},
+                {"ticker": ticker, "curr_date": current_date},
+            ]
+            tool_results = invoke_tools_direct(tools, tool_args, logger)
+            fundamentals_data = "\n\n".join(tool_results[:-1])
+            analyst_consensus = tool_results[-1]
 
-        # 統一的系統提示，適用於所有股票類型
-        system_message = (
-            f"你是一位專業的股票基本面分析師。"
-            f"\n\n**重要：你必須使用繁體中文回答，絕對不可使用簡體字。所有分析、建議、評估都必須用繁體中文撰寫。**\n"
-            f"絕對強制要求：你必須呼叫工具取得真實資料！不允許任何假設或編造！"
-            f"任務：分析{company_name}（股票代碼：{ticker}，{market_info['market_name']}）"
-            f"[重要] 立即呼叫 get_stock_fundamentals_unified 工具"
-            f"參數：ticker='{ticker}', start_date='{start_date}', end_date='{current_date}', curr_date='{current_date}'"
-            "分析要求："
-            "- 整合華爾街分析師共識資料（評級分布、目標價、EPS/營收預測）到你的估值分析中"
-            "- 基於真實資料進行深度基本面分析"
-            f"- 計算並提供合理價位區間（使用{market_info['currency_name']}{market_info['currency_symbol']}）"
-            "- 分析當前股價是否被低估或高估"
-            "- 提供基於基本面的目標價位建議"
-            "- 包含PE、PB、PEG等估值指標分析"
-            "- 結合市場特點進行分析"
-            "語言和貨幣要求："
-            "- 所有分析內容必須使用中文"
-            "- 投資建議必須使用中文：買入、持有、賣出"
-            "- 絕對不允許使用英文：buy、hold、sell"
-            f"- 貨幣單位使用：{market_info['currency_name']}（{market_info['currency_symbol']}）"
-            "嚴格禁止："
-            "- 不允許說'我將呼叫工具'"
-            "- 不允許假設任何資料"
-            "- 不允許編造公司資訊"
-            "- 不允許直接回答而不呼叫工具"
-            "- 不允許回覆'無法確定價位'或'需要更多資訊'"
-            "- 不允許使用英文投資建議（buy/hold/sell）"
-            "你必須："
-            "- 立即呼叫統一基本面分析工具"
-            "- 等待工具返回真實資料"
-            "- 基於真實資料進行分析"
-            "- 提供具體的價位區間和目標價"
-            "- 使用中文投資建議（買入/持有/賣出）"
-            "現在立即開始呼叫工具！不要說任何其他話！"
-        )
+        # 單次 LLM 呼叫：基於已取得的工具資料生成分析報告
+        from langchain_core.messages import HumanMessage
 
-        # 系統提示模板
-        system_prompt = (
-            "[強制要求] 你必須呼叫工具取得真實資料！"
-            "[禁止] 不允許假設、編造或直接回答任何問題！"
-            "[必須] 立即呼叫提供的工具取得真實資料，然後基於真實資料進行分析。"
-            "可用工具：{tool_names}。\n{system_message}"
-            "當前日期：{current_date}。"
-            "分析目標：{company_name}（股票代碼：{ticker}）。"
-            "請確保在分析中正確區分公司名稱和股票代碼。"
-        )
+        analysis_prompt = f"""你是一位專業的股票基本面分析師。
 
-        # 建立提示模板
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", system_prompt),
-            MessagesPlaceholder(variable_name="messages"),
-        ])
+**重要：你必須使用繁體中文回答，絕對不可使用簡體字。**
 
-        prompt = prompt.partial(system_message=system_message)
-        # 安全地取得工具名稱，處理函式和工具物件
-        tool_names = []
-        for tool in tools:
-            if hasattr(tool, 'name'):
-                tool_names.append(tool.name)
-            elif hasattr(tool, '__name__'):
-                tool_names.append(tool.__name__)
-            else:
-                tool_names.append(str(tool))
+請基於以下真實資料，對{company_name}（{ticker}）進行詳細的基本面分析。
+當前日期：{current_date}
+所屬市場：{market_info['market_name']}
+計價貨幣：{currency_info}
 
-        prompt = prompt.partial(tool_names=", ".join(tool_names))
-        prompt = prompt.partial(current_date=current_date)
-        prompt = prompt.partial(ticker=ticker)
-        prompt = prompt.partial(company_name=company_name)
+=== 基本面資料 ===
+{fundamentals_data}
 
-        fresh_llm = llm
+=== 華爾街分析師共識 ===
+{analyst_consensus}
 
-        logger.debug(f"建立LLM鏈，工具數量: {len(tools)}")
-        # 安全地取得工具名稱用於除錯
-        debug_tool_names = []
-        for tool in tools:
-            if hasattr(tool, 'name'):
-                debug_tool_names.append(tool.name)
-            elif hasattr(tool, '__name__'):
-                debug_tool_names.append(tool.__name__)
-            else:
-                debug_tool_names.append(str(tool))
-        logger.debug(f"綁定的工具列表: {debug_tool_names}")
-        logger.debug("建立工具鏈，讓模型自主決定是否呼叫工具")
+**分析要求：**
+1. 基於上述真實資料進行分析，不要編造數據
+2. 整合分析師共識資料（評級分布、目標價、EPS/營收預測）
+3. 包含 PE、PB、PEG 等估值指標分析
+4. 計算合理價位區間，分析當前股價是否被低估或高估
+5. 投資建議使用中文（買入/持有/賣出），不允許使用英文
+6. 所有價格使用{currency_info}
+
+**輸出格式：**
+## 公司基本資訊
+## 財務狀況評估
+## 盈利能力分析
+## 估值分析
+## 投資建議"""
 
         try:
-            chain = prompt | fresh_llm.bind_tools(tools)
-            logger.debug(f"工具綁定成功，綁定了 {len(tools)} 個工具")
+            result = llm.invoke([HumanMessage(content=analysis_prompt)])
+            report = result.content
+            logger.info(f"[基本面分析師] 直接模式完成，報告長度: {len(report)}")
         except Exception as e:
-            logger.error(f"工具綁定失敗: {e}")
-            raise e
-
-        logger.debug("呼叫LLM鏈...")
-
-        # 新增詳細的股票代碼追蹤日誌
-        logger.info(f"[股票代碼追蹤] LLM呼叫前，ticker參數: '{ticker}'")
-        logger.info(f"[股票代碼追蹤] 傳遞給LLM的訊息數量: {len(state['messages'])}")
-
-        result = chain.invoke(state["messages"])
-        logger.debug("LLM呼叫完成")
-
-        # 檢查工具呼叫情況
-        tool_call_count = len(result.tool_calls) if hasattr(result, 'tool_calls') else 0
-        logger.debug(f"工具呼叫數量: {tool_call_count}")
-
-        if tool_call_count > 0:
-            # 有工具呼叫，在內部手動執行工具避免 ToolNode 迴圈
-            # ToolNode 迴圈在並行 fan-in 時會導致 tool_calls 訊息交錯衝突
-            from langchain_core.messages import HumanMessage
-            from tradingagents.agents.utils.agent_utils import execute_tools_parallel
-
-            tool_calls_info = [tc['name'] for tc in result.tool_calls]
-            logger.info(f"[基本面分析師] 工具呼叫: {tool_calls_info}")
-
-            # 並行執行多個工具呼叫以提升效能
-            tool_messages = execute_tools_parallel(result.tool_calls, tools, logger)
-
-            # 將工具結果傳回 LLM 生成完整基本面分析報告
-            currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
-            analysis_prompt = (
-                f"現在請基於上述工具取得的資料，對{company_name}（股票代碼：{ticker}）"
-                f"進行詳細的基本面分析報告。價格使用{currency_info}。"
-                "報告必須使用繁體中文。"
-            )
-            messages_for_llm = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]
-            final_result = fresh_llm.invoke(messages_for_llm)
-            report = final_result.content
-
-            logger.info(f"[基本面分析師] 工具執行完成，報告長度: {len(report)}")
-
-            return {
-                "messages": [result] + tool_messages + [final_result],
-                "fundamentals_report": report,
-            }
-
-        # 沒有工具呼叫，使用強制工具呼叫修復
-        logger.debug("檢測到模型未呼叫工具，啟用強制工具呼叫模式")
-
-        # 強制呼叫統一基本面分析工具
-        try:
-            logger.debug("強制呼叫 get_stock_fundamentals_unified...")
-            unified_tool = None
-            for tool in tools:
-                tool_name = None
-                if hasattr(tool, 'name'):
-                    tool_name = tool.name
-                elif hasattr(tool, '__name__'):
-                    tool_name = tool.__name__
-
-                if tool_name == 'get_stock_fundamentals_unified':
-                    unified_tool = tool
-                    break
-            if unified_tool:
-                logger.info(f"[股票代碼追蹤] 強制呼叫統一工具，傳入ticker: '{ticker}'")
-                combined_data = unified_tool.invoke({
-                    'ticker': ticker,
-                    'start_date': start_date,
-                    'end_date': current_date,
-                    'curr_date': current_date
-                })
-                logger.debug(f"統一工具資料取得成功，長度: {len(combined_data)}字元")
-            else:
-                combined_data = "統一基本面分析工具不可用"
-                logger.debug("統一工具未找到")
-        except Exception as e:
-            combined_data = f"統一基本面分析工具呼叫失敗: {e}"
-            logger.debug(f"統一工具呼叫異常: {e}")
-
-        currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"
-
-        # 生成基於真實資料的分析報告
-        analysis_prompt = f"""基於以下真實資料，對{company_name}（股票代碼：{ticker}）進行詳細的基本面分析：
-
-{combined_data}
-
-請提供：
-1. 公司基本資訊分析（{company_name}，股票代碼：{ticker}）
-2. 財務狀況評估
-3. 盈利能力分析
-4. 估值分析（使用{currency_info}）
-5. 投資建議（買入/持有/賣出）
-
-要求：
-- 基於提供的真實資料進行分析
-- 正確使用公司名稱"{company_name}"和股票代碼"{ticker}"
-- 價格使用{currency_info}
-- 投資建議使用中文
-- 分析要詳細且專業"""
-
-        try:
-            analysis_prompt_template = ChatPromptTemplate.from_messages([
-                ("system", "你是專業的股票基本面分析師，基於提供的真實資料進行分析。"),
-                ("human", "{analysis_request}")
-            ])
-
-            analysis_chain = analysis_prompt_template | fresh_llm
-            analysis_result = analysis_chain.invoke({"analysis_request": analysis_prompt})
-
-            if hasattr(analysis_result, 'content'):
-                report = analysis_result.content
-            else:
-                report = str(analysis_result)
-
-            logger.info(f"[基本面分析師] 強制工具呼叫完成，報告長度: {len(report)}")
-
-        except Exception as e:
-            logger.error(f"強制工具呼叫分析失敗: {e}")
-            report = f"基本面分析失敗：{str(e)}"
+            logger.error(f"[基本面分析師] LLM 分析失敗: {e}", exc_info=True)
+            report = f"基本面分析失敗: {str(e)}"
 
         return {"fundamentals_report": report}
 
