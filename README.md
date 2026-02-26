@@ -24,12 +24,16 @@
 ### 亮點
 
 #### 效能優化
+- **GZip 壓縮**: GZipMiddleware 自動壓縮回應（CSS/JS/API），傳輸量減少 ~60%
 - **SSR 預渲染**: 後端注入快取 JSON 至 HTML，消除首屏 CLS（0.34 -> 0.00）
 - **CWV 指標**: LCP 796ms / CLS 0.00 / TTFB 308ms — 全部 Good 等級
 - **趨勢資料並行抓取**: ThreadPoolExecutor 批次並行，延遲降低約 50%
 - **背景定時刷新**: 每 5 分鐘自動更新市場資料快取，前端每 10 分鐘重新載入
+- **快取穿透防護**: 背景刷新採用「標記過期保留舊資料」策略，避免刷新中斷
 - **AI 分析預產生**: 啟動時及背景刷新後自動生成中英文分析（2 小時 TTL）
+- **前端平行初始化**: checkHealth + loadModels 使用 Promise.all 並行呼叫
 - **共用 _stockMap 快取**: trendingData 變化時重建一次 symbol->stock 查詢表
+- **dns-prefetch**: Google Analytics 域名 DNS 預解析
 
 #### i18n 國際化
 - **187+ 翻譯鍵**: zh-TW / en 完全對稱
@@ -41,6 +45,7 @@
 #### 安全強化
 - **速率限制 IP 修復**: CF-Connecting-IP -> X-Real-IP -> client.host 優先順序
 - **CSP 完整限制**: base-uri、form-action、object-src、worker-src、connect-src 精簡
+- **SEO Open Graph**: og:url / og:site_name / og:locale 多語言標記
 - **HSTS preload**: 強制 HTTPS + preload 指令
 - **analysisId 前後端格式驗證**: 防止異常 ID 注入
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
