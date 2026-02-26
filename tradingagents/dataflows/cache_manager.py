@@ -52,14 +52,15 @@ class StockDataCache:
         self._metadata_index_built = False
 
         # 快取配置 - 美股市場TTL設定
+        # 同一交易日內重複分析同一股票時，較長的 TTL 可避免重複 API 呼叫
         self.cache_config = {
             'us_stock_data': {
-                'ttl_hours': 2,  # 美股資料快取2小時（考慮到API限制）
+                'ttl_hours': 4,  # 美股資料快取4小時（覆蓋同一交易日大部分場景）
                 'max_files': 1000,
                 'description': '美股歷史資料'
             },
             'us_news': {
-                'ttl_hours': 6,  # 美股新聞快取6小時
+                'ttl_hours': 8,  # 美股新聞快取8小時（降低新聞 API 呼叫頻率）
                 'max_files': 500,
                 'description': '美股新聞資料'
             },

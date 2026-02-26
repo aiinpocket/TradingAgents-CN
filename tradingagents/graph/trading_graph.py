@@ -8,7 +8,7 @@ from typing import Dict, Any
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 
-from tradingagents.agents.utils.agent_utils import Toolkit
+from tradingagents.agents.utils.agent_utils import Toolkit, reset_tool_result_cache
 from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.agents.utils.memory import FinancialSituationMemory
 
@@ -171,6 +171,9 @@ class TradingAgentsGraph:
             raise ValueError(f"無效的日期格式: {trade_date}")
 
         logger.debug(f"propagate 接收: company_name='{company_name}', trade_date='{trade_date}'")
+
+        # 重置工具結果快取，確保本次分析使用新鮮資料
+        reset_tool_result_cache()
 
         self.ticker = company_name.upper().strip()
 

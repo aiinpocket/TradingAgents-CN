@@ -28,6 +28,8 @@
 - **多空辯論並行化**: 單輪辯論時看漲/看跌研究員同時執行（parallel_invest_debate），串行 ~4s 降至 ~2s
 - **風險分析師並行化**: 單輪辯論時 3 位風險分析師（激進/保守/中立）同時執行，串行 ~6s 降至 ~2s
 - **分析師直接工具呼叫**: invoke_tools_direct() 跳過 LLM 工具決策，每位分析師節省 1 次 LLM 呼叫（2-5s）
+- **工具結果快取**: 同一分析中多個分析師呼叫相同工具+參數時自動去重，避免重複 API 呼叫（如 FinnHub 情緒資料）
+- **快取 TTL 優化**: 市場資料 2h->4h、新聞 6h->8h，減少同一交易日內重複 API 呼叫
 - **圖結構精簡**: 移除 4 個不再使用的 ToolNode 圖節點和條件邊（-39 行）
 - **英文翻譯異步化**: _background_translate() 不阻塞 SSE 回應，先回中文結果再背景翻譯
 - **前端 compositor-only 動畫**: progress-fill 改用 transform scaleX()（零 layout reflow）
@@ -1372,7 +1374,7 @@ TradingAgents-CN
 
 ## 
 
-- **v0.4.5** (2026-02-26): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、圖結構精簡、SSE try/finally 清理、compositor-only 動畫、SSR 預渲染 CLS 0.00
+- **v0.4.5** (2026-02-27): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、工具結果快取去重、快取 TTL 優化、圖結構精簡、SSE try/finally 清理、compositor-only 動畫、SSR 預渲染 CLS 0.00
 - **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
 - **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化

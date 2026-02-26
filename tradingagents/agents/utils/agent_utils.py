@@ -2,6 +2,8 @@ from langchain_core.messages import HumanMessage
 from typing import Annotated
 from langchain_core.tools import tool
 from datetime import datetime
+import json
+import threading
 import tradingagents.dataflows.interface as interface
 from tradingagents.dataflows.finnhub_extra import (
     get_finnhub_sentiment_report,
@@ -16,6 +18,37 @@ from tradingagents.utils.tool_logging import log_tool_call
 # 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
+
+# 分析層級工具結果快取（跨分析師共享，每次分析重置）
+# 當多個分析師並行呼叫相同工具+參數時（如 get_finnhub_sentiment_data），
+# 第二個呼叫直接返回快取結果，避免重複 API 呼叫
+_tool_result_cache: dict[str, str] = {}
+_tool_cache_lock = threading.Lock()
+_tool_cache_hits = 0
+_tool_cache_misses = 0
+
+
+def reset_tool_result_cache():
+    """重置工具結果快取，在每次新分析開始前呼叫"""
+    global _tool_result_cache, _tool_cache_hits, _tool_cache_misses
+    with _tool_cache_lock:
+        if _tool_result_cache:
+            logger.info(
+                f"工具結果快取重置: {len(_tool_result_cache)} 筆, "
+                f"命中 {_tool_cache_hits} 次, 未命中 {_tool_cache_misses} 次"
+            )
+        _tool_result_cache = {}
+        _tool_cache_hits = 0
+        _tool_cache_misses = 0
+
+
+def _make_cache_key(tool_name: str, args: dict) -> str:
+    """產生工具結果快取鍵（工具名稱 + 參數雜湊）"""
+    try:
+        args_str = json.dumps(args, sort_keys=True, ensure_ascii=False, default=str)
+    except (TypeError, ValueError):
+        args_str = str(args)
+    return f"{tool_name}::{args_str}"
 
 
 def execute_tools_parallel(tool_calls, tools, logger_instance=None):
@@ -87,6 +120,9 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
     與 execute_tools_parallel 的差別：此函式不需要 LLM tool_calls，
     而是直接傳入工具列表和對應參數，省去第一次 LLM 呼叫的延遲。
 
+    內建分析層級快取：同一次分析中，相同工具+參數的呼叫只執行一次，
+    後續呼叫直接返回快取結果（例如多個分析師都呼叫 get_finnhub_sentiment_data）。
+
     Args:
         tools: 要呼叫的工具物件列表
         tool_args_list: 每個工具對應的參數字典列表（與 tools 同序）
@@ -97,14 +133,33 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
     """
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
+    global _tool_cache_hits, _tool_cache_misses
     _log = logger_instance or logger
 
     def _invoke_one(tool, args):
+        """執行單一工具呼叫，帶分析層級快取"""
         name = getattr(tool, 'name', getattr(tool, '__name__', str(tool)))
+        cache_key = _make_cache_key(name, args)
+
+        # 檢查快取（讀取不需要鎖，dict 讀取是原子操作）
+        cached = _tool_result_cache.get(cache_key)
+        if cached is not None:
+            with _tool_cache_lock:
+                _tool_cache_hits += 1
+            _log.info(f"工具快取命中: {name} (結果長度: {len(cached)})")
+            return cached
+
         try:
             result = tool.invoke(args)
-            _log.debug(f"直接工具呼叫 {name} 成功，結果長度: {len(str(result))}")
-            return str(result)
+            result_str = str(result)
+            _log.debug(f"直接工具呼叫 {name} 成功，結果長度: {len(result_str)}")
+
+            # 寫入快取（加鎖保護）
+            with _tool_cache_lock:
+                _tool_result_cache[cache_key] = result_str
+                _tool_cache_misses += 1
+
+            return result_str
         except Exception as e:
             _log.error(f"直接工具呼叫 {name} 失敗: {e}")
             return f"工具 {name} 執行失敗: {str(e)}"
