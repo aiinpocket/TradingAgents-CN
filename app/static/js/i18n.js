@@ -155,7 +155,7 @@ const I18N_MESSAGES = {
     'meta.title': 'TradingAgents - AI 股票分析',
 
     // 頁尾
-    'footer.version': 'v0.4.4',
+    'footer.version': 'v0.4.5',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -351,7 +351,7 @@ const I18N_MESSAGES = {
     'meta.title': 'TradingAgents - AI Stock Analysis',
 
     // Footer
-    'footer.version': 'v0.4.4',
+    'footer.version': 'v0.4.5',
     'footer.open_source': 'Open Source',
 
     // Theme

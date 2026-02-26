@@ -875,9 +875,11 @@ body {
 
 .progress-fill {
   height: 100%;
+  width: 100%;
   background: var(--accent);
   border-radius: 2px;
-  transition: width 0.4s ease;
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
 
 .log-container {
@@ -886,6 +888,7 @@ body {
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   background: var(--bg-inset);
+  contain: layout paint;
 }
 
 .log-line {

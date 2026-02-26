@@ -371,7 +371,7 @@ async def index(request: Request):
     # 覆蓋中介層的 CSP，加入此請求專屬的 nonce
     response.headers["Content-Security-Policy"] = (
         "default-src 'self'; "
-        f"script-src 'self' 'unsafe-eval' 'nonce-{csp_nonce}' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; "
+        f"script-src 'self' 'unsafe-eval' 'nonce-{csp_nonce}' 'sha256-Cz8u6Qpk4sdHHM6HYSSZ61d2aJotmFL2ax7qE4n0xDk=' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; "
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
         "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
