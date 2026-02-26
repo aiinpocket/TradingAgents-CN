@@ -569,7 +569,7 @@ function tradingApp() {
               if (this.analysisRunning) this.connectSSE();
             }, delay);
           } else {
-            this.progressMessages.push(this.t('analysis.reconnecting'));
+            this.progressMessages.push(this.t('analysis.polling_fallback'));
             this.pollRetryCount = 0;
             this.pollStatus();
           }

@@ -120,8 +120,8 @@ async def lifespan(app: FastAPI):
     logger.info("TradingAgents API 關閉")
 
 
-# 生產環境關閉 Swagger UI，防止 API 結構資訊洩漏
-_is_production = os.getenv("ENVIRONMENT", "").lower() == "production"
+# 安全預設：非 development 環境一律關閉 Swagger UI，防止 API 結構資訊洩漏
+_is_production = os.getenv("ENVIRONMENT", "").lower() != "development"
 
 app = FastAPI(
     title="TradingAgents",
@@ -241,7 +241,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
             "font-src 'self' https://fonts.gstatic.com; "
             "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
-            "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; "
+            "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; "
             "frame-ancestors 'none'; "
             "base-uri 'self'; "
             "form-action 'self'; "
@@ -321,9 +321,13 @@ async def index(request: Request):
     import json as _json
     from app.routers.trending import get_cached_overview
     ssr_data = get_cached_overview()
+    # 將 JSON 中的 </ 跳脫為 <\/ 防止 script 標籤注入（XSS 防護）
+    ssr_json = ""
+    if ssr_data:
+        ssr_json = _json.dumps(ssr_data, ensure_ascii=False).replace("</", r"<\/")
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "ssr_trending": _json.dumps(ssr_data, ensure_ascii=False) if ssr_data else "",
+        "ssr_trending": ssr_json,
     })
 
 
