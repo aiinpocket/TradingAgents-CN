@@ -70,7 +70,8 @@
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
 - **DOMPurify defer**: 修復 SSR 競爭條件（async -> defer 確保載入順序）
 - **CSP 修復**: 加入 GA inline script 的 sha256 hash（消除 console error）
-- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.1.31 / cryptography>=46.0.5 / tornado>=6.5.3
+- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.2.25 / cryptography>=46.0.5 / tornado>=6.5.4
+- **pip-audit**: 177 個依賴全數通過安全掃描（2026-02-27），0 個已知漏洞
 - **安全審計**: 整體評分 8.3/10（後端 8/10、前端 9/10、容器 8/10、依賴 9/10）
 
 #### 無障礙 (a11y)
@@ -79,6 +80,7 @@
 - **ARIA table 語意**: 歷史表格完整 role 標記，報告區 tablist/tab/tabpanel 完整語意
 - **觸控目標 44px**: 符合 WCAG 2.5.5 標準（含 480px 斷點 nav-btn / mover-row）
 - **html lang 屬性**: 隨語言切換同步更新（zh-Hant / en）
+- **WCAG 標題層級**: Markdown 渲染標題壓縮至 h3/h4（容器 h2 下不跳級）
 
 #### UI/UX
 - **漲跌排行 CSS Grid**: 固定欄寬跨行對齊，取代 flex 佈局
