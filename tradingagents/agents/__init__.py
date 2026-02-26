@@ -1,4 +1,4 @@
-from .utils.agent_utils import Toolkit, create_msg_delete
+from .utils.agent_utils import Toolkit, create_msg_delete, execute_tools_parallel
 from .utils.agent_states import AgentState, InvestDebateState, RiskDebateState
 from .utils.memory import FinancialSituationMemory
 
@@ -28,6 +28,7 @@ __all__ = [
     "Toolkit",
     "AgentState",
     "create_msg_delete",
+    "execute_tools_parallel",
     "InvestDebateState",
     "RiskDebateState",
     "create_bear_researcher",

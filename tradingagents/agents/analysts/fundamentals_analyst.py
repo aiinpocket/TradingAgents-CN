@@ -216,38 +216,14 @@ def create_fundamentals_analyst(llm, toolkit):
         if tool_call_count > 0:
             # 有工具呼叫，在內部手動執行工具避免 ToolNode 迴圈
             # ToolNode 迴圈在並行 fan-in 時會導致 tool_calls 訊息交錯衝突
-            from langchain_core.messages import ToolMessage, HumanMessage, AIMessage
-            tool_calls_info = []
-            for tc in result.tool_calls:
-                tool_calls_info.append(tc['name'])
-                logger.debug(f"工具呼叫 {len(tool_calls_info)}: {tc}")
+            from langchain_core.messages import HumanMessage
+            from tradingagents.agents.utils.agent_utils import execute_tools_parallel
 
+            tool_calls_info = [tc['name'] for tc in result.tool_calls]
             logger.info(f"[基本面分析師] 工具呼叫: {tool_calls_info}")
 
-            tool_messages = []
-            for tool_call in result.tool_calls:
-                tool_name = tool_call.get('name')
-                tool_args = tool_call.get('args', {})
-                tool_id = tool_call.get('id')
-
-                logger.debug(f"[基本面分析師] 執行工具: {tool_name}, 參數: {tool_args}")
-
-                tool_result = None
-                for tool in tools:
-                    current_name = getattr(tool, 'name', getattr(tool, '__name__', str(tool)))
-                    if current_name == tool_name:
-                        try:
-                            tool_result = tool.invoke(tool_args)
-                            logger.debug(f"[基本面分析師] 工具執行成功，結果長度: {len(str(tool_result))}")
-                        except Exception as e:
-                            logger.error(f"[基本面分析師] 工具執行失敗: {e}")
-                            tool_result = f"工具執行失敗: {str(e)}"
-                        break
-
-                if tool_result is None:
-                    tool_result = f"未找到工具: {tool_name}"
-
-                tool_messages.append(ToolMessage(content=str(tool_result), tool_call_id=tool_id))
+            # 並行執行多個工具呼叫以提升效能
+            tool_messages = execute_tools_parallel(result.tool_calls, tools, logger)
 
             # 將工具結果傳回 LLM 生成完整基本面分析報告
             currency_info = f"{market_info['currency_name']}（{market_info['currency_symbol']}）"

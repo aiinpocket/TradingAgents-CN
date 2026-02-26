@@ -306,42 +306,11 @@ def create_market_analyst(llm, toolkit):
             logger.info(f"[市場分析師] 工具呼叫: {[call.get('name', 'unknown') for call in result.tool_calls]}")
 
             try:
-                from langchain_core.messages import ToolMessage, HumanMessage
+                from langchain_core.messages import HumanMessage
+                from tradingagents.agents.utils.agent_utils import execute_tools_parallel
 
-                tool_messages = []
-                for tool_call in result.tool_calls:
-                    tool_name = tool_call.get('name')
-                    tool_args = tool_call.get('args', {})
-                    tool_id = tool_call.get('id')
-
-                    logger.debug(f"執行工具: {tool_name}, 參數: {tool_args}")
-
-                    # 找到對應的工具並執行
-                    tool_result = None
-                    for tool in tools:
-                        current_tool_name = None
-                        if hasattr(tool, 'name'):
-                            current_tool_name = tool.name
-                        elif hasattr(tool, '__name__'):
-                            current_tool_name = tool.__name__
-
-                        if current_tool_name == tool_name:
-                            try:
-                                tool_result = tool.invoke(tool_args)
-                                logger.debug(f"工具執行成功，結果長度: {len(str(tool_result))}")
-                                break
-                            except Exception as tool_error:
-                                logger.error(f"工具執行失敗: {tool_error}")
-                                tool_result = f"工具執行失敗: {str(tool_error)}"
-
-                    if tool_result is None:
-                        tool_result = f"未找到工具: {tool_name}"
-
-                    tool_message = ToolMessage(
-                        content=str(tool_result),
-                        tool_call_id=tool_id
-                    )
-                    tool_messages.append(tool_message)
+                # 並行執行多個工具呼叫以提升效能
+                tool_messages = execute_tools_parallel(result.tool_calls, tools, logger)
 
                 # 基於工具結果生成完整分析報告
                 analysis_prompt = f"""現在請基於上述工具取得的資料，生成詳細的技術分析報告。

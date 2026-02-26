@@ -153,33 +153,12 @@ def create_social_media_analyst(llm, toolkit):
 
         # 有工具呼叫，在內部手動執行工具避免 ToolNode 迴圈
         # ToolNode 迴圈在並行 fan-in 時會導致 tool_calls 訊息交錯衝突
-        from langchain_core.messages import ToolMessage, HumanMessage
+        from langchain_core.messages import HumanMessage
+        from tradingagents.agents.utils.agent_utils import execute_tools_parallel
         logger.info(f"[社交媒體分析師] 工具呼叫: {[tc.get('name', 'unknown') for tc in result.tool_calls]}")
 
-        tool_messages = []
-        for tool_call in result.tool_calls:
-            tool_name = tool_call.get('name')
-            tool_args = tool_call.get('args', {})
-            tool_id = tool_call.get('id')
-
-            logger.debug(f"[社交媒體分析師] 執行工具: {tool_name}")
-
-            tool_result = None
-            for tool in tools:
-                current_name = getattr(tool, 'name', getattr(tool, '__name__', str(tool)))
-                if current_name == tool_name:
-                    try:
-                        tool_result = tool.invoke(tool_args)
-                        logger.debug(f"[社交媒體分析師] 工具執行成功，結果長度: {len(str(tool_result))}")
-                    except Exception as e:
-                        logger.error(f"[社交媒體分析師] 工具執行失敗: {e}")
-                        tool_result = f"工具執行失敗: {str(e)}"
-                    break
-
-            if tool_result is None:
-                tool_result = f"未找到工具: {tool_name}"
-
-            tool_messages.append(ToolMessage(content=str(tool_result), tool_call_id=tool_id))
+        # 並行執行多個工具呼叫以提升效能
+        tool_messages = execute_tools_parallel(result.tool_calls, tools, logger)
 
         # 將工具結果傳回 LLM 生成完整情緒分析報告
         analysis_prompt = (

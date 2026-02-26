@@ -18,6 +18,69 @@ from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
 
 
+def execute_tools_parallel(tool_calls, tools, logger_instance=None):
+    """並行執行多個工具呼叫，提升分析師階段效能。
+
+    當分析師 LLM 回傳多個 tool_calls 時，這些工具呼叫通常是獨立的
+    （例如 get_stock_fundamentals_unified 和 get_finnhub_analyst_consensus），
+    可以安全地並行執行以減少等待時間。
+
+    Args:
+        tool_calls: LLM 回傳的 tool_calls 列表
+        tools: 可用工具列表
+        logger_instance: 日誌實例（可選）
+
+    Returns:
+        list[ToolMessage]: 工具執行結果訊息列表（保持與 tool_calls 相同順序）
+    """
+    from langchain_core.messages import ToolMessage
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    _log = logger_instance or logger
+
+    # 建立工具名稱到工具物件的查詢表
+    tool_map = {}
+    for t in tools:
+        name = getattr(t, 'name', getattr(t, '__name__', str(t)))
+        tool_map[name] = t
+
+    def _invoke_single_tool(tool_call):
+        """執行單一工具呼叫"""
+        tool_name = tool_call.get('name')
+        tool_args = tool_call.get('args', {})
+        tool_id = tool_call.get('id')
+
+        tool_obj = tool_map.get(tool_name)
+        if tool_obj is None:
+            return ToolMessage(content=f"未找到工具: {tool_name}", tool_call_id=tool_id)
+
+        try:
+            result = tool_obj.invoke(tool_args)
+            _log.debug(f"工具 {tool_name} 執行成功，結果長度: {len(str(result))}")
+            return ToolMessage(content=str(result), tool_call_id=tool_id)
+        except Exception as e:
+            _log.error(f"工具 {tool_name} 執行失敗: {e}")
+            return ToolMessage(content=f"工具執行失敗: {str(e)}", tool_call_id=tool_id)
+
+    # 單一工具呼叫時直接執行，避免執行緒池開銷
+    if len(tool_calls) <= 1:
+        return [_invoke_single_tool(tc) for tc in tool_calls]
+
+    # 多個工具呼叫時並行執行
+    _log.info(f"並行執行 {len(tool_calls)} 個工具呼叫")
+    results = [None] * len(tool_calls)
+    with ThreadPoolExecutor(max_workers=len(tool_calls)) as executor:
+        future_to_idx = {
+            executor.submit(_invoke_single_tool, tc): i
+            for i, tc in enumerate(tool_calls)
+        }
+        for future in as_completed(future_to_idx):
+            idx = future_to_idx[future]
+            results[idx] = future.result()
+
+    return results
+
+
 def create_msg_delete():
     """建立訊息清理節點，用於分析師完成後標記分支結束。
 
