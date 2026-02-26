@@ -118,8 +118,10 @@ async def lifespan(app: FastAPI):
     prewarm_task = asyncio.create_task(_prewarm_trending())
     try:
         await asyncio.wait_for(asyncio.shield(prewarm_task), timeout=50)
-    except (asyncio.TimeoutError, Exception):
-        pass  # 逾時不阻塞啟動
+    except asyncio.TimeoutError:
+        logger.warning("預熱逾時 50 秒，首頁 SSR 可能為空（不阻塞啟動）")
+    except Exception as e:
+        logger.warning(f"預熱失敗（不阻塞啟動）: {e}")
 
     # 啟動背景定時刷新（每 5 分鐘自動更新市場資料）
     from app.routers.trending import start_background_refresh
@@ -134,8 +136,15 @@ async def lifespan(app: FastAPI):
         await asyncio.gather(prewarm_task, refresh_task, return_exceptions=True)
     except Exception:
         pass
+    # 關閉所有執行緒池，避免資源洩漏
     from app.routers.trending import _TRENDING_EXECUTOR
     _TRENDING_EXECUTOR.shutdown(wait=True, cancel_futures=True)
+    try:
+        from app.routers.analysis import _ANALYSIS_EXECUTOR, _CONTEXT_EXECUTOR
+        _ANALYSIS_EXECUTOR.shutdown(wait=False, cancel_futures=True)
+        _CONTEXT_EXECUTOR.shutdown(wait=False, cancel_futures=True)
+    except (ImportError, AttributeError):
+        pass
     logger.info("TradingAgents API 關閉")
 
 

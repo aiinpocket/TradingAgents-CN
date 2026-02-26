@@ -1114,6 +1114,7 @@ async def start_background_refresh():
     """
     logger.info(f"背景趨勢刷新已啟動（基礎間隔 {_BG_REFRESH_INTERVAL} 秒）")
     consecutive_failures = 0
+    backoff = _BG_REFRESH_INTERVAL  # 預設值，避免首次例外時 NameError
     first_run = True
     while True:
         if first_run:
@@ -1151,7 +1152,7 @@ async def start_background_refresh():
         except asyncio.TimeoutError:
             consecutive_failures += 1
             logger.warning(
-                f"背景趨勢刷新逾時 60 秒"
+                f"背景趨勢刷新逾時 120 秒"
                 f"（連續第 {consecutive_failures} 次，下次間隔 {backoff:.0f}s）"
             )
         except Exception as e:

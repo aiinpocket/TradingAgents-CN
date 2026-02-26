@@ -456,15 +456,15 @@ async def stream_analysis(analysis_id: str, request: Request):
                     last_idx = current_len
                     last_heartbeat = time.time()
 
-                # 檢查完成狀態
+                # 檢查完成狀態（json.dumps 加入 default 處理，防止非序列化物件導致 SSE 中斷）
                 if data["status"] == "completed":
                     exit_reason = "completed"
-                    yield f"data: {json.dumps({'type': 'completed', 'result': data.get('result', {})}, ensure_ascii=False)}\n\n"
+                    yield f"data: {json.dumps({'type': 'completed', 'result': data.get('result', {})}, ensure_ascii=False, default=str)}\n\n"
                     break
                 elif data["status"] == "failed":
                     exit_reason = "failed"
                     fallback_err = _t("unknown_error", request)
-                    yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False)}\n\n"
+                    yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False, default=str)}\n\n"
                     break
 
                 # SSE heartbeat：每 15 秒發送一次，防止 proxy 因閒置斷線
