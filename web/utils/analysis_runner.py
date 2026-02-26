@@ -5,6 +5,8 @@
 import sys
 import os
 import uuid
+import hashlib
+import threading
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
@@ -28,6 +30,63 @@ try:
 except ImportError:
     TOKEN_TRACKING_ENABLED = False
     logger.warning("Token追蹤功能未啟用")
+
+
+# ---------------------------------------------------------------------------
+# TradingAgentsGraph 實例快取（避免每次分析重新初始化 LLM / Toolkit / 圖）
+# 快取 key 由影響圖結構的配置欄位組成，同配置重用同一實例
+# ---------------------------------------------------------------------------
+_GRAPH_CACHE: dict = {}
+_GRAPH_CACHE_LOCK = threading.Lock()
+_GRAPH_CACHE_MAX = 4  # 最多快取 4 種配置
+
+
+def _compute_graph_cache_key(config: dict, analysts: list) -> str:
+    """計算 TradingAgentsGraph 快取 key（基於影響圖結構的配置）"""
+    parts = [
+        config.get("llm_provider", "openai"),
+        config.get("deep_think_llm", "o4-mini"),
+        config.get("quick_think_llm", "gpt-4o-mini"),
+        config.get("backend_url", ""),
+        config.get("anthropic_base_url", ""),
+        str(config.get("max_debate_rounds", 1)),
+        str(config.get("max_risk_discuss_rounds", 1)),
+        str(config.get("memory_enabled", True)),
+        str(config.get("online_tools", False)),
+        ",".join(sorted(analysts)),
+    ]
+    return hashlib.md5("|".join(parts).encode()).hexdigest()
+
+
+def _get_or_create_graph(config: dict, analysts: list):
+    """取得或建立 TradingAgentsGraph 實例（執行緒安全，LRU 淘汰）"""
+    from tradingagents.graph.trading_graph import TradingAgentsGraph
+
+    cache_key = _compute_graph_cache_key(config, analysts)
+
+    with _GRAPH_CACHE_LOCK:
+        if cache_key in _GRAPH_CACHE:
+            graph = _GRAPH_CACHE[cache_key]
+            logger.info(f"TradingAgentsGraph 快取命中（key={cache_key[:8]}）")
+            # 重置實例狀態，避免前次分析殘留
+            graph.curr_state = None
+            graph.ticker = None
+            graph.log_states_dict = {}
+            return graph
+
+    # 快取未命中，建立新實例（在鎖外執行，避免長時間持鎖）
+    logger.info(f"TradingAgentsGraph 快取未命中，建立新實例（key={cache_key[:8]}）")
+    graph = TradingAgentsGraph(analysts, config=config, debug=False)
+
+    with _GRAPH_CACHE_LOCK:
+        # 淘汰最舊的快取
+        while len(_GRAPH_CACHE) >= _GRAPH_CACHE_MAX:
+            oldest_key = next(iter(_GRAPH_CACHE))
+            _GRAPH_CACHE.pop(oldest_key, None)
+            logger.debug(f"淘汰舊 TradingAgentsGraph 快取: {oldest_key[:8]}")
+        _GRAPH_CACHE[cache_key] = graph
+
+    return graph
 
 # ---------------------------------------------------------------------------
 # 進度訊息 i18n（前端可見）
@@ -392,8 +451,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
     update_progress(_p("env_verified", lang))
 
     try:
-        # 匯入必要的模組
-        from tradingagents.graph.trading_graph import TradingAgentsGraph
+        # 匯入預設配置
         from tradingagents.default_config import DEFAULT_CONFIG
 
         # 建立配置
@@ -506,9 +564,9 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
 
         logger.debug(f" 最終傳遞給分析引擎的股票代碼: '{formatted_symbol}'")
 
-        # 初始化交易圖
+        # 取得或重用交易圖實例（快取 LLM / Toolkit / 圖結構，省 3-5 秒）
         update_progress(_p("initializing_engine", lang), 5)
-        graph = TradingAgentsGraph(analysts, config=config, debug=False)
+        graph = _get_or_create_graph(config, analysts)
 
         # 執行分析
         update_progress(_p("analyzing_symbol", lang, symbol=formatted_symbol), 6)

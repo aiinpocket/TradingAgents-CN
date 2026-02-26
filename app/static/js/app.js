@@ -87,6 +87,9 @@ function tradingApp() {
     // 個股快照
     stockContext: null,
     stockContextLoading: false,
+    // 前端個股快照快取（symbol -> {data, ts}），TTL 5 分鐘，避免重複請求
+    _ctxCache: {},
+    _ctxPending: {},  // 正在進行的請求去重（symbol -> Promise）
 
     // 追蹤清單（localStorage 持久化）
     watchlist: [],
@@ -742,33 +745,59 @@ function tradingApp() {
       this._stopElapsedTimer();
     },
 
-    // 取得個股即時行情快照，自動重試最多 2 次（502 或網路錯誤）
+    // 取得個股即時行情快照（前端快取 5 分鐘 + 請求去重 + 自動重試）
     async fetchStockContext(symbol, _retry = 0) {
       const MAX_RETRY = 2;
+      const CTX_TTL = 300000; // 5 分鐘
+      // 快取命中：直接使用
+      const cached = this._ctxCache[symbol];
+      if (cached && Date.now() - cached.ts < CTX_TTL) {
+        this.stockContext = cached.data;
+        this.stockContextLoading = false;
+        return;
+      }
+      // 請求去重：相同 symbol 的併發請求共用同一 Promise
+      if (this._ctxPending[symbol]) {
+        this.stockContextLoading = true;
+        try {
+          this.stockContext = await this._ctxPending[symbol];
+        } catch { this.stockContext = { error: true }; }
+        this.stockContextLoading = false;
+        return;
+      }
       this.stockContextLoading = true;
       if (_retry === 0) this.stockContext = null;
-      try {
-        const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`, {
-          headers: this._langHeaders(),
-        });
-        if (res.ok) {
-          this.stockContext = await res.json();
-        } else if (res.status >= 500 && _retry < MAX_RETRY) {
-          await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
-          return this.fetchStockContext(symbol, _retry + 1);
-        } else {
-          this.stockContext = { error: true };
+      // 建立請求 Promise 並註冊到去重表
+      const doFetch = (async () => {
+        try {
+          const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`, {
+            headers: this._langHeaders(),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            this._ctxCache[symbol] = { data, ts: Date.now() };
+            return data;
+          } else if (res.status >= 500 && _retry < MAX_RETRY) {
+            await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
+            delete this._ctxPending[symbol];
+            return this.fetchStockContext(symbol, _retry + 1);
+          }
+          return { error: true };
+        } catch (e) {
+          console.error('Stock context fetch error:', e);
+          if (_retry < MAX_RETRY) {
+            await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
+            delete this._ctxPending[symbol];
+            return this.fetchStockContext(symbol, _retry + 1);
+          }
+          return { error: true };
+        } finally {
+          delete this._ctxPending[symbol];
+          this.stockContextLoading = false;
         }
-      } catch (e) {
-        console.error('Stock context fetch error:', e);
-        if (_retry < MAX_RETRY) {
-          await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
-          return this.fetchStockContext(symbol, _retry + 1);
-        }
-        this.stockContext = { error: true };
-      } finally {
-        this.stockContextLoading = false;
-      }
+      })();
+      this._ctxPending[symbol] = doFetch;
+      this.stockContext = await doFetch;
     },
 
     // 將時間戳轉為相對時間（如「剛剛」、「3 分鐘前」）
