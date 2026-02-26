@@ -129,6 +129,13 @@ function tradingApp() {
         this.stockPreview = this._computeStockPreview();
       });
       this.$watch('form.symbol', () => { this.stockPreview = this._computeStockPreview(); });
+      // 切換到分析 tab 時更新日期上限，避免長時間開啟頁面導致日期過時
+      this.$watch('tab', (val) => {
+        if (val === 'analysis') {
+          const today = new Date().toISOString().split('T')[0];
+          if (this.form.date > today) this.form.date = today;
+        }
+      });
 
       // 根據語言設定頁面標題
       document.title = this.t('meta.title');
