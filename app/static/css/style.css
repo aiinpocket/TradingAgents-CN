@@ -839,7 +839,7 @@ body {
 }
 
 .progress-track {
-  height: 3px;
+  height: 4px;
   background: var(--bg-inset);
   border-radius: 2px;
   overflow: hidden;
@@ -2952,6 +2952,7 @@ code {
   .nav-btn {
     padding: 6px 10px;
     font-size: 12px;
+    min-height: 44px;
   }
 
   .form-row {
@@ -3013,7 +3014,7 @@ code {
   .index-arrow { width: 14px; height: 14px; }
   .index-arrow svg { width: 8px; height: 8px; }
 
-  .mover-row { grid-template-columns: 20px 28px 50px 70px 60px 24px; }
+  .mover-row { grid-template-columns: 20px 28px 50px 70px 60px 24px; min-height: 44px; }
   .mover-rank { width: 18px; height: 18px; font-size: 10px; }
   .mover-price { font-size: 12px; }
   .mover-bar { display: none; }
