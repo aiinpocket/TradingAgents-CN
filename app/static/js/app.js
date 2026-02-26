@@ -546,7 +546,8 @@ function tradingApp() {
           if (data.type === 'progress') {
             this.progressMessages.push(data.message);
             // 限制進度訊息上限，避免長時間分析導致記憶體膨脹
-            if (this.progressMessages.length > 200) this.progressMessages.splice(0, 50);
+            // 每次刪 10 條（而非 50），減少 DOM 批量更新的卡頓
+            if (this.progressMessages.length > 200) this.progressMessages.splice(0, 10);
             const stepMatch = data.message.match(/^\[(\d+)\/(\d+)\]/);
             if (stepMatch) {
               this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, Math.round((parseInt(stepMatch[1]) / parseInt(stepMatch[2])) * CONFIG.PROGRESS_MAX_PERCENT));
