@@ -8,8 +8,6 @@ from typing import Dict, Any
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 
-from langgraph.prebuilt import ToolNode
-
 from tradingagents.agents.utils.agent_utils import Toolkit
 from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.agents.utils.memory import FinancialSituationMemory
@@ -60,8 +58,7 @@ class TradingAgentsGraph:
 
         if provider == "openai":
             # OpenAI 支援自訂 base_url（用於相容 API 代理等場景）
-            # 強制使用 Chat Completions API，避免 Responses API 回傳
-            # ResponseFunctionWebSearch 等 LangGraph ToolNode 無法處理的物件
+            # 強制使用 Chat Completions API，避免 Responses API 回傳不支援的物件
             openai_kwargs = {
                 "model": self.config["deep_think_llm"],
                 "use_responses_api": False,
@@ -113,10 +110,6 @@ class TradingAgentsGraph:
             self.invest_judge_memory = None
             self.risk_manager_memory = None
 
-        # Create tool nodes
-        self.tool_nodes = self._create_tool_nodes()
-
-        # Initialize components
         # 將設定中的辯論輪數傳入條件邏輯
         self.conditional_logic = ConditionalLogic(
             max_debate_rounds=self.config.get("max_debate_rounds", 1),
@@ -126,7 +119,6 @@ class TradingAgentsGraph:
             self.quick_thinking_llm,
             self.deep_thinking_llm,
             self.toolkit,
-            self.tool_nodes,
             self.bull_memory,
             self.bear_memory,
             self.trader_memory,
@@ -148,57 +140,6 @@ class TradingAgentsGraph:
 
         # Set up the graph
         self.graph = self.graph_setup.setup_graph(selected_analysts)
-
-    def _create_tool_nodes(self) -> Dict[str, ToolNode]:
-        """Create tool nodes for different data sources."""
-        return {
-            "market": ToolNode(
-                [
-                    # 統一工具
-                    self.toolkit.get_stock_market_data_unified,
-                    # FinnHub 技術訊號（分析師 bind_tools 有用到）
-                    self.toolkit.get_finnhub_technical_signals,
-                    # online tools
-                    self.toolkit.get_YFin_data_online,
-                    self.toolkit.get_stockstats_indicators_report_online,
-                    # offline tools
-                    self.toolkit.get_YFin_data,
-                    self.toolkit.get_stockstats_indicators_report,
-                ]
-            ),
-            "social": ToolNode(
-                [
-                    # 新聞情緒工具
-                    self.toolkit.get_stock_news_openai,
-                    # FinnHub 情緒量化資料
-                    self.toolkit.get_finnhub_sentiment_data,
-                ]
-            ),
-            "news": ToolNode(
-                [
-                    # 新聞來源
-                    self.toolkit.get_global_news_openai,
-                    self.toolkit.get_google_news,
-                    self.toolkit.get_finnhub_news,
-                    # FinnHub 情緒量化資料
-                    self.toolkit.get_finnhub_sentiment_data,
-                ]
-            ),
-            "fundamentals": ToolNode(
-                [
-                    # 統一工具
-                    self.toolkit.get_stock_fundamentals_unified,
-                    # 華爾街分析師共識資料（分析師 bind_tools 有用到）
-                    self.toolkit.get_finnhub_analyst_consensus,
-                    # offline tools
-                    self.toolkit.get_finnhub_company_insider_sentiment,
-                    self.toolkit.get_finnhub_company_insider_transactions,
-                    self.toolkit.get_simfin_balance_sheet,
-                    self.toolkit.get_simfin_cashflow,
-                    self.toolkit.get_simfin_income_stmt,
-                ]
-            ),
-        }
 
     def propagate(self, company_name, trade_date):
         """Run the trading agents graph for a company on a specific date."""

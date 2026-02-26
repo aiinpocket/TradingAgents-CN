@@ -9,6 +9,7 @@ from .analysts.social_media_analyst import create_social_media_analyst
 
 from .researchers.bear_researcher import create_bear_researcher
 from .researchers.bull_researcher import create_bull_researcher
+from .researchers.parallel_invest_debate import create_parallel_invest_debate
 
 from .risk_mgmt.aggressive_debator import create_risky_debator
 from .risk_mgmt.conservative_debator import create_safe_debator
@@ -45,4 +46,5 @@ __all__ = [
     "create_social_media_analyst",
     "create_trader",
     "create_parallel_risk_debate",
+    "create_parallel_invest_debate",
 ]
