@@ -922,13 +922,13 @@ function tradingApp() {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-      // 標題
+      // 標題（結果區域容器為 h2，Markdown 標題從 h3 開始以維持正確層級）
       html = html
         .replace(/^#{1,6}\s*$/gm, '')
-        .replace(/^#{4,6} (\S.*)$/gm, (_, g) => `<h5>${g.trim()}</h5>`)
-        .replace(/^### (\S.*)$/gm, (_, g) => `<h4>${g.trim()}</h4>`)
-        .replace(/^## (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
-        .replace(/^# (\S.*)$/gm, (_, g) => `<h2>${g.trim()}</h2>`)
+        .replace(/^#{4,6} (\S.*)$/gm, (_, g) => `<h6>${g.trim()}</h6>`)
+        .replace(/^### (\S.*)$/gm, (_, g) => `<h5>${g.trim()}</h5>`)
+        .replace(/^## (\S.*)$/gm, (_, g) => `<h4>${g.trim()}</h4>`)
+        .replace(/^# (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
         .replace(/^---$/gm, '<hr>');
 
       // 行內格式
@@ -1019,7 +1019,7 @@ function tradingApp() {
       if (debateState.bull_history) {
         const bullLabel = this.t('debate.bull_label');
         html += `<div class="debate-section debate-bull">
-          <h4>${bullLabel}</h4>
+          <h3>${bullLabel}</h3>
           <div>${this.renderMarkdown(debateState.bull_history)}</div>
         </div>`;
       }
@@ -1027,7 +1027,7 @@ function tradingApp() {
       if (debateState.bear_history) {
         const bearLabel = this.t('debate.bear_label');
         html += `<div class="debate-section debate-bear">
-          <h4>${bearLabel}</h4>
+          <h3>${bearLabel}</h3>
           <div>${this.renderMarkdown(debateState.bear_history)}</div>
         </div>`;
       }
@@ -1035,7 +1035,7 @@ function tradingApp() {
       if (debateState.judge_decision) {
         const judgeLabel = this.t('debate.judge_label');
         html += `<div class="debate-section debate-judge">
-          <h4>${judgeLabel}</h4>
+          <h3>${judgeLabel}</h3>
           <div>${this.renderMarkdown(debateState.judge_decision)}</div>
         </div>`;
       }
