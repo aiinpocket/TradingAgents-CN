@@ -2744,6 +2744,11 @@ code {
   border-color: rgba(248, 81, 73, 0.3);
 }
 
+/* 暗色模式進度條：微弱發光增強可視性 */
+[data-theme="dark"] .progress-fill {
+  box-shadow: 0 0 4px rgba(88, 166, 255, 0.35);
+}
+
 /* 暗色模式切換按鈕 */
 
 .theme-toggle {
@@ -3063,6 +3068,24 @@ code {
   .sectors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
   .sector-card { padding: 8px; }
   .sector-change { font-size: 13px; }
+
+  /* 進度區域小螢幕適配 */
+  .progress-title-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .log-container {
+    max-height: clamp(180px, 50vh, 350px);
+  }
+  .log-line {
+    font-size: 11px;
+    gap: 8px;
+    padding: 6px 10px;
+  }
+  .log-time {
+    font-size: 10px;
+    min-width: 38px;
+  }
 }
 
 @media (max-width: 375px) {
