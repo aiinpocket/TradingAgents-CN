@@ -84,6 +84,18 @@ _ERROR_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "正在生成英文版本...",
         "en": "Generating English version...",
     },
+    "english_version_ready": {
+        "zh-TW": "英文版本生成完成",
+        "en": "English version ready.",
+    },
+    "english_generation_skipped": {
+        "zh-TW": "英文版本略過（不影響分析結果）",
+        "en": "English version skipped (does not affect results).",
+    },
+    "saving_report": {
+        "zh-TW": "正在儲存分析報告...",
+        "en": "Saving analysis report...",
+    },
     "analysis_complete": {
         "zh-TW": "分析完成",
         "en": "Analysis complete.",
@@ -569,13 +581,15 @@ async def _run_analysis(analysis_id: str):
                         formatted["state_en"] = translation["state_en"]
                     if translation.get("decision_en"):
                         formatted["decision_en"] = translation["decision_en"]
+                    data["progress"].append(_t_lang("english_version_ready", lang))
+                else:
+                    data["progress"].append(_t_lang("english_generation_skipped", lang))
             except Exception as e:
                 logger.warning(f"翻譯步驟失敗（不影響主流程）: {e}")
-
-            data["progress"].append(_t_lang("analysis_complete", lang))
-            _update_analysis_state(analysis_id, status="completed", result=formatted)
+                data["progress"].append(_t_lang("english_generation_skipped", lang))
 
             # 儲存格式化結果到 MongoDB 供後續快取查詢
+            data["progress"].append(_t_lang("saving_report", lang))
             try:
                 from web.utils.mongodb_report_manager import MongoDBReportManager
                 _save_mgr = MongoDBReportManager()
@@ -588,6 +602,9 @@ async def _run_analysis(analysis_id: str):
                 )
             except Exception as e:
                 logger.warning(f"MongoDB 快取儲存失敗（不影響主流程）: {e}")
+
+            data["progress"].append(_t_lang("analysis_complete", lang))
+            _update_analysis_state(analysis_id, status="completed", result=formatted)
 
         else:
             error_msg = result.get("error", _t_lang("analysis_failed", lang))
