@@ -644,8 +644,8 @@ async def _run_analysis(analysis_id: str):
                 for dk in ("action", "reasoning"):
                     if isinstance(dec.get(dk), str):
                         dec[dk] = _normalize_tw_terminology(dec[dk])
-            except Exception:
-                pass  # 術語校正非關鍵路徑
+            except Exception as e:
+                logger.debug(f"術語校正異常（不影響主流程）: {e}")
 
             # 先儲存中文版結果到 MongoDB（不等翻譯）
             data["progress"].append(_t_lang("saving_report", lang))
@@ -1084,12 +1084,13 @@ def _fetch_stock_context(symbol: str, _retry: int = 0) -> dict:
                     "date": date_display,
                 })
 
-            # 去重
+            # 去重（過濾空標題）
             seen = set()
             unique_news = []
             for n in news_list:
-                if n["title"] not in seen:
-                    seen.add(n["title"])
+                t = n["title"].strip()
+                if t and t not in seen:
+                    seen.add(t)
                     unique_news.append(n)
             news_list = unique_news[:8]
 

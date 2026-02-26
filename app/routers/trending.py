@@ -441,7 +441,7 @@ def _fetch_news_for_symbol(sym: str) -> list[dict]:
                     "related": sym.replace("^", ""),
                 })
     except Exception as e:
-        logger.debug(f"取得 {sym} 新聞失敗: {e}")
+        logger.warning(f"取得 {sym} 新聞失敗: {e}")
 
     return items
 
@@ -485,12 +485,13 @@ def _fetch_market_news() -> list[dict]:
         if item.get("source", "").lower() not in _PAID_SOURCES
     ]
 
-    # 去重（依標題）
+    # 去重（依標題，過濾空標題）
     seen_titles: set[str] = set()
     unique_news = []
     for item in free_news:
-        if item["title"] not in seen_titles:
-            seen_titles.add(item["title"])
+        t = item["title"].strip()
+        if t and t not in seen_titles:
+            seen_titles.add(t)
             unique_news.append(item)
 
     return unique_news[:12]
