@@ -173,16 +173,18 @@ def get_cached_overview() -> Optional[dict]:
 
 
 def _set_cache(key: str, data: dict):
-    """設定快取（超過上限時清理過期條目）"""
+    """設定快取（超過上限時清理過期條目，依 key 類型使用不同 TTL）"""
     now = time.time()
     with _cache_lock:
         _cache[key] = {"data": data, "ts": now}
-        # 超過條目上限時，清理過期條目
+        # 超過條目上限時，依各條目的實際 TTL 清理過期快取
         if len(_cache) > _MAX_CACHE_ENTRIES:
-            expired = [
-                k for k, v in _cache.items()
-                if now - v["ts"] > _AI_CACHE_TTL_SECONDS
-            ]
+            expired = []
+            for k, v in _cache.items():
+                # AI 分析類快取使用較長 TTL，市場資料類使用較短 TTL
+                ttl = _AI_CACHE_TTL_SECONDS if k.startswith("ai_") else _CACHE_TTL_SECONDS
+                if now - v["ts"] > ttl:
+                    expired.append(k)
             for k in expired:
                 del _cache[k]
 

@@ -679,6 +679,13 @@ function tradingApp() {
     },
 
     resetAnalysis() {
+      // 通知後端取消進行中的分析（fire-and-forget）
+      if (this.analysisId) {
+        fetch(`/api/analysis/${encodeURIComponent(this.analysisId)}`, {
+          method: 'DELETE',
+          headers: this._langHeaders(),
+        }).catch(() => {});
+      }
       if (this.eventSource) {
         this.eventSource.close();
         this.eventSource = null;
@@ -843,9 +850,19 @@ function tradingApp() {
       } catch { return '#'; }
     },
 
+    // DOMPurify 白名單配置（僅允許 Markdown 渲染所需標籤與屬性）
+    _purifyConfig: {
+      ALLOWED_TAGS: [
+        'p', 'h2', 'h3', 'h4', 'h5', 'strong', 'em', 'code', 'pre',
+        'ul', 'ol', 'li', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
+        'br', 'hr', 'blockquote', 'div', 'a', 'span'
+      ],
+      ALLOWED_ATTR: ['class', 'scope', 'href', 'target', 'rel']
+    },
+
     _sanitize(html) {
       if (typeof DOMPurify !== 'undefined') {
-        return DOMPurify.sanitize(html);
+        return DOMPurify.sanitize(html, this._purifyConfig);
       }
       // DOMPurify 未載入時，直接做字元跳脫，避免使用 innerHTML 造成 XSS
       console.warn('DOMPurify not loaded, falling back to character escaping');
@@ -861,11 +878,27 @@ function tradingApp() {
     renderMarkdown(text) {
       if (!text) return '<p class="empty-state">' + this._sanitize(this.t('common.no_data')) + '</p>';
 
-      let html = text
+      let html = text;
+
+      // 先提取多行代碼塊，避免後續處理破壞其內容
+      const codeBlocks = [];
+      html = html.replace(/```(\w*)\n([\s\S]*?)```/gm, (_, lang, code) => {
+        const safeCode = code.trimEnd()
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        const placeholder = `\x00CB${codeBlocks.length}\x00`;
+        codeBlocks.push(`<pre><code class="language-${lang || 'text'}">${safeCode}</code></pre>`);
+        return placeholder;
+      });
+
+      // HTML 實體編碼（代碼塊已單獨處理）
+      html = html
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
+      // 標題
       html = html
         .replace(/^#{1,6}\s*$/gm, '')
         .replace(/^#{4,6} (\S.*)$/gm, (_, g) => `<h5>${g.trim()}</h5>`)
@@ -874,10 +907,23 @@ function tradingApp() {
         .replace(/^# (\S.*)$/gm, (_, g) => `<h2>${g.trim()}</h2>`)
         .replace(/^---$/gm, '<hr>');
 
+      // 行內格式
       html = html
         .replace(/\*\*(.+?)\*\*/g, (_, g) => `<strong>${g}</strong>`)
         .replace(/\*(.+?)\*/g, (_, g) => `<em>${g}</em>`)
         .replace(/`([^`]+)`/g, (_, g) => `<code>${g}</code>`);
+
+      // Markdown 連結（僅允許 http/https 協議，在新分頁開啟）
+      html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+        (_, label, url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+
+      // 引用區塊（支援連續 > 行）
+      html = html.replace(/(?:^&gt; .+$\n?)+/gm, (match) => {
+        const content = match.trim().split('\n')
+          .map(line => line.replace(/^&gt; /, ''))
+          .join('<br>');
+        return `<blockquote>${content}</blockquote>`;
+      });
 
       // 合併被空行分隔的列表項（LLM 常在項目間插入空行）
       html = html.replace(/^(\d+\. .+)$(\n\n)(?=\d+\. )/gm, '$1\n');
@@ -902,10 +948,8 @@ function tradingApp() {
       html = html.replace(/(?:^\|.+\|$\n?)+/gm, (block) => {
         const rows = block.trim().split('\n').filter(r => r.trim());
         if (rows.length < 2) return block;
-        // 檢查第二行是否為分隔線，支援 |---|、| :--- |、|:---:|、| --- | 等變體
         const sepTest = rows[1].replace(/\s/g, '');
         if (!/^\|[:|-]+\|$/.test(sepTest)) return block;
-        // 額外驗證：分隔行的每個格子必須含至少一個 -
         const sepCells = rows[1].replace(/^\|/, '').replace(/\|$/, '').split('|');
         if (!sepCells.every(c => c.trim().replace(/:/g, '').includes('-'))) return block;
         const parseRow = (row) =>
@@ -917,12 +961,18 @@ function tradingApp() {
           const cells = parseRow(row);
           return '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
         }).join('') + '</tbody>';
-        return `<table>${thead}${tbody}</table>`;
+        return `<div class="table-scroll"><table>${thead}${tbody}</table></div>`;
       });
 
+      // 段落與換行
       html = html.replace(/\n\n/g, '</p><p>');
       html = html.replace(/\n/g, '<br>');
       html = `<div class="markdown-body"><p>${html}</p></div>`;
+
+      // 還原代碼塊佔位符
+      codeBlocks.forEach((block, i) => {
+        html = html.replace(`\x00CB${i}\x00`, block);
+      });
 
       return this._sanitize(html);
     },

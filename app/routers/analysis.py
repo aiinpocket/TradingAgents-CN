@@ -92,6 +92,10 @@ _ERROR_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "分析失敗",
         "en": "Analysis failed.",
     },
+    "analysis_cancelled": {
+        "zh-TW": "分析已取消",
+        "en": "Analysis cancelled.",
+    },
     "analysis_error": {
         "zh-TW": "分析過程中發生錯誤",
         "en": "An error occurred during analysis.",
@@ -352,6 +356,32 @@ async def get_analysis_status(analysis_id: str, request: Request):
         result=data.get("result"),
         error=data.get("error"),
     )
+
+
+@router.delete("/analysis/{analysis_id}")
+async def cancel_analysis(analysis_id: str, request: Request):
+    """取消進行中的分析任務"""
+    if not _validate_analysis_id(analysis_id):
+        raise HTTPException(status_code=400, detail=_t("task_not_found", request))
+
+    with _analyses_lock:
+        data = _active_analyses.get(analysis_id)
+        if not data:
+            raise HTTPException(status_code=404, detail=_t("task_not_found", request))
+        if data["status"] not in ("pending", "running"):
+            return {"analysis_id": analysis_id, "status": data["status"]}
+        # 設定取消標誌，讓背景任務在下次檢查時中止
+        data["_cancelled"] = True
+        data["status"] = "failed"
+        data["error"] = _t("analysis_cancelled", request)
+
+    # 嘗試取消 asyncio.Task（無法中斷執行緒池但可釋放 await 等待）
+    task = data.get("_task")
+    if task and not task.done():
+        task.cancel()
+
+    logger.info(f"分析 ...{analysis_id[-4:]} 已被使用者取消")
+    return {"analysis_id": analysis_id, "status": "cancelled"}
 
 
 @router.get("/analysis/{analysis_id}/stream")
@@ -946,7 +976,7 @@ async def get_stock_context(symbol: str, request: Request):
     _CONTEXT_CACHE[cache_key] = {"data": data, "_ts": now}
 
     # 清理過期快取 + 超過上限時淘汰最舊的條目
-    expired = [k for k, v in _CONTEXT_CACHE.items() if now - v["_ts"] > _CONTEXT_CACHE_TTL * 2]
+    expired = [k for k, v in _CONTEXT_CACHE.items() if now - v["_ts"] > _CONTEXT_CACHE_TTL]
     for k in expired:
         _CONTEXT_CACHE.pop(k, None)
     if len(_CONTEXT_CACHE) > _MAX_CONTEXT_CACHE:

@@ -93,7 +93,7 @@ class MongoDBReportManager:
             self.connected = False
     
     def _create_indexes(self):
-        """建立索引以提高查詢性能"""
+        """建立索引以提高查詢性能（含 TTL 自動清理）"""
         try:
             # 建立複合索引
             self.collection.create_index([
@@ -101,13 +101,19 @@ class MongoDBReportManager:
                 ("analysis_date", -1),
                 ("timestamp", -1)
             ])
-            
+
             # 建立單欄位索引
             self.collection.create_index("analysis_id")
             self.collection.create_index("status")
-            
+
+            # TTL 索引：30 天後自動刪除過期報告，避免資料無限膨脹
+            self.collection.create_index(
+                "timestamp",
+                expireAfterSeconds=30 * 24 * 3600
+            )
+
             logger.info("MongoDB索引建立成功")
-            
+
         except Exception as e:
             logger.error(f"MongoDB索引建立失敗: {e}")
     

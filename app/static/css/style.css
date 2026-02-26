@@ -1316,6 +1316,91 @@ body {
   margin: 16px 0;
 }
 
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.markdown-body th,
+.markdown-body td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--border-light);
+}
+.markdown-body th {
+  background: var(--bg-inset);
+  font-weight: 600;
+  color: var(--text);
+}
+.markdown-body td {
+  color: var(--text-sub);
+}
+
+.markdown-body .table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 12px 0;
+}
+.markdown-body .table-scroll table {
+  margin: 0;
+}
+
+.markdown-body pre {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin: 12px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.markdown-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.markdown-body code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--bg-inset);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-light);
+}
+
+.markdown-body blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 8px 16px;
+  margin: 12px 0;
+  background: var(--bg-inset);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--text-sub);
+  font-size: 13px;
+}
+
+.markdown-body a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+.markdown-body a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.markdown-body em {
+  font-style: italic;
+  color: var(--text-sub);
+}
+
 /* 辯論 */
 
 .debate-content {
@@ -2636,6 +2721,22 @@ code {
   border-color: var(--border-light);
 }
 
+[data-theme="dark"] .markdown-body pre {
+  background: var(--bg-inset);
+  border-color: var(--border-light);
+}
+[data-theme="dark"] .markdown-body blockquote {
+  background: var(--bg-inset);
+  border-left-color: var(--accent);
+}
+[data-theme="dark"] .markdown-body th {
+  background: var(--bg-inset);
+}
+[data-theme="dark"] .markdown-body th,
+[data-theme="dark"] .markdown-body td {
+  border-color: var(--border-light);
+}
+
 [data-theme="dark"] .notice-warn {
   background: var(--amber-bg);
   border-color: rgba(187, 128, 9, 0.3);
@@ -2839,7 +2940,8 @@ code {
 
   .status-indicator span:not(.status-dot) { display: none; }
 
-  .ai-analysis-content table {
+  .ai-analysis-content table,
+  .markdown-body table {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
