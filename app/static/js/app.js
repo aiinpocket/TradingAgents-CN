@@ -555,13 +555,14 @@ function tradingApp() {
             }
             this.connectionRetries = 0;
 
+            // 使用 requestAnimationFrame 同步瀏覽器繪製幀，避免 jank
             if (!this._scrollPending) {
               this._scrollPending = true;
-              setTimeout(() => {
+              requestAnimationFrame(() => {
                 this._scrollPending = false;
                 const log = this.$refs.progressLog;
                 if (log) log.scrollTop = log.scrollHeight;
-              }, 500);
+              });
             }
 
           } else if (data.type === 'completed') {
@@ -975,23 +976,20 @@ function tradingApp() {
 
       let html = text;
 
+      // 單次掃描的 HTML 實體編碼函式（避免對同一字串掃描 3 次）
+      const escHtml = s => s.replace(/[&<>]/g, c => c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;');
+
       // 先提取多行代碼塊，避免後續處理破壞其內容
       const codeBlocks = [];
       html = html.replace(/```(\w*)\n([\s\S]*?)```/gm, (_, lang, code) => {
-        const safeCode = code.trimEnd()
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
+        const safeCode = escHtml(code.trimEnd());
         const placeholder = `\x00CB${codeBlocks.length}\x00`;
         codeBlocks.push(`<pre><code class="language-${lang || 'text'}">${safeCode}</code></pre>`);
         return placeholder;
       });
 
-      // HTML 實體編碼（代碼塊已單獨處理）
-      html = html
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+      // HTML 實體編碼（代碼塊已單獨處理，單次掃描取代三次鏈式 replace）
+      html = escHtml(html);
 
       // 標題（結果區域容器為 h2，Markdown 標題從 h3 開始以維持正確層級）
       html = html
