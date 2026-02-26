@@ -52,9 +52,13 @@
 - **dns-prefetch**: Google Analytics 域名 DNS 預解析
 - **LLM Prompt 精簡**: Research/Risk Manager (~25-30%)、Trader/Bull/Bear (~40%) token 消耗降低
 - **工具並行呼叫超時保護**: as_completed() 加入 30 秒超時，避免單一 API 卡住阻塞整個分析
+- **fetchpriority**: CSS stylesheet=high、GA scripts=low（瀏覽器資源優先級提示）
+- **touch-action: manipulation**: 消除行動裝置 300ms 點擊延遲
+- **content-visibility: auto**: 首屏以下區域延遲繪製，提升捲動效能
+- **分析管線效能計時器**: propagate() 自動記錄 prefetch/graph/total 各階段耗時
 
 #### i18n 國際化
-- **154 翻譯鍵**: zh-TW / en 完全對稱，後端 33 key 雙語完整
+- **155 翻譯鍵**: zh-TW / en 完全對稱，後端 33 key 雙語完整
 - **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
 - **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
 - **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
@@ -86,6 +90,9 @@
 - **觸控目標 44px**: 符合 WCAG 2.5.5 標準（含 480px 斷點 nav-btn / mover-row）
 - **html lang 屬性**: 隨語言切換同步更新（zh-Hant / en）
 - **WCAG 標題層級**: Markdown 渲染標題壓縮至 h3/h4（容器 h2 下不跳級）
+- **Windows 高對比**: @media (forced-colors: active) 支援
+- **高對比模式**: @media (prefers-contrast: more) 增強邊框和文字
+- **列印友善**: @media print 表格/代碼塊分頁保護
 
 #### UI/UX
 - **漲跌排行 CSS Grid**: 固定欄寬跨行對齊，取代 flex 佈局
