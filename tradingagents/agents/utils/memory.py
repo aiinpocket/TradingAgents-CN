@@ -313,11 +313,21 @@ class FinancialSituationMemory:
             ids=ids,
         )
 
-    def get_memories(self, current_situation, n_matches=1):
-        """Find matching recommendations using embeddings with smart truncation handling"""
-        
-        # 取得當前情況的embedding
-        query_embedding = self.get_embedding(current_situation)
+    def get_memories(self, current_situation, n_matches=1, cached_embedding=None):
+        """Find matching recommendations using embeddings with smart truncation handling
+
+        Args:
+            current_situation: 當前市場情況文本
+            n_matches: 返回的最相似記憶數量
+            cached_embedding: 預計算的嵌入向量（避免多節點重複呼叫嵌入 API）
+        """
+
+        # 使用快取嵌入（若已預計算）或重新計算
+        if cached_embedding is not None:
+            query_embedding = cached_embedding
+            logger.debug("使用外部快取嵌入，跳過 API 呼叫")
+        else:
+            query_embedding = self.get_embedding(current_situation)
         
         # 檢查是否為空向量（記憶功能被禁用或出錯）
         if all(x == 0.0 for x in query_embedding):

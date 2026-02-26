@@ -18,7 +18,9 @@ def create_research_manager(llm, memory):
 
         # 安全檢查：確保memory不為None
         if memory is not None:
-            past_memories = memory.get_memories(curr_situation, n_matches=2)
+            from tradingagents.agents.utils.agent_utils import get_cached_embedding
+            cached_emb = get_cached_embedding(curr_situation, memory)
+            past_memories = memory.get_memories(curr_situation, n_matches=2, cached_embedding=cached_emb)
         else:
             logger.warning("memory為None，跳過歷史記憶檢索")
             past_memories = []

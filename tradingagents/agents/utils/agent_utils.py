@@ -28,6 +28,29 @@ _tool_cache_hits = 0
 _tool_cache_misses = 0
 
 
+# 分析層級記憶嵌入快取（避免多節點重複呼叫嵌入 API）
+# 同一次分析中 5 個節點使用相同的 current_situation，只需計算一次嵌入
+_embedding_cache: dict[int, list[float]] = {}
+_embedding_cache_lock = threading.Lock()
+
+
+def get_cached_embedding(situation_text: str, memory_instance) -> list[float]:
+    """取得 current_situation 的嵌入向量（快取避免重複 API 呼叫）"""
+    cache_key = hash(situation_text)
+    with _embedding_cache_lock:
+        cached = _embedding_cache.get(cache_key)
+        if cached is not None:
+            logger.debug("記憶嵌入快取命中，跳過 API 呼叫")
+            return cached
+
+    # 快取未命中，計算嵌入
+    embedding = memory_instance.get_embedding(situation_text)
+    with _embedding_cache_lock:
+        _embedding_cache[cache_key] = embedding
+    logger.info("記憶嵌入已計算並快取")
+    return embedding
+
+
 def reset_tool_result_cache():
     """重置工具結果快取，在每次新分析開始前呼叫"""
     global _tool_result_cache, _tool_cache_hits, _tool_cache_misses
@@ -40,6 +63,11 @@ def reset_tool_result_cache():
         _tool_result_cache = {}
         _tool_cache_hits = 0
         _tool_cache_misses = 0
+    # 同時重置嵌入快取
+    with _embedding_cache_lock:
+        if _embedding_cache:
+            logger.info(f"記憶嵌入快取重置: {len(_embedding_cache)} 筆")
+        _embedding_cache.clear()
 
 
 def _make_cache_key(tool_name: str, args: dict) -> str:
