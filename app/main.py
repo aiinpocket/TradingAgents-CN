@@ -112,9 +112,13 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    # 關閉背景任務與執行緒池
+    # 優雅關閉背景任務：先取消再等待實際終止
     prewarm_task.cancel()
     refresh_task.cancel()
+    try:
+        await asyncio.gather(prewarm_task, refresh_task, return_exceptions=True)
+    except Exception:
+        pass
     from app.routers.trending import _TRENDING_EXECUTOR
     _TRENDING_EXECUTOR.shutdown(wait=True, cancel_futures=True)
     logger.info("TradingAgents API 關閉")

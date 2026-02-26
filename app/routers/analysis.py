@@ -596,7 +596,8 @@ async def _run_analysis(analysis_id: str):
 
     except asyncio.TimeoutError:
         timeout_min = _ANALYSIS_TIMEOUT_SECONDS // 60
-        data["progress"].append(_t_lang("analysis_error", lang))
+        if data:
+            data["progress"].append(_t_lang("analysis_error", lang))
         _update_analysis_state(
             analysis_id,
             status="failed",
@@ -604,8 +605,13 @@ async def _run_analysis(analysis_id: str):
         )
         logger.warning(f"分析 ...{analysis_id[-4:]} 超時（{timeout_min} 分鐘），已強制終止")
 
+    except (asyncio.CancelledError, InterruptedError):
+        # 使用者主動取消，狀態已在 cancel_analysis() 中設為 failed
+        logger.info(f"分析 ...{analysis_id[-4:]} 已被取消")
+
     except Exception as e:
-        data["progress"].append(_t_lang("analysis_error", lang))
+        if data:
+            data["progress"].append(_t_lang("analysis_error", lang))
         _update_analysis_state(
             analysis_id,
             status="failed",
@@ -622,19 +628,26 @@ async def _run_analysis(analysis_id: str):
 
 
 def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, model, lang="zh-TW"):
-    """同步執行分析（在執行緒池中執行）"""
+    """同步執行分析（在執行緒池中執行，支援取消標誌檢查）"""
     data = _active_analyses.get(analysis_id)
+    if not data:
+        logger.warning(f"分析 ...{analysis_id[-4:]} 啟動時已不在記憶體中，跳過")
+        return {"success": False, "error": "Task removed before execution"}
 
     def progress_callback(message, step=None, total_steps=None):
-        if data:
-            # 限制單條訊息長度，防止記憶體濫用
-            if len(message) > 1000:
-                logger.warning(
-                    f"分析 ...{analysis_id[-4:]} 進度訊息被截斷（{len(message)} 字元）"
-                )
-                message = message[:1000] + "..."
-            # deque(maxlen=200) 自動丟棄最舊訊息
-            data["progress"].append(message)
+        if not data:
+            return
+        # 檢查取消標誌，透過 raise 中斷分析流程
+        if data.get("_cancelled"):
+            raise InterruptedError("Analysis cancelled by user")
+        # 限制單條訊息長度，防止記憶體濫用
+        if len(message) > 1000:
+            logger.warning(
+                f"分析 ...{analysis_id[-4:]} 進度訊息被截斷（{len(message)} 字元）"
+            )
+            message = message[:1000] + "..."
+        # deque(maxlen=200) 自動丟棄最舊訊息
+        data["progress"].append(message)
 
     from web.utils.analysis_runner import run_stock_analysis
 
@@ -970,6 +983,10 @@ async def get_stock_context(symbol: str, request: Request):
 
     loop = asyncio.get_running_loop()
     data = await loop.run_in_executor(None, _fetch_stock_context, symbol)
+
+    # 若取得行情失敗，回傳 502 而非假裝成功
+    if data.get("error"):
+        raise HTTPException(status_code=502, detail=data["error"])
 
     # 寫入快取
     now = time.time()
