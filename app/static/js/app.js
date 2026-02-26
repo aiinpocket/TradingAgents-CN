@@ -202,10 +202,13 @@ function tradingApp() {
     toggleLang() {
       this.lang = this.lang === 'zh-TW' ? 'en' : 'zh-TW';
       setLang(this.lang);
+      // 同步 html lang 屬性（無障礙 + SEO）
+      document.documentElement.setAttribute('lang', this.lang === 'zh-TW' ? 'zh-Hant' : 'en');
       // 同步頁面標題語言
       document.title = this.t('meta.title');
-      // 切換語言後重新載入 AI 分析（使用新語言）
-      if (this.tab === 'trending' && this.aiAnalysis.content) {
+      // 切換語言後先清空 AI 分析（避免短暫顯示舊語言內容），再重新載入
+      if (this.tab === 'trending') {
+        this.aiAnalysis = { available: null, content: '', updated_at: '', provider: '' };
         this.loadAiAnalysis(true);
       }
     },

@@ -5,6 +5,7 @@
 
 import asyncio
 import os
+import re
 import random
 import time
 import threading
@@ -154,6 +155,14 @@ def _normalize_tw_terminology(text: str) -> str:
     # 中文語境：英文公司名轉為台灣慣用中文名
     for en_name, tw_name in _EN_TO_TW_COMPANY:
         if en_name in text:
+            # 先移除已含中文名的冗餘括號標註
+            # 例如「輝達(Nvidia)」或「輝達（Nvidia）」→「輝達」
+            pattern = (
+                re.escape(tw_name) + r"\s*[（(]\s*"
+                + re.escape(en_name) + r"\s*[）)]"
+            )
+            text = re.sub(pattern, tw_name, text)
+            # 再將剩餘的英文名替換為中文名
             text = text.replace(en_name, tw_name)
     return text
 
