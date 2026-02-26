@@ -477,7 +477,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             config["online_tools"] = True
         elif research_depth == 3:  # 3級 - 標準分析 (預設)
             config["max_debate_rounds"] = 1
-            config["max_risk_discuss_rounds"] = 2
+            config["max_risk_discuss_rounds"] = 1
             config["memory_enabled"] = True
             config["online_tools"] = True
         elif research_depth == 4:  # 4級 - 深度分析

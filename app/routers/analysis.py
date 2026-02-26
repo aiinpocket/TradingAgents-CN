@@ -536,6 +536,46 @@ def _update_analysis_state(analysis_id: str, **updates):
     return data
 
 
+async def _background_translate(
+    analysis_id: str,
+    formatted: dict,
+    stock_symbol: str,
+    analysis_date: str,
+    raw_result: dict,
+):
+    """背景異步翻譯英文版本，完成後更新記憶體狀態和 MongoDB"""
+    try:
+        loop = asyncio.get_running_loop()
+        translation = await loop.run_in_executor(
+            _ANALYSIS_EXECUTOR, _translate_result_to_english, formatted
+        )
+        if not translation:
+            return
+        if translation.get("state_en"):
+            formatted["state_en"] = translation["state_en"]
+        if translation.get("decision_en"):
+            formatted["decision_en"] = translation["decision_en"]
+
+        # 更新記憶體中的分析結果
+        _update_analysis_state(analysis_id, status="completed", result=formatted)
+
+        # 更新 MongoDB 中已儲存的報告（含英文版）
+        try:
+            from web.utils.mongodb_report_manager import MongoDBReportManager
+            mgr = MongoDBReportManager()
+            mgr.save_analysis_report(
+                stock_symbol=stock_symbol,
+                analysis_results=raw_result,
+                reports={},
+                analysis_date=analysis_date,
+                formatted_result=formatted,
+            )
+        except Exception as e:
+            logger.warning(f"背景翻譯後 MongoDB 更新失敗: {e}")
+    except Exception as e:
+        logger.warning(f"背景翻譯失敗（不影響已完成的中文結果）: {e}")
+
+
 async def _run_analysis(analysis_id: str):
     """背景執行分析"""
     with _analyses_lock:
@@ -589,25 +629,7 @@ async def _run_analysis(analysis_id: str):
             except Exception:
                 pass  # 術語校正非關鍵路徑
 
-            # 翻譯成英文版本
-            data["progress"].append(_t_lang("generating_english", lang))
-            try:
-                translation = await loop.run_in_executor(
-                    _ANALYSIS_EXECUTOR, _translate_result_to_english, formatted
-                )
-                if translation:
-                    if translation.get("state_en"):
-                        formatted["state_en"] = translation["state_en"]
-                    if translation.get("decision_en"):
-                        formatted["decision_en"] = translation["decision_en"]
-                    data["progress"].append(_t_lang("english_version_ready", lang))
-                else:
-                    data["progress"].append(_t_lang("english_generation_skipped", lang))
-            except Exception as e:
-                logger.warning(f"翻譯步驟失敗（不影響主流程）: {e}")
-                data["progress"].append(_t_lang("english_generation_skipped", lang))
-
-            # 儲存格式化結果到 MongoDB 供後續快取查詢
+            # 先儲存中文版結果到 MongoDB（不等翻譯）
             data["progress"].append(_t_lang("saving_report", lang))
             try:
                 from web.utils.mongodb_report_manager import MongoDBReportManager
@@ -622,8 +644,15 @@ async def _run_analysis(analysis_id: str):
             except Exception as e:
                 logger.warning(f"MongoDB 快取儲存失敗（不影響主流程）: {e}")
 
+            # 先標記完成並回傳中文結果，讓前端即時顯示
             data["progress"].append(_t_lang("analysis_complete", lang))
             _update_analysis_state(analysis_id, status="completed", result=formatted)
+
+            # 背景異步翻譯英文版（不阻塞 SSE 回應）
+            asyncio.ensure_future(_background_translate(
+                analysis_id, formatted, data["stock_symbol"],
+                data.get("analysis_date", ""), result
+            ))
 
         else:
             error_msg = result.get("error", _t_lang("analysis_failed", lang))
