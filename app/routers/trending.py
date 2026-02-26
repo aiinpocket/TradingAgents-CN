@@ -46,6 +46,11 @@ _company_names_lock = threading.Lock()
 _llm_clients: dict[str, object] = {}
 _llm_clients_lock = threading.Lock()
 
+# 新聞標題翻譯快取（逐標題快取，跨刷新週期複用已翻譯標題）
+_MAX_TITLE_TRANSLATIONS = 500
+_title_translation_cache: dict[str, str] = {}
+_title_translation_lock = threading.Lock()
+
 
 def _get_llm(provider: str, model: str, temperature: float = 0, max_tokens: int = 2000):
     """取得或建立 LangChain LLM 客戶端（執行緒安全懶初始化）"""
@@ -492,11 +497,28 @@ def _fetch_market_news() -> list[dict]:
 
 
 def _translate_news_titles(news_items: list[dict]) -> list[dict]:
-    """批次翻譯新聞標題為繁體中文（使用 LLM，失敗時保留原文）"""
+    """批次翻譯新聞標題為繁體中文（增量翻譯：已快取標題直接複用，僅翻譯新標題）"""
     if not news_items:
         return news_items
 
-    titles = [item["title"] for item in news_items]
+    # 分離已快取與待翻譯的標題
+    need_translate_indices = []  # 需要 LLM 翻譯的項目索引
+    need_translate_titles = []   # 需要 LLM 翻譯的原始標題
+
+    with _title_translation_lock:
+        for i, item in enumerate(news_items):
+            cached_zh = _title_translation_cache.get(item["title"])
+            if cached_zh:
+                item["title_zh"] = cached_zh
+            else:
+                need_translate_indices.append(i)
+                need_translate_titles.append(item["title"])
+
+    # 全部命中快取，跳過 LLM 呼叫
+    if not need_translate_titles:
+        logger.info(f"新聞標題翻譯: {len(news_items)} 則全部命中快取")
+        return news_items
+
     providers = _get_ai_providers()
     if not providers:
         return news_items
@@ -514,7 +536,7 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
         "Respond ONLY with a JSON array of translated strings, in the same order as input. "
         "Example: [\"翻譯一\", \"翻譯二\"]"
     )
-    user_msg = _json.dumps(titles, ensure_ascii=False)
+    user_msg = _json.dumps(need_translate_titles, ensure_ascii=False)
 
     messages = [
         SystemMessage(content=system_msg),
@@ -529,20 +551,34 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
             text = response.content.strip()
 
             # 解析 JSON（支援 markdown code fence 變體）
-            import re
             fence_match = re.search(r"```(?:json)?\s*\n?(.*?)```", text, re.DOTALL)
             if fence_match:
                 text = fence_match.group(1).strip()
 
             translated = _json.loads(text)
-            if isinstance(translated, list) and len(translated) == len(news_items):
-                for i, item in enumerate(news_items):
-                    # 確定性術語校正：LLM 可能仍用大陸用語
-                    item["title_zh"] = _normalize_tw_terminology(translated[i])
-                logger.info(f"新聞標題翻譯完成 ({len(translated)} 則，provider={provider})")
+            if isinstance(translated, list) and len(translated) == len(need_translate_titles):
+                # 寫入結果並更新快取
+                with _title_translation_lock:
+                    for j, idx in enumerate(need_translate_indices):
+                        zh = _normalize_tw_terminology(translated[j])
+                        news_items[idx]["title_zh"] = zh
+                        _title_translation_cache[need_translate_titles[j]] = zh
+
+                    # 快取超過上限時，移除最早加入的條目
+                    if len(_title_translation_cache) > _MAX_TITLE_TRANSLATIONS:
+                        excess = len(_title_translation_cache) - _MAX_TITLE_TRANSLATIONS
+                        keys_to_remove = list(_title_translation_cache.keys())[:excess]
+                        for k in keys_to_remove:
+                            del _title_translation_cache[k]
+
+                cached_count = len(news_items) - len(need_translate_titles)
+                logger.info(
+                    f"新聞標題翻譯完成: {len(need_translate_titles)} 則新翻譯 + "
+                    f"{cached_count} 則快取命中 (provider={provider})"
+                )
                 return news_items
 
-            logger.warning(f"新聞翻譯結果長度不符: {len(translated)} vs {len(news_items)}")
+            logger.warning(f"新聞翻譯結果長度不符: {len(translated)} vs {len(need_translate_titles)}")
         except Exception as e:
             logger.warning(f"新聞標題翻譯失敗 ({provider}): {str(e)[:100]}")
             continue
