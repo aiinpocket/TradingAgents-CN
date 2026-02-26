@@ -91,6 +91,10 @@ function tradingApp() {
     _ctxCache: {},
     _ctxPending: {},  // 正在進行的請求去重（symbol -> Promise）
 
+    // Markdown 渲染記憶化快取（text -> html），避免 Alpine 反應式更新重複解析
+    _mdCache: new Map(),
+    _MD_CACHE_MAX: 30,
+
     // 追蹤清單（localStorage 持久化）
     watchlist: [],
 
@@ -225,6 +229,8 @@ function tradingApp() {
       document.title = this.t('meta.title');
       // 情緒標籤依賴語言，需重新計算
       this._sentiment = this._computeSentiment();
+      // 清除 Markdown 快取（語言切換後 getReport 可能回傳不同內容）
+      this._mdCache.clear();
       // 切換語言後先清空 AI 分析（避免短暫顯示舊語言內容），再重新載入
       if (this.tab === 'trending') {
         this.aiAnalysis = { available: null, content: '', updated_at: '', provider: '' };
@@ -718,6 +724,8 @@ function tradingApp() {
     },
 
     resetAnalysis() {
+      // 清除 Markdown 渲染快取
+      this._mdCache.clear();
       // 通知後端取消進行中的分析（fire-and-forget）
       if (this.analysisId) {
         fetch(`/api/analysis/${encodeURIComponent(this.analysisId)}`, {
@@ -975,6 +983,10 @@ function tradingApp() {
     renderMarkdown(text) {
       if (!text) return '<p class="empty-state">' + this._sanitize(this.t('common.no_data')) + '</p>';
 
+      // 記憶化：相同輸入直接回傳快取結果，避免重複 Markdown 解析和 DOMPurify 消毒
+      const cached = this._mdCache.get(text);
+      if (cached) return cached;
+
       let html = text;
 
       // 單次掃描的 HTML 實體編碼函式（避免對同一字串掃描 3 次）
@@ -1068,7 +1080,15 @@ function tradingApp() {
         html = html.replace(`\x00CB${i}\x00`, block);
       });
 
-      return this._sanitize(html);
+      const result = this._sanitize(html);
+
+      // 快取結果（LRU：超過上限時清除最舊的一半）
+      this._mdCache.set(text, result);
+      if (this._mdCache.size > this._MD_CACHE_MAX) {
+        const keys = Array.from(this._mdCache.keys());
+        for (let i = 0; i < keys.length / 2; i++) this._mdCache.delete(keys[i]);
+      }
+      return result;
     },
 
     renderDebate(debateState) {

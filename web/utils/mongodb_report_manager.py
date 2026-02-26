@@ -24,72 +24,96 @@ except ImportError:
     logger.warning("pymongo未安裝，MongoDB功能不可用")
 
 
+import threading
+
+# 模組級別的共享 MongoClient 單例（PyMongo MongoClient 內建連接池，執行緒安全）
+_shared_client: Optional["MongoClient"] = None
+_shared_client_lock = threading.Lock()
+
+
+def _get_shared_client():
+    """取得共享的 MongoClient 單例，避免每次建立新連接"""
+    global _shared_client
+    if _shared_client is not None:
+        return _shared_client
+
+    with _shared_client_lock:
+        # 雙重檢查鎖定
+        if _shared_client is not None:
+            return _shared_client
+
+        if not MONGODB_AVAILABLE:
+            return None
+
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+
+            mongodb_host = os.getenv("MONGODB_HOST", "localhost")
+            mongodb_port = int(os.getenv("MONGODB_PORT", "27017"))
+            mongodb_username = os.getenv("MONGODB_USERNAME", "")
+            mongodb_password = os.getenv("MONGODB_PASSWORD", "")
+            mongodb_auth_source = os.getenv("MONGODB_AUTH_SOURCE", "admin")
+
+            connect_kwargs = {
+                "host": mongodb_host,
+                "port": mongodb_port,
+                "serverSelectionTimeoutMS": 5000,
+                "connectTimeoutMS": 5000,
+                "maxPoolSize": 10,
+                "minPoolSize": 1,
+            }
+
+            if mongodb_username and mongodb_password:
+                connect_kwargs.update({
+                    "username": mongodb_username,
+                    "password": mongodb_password,
+                    "authSource": mongodb_auth_source,
+                })
+
+            client = MongoClient(**connect_kwargs)
+            client.admin.command("ping")
+            _shared_client = client
+            logger.info(f"MongoDB 共享連接池建立成功: {mongodb_host}:{mongodb_port}")
+            return _shared_client
+
+        except Exception as e:
+            logger.error(f"MongoDB 共享連接池建立失敗: {e}")
+            return None
+
+
 class MongoDBReportManager:
-    """MongoDB報告管理器"""
-    
+    """MongoDB 報告管理器（使用共享連接池單例）"""
+
     def __init__(self):
         self.client = None
         self.db = None
         self.collection = None
         self.connected = False
-        
+
         if MONGODB_AVAILABLE:
             self._connect()
-    
+
     def _connect(self):
-        """連接到MongoDB"""
+        """透過共享連接池連接到 MongoDB"""
         try:
-            # 載入環境變數
-            from dotenv import load_dotenv
-            load_dotenv()
+            client = _get_shared_client()
+            if client is None:
+                self.connected = False
+                return
 
-            # 從環境變數取得MongoDB配置
-            mongodb_host = os.getenv("MONGODB_HOST", "localhost")
-            mongodb_port = int(os.getenv("MONGODB_PORT", "27017"))
-            mongodb_username = os.getenv("MONGODB_USERNAME", "")
-            mongodb_password = os.getenv("MONGODB_PASSWORD", "")
+            self.client = client
             mongodb_database = os.getenv("MONGODB_DATABASE", "tradingagents")
-            mongodb_auth_source = os.getenv("MONGODB_AUTH_SOURCE", "admin")
-
-            logger.info(f"MongoDB配置: host={mongodb_host}, port={mongodb_port}, db={mongodb_database}")
-            # 不記錄認證詳細資訊以避免安全風險
-            if mongodb_username:
-                logger.debug(f"認證: auth_source={mongodb_auth_source}")
-
-            # 構建連接參數
-            connect_kwargs = {
-                "host": mongodb_host,
-                "port": mongodb_port,
-                "serverSelectionTimeoutMS": 5000,
-                "connectTimeoutMS": 5000
-            }
-
-            # 如果有使用者名和密碼，新增認證資訊
-            if mongodb_username and mongodb_password:
-                connect_kwargs.update({
-                    "username": mongodb_username,
-                    "password": mongodb_password,
-                    "authSource": mongodb_auth_source
-                })
-
-            # 連接MongoDB
-            self.client = MongoClient(**connect_kwargs)
-            
-            # 測試連接
-            self.client.admin.command('ping')
-            
-            # 選擇資料庫和集合
             self.db = self.client[mongodb_database]
             self.collection = self.db["analysis_reports"]
-            
-            # 建立索引
+
+            # 索引只需建立一次（idempotent），共享連接池首次呼叫時建立
             self._create_indexes()
-            
+
             self.connected = True
-            logger.info(f"MongoDB連接成功: {mongodb_database}.analysis_reports")
-            
+
         except Exception as e:
-            logger.error(f"MongoDB連接失敗: {e}")
+            logger.error(f"MongoDB 連接失敗: {e}")
             self.connected = False
     
     def _create_indexes(self):
