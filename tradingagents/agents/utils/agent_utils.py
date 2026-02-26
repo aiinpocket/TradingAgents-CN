@@ -107,9 +107,13 @@ def execute_tools_parallel(tool_calls, tools, logger_instance=None):
             executor.submit(_invoke_single_tool, tc): i
             for i, tc in enumerate(tool_calls)
         }
-        for future in as_completed(future_to_idx):
-            idx = future_to_idx[future]
-            results[idx] = future.result()
+        # 30 秒超時保護：避免單一工具卡住阻塞整個流程
+        try:
+            for future in as_completed(future_to_idx, timeout=30):
+                idx = future_to_idx[future]
+                results[idx] = future.result()
+        except TimeoutError:
+            _log.warning("部分工具呼叫超過 30 秒超時，跳過未完成的工具")
 
     return results
 
@@ -182,9 +186,13 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
             executor.submit(_invoke_one, t, a): i
             for i, (t, a) in enumerate(zip(tools, tool_args_list))
         }
-        for future in as_completed(future_to_idx):
-            idx = future_to_idx[future]
-            results[idx] = future.result()
+        # 30 秒超時保護：避免單一工具卡住阻塞整個流程
+        try:
+            for future in as_completed(future_to_idx, timeout=30):
+                idx = future_to_idx[future]
+                results[idx] = future.result()
+        except TimeoutError:
+            _log.warning("部分工具呼叫超過 30 秒超時，跳過未完成的工具")
 
     return results
 
