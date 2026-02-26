@@ -21,6 +21,19 @@
 
 [x-cloak] { display: none !important; }
 
+/* 無障礙：螢幕閱讀器可讀但視覺隱藏 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 :root {
   --bg: #fafbfc;
   --bg-panel: #ffffff;
@@ -1058,7 +1071,16 @@ body {
   padding: 8px 0;
 }
 
-/* 統一為靜態骨架，與 .skeleton 一致 */
+/* 骨架脈動動畫 */
+.skeleton {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* 統一為脈動骨架 */
 .skeleton-line {
   height: 16px;
   border-radius: 4px;
@@ -2053,6 +2075,7 @@ code {
 .mover-row:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15);
 }
 
 .mover-row + .mover-row {
@@ -2705,7 +2728,7 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
   .panel { animation: none; }
-  .skeleton { /* 已移除動畫 */ }
+  .skeleton { animation: none; }
   .btn-loading::after { animation-duration: 1.5s; }
   .mover-bar-fill { transition: none; }
   .ai-analysis-content { animation: none; }
