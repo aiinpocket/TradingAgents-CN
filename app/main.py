@@ -14,6 +14,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
@@ -285,6 +286,8 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.add_middleware(RequestSizeLimitMiddleware)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RateLimitMiddleware, max_requests=60, window_seconds=60)
+# GZip 壓縮：500 bytes 以上自動壓縮，大幅降低傳輸量（CSS/JS 壓縮率 ~60-70%）
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 # CORS（拒絕萬用字元以防止設定錯誤）
 _cors_env = os.getenv("CORS_ORIGINS", "").strip()

@@ -119,8 +119,8 @@ function tradingApp() {
       // 載入追蹤清單
       this._loadWatchlist();
 
-      await this.checkHealth();
-      await this.loadModels();
+      // 平行呼叫健康檢查與模型清單以縮短啟動時間
+      await Promise.all([this.checkHealth(), this.loadModels()]);
       this.form.date = new Date().toISOString().split('T')[0];
 
       // 股票查詢表快取：trendingData 變化時重建一次，供 _computeStockPreview / getWatchlistStocks 共用

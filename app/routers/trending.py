@@ -966,8 +966,11 @@ async def start_background_refresh():
             jitter = random.uniform(0, 30)
             await asyncio.sleep(backoff + jitter)
         try:
+            # 標記快取過期但保留舊資料，避免穿透（使用者仍可讀取舊快取）
             with _cache_lock:
-                _cache.pop("overview", None)
+                entry = _cache.get("overview")
+                if entry:
+                    _cache["overview"] = {"data": entry["data"], "ts": 0}
             await asyncio.wait_for(get_market_overview(), timeout=60.0)
             logger.info("背景趨勢刷新完成")
             consecutive_failures = 0
