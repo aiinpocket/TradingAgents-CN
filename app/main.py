@@ -204,9 +204,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if len(self._hits) > self._MAX_TRACKED_IPS:
             self._evict_stale_ips(now)
 
+        # 以下讀取-檢查-寫入區段全部為同步操作（無 await），
+        # 在 asyncio 單線程事件迴圈中不會發生協程切換，因此不需要 Lock
         hits = self._hits[client_ip]
-
-        # 清除過期紀錄
         cutoff = now - self.window
         self._hits[client_ip] = [t for t in hits if t > cutoff]
         hits = self._hits[client_ip]
@@ -277,11 +277,12 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 # 請求大小限制中介層
 class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
-    """限制請求 body 大小"""
+    """限制請求 body 大小（同時防護 Content-Length 和 chunked transfer encoding）"""
 
     MAX_BODY_SIZE = 64 * 1024  # 64 KB
 
     async def dispatch(self, request: Request, call_next) -> Response:
+        # 快速路徑：透過 Content-Length header 檢查（涵蓋大多數正常請求）
         content_length = request.headers.get("content-length")
         if content_length:
             try:
@@ -292,6 +293,15 @@ class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
                     )
             except (ValueError, TypeError):
                 pass
+        elif request.method in ("POST", "PUT", "PATCH"):
+            # 防護 chunked transfer encoding 繞過：無 Content-Length 時讀取實際 body 驗證大小
+            # BaseHTTPMiddleware 已將 body 緩衝至記憶體，此處讀取不會增加額外開銷
+            body = await request.body()
+            if len(body) > self.MAX_BODY_SIZE:
+                return JSONResponse(
+                    status_code=413,
+                    content={"detail": _mw_t("request_too_large", request)},
+                )
         return await call_next(request)
 
 

@@ -26,9 +26,9 @@
 #### 效能優化
 - **GZip 壓縮**: GZipMiddleware 自動壓縮回應（CSS/JS/API），傳輸量減少 ~60%
 - **SSR 預渲染**: 後端注入快取 JSON 至 HTML，消除首屏 CLS（0.34 -> 0.00）
-- **CWV 指標**: LCP 796ms / CLS 0.00 / TTFB 308ms — 全部 Good 等級
+- **CWV 指標**: LCP 515ms / CLS 0.00 / TTFB 201ms — 全部 Good 等級
 - **趨勢資料並行抓取**: ThreadPoolExecutor 批次並行，延遲降低約 50%
-- **背景定時刷新**: 每 5 分鐘自動更新市場資料快取，前端每 10 分鐘重新載入
+- **背景定時刷新**: 每 5 分鐘自動更新市場資料快取，前端每 5 分鐘重新載入
 - **快取穿透防護**: 背景刷新採用「標記過期保留舊資料」策略，避免刷新中斷
 - **AI 分析預產生**: 啟動時及背景刷新後自動生成中英文分析（2 小時 TTL）
 - **前端平行初始化**: checkHealth + loadModels 使用 Promise.all 並行呼叫
@@ -36,7 +36,7 @@
 - **dns-prefetch**: Google Analytics 域名 DNS 預解析
 
 #### i18n 國際化
-- **152 翻譯鍵**: zh-TW / en 完全對稱
+- **154 翻譯鍵**: zh-TW / en 完全對稱
 - **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
 - **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
 - **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
@@ -284,7 +284,7 @@
 - //
 - 
 - 
-- Markdown/Word/PDF
+- Markdown 匯出
 
 ### 
 
@@ -307,7 +307,7 @@
 - ** **: //
 - ** **: 
 - ** **: 
-- ** **: Markdown/Word/PDF
+- ** **: Markdown 匯出
 
 #### **LLM**
 
@@ -320,26 +320,23 @@
 
 #### ****
 
-1. ****: `python start_web.py` `docker-compose up -d`
-2. ****: `http://localhost:8501`
-3. ****: LLM
-4. ****: AAPLTSLANVDA
-5. ****: 1-5
-6. ****: 
-7. ****: 
-8. ****: 
+1. **啟動系統**: `python start_app.py` 或 `docker-compose up -d`
+2. **開啟瀏覽器**: `http://localhost:8501`
+3. **瀏覽首頁**: 查看市場總覽、漲跌排行、AI 趨勢分析
+4. **切換至分析頁籤**: 輸入股票代碼（AAPL、TSLA、NVDA 等）
+5. **選擇模型**: 選擇 LLM 提供商與模型
+6. **開始分析**: 點擊「開始分析」按鈕，透過 SSE 串流即時查看進度
+7. **查看結果**: 瀏覽各智慧體分析報告與最終交易建議
+8. **匯出報告**: 以 Markdown 格式匯出分析結果
 
 #### ****
 
 - ** **: `AAPL`, `TSLA`, `MSFT`, `NVDA`, `GOOGL`
 
-#### ****
+#### **分析模式**
 
-- **1 (2-4)**: 
-- **2 (4-6)**: +
-- **3 (6-10)**: ****
-- **4 (10-15)**: 
-- **5 (15-25)**: 
+- **標準分析**: 多空辯論 + 風險評估（預設 2 輪辯論）
+- **深度分析**: 可透過 .env 調整 `MAX_DEBATE_ROUNDS` 和 `MAX_RISK_DISCUSS_ROUNDS`
 
 #### ****
 
@@ -451,7 +448,7 @@ pip install -e . --no-deps
 # Windows PyYAML 
 
 # 3. 
-python start_web.py
+python start_app.py
 
 # 4. http://localhost:8501
 ```
@@ -463,7 +460,7 @@ python start_web.py
 3. ****: " "
 4. ****: 
 5. ****: " "
-6. ****: Word/PDF/Markdown
+6. ****: Markdown
 
 ## 
 
@@ -503,8 +500,8 @@ python start_web.py
 - **Web**: TradingAgents-CN
 - **MongoDB**: 
 - **Redis**: 
-- **MongoDB Express**: 
-- **Redis Commander**: 
+- **MongoDB Express**: 資料庫管理介面（需 `--profile management` 啟動）
+- **Redis Commander**: 快取管理介面（需 `--profile management` 啟動）
 
 #### 
 
@@ -691,23 +688,12 @@ REDIS_DB=0
 
 ****
 
-```python
-# config/database_config.py
-DATABASE_CONFIG = {
- 'mongodb': {
- 'host': 'localhost',
- 'port': 27017,
- 'database': 'trading_agents',
- 'username': 'admin',
- 'password': 'your_password'
- },
- 'redis': {
- 'host': 'localhost',
- 'port': 6379,
- 'password': 'your_redis_password',
- 'db': 0
- }
-}
+```bash
+# .env 資料庫設定
+MONGODB_ENABLED=true
+MONGODB_URI=mongodb://localhost:27017/trading_agents
+REDIS_ENABLED=true
+REDIS_URL=redis://localhost:6379/0
 ```
 
 #### 
@@ -743,15 +729,10 @@ DATABASE_CONFIG = {
 
 ****
 
-```python
-# .env 
-ENABLE_MONGODB=true
-ENABLE_REDIS=true
-ENABLE_FALLBACK=true
-
-# 
-REDIS_CACHE_TTL=300
-MONGODB_CACHE_TTL=3600
+```bash
+# .env 快取設定
+MONGODB_ENABLED=true
+REDIS_ENABLED=true
 ```
 
 #### 
@@ -857,38 +838,21 @@ python scripts/maintenance/cleanup_cache.py --days 7
 
 
 
-****
+**支援格式**
 
-- ** Markdown (.md)** - 
-- ** Word (.docx)** - Microsoft Word
-- ** PDF (.pdf)** - 
+- **Markdown (.md)** - 純文字格式，適合版本控制與二次編輯
 
-****
+**匯出內容**
 
-- **** - //
-- **** - 
-- **** - 
-- **** - 
+- **各階段分析報告** - 市場/社群/新聞/基本面
+- **辯論過程紀錄** - 多空辯論與風險討論
+- **最終交易建議** - 含信心度與風險評估
 
-****
+**使用方式**
 
-1. " "
-2. MarkdownWordPDF
-3. 
-
-****
-
-```bash
-# Python
-pip install markdown pypandoc
-
-# PDF
-# Windows: choco install pandoc wkhtmltopdf
-# macOS: brew install pandoc wkhtmltopdf
-# Linux: sudo apt-get install pandoc wkhtmltopdf
-```
-
-> ****: [](docs/EXPORT_GUIDE.md)
+1. 完成分析後點擊「匯出」按鈕
+2. 系統自動產生 Markdown 格式報告
+3. 可直接下載或複製內容
 
 ### 
 
@@ -899,8 +863,8 @@ Docker
 ```bash
 # Docker
 # Web: http://localhost:8501
-# : http://localhost:8081
-# : http://localhost:8082
+# MongoDB Express: http://localhost:8081 (需 --profile management)
+# Redis Commander: http://localhost:8082 (需 --profile management)
 
 # 
 docker-compose ps
@@ -931,23 +895,19 @@ python start_app.py
 
 **Web**:
 
-- ****: AAPL, TSLA, NVDA 
-- ****: FinnHub Yahoo Finance 
-- ****: 
-- ****: Markdown/Word/PDF
-- **5**: (2-4)(15-25)
-- ****: 
-- ****: 
-- ****: 
-- ****: 
+- **股票代碼輸入**: AAPL, TSLA, NVDA 等美股代碼
+- **即時資料**: FinnHub Yahoo Finance 多來源整合
+- **SSE 串流**: 即時查看各智慧體分析進度
+- **報告匯出**: Markdown 匯出
+- **多空辯論**: 多方/空方研究員辯論機制
+- **風險評估**: 積極/保守/中立三方風險辯論
+- **歷史紀錄**: 分析結果持久化儲存
+- **中英雙語**: 完整 i18n 國際化支援
 
-****:
+**分析模式**:
 
-- **1 - ** (2-4): 
-- **2 - ** (4-6): 
-- **3 - ** (6-10): 
-- **4 - ** (10-15): 
-- **5 - ** (15-25): 
+- **標準分析**: 多空辯論 + 風險評估（預設 2 輪辯論）
+- **深度分析**: 可透過 .env 調整 `MAX_DEBATE_ROUNDS` 和 `MAX_RISK_DISCUSS_ROUNDS`
 
 #### 
 
@@ -979,9 +939,6 @@ print(f": {decision['reasoning']}")
 ```bash
 # OpenAI
 python examples/simple_analysis_demo.py
-
-# 
-python examples/custom_analysis_demo.py
 ```
 
 #### 
