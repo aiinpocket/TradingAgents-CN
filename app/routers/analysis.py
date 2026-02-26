@@ -15,7 +15,7 @@ from enum import Enum
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 try:
@@ -141,6 +141,10 @@ _ERROR_MESSAGES: dict[str, dict[str, str]] = {
     "fetch_stock_failed": {
         "zh-TW": "取得個股資料失敗",
         "en": "Failed to fetch stock data.",
+    },
+    "cancel_not_allowed": {
+        "zh-TW": "任務已完成或失敗，無法取消",
+        "en": "Task already completed or failed. Cannot cancel.",
     },
 }
 
@@ -399,7 +403,15 @@ async def cancel_analysis(analysis_id: str, request: Request):
         if not data:
             raise HTTPException(status_code=404, detail=_t("task_not_found", request))
         if data["status"] not in ("pending", "running"):
-            return {"analysis_id": analysis_id, "status": data["status"]}
+            # 已完成/失敗的任務無法取消
+            return JSONResponse(
+                status_code=409,
+                content={
+                    "analysis_id": analysis_id,
+                    "status": data["status"],
+                    "detail": _t("cancel_not_allowed", request),
+                },
+            )
         # 設定取消標誌，讓背景任務在下次檢查時中止
         data["_cancelled"] = True
         data["status"] = "failed"

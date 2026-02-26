@@ -14,6 +14,7 @@ from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
 # 日誌
 try:
@@ -657,6 +658,15 @@ async def get_market_overview():
         except (asyncio.TimeoutError, Exception) as exc:
             logger.warning(f"新聞標題翻譯逾時或失敗: {exc}")
 
+    # 判斷是否全部資料源均回傳空值（可能為 API 全面故障）
+    all_empty = (
+        not indices
+        and not movers.get("gainers")
+        and not movers.get("losers")
+        and not news
+        and not sectors
+    )
+
     result = {
         "indices": indices,
         "movers": movers,
@@ -664,6 +674,11 @@ async def get_market_overview():
         "sectors": sectors,
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
+
+    if all_empty:
+        # 所有資料源失敗，回傳 503 並保留結構供前端容錯
+        result["degraded"] = True
+        return JSONResponse(status_code=503, content=result)
 
     _set_cache("overview", result)
     return result
@@ -677,8 +692,19 @@ async def get_indices():
         return cached
 
     loop = asyncio.get_running_loop()
-    indices = await loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_indices)
+    try:
+        indices = await asyncio.wait_for(
+            loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_indices), timeout=15.0
+        )
+    except (asyncio.TimeoutError, Exception) as exc:
+        logger.warning(f"_fetch_indices 執行逾時或失敗: {exc}")
+        indices = []
+
     result = {"indices": indices, "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+    if not indices:
+        result["degraded"] = True
+        return JSONResponse(status_code=503, content=result)
+
     _set_cache("indices", result)
     return result
 
@@ -922,19 +948,33 @@ async def get_ai_analysis(lang: str = "zh-TW"):
 
     providers = _get_ai_providers()
     if not providers:
-        return {"available": False, "content": "", "updated_at": "", "provider": ""}
+        # 未配置任何 LLM API 金鑰，服務不可用
+        return JSONResponse(
+            status_code=503,
+            content={
+                "available": False,
+                "content": "",
+                "updated_at": "",
+                "provider": "",
+                "error": _t_trending("no_provider", lang),
+            },
+        )
 
     # 嘗試取得鎖；等待最多 120 秒（涵蓋一次完整 LLM 呼叫）
     try:
         acquired = await asyncio.wait_for(_ai_analysis_lock.acquire(), timeout=120.0)
     except asyncio.TimeoutError:
-        return {
-            "available": True,
-            "content": "",
-            "updated_at": "",
-            "provider": providers[0][0],
-            "error": _t_trending("ai_in_progress", lang),
-        }
+        # 鎖等待逾時，表示另一個 AI 分析正在進行中（並發請求過多）
+        return JSONResponse(
+            status_code=429,
+            content={
+                "available": True,
+                "content": "",
+                "updated_at": "",
+                "provider": providers[0][0],
+                "error": _t_trending("ai_in_progress", lang),
+            },
+        )
 
     try:
         # double-check: 前一個請求可能已填入快取
@@ -994,14 +1034,18 @@ async def get_ai_analysis(lang: str = "zh-TW"):
         return result
 
     except asyncio.TimeoutError:
+        # LLM 呼叫逾時，上游服務回應過慢
         logger.error("AI 分析生成逾時（120 秒）")
-        return {
-            "available": True,
-            "content": "",
-            "updated_at": "",
-            "provider": providers[0][0],
-            "error": _t_trending("ai_timeout", lang),
-        }
+        return JSONResponse(
+            status_code=504,
+            content={
+                "available": True,
+                "content": "",
+                "updated_at": "",
+                "provider": providers[0][0],
+                "error": _t_trending("ai_timeout", lang),
+            },
+        )
     finally:
         _ai_analysis_lock.release()
 

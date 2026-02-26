@@ -253,8 +253,24 @@ def prefetch_analyst_data(toolkit, ticker: str, trade_date: str):
 
     results = invoke_tools_direct(tools, tool_args, logger)
 
+    # 檢查哪些工具失敗了，嘗試重試一次（指數退避 1 秒）
+    failed_indices = [
+        i for i, r in enumerate(results)
+        if not r or "失敗" in str(r) or "執行失敗" in str(r)
+    ]
+    if failed_indices:
+        failed_names = [getattr(tools[i], 'name', '?') for i in failed_indices]
+        logger.warning(f"[資料預載入] {len(failed_indices)} 個工具失敗，1 秒後重試: {failed_names}")
+        time.sleep(1)
+        retry_tools = [tools[i] for i in failed_indices]
+        retry_args = [tool_args[i] for i in failed_indices]
+        retry_results = invoke_tools_direct(retry_tools, retry_args, logger)
+        for idx, retry_result in zip(failed_indices, retry_results):
+            if retry_result and "失敗" not in str(retry_result) and "執行失敗" not in str(retry_result):
+                results[idx] = retry_result
+
     elapsed = time.time() - t0
-    ok_count = sum(1 for r in results if r and "失敗" not in r and "執行失敗" not in r)
+    ok_count = sum(1 for r in results if r and "失敗" not in str(r) and "執行失敗" not in str(r))
     logger.info(f"[資料預載入] 完成，{ok_count}/{len(results)} 個成功，耗時: {elapsed:.1f}秒")
 
 
