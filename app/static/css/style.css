@@ -484,6 +484,21 @@ body {
   color: var(--accent-text);
 }
 
+/* 表單驗證：輸入無效時紅色邊框 */
+input[aria-invalid="true"],
+.symbol-input-wrap:has(input[aria-invalid="true"]) input {
+  border-color: var(--red-text) !important;
+}
+
+/* 快捷按鈕點擊回饋：輸入框脈動動畫 */
+@keyframes input-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 0 2px var(--accent); }
+}
+.symbol-input-wrap.activated input {
+  animation: input-pulse 0.5s ease-out;
+}
+
 /* 股票即時行情預覽 */
 
 .stock-preview {
