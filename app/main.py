@@ -107,6 +107,12 @@ async def lifespan(app: FastAPI):
             logger.info("AI 趨勢分析預產生完成")
         except Exception as e:
             logger.warning(f"AI 趨勢分析預產生失敗: {e}")
+        # AI 分析完成後，預快取 Top 股票個股快照
+        try:
+            from app.routers.trending import _precache_top_movers_context
+            await _precache_top_movers_context()
+        except Exception as e:
+            logger.warning(f"Top 股票快照預快取失敗: {e}")
 
     # 等待預熱完成（最多 50 秒），確保首頁有 SSR 資料
     prewarm_task = asyncio.create_task(_prewarm_trending())

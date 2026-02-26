@@ -1004,6 +1004,61 @@ async def _pregenerate_ai_analysis():
             logger.warning(f"AI 趨勢分析預產生錯誤 (lang={lang}): {e}")
 
 
+async def _precache_top_movers_context():
+    """背景預快取漲跌排行 Top 股票的個股快照。
+
+    從快取的市場概覽中提取 gainers + losers 的股票代碼，
+    並行呼叫 _fetch_stock_context() 寫入 _CONTEXT_CACHE，
+    讓使用者點擊漲跌排行時能立即取得個股快照（100ms vs 5-15s）。
+    """
+    overview = get_cached_overview()
+    if not overview:
+        return
+
+    movers = overview.get("movers", {})
+    symbols = []
+    for item in movers.get("gainers", [])[:8]:
+        symbols.append(item.get("symbol"))
+    for item in movers.get("losers", [])[:8]:
+        symbols.append(item.get("symbol"))
+    symbols = [s for s in symbols if s]
+
+    if not symbols:
+        return
+
+    from app.routers.analysis import _fetch_stock_context, _CONTEXT_CACHE, _CONTEXT_CACHE_TTL
+
+    # 過濾已有有效快取的股票，只預快取缺失或過期的
+    now = time.time()
+    need_cache = []
+    for sym in symbols:
+        cache_key = f"ctx_{sym}"
+        cached = _CONTEXT_CACHE.get(cache_key)
+        if not cached or now - cached["_ts"] > _CONTEXT_CACHE_TTL:
+            need_cache.append(sym)
+
+    if not need_cache:
+        logger.info(f"Top 股票快照全部命中快取（{len(symbols)} 支）")
+        return
+
+    logger.info(f"開始預快取 {len(need_cache)} 支 Top 股票快照: {', '.join(need_cache)}")
+    loop = asyncio.get_running_loop()
+    tasks = [loop.run_in_executor(None, _fetch_stock_context, sym) for sym in need_cache]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    cached_count = 0
+    now = time.time()
+    for sym, result in zip(need_cache, results):
+        if isinstance(result, Exception):
+            logger.debug(f"預快取 {sym} 快照失敗: {result}")
+            continue
+        if isinstance(result, dict) and not result.get("error"):
+            _CONTEXT_CACHE[f"ctx_{sym}"] = {"data": result, "_ts": now}
+            cached_count += 1
+
+    logger.info(f"Top 股票快照預快取完成: {cached_count}/{len(need_cache)} 成功")
+
+
 async def start_background_refresh():
     """啟動背景定時刷新趨勢資料。
 
@@ -1041,6 +1096,12 @@ async def start_background_refresh():
                 await _pregenerate_ai_analysis()
             except Exception as e:
                 logger.warning(f"AI 分析預產生失敗（不影響正常運作）: {e}")
+
+            # 背景預快取漲跌排行 Top 股票的個股快照，消除使用者點擊時的冷啟動延遲
+            try:
+                await _precache_top_movers_context()
+            except Exception as e:
+                logger.warning(f"Top 股票快照預快取失敗（不影響正常運作）: {e}")
 
         except asyncio.TimeoutError:
             consecutive_failures += 1
