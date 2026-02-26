@@ -204,9 +204,12 @@ class TradingAgentsGraph:
                 msg_content = getattr(last_msg, 'content', str(last_msg))
                 logger.debug(f"[Debug] {msg_content[:200]}")
 
-            # 偵測狀態欄位變化，回報節點級別進度
+            # 偵測狀態欄位變化，回報節點級別進度（例外不中斷主流程）
             if progress_callback:
-                self._detect_progress(chunk, populated, progress_callback)
+                try:
+                    self._detect_progress(chunk, populated, progress_callback)
+                except Exception as e:
+                    logger.warning(f"進度偵測回呼失敗: {e}")
 
         if final_state is None:
             raise RuntimeError("圖執行未產生任何狀態，請檢查設定")

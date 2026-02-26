@@ -1090,8 +1090,8 @@ async def start_background_refresh():
             await asyncio.sleep(10 + random.uniform(0, 5))
             first_run = False
         else:
-            # exponential backoff：連續失敗時逐步拉長間隔（上限 30 分鐘）
-            backoff = min(_BG_REFRESH_INTERVAL * (2 ** consecutive_failures), 1800)
+            # exponential backoff：連續失敗時逐步拉長間隔（上限 30 分鐘，指數限 10 避免大整數）
+            backoff = min(_BG_REFRESH_INTERVAL * (2 ** min(consecutive_failures, 10)), 1800)
             jitter = random.uniform(0, 30)
             await asyncio.sleep(backoff + jitter)
         try:
