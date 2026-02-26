@@ -25,6 +25,7 @@
 
 #### 效能優化
 - **分析師工具呼叫並行化**: execute_tools_parallel() 共用函式，4 個分析師內部工具呼叫以 ThreadPoolExecutor 並行執行
+- **風險分析師並行化**: 單輪辯論時 3 位風險分析師（激進/保守/中立）同時執行，串行 ~6s 降至 ~2s
 - **GZip 壓縮**: GZipMiddleware 自動壓縮回應（CSS/JS/API），傳輸量減少 ~60%
 - **SSR 預渲染**: 後端注入快取 JSON 至 HTML，消除首屏 CLS（0.34 -> 0.00）
 - **CWV 指標**: LCP 515ms / CLS 0.00 / TTFB 201ms — 全部 Good 等級
