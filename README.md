@@ -30,6 +30,8 @@
 - **分析師直接工具呼叫**: invoke_tools_direct() 跳過 LLM 工具決策，每位分析師節省 1 次 LLM 呼叫（2-5s）
 - **工具結果快取**: 同一分析中多個分析師呼叫相同工具+參數時自動去重，避免重複 API 呼叫（如 FinnHub 情緒資料）
 - **快取 TTL 優化**: 市場資料 2h->4h、新聞 6h->8h，減少同一交易日內重複 API 呼叫
+- **MongoDB 連接池單例化**: 共享 MongoClient 單例（maxPoolSize=10），避免每次建立新連接
+- **Markdown 渲染記憶化**: renderMarkdown() 使用 Map 快取（上限 30 筆），Alpine 反應式更新不再重複解析
 - **圖結構精簡**: 移除 4 個不再使用的 ToolNode 圖節點和條件邊（-39 行）
 - **英文翻譯異步化**: _background_translate() 不阻塞 SSE 回應，先回中文結果再背景翻譯
 - **前端 compositor-only 動畫**: progress-fill 改用 transform scaleX()（零 layout reflow）
@@ -47,7 +49,7 @@
 - **dns-prefetch**: Google Analytics 域名 DNS 預解析
 
 #### i18n 國際化
-- **154 翻譯鍵**: zh-TW / en 完全對稱
+- **196 翻譯鍵**: zh-TW / en 完全對稱，後端 33 key 雙語完整
 - **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
 - **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
 - **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
@@ -65,7 +67,8 @@
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
 - **DOMPurify defer**: 修復 SSR 競爭條件（async -> defer 確保載入順序）
 - **CSP 修復**: 加入 GA inline script 的 sha256 hash（消除 console error）
-- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.1.31 / cryptography>=46.0.5 / tornado>=6.5.4
+- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.1.31 / cryptography>=46.0.5 / tornado>=6.5.3
+- **安全審計**: 整體評分 8.3/10（後端 8/10、前端 9/10、容器 8/10、依賴 9/10）
 
 #### 無障礙 (a11y)
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
@@ -80,6 +83,9 @@
 - **亮色/暗色主題**: 完整雙主題支援，一鍵切換
 - **Markdown 渲染增強**: 代碼塊、引用區塊、連結、表格完整 CSS 樣式
 - **分析取消**: DELETE API 端點 + 前端即時通知後端中止任務
+- **表單驗證視覺回饋**: aria-invalid 紅色邊框 + 快速選股脈衝動畫
+- **結果標籤頁淡入動畫**: x-transition.opacity 過渡效果
+- **禁用按鈕提示文字**: 說明為何無法提交
 
 #### 快取與資料管理
 - **MongoDB TTL Index**: 30 天自動清理過期報告，防止資料無限膨脹
