@@ -776,12 +776,12 @@ CRITICAL RULES:
 - Always include a disclaimer that this is for informational purposes only
 - Focus on explaining WHY the market is moving, not WHAT investors should do
 
-When writing in Traditional Chinese, use TAIWANESE terminology:
-- Trump = 川普 (NOT 特朗普), Nvidia = 輝達 (NOT 英偉達)
-- Use 標普500 or S&P 500 (NOT 標準普爾500)
-- Use 聯準會 (NOT 聯邦儲備/美聯儲), 那斯達克 (NOT 納斯達克)
+LANGUAGE RULES (strictly follow):
+- When the user asks for Traditional Chinese: use TAIWANESE terminology
+  (川普 NOT 特朗普, 輝達 NOT 英偉達, 標普500 NOT 標準普爾500, 聯準會 NOT 美聯儲, 那斯達克 NOT 納斯達克)
+- When the user asks for English: write ENTIRELY in English, no Chinese characters at all
 
-Respond in the language specified by the user."""
+You MUST respond in the exact language the user specifies."""
 
 
 def _build_user_prompt(market_context: str, lang: str) -> str:
@@ -804,6 +804,8 @@ def _build_user_prompt(market_context: str, lang: str) -> str:
         return f"""Here is today's US stock market data:
 
 {market_context}
+
+IMPORTANT: You MUST write your entire response in English. Do NOT use any Chinese characters.
 
 Please write a daily market trend analysis report covering:
 
@@ -842,6 +844,18 @@ def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str, str
             # 中文分析套用台灣術語校正
             if lang == "zh-TW":
                 content = _normalize_tw_terminology(content)
+            elif lang == "en":
+                # 語言合規檢查：英文版不應包含大量中文字元
+                import unicodedata
+                cjk_count = sum(
+                    1 for ch in content
+                    if unicodedata.category(ch).startswith("Lo")
+                )
+                if cjk_count > 20:
+                    logger.warning(
+                        f"AI 英文分析包含 {cjk_count} 個 CJK 字元，"
+                        f"可能 LLM 未遵守語言指示 (provider={provider})"
+                    )
             logger.info(f"AI 趨勢分析生成成功 (provider={provider}, model={model})")
             return content, "", provider
 

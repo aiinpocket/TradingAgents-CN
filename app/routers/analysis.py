@@ -9,6 +9,7 @@ import secrets
 import threading
 import time
 from collections import OrderedDict, deque
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from enum import Enum
 from typing import Optional
@@ -26,6 +27,11 @@ except ImportError:
     logger = logging.getLogger("analysis")
 
 router = APIRouter(tags=["analysis"])
+
+# 專用執行緒池：分析任務獨立執行，避免與預設池搶資源
+_ANALYSIS_EXECUTOR = ThreadPoolExecutor(max_workers=4, thread_name_prefix="analysis")
+# 個股快照用輕量執行緒池（yfinance I/O 密集）
+_CONTEXT_EXECUTOR = ThreadPoolExecutor(max_workers=6, thread_name_prefix="ctx")
 
 
 # ---------------------------------------------------------------------------
@@ -544,9 +550,10 @@ async def _run_analysis(analysis_id: str):
     try:
         loop = asyncio.get_running_loop()
         # 超時保護：防止分析任務無限卡住佔用執行緒池
+        # 使用專用 _ANALYSIS_EXECUTOR 避免與預設池搶資源
         result = await asyncio.wait_for(
             loop.run_in_executor(
-                None,
+                _ANALYSIS_EXECUTOR,
                 _sync_run_analysis,
                 analysis_id,
                 data["stock_symbol"],
@@ -586,7 +593,7 @@ async def _run_analysis(analysis_id: str):
             data["progress"].append(_t_lang("generating_english", lang))
             try:
                 translation = await loop.run_in_executor(
-                    None, _translate_result_to_english, formatted
+                    _ANALYSIS_EXECUTOR, _translate_result_to_english, formatted
                 )
                 if translation:
                     if translation.get("state_en"):
@@ -889,8 +896,9 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
 # 個股快照 API（即時行情 + 新聞）
 # ---------------------------------------------------------------------------
 _CONTEXT_CACHE: dict = {}
-_CONTEXT_CACHE_TTL = 600  # 10 分鐘
+_CONTEXT_CACHE_TTL = 900  # 15 分鐘（個股快照更新頻率不需太高）
 _MAX_CONTEXT_CACHE = 200  # 快取條目上限
+_CONTEXT_FETCH_MAX_RETRIES = 2  # 快照取得失敗時最多重試次數
 
 _PAID_NEWS_SOURCES = {
     "the wall street journal", "wsj", "wall street journal",
@@ -899,8 +907,11 @@ _PAID_NEWS_SOURCES = {
 }
 
 
-def _fetch_stock_context(symbol: str) -> dict:
-    """取得個股即時行情、關鍵指標和近期新聞（同步，在 executor 中執行）"""
+def _fetch_stock_context(symbol: str, _retry: int = 0) -> dict:
+    """取得個股即時行情、關鍵指標和近期新聞（同步，在 executor 中執行）
+
+    失敗時自動重試，最多 _CONTEXT_FETCH_MAX_RETRIES 次（指數退避）。
+    """
     try:
         import yfinance as yf
     except ImportError:
@@ -991,7 +1002,13 @@ def _fetch_stock_context(symbol: str) -> dict:
         result["news"] = news_list
 
     except Exception as e:
-        logger.error(f"取得 {symbol} 個股快照失敗: {e}")
+        # 重試機制：網路瞬斷或 yfinance 偶發錯誤時自動重試
+        if _retry < _CONTEXT_FETCH_MAX_RETRIES:
+            wait = 1.0 * (2 ** _retry)  # 指數退避：1s, 2s
+            logger.warning(f"取得 {symbol} 快照失敗（第 {_retry + 1} 次），{wait:.0f}s 後重試: {e}")
+            time.sleep(wait)
+            return _fetch_stock_context(symbol, _retry=_retry + 1)
+        logger.error(f"取得 {symbol} 個股快照失敗（已重試 {_retry} 次）: {e}")
         result["error"] = _t_lang("fetch_stock_failed")
 
     return result
@@ -1011,7 +1028,7 @@ async def get_stock_context(symbol: str, request: Request):
         return cached["data"]
 
     loop = asyncio.get_running_loop()
-    data = await loop.run_in_executor(None, _fetch_stock_context, symbol)
+    data = await loop.run_in_executor(_CONTEXT_EXECUTOR, _fetch_stock_context, symbol)
 
     # 若取得行情失敗，回傳 502 並使用 i18n 錯誤訊息
     if data.get("error"):
