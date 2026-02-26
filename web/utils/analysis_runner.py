@@ -381,7 +381,8 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         lang: 語言偏好（zh-TW / en），用於進度訊息 i18n
     """
 
-    _total_steps = 8
+    # 總步驟數 = 6（前置）+ 最多 7（節點事件）+ 2（後置）= 15
+    _total_steps = 15
 
     def update_progress(message, step=None, total_steps=None):
         """更新進度，自動加入步驟前綴"""
@@ -608,22 +609,24 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         # 執行分析（傳入節點級進度回呼，讓前端即時顯示各模組完成狀態）
         update_progress(_p("analyzing_symbol", lang, symbol=formatted_symbol), 6)
 
+        # 節點進度步驟計數器（從第 6 步之後開始，留最後 2 步給後置處理）
+        _node_step = [6]
+
         def _node_progress(event_key: str):
-            """將圖節點進度事件轉換為 i18n 訊息並回報"""
+            """將圖節點進度事件轉換為 i18n 訊息並回報，附帶步驟編號"""
             msg = _p(event_key, lang)
             if msg and msg != event_key:
-                update_progress(msg)
+                _node_step[0] += 1
+                # 限制最大到 total_steps - 2，留空間給後置步驟
+                step_num = min(_node_step[0], _total_steps - 2)
+                update_progress(msg, step=step_num)
 
         state, decision = graph.propagate(
             formatted_symbol, analysis_date, progress_callback=_node_progress
         )
 
-        # 除錯資訊
-        logger.debug(f" 分析完成，decision類型: {type(decision)}")
-        logger.debug(f" decision內容: {decision}")
-
-        # 格式化結果
-        update_progress(_p("formatting_results", lang), 7)
+        # 格式化結果（使用固定的倒數第二步）
+        update_progress(_p("formatting_results", lang), _total_steps - 1)
 
         # 提取風險評估資料（使用 i18n 標題）
         risk_assessment = extract_risk_assessment(state, lang=lang)
@@ -728,7 +731,7 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
             logger.error(f" [報告保存] 保存分析報告時發生錯誤: {str(save_error)}")
             update_progress(_p("report_save_error", lang))
 
-        update_progress(_p("analysis_success", lang), 8)
+        update_progress(_p("analysis_success", lang), _total_steps)
         return results
 
     except Exception as e:
