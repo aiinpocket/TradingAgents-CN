@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/Version-0.4.4-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/Version-0.4.5-green.svg)](./VERSION)
 [![Documentation](https://img.shields.io/badge/docs--green.svg)](./docs/)
 [![Original](https://img.shields.io/badge/-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
@@ -17,15 +17,20 @@
 
 ** **: AI
 
-## v0.4.4 - SSR 預渲染 + 新聞 i18n + AI 趨勢分析
+## v0.4.5 - 分析師直接工具呼叫 + 前端效能強化
 
-> 最新版本：CLS 0.00 完美分數、新聞標題中英翻譯、AI 每日趨勢分析預產生、台灣術語校正
+> 最新版本：分析速度大幅提升、圖結構精簡、CSP 修復、前端 compositor-only 動畫
 
 ### 亮點
 
 #### 效能優化
-- **分析師工具呼叫並行化**: execute_tools_parallel() 共用函式，4 個分析師內部工具呼叫以 ThreadPoolExecutor 並行執行
+- **分析師直接工具呼叫**: invoke_tools_direct() 跳過 LLM 工具決策，每位分析師節省 1 次 LLM 呼叫（2-5s）
+- **圖結構精簡**: 移除 4 個不再使用的 ToolNode 圖節點和條件邊（-39 行）
+- **英文翻譯異步化**: _background_translate() 不阻塞 SSE 回應，先回中文結果再背景翻譯
 - **風險分析師並行化**: 單輪辯論時 3 位風險分析師（激進/保守/中立）同時執行，串行 ~6s 降至 ~2s
+- **前端 compositor-only 動畫**: progress-fill 改用 transform scaleX()（零 layout reflow）
+- **CSS contain**: log-container 加入 contain: layout paint（隔離 SSE 更新 layout）
+- **preload 最佳化**: Alpine.js + DOMPurify preload hint、preconnect 提前到 GA 之前
 - **GZip 壓縮**: GZipMiddleware 自動壓縮回應（CSS/JS/API），傳輸量減少 ~60%
 - **SSR 預渲染**: 後端注入快取 JSON 至 HTML，消除首屏 CLS（0.34 -> 0.00）
 - **CWV 指標**: LCP 515ms / CLS 0.00 / TTFB 201ms — 全部 Good 等級
@@ -55,7 +60,8 @@
 - **analysisId 前後端格式驗證**: 防止異常 ID 注入
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
 - **DOMPurify defer**: 修復 SSR 競爭條件（async -> defer 確保載入順序）
-- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.2.25 / cryptography>=46.0.5
+- **CSP 修復**: 加入 GA inline script 的 sha256 hash（消除 console error）
+- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.1.31 / cryptography>=46.0.5 / tornado>=6.5.4
 
 #### 無障礙 (a11y)
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
