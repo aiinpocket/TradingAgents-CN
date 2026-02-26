@@ -39,9 +39,48 @@ _cache_lock = threading.Lock()
 _TRENDING_EXECUTOR = ThreadPoolExecutor(max_workers=12, thread_name_prefix="trending")
 
 # 公司名稱快取（由 _STOCK_UNIVERSE 限制，約 50 筆；加上 200 上限防護）
+# 持久化到 JSON 檔案，啟動時載入避免冷啟動大量 yfinance info 呼叫
 _MAX_COMPANY_NAMES = 200
+# 優先使用 /app/data（Docker 運行時可寫）；本地開發時使用 app/routers/ 同目錄
+_COMPANY_NAMES_FILE = (
+    "/app/data/.company_names_cache.json"
+    if os.path.isdir("/app/data")
+    else os.path.join(os.path.dirname(__file__), ".company_names_cache.json")
+)
 _company_names: dict[str, str] = {}
 _company_names_lock = threading.Lock()
+
+
+def _load_company_names():
+    """從 JSON 檔案載入已知的公司名稱快取（啟動時呼叫）"""
+    global _company_names
+    try:
+        if os.path.exists(_COMPANY_NAMES_FILE):
+            import json
+            with open(_COMPANY_NAMES_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict):
+                with _company_names_lock:
+                    _company_names = data
+                logger.info(f"已載入 {len(data)} 筆公司名稱快取")
+    except Exception as e:
+        logger.debug(f"載入公司名稱快取失敗（非致命）: {e}")
+
+
+def _save_company_names():
+    """將公司名稱快取持久化到 JSON 檔案"""
+    try:
+        import json
+        with _company_names_lock:
+            snapshot = dict(_company_names)
+        with open(_COMPANY_NAMES_FILE, "w", encoding="utf-8") as f:
+            json.dump(snapshot, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        logger.debug(f"儲存公司名稱快取失敗（非致命）: {e}")
+
+
+# 啟動時載入持久化快取
+_load_company_names()
 
 # LLM 客戶端快取（避免每次翻譯/分析都重新初始化連線）
 _llm_clients: dict[str, object] = {}
@@ -210,19 +249,24 @@ def _set_cache(key: str, data: dict):
                 del _cache[k]
 
 
-def _fetch_indices() -> list[dict]:
-    """取得主要指數行情"""
+def _fetch_indices_and_sectors() -> tuple[list[dict], list[dict]]:
+    """合併取得指數行情 + 板塊 ETF 表現（單一 yfinance 呼叫減少 API 往返）"""
     try:
         import yfinance as yf
     except ImportError:
-        logger.warning("yfinance 未安裝，無法取得指數資料")
-        return []
+        logger.warning("yfinance 未安裝，無法取得指數/板塊資料")
+        return [], []
 
-    results = []
-    symbols = [idx["symbol"] for idx in _INDICES]
+    # 合併所有 symbol 為一次 yf.Tickers 呼叫
+    all_symbols = [idx["symbol"] for idx in _INDICES] + [s["symbol"] for s in _SECTORS]
+
+    indices_results: list[dict] = []
+    sectors_results: list[dict] = []
 
     try:
-        tickers = yf.Tickers(" ".join(symbols))
+        tickers = yf.Tickers(" ".join(all_symbols))
+
+        # 處理指數部分
         for idx_info in _INDICES:
             sym = idx_info["symbol"]
             try:
@@ -242,7 +286,7 @@ def _fetch_indices() -> list[dict]:
                     change = 0
                     change_pct = 0
 
-                results.append({
+                indices_results.append({
                     "symbol": sym,
                     "name": idx_info["name"],
                     "name_en": idx_info["name_en"],
@@ -253,25 +297,8 @@ def _fetch_indices() -> list[dict]:
             except Exception as e:
                 logger.debug(f"取得 {sym} 指數資料失敗: {e}")
                 continue
-    except Exception as e:
-        logger.error(f"批次取得指數資料失敗: {e}")
 
-    return results
-
-
-def _fetch_sectors() -> list[dict]:
-    """取得 S&P 500 板塊 ETF 表現"""
-    try:
-        import yfinance as yf
-    except ImportError:
-        logger.warning("yfinance 未安裝，無法取得板塊資料")
-        return []
-
-    results = []
-    symbols = [s["symbol"] for s in _SECTORS]
-
-    try:
-        tickers = yf.Tickers(" ".join(symbols))
+        # 處理板塊部分
         for sector_info in _SECTORS:
             sym = sector_info["symbol"]
             try:
@@ -287,7 +314,7 @@ def _fetch_sectors() -> list[dict]:
                 change = current_price - prev_price
                 change_pct = (change / prev_price) * 100 if prev_price else 0
 
-                results.append({
+                sectors_results.append({
                     "symbol": sym,
                     "name": sector_info["name"],
                     "name_en": sector_info["name_en"],
@@ -299,11 +326,23 @@ def _fetch_sectors() -> list[dict]:
                 logger.debug(f"取得 {sym} 板塊資料失敗: {e}")
                 continue
     except Exception as e:
-        logger.error(f"批次取得板塊資料失敗: {e}")
+        logger.error(f"批次取得指數/板塊資料失敗: {e}")
 
-    # 按漲跌幅排序（從高到低）
-    results.sort(key=lambda x: x["change_pct"], reverse=True)
-    return results
+    # 板塊按漲跌幅排序（從高到低）
+    sectors_results.sort(key=lambda x: x["change_pct"], reverse=True)
+    return indices_results, sectors_results
+
+
+def _fetch_indices() -> list[dict]:
+    """取得主要指數行情（獨立呼叫時的相容介面）"""
+    indices, _ = _fetch_indices_and_sectors()
+    return indices
+
+
+def _fetch_sectors() -> list[dict]:
+    """取得 S&P 500 板塊 ETF 表現（獨立呼叫時的相容介面）"""
+    _, sectors = _fetch_indices_and_sectors()
+    return sectors
 
 
 def _fetch_movers_batch(batch: list[str]) -> list[dict]:
@@ -369,7 +408,7 @@ def _fetch_movers() -> dict:
         return {"gainers": [], "losers": []}
 
     stock_data = []
-    batch_size = 25
+    batch_size = 10
 
     try:
         batches = [
@@ -379,7 +418,7 @@ def _fetch_movers() -> dict:
         # 使用臨時小型執行緒池並行處理批次，
         # 不提交到 _TRENDING_EXECUTOR（避免巢狀死鎖）
         from concurrent.futures import ThreadPoolExecutor as _TP, as_completed as _ac
-        with _TP(max_workers=len(batches), thread_name_prefix="movers") as pool:
+        with _TP(max_workers=min(len(batches), 6), thread_name_prefix="movers") as pool:
             futures = {pool.submit(_fetch_movers_batch, batch): batch for batch in batches}
             for future in _ac(futures, timeout=15):
                 try:
@@ -392,6 +431,9 @@ def _fetch_movers() -> dict:
         logger.error(f"取得漲跌幅資料失敗: {e}")
 
     sorted_data = sorted(stock_data, key=lambda x: x["change_pct"], reverse=True)
+
+    # 批次完成後統一持久化公司名稱（避免逐次寫入）
+    _save_company_names()
 
     return {
         "gainers": sorted_data[:8],
@@ -645,12 +687,13 @@ async def get_market_overview():
             logger.warning(f"{fn.__name__} 執行逾時或失敗: {exc}")
             return fallback
 
-    indices, movers, news, sectors = await asyncio.gather(
-        _safe_exec(_fetch_indices, []),
+    # 指數+板塊合併為單一 yfinance 呼叫（減少 API 往返）
+    indices_and_sectors, movers, news = await asyncio.gather(
+        _safe_exec(_fetch_indices_and_sectors, ([], [])),
         _safe_exec(_fetch_movers, {"gainers": [], "losers": []}),
         _safe_exec(_fetch_market_news, []),
-        _safe_exec(_fetch_sectors, []),
     )
+    indices, sectors = indices_and_sectors
 
     # 批次翻譯新聞標題（背景執行，不阻塞回應）
     if news:

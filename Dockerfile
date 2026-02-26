@@ -62,6 +62,9 @@ RUN echo '#!/bin/bash\nXvfb :99 -screen 0 1024x768x24 -ac +extension GLX &\nexpo
 # 複製專案源碼
 COPY . .
 
+# 壓縮靜態資源（CSS/JS minify，減少 ~16% 傳輸量）
+RUN python scripts/minify_static.py app/static
+
 # 安裝 tradingagents 套件本身（不安裝依賴，依賴已從 builder 複製）
 RUN pip install --no-deps -e .
 
