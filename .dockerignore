@@ -28,3 +28,10 @@ scripts/development/
 scripts/validation/
 archived/
 upstream_contribution/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

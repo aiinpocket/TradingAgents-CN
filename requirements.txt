@@ -19,6 +19,7 @@ langchain>=1.2.0
 langchain-core>=1.2.14
 langchain-openai>=1.1.9
 langchain-anthropic>=1.3.3
+langchain-community>=0.4.1
 langchain-experimental>=0.4.0
 langgraph>=1.0.0
 typer>=0.9.0
@@ -53,7 +54,7 @@ stockstats>=0.6.5
 # ==================== 安全性依賴 ====================
 cryptography>=46.0.5
 tornado>=6.5.4
-certifi>=2026.1.31
+certifi>=2026.2.25
 
 # ==================== 網路請求 ====================
 requests>=2.32.4
