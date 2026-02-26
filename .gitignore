@@ -131,6 +131,14 @@ COMMIT_SUMMARY.md
 # 使用者配置資料（不納入版本控制）
 web/config/users.json
 
+# 憑證與金鑰檔案（防止意外提交）
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
 # Helm 敏感值檔案（防止意外提交 API 金鑰）
 helm/**/values-secret*.yaml
 
