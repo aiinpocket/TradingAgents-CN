@@ -137,6 +137,10 @@ function tradingApp() {
         }
       });
 
+      // 瀏覽器離線/上線事件監聽，即時更新連線狀態
+      window.addEventListener('offline', () => { this.apiReady = false; });
+      window.addEventListener('online', () => this.checkHealth());
+
       // 根據語言設定頁面標題
       document.title = this.t('meta.title');
 
@@ -227,6 +231,10 @@ function tradingApp() {
       } catch {
         this.apiReady = false;
       }
+      // 定期健康檢查：離線時 15 秒、上線時 60 秒
+      if (this._healthTimer) clearTimeout(this._healthTimer);
+      const interval = this.apiReady ? 60000 : 15000;
+      this._healthTimer = setTimeout(() => this.checkHealth(), interval);
     },
 
     async loadModels() {
