@@ -258,20 +258,22 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "max-age=31536000; includeSubDomains; preload"
         )
         # CSP - 允許自身資源 + 特定 CDN（需與 HTML 中 SRI 配合）
-        response.headers["Content-Security-Policy"] = (
-            "default-src 'self'; "
-            "script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-            "font-src 'self' https://fonts.gstatic.com; "
-            "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
-            "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; "
-            "frame-ancestors 'none'; "
-            "base-uri 'self'; "
-            "form-action 'self'; "
-            "object-src 'none'; "
-            "worker-src 'self'; "
-            "upgrade-insecure-requests"
-        )
+        # 若路由已設定 CSP（如首頁帶 nonce），不覆蓋
+        if "content-security-policy" not in response.headers:
+            response.headers["Content-Security-Policy"] = (
+                "default-src 'self'; "
+                "script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; "
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+                "font-src 'self' https://fonts.gstatic.com; "
+                "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
+                "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; "
+                "frame-ancestors 'none'; "
+                "base-uri 'self'; "
+                "form-action 'self'; "
+                "object-src 'none'; "
+                "worker-src 'self'; "
+                "upgrade-insecure-requests"
+            )
         return response
 
 
@@ -352,16 +354,36 @@ app.include_router(trending.router, prefix="/api")
 async def index(request: Request):
     """主頁面（含趨勢資料 SSR 預渲染以消除 CLS）"""
     import json as _json
+    import secrets
     from app.routers.trending import get_cached_overview
     ssr_data = get_cached_overview()
     # 將 JSON 中的 </ 跳脫為 <\/ 防止 script 標籤注入（XSS 防護）
     ssr_json = ""
     if ssr_data:
         ssr_json = _json.dumps(ssr_data, ensure_ascii=False).replace("</", r"<\/")
-    return templates.TemplateResponse("index.html", {
+    # 產生 CSP nonce 用於內聯腳本（FOUC 防護）
+    csp_nonce = secrets.token_urlsafe(24)
+    response = templates.TemplateResponse("index.html", {
         "request": request,
         "ssr_trending": ssr_json,
+        "csp_nonce": csp_nonce,
     })
+    # 覆蓋中介層的 CSP，加入此請求專屬的 nonce
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        f"script-src 'self' 'unsafe-eval' 'nonce-{csp_nonce}' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
+        "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; "
+        "frame-ancestors 'none'; "
+        "base-uri 'self'; "
+        "form-action 'self'; "
+        "object-src 'none'; "
+        "worker-src 'self'; "
+        "upgrade-insecure-requests"
+    )
+    return response
 
 
 @app.get("/health")
