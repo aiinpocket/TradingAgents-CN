@@ -336,9 +336,16 @@ body {
   color: var(--red);
   font-size: 18px;
   cursor: pointer;
-  padding: 0 4px;
+  padding: 6px 8px;
   margin-left: auto;
   opacity: 0.6;
+  min-width: 32px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  line-height: 1;
 }
 
 .notice-dismiss:hover { opacity: 1; }
@@ -1831,8 +1838,8 @@ code {
 .lang-toggle {
   background: var(--bg-inset);
   border: 1px solid var(--border);
-  padding: 3px 10px;
-  border-radius: 12px;
+  padding: 6px 12px;
+  border-radius: 14px;
   cursor: pointer;
   font-size: 12px;
   font-weight: 600;
@@ -1840,6 +1847,10 @@ code {
   font-family: var(--font);
   transition: background-color 0.12s, color 0.12s, border-color 0.12s;
   line-height: 1.4;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lang-toggle:hover {
@@ -2769,14 +2780,17 @@ code {
 .theme-toggle {
   background: none;
   border: none;
-  padding: 4px;
+  padding: 8px;
   cursor: pointer;
   color: var(--text-faint);
   border-radius: var(--radius-sm);
   transition: color 0.12s;
   display: flex;
   align-items: center;
-  margin-left: 8px;
+  justify-content: center;
+  margin-left: 4px;
+  min-width: 36px;
+  min-height: 36px;
 }
 
 .theme-toggle:hover {
