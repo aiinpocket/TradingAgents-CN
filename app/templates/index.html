@@ -44,6 +44,15 @@
   <script id="ssr-trending" type="application/json">{{ ssr_trending | safe }}</script>
   {% endif %}
 
+  <!-- JavaScript 禁用時的回退提示 -->
+  <noscript>
+    <div style="text-align:center;padding:2rem;background:#1c2128;color:#e6edf3;font-family:system-ui,sans-serif">
+      <h1>TradingAgents</h1>
+      <p>This application requires JavaScript to run. Please enable JavaScript in your browser settings.</p>
+      <p>此應用程式需要 JavaScript 才能運作，請在瀏覽器設定中啟用 JavaScript。</p>
+    </div>
+  </noscript>
+
   <!-- 跳至主要內容（無障礙快捷鍵） -->
   <a href="#main-content" class="skip-link" x-text="t('a11y.skip_to_content')">Skip to content</a>
 
