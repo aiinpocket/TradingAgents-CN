@@ -778,7 +778,7 @@
               <span x-text="result?.analysis_date"></span>
               <span x-text="result?.llm_provider?.toUpperCase()"></span>
               <span x-text="t('analysis.depth') + ' ' + result?.research_depth"></span>
-              <span x-show="cachedResult" class="badge-cached" x-text="t('analysis.from_cache')"></span>
+              <span x-show="$data.cachedResult" class="badge-cached" x-text="t('analysis.from_cache')"></span>
             </div>
           </div>
           <div class="results-actions">
