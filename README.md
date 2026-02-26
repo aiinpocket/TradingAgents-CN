@@ -1,21 +1,21 @@
-# TradingAgents 
+# TradingAgents 中文增強版
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Version](https://img.shields.io/badge/Version-0.4.5-green.svg)](./VERSION)
-[![Documentation](https://img.shields.io/badge/docs--green.svg)](./docs/)
-[![Original](https://img.shields.io/badge/-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
+[![Documentation](https://img.shields.io/badge/docs-中文文檔-green.svg)](./docs/)
+[![Original](https://img.shields.io/badge/基於-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
 > 基於多智能體辯論的美股分析系統
 > **核心特性**: OpenAI | Anthropic Claude | 多智能體辯論 | LLM 可切換 | 完整 i18n（zh-TW / en） | 新聞標題翻譯 | AI 趨勢分析 | SSR 預渲染 (CLS 0.00) | Docker / K8s 部署 | 安全強化 | WCAG AA 無障礙
 
-****
+基於多智慧體大語言模型的**中文金融交易決策框架**。專為中文使用者優化，提供完整的美股分析能力。
 
-## 
+## 致敬源專案
 
- [Tauric Research](https://github.com/TauricResearch) [TradingAgents](https://github.com/TauricResearch/TradingAgents)
+感謝 [Tauric Research](https://github.com/TauricResearch) 團隊創造的革命性多智慧體交易框架 [TradingAgents](https://github.com/TauricResearch/TradingAgents)！
 
-** **: AI
+**我們的使命**: 為中文使用者提供完整的中文化體驗，支持美股市場，推動 AI 金融技術在中文社群的普及應用。
 
 ## v0.4.5 - 節點即時進度 + 並行辯論 + 前端效能強化
 
@@ -182,142 +182,142 @@
 
 ## v0.1.15
 
-### LLM
+### LLM生態系統大升級
 
 - ** LLM **: OpenAIAnthropic Claude
 - **LLM **: OpenAI 
-- ****: AI 
-- ****: LLM 
+- **純美股專注**: 移除所有中國 AI 模型，專注美股市場分析
+- **動態供應商管理**: 支持動態添加和配置 LLM 供應商
 
-### 
+### 核心特性
 
-- ****: 
-- ****: ETF 
-- ****: 
-- ****: 
-- ****: 
+- **開放存取**: 公開專案，無需登入即可使用所有功能
+- **產業板塊熱力圖**: 以視覺化方式呈現各產業 ETF 近一週表現
+- **配置管理中心**: 視覺化的大模型配置、資料來源管理、系統設定
+- **模型能力管理**: 智慧模型選擇，根據任務自動匹配最佳模型
+- **宏觀經濟概覽**: 即時追蹤美股主要指數、國際指數、債券殖利率、商品價格
 
-> 
+> 所有分析僅供資訊參考，不構成任何投資建議
 
-### i18n
+### 國際化（i18n）支援
 
-- ****: i18n 
-- ****: 
-- ****: JSON 
+- **多語言架構**: 內建 i18n 翻譯框架，預設繁體中文，支援英文
+- **熱門個股追蹤**: 自動篩選近一週波動最大的個股，依週漲跌幅排序
+- **翻譯檔案**: 結構化的 JSON 語言檔案，方便擴充新語言
 
-### 
+### 技術棧升級
 
 - **API **: Web API `.env` 
-- ****: 
+- **成交量異常偵測**: 自動識別成交量顯著偏離均值的股票
 
-### 
+### 內測申請
 
 - **TradingAgents**: 
-- ****: 
-- ****: PDF
-- ****: 
+- **以「日」為分析單位**: 聚焦短中期市場動態，避免短線雜訊與長期預測
+- **學術資料**: PDF論文和相關研究資料
+- **語言切換**: 使用者可在介面中切換語言
 
-### 
+### 熱門特區（全新功能）
 
-- ****: 
-- ****: 
-- ****: 
+- **開源友善**: 專為開源社群設計，不洩露任何敏感資訊
+- **技術博客**: 詳細的技術分析和實現原理解讀
+- **引用支持**: 標準的學術引用格式和參考文獻
 - **PR**: Pull Request
 
-### 
+### 安全性強化
 
-- ****: GitHub
-- ****: 
-- ****: 
-- ****: 
+- **分支保護**: GitHub分支保護策略和安全規則
+- **開發工作流**: 標準化的開發流程和分支管理規範
+- **安裝驗證**: 完整的安裝測試和驗證腳本
+- **文檔重構**: 結構化的文檔系統和快速開始指南
 
 ## v0.1.14 
 
-### 
+### 學術研究支持
 
 - **MongoDB**: MongoDB
-- ****: 
-- ****: 
-- ****: 
+- **緊急程序**: 完整的緊急處理和故障恢複程序
+- **測試框架**: 增強的測試覆蓋和驗證工具
+- **部署指南**: 企業級部署和配置管理
 
-### 
+### 開發者體驗升級
 
-- ****: 6
-- ****: Google
-- ****: UI
-- ****: 
-- ****: 
-- ****: 
+- **功能測試腳本**: 新增6個專項功能測試腳本
+- **工具處理器測試**: Google工具處理器修複驗證
+- **引導自動隱藏測試**: UI交互功能測試
+- **數據目錄重組**: 優化的數據存儲結構和管理
+- **數據遷移腳本**: 完整的數據遷移和備份工具
+- **緩存優化**: 提升數據加載和分析結果緩存性能
 
 ---
 
 ## v0.1.13 
 
-### OpenAI
+### 原生OpenAI端點支持
 
 - **OpenAI**: OpenAIAPI
-- ****: OpenAI
-- ****: OpenAI
-- ****: 
+- **靈活模型選擇**: 可以使用任何OpenAI格式的模型，不限於官方模型
+- **智能適配器**: 新增原生OpenAI適配器，提供更好的兼容性和性能
+- **在線工具配置測試**: 工具配置和選擇邏輯測試
 
-### LLM
+### LLM適配器架構優化
 
-- ****: LLM
-- ****: 
-- ****: LLM
+- **整合指南**: 完整的 LLM 整合開發文檔和測試工具
+- **真實場景測試**: 實際使用場景的端到端測試
+- **統一接口**: 所有LLM提供商使用統一的調用接口
 
-### Web
+### Web界面智能優化
 
-- ****: 
+- **美股獨立性測試**: 美股分析功能獨立性驗證
 - **KeyError**: KeyError
 - **UI**: 
-- ****: 
+- **配置管理**: 統一的端點和模型配置管理系統
 
 ## v0.1.12 
 
-### 
+### 企業級工具鏈
 
-- ****: AI
-- ****: 
-- ****: 
-- ****: 
+- **智能新聞過濾器**: 基於AI的新聞相關性評分和質量評估
+- **錯誤處理增強**: 改進的異常處理和自動重試機制
+- **智能模型選擇**: 根據可用性自動選擇最佳模型
+- **錯誤提示**: 更友好的錯誤提示和解決建議
 
-### 
+### 數據管理優化
 
 - **LLM**: 
-- ****: 
+- **多層次過濾機制**: 基礎過濾、增強過濾、集成過濾三級處理
 
-### 
+### 測試覆蓋增強
 
-- ****: 15+
-- ****: 8
-- ****: 
-- ****: 
+- **全面測試覆蓋**: 新增15+個測試文件，覆蓋所有新功能
+- **詳細技術文檔**: 新增8個技術分析報告和修複文檔
+- **新聞質量評估**: 自動識別和過濾低質量、重複、無關新聞
+- **統一新聞工具**: 整合多個新聞源，提供統一的新聞獲取接口
 
-### 
+### 智能新聞分析模塊
 
-- ****: docs
-- ****: examples
-- ****: 
+- **文檔分類整理**: 按功能將文檔分類到docs子目錄
+- **示例代碼歸位**: 演示腳本統一到examples目錄
+- **新聞檢索器優化**: 增強新聞數據獲取和處理能力
 
-## 
+## v0.1.12 重大更新
 
-### 
+### 技術修複和優化
 
-- ****: 
-- ****: /
-- ****: 
-- ****: 
+- **用戶指南完善**: 新增新聞過濾使用指南和最佳實踐
+- **結構化辯論**: 看漲/看跌研究員進行深度分析
+- **演示腳本**: 提供完整的新聞過濾功能演示
+- **根目錄整潔**: 保持根目錄簡潔，提升項目專業度
 
-## Web
+## Web界面展示
 
-### 
+### 完善測試和文檔
 
 > **Web**: FastAPI + Alpine.js Web
 
-> ****: 
+> **截圖更新中**: 界面截圖正在更新，將使用美股分析範例替換。請參考下方的功能描述和使用指南。
 
-### 
+### 項目結構優化
 
 #### - 
 
@@ -327,7 +327,7 @@
 - LLMOpenAIAnthropic
 - API
 
-#### 
+#### 實時分析進度
 
 
 - 
@@ -335,7 +335,7 @@
 - 
 - 
 
-#### 
+#### 分析結果展示
 
 
 - //
@@ -343,39 +343,39 @@
 - 
 - Markdown 匯出
 
-### 
+### 多智能體協作架構
 
-#### ****
+#### **全新技術架構**
 
-- ** **: 
+- ** 美股支持**: 專注美股市場深度分析
 - ** 5**: 225
-- ** **: 
-- ** **: 
+- ** 智慧體選擇**: 市場技術、基本面、新聞、社交媒體分析師
+- ** 彈性時間設定**: 支援歷史任意時間點分析
 
-#### ****
+#### **企業級功能**
 
-- ** **: 
-- ** **: 
-- ** **: 
-- ** **: 
+- ** 視覺化進度**: 即時顯示分析進展和剩餘時間
+- ** 智慧步驟識別**: 自動識別目前分析階段
+- ** 準確時間預估**: 基於歷史資料的智慧時間計算
+- ** 狀態持久化**: 頁面重新整理不遺失分析進度
 
-#### ****
+#### **智慧分析增強**
 
-- ** **: //
-- ** **: 
-- ** **: 
-- ** **: Markdown 匯出
+- ** 投資決策**: 明確的買入/持有/賣出建議
+- ** 多維分析**: 技術面、基本面、新聞面綜合評估
+- ** 量化指標**: 置信度、風險評分、目標價位
+- **專業報告**: 支援 Markdown 格式匯出
 
-#### **LLM**
+#### **多LLM模型管理**
 
-- **AI**: OpenAIAnthropic
+- **多AI提供商**: OpenAI、Anthropic
 - ** 60+**: 
-- ** **: URL
-- ** **: 5
+- ** 配置持久化**: URL參數儲存，重新整理保持設定
+- ** 快速切換**: 5個熱門模型一鍵選擇按鈕
 
-### Web
+### Web界面操作指南
 
-#### ****
+#### **智能分析配置**
 
 1. **啟動系統**: `python start_app.py` 或 `docker-compose up -d`
 2. **開啟瀏覽器**: `http://localhost:8501`
@@ -386,26 +386,26 @@
 7. **查看結果**: 瀏覽各智慧體分析報告與最終交易建議
 8. **匯出報告**: 以 Markdown 格式匯出分析結果
 
-#### ****
+#### **即時進度追蹤**
 
-- ** **: `AAPL`, `TSLA`, `MSFT`, `NVDA`, `GOOGL`
+- ** 美股**: `AAPL`, `TSLA`, `MSFT`, `NVDA`, `GOOGL`
 
 #### **分析模式**
 
 - **標準分析**: 多空辯論 + 風險評估（預設 2 輪辯論）
 - **深度分析**: 可透過 .env 調整 `MAX_DEBATE_ROUNDS` 和 `MAX_RISK_DISCUSS_ROUNDS`
 
-#### ****
+#### **專業結果展示**
 
-- ** **: 
-- ** **: 
-- ** **: 
-- ** **: Enter
-- ** **: 
+- ** 即時重新整理**: 分析過程中可隨時重新整理頁面，進度不遺失
+- ** 行動裝置適配**: 支援手機和平板裝置訪問
+- ** 深色模式**: 自動適配系統主題設定
+- **快速鍵**: 支援Enter鍵快速提交分析
+- ** 歷史記錄**: 自動儲存最近的分析配置
 
-> ****: Web [ Web](docs/usage/web-interface-detailed-guide.md)
+> **詳細指南**: 完整的Web界面使用說明請參考 [ Web界面詳細使用指南](docs/usage/web-interface-detailed-guide.md)
 
-## 
+## 功能特性一覽
 
 ### **v0.1.12**
 
@@ -418,20 +418,20 @@
 | ** LLM** | v0.1.11 | 460+ |
 | ** ** | v0.1.11 | URL |
 | ** ** | v0.1.11 | |
-| ** ** | v0.1.10 | |
-| ** ** | v0.1.10 | |
-| ** ** | v0.1.10 | |
+| ** 實時進度顯示** | v0.1.10 | 異步進度跟蹤，智能步驟識別，準確時間計算 |
+| ** 智能會話管理** | v0.1.10 | 狀態持久化，自動降級，跨頁面恢複 |
+| ** 一鍵查看報告** | v0.1.10 | 分析完成後一鍵查看，智能結果恢複 |
 | ** FastAPI ** | | |
-| ** ** | | WebAPI |
+| ** 配置管理** | 完整支持 | Web端API密鑰管理，模型選擇，參數配置 |
 
 ### CLI **v0.1.9**
 
 
 | | | |
 | ----------------------- | ----------- | ------------------------------------ |
-| ** ** | | |
-| ** ** | | |
-| ** ** | | |
+| ** 界面與日誌分離** | 完整支持 | 用戶界面清爽美觀，技術日誌獨立管理 |
+| ** 智能進度顯示** | 完整支持 | 多階段進度跟蹤，防止重複提示 |
+| ** 時間預估功能** | 完整支持 | 智能分析階段顯示預計耗時 |
 | ** Rich** | | |
 
 ### LLM **v0.1.13**
@@ -442,23 +442,23 @@
 | **OpenAI** | GPT-4o, GPT-4o-mini | | |
 | **Anthropic** | Claude Opus 4.6, Claude Sonnet 4.6, Claude Haiku 4.5 | | |
 
-****: URL | ****: 
+**持久化**: URL參數存儲，刷新保持 | **智能切換**: 一鍵切換不同提供商
 
-### 
+### 界面截圖
 
 
 | | | |
 | ------------- | ---------------------- | ------------------------ |
-| ** ** | FinnHub, Yahoo Finance | NYSE, NASDAQ |
-| ** ** | Google News | |
+| ** 美股** | FinnHub, Yahoo Finance | NYSE, NASDAQ，實時數據 |
+| ** 新聞** | Google News | 實時新聞，多語言支持 |
 
-### 
+### 主要功能展示
 
-****: | | | 
-****: | | 
-****: | 
+**分析師團隊**: 市場分析 | 基本面分析 | 新聞分析 | 情緒分析
+**研究團隊**: 看漲研究員 | 看跌研究員 | 交易決策員
+**管理層**: 風險管理員 | 研究主管
 
-## 
+## 快速開始
 
 ### Docker ()
 
@@ -471,69 +471,69 @@ cd TradingAgents-CN
 cp .env.example .env
 # .env API
 
-# 3. 
-# 
+# 3. 啟動服務
+# 首次啟動或代碼變更時（需要構建鏡像）
 docker-compose up -d --build
 
-# 
+# 日常啟動（鏡像已存在，無代碼變更）
 docker-compose up -d
 
-# 
-# Windows
+# 智能啟動（自動判斷是否需要構建）
+# Windows環境
 powershell -ExecutionPolicy Bypass -File scripts\smart_start.ps1
 
 # Linux/Mac
 chmod +x scripts/smart_start.sh && ./scripts/smart_start.sh
 
-# 4. 
-# Web: http://localhost:8501
+# 4. 訪問應用
+# Web界面: http://localhost:8501
 ```
 
-### 
+### 核心功能特色
 
 ```bash
-# 1. pip ()
+# 1. pip 升級（建議）
 python -m pip install --upgrade pip
 
-# 2. 
+# 2. 安裝依賴
 pip install -r requirements-lock.txt
 pip install -e . --no-deps
 
-# 
+# 完整安裝（含所有依賴，可能較慢）
 # pip install -e .
 
-# Windows PyYAML 
+# Windows PyYAML 編譯問題解決方案見文檔
 
-# 3. 
+# 3. 啟動應用
 python start_app.py
 
-# 4. http://localhost:8501
+# 4. 訪問 http://localhost:8501
 ```
 
-### 
+### 數據源與市場
 
-1. ****: OpenAI / Anthropic
+1. **額外說明**：: OpenAI / Anthropic
 2. ****: `AAPL` ()
 3. ****: " "
 4. ****: 
 5. ****: " "
 6. ****: Markdown
 
-## 
+## 核心優勢
 
-- ** **: v0.1.12AI
-- ** **: 
-- ** **: 
+- ** 智能新聞分析**: v0.1.12新增AI驅動的新聞過濾和品質評估系統
+- ** 多層次過濾**: 基礎、增強、集成三級新聞過濾機制
+- ** 統一新聞工具**: 整合多源新聞，提供統一的智能檢索接口
 - **LLM**: OpenAI Anthropic 
-- ****: URL
-- ** **: v0.1.10
-- ** **: 
-- ** **: + AI + 
-- ** **: Docker
-- ** **: 
-- ** **: 
+- **配置持久化**: 模型選擇真正持久化，URL參數存儲，刷新保持
+- **實時進度**: v0.1.10 異步進度跟蹤，告別黑盒等待
+- ** 智能會話**: 狀態持久化，頁面刷新不遺失分析結果
+- ** 全球市場**: 美股數據 + 國際AI模型 + 中文界面
+- ** 容器化**: Docker一鍵部署，環境隔離，快速擴展
+- ** 專業報告**: 多格式導出，自動生成投資建議
+- ** 穩定可靠**: 多層數據源，智能降級，錯誤恢復
 
-## 
+## 技術架構
 
 **後端**: Python 3.10+ | LangChain 1.x | LangGraph | FastAPI | MongoDB | Redis
 **AI 引擎**: OpenAI (GPT-4o, o4-mini) | Anthropic (Claude Opus 4.6, Sonnet 4.6)
@@ -541,16 +541,16 @@ python start_app.py
 **資料來源**: FinnHub | Yahoo Finance | Google News
 **部署**: Docker | Docker Compose | Kubernetes (Helm) | GitHub Actions CI/CD
 
-## 
+## 文檔和支持
 
-- ** **: [docs/](./docs/) - API
-- ** **: [troubleshooting/](./docs/troubleshooting/) - 
-- ** **: [CHANGELOG.md](./docs/releases/CHANGELOG.md) - 
-- ** **: [QUICKSTART.md](./QUICKSTART.md) - 5
+- ** 完整文檔**: [docs/](./docs/) - 安裝指南、使用教程、API文檔
+- ** 故障排除**: [troubleshooting/](./docs/troubleshooting/) - 常見問題解決方案
+- ** 更新日誌**: [CHANGELOG.md](./docs/releases/CHANGELOG.md) - 詳細版本歷史
+- ** 快速開始**: [QUICKSTART.md](./QUICKSTART.md) - 5分鐘快速部署指南
 
-## 
+## 中文增強特色
 
-****: | | | | LLM | | | | | | Docker | | | Web | 
+**相比原版新增**: 智能新聞分析 | 多層次新聞過濾 | 新聞質量評估 | 統一新聞工具 | 多LLM提供商集成 | 模型選擇持久化 | 快速切換按鈕 | 即時進度顯示 | 智慧會話管理 | 中文介面 | Docker部署 | 專業報告匯出 | 統一日誌管理 | Web配置介面 | 成本優化
 
 **Docker**:
 
@@ -560,17 +560,17 @@ python start_app.py
 - **MongoDB Express**: 資料庫管理介面（需 `--profile management` 啟動）
 - **Redis Commander**: 快取管理介面（需 `--profile management` 啟動）
 
-#### 
+#### 方式二：本地部署
 
-****: 
+**適用場景**: 開發環境、自定義配置、離線使用
 
-### 
+### 智能體團隊
 
 - Python 3.10+ ( 3.11)
 - 4GB+ RAM ( 8GB+)
 - 
 
-### 
+### 本地部署
 
 ```bash
 # 1. 
@@ -596,12 +596,12 @@ pip install -e .
 # - Web
 ```
 
-### API
+### 配置API密鑰
 
 #### API 
 
 ```bash
-# 
+# 複製環境變數範本
 cp .env.example .env
 
 # .env API
@@ -610,8 +610,8 @@ FINNHUB_API_KEY=your_finnhub_api_key_here
 # AIAPI
 OPENAI_API_KEY=your_openai_api_key_here
 
-# 
-# 
+# 無數據庫模式
+# 環境變量設定
 MONGODB_ENABLED=false # trueMongoDB
 REDIS_ENABLED=false # trueRedis
 MONGODB_HOST=localhost
@@ -624,16 +624,16 @@ REDIS_PORT=6379 # Redis
 # REDIS_HOST=redis
 ```
 
-#### 
+#### 部署模式配置說明
 
-****
+**本地部署模式**：
 
 ```bash
-# 
+# 數據庫配置（本地部署）
 MONGODB_ENABLED=true
 REDIS_ENABLED=true
 MONGODB_HOST=localhost # 
-MONGODB_PORT=27017 # 
+MONGODB_PORT=27017 # 本地快取
 REDIS_HOST=localhost # 
 REDIS_PORT=6379 # 
 ```
@@ -645,14 +645,14 @@ REDIS_PORT=6379 #
 MONGODB_ENABLED=true
 REDIS_ENABLED=true
 MONGODB_HOST=mongodb # Docker
-MONGODB_PORT=27017 # 
+MONGODB_PORT=27017 # Docker 容器快取
 REDIS_HOST=redis # Docker
 REDIS_PORT=6379 # 
 ```
 
-> ****
+> **配置提示**：
 >
-> - MongoDBRedis
+> - - MongoDBRedis
 > - Dockerdocker-compose
 > - docker-compose.yml
 
@@ -665,16 +665,16 @@ ANTHROPIC_API_KEY=your_anthropic_api_key
 
 ### MongoDB + Redis
 
-#### 
+#### 高性能數據存儲支持
 
  **MongoDB** **Redis** 
 
-- ** **: API
-- ** **: MongoDB → API → 
-- ** **: Redis
-- ** **: MongoDB
+- ** 股票數據緩存**: 減少API調用，提升響應速度
+- ** 智能降級機制**: MongoDB → API → 本地緩存的多層數據源
+- ** 高性能緩存**: Redis緩存熱點數據，毫秒級響應
+- ** 數據持久化**: MongoDB存儲歷史數據，支持離線分析
 
-#### 
+#### 數據庫部署方式
 
 ** Docker**
 
@@ -693,23 +693,23 @@ docker-compose up -d --build
 
 
 
-****
+**方式一：僅啟動數據庫服務**
 
 ```bash
-# MongoDB + Redis Web
+# 僅啟動 MongoDB + Redis 服務（不啟動Web應用）
 docker-compose up -d mongodb redis mongo-express redis-commander
 
-# 
+# 查看服務狀態
 docker-compose ps
 
-# 
+# 停止服務
 docker-compose down
 ```
 
-****
+**方式二：完全本地安裝**
 
 ```bash
-# requirements.txt
+# 數據庫依賴已包含在 requirements.txt 中
 
 # MongoDB ( 27017)
 mongod --dbpath ./data/mongodb
@@ -718,15 +718,15 @@ mongod --dbpath ./data/mongodb
 redis-server
 ```
 
-> ****:
+> **重要說明**：
 >
-> - ** Docker**: 
+> - - ** Docker**: 
 > - ** **: 
 > - ** **: Docker
 
-#### 
+#### 數據庫配置選項
 
-****
+**MongoDB 配置**
 
 ```bash
 # MongoDB 
@@ -743,8 +743,6 @@ REDIS_PASSWORD=your_redis_password
 REDIS_DB=0
 ```
 
-****
-
 ```bash
 # .env 資料庫設定
 MONGODB_ENABLED=true
@@ -753,7 +751,7 @@ REDIS_ENABLED=true
 REDIS_URL=redis://localhost:6379/0
 ```
 
-#### 
+#### 數據庫功能特性
 
 **MongoDB **
 
@@ -771,7 +769,7 @@ REDIS_URL=redis://localhost:6379/0
 - 
 - 
 
-#### 
+#### 智能降級機制
 
 
 
@@ -784,17 +782,15 @@ REDIS_URL=redis://localhost:6379/0
 5. 
 ```
 
-****
-
 ```bash
 # .env 快取設定
 MONGODB_ENABLED=true
 REDIS_ENABLED=true
 ```
 
-#### 
+#### 性能優化建議
 
-****
+**查詢優化**
 
 ```bash
 # MongoDB 
@@ -808,28 +804,28 @@ REDIS_CONNECTION_POOL_SIZE=10
 REDIS_SOCKET_TIMEOUT=5
 ```
 
-#### 
+#### 數據庫管理工具
 
 ```bash
-# 
+# 初始化數據庫
 python scripts/setup/init_database.py
 
-# 
+# 驗證系統狀態
 python scripts/validation/check_system_status.py
 
-# 
+# 清理快取
 python scripts/maintenance/cleanup_cache.py --days 7
 ```
 
-#### 
+#### 故障排除
 
-****
+**常見問題**
 
 1. ** Windows 10 ChromaDB**
 
- ****Windows 10 `Configuration error: An instance of Chroma already exists for ephemeral with different settings` Windows 11
+ **Windows 10 已知問題**：Windows 10 `Configuration error: An instance of Chroma already exists for ephemeral with different settings` Windows 11
 
- ****
+ **解決方案**：
 
  ```bash
  # 1
@@ -843,20 +839,19 @@ python scripts/maintenance/cleanup_cache.py --days 7
  # PowerShell -> ""
  ```
 
- **** [Windows 10](docs/troubleshooting/windows10-chromadb-fix.md)
+ **完整修復指南**：[Windows 10](docs/troubleshooting/windows10-chromadb-fix.md)
 2. **MongoDB**
 
  **Docker**
 
  ```bash
- # 
+ # 查看 MongoDB 日誌
  docker-compose logs mongodb
 
- # 
+ # 重啟 MongoDB
  docker-compose restart mongodb
  ```
 
- ****
 
  ```bash
  # MongoDB
@@ -885,13 +880,13 @@ python scripts/maintenance/cleanup_cache.py --days 7
  python scripts/maintenance/cleanup_cache.py --days 7
  ```
 
-> ****: API
+> **提示**: 即使不配置數據庫，系統仍可正常運行，會自動降級到API直接調用模式。數據庫配置是可選的性能優化功能。
 
-> ****: [](docs/architecture/database-architecture.md)
+> **詳細文檔**: 更多數據庫配置信息請參考 [數據庫架構文檔](docs/architecture/database-architecture.md)
 
-### 
+### 開始分析
 
-#### 
+#### 新增功能：專業分析報告導出
 
 
 
@@ -911,7 +906,7 @@ python scripts/maintenance/cleanup_cache.py --days 7
 2. 系統自動產生 Markdown 格式報告
 3. 可直接下載或複製內容
 
-### 
+### 環境要求
 
 #### Docker
 
@@ -923,14 +918,14 @@ Docker
 # MongoDB Express: http://localhost:8081 (需 --profile management)
 # Redis Commander: http://localhost:8082 (需 --profile management)
 
-# 
+# 查看服務狀態
 docker-compose ps
 
-# 
+# 查看 Web 日誌
 docker-compose logs -f web
 ```
 
-#### 
+#### 本地啟動
 
 
 
@@ -966,7 +961,7 @@ python start_app.py
 - **標準分析**: 多空辯論 + 風險評估（預設 2 輪辯論）
 - **深度分析**: 可透過 .env 調整 `MAX_DEBATE_ROUNDS` 和 `MAX_RISK_DISCUSS_ROUNDS`
 
-#### 
+#### 代碼調用（適合開發者）
 
 ```python
 from tradingagents.graph.trading_graph import TradingAgentsGraph
@@ -978,42 +973,42 @@ config["llm_provider"] = "openai"
 config["deep_think_llm"] = "gpt-4o" # 
 config["quick_think_llm"] = "gpt-4o-mini" # 
 
-# 
+# 初始化分析圖
 ta = TradingAgentsGraph(debug=True, config=config)
 
 # ()
 state, decision = ta.propagate("AAPL", "2024-01-15")
 
-# 
+# 輸出結果
 print(f": {decision['action']}")
 print(f": {decision['confidence']:.1%}")
 print(f": {decision['risk_score']:.1%}")
 print(f": {decision['reasoning']}")
 ```
 
-#### 
+#### 快速啟動腳本
 
 ```bash
 # OpenAI
 python examples/simple_analysis_demo.py
 ```
 
-#### 
+#### 數據目錄配置
 
-****: 
+**研究深度級別說明**:
 
 ```bash
-# 
+# 查看當前配置
 python -m cli.main data-config --show
 
-# 
+# 設定數據目錄
 python -m cli.main data-config --set /path/to/your/data
 
-# 
+# 重置為預設值
 python -m cli.main data-config --reset
 ```
 
-****:
+**新功能**: 靈活配置數據存儲路徑，支持多種配置方式：
 
 ```bash
 # Windows
@@ -1023,49 +1018,49 @@ set TRADING_AGENTS_DATA_DIR=C:\MyTradingData
 export TRADING_AGENTS_DATA_DIR=/home/user/trading_data
 ```
 
-****:
+**環境變量配置**:
 
 ```python
 from tradingagents.config_manager import ConfigManager
 
-# 
+# 程式碼中使用
 config_manager = ConfigManager()
 config_manager.set_data_directory("/path/to/data")
 
-# 
+# 取得數據目錄
 data_dir = config_manager.get_data_directory()
 print(f": {data_dir}")
 ```
 
-****: > > > 
+**配置優先級**: 程序設置 > 環境變量 > 配置文件 > 默認值
 
-: [ ](docs/configuration/data-directory-configuration.md)
+詳細說明請參考: [ 數據目錄配置指南](docs/configuration/data-directory-configuration.md)
 
-### 
+### 安裝步驟
 
 ```bash
-# 
+# 啟動 CLI
 python -m cli.main
 ```
 
-## **** - 
+## **快速導航** - 找到您需要的內容
 
 
 | **...** | **** | **** |
 | --------------- | --------------------------------------------------------- | ---------------- |
-| **** | [ ](docs/overview/quick-start.md) | 10 |
-| **** | [ ](docs/architecture/system-architecture.md) | 15 |
-| **** | [ ](docs/examples/basic-examples.md) | 20 |
-| **** | [ ](docs/faq/faq.md) | 5 |
-| **** | [ ](#-) | 2+ |
+| **快速上手** | [ 快速開始](docs/overview/quick-start.md) | 10分鐘 |
+| **了解架構** | [ 系統架構](docs/architecture/system-architecture.md) | 15分鐘 |
+| **看代碼示例** | [ 基礎示例](docs/examples/basic-examples.md) | 20分鐘 |
+| **遇到問題** | [常見問題](docs/faq/faq.md) | 5分鐘 |
+| **深度學習** | [ 完整文檔目錄](#-詳細文檔目錄) | 2小時+ |
 
-> ****: `docs/` **50,000+** 
+> **提示**: 我們的 `docs/` 目錄包含了 **50,000+字** 的詳細中文文檔，這是與原版最大的區別！
 
 ## - 
 
 > ** ** AI **50,000** **20+** **100+** 
 
-### 
+### 報告導出功能
 
 
 | | TradingAgents | **** |
@@ -1079,67 +1074,67 @@ python -m cli.main
 
 ### - 
 
-#### **** ()
+#### **新手入門路徑** (推薦從這裡開始)
 
-1. [ ](docs/overview/project-overview.md) - ****
-2. [ ](docs/overview/installation.md) - ****
-3. [ ](docs/overview/quick-start.md) - **10**
-4. [ ](docs/examples/basic-examples.md) - **8**
+1. [ 項目概述](docs/overview/project-overview.md) - **了解項目背景和核心價值**
+2. [ 詳細安裝](docs/overview/installation.md) - **各平台詳細安裝指南**
+3. [ 快速開始](docs/overview/quick-start.md) - **10分鐘上手指南**
+4. [ 基礎示例](docs/examples/basic-examples.md) - **8個實用的入門示例**
 
-#### **** ()
+#### **架構理解路徑** (深入了解系統設計)
 
-1. [ ](docs/architecture/system-architecture.md) - ****
-2. [ ](docs/architecture/agent-architecture.md) - ****
-3. [ ](docs/architecture/data-flow-architecture.md) - ****
-4. [ ](docs/architecture/graph-structure.md) - **LangGraph**
+1. [ 系統架構](docs/architecture/system-architecture.md) - **完整的系統架構設計**
+2. [ 智能體架構](docs/architecture/agent-architecture.md) - **多智能體協作機制**
+3. [ 數據流架構](docs/architecture/data-flow-architecture.md) - **數據處理全流程**
+4. [ 圖結構設計](docs/architecture/graph-structure.md) - **LangGraph工作流程**
 
-#### **** ()
+#### **智能體深度解析** (了解每個智能體的設計)
 
-1. [ ](docs/agents/analysts.md) - ****
-2. [ ](docs/agents/researchers.md) - **/**
-3. [ ](docs/agents/trader.md) - ****
-4. [ ](docs/agents/risk-management.md) - ****
-5. [ ](docs/agents/managers.md) - ****
+1. [ 分析師團隊](docs/agents/analysts.md) - **四類專業分析師詳解**
+2. [ 研究員團隊](docs/agents/researchers.md) - **看漲/看跌辯論機制**
+3. [ 交易員智能體](docs/agents/trader.md) - **交易決策制定流程**
+4. [ 風險管理](docs/agents/risk-management.md) - **多層次風險評估**
+5. [ 管理層智能體](docs/agents/managers.md) - **協調和決策管理**
 
-#### **** ()
+#### **數據處理專題** (掌握數據處理技術)
 
-1. [ ](docs/data/data-sources.md) - **API**
-2. [ ](docs/data/data-processing.md) - ****
-3. [ ](docs/data/caching.md) - ****
+1. [ 數據源集成](docs/data/data-sources.md) - **多數據源API集成**
+2. [ 數據處理流程](docs/data/data-processing.md) - **數據清洗和轉換**
+3. [ 緩存策略](docs/data/caching.md) - **多層緩存優化性能**
 
-#### **** ()
+#### **配置和優化** (性能調優和定制)
 
-1. [ ](docs/configuration/config-guide.md) - ****
+1. [ 配置指南](docs/configuration/config-guide.md) - **詳細配置選項說明**
 2. [ LLM](docs/configuration/llm-config.md) - ****
 
-#### **** ()
+#### **高級應用** (擴展開發和實戰)
 
-1. [ ](docs/examples/basic-examples.md) - **8**
-2. [ ](docs/examples/advanced-examples.md) - ****
+1. [ 基礎示例](docs/examples/basic-examples.md) - **8個實用基礎示例**
+2. [ 高級示例](docs/examples/advanced-examples.md) - **複雜場景和擴展開發**
 
-#### **** ()
+#### **問題解決** (遇到問題時查看)
 
-1. [ ](docs/faq/faq.md) - **FAQ**
+1. [常見問題](docs/faq/faq.md) - **FAQ和故障排除**
 
-### 
+### 啟動應用
 
-- ****: 20+ 
-- ****: 50,000+ 
-- ****: 100+ 
-- ****: 10+ 
-- ****: 
+- **文檔文件數**: 20+ 個專業文檔
+- **總字數**: 50,000+ 字詳細內容
+- **代碼示例**: 100+ 個實用示例
+- **架構圖表**: 10+ 個專業圖表
+- **專業分工**: 基本面、技術面、新聞面、社交媒體四大分析師
 
-### 
+### 交互式分析
 
-- ** **: 
-- ** **: 
-- ** **: 
-- ** **: 
-- ** **: 
+- ** 完全中文化**: 專為中文用戶優化的表達方式
+- ** 圖文並茂**: 豐富的架構圖和流程圖
+- ** 代碼豐富**: 每個概念都有對應的代碼示例
+- ** 深度剖析**: 不僅告訴你怎麼做，還告訴你為什麼這樣做
+- ** 實用導向**: 所有文檔都面向實際應用場景
 
 ---
 
-## 
+## 詳細文檔目錄
 
 ### **docs/ ** - 
 
@@ -1180,137 +1175,134 @@ docs/
  faq.md # FAQ
 ```
 
-### **** ()
+### **重點推薦文檔** (必讀精選)
 
-#### ****
+#### **最受歡迎的文檔**
 
-1. **[ ](docs/overview/project-overview.md)** - 
+1. **[項目概述](docs/overview/project-overview.md)**
 
- > 5
- >
-2. **[ ](docs/architecture/system-architecture.md)** - 
+   > 了解項目的核心價值和技術特色，5分鐘讀懂整個框架
 
- > 
- >
-3. **[ ](docs/examples/basic-examples.md)** - 
+2. **[系統架構](docs/architecture/system-architecture.md)**
 
- > 8
- >
+   > 深度解析多智能體協作機制，包含詳細架構圖
 
-#### ****
+3. **[基礎示例](docs/examples/basic-examples.md)**
 
-1. **[ ](docs/architecture/agent-architecture.md)**
+   > 8個實用示例，從股票分析到投資組合優化
 
- > 
- >
-2. **[ ](docs/architecture/data-flow-architecture.md)**
+#### **技術深度文檔**
 
- > 
- >
-3. **[ ](docs/agents/researchers.md)**
+1. **[智能體架構](docs/architecture/agent-architecture.md)**
 
- > /
- >
+   > 多智能體設計模式和協作機制詳解
 
-#### ****
+2. **[數據流架構](docs/architecture/data-flow-architecture.md)**
 
-1. **[ Web](docs/usage/web-interface-guide.md)** - 
+   > 數據獲取、處理、快取的完整流程
 
- > Web5
- >
-2. **[ ](docs/usage/investment_analysis_guide.md)**
+3. **[研究員團隊](docs/agents/researchers.md)**
 
- > 
- >
-3. **[ LLM](docs/configuration/llm-config.md)**
+   > 看漲/看跌研究員辯論機制的創新設計
 
- > LLM
- >
-4. **[ ](docs/data/caching.md)**
+#### **實用工具文檔**
 
- > API
- >
-5. **[ ](docs/faq/faq.md)**
+1. **[Web界面指南](docs/usage/web-interface-guide.md)**
 
- > FAQ
- >
+   > 完整的Web界面使用教程，包含分析深度詳細說明
 
-### ****
+2. **[投資分析指南](docs/usage/investment_analysis_guide.md)**
+
+   > 從基礎到高級的完整投資分析教程
+
+3. **[LLM配置](docs/configuration/llm-config.md)**
+
+   > 多LLM模型配置和成本優化策略
+
+4. **[快取策略](docs/data/caching.md)**
+
+   > 多層快取設計，顯著降低API調用成本
+
+5. **[常見問題](docs/faq/faq.md)**
+
+   > 詳細的FAQ和故障排除指南
+
+### **按模塊瀏覽文檔**
 
 <details>
-<summary><strong> </strong> - </summary>
+<summary><strong>概覽文檔</strong> - 項目入門必讀</summary>
 
-- [ ](docs/overview/project-overview.md) - 
-- [ ](docs/overview/quick-start.md) - 
-- [ ](docs/overview/installation.md) - 
+- [項目概述](docs/overview/project-overview.md) - 詳細的項目背景和特性介紹
+- [快速開始](docs/overview/quick-start.md) - 從安裝到第一次運行的完整指南
+- [詳細安裝](docs/overview/installation.md) - 各平台詳細安裝說明
 
 </details>
 
 <details>
-<summary><strong> </strong> - </summary>
+<summary><strong>架構文檔</strong> - 深度理解系統設計</summary>
 
-- [ ](docs/architecture/system-architecture.md) - 
-- [ ](docs/architecture/agent-architecture.md) - 
-- [ ](docs/architecture/data-flow-architecture.md) - 
-- [ ](docs/architecture/graph-structure.md) - LangGraph
-
-</details>
-
-<details>
-<summary><strong> </strong> - </summary>
-
-- [ ](docs/agents/analysts.md) - 
-- [ ](docs/agents/researchers.md) - /
-- [ ](docs/agents/trader.md) - 
-- [ ](docs/agents/risk-management.md) - 
-- [ ](docs/agents/managers.md) - 
+- [系統架構](docs/architecture/system-architecture.md) - 完整的系統架構設計
+- [智能體架構](docs/architecture/agent-architecture.md) - 智能體設計模式和協作機制
+- [數據流架構](docs/architecture/data-flow-architecture.md) - 數據獲取、處理和分發流程
+- [圖結構設計](docs/architecture/graph-structure.md) - LangGraph工作流程設計
 
 </details>
 
 <details>
-<summary><strong> </strong> - </summary>
+<summary><strong>智能體文檔</strong> - 核心組件詳解</summary>
 
-- [ ](docs/data/data-sources.md) - API
-- [ ](docs/data/data-processing.md) - 
-- [ ](docs/data/caching.md) - 
-
-</details>
-
-<details>
-<summary><strong> </strong> - </summary>
-
-- [ ](docs/configuration/config-guide.md) - 
-- [ LLM](docs/configuration/llm-config.md) - 
+- [分析師團隊](docs/agents/analysts.md) - 四類專業分析師詳解
+- [研究員團隊](docs/agents/researchers.md) - 看漲/看跌研究員和辯論機制
+- [交易員智能體](docs/agents/trader.md) - 交易決策制定流程
+- [風險管理](docs/agents/risk-management.md) - 多層次風險評估體系
+- [管理層智能體](docs/agents/managers.md) - 協調和決策管理
 
 </details>
 
 <details>
-<summary><strong> </strong> - </summary>
+<summary><strong>數據處理</strong> - 技術核心實現</summary>
 
-- [ ](docs/examples/basic-examples.md) - 8
-- [ ](docs/examples/advanced-examples.md) - 
+- [數據源集成](docs/data/data-sources.md) - 支持的數據源和API集成
+- [數據處理流程](docs/data/data-processing.md) - 數據清洗、轉換和驗證
+- [快取策略](docs/data/caching.md) - 多層快取優化性能
 
 </details>
 
 <details>
-<summary><strong> </strong> - </summary>
+<summary><strong>配置與部署</strong> - 性能調優指南</summary>
 
-- [ ](docs/faq/faq.md) - FAQ
+- [配置指南](docs/configuration/config-guide.md) - 詳細的配置選項說明
+- [LLM配置](docs/configuration/llm-config.md) - 大語言模型配置優化
 
 </details>
 
-## 
+<details>
+<summary><strong>示例和教程</strong> - 實戰應用指南</summary>
 
-### 
+- [基礎示例](docs/examples/basic-examples.md) - 8個實用的基礎示例
+- [高級示例](docs/examples/advanced-examples.md) - 複雜場景和擴展開發
 
-- ****: $0.01-0.05/ ( gpt-4o-mini)
-- ****: $0.05-0.15/ ( gpt-4o)
-- ****: $0.10-0.30/ ( gpt-4o + )
+</details>
 
-### 
+<details>
+<summary><strong>幫助文檔</strong> - 問題解決方案</summary>
+
+- [常見問題](docs/faq/faq.md) - 詳細的FAQ和解決方案
+
+</details>
+
+## 成本控制
+
+### 為什麼選擇我們的文檔？
+
+- **經濟模式**: $0.01-0.05/次分析 (使用 gpt-4o-mini)
+- **標準模式**: $0.05-0.15/次分析 (使用 gpt-4o)
+- **高精度模式**: $0.10-0.30/次分析 (使用 gpt-4o + 多輪辯論)
+
+### 文檔統計數據
 
 ```python
-# 
+# 低成本配置範例
 cost_optimized_config = {
  "deep_think_llm": "gpt-4o-mini",
  "quick_think_llm": "gpt-4o-mini", 
@@ -1319,19 +1311,19 @@ cost_optimized_config = {
 }
 ```
 
-## 
+## 貢獻指南
 
 
 
-### 
+### 文檔特色
 
 - **Bug** - 
-- **** - 
-- **** - 
-- **** - 
-- **** - 
+- **詳細分析報告** - 技術分析，基本面分析，市場情緒，新聞事件
+- **風險提示** - 完整的投資風險聲明和免責條款
+- **配置信息** - 分析參數，模型信息，生成時間
+- **新功能** - 添加新的功能特性
 
-### 
+### 典型使用成本
 
 1. Fork 
 2. (`git checkout -b feature/AmazingFeature`)
@@ -1339,15 +1331,15 @@ cost_optimized_config = {
 4. (`git push origin feature/AmazingFeature`)
 5. Pull Request
 
-### 
+### 成本優化建議
 
-**[ ](CONTRIBUTORS.md)**
+查看所有貢獻者和詳細貢獻內容：**[ 貢獻者名單](CONTRIBUTORS.md)**
 
-## 
+## 許可證
 
  Apache 2.0 [LICENSE](LICENSE) 
 
-### 
+### 貢獻類型
 
 - 
 - 
@@ -1356,60 +1348,60 @@ cost_optimized_config = {
 - 
 - 
 
-## 
+## 貢獻方式
 
-### 
+### 貢獻流程
 
  [Tauric Research](https://github.com/TauricResearch) 
 
-- ** **: AI
-- ** **: 
-- ** **: 
-- ** **: AI
-- ** **: 
+- ** 願景領導者**: 感謝您們在AI金融領域的前瞻性思考和創新實踐
+- ** 珍貴源碼**: 感謝您們開源的每一行代碼，它們凝聚着無數的智慧和心血
+- ** 架構大師**: 感謝您們設計了如此優雅、可擴展的多智能體框架
+- ** 技術先驅**: 感謝您們將前沿AI技術與金融實務完美結合
+- ** 持續貢獻**: 感謝您們持續的維護、更新和改進工作
 
-### 
+### 查看貢獻者
 
 TradingAgents-CN
 
-**[ ](CONTRIBUTORS.md)**
+詳細的貢獻者名單和貢獻內容請查看：**[ 貢獻者名單](CONTRIBUTORS.md)**
 
 
 
 - **Docker** - 
-- **** - 
+- **文檔改進** - 完善文檔和教程
 - **Bug** - 
-- **** - 
-- **** - 
-- **** - 
-- ** **: Apache 2.0
-- ** **: 
+- **本地化** - 翻譯和本地化工作
+- **代碼優化** - 性能優化和代碼重構
+- **報告導出功能** - 多格式輸出支持
+- ** 開源貢獻**: 感謝您們選擇Apache 2.0協議，給予開發者最大的自由
+- ** 知識分享**: 感謝您們提供的詳細文檔和最佳實踐指導
 
-****[TradingAgents](https://github.com/TauricResearch/TradingAgents) Apache 2.0
+本專案基於 [TradingAgents](https://github.com/TauricResearch/TradingAgents) 開發，採用 Apache 2.0 授權
 
-### 
-
-
-
-- ** **: TradingAgents
-- ** **: AI
-- ** **: 
-- ** **: AI
-
-### 
+### 許可證說明
 
 
 
-### 
+- ** 技術傳播**: 讓優秀的TradingAgents技術得到更廣泛的應用
+- ** 教育普及**: 為AI金融教育提供更好的工具和資源
+- ** 文化橋梁**: 在技術社群之間搭建交流合作的橋梁
+- ** 創新推動**: 推動金融科技領域的AI技術創新和應用
+
+### 向源項目開發者致敬
 
 
 
-- ****: 
-- ****: 
-- ****: 
-- ****: 
+### 社區貢獻者致謝
 
-## 
+
+
+- **智能決策**: 交易員基於所有輸入做出最終投資建議
+- **風險管理**: 多層次風險評估和管理機制
+- **智能體選擇**: 可選擇不同的分析師組合
+- **智能分析師選擇**: 市場技術、基本面、新聞、社交媒體分析師
+
+## 版本歷史
 
 - **v0.4.5** (2026-02-27): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、工具結果快取去重、快取 TTL 優化、圖結構精簡、SSE try/finally 清理、compositor-only 動畫、SSR 預渲染 CLS 0.00
 - **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
@@ -1429,18 +1421,18 @@ TradingAgents-CN
 - **v0.1.2** (2025-06-15): Web
 - **v0.1.1** (2025-06-01): LLM
 
- ****: [CHANGELOG.md](./docs/releases/CHANGELOG.md)
+ **詳細更新日誌**: [CHANGELOG.md](./docs/releases/CHANGELOG.md)
 
-## 
+## 聯繫方式
 
 - **GitHub Issues**: [](https://github.com/aiinpocket/TradingAgents-CN/issues)
 - **Email**: hsliup@163.com
-- ****: [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents)
-- ****: [](docs/)
+- **原項目**: [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents)
+- **文檔**: [完整文檔目錄](docs/)
 
-## 
+## 風險提示
 
-****: 
+**程序化配置**:
 
 - 
 - AI
