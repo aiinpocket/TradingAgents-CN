@@ -24,6 +24,7 @@
 ### 亮點
 
 #### 效能優化
+- **分析師工具呼叫並行化**: execute_tools_parallel() 共用函式，4 個分析師內部工具呼叫以 ThreadPoolExecutor 並行執行
 - **GZip 壓縮**: GZipMiddleware 自動壓縮回應（CSS/JS/API），傳輸量減少 ~60%
 - **SSR 預渲染**: 後端注入快取 JSON 至 HTML，消除首屏 CLS（0.34 -> 0.00）
 - **CWV 指標**: LCP 515ms / CLS 0.00 / TTFB 201ms — 全部 Good 等級
@@ -43,6 +44,7 @@
 - **document.title i18n**: 頁面標題隨語言切換
 
 #### 安全強化
+- **RequestSizeLimitMiddleware**: 同時防護 Content-Length 和 chunked transfer encoding
 - **速率限制 IP 修復**: CF-Connecting-IP -> X-Real-IP -> client.host 優先順序
 - **CSP 完整限制**: base-uri、form-action、object-src、worker-src、connect-src 精確域名（無萬用字元）
 - **Swagger UI 安全預設**: 非 development 環境自動關閉 API 文件
@@ -52,6 +54,7 @@
 - **analysisId 前後端格式驗證**: 防止異常 ID 注入
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
 - **DOMPurify defer**: 修復 SSR 競爭條件（async -> defer 確保載入順序）
+- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.2.25 / cryptography>=46.0.5
 
 #### 無障礙 (a11y)
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
@@ -62,7 +65,7 @@
 
 #### UI/UX
 - **漲跌排行 CSS Grid**: 固定欄寬跨行對齊，取代 flex 佈局
-- **RWD 響應式**: 桌面 1512px / 平板 768px / 手機 375px 三段式
+- **RWD 響應式**: 5 段式（桌面 1512px / 平板 960px / 768px / 手機 480px / 375px / 320px）
 - **亮色/暗色主題**: 完整雙主題支援，一鍵切換
 - **Markdown 渲染增強**: 代碼塊、引用區塊、連結、表格完整 CSS 樣式
 - **分析取消**: DELETE API 端點 + 前端即時通知後端中止任務
