@@ -440,14 +440,16 @@ async def stream_analysis(analysis_id: str, request: Request):
                     yield f"data: {json.dumps({'type': 'failed', 'error': _t('analysis_timeout', request)}, ensure_ascii=False)}\n\n"
                     break
 
-                data = _active_analyses.get(analysis_id)
-                if not data:
-                    exit_reason = "task_removed"
-                    break
-
-                # 在鎖內快照 progress，避免 deque 旋轉導致 IndexError
+                # 在鎖內讀取所有需要的狀態快照，避免 race condition
                 with _analyses_lock:
+                    data = _active_analyses.get(analysis_id)
+                    if not data:
+                        exit_reason = "task_removed"
+                        break
                     progress_snapshot = list(data["progress"])
+                    status = data["status"]
+                    result_snapshot = data.get("result", {})
+                    error_snapshot = data.get("error", "")
                 current_len = len(progress_snapshot)
                 if current_len > last_idx:
                     for i in range(last_idx, current_len):
@@ -456,15 +458,15 @@ async def stream_analysis(analysis_id: str, request: Request):
                     last_idx = current_len
                     last_heartbeat = time.time()
 
-                # 檢查完成狀態（json.dumps 加入 default 處理，防止非序列化物件導致 SSE 中斷）
-                if data["status"] == "completed":
+                # 檢查完成狀態（使用鎖內快照值，json.dumps 加入 default 防止非序列化物件中斷 SSE）
+                if status == "completed":
                     exit_reason = "completed"
-                    yield f"data: {json.dumps({'type': 'completed', 'result': data.get('result', {})}, ensure_ascii=False, default=str)}\n\n"
+                    yield f"data: {json.dumps({'type': 'completed', 'result': result_snapshot}, ensure_ascii=False, default=str)}\n\n"
                     break
-                elif data["status"] == "failed":
+                elif status == "failed":
                     exit_reason = "failed"
                     fallback_err = _t("unknown_error", request)
-                    yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False, default=str)}\n\n"
+                    yield f"data: {json.dumps({'type': 'failed', 'error': error_snapshot or fallback_err}, ensure_ascii=False, default=str)}\n\n"
                     break
 
                 # SSE heartbeat：每 15 秒發送一次，防止 proxy 因閒置斷線
@@ -666,11 +668,14 @@ async def _run_analysis(analysis_id: str):
             data["progress"].append(_t_lang("analysis_complete", lang))
             _update_analysis_state(analysis_id, status="completed", result=formatted)
 
-            # 背景異步翻譯英文版（不阻塞 SSE 回應）
-            asyncio.ensure_future(_background_translate(
+            # 背景異步翻譯英文版（不阻塞 SSE 回應，異常由 callback 記錄）
+            _bg_task = asyncio.ensure_future(_background_translate(
                 analysis_id, formatted, data["stock_symbol"],
                 data.get("analysis_date", ""), result
             ))
+            _bg_task.add_done_callback(
+                lambda t: t.exception() and logger.warning(f"背景翻譯任務異常: {t.exception()}")
+            )
 
         else:
             raw_error = result.get("error", "")

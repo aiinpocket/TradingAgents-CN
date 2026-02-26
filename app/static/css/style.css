@@ -109,6 +109,7 @@ body {
   top: 0;
   z-index: 100;
   height: var(--topbar-h);
+  will-change: transform;
 }
 
 .topbar-inner {
