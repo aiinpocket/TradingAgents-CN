@@ -79,6 +79,8 @@ function tradingApp() {
 
     // 股票預覽快取（避免模板中重複計算）
     stockPreview: null,
+    // 市場情緒快取（避免模板中 getMarketSentiment() 被重複呼叫）
+    _sentiment: { label: '', cls: '', arrow: '' },
     // 共用股票查詢表（trendingData 變化時由 $watch 更新）
     _stockMap: {},
 
@@ -127,6 +129,7 @@ function tradingApp() {
       this.$watch('trendingData', () => {
         this._rebuildStockMap();
         this.stockPreview = this._computeStockPreview();
+        this._sentiment = this._computeSentiment();
       });
       this.$watch('form.symbol', () => { this.stockPreview = this._computeStockPreview(); });
       // 切換到分析 tab 時更新日期上限，避免長時間開啟頁面導致日期過時
@@ -217,6 +220,8 @@ function tradingApp() {
       document.documentElement.setAttribute('lang', this.lang === 'zh-TW' ? 'zh-Hant' : 'en');
       // 同步頁面標題語言
       document.title = this.t('meta.title');
+      // 情緒標籤依賴語言，需重新計算
+      this._sentiment = this._computeSentiment();
       // 切換語言後先清空 AI 分析（避免短暫顯示舊語言內容），再重新載入
       if (this.tab === 'trending') {
         this.aiAnalysis = { available: null, content: '', updated_at: '', provider: '' };
@@ -337,16 +342,19 @@ function tradingApp() {
       return idx.symbol === '^VIX' ? !up : up;
     },
 
-    getMarketSentiment() {
+    // 計算市場情緒（結果快取在 _sentiment，由 $watch 和 toggleLang 觸發）
+    _computeSentiment() {
       const indices = this.trendingData.indices || [];
       if (indices.length === 0) return { label: '', cls: '', arrow: '' };
-      // 使用 isPositiveForMarket 計算，VIX 上漲視為市場負面
       const ups = indices.filter(i => this.isPositiveForMarket(i)).length;
       const ratio = ups / indices.length;
       if (ratio >= 0.7) return { label: this.t('trending.market_up'), cls: 'sentiment-up', arrow: '&#9650;' };
       if (ratio <= 0.3) return { label: this.t('trending.market_down'), cls: 'sentiment-down', arrow: '&#9660;' };
       return { label: this.t('trending.market_mixed'), cls: 'sentiment-mixed', arrow: '&#9670;' };
     },
+
+    // 公開存取（模板使用 _sentiment 即可，此函式保留向後相容）
+    getMarketSentiment() { return this._sentiment; },
 
     // 重建 symbol -> stock 查詢表（trendingData 變化時呼叫一次）
     _rebuildStockMap() {
@@ -534,6 +542,8 @@ function tradingApp() {
 
           if (data.type === 'progress') {
             this.progressMessages.push(data.message);
+            // 限制進度訊息上限，避免長時間分析導致記憶體膨脹
+            if (this.progressMessages.length > 200) this.progressMessages.splice(0, 50);
             const stepMatch = data.message.match(/^\[(\d+)\/(\d+)\]/);
             if (stepMatch) {
               this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, Math.round((parseInt(stepMatch[1]) / parseInt(stepMatch[2])) * CONFIG.PROGRESS_MAX_PERCENT));
@@ -856,7 +866,8 @@ function tradingApp() {
       a.href = url;
       a.download = `${this.result.stock_symbol || 'analysis'}_${this.result.analysis_date || 'report'}.json`;
       a.click();
-      URL.revokeObjectURL(url);
+      // 延遲釋放 blob URL，避免 Safari 下載前尚未讀取完成
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     },
 
     _startElapsedTimer() {

@@ -283,7 +283,8 @@ body {
   font-size: 13px;
 }
 
-.notice-warn.compact, .notice-error.compact { color: var(--red-text); }
+.notice-warn.compact { color: var(--amber-text); }
+.notice-error.compact { color: var(--red-text); }
 .notice-info.compact { color: var(--accent); }
 
 .notice-icon svg {
@@ -349,20 +350,22 @@ body {
 }
 
 .notice-dismiss:hover { opacity: 1; }
+.notice-dismiss:focus-visible { opacity: 1; outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* 錯誤重試按鈕 */
+/* 錯誤重試按鈕 - 通知區塊內的小型重試 */
 .btn-retry {
-  background: var(--accent);
-  color: #fff;
-  border: none;
+  flex-shrink: 0;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 2px 10px;
+  padding: 4px 12px;
   font-size: 12px;
   cursor: pointer;
   margin-left: 8px;
   white-space: nowrap;
 }
-.btn-retry:hover { opacity: 0.85; }
+.btn-retry:hover { border-color: var(--accent); }
 .btn-retry:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ===== 表單 ===== */
@@ -963,7 +966,7 @@ body {
   align-items: center;
 }
 .badge-cached {
-  background: var(--accent-blue, #0969da);
+  background: var(--accent);
   color: #fff;
   padding: 1px 8px;
   border-radius: 10px;
@@ -991,18 +994,7 @@ body {
   font-size: 13px;
 }
 
-.btn-retry {
-  flex-shrink: 0;
-  font-size: 12px;
-  padding: 4px 12px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-}
-
-.btn-retry:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
+/* .btn-retry 統一定義在通知區塊章節 */
 
 .stock-context-header {
   margin-bottom: 16px;
@@ -1136,12 +1128,7 @@ body {
   50% { opacity: 1; }
 }
 
-/* 統一為脈動骨架 */
-.skeleton-line {
-  height: 16px;
-  border-radius: 4px;
-  background: var(--bg-inset);
-}
+/* 統一為脈動骨架（主定義在 Skeleton 載入狀態區段） */
 
 .skeleton-w40 { width: 40%; }
 .skeleton-w60 { width: 60%; }
@@ -2802,6 +2789,10 @@ code {
   border-color: var(--border);
 }
 
+[data-theme="dark"] .disclaimer {
+  border-color: rgba(248, 81, 73, 0.3);
+}
+
 /* 暗色模式切換按鈕 */
 
 .theme-toggle {
@@ -2855,6 +2846,8 @@ code {
   height: 14px;
   margin-bottom: 8px;
   width: 100%;
+  border-radius: 4px;
+  background: var(--bg-inset);
 }
 
 .skeleton-line-short { width: 60%; }
