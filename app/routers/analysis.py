@@ -124,6 +124,18 @@ _ERROR_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "取得個股資料失敗，請稍後重試",
         "en": "Failed to fetch stock data. Please try again later.",
     },
+    "task_removed": {
+        "zh-TW": "分析任務已移除",
+        "en": "Analysis task has been removed.",
+    },
+    "dependency_missing": {
+        "zh-TW": "必要依賴未安裝",
+        "en": "Required dependency not installed.",
+    },
+    "fetch_stock_failed": {
+        "zh-TW": "取得個股資料失敗",
+        "en": "Failed to fetch stock data.",
+    },
 }
 
 
@@ -649,7 +661,7 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
     data = _active_analyses.get(analysis_id)
     if not data:
         logger.warning(f"分析 ...{analysis_id[-4:]} 啟動時已不在記憶體中，跳過")
-        return {"success": False, "error": "Task removed before execution"}
+        return {"success": False, "error": _t_lang("task_removed", lang)}
 
     def progress_callback(message, step=None, total_steps=None):
         if not data:
@@ -892,7 +904,7 @@ def _fetch_stock_context(symbol: str) -> dict:
     try:
         import yfinance as yf
     except ImportError:
-        return {"error": "yfinance not installed"}
+        return {"error": _t_lang("dependency_missing")}
 
     result: dict = {"symbol": symbol}
 
@@ -980,7 +992,7 @@ def _fetch_stock_context(symbol: str) -> dict:
 
     except Exception as e:
         logger.error(f"取得 {symbol} 個股快照失敗: {e}")
-        result["error"] = "Failed to fetch stock data"
+        result["error"] = _t_lang("fetch_stock_failed")
 
     return result
 
