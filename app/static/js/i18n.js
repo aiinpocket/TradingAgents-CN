@@ -115,7 +115,8 @@ const I18N_MESSAGES = {
     'history.status_failed': '失敗',
 
     // 熱門特區
-    'trending.refresh_hint': '每 5 分鐘背景更新、前端每 10 分鐘重新載入',
+    'trending.refresh_hint': '每 5 分鐘自動更新',
+    'time.just_now': '剛剛更新',
     'trending.indices': '主要指數',
     'trending.gainers': '漲幅排行',
     'trending.losers': '跌幅排行',
@@ -303,7 +304,8 @@ const I18N_MESSAGES = {
     'history.status_failed': 'Failed',
 
     // Trending
-    'trending.refresh_hint': 'Backend refreshes every 5 min, frontend reloads every 10 min',
+    'trending.refresh_hint': 'Auto-refresh every 5 min',
+    'time.just_now': 'Just updated',
     'trending.indices': 'Major Indices',
     'trending.gainers': 'Top Gainers',
     'trending.losers': 'Top Losers',

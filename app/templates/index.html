@@ -25,7 +25,7 @@
   <link rel="canonical" href="https://stock-us.aiinpocket.com/">
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HN1YQZJF1Z"></script>
-  <script async src="/static/js/gtag-init.js?v=0.4.4n"></script>
+  <script async src="/static/js/gtag-init.js?v=0.4.4o"></script>
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
@@ -33,11 +33,11 @@
   <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
           integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
           crossorigin="anonymous"></script>
-  <script src="/static/js/i18n.js?v=0.4.4n"></script>
+  <script src="/static/js/i18n.js?v=0.4.4o"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4n">
+  <link rel="stylesheet" href="/static/css/style.css?v=0.4.4o">
   <!-- JSON-LD 結構化資料 -->
   <script type="application/ld+json">
   {
@@ -180,8 +180,8 @@
         <div class="section-title" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
           <svg class="section-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
           <span x-text="t('trending.indices')">主要指數</span>
-          <span class="section-updated" x-show="trendingData.updated_at" x-text="t('trending.updated') + ' ' + trendingData.updated_at"></span>
-          <span class="section-hint" x-text="t('trending.refresh_hint')">每 10 分鐘自動更新</span>
+          <span class="section-updated" x-show="trendingData.updated_at" x-text="t('trending.updated') + ' ' + relativeTime(trendingData.updated_at)"></span>
+          <span class="section-hint" x-text="t('trending.refresh_hint')">每 5 分鐘自動更新</span>
         </div>
         <div class="indices-grid" x-cloak x-show="trendingData.indices && trendingData.indices.length > 0">
           <template x-for="idx in trendingData.indices" :key="idx.symbol">
@@ -371,7 +371,7 @@
             <svg class="section-icon-inline" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"/><path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"/></svg>
             <span x-text="t('trending.news')">市場新聞</span>
           </h2>
-          <span class="hint" x-show="trendingData.updated_at" x-text="t('trending.updated') + ': ' + trendingData.updated_at"></span>
+          <span class="hint" x-show="trendingData.updated_at" x-text="t('trending.updated') + ': ' + relativeTime(trendingData.updated_at)"></span>
         </div>
         <div class="news-grid" x-show="trendingData.news?.length > 0">
           <template x-for="(item, idx) in trendingData.news" :key="item.title">
@@ -958,6 +958,6 @@
     <span class="footer-open-source" x-text="t('footer.open_source')"></span>
   </footer>
 
-  <script src="/static/js/app.js?v=0.4.4n"></script>
+  <script src="/static/js/app.js?v=0.4.4o"></script>
 </body>
 </html>

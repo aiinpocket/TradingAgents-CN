@@ -74,7 +74,7 @@ class UnifiedNewsAnalyzer:
         """產生快取鍵值"""
         today = datetime.now().strftime("%Y-%m-%d")
         key_str = f"{stock_code}_{max_news}_{today}"
-        return hashlib.md5(key_str.encode()).hexdigest()
+        return hashlib.sha256(key_str.encode()).hexdigest()[:16]
 
     def _get_from_cache(self, cache_key: str):
         """從快取取得資料"""

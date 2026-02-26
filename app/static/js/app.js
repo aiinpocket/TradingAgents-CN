@@ -13,7 +13,7 @@ const CONFIG = {
   POLL_BACKOFF_MAX_MS: 15000,
   PROGRESS_STEP_PERCENT: 8,
   PROGRESS_MAX_PERCENT: 95,
-  TRENDING_REFRESH_MS: 600000, // 10 分鐘自動重新整理
+  TRENDING_REFRESH_MS: 300000, // 5 分鐘自動重新整理（與後端同步）
 };
 
 // 全域錯誤處理
@@ -728,6 +728,25 @@ function tradingApp() {
       } finally {
         this.stockContextLoading = false;
       }
+    },
+
+    // 將時間戳轉為相對時間（如「剛剛」、「3 分鐘前」）
+    relativeTime(dateStr) {
+      if (!dateStr) return '';
+      try {
+        const date = new Date(dateStr.replace(' ', 'T'));
+        const diff = Math.floor((Date.now() - date.getTime()) / 1000);
+        if (diff < 60) return this.t('time.just_now');
+        if (diff < 3600) {
+          const mins = Math.floor(diff / 60);
+          return this.lang === 'zh-TW' ? mins + ' 分鐘前' : mins + ' min ago';
+        }
+        if (diff < 86400) {
+          const hours = Math.floor(diff / 3600);
+          return this.lang === 'zh-TW' ? hours + ' 小時前' : hours + 'h ago';
+        }
+        return dateStr;
+      } catch { return dateStr; }
     },
 
     formatLargeNumber(num) {

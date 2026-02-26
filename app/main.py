@@ -78,6 +78,15 @@ async def lifespan(app: FastAPI):
 
     logger.info("TradingAgents API 啟動中...")
 
+    # 預初始化常用 LLM 客戶端，避免首次翻譯/分析時的冷啟動延遲
+    try:
+        from app.routers.trending import _get_llm, _get_ai_providers
+        for provider, model in _get_ai_providers():
+            _get_llm(provider, model, temperature=0)
+            logger.info(f"LLM 客戶端預初始化完成: {provider}/{model}")
+    except Exception as e:
+        logger.warning(f"LLM 客戶端預初始化失敗（不影響正常運作）: {e}")
+
     # 背景預熱趨勢資料快取，讓第一位使用者不需等待白螢幕
     async def _prewarm_trending():
         try:
