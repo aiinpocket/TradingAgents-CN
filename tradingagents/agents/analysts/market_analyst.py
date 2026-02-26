@@ -12,13 +12,7 @@ from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 
-def _calc_start_date(trade_date: str, days_back: int = 90) -> str:
-    """根據交易日期動態計算資料起始日期"""
-    try:
-        dt = datetime.strptime(trade_date, "%Y-%m-%d")
-        return (dt - timedelta(days=days_back)).strftime("%Y-%m-%d")
-    except (ValueError, TypeError):
-        return (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
+from tradingagents.agents.utils.agent_utils import calc_start_date as _calc_start_date
 
 
 def _get_company_name(ticker: str, market_info: dict) -> str:

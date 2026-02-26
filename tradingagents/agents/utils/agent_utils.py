@@ -34,6 +34,16 @@ _embedding_cache: dict[int, list[float]] = {}
 _embedding_cache_lock = threading.Lock()
 
 
+def calc_start_date(trade_date: str, days_back: int = 90) -> str:
+    """根據交易日期動態計算資料起始日期（共用函式，供所有分析師和 prefetch 使用）"""
+    from datetime import timedelta
+    try:
+        dt = datetime.strptime(trade_date, "%Y-%m-%d")
+        return (dt - timedelta(days=days_back)).strftime("%Y-%m-%d")
+    except (ValueError, TypeError):
+        return (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
+
+
 def get_cached_embedding(situation_text: str, memory_instance) -> list[float]:
     """取得 current_situation 的嵌入向量（快取避免重複 API 呼叫）"""
     cache_key = hash(situation_text)
@@ -79,78 +89,8 @@ def _make_cache_key(tool_name: str, args: dict) -> str:
     return f"{tool_name}::{args_str}"
 
 
-def execute_tools_parallel(tool_calls, tools, logger_instance=None):
-    """並行執行多個工具呼叫，提升分析師階段效能。
-
-    當分析師 LLM 回傳多個 tool_calls 時，這些工具呼叫通常是獨立的
-    （例如 get_stock_fundamentals_unified 和 get_finnhub_analyst_consensus），
-    可以安全地並行執行以減少等待時間。
-
-    Args:
-        tool_calls: LLM 回傳的 tool_calls 列表
-        tools: 可用工具列表
-        logger_instance: 日誌實例（可選）
-
-    Returns:
-        list[ToolMessage]: 工具執行結果訊息列表（保持與 tool_calls 相同順序）
-    """
-    from langchain_core.messages import ToolMessage
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
-    _log = logger_instance or logger
-
-    # 建立工具名稱到工具物件的查詢表
-    tool_map = {}
-    for t in tools:
-        name = getattr(t, 'name', getattr(t, '__name__', str(t)))
-        tool_map[name] = t
-
-    def _invoke_single_tool(tool_call):
-        """執行單一工具呼叫"""
-        tool_name = tool_call.get('name')
-        tool_args = tool_call.get('args', {})
-        tool_id = tool_call.get('id')
-
-        tool_obj = tool_map.get(tool_name)
-        if tool_obj is None:
-            return ToolMessage(content=f"未找到工具: {tool_name}", tool_call_id=tool_id)
-
-        try:
-            result = tool_obj.invoke(tool_args)
-            _log.debug(f"工具 {tool_name} 執行成功，結果長度: {len(str(result))}")
-            return ToolMessage(content=str(result), tool_call_id=tool_id)
-        except Exception as e:
-            _log.error(f"工具 {tool_name} 執行失敗: {e}")
-            return ToolMessage(content=f"工具執行失敗: {str(e)}", tool_call_id=tool_id)
-
-    # 單一工具呼叫時直接執行，避免執行緒池開銷
-    if len(tool_calls) <= 1:
-        return [_invoke_single_tool(tc) for tc in tool_calls]
-
-    # 多個工具呼叫時並行執行
-    _log.info(f"並行執行 {len(tool_calls)} 個工具呼叫")
-    results = [None] * len(tool_calls)
-    with ThreadPoolExecutor(max_workers=len(tool_calls)) as executor:
-        future_to_idx = {
-            executor.submit(_invoke_single_tool, tc): i
-            for i, tc in enumerate(tool_calls)
-        }
-        # 30 秒超時保護：避免單一工具卡住阻塞整個流程
-        try:
-            for future in as_completed(future_to_idx, timeout=30):
-                idx = future_to_idx[future]
-                results[idx] = future.result()
-        except TimeoutError:
-            _log.warning("部分工具呼叫超過 30 秒超時，跳過未完成的工具")
-
-    return results
-
-
 def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
     """跳過 LLM 工具決策，直接以程式碼並行呼叫所有指定工具。
-
-    與 execute_tools_parallel 的差別：此函式不需要 LLM tool_calls，
-    而是直接傳入工具列表和對應參數，省去第一次 LLM 呼叫的延遲。
 
     內建分析層級快取：同一次分析中，相同工具+參數的呼叫只執行一次，
     後續呼叫直接返回快取結果（例如多個分析師都呼叫 get_finnhub_sentiment_data）。
@@ -222,6 +162,16 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
         except TimeoutError:
             _log.warning("部分工具呼叫超過 30 秒超時，跳過未完成的工具")
 
+    # 快取命中率摘要（幫助監控 prefetch 效能）
+    with _tool_cache_lock:
+        total = _tool_cache_hits + _tool_cache_misses
+        if total > 0:
+            hit_rate = _tool_cache_hits / total * 100
+            _log.info(
+                f"工具快取統計: 命中 {_tool_cache_hits}/{total} "
+                f"({hit_rate:.0f}%), 快取條目 {len(_tool_result_cache)}"
+            )
+
     return results
 
 
@@ -237,13 +187,7 @@ def prefetch_analyst_data(toolkit, ticker: str, trade_date: str):
         ticker: 股票代碼（如 AAPL）
         trade_date: 分析日期（YYYY-MM-DD）
     """
-    from datetime import datetime, timedelta
-
-    try:
-        dt = datetime.strptime(trade_date, "%Y-%m-%d")
-        start_date = (dt - timedelta(days=90)).strftime("%Y-%m-%d")
-    except (ValueError, TypeError):
-        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+    start_date = calc_start_date(trade_date)
 
     # 建立統一新聞工具（與新聞分析師使用相同的工具和參數）
     from tradingagents.tools.unified_news_tool import create_unified_news_tool
