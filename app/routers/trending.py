@@ -68,13 +68,26 @@ def _load_company_names():
 
 
 def _save_company_names():
-    """將公司名稱快取持久化到 JSON 檔案"""
+    """將公司名稱快取持久化到 JSON 檔案（原子性寫入，防止中斷導致檔案損毀）"""
     try:
         import json
+        import tempfile
         with _company_names_lock:
             snapshot = dict(_company_names)
-        with open(_COMPANY_NAMES_FILE, "w", encoding="utf-8") as f:
-            json.dump(snapshot, f, ensure_ascii=False, indent=2)
+        # 寫入暫存檔後以原子操作替換，避免寫入中途中斷導致 JSON 損毀
+        parent_dir = os.path.dirname(_COMPANY_NAMES_FILE)
+        fd, tmp_path = tempfile.mkstemp(dir=parent_dir, suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(snapshot, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_path, _COMPANY_NAMES_FILE)
+        except Exception:
+            # 清理暫存檔
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
     except Exception as e:
         logger.debug(f"儲存公司名稱快取失敗（非致命）: {e}")
 

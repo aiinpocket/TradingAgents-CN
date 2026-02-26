@@ -40,6 +40,22 @@ _GRAPH_CACHE: dict = {}
 _GRAPH_CACHE_LOCK = threading.Lock()
 _GRAPH_CACHE_MAX = 4  # 最多快取 4 種配置
 
+# 智慧模型配對：重型模型自動配對輕量快速模型
+# 分析管線中 10/12 次 LLM 呼叫使用 quick_think_llm（分析師、研究員、交易員、辯論者）
+# 僅 Research Manager 和 Risk Judge 使用 deep_think_llm（2/12）
+# 當使用者選擇推理模型（如 o4-mini）時，自動為 quick_think 配對輕量模型，大幅提升速度
+_QUICK_MODEL_PAIRS = {
+    # OpenAI 推理/重型模型 -> 配對 gpt-4o-mini
+    "o4-mini": "gpt-4o-mini",
+    "gpt-4o": "gpt-4o-mini",
+    "gpt-4.1": "gpt-4.1-mini",
+    # Anthropic 重型模型 -> 配對 haiku
+    "claude-opus-4-6": "claude-haiku-4-5-20251001",
+    "claude-opus-4-20250514": "claude-haiku-4-5-20251001",
+    "claude-sonnet-4-6": "claude-haiku-4-5-20251001",
+    "claude-sonnet-4-20250514": "claude-haiku-4-5-20251001",
+}
+
 
 def _compute_graph_cache_key(config: dict, analysts: list) -> str:
     """計算 TradingAgentsGraph 快取 key（基於影響圖結構的配置）"""
@@ -131,6 +147,10 @@ _PROGRESS_MESSAGES: dict[str, dict[str, str]] = {
     "configuring": {
         "zh-TW": "配置分析參數...",
         "en": "Configuring analysis parameters...",
+    },
+    "model_pairing": {
+        "zh-TW": "模型配置: 決策={deep}, 分析={quick}",
+        "en": "Models: decision={deep}, analysis={quick}",
     },
     "creating_dirs": {
         "zh-TW": "建立必要的目錄...",
@@ -501,17 +521,37 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         update_progress(_p("configuring", lang), 4)
         config = DEFAULT_CONFIG.copy()
         config["llm_provider"] = llm_provider
-        config["deep_think_llm"] = llm_model
-        config["quick_think_llm"] = llm_model
+
+        # 智慧模型指派：根據研究深度自動配對快速模型
+        # depth 1: 全部使用輕量模型（最高速度）
+        # depth 2-3: 管理員用使用者選擇的模型，其他用配對的輕量模型
+        # depth 4-5: 全部使用使用者選擇的模型（最高品質）
+        quick_model = _QUICK_MODEL_PAIRS.get(llm_model, llm_model)
+        if research_depth == 1:
+            # 快速模式：全部使用輕量模型
+            config["deep_think_llm"] = quick_model
+            config["quick_think_llm"] = quick_model
+        elif research_depth <= 3:
+            # 標準模式：管理員用重型，分析師/研究員/辯論者用輕量
+            config["deep_think_llm"] = llm_model
+            config["quick_think_llm"] = quick_model
+        else:
+            # 深度模式：全部使用使用者選擇的模型
+            config["deep_think_llm"] = llm_model
+            config["quick_think_llm"] = llm_model
+
+        if config["deep_think_llm"] != config["quick_think_llm"]:
+            logger.info(
+                f" [智慧模型配對] deep={config['deep_think_llm']}, "
+                f"quick={config['quick_think_llm']}（depth={research_depth}）"
+            )
+
         # 根據研究深度調整配置
         if research_depth == 1:  # 1級 - 快速分析
             config["max_debate_rounds"] = 1
             config["max_risk_discuss_rounds"] = 1
-            # 保持記憶功能啟用，因為記憶操作開銷很小但能顯著提升分析品質
             config["memory_enabled"] = True
-
-            # 統一使用在線工具，避免離線工具的各種問題
-            config["online_tools"] = True  # 所有市場都使用統一工具
+            config["online_tools"] = True
             logger.info(f" [快速分析] {market_type}使用統一工具，確保資料來源正確和穩定性")
         elif research_depth == 2:  # 2級 - 基礎分析
             config["max_debate_rounds"] = 1
@@ -541,6 +581,14 @@ def run_stock_analysis(stock_symbol, analysis_date, analysts, research_depth, ll
         elif llm_provider == "anthropic":
             config["backend_url"] = "https://api.anthropic.com/"
             logger.info(f" [Anthropic] 使用模型: {llm_model}")
+
+        # 顯示模型配對資訊（讓使用者了解速度/品質配置）
+        if config["deep_think_llm"] != config["quick_think_llm"]:
+            update_progress(_p(
+                "model_pairing", lang,
+                deep=config["deep_think_llm"],
+                quick=config["quick_think_llm"],
+            ))
 
         # 修復路徑問題 - 優先使用環境變數配置
         # 資料目錄：優先使用環境變數，否則使用預設路徑

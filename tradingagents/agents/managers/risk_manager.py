@@ -78,8 +78,10 @@ def create_risk_manager(llm, memory):
             
             retry_count += 1
             if retry_count < max_retries and not response_content:
-                logger.info("[Risk Manager] 等待0.5秒後重試...")
-                time.sleep(0.5)
+                # 指數退避：0.5s, 1s, 2s...
+                backoff = 0.5 * (2 ** (retry_count - 1))
+                logger.info(f"[Risk Manager] 等待 {backoff}s 後重試...")
+                time.sleep(backoff)
         
         # 如果所有重試都失敗，生成預設決策
         if not response_content:

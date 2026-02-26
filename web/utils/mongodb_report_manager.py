@@ -217,6 +217,10 @@ class MongoDBReportManager:
         if not self.connected:
             return None
 
+        # 深度防禦：確保查詢參數為純字串，防止 NoSQL 操作符注入
+        if not isinstance(stock_symbol, str) or not isinstance(analysis_date, str):
+            return None
+
         try:
             cutoff = datetime.now() - timedelta(hours=max_age_hours)
             doc = self.collection.find_one(
@@ -302,7 +306,11 @@ class MongoDBReportManager:
         """根據ID取得單個分析報告"""
         if not self.connected:
             return None
-        
+
+        # 深度防禦：確保查詢參數為純字串，防止 NoSQL 操作符注入
+        if not isinstance(analysis_id, str):
+            return None
+
         try:
             doc = self.collection.find_one({"analysis_id": analysis_id})
             
