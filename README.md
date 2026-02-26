@@ -17,17 +17,19 @@
 
 ** **: AI
 
-## v0.4.5 - 分析師直接工具呼叫 + 前端效能強化
+## v0.4.5 - 節點即時進度 + 並行辯論 + 前端效能強化
 
-> 最新版本：分析速度大幅提升、圖結構精簡、CSP 修復、前端 compositor-only 動畫
+> 最新版本：graph.stream() 串流偵測、節點級別即時進度回報、多空/風險並行辯論、分析速度大幅提升
 
 ### 亮點
 
 #### 效能優化
+- **節點級別即時進度**: graph.stream() 串流偵測狀態欄位變化，9 種進度事件即時回報前端（分析師完成、辯論進行中、決策完成等）
+- **多空辯論並行化**: 單輪辯論時看漲/看跌研究員同時執行（parallel_invest_debate），串行 ~4s 降至 ~2s
+- **風險分析師並行化**: 單輪辯論時 3 位風險分析師（激進/保守/中立）同時執行，串行 ~6s 降至 ~2s
 - **分析師直接工具呼叫**: invoke_tools_direct() 跳過 LLM 工具決策，每位分析師節省 1 次 LLM 呼叫（2-5s）
 - **圖結構精簡**: 移除 4 個不再使用的 ToolNode 圖節點和條件邊（-39 行）
 - **英文翻譯異步化**: _background_translate() 不阻塞 SSE 回應，先回中文結果再背景翻譯
-- **風險分析師並行化**: 單輪辯論時 3 位風險分析師（激進/保守/中立）同時執行，串行 ~6s 降至 ~2s
 - **前端 compositor-only 動畫**: progress-fill 改用 transform scaleX()（零 layout reflow）
 - **CSS contain**: log-container 加入 contain: layout paint（隔離 SSE 更新 layout）
 - **preload 最佳化**: Alpine.js + DOMPurify preload hint、preconnect 提前到 GA 之前
@@ -1370,6 +1372,7 @@ TradingAgents-CN
 
 ## 
 
+- **v0.4.5** (2026-02-26): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、圖結構精簡、SSE try/finally 清理、compositor-only 動畫、SSR 預渲染 CLS 0.00
 - **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
 - **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化

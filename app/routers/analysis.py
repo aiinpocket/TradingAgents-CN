@@ -428,45 +428,63 @@ async def stream_analysis(analysis_id: str, request: Request):
         last_idx = 0
         start_time = time.time()
         last_heartbeat = time.time()
-        while True:
-            if await request.is_disconnected():
-                break
+        exit_reason = "unknown"
+        try:
+            while True:
+                if await request.is_disconnected():
+                    exit_reason = "client_disconnected"
+                    break
 
-            if time.time() - start_time > _SSE_TIMEOUT_SECONDS:
-                yield f"data: {json.dumps({'type': 'failed', 'error': _t('analysis_timeout', request)}, ensure_ascii=False)}\n\n"
-                break
+                if time.time() - start_time > _SSE_TIMEOUT_SECONDS:
+                    exit_reason = "sse_timeout"
+                    yield f"data: {json.dumps({'type': 'failed', 'error': _t('analysis_timeout', request)}, ensure_ascii=False)}\n\n"
+                    break
 
-            data = _active_analyses.get(analysis_id)
-            if not data:
-                break
+                data = _active_analyses.get(analysis_id)
+                if not data:
+                    exit_reason = "task_removed"
+                    break
 
-            # 在鎖內快照 progress，避免 deque 旋轉導致 IndexError
-            with _analyses_lock:
-                progress_snapshot = list(data["progress"])
-            current_len = len(progress_snapshot)
-            if current_len > last_idx:
-                for i in range(last_idx, current_len):
-                    msg = progress_snapshot[i]
-                    yield f"data: {json.dumps({'type': 'progress', 'message': msg}, ensure_ascii=False)}\n\n"
-                last_idx = current_len
-                last_heartbeat = time.time()
+                # 在鎖內快照 progress，避免 deque 旋轉導致 IndexError
+                with _analyses_lock:
+                    progress_snapshot = list(data["progress"])
+                current_len = len(progress_snapshot)
+                if current_len > last_idx:
+                    for i in range(last_idx, current_len):
+                        msg = progress_snapshot[i]
+                        yield f"data: {json.dumps({'type': 'progress', 'message': msg}, ensure_ascii=False)}\n\n"
+                    last_idx = current_len
+                    last_heartbeat = time.time()
 
-            # 檢查完成狀態
-            if data["status"] == "completed":
-                yield f"data: {json.dumps({'type': 'completed', 'result': data.get('result', {})}, ensure_ascii=False)}\n\n"
-                break
-            elif data["status"] == "failed":
-                fallback_err = _t("unknown_error", request)
-                yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False)}\n\n"
-                break
+                # 檢查完成狀態
+                if data["status"] == "completed":
+                    exit_reason = "completed"
+                    yield f"data: {json.dumps({'type': 'completed', 'result': data.get('result', {})}, ensure_ascii=False)}\n\n"
+                    break
+                elif data["status"] == "failed":
+                    exit_reason = "failed"
+                    fallback_err = _t("unknown_error", request)
+                    yield f"data: {json.dumps({'type': 'failed', 'error': data.get('error', fallback_err)}, ensure_ascii=False)}\n\n"
+                    break
 
-            # SSE heartbeat：每 15 秒發送一次，防止 proxy 因閒置斷線
-            if time.time() - last_heartbeat > 15:
-                yield ": heartbeat\n\n"
-                last_heartbeat = time.time()
+                # SSE heartbeat：每 15 秒發送一次，防止 proxy 因閒置斷線
+                if time.time() - last_heartbeat > 15:
+                    yield ": heartbeat\n\n"
+                    last_heartbeat = time.time()
 
-            # 100ms 輪詢間隔，平衡進度即時性與 CPU 使用
-            await asyncio.sleep(0.1)
+                # 100ms 輪詢間隔，平衡進度即時性與 CPU 使用
+                await asyncio.sleep(0.1)
+        except asyncio.CancelledError:
+            exit_reason = "cancelled"
+        except Exception as e:
+            exit_reason = f"error:{type(e).__name__}"
+            logger.error(f"SSE ...{analysis_id[-4:]} 生成器異常: {e}")
+        finally:
+            elapsed = time.time() - start_time
+            logger.debug(
+                f"SSE ...{analysis_id[-4:]} 結束 reason={exit_reason} "
+                f"elapsed={elapsed:.1f}s msgs={last_idx}"
+            )
 
     return StreamingResponse(
         event_generator(),
