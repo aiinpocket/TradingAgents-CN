@@ -38,7 +38,7 @@
 - **圖結構精簡**: 移除 4 個不再使用的 ToolNode 圖節點和條件邊（-39 行）
 - **英文翻譯異步化**: _background_translate() 不阻塞 SSE 回應，先回中文結果再背景翻譯
 - **前端 compositor-only 動畫**: progress-fill 改用 transform scaleX()（零 layout reflow）
-- **CSS contain**: log-container 加入 contain: layout paint（隔離 SSE 更新 layout）
+- **CSS containment**: log-container / panel / mover-row / index-card / debate-section 加入 contain（隔離 layout/style 回流範圍）
 - **preload 最佳化**: Alpine.js + DOMPurify preload hint、preconnect 提前到 GA 之前
 - **GZip 壓縮**: GZipMiddleware 自動壓縮回應（CSS/JS/API），傳輸量減少 ~60%
 - **SSR 預渲染**: 後端注入快取 JSON 至 HTML，消除首屏 CLS（0.34 -> 0.00）
@@ -50,9 +50,11 @@
 - **前端平行初始化**: checkHealth + loadModels 使用 Promise.all 並行呼叫
 - **共用 _stockMap 快取**: trendingData 變化時重建一次 symbol->stock 查詢表
 - **dns-prefetch**: Google Analytics 域名 DNS 預解析
+- **LLM Prompt 精簡**: Research/Risk Manager (~25-30%)、Trader/Bull/Bear (~40%) token 消耗降低
+- **工具並行呼叫超時保護**: as_completed() 加入 30 秒超時，避免單一 API 卡住阻塞整個分析
 
 #### i18n 國際化
-- **196 翻譯鍵**: zh-TW / en 完全對稱，後端 33 key 雙語完整
+- **154 翻譯鍵**: zh-TW / en 完全對稱，後端 33 key 雙語完整
 - **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
 - **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
 - **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
@@ -73,6 +75,9 @@
 - **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.2.25 / cryptography>=46.0.5 / tornado>=6.5.4
 - **pip-audit**: 177 個依賴全數通過安全掃描（2026-02-27），0 個已知漏洞
 - **安全審計**: 整體評分 8.3/10（後端 8/10、前端 9/10、容器 8/10、依賴 9/10）
+- **翻譯管線 Prompt Injection 防護**: 外部新聞標題與分析報告翻譯前清理（角色偽裝/指令覆蓋/特殊 token 移除）
+- **錯誤訊息清理**: 避免洩漏內部路徑與 API 金鑰（_sanitize_error_message）
+- **Referrer Policy**: strict-origin-when-cross-origin 防止跨域洩漏
 
 #### 無障礙 (a11y)
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
