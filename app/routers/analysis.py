@@ -336,7 +336,7 @@ async def start_analysis(req: AnalysisRequest, request: Request):
             "research_depth": req.research_depth,
             "llm_provider": provider,
             "llm_model": llm_model,
-            "progress": deque(maxlen=200),
+            "progress": deque(maxlen=100),
             "result": None,
             "error": None,
             "created_at": time.time(),
@@ -1051,7 +1051,7 @@ def _fetch_stock_context(symbol: str, _retry: int = 0) -> dict:
     except Exception as e:
         # 重試機制：網路瞬斷或 yfinance 偶發錯誤時自動重試
         if _retry < _CONTEXT_FETCH_MAX_RETRIES:
-            wait = 1.0 * (2 ** _retry)  # 指數退避：1s, 2s
+            wait = 0.5 * (2 ** _retry)  # 指數退避：0.5s, 1s
             logger.warning(f"取得 {symbol} 快照失敗（第 {_retry + 1} 次），{wait:.0f}s 後重試: {e}")
             time.sleep(wait)
             return _fetch_stock_context(symbol, _retry=_retry + 1)
