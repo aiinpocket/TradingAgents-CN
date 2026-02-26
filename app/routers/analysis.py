@@ -150,6 +150,7 @@ _ANALYSIS_ID_RE = re.compile(r"^analysis_[A-Za-z0-9_-]{22}$")
 # 進行中的分析任務（有上限的有序字典）
 _MAX_ANALYSES = 100
 _SSE_TIMEOUT_SECONDS = 1800  # 30 分鐘
+_ANALYSIS_TIMEOUT_SECONDS = 1800  # 分析任務最大執行時間（30 分鐘），防止無限卡住
 _ANALYSIS_EXPIRE_SECONDS = 7200  # 2 小時後自動清理已完成的分析
 _active_analyses: OrderedDict = OrderedDict()
 _analyses_lock = threading.Lock()
@@ -444,17 +445,21 @@ async def _run_analysis(analysis_id: str):
 
     try:
         loop = asyncio.get_running_loop()
-        result = await loop.run_in_executor(
-            None,
-            _sync_run_analysis,
-            analysis_id,
-            data["stock_symbol"],
-            data["analysis_date"],
-            data["analysts"],
-            data["research_depth"],
-            data["llm_provider"],
-            data["llm_model"],
-            lang,
+        # 超時保護：防止分析任務無限卡住佔用執行緒池
+        result = await asyncio.wait_for(
+            loop.run_in_executor(
+                None,
+                _sync_run_analysis,
+                analysis_id,
+                data["stock_symbol"],
+                data["analysis_date"],
+                data["analysts"],
+                data["research_depth"],
+                data["llm_provider"],
+                data["llm_model"],
+                lang,
+            ),
+            timeout=_ANALYSIS_TIMEOUT_SECONDS,
         )
 
         if result.get("success"):
@@ -514,6 +519,16 @@ async def _run_analysis(analysis_id: str):
             error_msg = result.get("error", _t_lang("analysis_failed", lang))
             data["progress"].append(f"{_t_lang('analysis_failed', lang)}: {error_msg}")
             _update_analysis_state(analysis_id, status="failed", error=error_msg)
+
+    except asyncio.TimeoutError:
+        timeout_min = _ANALYSIS_TIMEOUT_SECONDS // 60
+        data["progress"].append(_t_lang("analysis_error", lang))
+        _update_analysis_state(
+            analysis_id,
+            status="failed",
+            error=_t_lang("internal_error", lang),
+        )
+        logger.warning(f"分析 ...{analysis_id[-4:]} 超時（{timeout_min} 分鐘），已強制終止")
 
     except Exception as e:
         data["progress"].append(_t_lang("analysis_error", lang))
@@ -575,6 +590,24 @@ _TRANSLATE_SYSTEM_PROMPT = (
     "4. Return valid JSON with the exact same keys\n"
     "5. Only translate the values, not the keys"
 )
+
+# 翻譯用 LLM 客戶端快取（避免每次翻譯都重新初始化）
+_translate_clients: dict = {}
+_translate_clients_lock = threading.Lock()
+
+
+def _get_translate_client(provider: str):
+    """取得或建立翻譯用 LLM 客戶端（執行緒安全懶初始化）"""
+    import os
+    with _translate_clients_lock:
+        if provider not in _translate_clients:
+            if provider == "openai":
+                from openai import OpenAI
+                _translate_clients[provider] = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+            else:
+                from anthropic import Anthropic
+                _translate_clients[provider] = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        return _translate_clients[provider]
 
 
 def _translate_result_to_english(formatted_result: dict) -> dict | None:
@@ -647,8 +680,7 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
     for provider, model in providers:
         try:
             if provider == "openai":
-                from openai import OpenAI
-                client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+                client = _get_translate_client("openai")
                 resp = client.chat.completions.create(
                     model=model,
                     temperature=0.3,
@@ -660,8 +692,7 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
                 )
                 translated = json.loads(resp.choices[0].message.content)
             else:
-                from anthropic import Anthropic
-                client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+                client = _get_translate_client("anthropic")
                 resp = client.messages.create(
                     model=model,
                     max_tokens=4096,
