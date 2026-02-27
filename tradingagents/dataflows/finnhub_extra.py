@@ -31,8 +31,8 @@ _FINNHUB_IO_POOL = ThreadPoolExecutor(max_workers=10, thread_name_prefix="finnhu
 
 # 各報告類型的快取有效期（秒）
 _CACHE_TTL = {
-    "sentiment": 3600,      # 情緒資料：1 小時（盤中變化較快）
-    "analyst": 21600,       # 分析師共識：6 小時（評級更新頻率低）
+    "sentiment": 7200,      # 情緒資料：2 小時（減少重複 API 呼叫）
+    "analyst": 86400,       # 分析師共識：24 小時（評級更新頻率極低）
     "technical": 3600,      # 技術訊號：1 小時（隨市場變動）
 }
 
@@ -173,7 +173,7 @@ def _generate_sentiment_report(ticker: str, curr_date: str) -> str:
 
     # --- News Sentiment ---
     try:
-        news_sentiment = fut_news.result(timeout=30)
+        news_sentiment = fut_news.result(timeout=15)
         if news_sentiment and news_sentiment.get('sentiment'):
             sent = news_sentiment['sentiment']
             buzz = news_sentiment.get('buzz', {})
@@ -232,7 +232,7 @@ def _generate_sentiment_report(ticker: str, curr_date: str) -> str:
 
     # --- Social Sentiment ---
     try:
-        social_data = fut_social.result(timeout=30)
+        social_data = fut_social.result(timeout=15)
         all_entries = []
         for platform in ['twitter']:
             entries = social_data.get(platform, []) if social_data else []
@@ -325,7 +325,7 @@ def _generate_analyst_report(ticker: str, curr_date: str) -> str:
     # 安全取得 future 結果的輔助函式
     def _get(key, default=None):
         try:
-            return futures[key].result(timeout=30)
+            return futures[key].result(timeout=15)
         except Exception as e:
             logger.warning(f"FinnHub {key} 取得失敗 ({ticker}): {e}")
             return default
@@ -516,7 +516,7 @@ def _generate_technical_report(ticker: str, resolution: str = 'D') -> str:
 
     # --- Aggregate Indicators ---
     try:
-        indicators = fut_indicators.result(timeout=30)
+        indicators = fut_indicators.result(timeout=15)
         if indicators and indicators.get('technicalAnalysis'):
             ta = indicators['technicalAnalysis']
             trend = indicators.get('trend', {})
@@ -563,7 +563,7 @@ def _generate_technical_report(ticker: str, resolution: str = 'D') -> str:
 
     # --- Support Resistance ---
     try:
-        sr = fut_sr.result(timeout=30)
+        sr = fut_sr.result(timeout=15)
         if sr and sr.get('levels') and len(sr['levels']) > 0:
             levels = sorted(sr['levels'])
             report_sections.append("## 支撐與壓力位\n")

@@ -208,7 +208,7 @@ _ANALYSIS_ID_RE = re.compile(r"^analysis_[A-Za-z0-9_-]{22}$")
 _MAX_ANALYSES = 100
 _SSE_TIMEOUT_SECONDS = 1800  # 30 分鐘
 _ANALYSIS_TIMEOUT_SECONDS = 1800  # 分析任務最大執行時間（30 分鐘），防止無限卡住
-_ANALYSIS_EXPIRE_SECONDS = 7200  # 2 小時後自動清理已完成的分析
+_ANALYSIS_EXPIRE_SECONDS = 1800  # 30 分鐘後自動清理已完成的分析（減少記憶體占用）
 _MIN_ANALYSIS_DATE = datetime(2000, 1, 1).date()  # 分析日期下限
 _active_analyses: OrderedDict = OrderedDict()
 _analyses_lock = threading.Lock()
@@ -513,8 +513,8 @@ async def stream_analysis(analysis_id: str, request: Request):
                     yield f"data: {json.dumps({'type': 'failed', 'error': error_snapshot or fallback_err}, ensure_ascii=False, default=str)}\n\n"
                     break
 
-                # SSE heartbeat：每 15 秒發送一次，防止 proxy 因閒置斷線
-                if time.time() - last_heartbeat > 15:
+                # SSE heartbeat：每 5 秒發送一次，防止 CloudFlare 等 proxy 因閒置斷線
+                if time.time() - last_heartbeat > 5:
                     yield ": heartbeat\n\n"
                     last_heartbeat = time.time()
 
@@ -535,6 +535,8 @@ async def stream_analysis(analysis_id: str, request: Request):
             exit_reason = f"error:{type(e).__name__}"
             logger.error(f"SSE ...{analysis_id[-4:]} 生成器異常: {e}")
         finally:
+            # 確保 SSE 斷線時清理事件引用，防止孤立 asyncio.Event 記憶體洩漏
+            _analysis_events.pop(analysis_id, None)
             elapsed = time.time() - start_time
             logger.debug(
                 f"SSE ...{analysis_id[-4:]} 結束 reason={exit_reason} "

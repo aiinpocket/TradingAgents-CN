@@ -195,9 +195,13 @@ function tradingApp() {
         }
       });
 
-      // 瀏覽器離線/上線事件監聽，即時更新連線狀態
-      window.addEventListener('offline', () => { this.apiReady = false; });
-      window.addEventListener('online', () => this.checkHealth());
+      // 瀏覽器離線/上線事件監聯，即時更新連線狀態（儲存引用以便卸載時清理）
+      this._offlineHandler = () => { this.apiReady = false; };
+      this._onlineHandler = () => this.checkHealth();
+      this._visibilityHandler = null;
+      window.addEventListener('offline', this._offlineHandler);
+      window.addEventListener('online', this._onlineHandler);
+      this._healthCheckActive = true;
 
       // 根據語言設定頁面標題
       document.title = this.t('meta.title');
@@ -230,8 +234,8 @@ function tradingApp() {
         this.loadTrending();
       }
 
-      // 頁面可見性變更：隱藏時暫停重新整理，恢復時立即更新
-      document.addEventListener('visibilitychange', () => {
+      // 頁面可見性變更：隱藏時暫停重新整理，恢復時立即更新（儲存引用以便卸載時清理）
+      this._visibilityHandler = () => {
         if (document.hidden) {
           if (this._trendingTimer) {
             clearTimeout(this._trendingTimer);
@@ -241,10 +245,19 @@ function tradingApp() {
         } else if (this.tab === 'trending') {
           this.loadTrending();
         }
-      });
+      };
+      document.addEventListener('visibilitychange', this._visibilityHandler);
 
-      // 頁面卸載時清理 EventSource 和計時器，並在分析進行中顯示警告
+      // 頁面卸載時清理所有事件監聽器、EventSource 和計時器
       window.addEventListener('beforeunload', (e) => {
+        // 停止健康檢查鏈式遞迴
+        this._healthCheckActive = false;
+        if (this._healthTimer) { clearTimeout(this._healthTimer); this._healthTimer = null; }
+        // 清理全域事件監聽器（防止記憶體洩漏）
+        window.removeEventListener('offline', this._offlineHandler);
+        window.removeEventListener('online', this._onlineHandler);
+        if (this._visibilityHandler) document.removeEventListener('visibilitychange', this._visibilityHandler);
+        // 清理 SSE 連線和計時器
         if (this.eventSource) {
           this.eventSource.close();
           this.eventSource = null;
@@ -296,6 +309,8 @@ function tradingApp() {
       } catch {
         this.apiReady = false;
       }
+      // 頁面卸載後停止鏈式遞迴，防止多條健康檢查鏈並行
+      if (!this._healthCheckActive) return;
       // 定期健康檢查：離線時 15 秒、上線時 60 秒
       if (this._healthTimer) { clearTimeout(this._healthTimer); this._healthTimer = null; }
       const interval = this.apiReady ? 60000 : 15000;
@@ -339,12 +354,14 @@ function tradingApp() {
       this.trendingLoading = true;
       this.trendingError = false;
 
-      // 取消前一次未完成的請求（避免競態條件）
+      // 取消前一次未完成的請求（避免競態條件）+ 30 秒超時保護
       if (this._trendingAbort) this._trendingAbort.abort();
       this._trendingAbort = new AbortController();
+      const trendingTimeout = setTimeout(() => this._trendingAbort.abort(), 30000);
 
       try {
         const res = await fetch('/api/trending/overview', { signal: this._trendingAbort.signal });
+        clearTimeout(trendingTimeout);
         if (res.ok) {
           this.trendingData = await res.json();
           this.trendingError = false;
@@ -354,6 +371,7 @@ function tradingApp() {
           this.trendingError = true;
         }
       } catch (e) {
+        clearTimeout(trendingTimeout);
         if (e.name === 'AbortError') return;
         console.error('Failed to load trending:', e);
         this.trendingError = true;

@@ -762,19 +762,19 @@ def get_fundamentals_finnhub(ticker, curr_date):
 
         # 收集結果，個別容錯
         try:
-            basic_financials = fut_financials.result(timeout=30)
+            basic_financials = fut_financials.result(timeout=15)
         except Exception as e:
             logger.error(f"Finnhub基本財務資料取得失敗: {str(e)}")
             basic_financials = None
 
         try:
-            company_profile = fut_profile.result(timeout=30)
+            company_profile = fut_profile.result(timeout=15)
         except Exception as e:
             logger.error(f"Finnhub公司概況取得失敗: {str(e)}")
             company_profile = None
 
         try:
-            earnings = fut_earnings.result(timeout=30)
+            earnings = fut_earnings.result(timeout=15)
         except Exception as e:
             logger.error(f"Finnhub收益資料取得失敗: {str(e)}")
             earnings = None
