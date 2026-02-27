@@ -756,7 +756,7 @@
         <div class="progress-footer">
           <span class="hint" x-text="t('analysis.time_hint')"></span>
           <span class="elapsed-timer" x-text="elapsedText"></span>
-          <button class="btn-ghost" @click="resetAnalysis()" x-text="t('analysis.cancel')"></button>
+          <button class="btn-ghost" @click="cancelAnalysis()" x-text="_cancelConfirm ? t('analysis.cancel_confirm') : t('analysis.cancel')"></button>
         </div>
       </section>
 

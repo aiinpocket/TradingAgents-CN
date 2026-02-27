@@ -2771,6 +2771,12 @@ input[aria-invalid="true"],
   border-color: rgba(248, 81, 73, 0.3);
 }
 
+/* 暗色模式骨架：加深背景色提高與面板的對比度 */
+[data-theme="dark"] .skeleton,
+[data-theme="dark"] .skeleton-line {
+  background: #32363e;
+}
+
 /* 暗色模式進度條：微弱發光增強可視性 */
 [data-theme="dark"] .progress-fill {
   box-shadow: 0 0 4px rgba(88, 166, 255, 0.35);
@@ -3158,6 +3164,12 @@ input[aria-invalid="true"],
     padding: 6px 8px;
     font-size: 12px;
   }
+
+  /* 進度日誌極小螢幕適配 */
+  .progress-footer { flex-wrap: wrap; gap: 4px; }
+  .elapsed-timer { font-size: 11px; }
+  .log-line { padding: 4px 8px; }
+  .log-text { word-break: break-word; }
 }
 
 @media (max-width: 320px) {

@@ -100,6 +100,7 @@ function tradingApp() {
     _watchlistSet: new Set(),   // watchlist 的 Set 快取（O(1) 查詢）
     _watchlistStocks: [],       // 追蹤清單股票行情預計算結果
     _clearConfirm: false,  // 清除追蹤清單的確認狀態
+    _cancelConfirm: false, // 取消分析的確認狀態
     _toastMsg: '',         // 輕量級 toast 訊息
     _reconnectTimer: null, // SSE 重連計時器
     _trendingAbort: null,  // 趨勢資料請求取消控制器
@@ -647,8 +648,8 @@ function tradingApp() {
         if (this.analysisRunning) {
           this.connectionRetries++;
           if (this.connectionRetries <= CONFIG.SSE_MAX_RETRIES) {
-            // 記錄重連事件到進度日誌
-            this.progressMessages.push(
+            // 以 toast 通知重連狀態（避免污染進度日誌）
+            this._showToast(
               this.t('analysis.reconnecting') + ' (' + this.connectionRetries + '/' + CONFIG.SSE_MAX_RETRIES + ')'
             );
             const delay = Math.min(CONFIG.SSE_BACKOFF_BASE_MS * Math.pow(2, this.connectionRetries - 1), CONFIG.SSE_BACKOFF_MAX_MS);
@@ -766,6 +767,20 @@ function tradingApp() {
       }
     },
 
+    // 取消分析：第一次點擊顯示確認提示，3 秒內再次點擊才真正取消
+    cancelAnalysis() {
+      if (!this.analysisRunning) return;
+      if (this._cancelConfirm) {
+        clearTimeout(this._cancelConfirmTimer);
+        this._cancelConfirm = false;
+        this.resetAnalysis();
+        return;
+      }
+      this._cancelConfirm = true;
+      this._showToast(this.t('analysis.cancel_confirm'));
+      this._cancelConfirmTimer = setTimeout(() => { this._cancelConfirm = false; }, 3000);
+    },
+
     resetAnalysis() {
       // 清除 Markdown 渲染快取
       this._mdCache.clear();
@@ -795,6 +810,7 @@ function tradingApp() {
       this.pollRetryCount = 0;
       this.stockContext = null;
       this.stockContextLoading = false;
+      this._cancelConfirm = false;
       this._stopElapsedTimer();
     },
 
@@ -952,13 +968,27 @@ function tradingApp() {
 
     _startElapsedTimer() {
       this._stopElapsedTimer();
+      this._timeoutWarned = {};  // 超時提醒標記（避免重複提醒）
       this.elapsedText = this.t('analysis.elapsed') + ' 00:00';
       this._elapsedTimer = setInterval(() => {
         if (!this.startTime) return;
         const sec = Math.floor((Date.now() - this.startTime) / 1000);
-        const m = String(Math.floor(sec / 60)).padStart(2, '0');
-        const s = String(sec % 60).padStart(2, '0');
-        this.elapsedText = `${this.t('analysis.elapsed')} ${m}:${s}`;
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = sec % 60;
+        // 超過 1 小時顯示 H:MM:SS 格式
+        const timeStr = h > 0
+          ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+          : `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        this.elapsedText = `${this.t('analysis.elapsed')} ${timeStr}`;
+        // 10 分鐘 / 20 分鐘超時提醒（各僅顯示一次）
+        if (sec >= 600 && !this._timeoutWarned[600]) {
+          this._timeoutWarned[600] = true;
+          this._showToast(this.t('analysis.timeout_10min'));
+        } else if (sec >= 1200 && !this._timeoutWarned[1200]) {
+          this._timeoutWarned[1200] = true;
+          this._showToast(this.t('analysis.timeout_20min'));
+        }
       }, 1000);
     },
 
