@@ -3,8 +3,6 @@
 使用統一工具自動識別股票類型並呼叫相應資料來源
 """
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-
 # 匯入分析模組日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
 

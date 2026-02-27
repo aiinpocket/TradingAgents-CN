@@ -1,4 +1,3 @@
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from datetime import datetime
 
 # 匯入統一日誌系統和分析模組日誌裝飾器
