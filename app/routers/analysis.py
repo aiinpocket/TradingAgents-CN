@@ -190,6 +190,7 @@ _MAX_ANALYSES = 100
 _SSE_TIMEOUT_SECONDS = 1800  # 30 分鐘
 _ANALYSIS_TIMEOUT_SECONDS = 1800  # 分析任務最大執行時間（30 分鐘），防止無限卡住
 _ANALYSIS_EXPIRE_SECONDS = 7200  # 2 小時後自動清理已完成的分析
+_MIN_ANALYSIS_DATE = datetime(2000, 1, 1).date()  # 分析日期下限
 _active_analyses: OrderedDict = OrderedDict()
 _analyses_lock = threading.Lock()
 
@@ -275,8 +276,7 @@ async def start_analysis(req: AnalysisRequest, request: Request):
         analysis_date_obj = datetime.strptime(req.analysis_date, "%Y-%m-%d")
     except ValueError:
         raise HTTPException(status_code=400, detail=_t("invalid_date_format", request))
-    _MIN_DATE = datetime(2000, 1, 1).date()
-    if analysis_date_obj.date() < _MIN_DATE:
+    if analysis_date_obj.date() < _MIN_ANALYSIS_DATE:
         raise HTTPException(status_code=400, detail=_t("date_too_old", request))
     if analysis_date_obj.date() > datetime.now().date():
         raise HTTPException(status_code=400, detail=_t("date_future", request))

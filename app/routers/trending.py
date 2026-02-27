@@ -31,6 +31,10 @@ router = APIRouter(tags=["trending"])
 _CACHE_TTL_SECONDS = 600  # 10 分鐘快取（市場資料）
 _AI_CACHE_TTL_SECONDS = 7200  # 2 小時快取（AI 分析）
 _BG_REFRESH_INTERVAL = 300  # 背景刷新間隔：5 分鐘
+_BG_REFRESH_TIMEOUT = 120  # 背景刷新超時：2 分鐘
+_BG_BACKOFF_EXPONENT_MAX = 10  # 指數退避上限（避免大整數運算）
+_BG_BACKOFF_SECONDS_MAX = 1800  # 退避最大間隔：30 分鐘
+_BG_JITTER_MAX = 30  # 隨機抖動上限：30 秒
 _MAX_CACHE_ENTRIES = 20  # 快取條目上限，防止記憶體膨脹
 _cache: dict = {}
 _cache_lock = threading.Lock()
@@ -1234,9 +1238,12 @@ async def start_background_refresh():
             await asyncio.sleep(10 + random.uniform(0, 5))
             first_run = False
         else:
-            # exponential backoff：連續失敗時逐步拉長間隔（上限 30 分鐘，指數限 10 避免大整數）
-            backoff = min(_BG_REFRESH_INTERVAL * (2 ** min(consecutive_failures, 10)), 1800)
-            jitter = random.uniform(0, 30)
+            # exponential backoff：連續失敗時逐步拉長間隔
+            backoff = min(
+                _BG_REFRESH_INTERVAL * (2 ** min(consecutive_failures, _BG_BACKOFF_EXPONENT_MAX)),
+                _BG_BACKOFF_SECONDS_MAX,
+            )
+            jitter = random.uniform(0, _BG_JITTER_MAX)
             await asyncio.sleep(backoff + jitter)
         try:
             # 標記快取過期但保留舊資料，避免穿透（使用者仍可讀取舊快取）
@@ -1244,8 +1251,8 @@ async def start_background_refresh():
                 entry = _cache.get("overview")
                 if entry:
                     _cache["overview"] = {"data": entry["data"], "ts": 0}
-            # 含 LLM 翻譯的市場資料取得，120 秒較寬鬆以涵蓋慢速 API
-            await asyncio.wait_for(get_market_overview(), timeout=120.0)
+            # 含 LLM 翻譯的市場資料取得
+            await asyncio.wait_for(get_market_overview(), timeout=_BG_REFRESH_TIMEOUT)
             logger.info("背景趨勢刷新完成")
             consecutive_failures = 0
 
@@ -1264,7 +1271,7 @@ async def start_background_refresh():
         except asyncio.TimeoutError:
             consecutive_failures += 1
             logger.warning(
-                f"背景趨勢刷新逾時 120 秒"
+                f"背景趨勢刷新逾時 {_BG_REFRESH_TIMEOUT}s"
                 f"（連續第 {consecutive_failures} 次，下次間隔 {backoff:.0f}s）"
             )
         except Exception as e:

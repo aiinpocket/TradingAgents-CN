@@ -129,16 +129,21 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    # 優雅關閉背景任務：先取消再等待實際終止
+    # 優雅關閉背景任務：先取消再等待實際終止（設超時避免阻塞關閉流程）
     prewarm_task.cancel()
     refresh_task.cancel()
     try:
-        await asyncio.gather(prewarm_task, refresh_task, return_exceptions=True)
+        await asyncio.wait_for(
+            asyncio.gather(prewarm_task, refresh_task, return_exceptions=True),
+            timeout=10.0,
+        )
+    except asyncio.TimeoutError:
+        logger.warning("背景任務清理超時（10s），強制繼續關閉")
     except Exception as e:
         logger.warning(f"背景任務清理異常: {e}")
-    # 關閉所有執行緒池，避免資源洩漏
+    # 關閉所有執行緒池，避免資源洩漏（wait=False 避免阻塞關閉）
     from app.routers.trending import _TRENDING_EXECUTOR
-    _TRENDING_EXECUTOR.shutdown(wait=True, cancel_futures=True)
+    _TRENDING_EXECUTOR.shutdown(wait=False, cancel_futures=True)
     try:
         from app.routers.analysis import _ANALYSIS_EXECUTOR, _CONTEXT_EXECUTOR
         _ANALYSIS_EXECUTOR.shutdown(wait=False, cancel_futures=True)
