@@ -152,6 +152,13 @@ function tradingApp() {
           const today = new Date().toISOString().split('T')[0];
           if (this.form.date > today) this.form.date = today;
         }
+        // 離開 trending tab 時暫停自動刷新計時器，節省資源；回來時重新排程
+        if (val !== 'trending' && this._trendingTimer) {
+          clearTimeout(this._trendingTimer);
+          this._trendingTimer = null;
+        } else if (val === 'trending' && !this._trendingTimer && this._trendingLoaded) {
+          this._trendingTimer = setTimeout(() => this.loadTrending(), CONFIG.TRENDING_REFRESH_MS);
+        }
       });
 
       // 瀏覽器離線/上線事件監聽，即時更新連線狀態
