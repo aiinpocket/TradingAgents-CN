@@ -51,6 +51,23 @@ _company_names: dict[str, str] = {}
 _company_names_lock = threading.Lock()
 
 
+def _calc_price_change(hist) -> tuple[float, float, float]:
+    """從 yfinance 歷史資料計算股價漲跌（去重 3 處相同邏輯）
+
+    Returns:
+        (current_price, change, change_pct) 三元組
+    """
+    current_price = float(hist["Close"].iloc[-1])
+    if len(hist) >= 2:
+        prev_price = float(hist["Close"].iloc[-2])
+        change = current_price - prev_price
+        change_pct = (change / prev_price) * 100 if prev_price else 0
+    else:
+        change = 0.0
+        change_pct = 0.0
+    return current_price, change, change_pct
+
+
 def _load_company_names():
     """從 JSON 檔案載入已知的公司名稱快取（啟動時呼叫）"""
     global _company_names
@@ -290,14 +307,7 @@ def _fetch_indices_and_sectors() -> tuple[list[dict], list[dict]]:
                 if hist.empty or len(hist) < 1:
                     continue
 
-                current_price = float(hist["Close"].iloc[-1])
-                if len(hist) >= 2:
-                    prev_price = float(hist["Close"].iloc[-2])
-                    change = current_price - prev_price
-                    change_pct = (change / prev_price) * 100 if prev_price else 0
-                else:
-                    change = 0
-                    change_pct = 0
+                current_price, change, change_pct = _calc_price_change(hist)
 
                 indices_results.append({
                     "symbol": sym,
@@ -322,10 +332,7 @@ def _fetch_indices_and_sectors() -> tuple[list[dict], list[dict]]:
                 if hist.empty or len(hist) < 2:
                     continue
 
-                current_price = float(hist["Close"].iloc[-1])
-                prev_price = float(hist["Close"].iloc[-2])
-                change = current_price - prev_price
-                change_pct = (change / prev_price) * 100 if prev_price else 0
+                current_price, change, change_pct = _calc_price_change(hist)
 
                 sectors_results.append({
                     "symbol": sym,
@@ -374,10 +381,7 @@ def _fetch_movers_batch(batch: list[str]) -> list[dict]:
                 if hist.empty or len(hist) < 2:
                     continue
 
-                current_price = float(hist["Close"].iloc[-1])
-                prev_price = float(hist["Close"].iloc[-2])
-                change = current_price - prev_price
-                change_pct = (change / prev_price) * 100 if prev_price else 0
+                current_price, change, change_pct = _calc_price_change(hist)
 
                 # 從快取取得公司名稱（避免昂貴的 ticker.info 呼叫）
                 with _company_names_lock:
