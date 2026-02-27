@@ -613,8 +613,9 @@ async def get_market_overview():
     # 批次翻譯新聞標題（背景執行，不阻塞回應）
     if news:
         try:
+            _loop = asyncio.get_running_loop()
             news = await asyncio.wait_for(
-                loop.run_in_executor(_TRENDING_EXECUTOR, _translate_news_titles, news),
+                _loop.run_in_executor(_TRENDING_EXECUTOR, _translate_news_titles, news),
                 timeout=30.0,
             )
         except Exception as exc:
