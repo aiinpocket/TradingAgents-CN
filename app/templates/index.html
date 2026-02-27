@@ -40,7 +40,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="TradingAgents">
-  <link rel="apple-touch-icon" href="/static/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <!-- 預連線與預載入（優先於第三方腳本以獲得最大效益） -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
@@ -152,7 +152,7 @@
       <!-- 市場脈動摘要（骨架佔位防止 CLS） -->
       <section class="market-pulse">
         <!-- 載入中骨架 -->
-        <div x-show="trendingLoading && !(trendingData.indices && trendingData.indices.length > 0)" role="status" :aria-label="t('a11y.loading')">
+        <template x-if="trendingLoading && !(trendingData.indices && trendingData.indices.length > 0)"><div role="status" :aria-label="t('a11y.loading')">
           <div class="pulse-header">
             <div class="skeleton skeleton-line-medium" style="width:140px;height:20px"></div>
             <div class="skeleton skeleton-line-short" style="width:80px;height:24px;border-radius:12px"></div>
@@ -163,7 +163,7 @@
             <div class="skeleton pulse-item" style="height:28px"></div>
             <div class="skeleton pulse-item" style="height:28px"></div>
           </div>
-        </div>
+        </div></template>
         <!-- 實際內容 -->
         <div x-show="trendingData.indices && trendingData.indices.length > 0" x-cloak>
           <div class="pulse-header">
@@ -235,12 +235,12 @@
             </div>
           </template>
         </div>
-        <div class="indices-grid" x-show="trendingLoading" role="status" :aria-label="t('a11y.loading')">
+        <template x-if="trendingLoading"><div class="indices-grid" role="status" :aria-label="t('a11y.loading')">
           <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="index-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-medium"></div><div class="skeleton skeleton-line-short"></div></div>
-        </div>
+        </div></template>
       </section>
 
       <!-- 追蹤清單 -->
@@ -324,7 +324,7 @@
               </div>
             </template>
           </div>
-          <div class="movers-list" x-show="trendingLoading">
+          <template x-if="trendingLoading"><div class="movers-list">
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
@@ -333,7 +333,7 @@
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
-          </div>
+          </div></template>
           <div class="empty-state" x-cloak x-show="!trendingLoading && (!trendingData.movers?.gainers || trendingData.movers.gainers.length === 0)">
             <p x-text="t('trending.no_data')"></p>
           </div>
@@ -377,7 +377,7 @@
               </div>
             </template>
           </div>
-          <div class="movers-list" x-show="trendingLoading">
+          <template x-if="trendingLoading"><div class="movers-list">
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
@@ -386,7 +386,7 @@
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
             <div class="mover-row skeleton-row"><div class="skeleton skeleton-line-medium"></div></div>
-          </div>
+          </div></template>
           <div class="empty-state" x-cloak x-show="!trendingLoading && (!trendingData.movers?.losers || trendingData.movers.losers.length === 0)">
             <p x-text="t('trending.no_data')"></p>
           </div>
@@ -417,12 +417,12 @@
             </div>
           </template>
         </div>
-        <div class="news-grid" x-show="trendingLoading">
+        <template x-if="trendingLoading"><div class="news-grid">
           <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
           <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
           <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
           <div class="news-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line-medium"></div></div>
-        </div>
+        </div></template>
         <div class="empty-state" x-cloak x-show="!trendingLoading && (!trendingData.news || trendingData.news.length === 0)">
           <p x-text="t('trending.no_data')"></p>
         </div>
@@ -453,14 +453,14 @@
             </div>
           </template>
         </div>
-        <div class="sectors-grid" x-show="trendingLoading">
+        <template x-if="trendingLoading"><div class="sectors-grid">
           <div class="sector-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-tiny"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="sector-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-tiny"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="sector-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-tiny"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="sector-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-tiny"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="sector-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-tiny"></div><div class="skeleton skeleton-line-short"></div></div>
           <div class="sector-card skeleton-card"><div class="skeleton skeleton-line-short"></div><div class="skeleton skeleton-line-tiny"></div><div class="skeleton skeleton-line-short"></div></div>
-        </div>
+        </div></template>
       </section>
 
       <!-- AI 趨勢分析 -->
