@@ -24,8 +24,8 @@ def is_rate_limited(response):
 
 @retry(
     retry=(retry_if_result(is_rate_limited) | retry_if_exception_type(requests.exceptions.ConnectionError) | retry_if_exception_type(requests.exceptions.Timeout)),
-    wait=wait_exponential(multiplier=1, min=4, max=60),
-    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=4, max=30),
+    stop=stop_after_attempt(3),
 )
 def make_request(url, headers):
     """Make a request with retry logic for rate limiting and connection issues"""
@@ -109,21 +109,11 @@ def getNewsData(query, start_date, end_date):
             page += 1
 
         except requests.exceptions.Timeout as e:
-            logger.error(f"連接超時: {e}")
-            # 不立即中斷，記錄錯誤後繼續嘗試下一頁
-            page += 1
-            if page > 3:  # 如果連續多頁都超時，則退出迴圈
-                logger.error("多次連接超時，停止取得Google新聞")
-                break
-            continue
+            logger.error(f"連接超時，停止取得 Google 新聞: {e}")
+            break
         except requests.exceptions.ConnectionError as e:
-            logger.error(f"連接錯誤: {e}")
-            # 不立即中斷，記錄錯誤後繼續嘗試下一頁
-            page += 1
-            if page > 3:  # 如果連續多頁都連接錯誤，則退出迴圈
-                logger.error("多次連接錯誤，停止取得Google新聞")
-                break
-            continue
+            logger.error(f"連接錯誤，停止取得 Google 新聞: {e}")
+            break
         except Exception as e:
             logger.error(f"取得Google新聞失敗: {e}")
             break
