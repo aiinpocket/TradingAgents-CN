@@ -227,12 +227,13 @@ function tradingApp() {
         }
       });
 
-      // 頁面卸載時清理 EventSource，並在分析進行中顯示警告
+      // 頁面卸載時清理 EventSource 和計時器，並在分析進行中顯示警告
       window.addEventListener('beforeunload', (e) => {
         if (this.eventSource) {
           this.eventSource.close();
           this.eventSource = null;
         }
+        this._stopRefreshCountdown();
         if (this.analysisRunning) {
           e.preventDefault();
           e.returnValue = '';
