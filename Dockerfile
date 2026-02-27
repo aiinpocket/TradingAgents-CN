@@ -3,13 +3,10 @@ FROM python:3.10-slim-bookworm AS builder
 
 WORKDIR /build
 
-# 使用 Debian 官方源（全球 CDN）
+# 使用 Debian 官方源（全球 CDN，移除不需要的 deb-src 以加速 apt-get update）
 RUN echo 'deb http://deb.debian.org/debian/ bookworm main' > /etc/apt/sources.list && \
-    echo 'deb-src http://deb.debian.org/debian/ bookworm main' >> /etc/apt/sources.list && \
     echo 'deb http://deb.debian.org/debian/ bookworm-updates main' >> /etc/apt/sources.list && \
-    echo 'deb-src http://deb.debian.org/debian/ bookworm-updates main' >> /etc/apt/sources.list && \
-    echo 'deb http://deb.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list && \
-    echo 'deb-src http://deb.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list
+    echo 'deb http://deb.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list
 
 # 安裝編譯工具（僅在此階段使用，不帶入最終映像）
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -32,13 +29,10 @@ RUN mkdir -p /app/data /app/logs
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-# 使用 Debian 官方源
+# 使用 Debian 官方源（同 builder 階段，無 deb-src）
 RUN echo 'deb http://deb.debian.org/debian/ bookworm main' > /etc/apt/sources.list && \
-    echo 'deb-src http://deb.debian.org/debian/ bookworm main' >> /etc/apt/sources.list && \
     echo 'deb http://deb.debian.org/debian/ bookworm-updates main' >> /etc/apt/sources.list && \
-    echo 'deb-src http://deb.debian.org/debian/ bookworm-updates main' >> /etc/apt/sources.list && \
-    echo 'deb http://deb.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list && \
-    echo 'deb-src http://deb.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list
+    echo 'deb http://deb.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list
 
 # 運行時依賴（不含 build-essential，節省 ~400MB）
 RUN apt-get update && apt-get install -y --no-install-recommends \
