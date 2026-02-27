@@ -58,6 +58,11 @@ const I18N_MESSAGES = {
     'depth.time.3': '約 3-5 分鐘',
     'depth.time.4': '約 3-6 分鐘',
     'depth.time.5': '約 5-10 分鐘',
+    'depth.hint.1': '全部使用輕量模型',
+    'depth.hint.2': '自動配對快速模型',
+    'depth.hint.3': '智慧模型配對',
+    'depth.hint.4': '全部使用選定模型',
+    'depth.hint.5': '全部使用選定模型 + 多輪辯論',
 
     // 分析流程
     'workflow.title': '多代理協作分析流程',
@@ -252,6 +257,11 @@ const I18N_MESSAGES = {
     'depth.time.3': '~3-5 min',
     'depth.time.4': '~3-6 min',
     'depth.time.5': '~5-10 min',
+    'depth.hint.1': 'All lightweight models',
+    'depth.hint.2': 'Auto-paired fast models',
+    'depth.hint.3': 'Smart model pairing',
+    'depth.hint.4': 'All use selected model',
+    'depth.hint.5': 'Selected model + multi-round debate',
 
     // Workflow
     'workflow.title': 'Multi-Agent Analysis Pipeline',

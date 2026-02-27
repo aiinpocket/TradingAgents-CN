@@ -55,7 +55,12 @@
 - **fetchpriority**: CSS stylesheet=high、GA scripts=low（瀏覽器資源優先級提示）
 - **touch-action: manipulation**: 消除行動裝置 300ms 點擊延遲
 - **content-visibility: auto**: 首屏以下區域延遲繪製，提升捲動效能
-- **分析管線效能計時器**: propagate() 自動記錄 prefetch/graph/total 各階段耗時
+- **分析管線效能計時器**: propagate() 自動記錄 prefetch/graph/total 各階段耗時，含節點級別完成時間戳
+- **智慧模型配對**: 根據研究深度自動配對輕量快速模型（depth 1-3 分析師用 gpt-4o-mini/haiku，僅管理員用重型模型），o4-mini 不再拖慢全部 12 次 LLM 呼叫
+- **工具快取命中率 100%**: prefetch 預載入 7 個 API -> 分析師 8 次呼叫全部命中，快取命中率日誌自動記錄
+- **統一日期計算**: calc_start_date() 共用函式消除 3 處重複邏輯
+- **MongoDB 深度防禦**: 查詢參數型別檢查防 NoSQL 操作符注入
+- **原子性快取寫入**: 公司名稱快取使用 tempfile + os.replace 防止中斷損毀
 
 #### 資料更新頻率
 
