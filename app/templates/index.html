@@ -555,7 +555,7 @@
               <label for="symbol" x-text="t('analysis.symbol')"></label>
               <div class="symbol-input-wrap">
                 <span class="symbol-prefix">$</span>
-                <input id="symbol" type="text" x-model="form.symbol" placeholder="AAPL"
+                <input id="symbol" type="text" x-model="form.symbol" :placeholder="t('analysis.symbol_placeholder')"
                        maxlength="5" required autocomplete="off" spellcheck="false"
                        autocapitalize="characters"
                        aria-required="true"

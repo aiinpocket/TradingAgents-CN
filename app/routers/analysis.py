@@ -213,6 +213,10 @@ _MIN_ANALYSIS_DATE = datetime(2000, 1, 1).date()  # 分析日期下限
 _active_analyses: OrderedDict = OrderedDict()
 _analyses_lock = threading.Lock()
 
+# 每個分析任務的事件驅動 SSE 通知（取代固定輪詢）
+# 結構：{analysis_id: (asyncio.Event, asyncio.AbstractEventLoop)}
+_analysis_events: dict[str, tuple[asyncio.Event, asyncio.AbstractEventLoop]] = {}
+
 # 背景翻譯任務追蹤集合（防止 GC 回收 asyncio.Task 導致任務被取消）
 _background_tasks: set = set()
 
@@ -270,6 +274,7 @@ def _cleanup_old_analyses():
         ]
         for aid in expired:
             _active_analyses.pop(aid, None)
+            _analysis_events.pop(aid, None)
 
         # 再檢查數量上限
         while len(_active_analyses) >= _MAX_ANALYSES:
@@ -278,11 +283,13 @@ def _cleanup_old_analyses():
             for aid in list(_active_analyses.keys()):
                 if _active_analyses[aid]["status"] in ("completed", "failed"):
                     _active_analyses.pop(aid, None)
+                    _analysis_events.pop(aid, None)
                     removed = True
                     break
             if not removed:
                 # 如果沒有已完成的任務，移除最舊的
-                _active_analyses.popitem(last=False)
+                oldest_aid, _ = _active_analyses.popitem(last=False)
+                _analysis_events.pop(oldest_aid, None)
 
 
 @router.post("/analysis/start")
@@ -367,6 +374,10 @@ async def start_analysis(req: AnalysisRequest, request: Request):
             "created_at": time.time(),
             "lang": lang,
         }
+
+    # 建立事件驅動 SSE 通知用的 asyncio.Event（搭配 loop 引用供跨執行緒觸發）
+    evt = asyncio.Event()
+    _analysis_events[analysis_id] = (evt, asyncio.get_running_loop())
 
     # 在背景執行分析
     task = asyncio.create_task(_run_analysis(analysis_id))
@@ -507,9 +518,15 @@ async def stream_analysis(analysis_id: str, request: Request):
                     yield ": heartbeat\n\n"
                     last_heartbeat = time.time()
 
-                # 自適應輪詢間隔：有新進度時快速檢查，閒置時放寬間隔節省 CPU
-                if current_len > last_idx_before:
-                    await asyncio.sleep(0.05)
+                # 事件驅動等待：背景執行緒更新進度時立即觸發，最長等 2 秒（heartbeat 保底）
+                pair = _analysis_events.get(analysis_id)
+                if pair is not None:
+                    evt = pair[0]
+                    evt.clear()
+                    try:
+                        await asyncio.wait_for(evt.wait(), timeout=2.0)
+                    except asyncio.TimeoutError:
+                        pass
                 else:
                     await asyncio.sleep(0.3)
         except asyncio.CancelledError:
@@ -581,13 +598,30 @@ async def get_analysis_history():
     return {"analyses": history[-20:]}
 
 
+def _notify_sse(analysis_id: str):
+    """通知 SSE 生成器有新進度（執行緒安全，跨 thread/async 邊界）"""
+    pair = _analysis_events.get(analysis_id)
+    if pair is None:
+        return
+    evt, loop = pair
+    try:
+        if loop.is_running():
+            loop.call_soon_threadsafe(evt.set)
+        else:
+            evt.set()
+    except Exception:
+        # event loop 已關閉或其他異常，靜默忽略
+        pass
+
+
 def _update_analysis_state(analysis_id: str, **updates):
-    """執行緒安全地更新分析狀態"""
+    """執行緒安全地更新分析狀態，並通知 SSE 生成器"""
     with _analyses_lock:
         data = _active_analyses.get(analysis_id)
         if data:
             for key, value in updates.items():
                 data[key] = value
+    _notify_sse(analysis_id)
     return data
 
 
@@ -784,6 +818,8 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
             message = message[:1000] + "..."
         # deque(maxlen=100) 自動丟棄最舊訊息
         data["progress"].append(message)
+        # 通知 SSE 生成器有新進度（事件驅動，取代固定間隔輪詢）
+        _notify_sse(analysis_id)
 
     from web.utils.analysis_runner import run_stock_analysis
 

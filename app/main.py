@@ -82,6 +82,8 @@ def _mw_t(key: str, request: Request) -> str:
 # ---------------------------------------------------------------------------
 _CSP_DIRECTIVES: dict[str, str] = {
     "default-src": "'self'",
+    # unsafe-eval 為 Alpine.js v3 核心所需（內部使用 new Function()），
+    # 如需移除須改用 @alpinejs/csp 版本並重構所有內聯 x-data 表達式
     "script-src": "'self' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com",
     "style-src": "'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src": "'self' https://fonts.gstatic.com",
