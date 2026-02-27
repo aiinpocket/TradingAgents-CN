@@ -40,8 +40,8 @@ def _get_report_mgr():
     try:
         from web.utils.mongodb_report_manager import MongoDBReportManager
         _report_mgr_instance = MongoDBReportManager()
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"MongoDBReportManager 初始化失敗（非致命）: {e}")
     return _report_mgr_instance
 
 
@@ -393,8 +393,8 @@ async def get_analysis_status(analysis_id: str, request: Request):
                     result=doc["formatted_result"],
                     error=None,
                 )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"MongoDB 查詢分析任務失敗 ({analysis_id}): {e}")
         raise HTTPException(status_code=404, detail=_t("task_not_found", request))
 
     return AnalysisStatus(

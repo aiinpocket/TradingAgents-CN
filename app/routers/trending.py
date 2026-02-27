@@ -105,11 +105,11 @@ def _save_company_names():
                 json.dump(snapshot, f, ensure_ascii=False, indent=2)
             os.replace(tmp_path, _COMPANY_NAMES_FILE)
         except Exception:
-            # 清理暫存檔
+            # 清理暫存檔（寫入失敗時移除殘留的暫存檔）
             try:
                 os.unlink(tmp_path)
-            except OSError:
-                pass
+            except OSError as cleanup_err:
+                logger.debug(f"清理暫存檔失敗: {cleanup_err}")
             raise
     except Exception as e:
         logger.debug(f"儲存公司名稱快取失敗（非致命）: {e}")
