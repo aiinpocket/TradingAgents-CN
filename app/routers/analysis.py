@@ -211,6 +211,9 @@ _MIN_ANALYSIS_DATE = datetime(2000, 1, 1).date()  # 分析日期下限
 _active_analyses: OrderedDict = OrderedDict()
 _analyses_lock = threading.Lock()
 
+# 背景翻譯任務追蹤集合（防止 GC 回收 asyncio.Task 導致任務被取消）
+_background_tasks: set = set()
+
 
 def _validate_analysis_id(analysis_id: str) -> bool:
     """驗證 analysis_id 格式（analysis_ + 22 位 URL-safe base64）"""
@@ -700,14 +703,23 @@ async def _run_analysis(analysis_id: str):
             data["progress"].append(_t_lang("analysis_complete", lang))
             _update_analysis_state(analysis_id, status="completed", result=formatted)
 
-            # 背景異步翻譯英文版（不阻塞 SSE 回應，異常由 callback 記錄）
+            # 背景異步翻譯英文版（不阻塞 SSE 回應）
+            # 加入 _background_tasks 集合防止 GC 回收 Task 物件
             _bg_task = asyncio.ensure_future(_background_translate(
                 analysis_id, formatted, data["stock_symbol"],
                 data.get("analysis_date", ""), result
             ))
-            _bg_task.add_done_callback(
-                lambda t: t.exception() and logger.warning(f"背景翻譯任務異常: {t.exception()}")
-            )
+            _background_tasks.add(_bg_task)
+
+            def _on_translate_done(t):
+                """翻譯完成回呼：從追蹤集合移除，記錄例外"""
+                _background_tasks.discard(t)
+                if t.cancelled():
+                    logger.debug(f"背景翻譯任務被取消: ...{analysis_id[-4:]}")
+                elif t.exception():
+                    logger.warning(f"背景翻譯任務異常: {t.exception()}")
+
+            _bg_task.add_done_callback(_on_translate_done)
 
         else:
             raw_error = result.get("error", "")

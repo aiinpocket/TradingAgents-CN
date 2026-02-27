@@ -3,7 +3,9 @@ from typing import Annotated
 from langchain_core.tools import tool
 from datetime import datetime
 import json
+import os
 import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import tradingagents.dataflows.interface as interface
 from tradingagents.dataflows.finnhub_extra import (
     get_finnhub_sentiment_report,
@@ -18,6 +20,14 @@ from tradingagents.utils.tool_logging import log_tool_call
 # 匯入日誌模組
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('agents')
+
+# 全域工具執行緒池（共享給所有分析師的工具呼叫，避免每次建立新池的開銷）
+# CPU 核心數 * 2 上限為 12，因為工具呼叫主要是 I/O 密集（API / DB）
+_TOOL_EXECUTOR_WORKERS = max(4, min(12, (os.cpu_count() or 4) * 2))
+_GLOBAL_TOOL_EXECUTOR = ThreadPoolExecutor(
+    max_workers=_TOOL_EXECUTOR_WORKERS,
+    thread_name_prefix="tool",
+)
 
 # 分析層級工具結果快取（跨分析師共享，每次分析重置）
 # 當多個分析師並行呼叫相同工具+參數時（如 get_finnhub_sentiment_data），
@@ -121,8 +131,6 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
     Returns:
         list[str]: 每個工具的回傳結果（字串列表，與 tools 同序）
     """
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
     global _tool_cache_hits, _tool_cache_misses
     _log = logger_instance or logger
 
@@ -165,20 +173,25 @@ def invoke_tools_direct(tools, tool_args_list, logger_instance=None):
     if len(tools) <= 1:
         return [_invoke_one(t, a) for t, a in zip(tools, tool_args_list)]
 
-    _log.info(f"直接並行呼叫 {len(tools)} 個工具")
+    _log.info(f"直接並行呼叫 {len(tools)} 個工具（全域池 {_TOOL_EXECUTOR_WORKERS} workers）")
     results = [None] * len(tools)
-    with ThreadPoolExecutor(max_workers=len(tools)) as executor:
-        future_to_idx = {
-            executor.submit(_invoke_one, t, a): i
-            for i, (t, a) in enumerate(zip(tools, tool_args_list))
-        }
-        # 30 秒超時保護：避免單一工具卡住阻塞整個流程
-        try:
-            for future in as_completed(future_to_idx, timeout=30):
-                idx = future_to_idx[future]
-                results[idx] = future.result()
-        except TimeoutError:
-            _log.warning("部分工具呼叫超過 30 秒超時，跳過未完成的工具")
+    # 使用全域共享執行緒池，避免每次呼叫建立/銷毀池的開銷
+    future_to_idx = {
+        _GLOBAL_TOOL_EXECUTOR.submit(_invoke_one, t, a): i
+        for i, (t, a) in enumerate(zip(tools, tool_args_list))
+    }
+    # 30 秒超時保護：避免單一工具卡住阻塞整個流程
+    try:
+        for future in as_completed(future_to_idx, timeout=30):
+            idx = future_to_idx[future]
+            try:
+                results[idx] = future.result(timeout=5)
+            except Exception as e:
+                name = getattr(tools[idx], 'name', '?')
+                _log.error(f"工具 {name} 執行失敗: {e}")
+                results[idx] = f"工具 {name} 執行失敗: {str(e)}"
+    except TimeoutError:
+        _log.warning("部分工具呼叫超過 30 秒超時，跳過未完成的工具")
 
     # 快取命中率摘要（幫助監控 prefetch 效能）
     with _tool_cache_lock:
