@@ -367,8 +367,8 @@ body {
   padding: 6px 8px;
   margin-left: auto;
   opacity: 0.6;
-  min-width: 32px;
-  min-height: 32px;
+  min-width: 44px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1828,7 +1828,7 @@ input[aria-invalid="true"],
   font-family: var(--font);
   transition: background-color 0.12s, color 0.12s, border-color 0.12s;
   line-height: 1.4;
-  min-height: 32px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2800,8 +2800,8 @@ input[aria-invalid="true"],
   align-items: center;
   justify-content: center;
   margin-left: 4px;
-  min-width: 36px;
-  min-height: 36px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .theme-toggle:hover {

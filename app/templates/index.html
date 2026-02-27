@@ -560,6 +560,7 @@
                        autocapitalize="characters"
                        aria-required="true"
                        :aria-invalid="formError ? 'true' : undefined"
+                       :aria-describedby="formError ? 'form-error-msg' : undefined"
                        aria-errormessage="form-error-msg"
                        @input="form.symbol = $event.target.value.toUpperCase().replace(/[^A-Z]/g, '')">
               </div>
