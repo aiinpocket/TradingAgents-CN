@@ -44,9 +44,10 @@ def create_trader(llm, memory):
             past_memories = []
             past_memory_str = "暫無歷史記憶資料可參考。"
 
+        # 交易員接收 Research Manager 的投資計劃，作為交易決策的基礎
         context = {
             "role": "user",
-            "content": f"Based on a comprehensive analysis by a team of analysts, here is an investment plan tailored for {company_name}. This plan incorporates insights from current technical market trends, macroeconomic indicators, and social media sentiment. Use this plan as a foundation for evaluating your next trading decision.\n\nProposed Investment Plan: {investment_plan}\n\nLeverage these insights to make an informed and strategic decision.",
+            "content": f"以下是分析團隊針對 {company_name} 的綜合投資計劃，整合了技術面趨勢、宏觀經濟指標及社群情緒分析。請以此為基礎做出交易決策。\n\n投資計劃：{investment_plan}",
         }
 
         messages = [
