@@ -10,19 +10,18 @@ def create_risk_manager(llm, memory):
 
         company_name = state["company_of_interest"]
 
-        history = state["risk_debate_state"]["history"]
         risk_debate_state = state["risk_debate_state"]
-        market_research_report = state["market_report"]
-        news_report = state["news_report"]
-        fundamentals_report = state["fundamentals_report"]
-        sentiment_report = state["sentiment_report"]
-        trader_plan = state["investment_plan"]
+        # 截斷辯論歷史以降低 deep_think 輸入 token（超過 4000 字元時截斷）
+        from tradingagents.agents.utils.agent_utils import truncate_report
+        history = truncate_report(risk_debate_state.get("history", ""), max_chars=4000)
+        trader_plan = truncate_report(state.get("investment_plan", ""), max_chars=3000)
 
-        curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
+        # 使用標準化情境描述（與其他節點共用格式，嵌入快取命中率 100%）
+        from tradingagents.agents.utils.agent_utils import get_situation_for_memory, get_cached_embedding
+        curr_situation = get_situation_for_memory(state)
 
         # 安全檢查：確保memory不為None
         if memory is not None:
-            from tradingagents.agents.utils.agent_utils import get_cached_embedding
             cached_emb = get_cached_embedding(curr_situation, memory)
             past_memories = memory.get_memories(curr_situation, n_matches=2, cached_embedding=cached_emb)
         else:

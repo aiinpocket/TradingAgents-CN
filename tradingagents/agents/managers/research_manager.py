@@ -6,7 +6,9 @@ logger = get_logger("default")
 
 def create_research_manager(llm, memory):
     def research_manager_node(state) -> dict:
-        history = state["investment_debate_state"].get("history", "")
+        # 截斷辯論歷史以降低 deep_think 輸入 token
+        from tradingagents.agents.utils.agent_utils import truncate_report as _trunc
+        history = _trunc(state["investment_debate_state"].get("history", ""), max_chars=4000)
         market_research_report = state["market_report"]
         sentiment_report = state["sentiment_report"]
         news_report = state["news_report"]
@@ -14,12 +16,12 @@ def create_research_manager(llm, memory):
 
         investment_debate_state = state["investment_debate_state"]
 
-        # 記憶嵌入使用完整報告（嵌入向量已快取，不影響效能）
-        curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
+        # 使用標準化情境描述（與其他節點共用格式，嵌入快取命中率 100%）
+        from tradingagents.agents.utils.agent_utils import truncate_report, get_situation_for_memory
+        curr_situation = get_situation_for_memory(state)
 
         # 截斷報告以減少 deep_think 模型輸入 token（加速 20-30%）
         # 辯論歷史已包含研究員引用的關鍵資訊，LLM prompt 不需完整報告
-        from tradingagents.agents.utils.agent_utils import truncate_report
         market_summary = truncate_report(market_research_report, max_chars=1500)
         sentiment_summary = truncate_report(sentiment_report, max_chars=1200)
         news_summary = truncate_report(news_report, max_chars=1200)

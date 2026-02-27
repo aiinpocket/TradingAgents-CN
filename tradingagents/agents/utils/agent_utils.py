@@ -72,6 +72,31 @@ def calc_start_date(trade_date: str, days_back: int = 90) -> str:
         return (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
 
 
+def get_situation_for_memory(state: dict, max_chars: int = 1500) -> str:
+    """產生標準化的 current_situation 字串供記憶嵌入使用。
+
+    所有節點使用相同格式和截斷長度，確保嵌入快取最大命中率。
+    第一個節點計算嵌入後，後續節點全部命中快取，
+    將 3-4 次嵌入 API 呼叫減少為 1 次。
+
+    Args:
+        state: LangGraph 狀態字典
+        max_chars: 每份報告保留的最大字元數
+
+    Returns:
+        str: 標準化的情境描述文字
+    """
+    return (
+        truncate_report(state.get("market_report", ""), max_chars)
+        + "\n\n"
+        + truncate_report(state.get("sentiment_report", ""), max_chars)
+        + "\n\n"
+        + truncate_report(state.get("news_report", ""), max_chars)
+        + "\n\n"
+        + truncate_report(state.get("fundamentals_report", ""), max_chars)
+    )
+
+
 def get_cached_embedding(situation_text: str, memory_instance) -> list[float]:
     """取得 current_situation 的嵌入向量（快取避免重複 API 呼叫）"""
     cache_key = hash(situation_text)

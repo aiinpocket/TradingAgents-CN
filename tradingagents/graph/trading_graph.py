@@ -64,13 +64,21 @@ class TradingAgentsGraph:
         provider = self.config["llm_provider"].lower()
         backend_url = self.config.get("backend_url", "")
 
+        # 從設定取得 max_tokens 上限（限制 LLM 回應長度，加速生成）
+        quick_max = self.config.get("quick_think_max_tokens", 3000)
+        deep_max = self.config.get("deep_think_max_tokens", 4096)
+
         if provider == "openai":
             # OpenAI 支援自訂 base_url（用於相容 API 代理等場景）
             # 強制使用 Chat Completions API，避免 Responses API 回傳不支援的物件
+            deep_model = self.config["deep_think_llm"]
             openai_kwargs = {
-                "model": self.config["deep_think_llm"],
+                "model": deep_model,
                 "use_responses_api": False,
             }
+            # 推理模型（o1/o3/o4 系列）不設 max_tokens，避免壓縮推理空間
+            if not deep_model.startswith("o"):
+                openai_kwargs["max_tokens"] = deep_max
             if backend_url:
                 openai_kwargs["base_url"] = backend_url
             self.deep_thinking_llm = ChatOpenAI(**openai_kwargs)
@@ -78,6 +86,7 @@ class TradingAgentsGraph:
             openai_kwargs_quick = {
                 "model": self.config["quick_think_llm"],
                 "use_responses_api": False,
+                "max_tokens": quick_max,
             }
             if backend_url:
                 openai_kwargs_quick["base_url"] = backend_url
@@ -85,13 +94,19 @@ class TradingAgentsGraph:
 
         elif provider == "anthropic":
             # Anthropic 使用獨立的 API 端點，不傳入 OpenAI 的 base_url
-            anthropic_kwargs = {"model": self.config["deep_think_llm"]}
+            anthropic_kwargs = {
+                "model": self.config["deep_think_llm"],
+                "max_tokens": deep_max,
+            }
             anthropic_base = self.config.get("anthropic_base_url", "")
             if anthropic_base:
                 anthropic_kwargs["base_url"] = anthropic_base
             self.deep_thinking_llm = ChatAnthropic(**anthropic_kwargs)
 
-            anthropic_kwargs_quick = {"model": self.config["quick_think_llm"]}
+            anthropic_kwargs_quick = {
+                "model": self.config["quick_think_llm"],
+                "max_tokens": quick_max,
+            }
             if anthropic_base:
                 anthropic_kwargs_quick["base_url"] = anthropic_base
             self.quick_thinking_llm = ChatAnthropic(**anthropic_kwargs_quick)
