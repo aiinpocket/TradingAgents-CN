@@ -324,7 +324,7 @@ const I18N_MESSAGES = {
     'trending.refresh_hint': 'Auto-refresh every 5 min',
     'time.just_now': 'Just updated',
     'time.min_ago': ' min ago',
-    'time.hour_ago': 'h ago',
+    'time.hour_ago': ' h ago',
     'trending.indices': 'Major Indices',
     'trending.gainers': 'Top Gainers',
     'trending.losers': 'Top Losers',

@@ -764,7 +764,7 @@ def _sync_run_analysis(analysis_id, symbol, date, analysts, depth, provider, mod
                 f"分析 ...{analysis_id[-4:]} 進度訊息被截斷（{len(message)} 字元）"
             )
             message = message[:1000] + "..."
-        # deque(maxlen=200) 自動丟棄最舊訊息
+        # deque(maxlen=100) 自動丟棄最舊訊息
         data["progress"].append(message)
 
     from web.utils.analysis_runner import run_stock_analysis
@@ -852,11 +852,17 @@ def _get_translate_client(provider: str):
     with _translate_clients_lock:
         if provider not in _translate_clients:
             if provider == "openai":
+                key = os.environ.get("OPENAI_API_KEY", "")
+                if not key:
+                    return None
                 from openai import OpenAI
-                _translate_clients[provider] = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+                _translate_clients[provider] = OpenAI(api_key=key)
             else:
+                key = os.environ.get("ANTHROPIC_API_KEY", "")
+                if not key:
+                    return None
                 from anthropic import Anthropic
-                _translate_clients[provider] = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+                _translate_clients[provider] = Anthropic(api_key=key)
         return _translate_clients[provider]
 
 
@@ -934,6 +940,8 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
         try:
             if provider == "openai":
                 client = _get_translate_client("openai")
+                if client is None:
+                    continue
                 resp = client.chat.completions.create(
                     model=model,
                     temperature=0.3,
@@ -946,6 +954,8 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
                 translated = json.loads(resp.choices[0].message.content)
             else:
                 client = _get_translate_client("anthropic")
+                if client is None:
+                    continue
                 resp = client.messages.create(
                     model=model,
                     max_tokens=4096,
@@ -1143,7 +1153,7 @@ async def get_stock_context(symbol: str, request: Request):
                 timeout=8.0,
             )
             data["news"] = translated
-        except (asyncio.TimeoutError, Exception) as exc:
+        except Exception as exc:
             logger.debug(f"股票快照新聞翻譯逾時或失敗（顯示英文）: {exc}")
 
     # 寫入語言特定快取

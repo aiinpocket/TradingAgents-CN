@@ -97,6 +97,7 @@ function tradingApp() {
 
     // 追蹤清單（localStorage 持久化）
     watchlist: [],
+    _clearConfirm: false,  // 清除追蹤清單的確認狀態
 
     get canSubmit() {
       return this.apiReady &&
@@ -456,10 +457,17 @@ function tradingApp() {
       this._saveWatchlist();
     },
 
+    // 清除追蹤清單：第一次點擊顯示確認狀態，3 秒內再次點擊才真正清除
     clearWatchlist() {
-      if (!confirm(this.t('watchlist.clear_confirm'))) return;
-      this.watchlist = [];
-      this._saveWatchlist();
+      if (this._clearConfirm) {
+        clearTimeout(this._clearConfirmTimer);
+        this._clearConfirm = false;
+        this.watchlist = [];
+        this._saveWatchlist();
+        return;
+      }
+      this._clearConfirm = true;
+      this._clearConfirmTimer = setTimeout(() => { this._clearConfirm = false; }, 3000);
     },
 
     // 取得追蹤清單中的股票行情（使用 _stockMap 快取查詢表）
@@ -769,9 +777,9 @@ function tradingApp() {
       this._stopElapsedTimer();
     },
 
-    // 取得個股即時行情快照（前端快取 5 分鐘 + 請求去重 + 自動重試）
+    // 取得個股即時行情快照（前端快取 5 分鐘 + 請求去重 + 迴圈重試）
     // 快取 key 包含語言，確保切換語言時重新取得含翻譯的資料
-    async fetchStockContext(symbol, _retry = 0) {
+    async fetchStockContext(symbol) {
       const MAX_RETRY = 2;
       const CTX_TTL = 300000; // 5 分鐘
       const cacheKey = symbol + '_' + this.lang;
@@ -792,38 +800,36 @@ function tradingApp() {
         return;
       }
       this.stockContextLoading = true;
-      if (_retry === 0) this.stockContext = null;
-      // 建立請求 Promise 並註冊到去重表
+      this.stockContext = null;
+      // 建立請求 Promise 並註冊到去重表（迴圈重試取代遞迴，避免 finally 競態）
       const doFetch = (async () => {
-        try {
-          const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`, {
-            headers: this._langHeaders(),
-          });
-          if (res.ok) {
-            const data = await res.json();
-            this._ctxCache[cacheKey] = { data, ts: Date.now() };
-            return data;
-          } else if (res.status >= 500 && _retry < MAX_RETRY) {
-            await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
-            delete this._ctxPending[cacheKey];
-            return this.fetchStockContext(symbol, _retry + 1);
+        for (let attempt = 0; attempt <= MAX_RETRY; attempt++) {
+          try {
+            const res = await fetch(`/api/analysis/stock-context/${encodeURIComponent(symbol)}`, {
+              headers: this._langHeaders(),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              this._ctxCache[cacheKey] = { data, ts: Date.now() };
+              return data;
+            }
+            if (res.status < 500 || attempt >= MAX_RETRY) return { error: true };
+          } catch (e) {
+            console.error('Stock context fetch error:', e);
+            if (attempt >= MAX_RETRY) return { error: true };
           }
-          return { error: true };
-        } catch (e) {
-          console.error('Stock context fetch error:', e);
-          if (_retry < MAX_RETRY) {
-            await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
-            delete this._ctxPending[cacheKey];
-            return this.fetchStockContext(symbol, _retry + 1);
-          }
-          return { error: true };
-        } finally {
-          delete this._ctxPending[cacheKey];
-          this.stockContextLoading = false;
+          // 指數退避等待後重試
+          await new Promise(r => setTimeout(r, 2000 + attempt * 1000));
         }
+        return { error: true };
       })();
       this._ctxPending[cacheKey] = doFetch;
-      this.stockContext = await doFetch;
+      try {
+        this.stockContext = await doFetch;
+      } finally {
+        delete this._ctxPending[cacheKey];
+        this.stockContextLoading = false;
+      }
     },
 
     // 將時間戳轉為相對時間（如「剛剛」、「3 分鐘前」）

@@ -225,56 +225,51 @@ class FinancialSituationMemory:
             'strategy': 'no_truncation_with_fallback'  # 標記策略
         }
 
-        if True:
-            # 使用OpenAI相容的嵌入模型
-            if self.client is None:
-                logger.warning("嵌入客戶端未初始化，返回空向量")
-                return [0.0] * 1024  # 返回空向量
-            elif self.client == "DISABLED":
-                # 記憶功能已禁用，返回空向量
-                logger.debug("記憶功能已禁用，返回空向量")
-                return [0.0] * 1024  # 返回1024維的零向量
+        # 使用 OpenAI 相容的嵌入模型
+        if self.client is None:
+            logger.warning("嵌入客戶端未初始化，返回空向量")
+            return [0.0] * 1024
+        if self.client == "DISABLED":
+            logger.debug("記憶功能已禁用，返回空向量")
+            return [0.0] * 1024
 
-            # 嘗試呼叫OpenAI相容的embedding API
-            try:
-                response = self.client.embeddings.create(
-                    model=self.embedding,
-                    input=text
-                )
-                embedding = response.data[0].embedding
-                logger.debug(f"{self.llm_provider} embedding成功，維度: {len(embedding)}")
-                return embedding
+        try:
+            response = self.client.embeddings.create(
+                model=self.embedding,
+                input=text
+            )
+            embedding = response.data[0].embedding
+            logger.debug(f"{self.llm_provider} embedding成功，維度: {len(embedding)}")
+            return embedding
 
-            except Exception as e:
-                error_str = str(e).lower()
-                
-                # 檢查是否為長度限制錯誤
-                length_error_keywords = [
-                    'token', 'length', 'too long', 'exceed', 'maximum', 'limit',
-                    'context', 'input too large', 'request too large'
-                ]
-                
-                is_length_error = any(keyword in error_str for keyword in length_error_keywords)
-                
-                if is_length_error:
-                    # 長度限制錯誤：直接降級，不截斷重試
-                    logger.warning(f"{self.llm_provider}長度限制: {str(e)}")
-                    logger.info("為保證分析準確性，不截斷文本，記憶功能降級")
+        except Exception as e:
+            error_str = str(e).lower()
+
+            # 檢查是否為長度限制錯誤
+            length_error_keywords = [
+                'token', 'length', 'too long', 'exceed', 'maximum', 'limit',
+                'context', 'input too large', 'request too large'
+            ]
+
+            is_length_error = any(keyword in error_str for keyword in length_error_keywords)
+
+            if is_length_error:
+                logger.warning(f"{self.llm_provider}長度限制: {str(e)}")
+                logger.info("為保證分析準確性，不截斷文本，記憶功能降級")
+            else:
+                if 'attributeerror' in error_str:
+                    logger.error(f"{self.llm_provider} API呼叫錯誤: {str(e)}")
+                elif 'connectionerror' in error_str or 'connection' in error_str:
+                    logger.error(f"{self.llm_provider}網路連接錯誤: {str(e)}")
+                elif 'timeout' in error_str:
+                    logger.error(f"{self.llm_provider}請求超時: {str(e)}")
+                elif 'keyerror' in error_str:
+                    logger.error(f"{self.llm_provider}回應格式錯誤: {str(e)}")
                 else:
-                    # 其他類型的錯誤
-                    if 'attributeerror' in error_str:
-                        logger.error(f"{self.llm_provider} API呼叫錯誤: {str(e)}")
-                    elif 'connectionerror' in error_str or 'connection' in error_str:
-                        logger.error(f"{self.llm_provider}網路連接錯誤: {str(e)}")
-                    elif 'timeout' in error_str:
-                        logger.error(f"{self.llm_provider}請求超時: {str(e)}")
-                    elif 'keyerror' in error_str:
-                        logger.error(f"{self.llm_provider}回應格式錯誤: {str(e)}")
-                    else:
-                        logger.error(f"{self.llm_provider} embedding異常: {str(e)}")
-                
-                logger.warning("記憶功能降級，返回空向量")
-                return [0.0] * 1024
+                    logger.error(f"{self.llm_provider} embedding異常: {str(e)}")
+
+            logger.warning("記憶功能降級，返回空向量")
+            return [0.0] * 1024
 
     def get_embedding_config_status(self):
         """取得向量快取配置狀態"""

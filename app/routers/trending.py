@@ -576,7 +576,7 @@ async def get_market_overview():
             return await asyncio.wait_for(
                 loop.run_in_executor(_TRENDING_EXECUTOR, fn), timeout=15.0
             )
-        except (asyncio.TimeoutError, Exception) as exc:
+        except Exception as exc:
             logger.warning(f"{fn.__name__} 執行逾時或失敗: {exc}")
             return fallback
 
@@ -595,7 +595,7 @@ async def get_market_overview():
                 loop.run_in_executor(_TRENDING_EXECUTOR, _translate_news_titles, news),
                 timeout=30.0,
             )
-        except (asyncio.TimeoutError, Exception) as exc:
+        except Exception as exc:
             logger.warning(f"新聞標題翻譯逾時或失敗: {exc}")
 
     # 判斷是否全部資料源均回傳空值（可能為 API 全面故障）
@@ -636,7 +636,7 @@ async def get_indices():
         indices = await asyncio.wait_for(
             loop.run_in_executor(_TRENDING_EXECUTOR, _fetch_indices), timeout=15.0
         )
-    except (asyncio.TimeoutError, Exception) as exc:
+    except Exception as exc:
         logger.warning(f"_fetch_indices 執行逾時或失敗: {exc}")
         indices = []
 
@@ -946,7 +946,7 @@ async def get_ai_analysis(lang: str = "zh-TW"):
                     return await asyncio.wait_for(
                         loop.run_in_executor(_TRENDING_EXECUTOR, fn), timeout=15.0
                     )
-                except (asyncio.TimeoutError, Exception) as exc:
+                except Exception as exc:
                     logger.warning(f"AI 分析取得市場資料失敗 ({fn.__name__}): {exc}")
                     return fallback
 
@@ -1098,7 +1098,8 @@ async def _precache_top_movers_context():
 
     logger.info(f"開始預快取 {len(need_cache)} 支 Top 股票快照: {', '.join(need_cache)}")
     loop = asyncio.get_running_loop()
-    tasks = [loop.run_in_executor(None, _fetch_stock_context, sym) for sym in need_cache]
+    from app.routers.analysis import _CONTEXT_EXECUTOR
+    tasks = [loop.run_in_executor(_CONTEXT_EXECUTOR, _fetch_stock_context, sym) for sym in need_cache]
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
     cached_count = 0

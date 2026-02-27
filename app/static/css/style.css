@@ -839,6 +839,16 @@ input[aria-invalid="true"],
   color: var(--text);
 }
 
+/* 確認狀態按鈕（取代 confirm() 阻塞對話框，3 秒倒數後恢復） */
+.btn-confirm {
+  color: var(--red);
+  background: rgba(239, 68, 68, 0.1);
+}
+.btn-confirm:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--red);
+}
+
 .btn-sm {
   padding: 4px 10px;
   font-size: 12px;
@@ -2322,7 +2332,7 @@ code {
 .news-card-link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
 }
 
 .news-card-link .news-date {
@@ -2341,11 +2351,6 @@ code {
   border-color: var(--border);
   box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
-}
-
-.news-card:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
 }
 
 .news-source {
@@ -3124,7 +3129,7 @@ code {
 
   .indices-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
   .index-price { font-size: 14px; }
-  .index-change { font-size: 11px; }
+  .index-change-val, .index-change-pct { font-size: 11px; }
 
   .decision-action { font-size: 20px; }
   .metric-value { font-size: 15px; }
