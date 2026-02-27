@@ -58,6 +58,11 @@
 - **分析管線效能計時器**: propagate() 自動記錄 prefetch/graph/total 各階段耗時，含節點級別完成時間戳
 - **智慧模型配對**: 根據研究深度自動配對輕量快速模型（depth 1-3 分析師用 gpt-4o-mini/haiku，僅管理員用重型模型），o4-mini 不再拖慢全部 12 次 LLM 呼叫
 - **工具快取命中率 100%**: prefetch 預載入 7 個 API -> 分析師 8 次呼叫全部命中，快取命中率日誌自動記錄
+- **全域工具執行緒池**: 共享 ThreadPoolExecutor 單例（動態 4-12 workers），避免每次工具呼叫建立/銷毀執行緒池
+- **標準化記憶嵌入快取**: get_situation_for_memory() 統一所有節點的嵌入文字格式，快取命中率從 ~33% 提升至 100%
+- **LLM max_tokens 限制**: quick_think 預設 3000、deep_think 預設 4096，推理模型(o 系列)自動跳過，防止過長回應拖慢分析
+- **辯論歷史截斷**: Research Manager / Risk Judge 辯論歷史截斷至 4000 字元、trader_plan 截斷至 3000 字元，大幅降低 deep_think 輸入 token
+- **背景翻譯任務追蹤**: asyncio.Task 加入模組級追蹤集合，防止 GC 回收導致翻譯任務被取消
 - **統一日期計算**: calc_start_date() 共用函式消除 3 處重複邏輯
 - **MongoDB 深度防禦**: 查詢參數型別檢查防 NoSQL 操作符注入
 - **原子性快取寫入**: 公司名稱快取使用 tempfile + os.replace 防止中斷損毀
@@ -100,8 +105,8 @@
 - **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
 - **DOMPurify defer**: 修復 SSR 競爭條件（async -> defer 確保載入順序）
 - **CSP 修復**: 加入 GA inline script 的 sha256 hash（消除 console error）
-- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.2.25 / cryptography>=46.0.5 / tornado>=6.5.4
-- **pip-audit**: 177 個依賴全數通過安全掃描（2026-02-27），0 個已知漏洞
+- **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.2.25 / cryptography>=46.0.5 / tornado>=6.5.4 / urllib3>=2.6.3
+- **pip-audit**: 177 個依賴全數通過安全掃描（2026-02-27），0 個已知漏洞（含 CVE-2026-26007、CVE-2026-21441 修復）
 - **安全審計**: 整體評分 8.3/10（後端 8/10、前端 9/10、容器 8/10、依賴 9/10）
 - **翻譯管線 Prompt Injection 防護**: 外部新聞標題與分析報告翻譯前清理（角色偽裝/指令覆蓋/特殊 token 移除）
 - **錯誤訊息清理**: 避免洩漏內部路徑與 API 金鑰（_sanitize_error_message）
@@ -1425,7 +1430,7 @@ TradingAgents-CN
 
 ## 版本歷史
 
-- **v0.4.5** (2026-02-27): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、工具結果快取去重、快取 TTL 優化、圖結構精簡、SSE try/finally 清理、compositor-only 動畫、SSR 預渲染 CLS 0.00、CSP 構建器提取消除重複、版本常數化、術語校正共用模組化、詞庫擴充（+8 組台灣慣用語）、AI 分析中英文平行產生、背景任務平行化、CSP 預快取、MongoDB 單例化、CI deploy race condition 修復
+- **v0.4.5** (2026-02-27): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、工具結果快取去重、全域工具執行緒池、標準化記憶嵌入快取(100% 命中)、LLM max_tokens 限制、辯論歷史截斷、背景翻譯任務追蹤、SSR 預渲染 CLS 0.00、CSP 構建器、版本常數化、術語校正模組化、AI 分析中英文平行產生、背景任務平行化、MongoDB 單例化、安全依賴全數最新（pip-audit 0 漏洞）
 - **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
 - **v0.4.0** (2026-02-23): 分析師並行化、安全強化、CDN 升級、行動觸控優化
