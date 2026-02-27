@@ -40,19 +40,20 @@ _CACHE_TTL = {
 def _get_cached_report(report_type: str, ticker: str, extra_key: str = "") -> str:
     """從快取取得報告，如果存在且未過期則回傳，否則回傳 None"""
     cache_key = f"{report_type}:{ticker}:{extra_key}"
-    entry = _report_cache.get(cache_key)
-    if entry is None:
-        return None
-    ttl = _CACHE_TTL.get(report_type, 3600)
-    if (time.time() - entry["timestamp"]) > ttl:
-        _report_cache.pop(cache_key, None)
-        return None
+    with _cache_lock:
+        entry = _report_cache.get(cache_key)
+        if entry is None:
+            return None
+        ttl = _CACHE_TTL.get(report_type, 3600)
+        if (time.time() - entry["timestamp"]) > ttl:
+            _report_cache.pop(cache_key, None)
+            return None
     logger.info(f"FinnHub {report_type} 快取命中: {ticker}")
     return entry["data"]
 
 
 def _evict_expired_cache() -> None:
-    """清理過期快取項目"""
+    """清理過期快取項目（呼叫前必須持有 _cache_lock）"""
     now = time.time()
     expired = [
         k for k, v in _report_cache.items()
@@ -64,15 +65,14 @@ def _evict_expired_cache() -> None:
 
 def _set_cached_report(report_type: str, ticker: str, data: str, extra_key: str = "") -> None:
     """將報告存入快取"""
-    # 超過上限時清理過期項目
-    if len(_report_cache) >= _MAX_CACHE_ENTRIES:
-        _evict_expired_cache()
-    # 仍超過上限則移除最舊的項目
-    while len(_report_cache) >= _MAX_CACHE_ENTRIES:
-        oldest_key = min(_report_cache, key=lambda k: _report_cache[k]["timestamp"])
-        _report_cache.pop(oldest_key, None)
-    cache_key = f"{report_type}:{ticker}:{extra_key}"
-    _report_cache[cache_key] = {"data": data, "timestamp": time.time()}
+    with _cache_lock:
+        if len(_report_cache) >= _MAX_CACHE_ENTRIES:
+            _evict_expired_cache()
+        while len(_report_cache) >= _MAX_CACHE_ENTRIES:
+            oldest_key = min(_report_cache, key=lambda k: _report_cache[k]["timestamp"])
+            _report_cache.pop(oldest_key, None)
+        cache_key = f"{report_type}:{ticker}:{extra_key}"
+        _report_cache[cache_key] = {"data": data, "timestamp": time.time()}
 
 
 # 鍵鎖池：為每個快取鍵提供獨立鎖，避免並行分析師重複呼叫相同 API

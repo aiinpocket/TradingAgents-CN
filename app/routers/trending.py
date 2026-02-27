@@ -1148,16 +1148,19 @@ async def _precache_top_movers_context():
     if not symbols:
         return
 
-    from app.routers.analysis import _fetch_stock_context, _CONTEXT_CACHE, _CONTEXT_CACHE_TTL
+    from app.routers.analysis import (
+        _fetch_stock_context, _CONTEXT_CACHE, _CONTEXT_CACHE_LOCK, _CONTEXT_CACHE_TTL,
+    )
 
     # 過濾已有有效快取的股票，只預快取缺失或過期的
     now = time.time()
     need_cache = []
-    for sym in symbols:
-        cache_key = f"ctx_{sym}"
-        cached = _CONTEXT_CACHE.get(cache_key)
-        if not cached or now - cached["_ts"] > _CONTEXT_CACHE_TTL:
-            need_cache.append(sym)
+    with _CONTEXT_CACHE_LOCK:
+        for sym in symbols:
+            cache_key = f"ctx_{sym}"
+            cached = _CONTEXT_CACHE.get(cache_key)
+            if not cached or now - cached["_ts"] > _CONTEXT_CACHE_TTL:
+                need_cache.append(sym)
 
     if not need_cache:
         logger.info(f"Top 股票快照全部命中快取（{len(symbols)} 支）")
@@ -1171,13 +1174,14 @@ async def _precache_top_movers_context():
 
     cached_count = 0
     now = time.time()
-    for sym, result in zip(need_cache, results):
-        if isinstance(result, Exception):
-            logger.debug(f"預快取 {sym} 快照失敗: {result}")
-            continue
-        if isinstance(result, dict) and not result.get("error"):
-            _CONTEXT_CACHE[f"ctx_{sym}"] = {"data": result, "_ts": now}
-            cached_count += 1
+    with _CONTEXT_CACHE_LOCK:
+        for sym, result in zip(need_cache, results):
+            if isinstance(result, Exception):
+                logger.debug(f"預快取 {sym} 快照失敗: {result}")
+                continue
+            if isinstance(result, dict) and not result.get("error"):
+                _CONTEXT_CACHE[f"ctx_{sym}"] = {"data": result, "_ts": now}
+                cached_count += 1
 
     logger.info(f"Top 股票快照預快取完成: {cached_count}/{len(need_cache)} 成功")
 

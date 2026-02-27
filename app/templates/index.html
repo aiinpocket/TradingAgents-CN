@@ -111,7 +111,7 @@
         </svg>
         <span class="brand-name" x-text="t('nav.brand')">TradingAgents</span>
       </div>
-      <nav class="topbar-nav" role="navigation" :aria-label="t('a11y.main_nav')">
+      <nav class="topbar-nav" :aria-label="t('a11y.main_nav')">
         <button class="nav-btn" :class="{ active: tab === 'trending' }" :aria-current="tab === 'trending' ? 'page' : null" @click="tab = 'trending'; loadTrending(); window.scrollTo(0, 0)">
           <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"/></svg>
           <span x-text="t('nav.trending')">熱門</span>
@@ -494,8 +494,7 @@
 
         <!-- AI 分析內容 -->
         <div class="ai-analysis-content markdown-body" x-show="aiAnalysis.content && !aiAnalysisLoading"
-             x-html="renderMarkdown(aiAnalysis.content)"
-             aria-live="polite">
+             x-html="renderMarkdown(aiAnalysis.content)">
         </div>
 
         <!-- AI 分析底部標記 -->
@@ -554,7 +553,7 @@
             <div class="field field-symbol">
               <label for="symbol" x-text="t('analysis.symbol')"></label>
               <div class="symbol-input-wrap">
-                <span class="symbol-prefix">$</span>
+                <span class="symbol-prefix" aria-hidden="true">$</span>
                 <input id="symbol" type="text" x-model="form.symbol" :placeholder="t('analysis.symbol_placeholder')"
                        maxlength="5" required autocomplete="off" spellcheck="false"
                        autocapitalize="characters"
@@ -614,8 +613,8 @@
           <!-- 分析設定 -->
           <div class="form-row form-row-settings">
             <div class="field">
-              <label x-text="t('analysis.depth')"></label>
-              <div class="depth-selector">
+              <span id="depth-label" x-text="t('analysis.depth')"></span>
+              <div class="depth-selector" role="group" aria-labelledby="depth-label">
                 <template x-for="d in [1,2,3,4,5]" :key="d">
                   <button type="button" class="depth-btn"
                           :class="{ active: form.depth === d }"
@@ -630,8 +629,8 @@
             </div>
 
             <div class="field">
-              <label x-text="t('analysis.modules')"></label>
-              <div class="module-selector">
+              <span id="modules-label" x-text="t('analysis.modules')"></span>
+              <div class="module-selector" role="group" aria-labelledby="modules-label">
                 <label class="module-chip" :class="{ active: form.analysts.includes('market') }">
                   <input type="checkbox" value="market" x-model="form.analysts">
                   <span x-text="t('analysis.module_market')"></span>
@@ -844,7 +843,7 @@
       <section x-cloak x-show="showResults" x-transition.opacity.duration.200ms>
         <div class="results-header">
           <div>
-            <h2 class="results-symbol">
+            <h2 class="results-symbol" tabindex="-1">
               <span x-text="'$' + result?.stock_symbol"></span>
               <span class="results-label" x-text="t('analysis.report')"></span>
             </h2>
@@ -990,12 +989,13 @@
             <span class="h-status" role="columnheader" x-text="t('history.col_status')"></span>
           </div>
           <template x-for="item in historyList" :key="item.analysis_id">
-            <div class="history-row" role="row" tabindex="0"
+            <div class="history-row" role="row"
+                 :tabindex="item.status === 'completed' ? 0 : -1"
                  @click="item.status === 'completed' && loadAnalysisResult(item.analysis_id)"
                  @keydown.enter="item.status === 'completed' && loadAnalysisResult(item.analysis_id)"
                  @keydown.space.prevent="item.status === 'completed' && loadAnalysisResult(item.analysis_id)"
                  :class="{ 'history-clickable': item.status === 'completed' }"
-                 :aria-label="t('a11y.view_analysis') + ' ' + item.stock_symbol + ' ' + item.analysis_date">
+                 :aria-label="(item.status === 'completed' ? t('a11y.view_analysis') : statusText(item.status)) + ' ' + item.stock_symbol + ' ' + item.analysis_date">
               <span class="h-symbol" role="cell" x-text="'$' + item.stock_symbol"></span>
               <span class="h-date" role="cell" x-text="item.analysis_date"></span>
               <span class="h-provider" role="cell" x-text="(item.llm_provider || '').toUpperCase()"></span>

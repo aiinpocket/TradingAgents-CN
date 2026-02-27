@@ -27,6 +27,22 @@ from datetime import datetime
 import pandas as pd
 from openai import OpenAI
 
+
+def _extract_openai_text(response) -> str:
+    """從 OpenAI Responses API 回傳值中安全提取文字內容。
+    output 結構可能因 web_search tool 而含有多個元素，
+    文字回覆不一定在 index 1，需遍歷尋找。
+    """
+    for item in response.output:
+        if hasattr(item, "content") and item.content:
+            for block in item.content:
+                if hasattr(block, "text") and block.text:
+                    return block.text
+    # 找不到文字時回傳空字串而非拋出 IndexError
+    logger.warning("OpenAI Responses API 回傳不含文字內容")
+    return ""
+
+
 # 嘗試匯入yfinance，如果失敗則設定為None
 try:
     import yfinance as yf
@@ -662,7 +678,7 @@ def get_stock_news_openai(ticker, curr_date):
         store=True,
     )
 
-    return response.output[1].content[0].text
+    return _extract_openai_text(response)
 
 
 def get_global_news_openai(curr_date):
@@ -697,7 +713,7 @@ def get_global_news_openai(curr_date):
         store=True,
     )
 
-    return response.output[1].content[0].text
+    return _extract_openai_text(response)
 
 
 def get_fundamentals_finnhub(ticker, curr_date):
@@ -922,7 +938,7 @@ def get_fundamentals_openai(ticker, curr_date):
             store=True,
         )
 
-        result = response.output[1].content[0].text
+        result = _extract_openai_text(response)
         
         # 儲存到快取
         if result and len(result) > 100:  # 只有當結果有實際內容時才快取

@@ -690,6 +690,11 @@ function tradingApp() {
             this.eventSource = null;
             this._stopElapsedTimer();
             this._notifyCompletion(true);
+            // 焦點移至結果區，讓螢幕閱讀器使用者知道分析已完成
+            this.$nextTick(() => {
+              const heading = document.querySelector('.results-symbol');
+              if (heading) heading.focus();
+            });
 
           } else if (data.type === 'failed') {
             this.progressPercent = 100;

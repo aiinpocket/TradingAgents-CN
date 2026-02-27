@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 # 應用程式版本（唯一來源：FastAPI、health endpoint 共用）
 _APP_VERSION = "0.5.0"
 # 靜態檔案快取版本戳（唯一來源：CSS/JS 改動時遞增字母後綴以強制 CDN 更新）
-_CACHE_VERSION = "0.5.0x"
+_CACHE_VERSION = "0.5.0y"
 
 # 專案根目錄
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -292,7 +292,14 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     """新增安全相關 HTTP Headers"""
 
     async def dispatch(self, request: Request, call_next) -> Response:
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception:
+            # 下游路由或中介層拋出例外時，產生 500 回應並同樣注入安全 headers
+            response = JSONResponse(
+                status_code=500,
+                content={"detail": "Internal Server Error"},
+            )
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
