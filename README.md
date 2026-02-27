@@ -555,6 +555,43 @@ python start_app.py
 **資料來源**: FinnHub | Yahoo Finance | Google News
 **部署**: Docker | Docker Compose | Kubernetes (Helm) | GitHub Actions CI/CD
 
+## REST API 端點
+
+所有 API 路徑皆以 `/api` 為前綴。
+
+### 分析 (`/api/analysis`)
+
+| 方法 | 路徑 | 說明 |
+|------|------|------|
+| POST | `/analysis/start` | 啟動股票分析（回傳 analysis_id） |
+| GET | `/analysis/{id}/stream` | SSE 即時串流分析進度與結果 |
+| GET | `/analysis/{id}/status` | 查詢分析狀態（pending/running/completed/failed） |
+| DELETE | `/analysis/{id}` | 取消進行中的分析 |
+| GET | `/analysis/history` | 取得歷史分析記錄（記憶體 + MongoDB） |
+| GET | `/analysis/stock-context/{symbol}` | 取得個股快照（股價、新聞、基本資料） |
+
+### 趨勢 (`/api/trending`)
+
+| 方法 | 路徑 | 說明 |
+|------|------|------|
+| GET | `/trending/overview` | 市場總覽（指數、板塊、漲跌排行、新聞） |
+| GET | `/trending/indices` | 主要指數即時數據 |
+| GET | `/trending/ai-analysis` | AI 趨勢分析摘要（?lang=zh-TW/en） |
+
+### 設定 (`/api/config`)
+
+| 方法 | 路徑 | 說明 |
+|------|------|------|
+| GET | `/config/status` | API 金鑰配置狀態 |
+| GET | `/config/models` | 可用 LLM 模型清單 |
+
+### 共用端點
+
+| 方法 | 路徑 | 說明 |
+|------|------|------|
+| GET | `/health` | 健康檢查（版本、運行時間、記憶體） |
+| GET | `/` | 首頁（SSR 預渲染） |
+
 ## 文檔和支持
 
 - ** 完整文檔**: [docs/](./docs/) - 安裝指南、使用教程、API文檔
