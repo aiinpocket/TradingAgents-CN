@@ -46,6 +46,7 @@ _cache_lock = threading.Lock()
 _AI_RATE_LIMIT_MAX = 5
 _AI_RATE_LIMIT_WINDOW = 60  # 秒
 _ai_rate_hits: dict[str, list[float]] = {}
+_ai_rate_hits_lock = threading.Lock()
 
 
 def _check_ai_rate_limit(request: Request) -> bool:
@@ -57,19 +58,20 @@ def _check_ai_rate_limit(request: Request) -> bool:
     ip = get_client_ip(request)
     now = time.monotonic()
     cutoff = now - _AI_RATE_LIMIT_WINDOW
-    # 清理過期記錄
-    hits = _ai_rate_hits.get(ip, [])
-    hits = [t for t in hits if t > cutoff]
-    if len(hits) >= _AI_RATE_LIMIT_MAX:
+    with _ai_rate_hits_lock:
+        # 清理過期記錄
+        hits = _ai_rate_hits.get(ip, [])
+        hits = [t for t in hits if t > cutoff]
+        if len(hits) >= _AI_RATE_LIMIT_MAX:
+            _ai_rate_hits[ip] = hits
+            return False
+        hits.append(now)
         _ai_rate_hits[ip] = hits
-        return False
-    hits.append(now)
-    _ai_rate_hits[ip] = hits
-    # 定期清理閒置 IP（當追蹤數超過 1000 時）
-    if len(_ai_rate_hits) > 1000:
-        stale = [k for k, v in _ai_rate_hits.items() if not v or v[-1] <= cutoff]
-        for k in stale:
-            del _ai_rate_hits[k]
+        # 定期清理閒置 IP（當追蹤數超過 1000 時）
+        if len(_ai_rate_hits) > 1000:
+            stale = [k for k, v in _ai_rate_hits.items() if not v or v[-1] <= cutoff]
+            for k in stale:
+                del _ai_rate_hits[k]
     return True
 
 
@@ -1235,7 +1237,11 @@ async def start_background_refresh():
                 except Exception as e:
                     logger.warning(f"Top 股票快照預快取失敗（不影響正常運作）: {e}")
 
-            await asyncio.gather(_safe_ai(), _safe_precache())
+            # 為 AI 分析 + 快照預快取設定超時，避免無限掛起
+            await asyncio.wait_for(
+                asyncio.gather(_safe_ai(), _safe_precache()),
+                timeout=180.0,
+            )
 
         except asyncio.TimeoutError:
             consecutive_failures += 1
