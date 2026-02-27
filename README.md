@@ -92,7 +92,7 @@
 > 實際使用者看到的市場數據總延遲約 **15-25 分鐘**（yfinance 延遲 + 快取週期）。如需完全即時數據，需升級至付費資料源。本系統定位為「日線級別分析」而非高頻交易。
 
 #### i18n 國際化
-- **166 翻譯鍵**: zh-TW / en 完全對稱，後端 39 key 雙語完整
+- **168 翻譯鍵**: zh-TW / en 完全對稱，後端 39 key 雙語完整
 - **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
 - **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
 - **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
@@ -107,7 +107,9 @@
 - **SEO Open Graph + JSON-LD**: og:url / og:site_name / og:locale + WebApplication schema
 - **HSTS preload**: 強制 HTTPS + preload 指令
 - **analysisId 前後端格式驗證**: 防止異常 ID 注入
-- **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭
+- **並發安全**: asyncio.Lock 替換 bool + Event，消除 TOCTOU 競爭；_CONTEXT_CACHE / _report_cache threading.Lock 保護
+- **SecurityHeadersMiddleware 錯誤防護**: 500 回應也帶完整安全 headers（CSP/HSTS/X-Frame）
+- **OpenAI Responses API 安全提取**: 遍歷 output 找文字而非硬編碼索引，防止 IndexError
 - **DOMPurify defer**: 修復 SSR 競爭條件（async -> defer 確保載入順序）
 - **CSP 修復**: 加入 GA inline script 的 sha256 hash（消除 console error）
 - **安全依賴**: python-multipart>=0.0.22 / jinja2>=3.1.6 / certifi>=2026.2.25 / cryptography>=46.0.5 / tornado>=6.5.4 / urllib3>=2.6.3
@@ -119,8 +121,10 @@
 
 #### 無障礙 (a11y)
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
-- **WCAG AA 色彩對比**: 亮/暗色模式文字對比 >= 4.5:1（--text-faint 5.3:1、--amber-text 5.2:1）
+- **WCAG AA 色彩對比**: 亮/暗色模式文字對比 >= 4.5:1（--text-faint #4a5568 5.3:1、--amber-text 5.2:1）
 - **ARIA table 語意**: 歷史表格完整 role 標記，報告區 tablist/tab/tabpanel 完整語意
+- **焦點管理**: 分析完成後自動移焦至結果區（screen reader 感知），非完成歷史列 tabindex=-1
+- **群組標籤**: 深度/模組選擇器 role=group + aria-labelledby 關聯
 - **觸控目標 44px**: 符合 WCAG 2.5.8 AAA 標準（theme/lang/dismiss 全部 44px）
 - **html lang 屬性**: 隨語言切換同步更新（zh-Hant / en）
 - **WCAG 標題層級**: Markdown 渲染標題壓縮至 h3/h4（容器 h2 下不跳級）
