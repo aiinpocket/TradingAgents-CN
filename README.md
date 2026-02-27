@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/Version-0.4.5-green.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/Version-0.5.0-green.svg)](./VERSION)
 [![Documentation](https://img.shields.io/badge/docs-中文文檔-green.svg)](./docs/)
 [![Original](https://img.shields.io/badge/基於-TauricResearch/TradingAgents-orange.svg)](https://github.com/TauricResearch/TradingAgents)
 
@@ -17,9 +17,9 @@
 
 **我們的使命**: 為中文使用者提供完整的中文化體驗，支持美股市場，推動 AI 金融技術在中文社群的普及應用。
 
-## v0.4.5 - 節點即時進度 + 並行辯論 + 前端效能強化
+## v0.5.0 - UI/UX 強化 + AI 分析語言切換修復 + 安全更新
 
-> 最新版本：graph.stream() 串流偵測、節點級別即時進度回報、多空/風險並行辯論、分析速度大幅提升
+> 最新版本：AI 趨勢分析跨 tab 語言切換修復、CSS 觸控回饋、暗色模式對比度強化、MongoDB 非阻塞儲存、SSE 事件驅動通知
 
 ### 亮點
 
@@ -1435,6 +1435,7 @@ TradingAgents-CN
 
 ## 版本歷史
 
+- **v0.5.0** (2026-02-27): AI 趨勢分析跨 tab 語言切換修復、CSS 觸控回饋(:active)、暗色模式對比度強化、MongoDB 非阻塞儲存、SSE 事件驅動通知、$ 前綴 CSS specificity 修復、ARIA 無障礙修正、版本號統一
 - **v0.4.5** (2026-02-27): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、工具結果快取去重、全域工具執行緒池、標準化記憶嵌入快取(100% 命中)、LLM max_tokens 限制、辯論歷史截斷、背景翻譯任務追蹤、SSR 預渲染 CLS 0.00、CSP 構建器、版本常數化、術語校正模組化、AI 分析中英文平行產生、背景任務平行化、MongoDB 單例化、安全依賴全數最新（pip-audit 0 漏洞）
 - **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接

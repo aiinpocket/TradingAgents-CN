@@ -183,9 +183,13 @@ function tradingApp() {
           clearTimeout(this._trendingTimer);
           this._trendingTimer = null;
           this._stopRefreshCountdown();
-        } else if (val === 'trending' && !this._trendingTimer && this._trendingLoaded) {
-          this._trendingTimer = setTimeout(() => this.loadTrending(), CONFIG.TRENDING_REFRESH_MS);
-          this._startRefreshCountdown(CONFIG.TRENDING_REFRESH_MS / 1000);
+        } else if (val === 'trending' && this._trendingLoaded) {
+          if (!this._trendingTimer) {
+            this._trendingTimer = setTimeout(() => this.loadTrending(), CONFIG.TRENDING_REFRESH_MS);
+            this._startRefreshCountdown(CONFIG.TRENDING_REFRESH_MS / 1000);
+          }
+          // 語言切換後回到 trending 時，AI 分析可能已被清空，需重新載入
+          if (!this.aiAnalysis.content) this.loadAiAnalysis();
         }
       });
 
@@ -276,9 +280,9 @@ function tradingApp() {
       this._sentiment = this._computeSentiment();
       // 清除 Markdown 快取（語言切換後 getReport 可能回傳不同內容）
       this._mdCache.clear();
-      // 切換語言後先清空 AI 分析（避免短暫顯示舊語言內容），再重新載入
+      // 清空 AI 分析（語言已變更，舊內容作廢）；若在 trending tab 則立即重新載入
+      this.aiAnalysis = { available: null, content: '', updated_at: '', provider: '' };
       if (this.tab === 'trending') {
-        this.aiAnalysis = { available: null, content: '', updated_at: '', provider: '' };
         this.loadAiAnalysis(true);
       }
     },

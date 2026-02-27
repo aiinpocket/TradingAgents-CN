@@ -169,7 +169,7 @@ const I18N_MESSAGES = {
     'meta.site_name': 'TradingAgents',
 
     // 頁尾
-    'footer.version': 'v0.4.5',
+    'footer.version': 'v0.5.0',
     'footer.open_source': '開源專案',
 
     // 主題
@@ -376,7 +376,7 @@ const I18N_MESSAGES = {
     'meta.site_name': 'TradingAgents',
 
     // Footer
-    'footer.version': 'v0.4.5',
+    'footer.version': 'v0.5.0',
     'footer.open_source': 'Open Source',
 
     // Theme
