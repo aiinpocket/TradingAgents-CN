@@ -4,7 +4,7 @@
 #   pip install -e .
 #
 # 此檔案與 pyproject.toml 保持同步
-# 最後更新：2026-02-27
+# 最後更新：2026-02-26
 #
 # 移除了以下間接依賴（會被其他包自動安裝）：
 # - pydantic (langchain 依賴)
@@ -20,6 +20,7 @@ langchain-core>=1.2.14
 langchain-openai>=1.1.9
 langchain-anthropic>=1.3.3
 langchain-community>=0.4.1
+langchain-classic>=1.0.0
 langchain-experimental>=0.4.0
 langgraph>=1.0.0
 typer>=0.9.0
@@ -38,12 +39,12 @@ finnhub-python>=2.4.23
 feedparser>=6.0.11
 
 # ==================== 資料庫 ====================
-pymongo>=4.0.0
+pymongo>=4.6.3
 redis>=6.2.0
 
 # ==================== Web 框架 ====================
-fastapi>=0.115.0
-uvicorn[standard]>=0.34.0
+fastapi>=0.130.0
+uvicorn[standard]>=0.40.0
 jinja2>=3.1.6
 python-multipart>=0.0.22
 chromadb>=1.0.12
@@ -57,7 +58,7 @@ tornado>=6.5.4
 certifi>=2026.2.25
 
 # ==================== 網路請求 ====================
-requests>=2.32.4
+requests>=2.32.5
 
 # ==================== CLI 工具 ====================
 rich>=14.0.0

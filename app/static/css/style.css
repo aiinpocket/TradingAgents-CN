@@ -1810,15 +1810,6 @@ input[aria-invalid="true"],
   line-height: 1.5;
 }
 
-code {
-  font-family: var(--mono);
-  font-size: 12px;
-  background: var(--bg-inset);
-  padding: 1px 5px;
-  border-radius: 3px;
-  border: 1px solid var(--border-light);
-}
-
 /* ===== 語言切換 ===== */
 
 .lang-toggle {
