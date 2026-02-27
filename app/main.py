@@ -20,6 +20,11 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from dotenv import load_dotenv
 
+# 應用程式版本（唯一來源：FastAPI、health endpoint 共用）
+_APP_VERSION = "0.4.5"
+# 靜態檔案快取版本戳（唯一來源：CSS/JS 改動時遞增字母後綴以強制 CDN 更新）
+_CACHE_VERSION = "0.4.5t"
+
 # 專案根目錄
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -69,6 +74,46 @@ def _mw_t(key: str, request: Request) -> str:
     lang = _mw_lang(request)
     msgs = _MW_ERROR_MESSAGES.get(key, {})
     return msgs.get(lang, msgs.get("zh-TW", key))
+
+
+# ---------------------------------------------------------------------------
+# CSP（Content Security Policy）共用構建器
+# 中介層預設 CSP 與首頁 nonce CSP 共用相同的指令集，避免維護兩份重複字串
+# ---------------------------------------------------------------------------
+_CSP_DIRECTIVES: dict[str, str] = {
+    "default-src": "'self'",
+    "script-src": "'self' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com",
+    "style-src": "'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src": "'self' https://fonts.gstatic.com",
+    "img-src": "'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
+    "connect-src": "'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com",
+    "frame-ancestors": "'none'",
+    "base-uri": "'self'",
+    "form-action": "'self'",
+    "object-src": "'none'",
+    "worker-src": "'self'",
+}
+
+
+def _build_csp(*, nonce: str = "", script_hash: str = "") -> str:
+    """組合 CSP header 值
+
+    Args:
+        nonce: 可選的 CSP nonce（首頁 FOUC 防護內聯腳本用）
+        script_hash: 可選的 script hash（配合 nonce 使用）
+    """
+    parts = []
+    for directive, value in _CSP_DIRECTIVES.items():
+        if directive == "script-src" and (nonce or script_hash):
+            extras = []
+            if nonce:
+                extras.append(f"'nonce-{nonce}'")
+            if script_hash:
+                extras.append(f"'sha256-{script_hash}'")
+            value = f"'self' 'unsafe-eval' {' '.join(extras)} https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com"
+        parts.append(f"{directive} {value}")
+    parts.append("upgrade-insecure-requests")
+    return "; ".join(parts)
 
 
 @asynccontextmanager
@@ -159,7 +204,7 @@ _is_production = os.getenv("ENVIRONMENT", "").lower() != "development"
 app = FastAPI(
     title="TradingAgents",
     description="AI 驅動的美股交易分析系統",
-    version="0.4.5",
+    version=_APP_VERSION,
     lifespan=lifespan,
     docs_url=None if _is_production else "/api/docs",
     openapi_url=None if _is_production else "/openapi.json",
@@ -274,20 +319,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # CSP - 允許自身資源 + 特定 CDN（需與 HTML 中 SRI 配合）
         # 若路由已設定 CSP（如首頁帶 nonce），不覆蓋
         if "content-security-policy" not in response.headers:
-            response.headers["Content-Security-Policy"] = (
-                "default-src 'self'; "
-                "script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; "
-                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-                "font-src 'self' https://fonts.gstatic.com; "
-                "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
-                "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; "
-                "frame-ancestors 'none'; "
-                "base-uri 'self'; "
-                "form-action 'self'; "
-                "object-src 'none'; "
-                "worker-src 'self'; "
-                "upgrade-insecure-requests"
-            )
+            response.headers["Content-Security-Policy"] = _build_csp()
         return response
 
 
@@ -381,21 +413,12 @@ async def index(request: Request):
         "request": request,
         "ssr_trending": ssr_json,
         "csp_nonce": csp_nonce,
+        "v": _CACHE_VERSION,
     })
     # 覆蓋中介層的 CSP，加入此請求專屬的 nonce
-    response.headers["Content-Security-Policy"] = (
-        "default-src 'self'; "
-        f"script-src 'self' 'unsafe-eval' 'nonce-{csp_nonce}' 'sha256-Cz8u6Qpk4sdHHM6HYSSZ61d2aJotmFL2ax7qE4n0xDk=' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; "
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-        "font-src 'self' https://fonts.gstatic.com; "
-        "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; "
-        "connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; "
-        "frame-ancestors 'none'; "
-        "base-uri 'self'; "
-        "form-action 'self'; "
-        "object-src 'none'; "
-        "worker-src 'self'; "
-        "upgrade-insecure-requests"
+    response.headers["Content-Security-Policy"] = _build_csp(
+        nonce=csp_nonce,
+        script_hash="Cz8u6Qpk4sdHHM6HYSSZ61d2aJotmFL2ax7qE4n0xDk=",
     )
     return response
 
@@ -403,7 +426,7 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     """健康檢查"""
-    return {"status": "ok", "version": "0.4.5"}
+    return {"status": "ok", "version": _APP_VERSION}
 
 
 @app.get("/robots.txt", include_in_schema=False)
