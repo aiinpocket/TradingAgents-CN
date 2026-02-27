@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 # 應用程式版本（唯一來源：FastAPI、health endpoint 共用）
 _APP_VERSION = "0.4.5"
 # 靜態檔案快取版本戳（唯一來源：CSS/JS 改動時遞增字母後綴以強制 CDN 更新）
-_CACHE_VERSION = "0.5.0a"
+_CACHE_VERSION = "0.5.0b"
 
 # 專案根目錄
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -200,8 +200,9 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"背景任務清理異常: {e}")
     # 關閉所有執行緒池，避免資源洩漏（wait=False 避免阻塞關閉）
-    from app.routers.trending import _TRENDING_EXECUTOR
+    from app.routers.trending import _TRENDING_EXECUTOR, _SUBTASK_EXECUTOR
     _TRENDING_EXECUTOR.shutdown(wait=False, cancel_futures=True)
+    _SUBTASK_EXECUTOR.shutdown(wait=False, cancel_futures=True)
     try:
         from app.routers.analysis import _ANALYSIS_EXECUTOR, _CONTEXT_EXECUTOR
         _ANALYSIS_EXECUTOR.shutdown(wait=False, cancel_futures=True)

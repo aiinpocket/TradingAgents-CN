@@ -468,6 +468,7 @@ async def stream_analysis(analysis_id: str, request: Request):
                     break
 
                 # 在鎖內讀取所有需要的狀態快照，避免 race condition
+                last_idx_before = last_idx
                 with _analyses_lock:
                     data = _active_analyses.get(analysis_id)
                     if not data:
@@ -501,8 +502,11 @@ async def stream_analysis(analysis_id: str, request: Request):
                     yield ": heartbeat\n\n"
                     last_heartbeat = time.time()
 
-                # 100ms 輪詢間隔，平衡進度即時性與 CPU 使用
-                await asyncio.sleep(0.1)
+                # 自適應輪詢間隔：有新進度時快速檢查，閒置時放寬間隔節省 CPU
+                if current_len > last_idx_before:
+                    await asyncio.sleep(0.05)
+                else:
+                    await asyncio.sleep(0.3)
         except asyncio.CancelledError:
             exit_reason = "cancelled"
         except Exception as e:

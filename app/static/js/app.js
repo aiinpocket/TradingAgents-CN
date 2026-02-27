@@ -93,7 +93,7 @@ function tradingApp() {
 
     // Markdown 渲染記憶化快取（text -> html），避免 Alpine 反應式更新重複解析
     _mdCache: new Map(),
-    _MD_CACHE_MAX: 30,
+    _MD_CACHE_MAX: 100,
 
     // 追蹤清單（localStorage 持久化）
     watchlist: [],

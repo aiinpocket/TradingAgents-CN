@@ -9,7 +9,7 @@ import re
 import random
 import time
 import threading
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Optional
 
@@ -43,6 +43,8 @@ _cache_lock = threading.Lock()
 
 # 專用執行緒池（放在模組頂部，確保所有函式可引用）
 _TRENDING_EXECUTOR = ThreadPoolExecutor(max_workers=12, thread_name_prefix="trending")
+# 子任務執行緒池（供 _fetch_movers / _fetch_market_news 內部並行使用，避免巢狀提交 _TRENDING_EXECUTOR 的死鎖風險）
+_SUBTASK_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="subtask")
 
 # 公司名稱快取（由 _STOCK_UNIVERSE 限制，約 50 筆；加上 200 上限防護）
 # 持久化到 JSON 檔案，啟動時載入避免冷啟動大量 yfinance info 呼叫
@@ -384,17 +386,15 @@ def _fetch_movers() -> dict:
             _STOCK_UNIVERSE[i:i + batch_size]
             for i in range(0, len(_STOCK_UNIVERSE), batch_size)
         ]
-        # 使用臨時小型執行緒池並行處理批次，
+        # 使用專用子任務執行緒池並行處理批次，
         # 不提交到 _TRENDING_EXECUTOR（避免巢狀死鎖）
-        from concurrent.futures import ThreadPoolExecutor as _TP, as_completed as _ac
-        with _TP(max_workers=min(len(batches), 6), thread_name_prefix="movers") as pool:
-            futures = {pool.submit(_fetch_movers_batch, batch): batch for batch in batches}
-            for future in _ac(futures, timeout=15):
-                try:
-                    batch_results = future.result(timeout=10)
-                    stock_data.extend(batch_results)
-                except Exception as e:
-                    logger.debug(f"批次取得股票資料失敗: {e}")
+        futures = {_SUBTASK_EXECUTOR.submit(_fetch_movers_batch, batch): batch for batch in batches}
+        for future in as_completed(futures, timeout=15):
+            try:
+                batch_results = future.result(timeout=10)
+                stock_data.extend(batch_results)
+            except Exception as e:
+                logger.debug(f"批次取得股票資料失敗: {e}")
 
     except Exception as e:
         logger.error(f"取得漲跌幅資料失敗: {e}")
@@ -434,7 +434,7 @@ _NEWS_SYMBOLS = ["^GSPC", "AAPL", "NVDA", "TSLA", "MSFT", "GOOGL"]
 
 
 def _fetch_market_news() -> list[dict]:
-    """取得市場新聞（臨時執行緒池並行抓取，避免巢狀提交 _TRENDING_EXECUTOR）"""
+    """取得市場新聞（專用子任務池並行抓取，避免巢狀提交 _TRENDING_EXECUTOR）"""
     from app.utils.news_parser import filter_paid_sources, deduplicate_news
 
     try:
@@ -444,16 +444,14 @@ def _fetch_market_news() -> list[dict]:
 
     news_list = []
     try:
-        from concurrent.futures import ThreadPoolExecutor as _TP, as_completed as _ac
-        with _TP(max_workers=len(_NEWS_SYMBOLS), thread_name_prefix="news") as pool:
-            futures = {pool.submit(_fetch_news_for_symbol, sym): sym for sym in _NEWS_SYMBOLS}
-            for future in _ac(futures, timeout=15):
-                try:
-                    items = future.result(timeout=10)
-                    news_list.extend(items)
-                except Exception as e:
-                    sym = futures[future]
-                    logger.debug(f"取得 {sym} 新聞失敗: {e}")
+        futures = {_SUBTASK_EXECUTOR.submit(_fetch_news_for_symbol, sym): sym for sym in _NEWS_SYMBOLS}
+        for future in as_completed(futures, timeout=15):
+            try:
+                items = future.result(timeout=10)
+                news_list.extend(items)
+            except Exception as e:
+                sym = futures[future]
+                logger.debug(f"取得 {sym} 新聞失敗: {e}")
     except Exception as e:
         logger.error(f"取得市場新聞失敗: {e}")
 
