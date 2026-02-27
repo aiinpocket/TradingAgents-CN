@@ -269,9 +269,19 @@ class StockDataCache:
                 cache_type = f"{market_type}_{data_type}"
                 max_age_hours = self.cache_config.get(cache_type, {}).get('ttl_hours', 24)
 
-        cached_at = datetime.fromisoformat(metadata['cached_at'])
-        age = datetime.now() - cached_at
+        try:
+            cached_at = datetime.fromisoformat(metadata['cached_at'])
+        except (ValueError, TypeError):
+            logger.warning(f"快取 {cache_key} 的時戳格式無效，視為過期")
+            return False
 
+        now = datetime.now()
+        # 防護：時鐘回調導致快取時間在未來
+        if cached_at > now:
+            logger.warning(f"快取 {cache_key} 的時戳在未來（可能因時鐘不同步），視為過期")
+            return False
+
+        age = now - cached_at
         is_valid = age.total_seconds() < max_age_hours * 3600
 
         if is_valid:

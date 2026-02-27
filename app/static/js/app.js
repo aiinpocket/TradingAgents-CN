@@ -776,6 +776,9 @@ function tradingApp() {
       if (this.analysisRunning) {
         this.analysisRunning = false;
         this._stopElapsedTimer();
+        // 防禦性清理：確保 EventSource 和重連計時器已釋放
+        if (this.eventSource) { this.eventSource.close(); this.eventSource = null; }
+        if (this._reconnectTimer) { clearTimeout(this._reconnectTimer); this._reconnectTimer = null; }
         this.formError = this.t('error.connection_timeout');
       }
     },
