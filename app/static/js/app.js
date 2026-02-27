@@ -98,6 +98,7 @@ function tradingApp() {
     // 追蹤清單（localStorage 持久化）
     watchlist: [],
     _clearConfirm: false,  // 清除追蹤清單的確認狀態
+    _toastMsg: '',         // 輕量級 toast 訊息
 
     get canSubmit() {
       return this.apiReady &&
@@ -451,7 +452,10 @@ function tradingApp() {
       if (idx >= 0) {
         this.watchlist.splice(idx, 1);
       } else {
-        if (this.watchlist.length >= 20) return; // 追蹤上限
+        if (this.watchlist.length >= 20) {
+          this._showToast(this.t('watchlist.limit_reached'));
+          return;
+        }
         this.watchlist.push(symbol);
       }
       this._saveWatchlist();
@@ -952,6 +956,13 @@ function tradingApp() {
       this.elapsedText = '';
     },
 
+    // 輕量級 toast 訊息：顯示 3 秒後自動消失
+    _showToast(msg) {
+      this._toastMsg = msg;
+      clearTimeout(this._toastTimer);
+      this._toastTimer = setTimeout(() => { this._toastMsg = ''; }, 3000);
+    },
+
     _notifyCompletion(success) {
       const symbol = this.form.symbol || '';
       const title = success
@@ -960,7 +971,7 @@ function tradingApp() {
       document.title = title + ' - TradingAgents';
       setTimeout(() => { document.title = this.t('meta.title'); }, 5000);
       if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
-        new Notification('TradingAgents', { body: title, icon: '/static/favicon.svg' });
+        new Notification(this.t('meta.site_name'), { body: title, icon: '/static/favicon.svg' });
       }
     },
 

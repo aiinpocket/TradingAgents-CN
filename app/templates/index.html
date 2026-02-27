@@ -522,7 +522,7 @@
 
       <!-- API 未配置提示 -->
       <section class="notice notice-warn" x-cloak x-show="apiReady && availableProviders.length === 0 && !analysisRunning && !showResults">
-        <div class="notice-icon">
+        <div class="notice-icon" aria-hidden="true">
           <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
         </div>
         <div class="notice-body">
@@ -656,7 +656,7 @@
           </div>
         </form>
 
-        <div id="form-error-msg" class="notice notice-error compact" role="alert" aria-live="assertive" x-show="formError" x-cloak>
+        <div id="form-error-msg" class="notice notice-error compact" role="alert" aria-live="assertive" aria-atomic="true" x-show="formError" x-cloak>
           <span x-text="formError"></span>
           <button class="btn-retry" x-show="!analysisRunning && showResults" @click="formError = null; startAnalysis()" x-text="t('analysis.retry')"></button>
           <button class="notice-dismiss" @click="formError = null" :aria-label="t('common.close')">&times;</button>
@@ -766,7 +766,7 @@
         </div>
 
         <!-- 個股快照錯誤狀態 -->
-        <div class="panel stock-context-panel stock-context-error" x-show="stockContext && stockContext.error && !stockContextLoading">
+        <div class="panel stock-context-panel stock-context-error" role="alert" x-show="stockContext && stockContext.error && !stockContextLoading">
           <div class="stock-context-error-content">
             <span x-text="t('context.fetch_failed')"></span>
             <button class="btn-ghost btn-retry" @click="fetchStockContext(form.symbol)" :disabled="stockContextLoading" x-text="t('common.retry')"></button>
@@ -983,6 +983,11 @@
     </div>
 
   </main>
+
+  <!-- 輕量級 toast 通知 -->
+  <div class="toast" x-cloak x-show="_toastMsg" x-text="_toastMsg"
+       x-transition:enter="toast-enter" x-transition:leave="toast-leave"
+       role="status" aria-live="polite"></div>
 
   <footer class="footer">
     <span x-text="'TradingAgents ' + t('footer.version')"></span>

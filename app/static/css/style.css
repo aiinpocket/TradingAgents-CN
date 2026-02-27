@@ -21,6 +21,30 @@
 
 [x-cloak] { display: none !important; }
 
+/* 輕量級 toast 通知 */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  padding: 10px 20px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast-enter {
+  transition: opacity .2s ease, transform .2s ease;
+}
+.toast-leave {
+  transition: opacity .15s ease, transform .15s ease;
+}
+
 /* 無障礙：螢幕閱讀器可讀但視覺隱藏 */
 .visually-hidden {
   position: absolute;
