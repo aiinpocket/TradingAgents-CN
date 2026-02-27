@@ -165,7 +165,8 @@ class IntegratedCacheManager:
         if self.use_adaptive:
             return self.adaptive_cache.load_data(cache_key)
         else:
-            return self.legacy_cache.load_news_data(cache_key)
+            # StockDataCache 無獨立 load_news_data，共用 load_stock_data（支援 txt）
+            return self.legacy_cache.load_stock_data(cache_key)
     
     def save_fundamentals_data(self, symbol: str, data: Any, data_source: str = "default") -> str:
         """保存基本面資料"""
@@ -214,13 +215,13 @@ class IntegratedCacheManager:
                 "redis_available": False
             }
     
-    def clear_expired_cache(self):
+    def clear_expired_cache(self, max_age_days: int = 7):
         """清理過期快取"""
         if self.use_adaptive:
             self.adaptive_cache.clear_expired_cache()
-        
+
         # 總是清理傳統快取
-        self.legacy_cache.clear_expired_cache()
+        self.legacy_cache.clear_old_cache(max_age_days=max_age_days)
     
     def get_cache_backend_info(self) -> Dict[str, Any]:
         """取得快取後端資訊"""
