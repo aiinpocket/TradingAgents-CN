@@ -72,6 +72,8 @@ function tradingApp() {
     trendingLoading: true,
     trendingError: false,
     _trendingTimer: null,
+    _refreshCountdown: 0,        // 距下次自動刷新的秒數
+    _refreshCountdownTimer: null, // 每秒遞減的 setInterval ID
 
     // AI 趨勢分析
     aiAnalysis: { available: null, content: '', updated_at: '', provider: '' },
@@ -170,8 +172,10 @@ function tradingApp() {
         if (val !== 'trending' && this._trendingTimer) {
           clearTimeout(this._trendingTimer);
           this._trendingTimer = null;
+          this._stopRefreshCountdown();
         } else if (val === 'trending' && !this._trendingTimer && this._trendingLoaded) {
           this._trendingTimer = setTimeout(() => this.loadTrending(), CONFIG.TRENDING_REFRESH_MS);
+          this._startRefreshCountdown(CONFIG.TRENDING_REFRESH_MS / 1000);
         }
       });
 
@@ -198,6 +202,7 @@ function tradingApp() {
             this._trendingTimer = setTimeout(() => {
               if (this.tab === 'trending') this.loadTrending();
             }, CONFIG.TRENDING_REFRESH_MS);
+            this._startRefreshCountdown(CONFIG.TRENDING_REFRESH_MS / 1000);
           }
         } catch (e) {
           console.error('SSR trending data parse error:', e);
@@ -216,6 +221,7 @@ function tradingApp() {
             clearTimeout(this._trendingTimer);
             this._trendingTimer = null;
           }
+          this._stopRefreshCountdown();
         } else if (this.tab === 'trending') {
           this.loadTrending();
         }
@@ -344,6 +350,12 @@ function tradingApp() {
       this._trendingTimer = setTimeout(() => {
         if (this.tab === 'trending') this.loadTrending();
       }, interval);
+      // 啟動倒數計時器（僅正常狀態；錯誤時不顯示倒數）
+      if (!this.trendingError) {
+        this._startRefreshCountdown(interval / 1000);
+      } else {
+        this._stopRefreshCountdown();
+      }
     },
 
     // 手動重試載入熱門資料
@@ -351,6 +363,37 @@ function tradingApp() {
       this._trendingLoaded = false;
       this.trendingError = false;
       this.loadTrending();
+    },
+
+    // 啟動刷新倒數計時器（每秒遞減，到 0 自動停止）
+    _startRefreshCountdown(seconds) {
+      this._stopRefreshCountdown();
+      this._refreshCountdown = Math.ceil(seconds);
+      this._refreshCountdownTimer = setInterval(() => {
+        if (this._refreshCountdown > 0) {
+          this._refreshCountdown--;
+        } else {
+          this._stopRefreshCountdown();
+        }
+      }, 1000);
+    },
+
+    // 停止倒數計時器
+    _stopRefreshCountdown() {
+      if (this._refreshCountdownTimer) {
+        clearInterval(this._refreshCountdownTimer);
+        this._refreshCountdownTimer = null;
+      }
+    },
+
+    // 格式化倒數秒數為完整本地化文字（如「3:45 後更新」或「Next in 3:45」）
+    refreshCountdownText() {
+      const s = this._refreshCountdown;
+      if (s <= 0) return this.t('trending.refresh_hint');
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      const time = m + ':' + String(sec).padStart(2, '0');
+      return this.t('trending.next_refresh_fmt').replace('{0}', time);
     },
 
     // AI 趨勢分析

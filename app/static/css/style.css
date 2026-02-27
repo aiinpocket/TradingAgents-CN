@@ -1981,6 +1981,8 @@ input[aria-invalid="true"],
   font-weight: 400;
   color: var(--text-faint);
   margin-left: 8px;
+  font-variant-numeric: tabular-nums; /* 倒數計時數字等寬，避免寬度跳動 */
+  min-width: 110px; /* 固定最小寬度避免文字切換時 CLS */
 }
 
 /* 指數概覽列 */

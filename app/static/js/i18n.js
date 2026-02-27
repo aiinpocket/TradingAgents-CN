@@ -126,6 +126,7 @@ const I18N_MESSAGES = {
 
     // 熱門特區
     'trending.refresh_hint': '每 5 分鐘自動更新',
+    'trending.next_refresh_fmt': '{0} 後更新',
     'time.just_now': '剛剛更新',
     'time.min_ago': ' 分鐘前',
     'time.hour_ago': ' 小時前',
@@ -331,6 +332,7 @@ const I18N_MESSAGES = {
 
     // Trending
     'trending.refresh_hint': 'Auto-refresh every 5 min',
+    'trending.next_refresh_fmt': 'Next in {0}',
     'time.just_now': 'Just updated',
     'time.min_ago': ' min ago',
     'time.hour_ago': ' h ago',
