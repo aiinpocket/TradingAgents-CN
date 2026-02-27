@@ -719,25 +719,25 @@ async def _run_analysis(analysis_id: str):
             except Exception as e:
                 logger.debug(f"術語校正異常（不影響主流程）: {e}")
 
-            # 先儲存中文版結果到 MongoDB（不等翻譯）
-            data["progress"].append(_t_lang("saving_report", lang))
-            try:
-                _save_mgr = _get_report_mgr()
-                if not _save_mgr:
-                    raise RuntimeError("MongoDB 不可用")
-                _save_mgr.save_analysis_report(
-                    stock_symbol=data["stock_symbol"],
-                    analysis_results=result,
-                    reports={},
-                    analysis_date=data.get("analysis_date", ""),
-                    formatted_result=formatted,
-                )
-            except Exception as e:
-                logger.warning(f"MongoDB 快取儲存失敗（不影響主流程）: {e}")
-
-            # 先標記完成並回傳中文結果，讓前端即時顯示
+            # 先標記完成並回傳中文結果，讓前端即時顯示（MongoDB 儲存不阻塞）
             data["progress"].append(_t_lang("analysis_complete", lang))
             _update_analysis_state(analysis_id, status="completed", result=formatted)
+
+            # 背景儲存中文版結果到 MongoDB（不阻塞事件迴圈）
+            def _bg_save_mongodb():
+                try:
+                    _save_mgr = _get_report_mgr()
+                    if _save_mgr:
+                        _save_mgr.save_analysis_report(
+                            stock_symbol=data["stock_symbol"],
+                            analysis_results=result,
+                            reports={},
+                            analysis_date=data.get("analysis_date", ""),
+                            formatted_result=formatted,
+                        )
+                except Exception as e:
+                    logger.warning(f"MongoDB 快取儲存失敗（不影響主流程）: {e}")
+            loop.run_in_executor(None, _bg_save_mongodb)
 
             # 背景異步翻譯英文版（不阻塞 SSE 回應）
             # 加入 _background_tasks 集合防止 GC 回收 Task 物件
