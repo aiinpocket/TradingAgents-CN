@@ -45,8 +45,10 @@ def _get_report_mgr():
     return _report_mgr_instance
 
 
-# 專用執行緒池：分析任務獨立執行（最大並發 3 + 1 背景翻譯 = 4 workers 足夠）
-_ANALYSIS_EXECUTOR = ThreadPoolExecutor(max_workers=4, thread_name_prefix="analysis")
+# 專用執行緒池：分析任務獨立執行（最大並發 3 個分析）
+_ANALYSIS_EXECUTOR = ThreadPoolExecutor(max_workers=3, thread_name_prefix="analysis")
+# 翻譯專用執行緒池（與分析分離，避免長時間翻譯阻塞新分析請求）
+_TRANSLATE_EXECUTOR = ThreadPoolExecutor(max_workers=2, thread_name_prefix="translate")
 # 個股快照用輕量執行緒池（yfinance I/O 密集）
 _CONTEXT_EXECUTOR = ThreadPoolExecutor(max_workers=6, thread_name_prefix="ctx")
 
@@ -600,7 +602,7 @@ async def _background_translate(
     try:
         loop = asyncio.get_running_loop()
         translation = await loop.run_in_executor(
-            _ANALYSIS_EXECUTOR, _translate_result_to_english, formatted
+            _TRANSLATE_EXECUTOR, _translate_result_to_english, formatted
         )
         if not translation:
             return

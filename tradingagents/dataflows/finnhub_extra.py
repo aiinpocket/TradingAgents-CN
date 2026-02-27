@@ -76,12 +76,25 @@ def _set_cached_report(report_type: str, ticker: str, data: str, extra_key: str 
 
 
 # 鍵鎖池：為每個快取鍵提供獨立鎖，避免並行分析師重複呼叫相同 API
-_key_locks: dict = {}
+_key_locks: dict = {}        # cache_key -> Lock
+_key_lock_ts: dict = {}      # cache_key -> 最後使用時間戳
+_KEY_LOCK_MAX = 200          # 鍵鎖池容量上限
+_KEY_LOCK_TTL = 3600         # 閒置鎖過期秒數（1 小時）
 
 def _get_key_lock(cache_key: str) -> threading.Lock:
-    """取得指定快取鍵的專屬鎖（執行緒安全）"""
+    """取得指定快取鍵的專屬鎖（執行緒安全，含定期清理）"""
     with _cache_lock:
+        now = time.time()
+        _key_lock_ts[cache_key] = now
         if cache_key not in _key_locks:
+            # 超過上限時清理過期鎖（僅清理未被持有的閒置鎖）
+            if len(_key_locks) >= _KEY_LOCK_MAX:
+                cutoff = now - _KEY_LOCK_TTL
+                stale = [k for k, ts in _key_lock_ts.items()
+                         if ts < cutoff and k in _key_locks and not _key_locks[k].locked()]
+                for k in stale:
+                    del _key_locks[k]
+                    del _key_lock_ts[k]
             _key_locks[cache_key] = threading.Lock()
         return _key_locks[cache_key]
 
