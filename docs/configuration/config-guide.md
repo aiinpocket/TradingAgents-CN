@@ -145,7 +145,7 @@ config_scenarios = {
 
 #### max_recur_limit
 - ****: `int`
-- ****: `100`
+- ****: `30`
 - ****: 
 
 ### 4. 

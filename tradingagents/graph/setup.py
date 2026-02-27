@@ -46,7 +46,6 @@ class GraphSetup:
         risk_manager_memory,
         conditional_logic: ConditionalLogic,
         config: Dict[str, Any] = None,
-        react_llm = None,
     ):
         """初始化圖設定元件。"""
         self.quick_thinking_llm = quick_thinking_llm
@@ -59,7 +58,6 @@ class GraphSetup:
         self.risk_manager_memory = risk_manager_memory
         self.conditional_logic = conditional_logic
         self.config = config or {}
-        self.react_llm = react_llm
 
     def setup_graph(
         self, selected_analysts=["market", "social", "news", "fundamentals"]

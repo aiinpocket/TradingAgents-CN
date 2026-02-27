@@ -205,12 +205,7 @@ class ConfigManager:
         # 預設定價配置
         if not self.pricing_file.exists():
             default_pricing = [
-                # OpenAI定價 (美元，每千token) - 2025年最新價格
-                # GPT-5系列 (2025年8月發布)
-                PricingConfig("openai", "gpt-5", 0.00125, 0.01, "USD"),
-                PricingConfig("openai", "gpt-5-mini", 0.00025, 0.002, "USD"),
-                PricingConfig("openai", "gpt-5-nano", 0.00005, 0.0004, "USD"),
-
+                # OpenAI 定價（美元，每千 token）
                 # o 系列推理模型
                 PricingConfig("openai", "o4-mini", 0.0011, 0.0044, "USD"),
 

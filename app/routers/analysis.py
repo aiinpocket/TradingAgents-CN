@@ -929,7 +929,7 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
     # 組裝 LLM 提供商列表（按優先順序）
     providers: list[tuple[str, str]] = []
     if os.environ.get("OPENAI_API_KEY", ""):
-        providers.append(("openai", "gpt-4o-mini"))
+        providers.append(("openai", "gpt-4.1-nano"))
     if os.environ.get("ANTHROPIC_API_KEY", ""):
         providers.append(("anthropic", "claude-haiku-4-5-20251001"))
     if not providers:
@@ -962,7 +962,7 @@ def _translate_result_to_english(formatted_result: dict) -> dict | None:
                     continue
                 resp = client.messages.create(
                     model=model,
-                    max_tokens=4096,
+                    max_tokens=8192,
                     temperature=0.3,
                     system=_TRANSLATE_SYSTEM_PROMPT,
                     messages=[{"role": "user", "content": user_content}],

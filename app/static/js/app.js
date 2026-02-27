@@ -101,6 +101,7 @@ function tradingApp() {
     _watchlistStocks: [],       // 追蹤清單股票行情預計算結果
     _clearConfirm: false,  // 清除追蹤清單的確認狀態
     _toastMsg: '',         // 輕量級 toast 訊息
+    _reconnectTimer: null, // SSE 重連計時器
 
     get canSubmit() {
       return this.apiReady &&
