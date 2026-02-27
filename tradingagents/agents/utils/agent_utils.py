@@ -289,8 +289,8 @@ def prefetch_analyst_data(toolkit, ticker: str, trade_date: str):
     ]
     if failed_indices:
         failed_names = [getattr(tools[i], 'name', '?') for i in failed_indices]
-        logger.warning(f"[資料預載入] {len(failed_indices)} 個工具失敗，1 秒後重試: {failed_names}")
-        time.sleep(1)
+        logger.warning(f"[資料預載入] {len(failed_indices)} 個工具失敗，0.3 秒後重試: {failed_names}")
+        time.sleep(0.3)
         retry_tools = [tools[i] for i in failed_indices]
         retry_args = [tool_args[i] for i in failed_indices]
         retry_results = invoke_tools_direct(retry_tools, retry_args, logger)
