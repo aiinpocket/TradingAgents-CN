@@ -505,7 +505,7 @@ body {
 
 .chip-sm:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline-offset: 2px;
 }
 
 .chip-sm.chip-active {
@@ -787,7 +787,7 @@ input[aria-invalid="true"],
   font-family: var(--font);
   transition: background 0.12s;
   flex: 1;
-  height: 42px;
+  height: 44px;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -2643,6 +2643,7 @@ input[aria-invalid="true"],
   transition: opacity 0.12s, color 0.12s, transform 0.1s;
   line-height: 0;
   flex-shrink: 0;
+  position: relative;
 }
 
 .watchlist-btn svg {
@@ -3013,6 +3014,7 @@ input[aria-invalid="true"],
   /* 追蹤清單 RWD */
   .watchlist-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
   .watchlist-btn { opacity: 0.5; padding: 10px; }
+  .watchlist-btn::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 44px; min-height: 44px; }
   .watchlist-btn.active { opacity: 1; }
   .watchlist-star { padding: 10px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 
@@ -3184,7 +3186,7 @@ input[aria-invalid="true"],
   .panel { padding: 12px; }
   .container { padding: 12px 8px; }
 
-  .depth-btn { min-width: 40px; padding: 4px 6px; }
+  .depth-btn { min-width: 44px; padding: 4px 6px; }
   .depth-label { display: none; }
 
   .mover-row { grid-template-columns: 16px 24px 44px 64px 52px; }
