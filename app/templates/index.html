@@ -45,14 +45,13 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
   <link rel="dns-prefetch" href="https://www.google-analytics.com">
-  <link rel="preload" as="style" href="/static/css/style.css?v={{ v }}">
-  <link rel="preload" as="script" href="/static/js/i18n.js?v={{ v }}">
-  <link rel="preload" as="script" href="/static/js/app.js?v={{ v }}">
   <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
         integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww" crossorigin="anonymous">
   <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
         integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi" crossorigin="anonymous">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <!-- CSS（渲染阻塞資源，優先載入） -->
+  <link rel="stylesheet" href="/static/css/style.css?v={{ v }}" fetchpriority="high">
   <!-- Google Analytics（低優先級，不與關鍵資源競爭頻寬） -->
   <script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-HN1YQZJF1Z"></script>
   <script async fetchpriority="low" src="/static/js/gtag-init.js?v={{ v }}"></script>
@@ -65,7 +64,6 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
           integrity="sha384-LXWjKwDZz29o7TduNe+r/UxaolHh5FsSvy2W7bDHSZ8jJeGgDeuNnsDNHoxpSgDi"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v={{ v }}" fetchpriority="high">
   <!-- JSON-LD 結構化資料 -->
   <script type="application/ld+json">
   {
