@@ -1344,26 +1344,8 @@ input[aria-invalid="true"],
   min-height: 160px;
   contain: layout style paint;
 }
-.report-body table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 12px 0;
-  font-size: 13px;
-}
-.report-body th,
-.report-body td {
-  padding: 8px 12px;
-  text-align: left;
-  border: 1px solid var(--border-light);
-}
-.report-body th {
-  background: var(--bg-inset);
-  font-weight: 600;
-  color: var(--text);
-}
-.report-body td {
-  color: var(--text-sub);
-}
+/* 表格樣式由 .markdown-body table/th/td 統一管理 */
+/* report-body 內容透過 renderMarkdown() 已包含 markdown-body class */
 
 /* Markdown */
 
@@ -2755,14 +2737,14 @@ input[aria-invalid="true"],
   border-left-color: var(--accent);
 }
 [data-theme="dark"] .markdown-body th,
-[data-theme="dark"] .ai-analysis-content th {
-  background: var(--bg-inset);
-}
-[data-theme="dark"] .markdown-body th,
 [data-theme="dark"] .markdown-body td,
 [data-theme="dark"] .ai-analysis-content th,
 [data-theme="dark"] .ai-analysis-content td {
   border-color: var(--border-light);
+}
+[data-theme="dark"] .markdown-body th,
+[data-theme="dark"] .ai-analysis-content th {
+  background: var(--bg-inset);
 }
 
 [data-theme="dark"] .notice-warn {
@@ -2862,9 +2844,28 @@ input[aria-invalid="true"],
   .nav-btn:focus-visible,
   .btn-primary:focus-visible,
   .btn-outline:focus-visible,
-  .btn-ghost:focus-visible {
+  .btn-ghost:focus-visible,
+  .btn-accent:focus-visible,
+  .btn-retry:focus-visible,
+  .tab-btn:focus-visible,
+  .watchlist-btn:focus-visible,
+  .lang-toggle:focus-visible,
+  .notice-dismiss:focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 2px;
+  }
+
+  /* 表單元素高對比邊框 */
+  .field input:focus,
+  .field select:focus {
+    border-width: 2px;
+    border-color: var(--accent);
+  }
+
+  /* 連結在高對比模式下加底線，確保可辨識 */
+  .markdown-body a,
+  .ai-analysis-content a {
+    text-decoration: underline;
   }
 
   .status-dot {

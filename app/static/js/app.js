@@ -592,10 +592,11 @@ function tradingApp() {
           const data = JSON.parse(event.data);
 
           if (data.type === 'progress') {
-            this.progressMessages.push(data.message);
-            // 限制進度訊息上限，避免長時間分析導致記憶體膨脹
-            // 超過上限時一次性截斷（整體替換比 splice 對 Alpine 更友好）
-            if (this.progressMessages.length > 200) this.progressMessages = this.progressMessages.slice(-190);
+            // 連續相同訊息去重（避免多代理重複進度推送）
+            const lastMsg = this.progressMessages[this.progressMessages.length - 1];
+            if (data.message !== lastMsg) this.progressMessages.push(data.message);
+            // 限制與後端 deque(maxlen=100) 對稱，超過時截斷
+            if (this.progressMessages.length > 100) this.progressMessages = this.progressMessages.slice(-95);
             const stepMatch = data.message.match(/^\[(\d+)\/(\d+)\]/);
             if (stepMatch) {
               this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, Math.round((parseInt(stepMatch[1]) / parseInt(stepMatch[2])) * CONFIG.PROGRESS_MAX_PERCENT));
@@ -852,23 +853,20 @@ function tradingApp() {
       }
     },
 
-    // 將時間戳轉為相對時間（如「剛剛」、「3 分鐘前」）
+    // 將時間戳轉為相對時間（如「剛剛」、「3 分鐘前」、「2 天前」）
     relativeTime(dateStr) {
-      if (!dateStr) return '';
+      if (!dateStr) return '--';
       try {
         const date = new Date(dateStr.replace(' ', 'T'));
+        if (isNaN(date.getTime())) return dateStr.slice(0, 10) || '--';
         const diff = Math.floor((Date.now() - date.getTime()) / 1000);
+        if (diff < 0) return dateStr.slice(0, 10);
         if (diff < 60) return this.t('time.just_now');
-        if (diff < 3600) {
-          const mins = Math.floor(diff / 60);
-          return mins + this.t('time.min_ago');
-        }
-        if (diff < 86400) {
-          const hours = Math.floor(diff / 3600);
-          return hours + this.t('time.hour_ago');
-        }
-        return dateStr;
-      } catch { return dateStr; }
+        if (diff < 3600) return Math.floor(diff / 60) + this.t('time.min_ago');
+        if (diff < 86400) return Math.floor(diff / 3600) + this.t('time.hour_ago');
+        if (diff < 604800) return Math.floor(diff / 86400) + this.t('time.day_ago');
+        return dateStr.slice(0, 10);
+      } catch { return '--'; }
     },
 
     formatLargeNumber(num) {
@@ -1129,12 +1127,12 @@ function tradingApp() {
 
       const result = this._sanitize(html);
 
-      // 快取結果（LRU：超過上限時清除最舊的一半，使用 iterator 避免建立中間陣列）
+      // 快取結果（LRU：超過上限時清除至 80%，避免頻繁淘汰）
       this._mdCache.set(text, result);
       if (this._mdCache.size > this._MD_CACHE_MAX) {
-        const half = Math.floor(this._MD_CACHE_MAX / 2);
+        const target = this._mdCache.size - Math.floor(this._MD_CACHE_MAX * 0.8);
         const it = this._mdCache.keys();
-        for (let i = 0; i < half; i++) this._mdCache.delete(it.next().value);
+        for (let i = 0; i < target; i++) this._mdCache.delete(it.next().value);
       }
       return result;
     },

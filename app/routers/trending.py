@@ -11,6 +11,7 @@ import time
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
+from collections import OrderedDict
 from typing import Optional
 
 from fastapi import APIRouter
@@ -124,10 +125,23 @@ _load_company_names()
 _llm_clients: dict[str, object] = {}
 _llm_clients_lock = threading.Lock()
 
-# 新聞標題翻譯快取（逐標題快取，跨刷新週期複用已翻譯標題）
+# 新聞標題翻譯快取（OrderedDict LRU，讀取時 move_to_end，滿時移除最久未使用）
 _MAX_TITLE_TRANSLATIONS = 500
-_title_translation_cache: dict[str, str] = {}
+_title_translation_cache: OrderedDict[str, str] = OrderedDict()
 _title_translation_lock = threading.Lock()
+
+
+async def _safe_run_in_executor(fn, fallback, *, context: str = ""):
+    """在執行緒池中執行同步函式，帶超時保護（15 秒）與容錯"""
+    loop = asyncio.get_running_loop()
+    try:
+        return await asyncio.wait_for(
+            loop.run_in_executor(_TRENDING_EXECUTOR, fn), timeout=15.0
+        )
+    except Exception as exc:
+        prefix = f"{context} " if context else ""
+        logger.warning(f"{prefix}{fn.__name__} 執行逾時或失敗: {exc}")
+        return fallback
 
 
 def _get_llm(provider: str, model: str, temperature: float = 0, max_tokens: int = 2000):
@@ -502,6 +516,8 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
             cached_zh = _title_translation_cache.get(item["title"])
             if cached_zh:
                 item["title_zh"] = cached_zh
+                # LRU：讀取命中時移至尾端，保護熱門條目不被淘汰
+                _title_translation_cache.move_to_end(item["title"])
             else:
                 need_translate_indices.append(i)
                 need_translate_titles.append(item["title"])
@@ -560,12 +576,9 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
                         news_items[idx]["title_zh"] = zh
                         _title_translation_cache[need_translate_titles[j]] = zh
 
-                    # 快取超過上限時，移除最早加入的條目
-                    if len(_title_translation_cache) > _MAX_TITLE_TRANSLATIONS:
-                        excess = len(_title_translation_cache) - _MAX_TITLE_TRANSLATIONS
-                        keys_to_remove = list(_title_translation_cache.keys())[:excess]
-                        for k in keys_to_remove:
-                            del _title_translation_cache[k]
+                    # LRU 淘汰：超過上限時移除最久未使用的條目
+                    while len(_title_translation_cache) > _MAX_TITLE_TRANSLATIONS:
+                        _title_translation_cache.popitem(last=False)
 
                 cached_count = len(news_items) - len(need_translate_titles)
                 logger.info(
@@ -589,23 +602,11 @@ async def get_market_overview():
     if cached:
         return cached
 
-    loop = asyncio.get_running_loop()
-
-    # 並行取得各項資料（使用專用執行緒池 + 超時保護）
-    async def _safe_exec(fn, fallback):
-        try:
-            return await asyncio.wait_for(
-                loop.run_in_executor(_TRENDING_EXECUTOR, fn), timeout=15.0
-            )
-        except Exception as exc:
-            logger.warning(f"{fn.__name__} 執行逾時或失敗: {exc}")
-            return fallback
-
-    # 指數+板塊合併為單一 yfinance 呼叫（減少 API 往返）
+    # 並行取得各項資料（指數+板塊合併為單一 yfinance 呼叫，減少 API 往返）
     indices_and_sectors, movers, news = await asyncio.gather(
-        _safe_exec(_fetch_indices_and_sectors, ([], [])),
-        _safe_exec(_fetch_movers, {"gainers": [], "losers": []}),
-        _safe_exec(_fetch_market_news, []),
+        _safe_run_in_executor(_fetch_indices_and_sectors, ([], [])),
+        _safe_run_in_executor(_fetch_movers, {"gainers": [], "losers": []}),
+        _safe_run_in_executor(_fetch_market_news, []),
     )
     indices, sectors = indices_and_sectors
 
@@ -961,22 +962,11 @@ async def get_ai_analysis(lang: str = "zh-TW"):
         # 取得市場資料（帶容錯的並行抓取）
         overview = _get_cached("overview")
         if not overview:
-            loop = asyncio.get_running_loop()
-
-            async def _safe_fetch(fn, fallback):
-                try:
-                    return await asyncio.wait_for(
-                        loop.run_in_executor(_TRENDING_EXECUTOR, fn), timeout=15.0
-                    )
-                except Exception as exc:
-                    logger.warning(f"AI 分析取得市場資料失敗 ({fn.__name__}): {exc}")
-                    return fallback
-
-            # 合併 indices + sectors 為單次 API 呼叫，避免 _fetch_indices_and_sectors 被重複執行
+            # 合併 indices + sectors 為單次 API 呼叫，避免重複執行
             indices_and_sectors, movers, news = await asyncio.gather(
-                _safe_fetch(_fetch_indices_and_sectors, ([], [])),
-                _safe_fetch(_fetch_movers, {"gainers": [], "losers": []}),
-                _safe_fetch(_fetch_market_news, []),
+                _safe_run_in_executor(_fetch_indices_and_sectors, ([], []), context="AI 分析"),
+                _safe_run_in_executor(_fetch_movers, {"gainers": [], "losers": []}, context="AI 分析"),
+                _safe_run_in_executor(_fetch_market_news, [], context="AI 分析"),
             )
             indices, sectors = indices_and_sectors
             overview = {

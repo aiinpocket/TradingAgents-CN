@@ -1120,14 +1120,19 @@ async def get_stock_context(symbol: str, request: Request):
 
     lang = _get_lang(request)
 
-    # 快取檢查（依語言分離，zh-TW 包含翻譯後標題）
-    cache_key = f"ctx_{symbol}_{lang}"
-    cached = _CONTEXT_CACHE.get(cache_key)
-    if cached and time.time() - cached["_ts"] < _CONTEXT_CACHE_TTL:
-        return cached["data"]
-
-    # 也檢查無語言後綴的基礎快取（向後相容）
+    # 快取檢查：英文直接使用基礎快取，中文使用語言特定快取（含翻譯標題）
     base_cache_key = f"ctx_{symbol}"
+    if lang != "zh-TW":
+        # 英文版直接使用基礎快取，省去額外快取鍵
+        cached = _CONTEXT_CACHE.get(base_cache_key)
+        if cached and time.time() - cached["_ts"] < _CONTEXT_CACHE_TTL:
+            return cached["data"]
+    else:
+        cache_key = f"ctx_{symbol}_zh-TW"
+        cached = _CONTEXT_CACHE.get(cache_key)
+        if cached and time.time() - cached["_ts"] < _CONTEXT_CACHE_TTL:
+            return cached["data"]
+
     base_cached = _CONTEXT_CACHE.get(base_cache_key)
 
     loop = asyncio.get_running_loop()
@@ -1159,9 +1164,10 @@ async def get_stock_context(symbol: str, request: Request):
         except Exception as exc:
             logger.debug(f"股票快照新聞翻譯逾時或失敗（顯示英文）: {exc}")
 
-    # 寫入語言特定快取
+    # 寫入快取（中文寫入語言特定鍵，英文已由基礎快取涵蓋）
     now = time.time()
-    _CONTEXT_CACHE[cache_key] = {"data": data, "_ts": now}
+    if lang == "zh-TW":
+        _CONTEXT_CACHE[cache_key] = {"data": data, "_ts": now}
 
     # 清理過期快取 + 超過上限時淘汰最舊的條目
     expired = [k for k, v in _CONTEXT_CACHE.items() if now - v["_ts"] > _CONTEXT_CACHE_TTL]
