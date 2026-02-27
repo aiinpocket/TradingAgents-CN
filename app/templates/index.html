@@ -872,26 +872,26 @@
         <!-- 交易決策 -->
         <div class="panel decision-panel" x-show="result?.decision">
           <div class="decision-row">
-            <div class="decision-primary" :class="getActionClass(getDecision()?.action)">
+            <div class="decision-primary" :class="getActionClass(_decision?.action)">
               <span class="decision-label" x-text="t('result.suggestion')"></span>
-              <span class="decision-action" x-text="getDecision()?.action || '-'"></span>
+              <span class="decision-action" x-text="_decision?.action || '-'"></span>
             </div>
             <div class="decision-metrics">
               <div class="metric">
                 <span class="metric-label" x-text="t('result.confidence')"></span>
-                <span class="metric-value" x-text="formatPercent(getDecision()?.confidence)"></span>
+                <span class="metric-value" x-text="formatPercent(_decision?.confidence)"></span>
               </div>
               <div class="metric">
                 <span class="metric-label" x-text="t('result.risk')"></span>
-                <span class="metric-value" x-text="formatPercent(getDecision()?.risk_score)"></span>
+                <span class="metric-value" x-text="formatPercent(_decision?.risk_score)"></span>
               </div>
-              <div class="metric" x-show="getDecision()?.target_price">
+              <div class="metric" x-show="_decision?.target_price">
                 <span class="metric-label" x-text="t('result.target_price')"></span>
-                <span class="metric-value" x-text="'$' + getDecision()?.target_price"></span>
+                <span class="metric-value" x-text="'$' + _decision?.target_price"></span>
               </div>
             </div>
           </div>
-          <p class="decision-reasoning" x-show="getDecision()?.reasoning" x-text="getDecision()?.reasoning"></p>
+          <p class="decision-reasoning" x-show="_decision?.reasoning" x-text="_decision?.reasoning"></p>
         </div>
 
         <!-- 報告分頁 -->

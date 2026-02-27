@@ -1855,6 +1855,7 @@ input[aria-invalid="true"],
   padding: 16px 20px;
   margin-bottom: 16px;
   box-shadow: var(--shadow-sm);
+  contain: layout style;
   min-height: 98px; /* 匹配實際內容高度，防止骨架→資料切換 CLS */
 }
 
@@ -1989,6 +1990,7 @@ input[aria-invalid="true"],
 .indices-bar {
   margin-bottom: 16px;
   min-height: 142px; /* 匹配實際內容高度，防止骨架→資料切換 CLS */
+  contain: layout style;
 }
 
 .indices-grid {
@@ -2882,30 +2884,8 @@ input[aria-invalid="true"],
   }
 }
 
-/* 暗色模式焦點輪廓加強（WCAG AA: --accent 在暗色背景上對比度 > 3:1） */
-[data-theme="dark"] .nav-btn:focus-visible,
-[data-theme="dark"] .btn-primary:focus-visible,
-[data-theme="dark"] .btn-outline:focus-visible,
-[data-theme="dark"] .btn-ghost:focus-visible,
-[data-theme="dark"] .btn-accent:focus-visible,
-[data-theme="dark"] .btn-retry:focus-visible,
-[data-theme="dark"] .tab-btn:focus-visible,
-[data-theme="dark"] .depth-btn:focus-visible,
-[data-theme="dark"] .module-chip:focus-visible,
-[data-theme="dark"] .watchlist-star:focus-visible,
-[data-theme="dark"] .watchlist-btn:focus-visible,
-[data-theme="dark"] .news-card-link:focus-visible,
-[data-theme="dark"] .stock-context-news-link:focus-visible,
-[data-theme="dark"] .news-related-badge:focus-visible,
-[data-theme="dark"] .index-card:focus-visible,
-[data-theme="dark"] .sector-card:focus-visible,
-[data-theme="dark"] .mover-row:focus-visible,
-[data-theme="dark"] .lang-toggle:focus-visible,
-[data-theme="dark"] .notice-dismiss:focus-visible,
-[data-theme="dark"] .history-row.history-clickable:focus-visible,
-[data-theme="dark"] .footer a:focus-visible {
-  outline-color: var(--accent);
-}
+/* 暗色模式焦點輪廓：所有基礎規則已使用 var(--accent)，
+   暗色模式重定義 --accent: #58a6ff，自動繼承無需逐一覆蓋 */
 
 /* 無障礙：減少動態效果偏好 */
 @media (prefers-reduced-motion: reduce) {

@@ -83,6 +83,8 @@ function tradingApp() {
     stockPreview: null,
     // 市場情緒快取（避免模板中 getMarketSentiment() 被重複呼叫）
     _sentiment: { label: '', cls: '', arrow: '' },
+    // 交易決策快取（避免模板中 getDecision() 被 7 次重複呼叫+物件展開）
+    _decision: null,
     // 共用股票查詢表（trendingData 變化時由 $watch 更新）
     _stockMap: {},
 
@@ -159,6 +161,9 @@ function tradingApp() {
         // 使用者修改股票代號時自動清除過時的錯誤訊息
         if (this.formError) this.formError = null;
       });
+      // 分析結果變化時更新 decision 快取（避免模板中 7 次 getDecision() 重複呼叫+物件展開）
+      this.$watch('result', () => { this._decision = this._computeDecision(); });
+      this.$watch('lang', () => { this._decision = this._computeDecision(); });
       // 使用者切換提供商或模型時自動清除錯誤訊息（避免殘留前次配置的錯誤）
       this.$watch('form.provider', () => { if (this.formError) this.formError = null; });
       this.$watch('form.model', () => { if (this.formError) this.formError = null; });
@@ -787,14 +792,16 @@ function tradingApp() {
       return st ? st[key] : null;
     },
 
-    // 根據語言取得 decision
-    getDecision() {
+    // 計算交易決策（結果快取在 _decision，由 $watch('result') 和 $watch('lang') 觸發）
+    _computeDecision() {
       if (!this.result) return null;
       if (this.lang === 'en' && this.result.decision_en) {
         return { ...this.result.decision, ...this.result.decision_en };
       }
       return this.result.decision;
     },
+    // 公開存取（模板使用 _decision 即可，此函式保留向後相容）
+    getDecision() { return this._decision; },
 
     selectFirstTab() {
       if (!this.result?.state) return;
