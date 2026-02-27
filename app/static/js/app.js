@@ -253,7 +253,7 @@ function tradingApp() {
         this.apiReady = false;
       }
       // 定期健康檢查：離線時 15 秒、上線時 60 秒
-      if (this._healthTimer) clearTimeout(this._healthTimer);
+      if (this._healthTimer) { clearTimeout(this._healthTimer); this._healthTimer = null; }
       const interval = this.apiReady ? 60000 : 15000;
       this._healthTimer = setTimeout(() => this.checkHealth(), interval);
     },
