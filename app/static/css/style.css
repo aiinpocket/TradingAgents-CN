@@ -821,6 +821,17 @@ input[aria-invalid="true"],
   to { transform: rotate(360deg); }
 }
 
+/* 通用 spinner（歷史載入等場景） */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: 16px auto;
+}
+
 .btn-outline {
   background: none;
   color: var(--accent);

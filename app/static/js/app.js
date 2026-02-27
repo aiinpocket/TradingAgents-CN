@@ -58,6 +58,8 @@ function tradingApp() {
     result: null,
     cachedResult: false,
     historyList: [],
+    historyLoading: false,
+    historyError: '',
     configStatus: null,
     analysisId: null,
     eventSource: null,
@@ -837,6 +839,18 @@ function tradingApp() {
       }
     },
 
+    // 報告分頁鍵盤導航（跳過隱藏的 tab，支援方向鍵 + Home/End）
+    _navTab(dir, el) {
+      const all = [...el.closest('[role=tablist]').querySelectorAll('[role=tab]')];
+      const visible = all.filter(t => t.offsetWidth > 0);
+      if (!visible.length) return;
+      if (dir === 'first') { visible[0].focus(); visible[0].click(); return; }
+      if (dir === 'last') { visible[visible.length - 1].focus(); visible[visible.length - 1].click(); return; }
+      const idx = visible.indexOf(el);
+      const next = visible[idx + dir];
+      if (next) { next.focus(); next.click(); }
+    },
+
     // 取消分析：第一次點擊顯示確認提示，3 秒內再次點擊才真正取消
     cancelAnalysis() {
       if (!this.analysisRunning) return;
@@ -976,13 +990,18 @@ function tradingApp() {
     },
 
     async loadHistory() {
+      this.historyLoading = true;
+      this.historyError = '';
       try {
         const res = await fetch('/api/analysis/history', { headers: this._langHeaders() });
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         this.historyList = (data.analyses || []).reverse();
       } catch (e) {
         console.error('Failed to load history:', e);
+        this.historyError = this.t('history.load_failed');
+      } finally {
+        this.historyLoading = false;
       }
     },
 
@@ -1151,10 +1170,11 @@ function tradingApp() {
       // 單次掃描的 HTML 實體編碼函式（避免對同一字串掃描 3 次）
       const escHtml = s => s.replace(/[&<>]/g, c => c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;');
 
-      // 先提取多行代碼塊，避免後續處理破壞其內容
+      // 先提取多行代碼塊，避免後續處理破壞其內容（支援語言標記後無換行的情況）
       const codeBlocks = [];
-      html = html.replace(/```(\w*)\n([\s\S]*?)```/gm, (_, lang, code) => {
+      html = html.replace(/```(\w*)\n?([\s\S]*?)```/gm, (_, lang, code) => {
         const safeCode = escHtml(code.trimEnd());
+        if (!safeCode) return '';
         const placeholder = `\x00CB${codeBlocks.length}\x00`;
         codeBlocks.push(`<pre><code class="language-${lang || 'text'}">${safeCode}</code></pre>`);
         return placeholder;
@@ -1217,11 +1237,14 @@ function tradingApp() {
         const parseRow = (row) =>
           row.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
         const headers = parseRow(rows[0]);
+        const colCount = headers.length;
         const thead = '<thead><tr>' + headers.map(h => `<th scope="col">${h}</th>`).join('') + '</tr></thead>';
         const bodyRows = rows.slice(2);
         const tbody = '<tbody>' + bodyRows.map(row => {
           const cells = parseRow(row);
-          return '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+          // 正規化列數：不足補空格、多餘截斷，避免 LLM 產生畸形表格
+          while (cells.length < colCount) cells.push('');
+          return '<tr>' + cells.slice(0, colCount).map(c => `<td>${c}</td>`).join('') + '</tr>';
         }).join('') + '</tbody>';
         return `<div class="table-scroll"><table>${thead}${tbody}</table></div>`;
       });

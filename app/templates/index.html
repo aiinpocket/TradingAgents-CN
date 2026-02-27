@@ -896,10 +896,10 @@
 
         <!-- 報告分頁 -->
         <div class="tab-bar" role="tablist"
-             @keydown.arrow-right.prevent="$event.target.nextElementSibling?.click()"
-             @keydown.arrow-left.prevent="$event.target.previousElementSibling?.click()"
-             @keydown.home.prevent="$event.currentTarget.querySelector('[role=tab]')?.click()"
-             @keydown.end.prevent="$event.currentTarget.querySelector('[role=tab]:last-of-type')?.click()">
+             @keydown.arrow-right.prevent="_navTab(1, $event.target)"
+             @keydown.arrow-left.prevent="_navTab(-1, $event.target)"
+             @keydown.home.prevent="_navTab('first', $event.target)"
+             @keydown.end.prevent="_navTab('last', $event.target)">
           <button class="tab-btn" role="tab" id="tab-market" aria-controls="panel-market"
                   :aria-selected="reportTab === 'market'" :tabindex="reportTab === 'market' ? 0 : -1"
                   :class="{ active: reportTab === 'market' }"
@@ -963,7 +963,14 @@
             <span x-text="t('history.refresh')"></span>
           </button>
         </div>
-        <div class="empty-state empty-state-rich" x-show="historyList.length === 0">
+        <div class="notice notice-error compact" x-cloak x-show="historyError" role="alert">
+          <span x-text="historyError"></span>
+          <button class="btn-ghost btn-sm" @click="loadHistory()" x-text="t('history.refresh')"></button>
+        </div>
+        <div class="empty-state" x-show="historyLoading && historyList.length === 0" aria-busy="true">
+          <div class="spinner" aria-hidden="true"></div>
+        </div>
+        <div class="empty-state empty-state-rich" x-show="!historyLoading && !historyError && historyList.length === 0">
           <svg viewBox="0 0 64 64" fill="none" class="empty-icon-lg" aria-hidden="true">
             <rect x="8" y="12" width="48" height="40" rx="6" stroke="currentColor" stroke-width="2" opacity="0.3"/>
             <path d="M8 24h48" stroke="currentColor" stroke-width="2" opacity="0.3"/>
