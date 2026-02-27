@@ -64,6 +64,7 @@
 - **風險辯論者報告截斷**: truncate_report() 將 4 份完整報告截斷至 800 字元，減少風險辯論階段 ~50% LLM 輸入 token
 - **共用公司名稱函式**: get_company_name() 提取至 stock_utils.py，4 位分析師共用單一映射表
 - **股價計算去重**: _calc_price_change() 統一 3 處相同漲跌計算邏輯
+- **WCAG 標題層級修正**: Markdown 標題統一映射 h3，消除 h2->h4 跳級問題
 
 #### 資料更新頻率
 

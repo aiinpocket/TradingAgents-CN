@@ -677,7 +677,7 @@ input[aria-invalid="true"],
 }
 
 .depth-label {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-faint);
 }
 
@@ -1972,7 +1972,7 @@ code {
 }
 
 .section-hint {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 400;
   color: var(--text-faint);
   margin-left: 8px;
@@ -2020,7 +2020,7 @@ code {
   position: absolute;
   top: 8px;
   right: 10px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-tertiary);
   opacity: 0;
@@ -2140,7 +2140,7 @@ code {
 }
 
 .trending-icon {
-  font-size: 10px;
+  font-size: 11px;
   margin-right: 4px;
 }
 
@@ -2386,7 +2386,7 @@ code {
   right: 12px;
   bottom: 10px;
   font-weight: 700;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--accent-text);
   background: var(--accent-bg);
   padding: 1px 6px;
@@ -2455,7 +2455,7 @@ code {
 }
 
 .sector-symbol {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-faint);
   margin-bottom: 4px;
 }
@@ -2611,7 +2611,7 @@ code {
   padding: 4px;
   cursor: pointer;
   color: var(--text-faint);
-  opacity: 0.15;
+  opacity: 0.3;
   transition: opacity 0.12s, color 0.12s, transform 0.1s;
   line-height: 0;
   flex-shrink: 0;
