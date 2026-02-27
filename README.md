@@ -1439,7 +1439,7 @@ TradingAgents-CN
 
 ## 版本歷史
 
-- **v0.5.0** (2026-02-27): 報告分頁鍵盤導航修復（跳過隱藏 tab）、Markdown 渲染器強化（代碼塊邊界 + 表格列數正規化）、歷史清單載入/錯誤狀態反饋、分析事件引用終態清理（記憶體洩漏防護）、取消計時器重置修復、WCAG 2.5.8 觸控目標修復(44px)、快取時鐘回調防護、focus-visible 一致化、AI 趨勢分析跨 tab 語言切換修復、SignalProcessor 去 LLM 化（純正則提取）、CSS 觸控回饋(:active)、暗色模式對比度強化、MongoDB 非阻塞儲存、SSE 事件驅動通知、ARIA 無障礙修正（焦點管理 + group 標籤 + 對比度）、i18n 168 key 對稱、6 個單例工廠 double-checked locking（TOCTOU 競態防護）、OpenAI Responses API 安全提取、SecurityHeadersMiddleware 錯誤回應防護、虛假回退資料移除、Google News 超時中止、AI 速率限制器加鎖、背景刷新超時保護
+- **v0.5.0** (2026-02-27): 報告分頁鍵盤導航修復（跳過隱藏 tab）、Markdown 渲染器強化（代碼塊邊界 + 表格列數正規化）、歷史清單載入/錯誤狀態反饋、分析事件引用終態清理（記憶體洩漏防護）、取消計時器重置修復、WCAG 2.5.8 觸控目標修復(44px)、快取時鐘回調防護、focus-visible 一致化、AI 趨勢分析跨 tab 語言切換修復、SignalProcessor 去 LLM 化（純正則提取）、CSS 觸控回饋(:active)、暗色模式對比度強化、MongoDB 非阻塞儲存、SSE 事件驅動通知、ARIA 無障礙修正（焦點管理 + group 標籤 + 對比度）、i18n 168 key 對稱、6 個單例工廠 double-checked locking（TOCTOU 競態防護）、OpenAI Responses API 安全提取、SecurityHeadersMiddleware 錯誤回應防護、虛假回退資料移除、Google News 超時中止、AI 速率限制器加鎖、背景刷新超時保護、Google News 延遲優化（2-6s -> 首頁零延遲）、CSS contain:paint 統一 + nth-child 選擇器簡化 + will-change GPU 加速
 - **v0.4.5** (2026-02-27): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、工具結果快取去重、全域工具執行緒池、標準化記憶嵌入快取(100% 命中)、LLM max_tokens 限制、辯論歷史截斷、背景翻譯任務追蹤、SSR 預渲染 CLS 0.00、CSP 構建器、版本常數化、術語校正模組化、AI 分析中英文平行產生、背景任務平行化、MongoDB 單例化、安全依賴全數最新（pip-audit 0 漏洞）
 - **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
