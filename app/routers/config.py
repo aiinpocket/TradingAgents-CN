@@ -3,14 +3,11 @@
 """
 
 import os
-from pathlib import Path
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 router = APIRouter(tags=["config"])
-
-PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 
 @router.get("/config/status")

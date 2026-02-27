@@ -1128,9 +1128,9 @@ async def get_stock_context(symbol: str, request: Request):
 
     loop = asyncio.get_running_loop()
 
+    import copy
     if base_cached and time.time() - base_cached["_ts"] < _CONTEXT_CACHE_TTL:
         # 基礎資料已快取，深拷貝後再翻譯避免汙染基礎快取
-        import copy
         data = copy.deepcopy(base_cached["data"])
     else:
         data = await loop.run_in_executor(_CONTEXT_EXECUTOR, _fetch_stock_context, symbol)
@@ -1140,7 +1140,6 @@ async def get_stock_context(symbol: str, request: Request):
             raise HTTPException(status_code=502, detail=_t("stock_context_error", request))
 
         # 寫入基礎快取（深拷貝，避免後續翻譯修改影響快取中的英文版本）
-        import copy
         now = time.time()
         _CONTEXT_CACHE[base_cache_key] = {"data": copy.deepcopy(data), "_ts": now}
 
