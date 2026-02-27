@@ -464,6 +464,7 @@ def _fetch_movers() -> dict:
 
 def _fetch_news_for_symbol(sym: str) -> list[dict]:
     """取得單一股票的新聞（由執行緒池並行呼叫）"""
+    from app.utils.news_parser import parse_news_item
     import yfinance as yf
 
     items = []
@@ -471,58 +472,14 @@ def _fetch_news_for_symbol(sym: str) -> list[dict]:
         ticker = yf.Ticker(sym)
         news = ticker.news or []
         for item in news[:3]:
-            # yfinance >= 1.0 新格式：{id, content: {title, pubDate, provider, canonicalUrl, ...}}
-            content = item.get("content", {}) if isinstance(item, dict) else {}
-            if content:
-                title = content.get("title", "")
-                canonical = content.get("canonicalUrl", {})
-                link = canonical.get("url", "") if isinstance(canonical, dict) else ""
-                provider = content.get("provider", {})
-                publisher = provider.get("displayName", "") if isinstance(provider, dict) else ""
-                pub_date_str = content.get("pubDate", "")
-            else:
-                # 舊版 yfinance 格式回退
-                title = item.get("title", "")
-                link = item.get("link", "")
-                publisher = item.get("publisher", "")
-                pub_date_ts = item.get("providerPublishTime", 0)
-                pub_date_str = datetime.fromtimestamp(pub_date_ts).strftime(
-                    "%Y-%m-%d %H:%M"
-                ) if pub_date_ts else ""
-
-            if title and link:
-                # 統一日期格式
-                date_display = ""
-                if pub_date_str and "T" in str(pub_date_str):
-                    try:
-                        dt = datetime.fromisoformat(
-                            str(pub_date_str).replace("Z", "+00:00")
-                        )
-                        date_display = dt.strftime("%Y-%m-%d %H:%M")
-                    except (ValueError, TypeError):
-                        date_display = str(pub_date_str)[:16]
-                elif pub_date_str:
-                    date_display = str(pub_date_str)
-
-                items.append({
-                    "title": title,
-                    "url": link,
-                    "source": publisher,
-                    "date": date_display,
-                    "related": sym.replace("^", ""),
-                })
+            parsed = parse_news_item(item, symbol=sym)
+            if parsed:
+                items.append(parsed)
     except Exception as e:
         logger.warning(f"取得 {sym} 新聞失敗: {e}")
 
     return items
 
-
-# 付費新聞來源（使用者無法免費閱讀全文）
-_PAID_SOURCES = frozenset({
-    "the wall street journal", "wsj", "wall street journal",
-    "bloomberg", "financial times", "ft", "barron's", "barrons",
-    "the economist", "investor's business daily", "ibd",
-})
 
 # 新聞來源股票清單
 _NEWS_SYMBOLS = ["^GSPC", "AAPL", "NVDA", "TSLA", "MSFT", "GOOGL"]
@@ -530,6 +487,8 @@ _NEWS_SYMBOLS = ["^GSPC", "AAPL", "NVDA", "TSLA", "MSFT", "GOOGL"]
 
 def _fetch_market_news() -> list[dict]:
     """取得市場新聞（臨時執行緒池並行抓取，避免巢狀提交 _TRENDING_EXECUTOR）"""
+    from app.utils.news_parser import filter_paid_sources, deduplicate_news
+
     try:
         import yfinance as yf  # noqa: F401 確保已安裝
     except ImportError:
@@ -550,22 +509,7 @@ def _fetch_market_news() -> list[dict]:
     except Exception as e:
         logger.error(f"取得市場新聞失敗: {e}")
 
-    # 過濾付費新聞來源
-    free_news = [
-        item for item in news_list
-        if item.get("source", "").lower() not in _PAID_SOURCES
-    ]
-
-    # 去重（依標題，過濾空標題）
-    seen_titles: set[str] = set()
-    unique_news = []
-    for item in free_news:
-        t = item["title"].strip()
-        if t and t not in seen_titles:
-            seen_titles.add(t)
-            unique_news.append(item)
-
-    return unique_news[:12]
+    return deduplicate_news(filter_paid_sources(news_list))[:12]
 
 
 # Prompt injection 清理：移除新聞標題中可能被利用的指令標記

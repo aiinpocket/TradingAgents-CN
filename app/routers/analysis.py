@@ -1014,11 +1014,6 @@ _CONTEXT_CACHE_TTL = 900  # 15 分鐘（個股快照更新頻率不需太高）
 _MAX_CONTEXT_CACHE = 200  # 快取條目上限
 _CONTEXT_FETCH_MAX_RETRIES = 2  # 快照取得失敗時最多重試次數
 
-_PAID_NEWS_SOURCES = {
-    "the wall street journal", "wsj", "wall street journal",
-    "bloomberg", "financial times", "ft", "barron's", "barrons",
-    "barrons.com", "the economist", "investor's business daily", "ibd",
-}
 
 
 def _fetch_stock_context(symbol: str, _retry: int = 0) -> dict:
@@ -1056,61 +1051,15 @@ def _fetch_stock_context(symbol: str, _retry: int = 0) -> dict:
             "beta": info.get("beta"),
         })
 
-        # 近期新聞
+        # 近期新聞（使用共用解析器，消除重複程式碼）
         news_list = []
         try:
+            from app.utils.news_parser import parse_news_item, filter_paid_sources, deduplicate_news
             raw_news = ticker.news or []
-            for item in raw_news[:12]:
-                content = item.get("content", {}) if isinstance(item, dict) else {}
-                if content:
-                    title = content.get("title", "")
-                    canonical = content.get("canonicalUrl", {})
-                    link = canonical.get("url", "") if isinstance(canonical, dict) else ""
-                    provider = content.get("provider", {})
-                    publisher = provider.get("displayName", "") if isinstance(provider, dict) else ""
-                    pub_date_str = content.get("pubDate", "")
-                else:
-                    title = item.get("title", "")
-                    link = item.get("link", "")
-                    publisher = item.get("publisher", "")
-                    pub_date_ts = item.get("providerPublishTime", 0)
-                    pub_date_str = (
-                        datetime.fromtimestamp(pub_date_ts).strftime("%Y-%m-%d %H:%M")
-                        if pub_date_ts else ""
-                    )
-
-                if not title or not link:
-                    continue
-                if publisher.lower() in _PAID_NEWS_SOURCES:
-                    continue
-
-                date_display = ""
-                if pub_date_str and "T" in str(pub_date_str):
-                    try:
-                        dt = datetime.fromisoformat(str(pub_date_str).replace("Z", "+00:00"))
-                        date_display = dt.strftime("%Y-%m-%d %H:%M")
-                    except (ValueError, TypeError):
-                        date_display = str(pub_date_str)[:16]
-                elif pub_date_str:
-                    date_display = str(pub_date_str)
-
-                news_list.append({
-                    "title": title,
-                    "url": link,
-                    "source": publisher,
-                    "date": date_display,
-                })
-
-            # 去重（過濾空標題）
-            seen = set()
-            unique_news = []
-            for n in news_list:
-                t = n["title"].strip()
-                if t and t not in seen:
-                    seen.add(t)
-                    unique_news.append(n)
-            news_list = unique_news[:8]
-
+            parsed = [parse_news_item(item) for item in raw_news[:12]]
+            news_list = deduplicate_news(filter_paid_sources(
+                [n for n in parsed if n]
+            ))[:8]
         except Exception as e:
             logger.debug(f"取得 {symbol} 新聞失敗: {e}")
 
