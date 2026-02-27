@@ -62,6 +62,30 @@ def get_stock_market_info(ticker: str) -> Dict:
     }
 
 
+# 常見美股代碼對應的中文公司名稱
+_US_STOCK_NAMES = {
+    'AAPL': '蘋果公司',
+    'TSLA': '特斯拉',
+    'NVDA': '輝達',
+    'MSFT': '微軟',
+    'GOOGL': '谷歌',
+    'GOOG': '谷歌',
+    'AMZN': '亞馬遜',
+    'META': 'Meta',
+    'NFLX': 'Netflix',
+    'AMD': '超微半導體',
+    'INTC': '英特爾',
+    'CRM': 'Salesforce',
+    'AVGO': '博通',
+    'QCOM': '高通',
+}
+
+
+def get_company_name(ticker: str) -> str:
+    """根據股票代碼取得中文公司名稱（無對應時返回原代碼）"""
+    return _US_STOCK_NAMES.get(ticker.upper(), ticker)
+
+
 # 向後相容函式
 def is_us_stock(ticker: str) -> bool:
     """判斷是否為有效的美股代碼"""

@@ -11,36 +11,7 @@ from tradingagents.utils.logging_init import get_logger
 logger = get_logger("default")
 
 
-def _get_company_name_for_fundamentals(ticker: str, market_info: dict) -> str:
-    """
-    為基本面分析師取得公司名稱
-
-    Args:
-        ticker: 股票代碼
-        market_info: 市場資訊字典
-
-    Returns:
-        str: 公司名稱
-    """
-    try:
-        us_stock_names = {
-            'AAPL': '蘋果公司',
-            'TSLA': '特斯拉',
-            'NVDA': '輝達',
-            'MSFT': '微軟',
-            'GOOGL': '谷歌',
-            'AMZN': '亞馬遜',
-            'META': 'Meta',
-            'NFLX': 'Netflix'
-        }
-
-        company_name = us_stock_names.get(ticker.upper(), ticker)
-        logger.debug(f"[基本面分析師] 美股名稱映射: {ticker} -> {company_name}")
-        return company_name
-
-    except Exception as e:
-        logger.error(f"[基本面分析師] 取得公司名稱失敗: {e}")
-        return ticker
+from tradingagents.utils.stock_utils import get_company_name as _get_company_name
 
 
 def create_fundamentals_analyst(llm, toolkit):
@@ -72,7 +43,7 @@ def create_fundamentals_analyst(llm, toolkit):
         logger.debug(f"工具配置檢查: online_tools={toolkit.config['online_tools']}")
 
         # 取得公司名稱
-        company_name = _get_company_name_for_fundamentals(ticker, market_info)
+        company_name = _get_company_name(ticker)
         logger.debug(f"公司名稱: {ticker} -> {company_name}")
 
         # 直接呼叫工具取得資料（跳過 LLM 工具決策步驟，節省一次 LLM 呼叫）

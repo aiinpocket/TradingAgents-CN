@@ -1,39 +1,8 @@
 # 匯入統一日誌系統和分析模組日誌裝飾器
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
+from tradingagents.utils.stock_utils import get_company_name as _get_company_name
 logger = get_logger("analysts.social_media")
-
-
-def _get_company_name_for_social_media(ticker: str, market_info: dict) -> str:
-    """
-    為社交媒體分析師取得公司名稱
-
-    Args:
-        ticker: 股票代碼
-        market_info: 市場資訊字典
-
-    Returns:
-        str: 公司名稱
-    """
-    try:
-        us_stock_names = {
-            'AAPL': '蘋果公司',
-            'TSLA': '特斯拉',
-            'NVDA': '輝達',
-            'MSFT': '微軟',
-            'GOOGL': '谷歌',
-            'AMZN': '亞馬遜',
-            'META': 'Meta',
-            'NFLX': 'Netflix'
-        }
-
-        company_name = us_stock_names.get(ticker.upper(), ticker)
-        logger.debug(f"[社交媒體分析師] 美股名稱映射: {ticker} -> {company_name}")
-        return company_name
-
-    except Exception as e:
-        logger.error(f"[社交媒體分析師] 取得公司名稱失敗: {e}")
-        return ticker
 
 
 def create_social_media_analyst(llm, toolkit):
@@ -47,7 +16,7 @@ def create_social_media_analyst(llm, toolkit):
         market_info = get_stock_market_info(ticker)
         
         # 取得公司名稱
-        company_name = _get_company_name_for_social_media(ticker, market_info)
+        company_name = _get_company_name(ticker)
         logger.info(f"[社交媒體分析師] 公司名稱: {company_name}")
 
         # 直接呼叫工具取得資料（跳過 LLM 工具決策步驟，節省一次 LLM 呼叫）

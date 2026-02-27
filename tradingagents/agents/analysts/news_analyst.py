@@ -5,8 +5,8 @@ from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
 # 匯入統一新聞工具
 from tradingagents.tools.unified_news_tool import create_unified_news_tool
-# 匯入股票市場資訊工具
-from tradingagents.utils.stock_utils import get_stock_market_info
+# 匯入股票市場資訊工具和公司名稱查詢
+from tradingagents.utils.stock_utils import get_stock_market_info, get_company_name as _get_company_name
 logger = get_logger("analysts.news")
 
 
@@ -26,29 +26,7 @@ def create_news_analyst(llm, toolkit):
         logger.info(f"[新聞分析師] 股票類型: {market_info['market_name']}")
         
         # 取得公司名稱
-        def _get_company_name(ticker: str, market_info: dict) -> str:
-            """根據股票代碼取得公司名稱"""
-            try:
-                us_stock_names = {
-                    'AAPL': '蘋果公司',
-                    'TSLA': '特斯拉',
-                    'NVDA': '輝達',
-                    'MSFT': '微軟',
-                    'GOOGL': '谷歌',
-                    'AMZN': '亞馬遜',
-                    'META': 'Meta',
-                    'NFLX': 'Netflix'
-                }
-
-                company_name = us_stock_names.get(ticker.upper(), ticker)
-                logger.debug(f"美股名稱映射: {ticker} -> {company_name}")
-                return company_name
-
-            except Exception as e:
-                logger.error(f"取得公司名稱失敗: {e}")
-                return ticker
-        
-        company_name = _get_company_name(ticker, market_info)
+        company_name = _get_company_name(ticker)
         logger.info(f"[新聞分析師] 公司名稱: {company_name}")
         
         # 直接呼叫工具取得資料（跳過 LLM 工具決策步驟，節省一次 LLM 呼叫）
