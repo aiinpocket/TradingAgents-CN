@@ -98,7 +98,7 @@ def get_situation_for_memory(state: dict, max_chars: int = 1500) -> str:
 
 
 def get_cached_embedding(situation_text: str, memory_instance) -> list[float]:
-    """取得 current_situation 的嵌入向量（快取避免重複 API 呼叫）"""
+    """取得 current_situation 的嵌入向量（快取避免重複 API 呼叫，含 15 秒超時保護）"""
     cache_key = hash(situation_text)
     with _embedding_cache_lock:
         cached = _embedding_cache.get(cache_key)
@@ -106,8 +106,16 @@ def get_cached_embedding(situation_text: str, memory_instance) -> list[float]:
             logger.debug("記憶嵌入快取命中，跳過 API 呼叫")
             return cached
 
-    # 快取未命中，計算嵌入
-    embedding = memory_instance.get_embedding(situation_text)
+    # 快取未命中，使用執行緒 + 超時保護，防止嵌入 API 無限阻塞
+    import concurrent.futures
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+        try:
+            future = pool.submit(memory_instance.get_embedding, situation_text)
+            embedding = future.result(timeout=15)
+        except (concurrent.futures.TimeoutError, Exception) as e:
+            logger.warning(f"嵌入 API 超時或失敗（{e}），返回零向量降級")
+            return [0.0] * 1024
+
     with _embedding_cache_lock:
         _embedding_cache[cache_key] = embedding
     logger.info("記憶嵌入已計算並快取")

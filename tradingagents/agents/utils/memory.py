@@ -236,7 +236,8 @@ class FinancialSituationMemory:
         try:
             response = self.client.embeddings.create(
                 model=self.embedding,
-                input=text
+                input=text,
+                timeout=10.0,
             )
             embedding = response.data[0].embedding
             logger.debug(f"{self.llm_provider} embedding成功，維度: {len(embedding)}")

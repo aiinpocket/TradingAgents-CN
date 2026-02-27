@@ -3,6 +3,7 @@
 import os
 import re
 import time
+import threading
 from pathlib import Path
 import json
 from typing import Dict, Any
@@ -345,16 +346,20 @@ class TradingAgentsGraph:
             logger.error(f"記錄狀態時發生錯誤: {e}")
             return
 
-        # Save to file
-        directory = Path(f"eval_results/{self.ticker}/TradingAgentsStrategy_logs/")
-        directory.mkdir(parents=True, exist_ok=True)
+        # 背景執行緒寫入，不阻塞分析結果回傳
+        data_copy = dict(self.log_states_dict)
+        ticker = self.ticker
 
-        with open(
-            f"eval_results/{self.ticker}/TradingAgentsStrategy_logs/full_states_log.json",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            json.dump(self.log_states_dict, f, indent=4)
+        def _write():
+            try:
+                directory = Path(f"eval_results/{ticker}/TradingAgentsStrategy_logs/")
+                directory.mkdir(parents=True, exist_ok=True)
+                with open(directory / "full_states_log.json", "w", encoding="utf-8") as f:
+                    json.dump(data_copy, f, ensure_ascii=False)
+            except Exception as exc:
+                logger.error(f"背景寫入分析日誌失敗: {exc}")
+
+        threading.Thread(target=_write, daemon=True).start()
 
     def reflect_and_remember(self, returns_losses):
         """Reflect on decisions and update memory based on returns."""
