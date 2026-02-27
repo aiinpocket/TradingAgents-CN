@@ -297,10 +297,6 @@ class TradingAgentsGraph:
             if "invest_judge" not in populated:
                 populated.add("invest_judge")
                 callback("node_research_manager_done")
-        elif hasattr(debate, "get") and debate.get("judge_decision"):
-            if "invest_judge" not in populated:
-                populated.add("invest_judge")
-                callback("node_research_manager_done")
 
         # 偵測多空辯論進行中（count 增加但 judge_decision 尚未出現）
         if isinstance(debate, dict) and debate.get("count", 0) > 0:
