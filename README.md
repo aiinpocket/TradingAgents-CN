@@ -34,7 +34,7 @@
 - **分析執行緒池擴容**: _ANALYSIS_EXECUTOR 4->8 workers，支援更高並行度
 - **快取 TTL 優化**: 市場資料 2h->4h、新聞 6h->8h，減少同一交易日內重複 API 呼叫
 - **MongoDB 連接池單例化**: 共享 MongoClient 單例（maxPoolSize=10），避免每次建立新連接
-- **Markdown 渲染記憶化**: renderMarkdown() 使用 Map 快取（上限 30 筆），Alpine 反應式更新不再重複解析
+- **Markdown 渲染記憶化**: renderMarkdown() 使用 Map 快取（上限 100 筆），Alpine 反應式更新不再重複解析
 - **圖結構精簡**: 移除 4 個不再使用的 ToolNode 圖節點和條件邊（-39 行）
 - **英文翻譯異步化**: _background_translate() 不阻塞 SSE 回應，先回中文結果再背景翻譯
 - **前端 compositor-only 動畫**: progress-fill 改用 transform scaleX()（零 layout reflow）
@@ -61,6 +61,7 @@
 - **統一日期計算**: calc_start_date() 共用函式消除 3 處重複邏輯
 - **MongoDB 深度防禦**: 查詢參數型別檢查防 NoSQL 操作符注入
 - **原子性快取寫入**: 公司名稱快取使用 tempfile + os.replace 防止中斷損毀
+- **投資辯論報告截斷**: 看漲/看跌研究員將 4 份分析報告截斷至 1500-2000 字元，降低辯論 token 消耗 ~25%
 - **風險辯論者報告截斷**: truncate_report() 將 4 份完整報告截斷至 800 字元，減少風險辯論階段 ~50% LLM 輸入 token
 - **共用公司名稱函式**: get_company_name() 提取至 stock_utils.py，4 位分析師共用單一映射表
 - **股價計算去重**: _calc_price_change() 統一 3 處相同漲跌計算邏輯
