@@ -28,11 +28,9 @@ def is_rate_limited(response):
     stop=stop_after_attempt(3),
 )
 def make_request(url, headers):
-    """Make a request with retry logic for rate limiting and connection issues"""
-    # Random delay before each request to avoid detection
-    time.sleep(random.uniform(2, 6))
+    """含重試邏輯的 HTTP 請求（429 速率限制 / 連線錯誤自動重試）"""
     # 新增超時參數，設定連接超時和讀取超時
-    response = requests.get(url, headers=headers, timeout=(10, 30))  # 連接超時10秒，讀取超時30秒
+    response = requests.get(url, headers=headers, timeout=(10, 30))
     return response
 
 
@@ -61,6 +59,9 @@ def getNewsData(query, start_date, end_date):
     news_results = []
     page = 0
     while True:
+        # 分頁請求間加入短延遲避免被封鎖（首頁不延遲以加速回應）
+        if page > 0:
+            time.sleep(random.uniform(0.5, 1.5))
         offset = page * 10
         params = urlencode({
             'q': query,

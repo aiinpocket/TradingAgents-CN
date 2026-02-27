@@ -658,7 +658,7 @@ function tradingApp() {
             const lastMsg = this.progressMessages[this.progressMessages.length - 1];
             if (data.message !== lastMsg) this.progressMessages.push(data.message);
             // 限制與後端 deque(maxlen=100) 對稱，超過時截斷
-            if (this.progressMessages.length > 100) this.progressMessages = this.progressMessages.slice(-95);
+            if (this.progressMessages.length > 100) this.progressMessages.splice(0, 5);
             const stepMatch = data.message.match(/^\[(\d+)\/(\d+)\]/);
             if (stepMatch) {
               this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, Math.round((parseInt(stepMatch[1]) / parseInt(stepMatch[2])) * CONFIG.PROGRESS_MAX_PERCENT));

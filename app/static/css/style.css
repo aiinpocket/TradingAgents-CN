@@ -252,7 +252,7 @@ body {
   padding: 24px;
   margin-bottom: 16px;
   box-shadow: var(--shadow-sm);
-  contain: layout style;
+  contain: layout style paint;
 }
 
 .panel-header {
@@ -1534,7 +1534,7 @@ input[aria-invalid="true"],
   padding: 16px;
   border-radius: var(--radius);
   border: 1px solid var(--border-light);
-  contain: layout style;
+  contain: layout style paint;
 }
 
 .debate-section h3 {
@@ -1888,7 +1888,7 @@ input[aria-invalid="true"],
   padding: 16px 20px;
   margin-bottom: 16px;
   box-shadow: var(--shadow-sm);
-  contain: layout style;
+  contain: layout style paint;
   min-height: 98px; /* 匹配實際內容高度，防止骨架→資料切換 CLS */
 }
 
@@ -2023,7 +2023,7 @@ input[aria-invalid="true"],
 .indices-bar {
   margin-bottom: 16px;
   min-height: 142px; /* 匹配實際內容高度，防止骨架→資料切換 CLS */
-  contain: layout style;
+  contain: layout style paint;
 }
 
 .indices-grid {
@@ -2038,8 +2038,9 @@ input[aria-invalid="true"],
   border-radius: var(--radius);
   padding: 16px;
   box-shadow: var(--shadow-sm);
-  contain: layout style;
+  contain: layout style paint;
   transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+  will-change: transform, box-shadow;
   cursor: pointer;
   position: relative;
 }
@@ -2166,7 +2167,7 @@ input[aria-invalid="true"],
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 16px;
-  contain: layout style;
+  contain: layout style paint;
 }
 
 .trending-panel {
@@ -2201,7 +2202,7 @@ input[aria-invalid="true"],
   align-items: center;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  contain: layout style;
+  contain: layout style paint;
   cursor: pointer;
   transition: background-color 0.12s;
   gap: 0 8px;
@@ -2342,7 +2343,7 @@ input[aria-invalid="true"],
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  contain: layout style;
+  contain: layout style paint;
 }
 
 .news-card {
