@@ -2,7 +2,7 @@ import functools
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
-from tradingagents.agents.utils.agent_utils import truncate_report, get_situation_for_memory
+from tradingagents.agents.utils.agent_utils import get_situation_for_memory
 logger = get_logger("default")
 
 
@@ -10,10 +10,6 @@ def create_trader(llm, memory):
     def trader_node(state, name):
         company_name = state["company_of_interest"]
         investment_plan = state["investment_plan"]
-        market_research_report = state["market_report"]
-        sentiment_report = state["sentiment_report"]
-        news_report = state["news_report"]
-        fundamentals_report = state["fundamentals_report"]
 
         # 取得股票市場資訊（僅支援美股）
         from tradingagents.utils.stock_utils import get_stock_market_info
@@ -26,8 +22,6 @@ def create_trader(llm, memory):
         logger.debug("===== 交易員節點開始 =====")
         logger.debug(f"交易員檢測股票類型: {company_name} -> {market_info['market_name']}, 貨幣: {currency}")
         logger.debug(f"貨幣符號: {currency_symbol}")
-        logger.debug(f"基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"基本面報告前200字元: {fundamentals_report[:200]}...")
 
         # 使用標準化情境描述（與其他節點共用格式，嵌入快取命中率 100%）
         curr_situation = get_situation_for_memory(state)
