@@ -969,12 +969,13 @@ async def get_ai_analysis(lang: str = "zh-TW"):
                     logger.warning(f"AI 分析取得市場資料失敗 ({fn.__name__}): {exc}")
                     return fallback
 
-            indices, movers, news, sectors = await asyncio.gather(
-                _safe_fetch(_fetch_indices, []),
+            # 合併 indices + sectors 為單次 API 呼叫，避免 _fetch_indices_and_sectors 被重複執行
+            indices_and_sectors, movers, news = await asyncio.gather(
+                _safe_fetch(_fetch_indices_and_sectors, ([], [])),
                 _safe_fetch(_fetch_movers, {"gainers": [], "losers": []}),
                 _safe_fetch(_fetch_market_news, []),
-                _safe_fetch(_fetch_sectors, []),
             )
+            indices, sectors = indices_and_sectors
             overview = {
                 "indices": indices,
                 "movers": movers,
