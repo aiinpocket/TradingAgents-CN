@@ -744,7 +744,7 @@
         <div class="log-container" x-ref="progressLog" role="log" aria-live="polite" aria-relevant="additions" :aria-label="t('analysis.progress_log')">
           <template x-for="(msg, idx) in progressMessages" :key="idx">
             <div class="log-line" :class="{ 'log-latest': idx === progressMessages.length - 1 }">
-              <span class="log-time" x-text="formatTime(idx)"></span>
+              <span class="log-time" x-text="formatTime()"></span>
               <span class="log-text" x-text="msg"></span>
             </div>
           </template>
@@ -927,12 +927,25 @@
         </div>
 
         <div class="panel report-body">
-          <div id="panel-market" role="tabpanel" tabindex="0" aria-labelledby="tab-market" x-show="reportTab === 'market'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('market_report'))"></div>
-          <div id="panel-fundamentals" role="tabpanel" tabindex="0" aria-labelledby="tab-fundamentals" x-show="reportTab === 'fundamentals'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('fundamentals_report'))"></div>
-          <div id="panel-news" role="tabpanel" tabindex="0" aria-labelledby="tab-news" x-show="reportTab === 'news'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('news_report'))"></div>
-          <div id="panel-sentiment" role="tabpanel" tabindex="0" aria-labelledby="tab-sentiment" x-show="reportTab === 'sentiment'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('sentiment_report'))"></div>
-          <div id="panel-risk" role="tabpanel" tabindex="0" aria-labelledby="tab-risk" x-show="reportTab === 'risk'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('risk_assessment'))"></div>
-          <div id="panel-debate" role="tabpanel" tabindex="0" aria-labelledby="tab-debate" x-show="reportTab === 'debate'" x-transition.opacity.duration.200ms x-html="renderDebate(getReport('investment_debate_state'))"></div>
+          <!-- 延遲渲染：<template x-if> 僅在使用者造訪該 tab 時建立 DOM，避免 6 個面板同時執行 Markdown 解析 -->
+          <template x-if="_visitedTabs.market">
+            <div id="panel-market" role="tabpanel" tabindex="0" aria-labelledby="tab-market" x-show="reportTab === 'market'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('market_report'))"></div>
+          </template>
+          <template x-if="_visitedTabs.fundamentals">
+            <div id="panel-fundamentals" role="tabpanel" tabindex="0" aria-labelledby="tab-fundamentals" x-show="reportTab === 'fundamentals'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('fundamentals_report'))"></div>
+          </template>
+          <template x-if="_visitedTabs.news">
+            <div id="panel-news" role="tabpanel" tabindex="0" aria-labelledby="tab-news" x-show="reportTab === 'news'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('news_report'))"></div>
+          </template>
+          <template x-if="_visitedTabs.sentiment">
+            <div id="panel-sentiment" role="tabpanel" tabindex="0" aria-labelledby="tab-sentiment" x-show="reportTab === 'sentiment'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('sentiment_report'))"></div>
+          </template>
+          <template x-if="_visitedTabs.risk">
+            <div id="panel-risk" role="tabpanel" tabindex="0" aria-labelledby="tab-risk" x-show="reportTab === 'risk'" x-transition.opacity.duration.200ms x-html="renderMarkdown(getReport('risk_assessment'))"></div>
+          </template>
+          <template x-if="_visitedTabs.debate">
+            <div id="panel-debate" role="tabpanel" tabindex="0" aria-labelledby="tab-debate" x-show="reportTab === 'debate'" x-transition.opacity.duration.200ms x-html="renderDebate(getReport('investment_debate_state'))"></div>
+          </template>
         </div>
 
         <p class="disclaimer" x-text="t('result.disclaimer')"></p>

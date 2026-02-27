@@ -85,6 +85,8 @@ function tradingApp() {
     _sentiment: { label: '', cls: '', arrow: '' },
     // 交易決策快取（避免模板中 getDecision() 被 7 次重複呼叫+物件展開）
     _decision: null,
+    // 已造訪的報告 tab（配合 <template x-if> 延遲渲染未查看的面板）
+    _visitedTabs: {},
     // 共用股票查詢表（trendingData 變化時由 $watch 更新）
     _stockMap: {},
 
@@ -164,6 +166,9 @@ function tradingApp() {
       // 分析結果變化時更新 decision 快取（避免模板中 7 次 getDecision() 重複呼叫+物件展開）
       this.$watch('result', () => { this._decision = this._computeDecision(); });
       this.$watch('lang', () => { this._decision = this._computeDecision(); });
+      // 切換報告 tab 時標記為已造訪（配合 <template x-if> 延遲建立未查看面板的 DOM）
+      this._visitedTabs[this.reportTab] = true;
+      this.$watch('reportTab', (tab) => { this._visitedTabs[tab] = true; });
       // 使用者切換提供商或模型時自動清除錯誤訊息（避免殘留前次配置的錯誤）
       this.$watch('form.provider', () => { if (this.formError) this.formError = null; });
       this.$watch('form.model', () => { if (this.formError) this.formError = null; });
@@ -805,6 +810,8 @@ function tradingApp() {
 
     selectFirstTab() {
       if (!this.result?.state) return;
+      // 重置已造訪 tab，延遲渲染未查看的面板（新結果載入時清除前次狀態）
+      this._visitedTabs = {};
       const tabs = ['market', 'fundamentals', 'news', 'sentiment', 'risk', 'debate'];
       const keys = {
         market: 'market_report',
@@ -817,6 +824,7 @@ function tradingApp() {
       for (const t of tabs) {
         if (this.result.state[keys[t]]) {
           this.reportTab = t;
+          this._visitedTabs[t] = true;
           return;
         }
       }
@@ -990,8 +998,8 @@ function tradingApp() {
       }
     },
 
-    // 工具方法
-    formatTime(idx) {
+    // 格式化分析經過時間（MM:SS）
+    formatTime() {
       if (!this.startTime) return '';
       const elapsed = Math.round((Date.now() - this.startTime) / 1000);
       const mins = Math.floor(elapsed / 60);
