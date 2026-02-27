@@ -615,13 +615,19 @@ def _notify_sse(analysis_id: str):
 
 
 def _update_analysis_state(analysis_id: str, **updates):
-    """執行緒安全地更新分析狀態，並通知 SSE 生成器"""
+    """執行緒安全地更新分析狀態，並通知 SSE 生成器。
+    當狀態進入終態（completed/failed）時自動清理事件引用，防止記憶體累積。
+    """
     with _analyses_lock:
         data = _active_analyses.get(analysis_id)
         if data:
             for key, value in updates.items():
                 data[key] = value
     _notify_sse(analysis_id)
+    # 終態清理：SSE 生成器讀取完成後不再需要事件通知
+    final_status = updates.get("status")
+    if final_status in ("completed", "failed"):
+        _analysis_events.pop(analysis_id, None)
     return data
 
 

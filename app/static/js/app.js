@@ -895,6 +895,7 @@ function tradingApp() {
       this.stockContext = null;
       this.stockContextLoading = false;
       this._cancelConfirm = false;
+      if (this._cancelConfirmTimer) { clearTimeout(this._cancelConfirmTimer); this._cancelConfirmTimer = null; }
       this._stopElapsedTimer();
     },
 
