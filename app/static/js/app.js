@@ -770,21 +770,23 @@ function tradingApp() {
     },
 
     // 取得個股即時行情快照（前端快取 5 分鐘 + 請求去重 + 自動重試）
+    // 快取 key 包含語言，確保切換語言時重新取得含翻譯的資料
     async fetchStockContext(symbol, _retry = 0) {
       const MAX_RETRY = 2;
       const CTX_TTL = 300000; // 5 分鐘
+      const cacheKey = symbol + '_' + this.lang;
       // 快取命中：直接使用
-      const cached = this._ctxCache[symbol];
+      const cached = this._ctxCache[cacheKey];
       if (cached && Date.now() - cached.ts < CTX_TTL) {
         this.stockContext = cached.data;
         this.stockContextLoading = false;
         return;
       }
-      // 請求去重：相同 symbol 的併發請求共用同一 Promise
-      if (this._ctxPending[symbol]) {
+      // 請求去重：相同 symbol+lang 的併發請求共用同一 Promise
+      if (this._ctxPending[cacheKey]) {
         this.stockContextLoading = true;
         try {
-          this.stockContext = await this._ctxPending[symbol];
+          this.stockContext = await this._ctxPending[cacheKey];
         } catch { this.stockContext = { error: true }; }
         this.stockContextLoading = false;
         return;
@@ -799,11 +801,11 @@ function tradingApp() {
           });
           if (res.ok) {
             const data = await res.json();
-            this._ctxCache[symbol] = { data, ts: Date.now() };
+            this._ctxCache[cacheKey] = { data, ts: Date.now() };
             return data;
           } else if (res.status >= 500 && _retry < MAX_RETRY) {
             await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
-            delete this._ctxPending[symbol];
+            delete this._ctxPending[cacheKey];
             return this.fetchStockContext(symbol, _retry + 1);
           }
           return { error: true };
@@ -811,16 +813,16 @@ function tradingApp() {
           console.error('Stock context fetch error:', e);
           if (_retry < MAX_RETRY) {
             await new Promise(r => setTimeout(r, 2000 + _retry * 1000));
-            delete this._ctxPending[symbol];
+            delete this._ctxPending[cacheKey];
             return this.fetchStockContext(symbol, _retry + 1);
           }
           return { error: true };
         } finally {
-          delete this._ctxPending[symbol];
+          delete this._ctxPending[cacheKey];
           this.stockContextLoading = false;
         }
       })();
-      this._ctxPending[symbol] = doFetch;
+      this._ctxPending[cacheKey] = doFetch;
       this.stockContext = await doFetch;
     },
 

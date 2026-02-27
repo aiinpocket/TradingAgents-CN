@@ -490,7 +490,7 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
         logger.info(f"新聞標題翻譯: {len(news_items)} 則全部命中快取")
         return news_items
 
-    providers = _get_ai_providers()
+    providers = _get_translate_providers()
     if not providers:
         return news_items
 
@@ -657,8 +657,22 @@ async def get_indices():
 _ai_analysis_lock = asyncio.Lock()
 
 
+def _get_translate_providers() -> list[tuple[str, str]]:
+    """取得翻譯專用的 LLM 提供商清單（使用最快最小的模型，僅翻譯標題用）"""
+    providers = []
+    openai_key = os.getenv("OPENAI_API_KEY", "")
+    anthropic_key = os.getenv("ANTHROPIC_API_KEY", "")
+
+    if openai_key:
+        providers.append(("openai", "gpt-4.1-nano"))
+    if anthropic_key:
+        providers.append(("anthropic", "claude-haiku-4-5-20251001"))
+
+    return providers
+
+
 def _get_ai_providers() -> list[tuple[str, str]]:
-    """取得所有可用的 LLM 提供商清單（依優先順序排列，快速模型優先）"""
+    """取得 AI 分析用的 LLM 提供商清單（較高能力模型，用於趨勢分析等）"""
     providers = []
     openai_key = os.getenv("OPENAI_API_KEY", "")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY", "")

@@ -819,7 +819,7 @@
               <ul class="stock-context-news-list">
                 <template x-for="(item, idx) in stockContext.news" :key="idx">
                   <li>
-                    <a :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer" class="stock-context-news-link" x-text="item.title"></a>
+                    <a :href="safeUrl(item.url)" target="_blank" rel="noopener noreferrer" class="stock-context-news-link" x-text="(lang === 'zh-TW' && item.title_zh) ? item.title_zh : item.title"></a>
                     <span class="stock-context-news-meta">
                       <span x-text="item.source" x-show="item.source"></span>
                       <span x-text="item.date" x-show="item.date"></span>

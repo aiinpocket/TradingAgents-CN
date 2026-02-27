@@ -1096,25 +1096,57 @@ def _fetch_stock_context(symbol: str, _retry: int = 0) -> dict:
 
 @router.get("/analysis/stock-context/{symbol}")
 async def get_stock_context(symbol: str, request: Request):
-    """取得個股即時快照（行情 + 指標 + 新聞）"""
+    """取得個股即時快照（行情 + 指標 + 新聞）
+
+    支援 ?lang= 查詢參數：zh-TW 時自動翻譯新聞標題為繁體中文。
+    """
     symbol = symbol.upper().strip()
     if not _SYMBOL_RE.match(symbol):
         raise HTTPException(status_code=400, detail=_t("invalid_symbol_short", request))
 
-    # 快取檢查
-    cache_key = f"ctx_{symbol}"
+    lang = _get_lang(request)
+
+    # 快取檢查（依語言分離，zh-TW 包含翻譯後標題）
+    cache_key = f"ctx_{symbol}_{lang}"
     cached = _CONTEXT_CACHE.get(cache_key)
     if cached and time.time() - cached["_ts"] < _CONTEXT_CACHE_TTL:
         return cached["data"]
 
+    # 也檢查無語言後綴的基礎快取（向後相容）
+    base_cache_key = f"ctx_{symbol}"
+    base_cached = _CONTEXT_CACHE.get(base_cache_key)
+
     loop = asyncio.get_running_loop()
-    data = await loop.run_in_executor(_CONTEXT_EXECUTOR, _fetch_stock_context, symbol)
 
-    # 若取得行情失敗，回傳 502 並使用 i18n 錯誤訊息
-    if data.get("error"):
-        raise HTTPException(status_code=502, detail=_t("stock_context_error", request))
+    if base_cached and time.time() - base_cached["_ts"] < _CONTEXT_CACHE_TTL:
+        # 基礎資料已快取，深拷貝後再翻譯避免汙染基礎快取
+        import copy
+        data = copy.deepcopy(base_cached["data"])
+    else:
+        data = await loop.run_in_executor(_CONTEXT_EXECUTOR, _fetch_stock_context, symbol)
 
-    # 寫入快取
+        # 若取得行情失敗，回傳 502 並使用 i18n 錯誤訊息
+        if data.get("error"):
+            raise HTTPException(status_code=502, detail=_t("stock_context_error", request))
+
+        # 寫入基礎快取（深拷貝，避免後續翻譯修改影響快取中的英文版本）
+        import copy
+        now = time.time()
+        _CONTEXT_CACHE[base_cache_key] = {"data": copy.deepcopy(data), "_ts": now}
+
+    # 中文語系時翻譯新聞標題（使用 gpt-4.1-nano 快速翻譯 + 共用快取）
+    if lang == "zh-TW" and data.get("news"):
+        try:
+            from app.routers.trending import _translate_news_titles
+            translated = await asyncio.wait_for(
+                loop.run_in_executor(_CONTEXT_EXECUTOR, _translate_news_titles, data["news"]),
+                timeout=8.0,
+            )
+            data["news"] = translated
+        except (asyncio.TimeoutError, Exception) as exc:
+            logger.debug(f"股票快照新聞翻譯逾時或失敗（顯示英文）: {exc}")
+
+    # 寫入語言特定快取
     now = time.time()
     _CONTEXT_CACHE[cache_key] = {"data": data, "_ts": now}
 
