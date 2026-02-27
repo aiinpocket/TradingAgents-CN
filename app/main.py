@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 # 應用程式版本（唯一來源：FastAPI、health endpoint 共用）
 _APP_VERSION = "0.4.5"
 # 靜態檔案快取版本戳（唯一來源：CSS/JS 改動時遞增字母後綴以強制 CDN 更新）
-_CACHE_VERSION = "0.5.0m"
+_CACHE_VERSION = "0.5.0n"
 
 # 專案根目錄
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -248,22 +248,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
     @staticmethod
     def _get_client_ip(request: Request) -> str:
-        """取得真實客戶端 IP（Cloudflare -> Nginx Ingress -> Uvicorn 架構）
-
-        優先順序：
-        1. CF-Connecting-IP — Cloudflare 注入，不可偽造
-        2. X-Real-IP — Nginx Ingress 從最後一跳提取
-        3. request.client.host — 直連時的 socket 對端 IP
-        """
-        ip = (
-            request.headers.get("cf-connecting-ip")
-            or request.headers.get("x-real-ip")
-            or (request.client.host if request.client else "unknown")
-        )
-        # 正規化 IPv4-mapped IPv6（::ffff:1.2.3.4 -> 1.2.3.4）
-        if ip.startswith("::ffff:"):
-            ip = ip[7:]
-        return ip
+        """取得真實客戶端 IP（委派至共用工具函式）"""
+        from app.utils.request_helpers import get_client_ip
+        return get_client_ip(request)
 
     async def dispatch(self, request: Request, call_next) -> Response:
         # 只限制 API 路徑

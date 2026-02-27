@@ -53,13 +53,8 @@ def _check_ai_rate_limit(request: Request) -> bool:
 
     回傳 True 表示允許通過，False 表示超限
     """
-    ip = (
-        request.headers.get("cf-connecting-ip")
-        or request.headers.get("x-real-ip")
-        or (request.client.host if request.client else "unknown")
-    )
-    if ip.startswith("::ffff:"):
-        ip = ip[7:]
+    from app.utils.request_helpers import get_client_ip
+    ip = get_client_ip(request)
     now = time.monotonic()
     cutoff = now - _AI_RATE_LIMIT_WINDOW
     # 清理過期記錄
@@ -267,20 +262,22 @@ def _update_ssr_json_cache():
 
 
 def _set_cache(key: str, data: dict):
-    """設定快取（超過上限時清理過期條目，依 key 類型使用不同 TTL）"""
+    """設定快取（超過上限時先清過期再淘汰最舊，確保不超限）"""
     now = time.time()
     with _cache_lock:
         _cache[key] = {"data": data, "ts": now}
-        # 超過條目上限時，依各條目的實際 TTL 清理過期快取
         if len(_cache) > _MAX_CACHE_ENTRIES:
-            expired = []
-            for k, v in _cache.items():
-                # AI 分析類快取使用較長 TTL，市場資料類使用較短 TTL
-                ttl = _AI_CACHE_TTL_SECONDS if k.startswith("ai_") else _CACHE_TTL_SECONDS
-                if now - v["ts"] > ttl:
-                    expired.append(k)
+            # 第一輪：清理已過期的條目
+            expired = [
+                k for k, v in _cache.items()
+                if now - v["ts"] > (_AI_CACHE_TTL_SECONDS if k.startswith("ai_") else _CACHE_TTL_SECONDS)
+            ]
             for k in expired:
                 _cache.pop(k, None)
+            # 第二輪：仍超限則淘汰最舊條目（LRU 保底）
+            while len(_cache) > _MAX_CACHE_ENTRIES:
+                oldest_key = min(_cache, key=lambda k: _cache[k]["ts"])
+                _cache.pop(oldest_key, None)
 
 
 def _fetch_indices_and_sectors() -> tuple[list[dict], list[dict]]:

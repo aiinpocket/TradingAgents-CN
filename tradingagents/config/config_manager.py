@@ -109,36 +109,31 @@ class ConfigManager:
         return ""
     
     def validate_openai_api_key_format(self, api_key: str) -> bool:
-        """
-        驗證OpenAI API密鑰格式
-        
-        OpenAI API密鑰格式規則：
-        1. 以 'sk-' 開頭
-        2. 總長度通常為51個字元
-        3. 包含字母、數字和可能的特殊字元
-        
+        """驗證 OpenAI API 密鑰格式
+
+        支援多種 OpenAI 密鑰格式：
+        - Legacy: sk-[48字元] (51字元)
+        - Project: sk-proj-[長字串] (100+ 字元)
+        - Service Account: sk-svcacct-[長字串]
+
         Args:
-            api_key: 要驗證的API密鑰
-            
+            api_key: 要驗證的 API 密鑰
+
         Returns:
             bool: 格式是否正確
         """
         if not api_key or not isinstance(api_key, str):
             return False
-        
-        # 檢查是否以 'sk-' 開頭
-        if not api_key.startswith('sk-'):
+
+        # 所有 OpenAI 密鑰以 'sk-' 開頭，最短 20 字元
+        if not api_key.startswith('sk-') or len(api_key) < 20:
             return False
-        
-        # 檢查長度（OpenAI密鑰通常為51個字元）
-        if len(api_key) != 51:
-            return False
-        
-        # 檢查格式：sk- 後面應該是48個字元的字母數字組合
-        pattern = r'^sk-[A-Za-z0-9]{48}$'
+
+        # 密鑰只能包含 ASCII 字母、數字、底線和連字號
+        pattern = r'^sk-[A-Za-z0-9_-]+$'
         if not re.match(pattern, api_key):
             return False
-        
+
         return True
     
     def _init_mongodb_storage(self):
