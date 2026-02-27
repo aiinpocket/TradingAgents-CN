@@ -1,7 +1,7 @@
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
-logger = get_logger("default")
+logger = get_logger("agents.managers.research")
 
 
 def create_research_manager(llm, memory):

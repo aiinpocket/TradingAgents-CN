@@ -2,7 +2,7 @@
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.agents.utils.agent_utils import truncate_report, get_situation_for_memory
-logger = get_logger("default")
+logger = get_logger("agents.researchers.bull")
 
 
 def create_bull_researcher(llm, memory):
@@ -28,13 +28,7 @@ def create_bull_researcher(llm, memory):
         currency = market_info['currency_name']
         currency_symbol = market_info['currency_symbol']
 
-        logger.debug("接收到的報告:")
-        logger.debug(f"- 市場報告長度: {len(market_research_report)}")
-        logger.debug(f"- 情緒報告長度: {len(sentiment_report)}")
-        logger.debug(f"- 新聞報告長度: {len(news_report)}")
-        logger.debug(f"- 基本面報告長度: {len(fundamentals_report)}")
-        logger.debug(f"- 基本面報告前200字元: {fundamentals_report[:200]}...")
-        logger.debug(f"- 股票代碼: {company_name}, 類型: {market_info['market_name']}, 貨幣: {currency}")
+        logger.debug(f"[看漲研究員] {company_name} 報告長度: 市場={len(market_research_report)} 情緒={len(sentiment_report)} 新聞={len(news_report)} 基本面={len(fundamentals_report)}")
 
         # 使用標準化情境描述（所有節點共用相同格式，確保嵌入快取 100% 命中）
         curr_situation = get_situation_for_memory(state)

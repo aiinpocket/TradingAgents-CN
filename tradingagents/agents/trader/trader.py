@@ -3,7 +3,7 @@ import functools
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.agents.utils.agent_utils import get_situation_for_memory
-logger = get_logger("default")
+logger = get_logger("agents.trader")
 
 
 def create_trader(llm, memory):

@@ -7,7 +7,7 @@ from tradingagents.utils.tool_logging import log_analyst_module
 from tradingagents.tools.unified_news_tool import create_unified_news_tool
 # 匯入股票市場資訊工具和公司名稱查詢
 from tradingagents.utils.stock_utils import get_stock_market_info, get_company_name as _get_company_name
-logger = get_logger("analysts.news")
+logger = get_logger("agents.analysts.news")
 
 
 def create_news_analyst(llm, toolkit):

@@ -1,133 +1,13 @@
-from langchain_classic.agents import create_react_agent, AgentExecutor
-from langchain_classic import hub
-
 # 匯入分析模組日誌裝飾器
 from tradingagents.utils.tool_logging import log_analyst_module
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
-logger = get_logger("default")
+logger = get_logger("agents.analysts.market")
 
 
 from tradingagents.agents.utils.agent_utils import calc_start_date as _calc_start_date
 from tradingagents.utils.stock_utils import get_company_name as _get_company_name
-
-
-def create_market_analyst_react(llm, toolkit):
-    """使用 ReAct Agent 模式的市場分析師"""
-    @log_analyst_module("market_react")
-    def market_analyst_react_node(state):
-        logger.debug("===== ReAct市場分析師節點開始 =====")
-
-        current_date = state["trade_date"]
-        ticker = state["company_of_interest"]
-
-        logger.debug(f"輸入參數: ticker={ticker}, date={current_date}")
-
-        if toolkit.config["online_tools"]:
-            # 在線模式，使用 ReAct Agent
-            logger.info("[市場分析師] 使用 ReAct Agent 分析美股")
-
-            # 建立美股資料工具
-            from langchain_core.tools import BaseTool
-
-            class USStockDataTool(BaseTool):
-                name: str = "get_us_stock_data"
-                description: str = f"取得美股{ticker}的市場資料和技術指標。直接呼叫，無需參數。"
-
-                def _run(self, query: str = "") -> str:
-                    try:
-                        logger.debug(f"USStockDataTool 呼叫，股票代碼: {ticker}")
-                        from tradingagents.dataflows.optimized_us_data import get_us_stock_data_cached
-                        return get_us_stock_data_cached(
-                            symbol=ticker,
-                            start_date=_calc_start_date(current_date),
-                            end_date=current_date,
-                            force_refresh=False
-                        )
-                    except Exception as e:
-                        logger.error(f"優化美股資料取得失敗: {e}")
-                        try:
-                            return toolkit.get_YFin_data_online.invoke({
-                                'symbol': ticker,
-                                'start_date': _calc_start_date(current_date),
-                                'end_date': current_date
-                            })
-                        except Exception as e2:
-                            return f"取得股票資料失敗: {str(e2)}"
-
-            class FinnhubNewsTool(BaseTool):
-                name: str = "get_finnhub_news"
-                description: str = f"取得美股{ticker}的最新新聞和市場情緒（透過 FINNHUB API）。直接呼叫，無需參數。"
-
-                def _run(self, query: str = "") -> str:
-                    try:
-                        logger.debug(f"FinnhubNewsTool 呼叫，股票代碼: {ticker}")
-                        return toolkit.get_finnhub_news.invoke({
-                            'ticker': ticker,
-                            'start_date': _calc_start_date(current_date),
-                            'end_date': current_date
-                        })
-                    except Exception as e:
-                        return f"取得新聞資料失敗: {str(e)}"
-
-            tools = [USStockDataTool(), FinnhubNewsTool()]
-            query = f"""請對美股{ticker}進行詳細的技術分析。
-
-執行步驟：
-1. 使用get_us_stock_data工具取得股票市場資料和技術指標（通過FINNHUB API）
-2. 使用get_finnhub_news工具取得最新新聞和市場情緒
-3. 基於取得的真實資料進行深入的技術指標分析
-4. 直接輸出完整的技術分析報告內容
-
-重要要求：
-- 必須輸出完整的技術分析報告內容，不要只是描述報告已完成
-- 報告必須基於工具取得的真實資料進行分析
-- 報告長度不少於800字
-- 包含具體的資料、指標數值和專業分析
-- 結合新聞資訊分析市場情緒
-
-報告格式應包含：
-## 股票基本資訊
-## 技術指標分析
-## 價格趨勢分析
-## 成交量分析
-## 新聞和市場情緒分析
-## 投資建議"""
-
-            try:
-                prompt = hub.pull("hwchase17/react")
-                agent = create_react_agent(llm, tools, prompt)
-                agent_executor = AgentExecutor(
-                    agent=agent,
-                    tools=tools,
-                    verbose=True,
-                    handle_parsing_errors=True,
-                    max_iterations=10,
-                    max_execution_time=180
-                )
-
-                logger.debug("執行 ReAct Agent 查詢...")
-                result = agent_executor.invoke({'input': query})
-
-                report = result['output']
-                logger.info(f"[市場分析師] ReAct Agent 完成，報告長度: {len(report)}")
-
-            except Exception as e:
-                logger.error(f"ReAct Agent 失敗: {str(e)}")
-                report = f"ReAct Agent 市場分析失敗: {str(e)}"
-        else:
-            # 離線模式，使用原有邏輯
-            report = "離線模式，暫不支援"
-
-        logger.debug("===== ReAct市場分析師節點結束 =====")
-
-        return {
-            "messages": [("assistant", report)],
-            "market_report": report,
-        }
-
-    return market_analyst_react_node
 
 
 def create_market_analyst(llm, toolkit):

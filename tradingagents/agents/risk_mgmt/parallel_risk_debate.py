@@ -4,7 +4,7 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from tradingagents.utils.logging_init import get_logger
-logger = get_logger("default")
+logger = get_logger("agents.risk_mgmt.parallel")
 
 
 def create_parallel_risk_debate(risky_fn, safe_fn, neutral_fn):

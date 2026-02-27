@@ -8,7 +8,7 @@ from tradingagents.utils.tool_logging import log_analyst_module
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
-logger = get_logger("default")
+logger = get_logger("agents.analysts.fundamentals")
 
 
 from tradingagents.utils.stock_utils import get_company_name as _get_company_name

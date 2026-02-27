@@ -2,7 +2,7 @@
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.utils.tool_logging import log_analyst_module
 from tradingagents.utils.stock_utils import get_company_name as _get_company_name
-logger = get_logger("analysts.social_media")
+logger = get_logger("agents.analysts.social_media")
 
 
 def create_social_media_analyst(llm, toolkit):

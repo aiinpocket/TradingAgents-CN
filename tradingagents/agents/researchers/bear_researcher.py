@@ -2,7 +2,7 @@
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
 from tradingagents.agents.utils.agent_utils import truncate_report, get_situation_for_memory
-logger = get_logger("default")
+logger = get_logger("agents.researchers.bear")
 
 
 def create_bear_researcher(llm, memory):
