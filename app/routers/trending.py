@@ -194,6 +194,26 @@ def get_cached_overview() -> Optional[dict]:
     return _get_cached("overview")
 
 
+# 預序列化的 SSR JSON 字串快取（背景刷新時更新，避免每次請求重複序列化）
+_cached_ssr_json: str = ""
+
+
+def get_cached_overview_json() -> str:
+    """取得預序列化的 SSR JSON 字串（已含 XSS 防護跳脫）"""
+    return _cached_ssr_json
+
+
+def _update_ssr_json_cache():
+    """背景刷新後呼叫，將 overview 資料預序列化為 JSON 字串"""
+    global _cached_ssr_json
+    import json as _json
+    data = _get_cached("overview")
+    if data:
+        _cached_ssr_json = _json.dumps(data, ensure_ascii=False).replace("</", r"<\/")
+    else:
+        _cached_ssr_json = ""
+
+
 def _set_cache(key: str, data: dict):
     """設定快取（超過上限時清理過期條目，依 key 類型使用不同 TTL）"""
     now = time.time()
@@ -621,6 +641,7 @@ async def get_market_overview():
         return JSONResponse(status_code=503, content=result)
 
     _set_cache("overview", result)
+    _update_ssr_json_cache()
     return result
 
 
@@ -964,6 +985,7 @@ async def get_ai_analysis(lang: str = "zh-TW"):
                 "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
             _set_cache("overview", overview)
+            _update_ssr_json_cache()
 
         market_context = _build_market_context(overview)
         loop = asyncio.get_running_loop()

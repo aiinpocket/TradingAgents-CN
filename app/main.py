@@ -412,14 +412,10 @@ app.include_router(trending.router, prefix="/api")
 @app.get("/")
 async def index(request: Request):
     """主頁面（含趨勢資料 SSR 預渲染以消除 CLS）"""
-    import json as _json
     import secrets
-    from app.routers.trending import get_cached_overview
-    ssr_data = get_cached_overview()
-    # 將 JSON 中的 </ 跳脫為 <\/ 防止 script 標籤注入（XSS 防護）
-    ssr_json = ""
-    if ssr_data:
-        ssr_json = _json.dumps(ssr_data, ensure_ascii=False).replace("</", r"<\/")
+    from app.routers.trending import get_cached_overview_json
+    # 使用預序列化快取（背景刷新時已完成 JSON 序列化 + XSS 防護跳脫）
+    ssr_json = get_cached_overview_json()
     # 產生 CSP nonce 用於內聯腳本（FOUC 防護）
     csp_nonce = secrets.token_urlsafe(24)
     response = templates.TemplateResponse("index.html", {
