@@ -25,6 +25,8 @@ except ImportError:
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger("trending")
 
+from app.utils.tw_terminology import normalize_tw_terminology
+
 router = APIRouter(tags=["trending"])
 
 # 快取設定
@@ -178,78 +180,8 @@ _STOCK_UNIVERSE = [
 ]
 
 
-# ---------------------------------------------------------------------------
-# 台灣慣用術語校正（確定性後處理，不依賴 LLM prompt 遵從度）
-# ---------------------------------------------------------------------------
-# 大陸→台灣中文術語映射
-# 注意：左側「來源」欄位刻意保留簡體/大陸用語，因為這些是 LLM 實際輸出的文字，
-# 用於比對替換為右側的台灣正體中文。此處簡體字為比對需求，非顯示用途。
-_TW_TERMINOLOGY: list[tuple[str, str]] = [
-    # 人名
-    ("特朗普", "川普"),
-    # 公司 / 品牌（中文大陸譯名→台灣譯名）
-    ("英偉達", "輝達"),
-    ("英伟达", "輝達"),
-    # 指數 / 機構（長字串優先處理，避免部分取代衝突）
-    ("標準普爾500", "標普500"),
-    ("標準普爾", "標普"),
-    ("标准普尔", "標普"),
-    ("道瓊斯工業平均指數", "道瓊工業指數"),
-    ("道瓊斯工業平均", "道瓊工業平均"),
-    ("道瓊斯", "道瓊"),
-    ("道琼斯", "道瓊"),
-    ("納斯達克", "那斯達克"),
-    ("纳斯达克", "那斯達克"),
-    ("美聯儲", "聯準會"),
-    ("美联储", "聯準會"),
-    ("聯邦儲備系統", "聯準會"),
-    ("聯邦儲備", "聯準會"),
-    ("联邦储备", "聯準會"),
-    ("聯邦準備理事會", "聯準會"),
-    ("聯邦準備", "聯準會"),
-    # 市場專有名詞（LLM 中文直譯→台灣慣用）
-    ("壯麗七巨頭", "科技七雄"),
-    ("七巨頭", "七雄"),
-    ("Mag 7", "科技七雄"),
-    # 其他金融術語
-    ("做空", "放空"),
-    ("期權", "選擇權"),
-    ("做多", "作多"),
-    ("利好", "利多"),
-    ("股指期貨", "股價期貨"),
-    ("互聯網", "網路"),
-    ("信息技術", "資訊科技"),
-    ("波動率", "波動度"),
-    ("收益率", "殖利率"),
-    ("市盈率", "本益比"),
-    ("市淨率", "股價淨值比"),
-]
 
-# 中文語境下英文公司名→台灣中文名映射（僅套用於中文翻譯結果）
-_EN_TO_TW_COMPANY: list[tuple[str, str]] = [
-    ("Nvidia", "輝達"),
-    ("NVIDIA", "輝達"),
-]
-
-
-def _normalize_tw_terminology(text: str) -> str:
-    """將大陸金融術語校正為台灣慣用說法（確定性取代）"""
-    for mainland, taiwan in _TW_TERMINOLOGY:
-        if mainland in text:
-            text = text.replace(mainland, taiwan)
-    # 中文語境：英文公司名轉為台灣慣用中文名
-    for en_name, tw_name in _EN_TO_TW_COMPANY:
-        if en_name in text:
-            # 先移除已含中文名的冗餘括號標註
-            # 例如「輝達(Nvidia)」或「輝達（Nvidia）」→「輝達」
-            pattern = (
-                re.escape(tw_name) + r"\s*[（(]\s*"
-                + re.escape(en_name) + r"\s*[）)]"
-            )
-            text = re.sub(pattern, tw_name, text)
-            # 再將剩餘的英文名替換為中文名
-            text = text.replace(en_name, tw_name)
-    return text
+# 台灣慣用術語校正：從 app.utils.tw_terminology 匯入 normalize_tw_terminology
 
 
 def _get_cached(key: str, ttl: int = _CACHE_TTL_SECONDS) -> Optional[dict]:
@@ -607,7 +539,7 @@ def _translate_news_titles(news_items: list[dict]) -> list[dict]:
                 # 寫入結果並更新快取
                 with _title_translation_lock:
                     for j, idx in enumerate(need_translate_indices):
-                        zh = _normalize_tw_terminology(translated[j])
+                        zh = normalize_tw_terminology(translated[j])
                         news_items[idx]["title_zh"] = zh
                         _title_translation_cache[need_translate_titles[j]] = zh
 
@@ -916,7 +848,7 @@ def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str, str
             content = response.content
             # 中文分析套用台灣術語校正
             if lang == "zh-TW":
-                content = _normalize_tw_terminology(content)
+                content = normalize_tw_terminology(content)
             elif lang == "en":
                 # 語言合規檢查：英文版不應包含大量中文字元
                 import unicodedata
