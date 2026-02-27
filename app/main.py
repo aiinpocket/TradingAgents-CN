@@ -105,12 +105,13 @@ def _build_csp(*, nonce: str = "", script_hash: str = "") -> str:
     parts = []
     for directive, value in _CSP_DIRECTIVES.items():
         if directive == "script-src" and (nonce or script_hash):
+            # 在既有 script-src 值中插入 nonce/hash（保持域名清單為唯一來源）
             extras = []
             if nonce:
                 extras.append(f"'nonce-{nonce}'")
             if script_hash:
                 extras.append(f"'sha256-{script_hash}'")
-            value = f"'self' 'unsafe-eval' {' '.join(extras)} https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com"
+            value = value.replace("'unsafe-eval'", f"'unsafe-eval' {' '.join(extras)}")
         parts.append(f"{directive} {value}")
     parts.append("upgrade-insecure-requests")
     return "; ".join(parts)

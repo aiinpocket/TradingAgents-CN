@@ -33,7 +33,7 @@ pytz>=2025.2
 beautifulsoup4>=4.12.0
 
 # ==================== 資料來源（美股） ====================
-yfinance>=0.2.63
+yfinance>=1.0.0
 finnhub-python>=2.4.23
 feedparser>=6.0.11
 
