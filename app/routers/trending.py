@@ -244,7 +244,7 @@ def _set_cache(key: str, data: dict):
                 if now - v["ts"] > ttl:
                     expired.append(k)
             for k in expired:
-                del _cache[k]
+                _cache.pop(k, None)
 
 
 def _fetch_indices_and_sectors() -> tuple[list[dict], list[dict]]:
