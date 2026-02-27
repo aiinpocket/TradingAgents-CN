@@ -34,24 +34,14 @@ RUN echo 'deb http://deb.debian.org/debian/ bookworm main' > /etc/apt/sources.li
     echo 'deb http://deb.debian.org/debian/ bookworm-updates main' >> /etc/apt/sources.list && \
     echo 'deb http://deb.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list
 
-# 運行時依賴（不含 build-essential，節省 ~400MB）
+# 運行時依賴（僅 curl 用於 HEALTHCHECK，PDF 工具已移除節省 ~250MB）
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    wkhtmltopdf \
-    xvfb \
-    fonts-wqy-zenhei \
-    fonts-wqy-microhei \
-    fonts-liberation \
-    pandoc \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 # 從建置階段複製已編譯的 Python 套件
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
-
-# 啟動 Xvfb 虛擬顯示器（wkhtmltopdf 需要）
-RUN echo '#!/bin/bash\nXvfb :99 -screen 0 1024x768x24 -ac +extension GLX &\nexport DISPLAY=:99\nexec "$@"' > /usr/local/bin/start-xvfb.sh \
-    && chmod +x /usr/local/bin/start-xvfb.sh
 
 # 複製專案源碼
 COPY . .
