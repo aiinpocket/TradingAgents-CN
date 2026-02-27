@@ -1,6 +1,7 @@
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
+from tradingagents.agents.utils.agent_utils import truncate_report
 logger = get_logger("default")
 
 
@@ -13,10 +14,11 @@ def create_bull_researcher(llm, memory):
         bull_history = investment_debate_state.get("bull_history", "")
 
         current_response = investment_debate_state.get("current_response", "")
-        market_research_report = state["market_report"]
-        sentiment_report = state["sentiment_report"]
-        news_report = state["news_report"]
-        fundamentals_report = state["fundamentals_report"]
+        # 截斷分析報告以降低 token 消耗（辯論用 2000 字元足以涵蓋關鍵論點）
+        market_research_report = truncate_report(state["market_report"], max_chars=2000)
+        sentiment_report = truncate_report(state["sentiment_report"], max_chars=1500)
+        news_report = truncate_report(state["news_report"], max_chars=1500)
+        fundamentals_report = truncate_report(state["fundamentals_report"], max_chars=2000)
 
         # 取得股票市場資訊（僅支援美股）
         company_name = state.get('company_of_interest', 'Unknown')

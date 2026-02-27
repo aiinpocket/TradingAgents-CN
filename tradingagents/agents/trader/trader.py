@@ -2,6 +2,7 @@ import functools
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
+from tradingagents.agents.utils.agent_utils import truncate_report
 logger = get_logger("default")
 
 
@@ -28,7 +29,8 @@ def create_trader(llm, memory):
         logger.debug(f"基本面報告長度: {len(fundamentals_report)}")
         logger.debug(f"基本面報告前200字元: {fundamentals_report[:200]}...")
 
-        curr_situation = f"{market_research_report}\n\n{sentiment_report}\n\n{news_report}\n\n{fundamentals_report}"
+        # 截斷報告用於記憶查詢（降低嵌入計算成本，不影響查詢品質）
+        curr_situation = f"{truncate_report(market_research_report, 1500)}\n\n{truncate_report(sentiment_report, 1000)}\n\n{truncate_report(news_report, 1000)}\n\n{truncate_report(fundamentals_report, 1500)}"
 
         # 檢查memory是否可用
         if memory is not None:
