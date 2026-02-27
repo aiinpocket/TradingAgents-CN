@@ -31,7 +31,7 @@
 - **資料預載入**: prefetch_analyst_data() 在圖執行前並行載入 7 個 API 結果到快取，分析師開始時零等待
 - **工具結果快取**: 同一分析中多個分析師呼叫相同工具+參數時自動去重，避免重複 API 呼叫（如 FinnHub 情緒資料）
 - **辯論輪數精簡**: depth 4 從 2 輪降為 1 輪（啟用並行），depth 5 從 3 輪降為 2 輪，大幅加速高深度分析
-- **分析執行緒池擴容**: _ANALYSIS_EXECUTOR 4->8 workers，支援更高並行度
+- **執行緒池分離**: _ANALYSIS_EXECUTOR(3) + _TRANSLATE_EXECUTOR(2) 分離，翻譯不阻塞分析
 - **快取 TTL 優化**: 市場資料 2h->4h、新聞 6h->8h，減少同一交易日內重複 API 呼叫
 - **MongoDB 連接池單例化**: 共享 MongoClient 單例（maxPoolSize=10），避免每次建立新連接
 - **Markdown 渲染記憶化**: renderMarkdown() 使用 Map 快取（上限 100 筆），Alpine 反應式更新不再重複解析
@@ -74,6 +74,8 @@
 - **Finnhub API 內部並行化**: 三大報告函式（分析師 7 呼叫 / 情緒 2 呼叫 / 技術 2 呼叫 / 基本面 3 呼叫）全部使用 ThreadPoolExecutor 並行，分析師報告從 12s 降至 ~2s
 - **刷新倒數計時器**: 前端顯示距下次自動刷新的精確倒數（tabular-nums 等寬數字、tab 切換暫停/恢復）
 - **AI 分析專屬速率限制**: per-IP 5 req/60s，防止高成本 LLM 呼叫被濫用
+- **報告面板延遲渲染**: `<template x-if>` + `_visitedTabs` 追蹤，僅造訪過的 tab 執行 Markdown 解析，初始載入減少 5/6 渲染開銷
+- **Finnhub 鍵鎖池清理**: 容量上限 200 + TTL 1h 自動清理閒置鎖，防止記憶體無限增長
 
 #### 資料更新頻率
 
@@ -90,7 +92,7 @@
 > 實際使用者看到的市場數據總延遲約 **15-25 分鐘**（yfinance 延遲 + 快取週期）。如需完全即時數據，需升級至付費資料源。本系統定位為「日線級別分析」而非高頻交易。
 
 #### i18n 國際化
-- **167 翻譯鍵**: zh-TW / en 完全對稱，後端 33+ key 雙語完整
+- **166 翻譯鍵**: zh-TW / en 完全對稱，後端 39 key 雙語完整
 - **新聞標題 i18n**: LLM 批次翻譯英文新聞為繁體中文，前端根據語言自動切換
 - **台灣術語校正**: 確定性後處理（川普/輝達/標普/道瓊/聯準會/那斯達克）
 - **後端 API 錯誤訊息 i18n**: 包含速率限制、請求大小、伺服器錯誤
@@ -119,7 +121,7 @@
 - **skip-to-content 快捷連結**: 鍵盤使用者直接跳至主要內容
 - **WCAG AA 色彩對比**: 亮/暗色模式文字對比 >= 4.5:1（--text-faint 5.3:1、--amber-text 5.2:1）
 - **ARIA table 語意**: 歷史表格完整 role 標記，報告區 tablist/tab/tabpanel 完整語意
-- **觸控目標 44px**: 符合 WCAG 2.5.5 標準（含 480px 斷點 nav-btn / mover-row）
+- **觸控目標 44px**: 符合 WCAG 2.5.8 AAA 標準（theme/lang/dismiss 全部 44px）
 - **html lang 屬性**: 隨語言切換同步更新（zh-Hant / en）
 - **WCAG 標題層級**: Markdown 渲染標題壓縮至 h3/h4（容器 h2 下不跳級）
 - **Windows 高對比**: @media (forced-colors: active) 支援
