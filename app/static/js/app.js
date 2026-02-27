@@ -102,6 +102,7 @@ function tradingApp() {
     _clearConfirm: false,  // 清除追蹤清單的確認狀態
     _toastMsg: '',         // 輕量級 toast 訊息
     _reconnectTimer: null, // SSE 重連計時器
+    _trendingAbort: null,  // 趨勢資料請求取消控制器
 
     get canSubmit() {
       return this.apiReady &&
@@ -1128,11 +1129,12 @@ function tradingApp() {
 
       const result = this._sanitize(html);
 
-      // 快取結果（LRU：超過上限時清除最舊的一半）
+      // 快取結果（LRU：超過上限時清除最舊的一半，使用 iterator 避免建立中間陣列）
       this._mdCache.set(text, result);
       if (this._mdCache.size > this._MD_CACHE_MAX) {
-        const keys = Array.from(this._mdCache.keys());
-        for (let i = 0; i < keys.length / 2; i++) this._mdCache.delete(keys[i]);
+        const half = Math.floor(this._MD_CACHE_MAX / 2);
+        const it = this._mdCache.keys();
+        for (let i = 0; i < half; i++) this._mdCache.delete(it.next().value);
       }
       return result;
     },

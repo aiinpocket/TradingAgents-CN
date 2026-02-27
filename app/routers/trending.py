@@ -234,35 +234,43 @@ def _set_cache(key: str, data: dict):
 
 
 def _fetch_indices_and_sectors() -> tuple[list[dict], list[dict]]:
-    """合併取得指數行情 + 板塊 ETF 表現（單一 yfinance 呼叫減少 API 往返）"""
+    """合併取得指數行情 + 板塊 ETF 表現（yf.download 單次批次下載取代 15 次獨立呼叫）"""
     try:
         import yfinance as yf
     except ImportError:
         logger.warning("yfinance 未安裝，無法取得指數/板塊資料")
         return [], []
 
-    # 合併所有 symbol 為一次 yf.Tickers 呼叫
     all_symbols = [idx["symbol"] for idx in _INDICES] + [s["symbol"] for s in _SECTORS]
 
     indices_results: list[dict] = []
     sectors_results: list[dict] = []
 
     try:
-        tickers = yf.Tickers(" ".join(all_symbols))
+        # 單次批次下載所有歷史資料（取代逐個 ticker.history()，減少 14 次 API 往返）
+        hist_all = yf.download(
+            all_symbols, period="2d", group_by="ticker",
+            progress=False, threads=True, auto_adjust=True,
+        )
+
+        def _extract_hist(sym: str):
+            """從批次下載結果中取得單一 symbol 的 DataFrame"""
+            if len(all_symbols) == 1:
+                return hist_all
+            try:
+                df = hist_all[sym]
+                return df.dropna(how="all")
+            except (KeyError, TypeError):
+                return None
 
         # 處理指數部分
         for idx_info in _INDICES:
             sym = idx_info["symbol"]
             try:
-                ticker = tickers.tickers.get(sym)
-                if not ticker:
+                hist = _extract_hist(sym)
+                if hist is None or hist.empty or len(hist) < 1:
                     continue
-                hist = ticker.history(period="2d")
-                if hist.empty or len(hist) < 1:
-                    continue
-
                 current_price, change, change_pct = _calc_price_change(hist)
-
                 indices_results.append({
                     "symbol": sym,
                     "name": idx_info["name"],
@@ -279,15 +287,10 @@ def _fetch_indices_and_sectors() -> tuple[list[dict], list[dict]]:
         for sector_info in _SECTORS:
             sym = sector_info["symbol"]
             try:
-                ticker = tickers.tickers.get(sym)
-                if not ticker:
+                hist = _extract_hist(sym)
+                if hist is None or hist.empty or len(hist) < 2:
                     continue
-                hist = ticker.history(period="2d")
-                if hist.empty or len(hist) < 2:
-                    continue
-
                 current_price, change, change_pct = _calc_price_change(hist)
-
                 sectors_results.append({
                     "symbol": sym,
                     "name": sector_info["name"],
