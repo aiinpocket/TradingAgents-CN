@@ -12,6 +12,7 @@ from tradingagents.utils.stock_utils import get_company_name as _get_company_nam
 
 def create_market_analyst(llm, toolkit):
 
+    @log_analyst_module("market")
     def market_analyst_node(state):
         logger.debug("===== 市場分析師節點開始 =====")
 
