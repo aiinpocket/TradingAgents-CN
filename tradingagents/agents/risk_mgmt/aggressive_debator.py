@@ -1,6 +1,7 @@
 
 # 匯入統一日誌系統
 from tradingagents.utils.logging_init import get_logger
+from tradingagents.agents.utils.agent_utils import truncate_report
 logger = get_logger("default")
 
 
@@ -13,10 +14,11 @@ def create_risky_debator(llm):
         current_safe_response = risk_debate_state.get("current_safe_response", "")
         current_neutral_response = risk_debate_state.get("current_neutral_response", "")
 
-        market_research_report = state["market_report"]
-        sentiment_report = state["sentiment_report"]
-        news_report = state["news_report"]
-        fundamentals_report = state["fundamentals_report"]
+        # 截斷報告上下文：風險辯論者只需關鍵結論，不需完整分析資料
+        market_research_report = truncate_report(state["market_report"])
+        sentiment_report = truncate_report(state["sentiment_report"])
+        news_report = truncate_report(state["news_report"])
+        fundamentals_report = truncate_report(state["fundamentals_report"])
 
         trader_decision = state["trader_investment_plan"]
 

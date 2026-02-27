@@ -34,6 +34,24 @@ _embedding_cache: dict[int, list[float]] = {}
 _embedding_cache_lock = threading.Lock()
 
 
+def truncate_report(text: str, max_chars: int = 800) -> str:
+    """截斷報告文字，用於下游節點的參考上下文。
+
+    風險辯論者等節點不需要完整的分析報告，只需關鍵結論。
+    截斷可大幅減少 LLM 輸入 token，加速推理。
+
+    Args:
+        text: 原始報告文字
+        max_chars: 保留的最大字元數
+
+    Returns:
+        str: 截斷後的文字（超過上限時加 '...(略)' 後綴）
+    """
+    if not text or len(text) <= max_chars:
+        return text or ""
+    return text[:max_chars] + "...(略)"
+
+
 def calc_start_date(trade_date: str, days_back: int = 90) -> str:
     """根據交易日期動態計算資料起始日期（共用函式，供所有分析師和 prefetch 使用）"""
     from datetime import timedelta
