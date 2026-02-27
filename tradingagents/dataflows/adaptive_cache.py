@@ -420,12 +420,16 @@ class AdaptiveCacheSystem:
         # Redis 會自動清理過期鍵
 
 
-# 全局快取系統實例
+# 全局快取系統實例（執行緒安全）
+import threading as _threading
 _cache_system = None
+_cache_system_lock = _threading.Lock()
 
 def get_cache_system() -> AdaptiveCacheSystem:
     """取得全局自適應快取系統實例"""
     global _cache_system
     if _cache_system is None:
-        _cache_system = AdaptiveCacheSystem()
+        with _cache_system_lock:
+            if _cache_system is None:
+                _cache_system = AdaptiveCacheSystem()
     return _cache_system

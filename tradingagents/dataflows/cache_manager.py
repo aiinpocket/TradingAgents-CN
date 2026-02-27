@@ -670,12 +670,16 @@ class StockDataCache:
         }
 
 
-# 全局快取實例
+# 全局快取實例（執行緒安全）
+import threading as _threading
 _cache_instance = None
+_cache_instance_lock = _threading.Lock()
 
 def get_cache() -> StockDataCache:
     """取得全局快取實例"""
     global _cache_instance
     if _cache_instance is None:
-        _cache_instance = StockDataCache()
+        with _cache_instance_lock:
+            if _cache_instance is None:
+                _cache_instance = StockDataCache()
     return _cache_instance

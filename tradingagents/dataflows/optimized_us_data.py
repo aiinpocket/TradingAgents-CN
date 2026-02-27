@@ -5,7 +5,6 @@
 """
 
 import time
-import random
 from datetime import datetime
 from typing import Optional
 import yfinance as yf
@@ -289,34 +288,37 @@ class OptimizedUSDataProvider:
             return None
 
     def _generate_fallback_data(self, symbol: str, start_date: str, end_date: str, error_msg: str) -> str:
-        """生成備用資料"""
+        """在所有資料來源失敗時生成錯誤報告（不含任何模擬數據）"""
         return f"""# {symbol} 美股資料取得失敗
 
 ## 錯誤訊息
 {error_msg}
 
-## 模擬資料（僅供演示）
+## 查詢參數
 - 股票代碼: {symbol}
 - 資料期間: {start_date} 至 {end_date}
-- 最新價格: ${random.uniform(100, 300):.2f}
-- 模擬漲跌: {random.uniform(-5, 5):+.2f}%
 
-## 重要提示
-由於API限制或網路問題，無法取得即時資料。
+## 注意事項
+由於 API 限制或網路問題，無法取得任何即時資料。
+本報告不包含任何價格或漲跌數據，請勿依據此報告做出投資判斷。
 建議稍後重試或檢查網路連接。
 
 生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
 
 
-# 全局實例
+# 全局實例（執行緒安全）
+import threading as _threading
 _us_data_provider = None
+_us_data_provider_lock = _threading.Lock()
 
 def get_optimized_us_data_provider() -> OptimizedUSDataProvider:
     """取得全局美股資料提供器實例"""
     global _us_data_provider
     if _us_data_provider is None:
-        _us_data_provider = OptimizedUSDataProvider()
+        with _us_data_provider_lock:
+            if _us_data_provider is None:
+                _us_data_provider = OptimizedUSDataProvider()
     return _us_data_provider
 
 

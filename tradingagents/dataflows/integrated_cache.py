@@ -266,14 +266,18 @@ class IntegratedCacheManager:
             return "標準模式 (智慧檔案快取)"
 
 
-# 全局整合快取管理器實例
+# 全局整合快取管理器實例（執行緒安全）
+import threading as _threading
 _integrated_cache = None
+_integrated_cache_lock = _threading.Lock()
 
 def get_cache() -> IntegratedCacheManager:
     """取得全局整合快取管理器實例"""
     global _integrated_cache
     if _integrated_cache is None:
-        _integrated_cache = IntegratedCacheManager()
+        with _integrated_cache_lock:
+            if _integrated_cache is None:
+                _integrated_cache = IntegratedCacheManager()
     return _integrated_cache
 
 # 向後相容的函式

@@ -326,14 +326,18 @@ class DatabaseManager:
         return cleared_count
 
 
-# 全局資料庫管理器實例
+# 全局資料庫管理器實例（執行緒安全）
+import threading as _threading
 _database_manager = None
+_database_manager_lock = _threading.Lock()
 
 def get_database_manager() -> DatabaseManager:
     """取得全局資料庫管理器實例"""
     global _database_manager
     if _database_manager is None:
-        _database_manager = DatabaseManager()
+        with _database_manager_lock:
+            if _database_manager is None:
+                _database_manager = DatabaseManager()
     return _database_manager
 
 def is_mongodb_available() -> bool:

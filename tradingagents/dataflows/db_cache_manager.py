@@ -550,12 +550,16 @@ class DatabaseCacheManager:
             logger.info("Redis連接已關閉")
 
 
-# 全局資料庫快取實例
+# 全局資料庫快取實例（執行緒安全）
+import threading as _threading
 _db_cache_instance = None
+_db_cache_instance_lock = _threading.Lock()
 
 def get_db_cache() -> DatabaseCacheManager:
     """取得全局資料庫快取實例"""
     global _db_cache_instance
     if _db_cache_instance is None:
-        _db_cache_instance = DatabaseCacheManager()
+        with _db_cache_instance_lock:
+            if _db_cache_instance is None:
+                _db_cache_instance = DatabaseCacheManager()
     return _db_cache_instance
