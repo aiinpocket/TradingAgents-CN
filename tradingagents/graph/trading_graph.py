@@ -1,6 +1,7 @@
 # TradingAgents/graph/trading_graph.py
 
 import os
+import re
 import time
 from pathlib import Path
 import json
@@ -23,6 +24,10 @@ from .setup import GraphSetup
 from .propagation import Propagator
 from .reflection import Reflector
 from .signal_processing import SignalProcessor
+
+# 預編譯輸入驗證正則（避免每次 propagate 呼叫重新編譯）
+_SYMBOL_RE = re.compile(r"^[A-Za-z]{1,5}$")
+_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 class TradingAgentsGraph:
@@ -161,14 +166,12 @@ class TradingAgentsGraph:
             trade_date: 分析日期（YYYY-MM-DD）
             progress_callback: 可選的進度回呼函式，接收進度事件標識字串
         """
-        import re
-
         # 驗證股票代碼格式，防止路徑穿越攻擊
-        if not company_name or not re.match(r"^[A-Za-z]{1,5}$", str(company_name).strip()):
+        if not company_name or not _SYMBOL_RE.match(str(company_name).strip()):
             raise ValueError(f"無效的股票代碼: {company_name}")
 
         # 驗證日期格式
-        if not trade_date or not re.match(r"^\d{4}-\d{2}-\d{2}$", str(trade_date).strip()):
+        if not trade_date or not _DATE_RE.match(str(trade_date).strip()):
             raise ValueError(f"無效的日期格式: {trade_date}")
 
         logger.debug(f"propagate 接收: company_name='{company_name}', trade_date='{trade_date}'")

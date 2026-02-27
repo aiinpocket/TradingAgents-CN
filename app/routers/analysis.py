@@ -28,6 +28,23 @@ except ImportError:
 
 router = APIRouter(tags=["analysis"])
 
+# MongoDBReportManager 惰性單例（避免每次呼叫重複實例化與 _create_indexes）
+_report_mgr_instance: Optional["MongoDBReportManager"] = None  # type: ignore[name-defined]
+
+
+def _get_report_mgr():
+    """取得 MongoDBReportManager 單例"""
+    global _report_mgr_instance
+    if _report_mgr_instance is not None:
+        return _report_mgr_instance
+    try:
+        from web.utils.mongodb_report_manager import MongoDBReportManager
+        _report_mgr_instance = MongoDBReportManager()
+    except Exception:
+        pass
+    return _report_mgr_instance
+
+
 # 專用執行緒池：分析任務獨立執行，避免與預設池搶資源（8 workers 支援更多並行 API 呼叫）
 _ANALYSIS_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="analysis")
 # 個股快照用輕量執行緒池（yfinance I/O 密集）
@@ -311,9 +328,8 @@ async def start_analysis(req: AnalysisRequest, request: Request):
 
     # 查詢 MongoDB 快取：24 小時內同一股票同一日期的已完成報告
     try:
-        from web.utils.mongodb_report_manager import MongoDBReportManager
-        _cache_mgr = MongoDBReportManager()
-        cached = _cache_mgr.get_latest_report(symbol, req.analysis_date)
+        _cache_mgr = _get_report_mgr()
+        cached = _cache_mgr.get_latest_report(symbol, req.analysis_date) if _cache_mgr else None
         if cached and cached.get("formatted_result"):
             logger.info(f"分析快取命中: {symbol} @ {req.analysis_date}")
             return {"analysis_id": "cached", "status": "cached",
@@ -366,9 +382,8 @@ async def get_analysis_status(analysis_id: str, request: Request):
     # 記憶體中找不到時，嘗試從 MongoDB 取回已完成的報告
     if not data:
         try:
-            from web.utils.mongodb_report_manager import MongoDBReportManager
-            mgr = MongoDBReportManager()
-            doc = mgr.get_report_by_id(analysis_id)
+            mgr = _get_report_mgr()
+            doc = mgr.get_report_by_id(analysis_id) if mgr else None
             if doc and doc.get("formatted_result"):
                 return AnalysisStatus(
                     analysis_id=analysis_id,
@@ -533,9 +548,8 @@ async def get_analysis_history():
 
     # 2. MongoDB 已完成報告（補充記憶體中沒有的歷史）
     try:
-        from web.utils.mongodb_report_manager import MongoDBReportManager
-        mgr = MongoDBReportManager()
-        db_reports = mgr.get_analysis_reports(limit=30)
+        mgr = _get_report_mgr()
+        db_reports = mgr.get_analysis_reports(limit=30) if mgr else []
         for doc in db_reports:
             aid = doc.get("analysis_id", "")
             if aid in seen_ids:
@@ -593,8 +607,9 @@ async def _background_translate(
 
         # 更新 MongoDB 中已儲存的報告（含英文版）
         try:
-            from web.utils.mongodb_report_manager import MongoDBReportManager
-            mgr = MongoDBReportManager()
+            mgr = _get_report_mgr()
+            if not mgr:
+                raise RuntimeError("MongoDB 不可用")
             mgr.save_analysis_report(
                 stock_symbol=stock_symbol,
                 analysis_results=raw_result,
@@ -664,8 +679,9 @@ async def _run_analysis(analysis_id: str):
             # 先儲存中文版結果到 MongoDB（不等翻譯）
             data["progress"].append(_t_lang("saving_report", lang))
             try:
-                from web.utils.mongodb_report_manager import MongoDBReportManager
-                _save_mgr = MongoDBReportManager()
+                _save_mgr = _get_report_mgr()
+                if not _save_mgr:
+                    raise RuntimeError("MongoDB 不可用")
                 _save_mgr.save_analysis_report(
                     stock_symbol=data["stock_symbol"],
                     analysis_results=result,

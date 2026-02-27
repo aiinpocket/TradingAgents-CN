@@ -95,17 +95,24 @@ _CSP_DIRECTIVES: dict[str, str] = {
 }
 
 
+# 預設 CSP（無 nonce/hash），啟動時組裝一次，API 路由直接使用
+_DEFAULT_CSP = "; ".join(
+    [f"{d} {v}" for d, v in _CSP_DIRECTIVES.items()] + ["upgrade-insecure-requests"]
+)
+
+
 def _build_csp(*, nonce: str = "", script_hash: str = "") -> str:
-    """組合 CSP header 值
+    """組合 CSP header 值（需 nonce/hash 時動態組裝，否則回傳預快取常數）
 
     Args:
         nonce: 可選的 CSP nonce（首頁 FOUC 防護內聯腳本用）
         script_hash: 可選的 script hash（配合 nonce 使用）
     """
+    if not nonce and not script_hash:
+        return _DEFAULT_CSP
     parts = []
     for directive, value in _CSP_DIRECTIVES.items():
-        if directive == "script-src" and (nonce or script_hash):
-            # 在既有 script-src 值中插入 nonce/hash（保持域名清單為唯一來源）
+        if directive == "script-src":
             extras = []
             if nonce:
                 extras.append(f"'nonce-{nonce}'")
@@ -147,18 +154,23 @@ async def lifespan(app: FastAPI):
             logger.warning(f"趨勢資料預熱失敗（不影響正常運作）: {e}")
 
     async def _safe_pregenerate_ai():
-        try:
-            from app.routers.trending import _pregenerate_ai_analysis
-            await _pregenerate_ai_analysis()
-            logger.info("AI 趨勢分析預產生完成")
-        except Exception as e:
-            logger.warning(f"AI 趨勢分析預產生失敗: {e}")
-        # AI 分析完成後，預快取 Top 股票個股快照
-        try:
-            from app.routers.trending import _precache_top_movers_context
-            await _precache_top_movers_context()
-        except Exception as e:
-            logger.warning(f"Top 股票快照預快取失敗: {e}")
+        """平行執行 AI 分析預產生 + Top 股票快照預快取"""
+        async def _ai():
+            try:
+                from app.routers.trending import _pregenerate_ai_analysis
+                await _pregenerate_ai_analysis()
+                logger.info("AI 趨勢分析預產生完成")
+            except Exception as e:
+                logger.warning(f"AI 趨勢分析預產生失敗: {e}")
+
+        async def _precache():
+            try:
+                from app.routers.trending import _precache_top_movers_context
+                await _precache_top_movers_context()
+            except Exception as e:
+                logger.warning(f"Top 股票快照預快取失敗: {e}")
+
+        await asyncio.gather(_ai(), _precache())
 
     # 等待預熱完成（最多 50 秒），確保首頁有 SSR 資料
     prewarm_task = asyncio.create_task(_prewarm_trending())

@@ -1007,12 +1007,17 @@ async def _pregenerate_ai_analysis():
     market_context = _build_market_context(overview)
     loop = asyncio.get_running_loop()
 
-    for lang in ("zh-TW", "en"):
-        cache_key = f"ai_analysis_{lang}"
-        # 已有快取且未過期，跳過
-        if _get_cached(cache_key, ttl=_AI_CACHE_TTL_SECONDS):
-            continue
+    # 收集需要產生的語言（已快取且未過期者跳過）
+    langs_to_generate = [
+        lang for lang in ("zh-TW", "en")
+        if not _get_cached(f"ai_analysis_{lang}", ttl=_AI_CACHE_TTL_SECONDS)
+    ]
+    if not langs_to_generate:
+        return
 
+    async def _gen_one(lang: str):
+        """產生單一語言的 AI 分析"""
+        cache_key = f"ai_analysis_{lang}"
         try:
             content, error, actual_provider = await asyncio.wait_for(
                 loop.run_in_executor(
@@ -1035,6 +1040,9 @@ async def _pregenerate_ai_analysis():
             logger.warning(f"AI 趨勢分析預產生逾時 (lang={lang})")
         except Exception as e:
             logger.warning(f"AI 趨勢分析預產生錯誤 (lang={lang}): {e}")
+
+    # 中英文平行產生，節省約一半等待時間
+    await asyncio.gather(*[_gen_one(lang) for lang in langs_to_generate])
 
 
 async def _precache_top_movers_context():
@@ -1128,17 +1136,20 @@ async def start_background_refresh():
             logger.info("背景趨勢刷新完成")
             consecutive_failures = 0
 
-            # 市場資料更新後，背景預產生 AI 分析（不阻塞下次刷新）
-            try:
-                await _pregenerate_ai_analysis()
-            except Exception as e:
-                logger.warning(f"AI 分析預產生失敗（不影響正常運作）: {e}")
+            # 市場資料更新後，平行執行 AI 分析預產生 + Top 股票快照預快取
+            async def _safe_ai():
+                try:
+                    await _pregenerate_ai_analysis()
+                except Exception as e:
+                    logger.warning(f"AI 分析預產生失敗（不影響正常運作）: {e}")
 
-            # 背景預快取漲跌排行 Top 股票的個股快照，消除使用者點擊時的冷啟動延遲
-            try:
-                await _precache_top_movers_context()
-            except Exception as e:
-                logger.warning(f"Top 股票快照預快取失敗（不影響正常運作）: {e}")
+            async def _safe_precache():
+                try:
+                    await _precache_top_movers_context()
+                except Exception as e:
+                    logger.warning(f"Top 股票快照預快取失敗（不影響正常運作）: {e}")
+
+            await asyncio.gather(_safe_ai(), _safe_precache())
 
         except asyncio.TimeoutError:
             consecutive_failures += 1
