@@ -2237,16 +2237,12 @@ input[aria-invalid="true"],
   flex-shrink: 0;
 }
 
-.mover-row-up:nth-child(1) .mover-rank,
-.mover-row-up:nth-child(2) .mover-rank,
-.mover-row-up:nth-child(3) .mover-rank {
+.mover-row-up:nth-child(-n+3) .mover-rank {
   background: var(--green-bg);
   color: var(--green-text);
 }
 
-.mover-row-down:nth-child(1) .mover-rank,
-.mover-row-down:nth-child(2) .mover-rank,
-.mover-row-down:nth-child(3) .mover-rank {
+.mover-row-down:nth-child(-n+3) .mover-rank {
   background: var(--red-bg);
   color: var(--red-text);
 }
