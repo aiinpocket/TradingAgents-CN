@@ -57,11 +57,19 @@ spec:
                 name: {{ include "tradingagents.fullname" . }}-config
             - secretRef:
                 name: {{ include "tradingagents.fullname" . }}-secret
+          # 啟動探針：在漫長的初始化期間（預熱快取、LLM 客戶端等）使用寬鬆的檢查
+          startupProbe:
+            httpGet:
+              path: {{ .Values.healthCheck.readiness.path }}
+              port: http
+            periodSeconds: 10
+            failureThreshold: 18
+            timeoutSeconds: 5
+          # 存活探針：startupProbe 成功後才啟動，不再需要高 initialDelaySeconds
           livenessProbe:
             httpGet:
               path: {{ .Values.healthCheck.liveness.path }}
               port: http
-            initialDelaySeconds: {{ .Values.healthCheck.liveness.initialDelaySeconds }}
             periodSeconds: {{ .Values.healthCheck.liveness.periodSeconds }}
             timeoutSeconds: {{ .Values.healthCheck.liveness.timeoutSeconds }}
             failureThreshold: {{ .Values.healthCheck.liveness.failureThreshold }}
@@ -69,7 +77,6 @@ spec:
             httpGet:
               path: {{ .Values.healthCheck.readiness.path }}
               port: http
-            initialDelaySeconds: {{ .Values.healthCheck.readiness.initialDelaySeconds }}
             periodSeconds: {{ .Values.healthCheck.readiness.periodSeconds }}
             timeoutSeconds: {{ .Values.healthCheck.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.healthCheck.readiness.failureThreshold }}
