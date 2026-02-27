@@ -1012,12 +1012,10 @@ function tradingApp() {
       // HTML 實體編碼（代碼塊已單獨處理，單次掃描取代三次鏈式 replace）
       html = escHtml(html);
 
-      // 標題（容器為 h2，Markdown 標題壓縮至 h3/h4 維持 WCAG 層級不跳級）
+      // 標題（容器為 h2，所有 Markdown 標題統一為 h3 維持 WCAG 層級不跳級）
       html = html
         .replace(/^#{1,6}\s*$/gm, '')
-        .replace(/^#{3,6} (\S.*)$/gm, (_, g) => `<h4>${g.trim()}</h4>`)
-        .replace(/^## (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
-        .replace(/^# (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
+        .replace(/^#{1,6} (\S.*)$/gm, (_, g) => `<h3>${g.trim()}</h3>`)
         .replace(/^---$/gm, '<hr>');
 
       // 行內格式
