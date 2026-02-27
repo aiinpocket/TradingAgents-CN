@@ -206,9 +206,12 @@ async def lifespan(app: FastAPI):
     _TRENDING_EXECUTOR.shutdown(wait=False, cancel_futures=True)
     _SUBTASK_EXECUTOR.shutdown(wait=False, cancel_futures=True)
     try:
-        from app.routers.analysis import _ANALYSIS_EXECUTOR, _CONTEXT_EXECUTOR
+        from app.routers.analysis import (
+            _ANALYSIS_EXECUTOR, _CONTEXT_EXECUTOR, _TRANSLATE_EXECUTOR,
+        )
         _ANALYSIS_EXECUTOR.shutdown(wait=False, cancel_futures=True)
         _CONTEXT_EXECUTOR.shutdown(wait=False, cancel_futures=True)
+        _TRANSLATE_EXECUTOR.shutdown(wait=False, cancel_futures=True)
     except (ImportError, AttributeError):
         pass
     logger.info("TradingAgents API 關閉")
