@@ -956,6 +956,7 @@ input[aria-invalid="true"],
 .log-container {
   max-height: clamp(200px, 40vh, 400px);
   overflow-y: auto;
+  scroll-behavior: smooth;
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   background: var(--bg-inset);
@@ -1415,6 +1416,7 @@ input[aria-invalid="true"],
   border-top: 1px solid var(--border-light);
   margin: 16px 0;
 }
+/* 表格自動水平捲動容器（防止寬表格在小螢幕溢出） */
 .markdown-body table,
 .ai-analysis-content table {
   width: 100%;
@@ -1422,6 +1424,9 @@ input[aria-invalid="true"],
   border-collapse: collapse;
   margin: 12px 0;
   font-size: 13px;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .markdown-body th,
 .markdown-body td,
@@ -3021,12 +3026,7 @@ input[aria-invalid="true"],
 
   .status-indicator span:not(.status-dot) { display: none; }
 
-  .ai-analysis-content table,
-  .markdown-body table {
-    display: block;
-    overflow-x: auto;
-  
-  }
+  /* 表格 overflow 已在基礎樣式處理，此處無需重複 */
 }
 
 @media (max-width: 480px) {

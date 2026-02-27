@@ -1435,7 +1435,7 @@ TradingAgents-CN
 
 ## 版本歷史
 
-- **v0.5.0** (2026-02-27): AI 趨勢分析跨 tab 語言切換修復、CSS 觸控回饋(:active)、暗色模式對比度強化、MongoDB 非阻塞儲存、SSE 事件驅動通知、$ 前綴 CSS specificity 修復、ARIA 無障礙修正、版本號統一
+- **v0.5.0** (2026-02-27): AI 趨勢分析跨 tab 語言切換修復、SignalProcessor 去 LLM 化（純正則提取）、未使用匯入清理、market_analyst 裝飾器一致化、CSS 觸控回饋(:active)、暗色模式對比度強化、MongoDB 非阻塞儲存、SSE 事件驅動通知、$ 前綴 CSS specificity 修復、ARIA 無障礙修正、版本號統一
 - **v0.4.5** (2026-02-27): 節點級別即時進度回報、多空/風險並行辯論、分析師直接工具呼叫、工具結果快取去重、全域工具執行緒池、標準化記憶嵌入快取(100% 命中)、LLM max_tokens 限制、辯論歷史截斷、背景翻譯任務追蹤、SSR 預渲染 CLS 0.00、CSP 構建器、版本常數化、術語校正模組化、AI 分析中英文平行產生、背景任務平行化、MongoDB 單例化、安全依賴全數最新（pip-audit 0 漏洞）
 - **v0.4.4** (2026-02-26): SSR 預渲染 CLS 0.00、新聞 i18n 翻譯、AI 趨勢分析、WCAG AA 對比度、安全依賴更新（python-multipart/tornado/certifi CVE 修復）、台灣術語校正
 - **v0.4.1** (2026-02-23): Helm 安全強化、SSE 連接修復、暗色對比度、CDN 預連接
