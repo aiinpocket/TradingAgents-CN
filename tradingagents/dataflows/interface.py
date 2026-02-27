@@ -7,6 +7,9 @@ from .finnhub_utils import get_data_in_range
 from tradingagents.utils.logging_manager import get_logger
 logger = get_logger('dataflows')
 
+# 匯入 Finnhub I/O 執行緒池，用於並行呼叫 Finnhub API
+from .finnhub_extra import _FINNHUB_IO_POOL
+
 # 嘗試匯入 yfinance 相關模組，如果失敗則跳過
 try:
     from .yfin_utils import YFinanceUtils
@@ -729,24 +732,33 @@ def get_fundamentals_finnhub(ticker, curr_date):
         finnhub_client = finnhub.Client(api_key=api_key)
         
         logger.debug(f"使用Finnhub API取得 {ticker} 的基本面資料...")
-        
-        # 取得基本財務資料
+
+        # 並行呼叫 3 個 Finnhub API（共用 finnhub_extra 執行緒池）
+        fut_financials = _FINNHUB_IO_POOL.submit(
+            finnhub_client.company_basic_financials, ticker, 'all'
+        )
+        fut_profile = _FINNHUB_IO_POOL.submit(
+            finnhub_client.company_profile2, symbol=ticker
+        )
+        fut_earnings = _FINNHUB_IO_POOL.submit(
+            finnhub_client.company_earnings, ticker, limit=4
+        )
+
+        # 收集結果，個別容錯
         try:
-            basic_financials = finnhub_client.company_basic_financials(ticker, 'all')
+            basic_financials = fut_financials.result(timeout=30)
         except Exception as e:
             logger.error(f"Finnhub基本財務資料取得失敗: {str(e)}")
             basic_financials = None
-        
-        # 取得公司概況
+
         try:
-            company_profile = finnhub_client.company_profile2(symbol=ticker)
+            company_profile = fut_profile.result(timeout=30)
         except Exception as e:
             logger.error(f"Finnhub公司概況取得失敗: {str(e)}")
             company_profile = None
-        
-        # 取得收益資料
+
         try:
-            earnings = finnhub_client.company_earnings(ticker, limit=4)
+            earnings = fut_earnings.result(timeout=30)
         except Exception as e:
             logger.error(f"Finnhub收益資料取得失敗: {str(e)}")
             earnings = None

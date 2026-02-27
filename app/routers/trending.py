@@ -14,7 +14,7 @@ from datetime import datetime
 from collections import OrderedDict
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 # 日誌
@@ -41,6 +41,42 @@ _BG_JITTER_MAX = 30  # 隨機抖動上限：30 秒
 _MAX_CACHE_ENTRIES = 20  # 快取條目上限，防止記憶體膨脹
 _cache: dict = {}
 _cache_lock = threading.Lock()
+
+# AI 分析端點專屬速率限制（每 IP 5 次/60 秒，防止高成本 LLM 呼叫被濫用）
+_AI_RATE_LIMIT_MAX = 5
+_AI_RATE_LIMIT_WINDOW = 60  # 秒
+_ai_rate_hits: dict[str, list[float]] = {}
+
+
+def _check_ai_rate_limit(request: Request) -> bool:
+    """檢查 AI 分析端點的 per-IP 速率限制
+
+    回傳 True 表示允許通過，False 表示超限
+    """
+    ip = (
+        request.headers.get("cf-connecting-ip")
+        or request.headers.get("x-real-ip")
+        or (request.client.host if request.client else "unknown")
+    )
+    if ip.startswith("::ffff:"):
+        ip = ip[7:]
+    now = time.monotonic()
+    cutoff = now - _AI_RATE_LIMIT_WINDOW
+    # 清理過期記錄
+    hits = _ai_rate_hits.get(ip, [])
+    hits = [t for t in hits if t > cutoff]
+    if len(hits) >= _AI_RATE_LIMIT_MAX:
+        _ai_rate_hits[ip] = hits
+        return False
+    hits.append(now)
+    _ai_rate_hits[ip] = hits
+    # 定期清理閒置 IP（當追蹤數超過 1000 時）
+    if len(_ai_rate_hits) > 1000:
+        stale = [k for k, v in _ai_rate_hits.items() if not v or v[-1] <= cutoff]
+        for k in stale:
+            del _ai_rate_hits[k]
+    return True
+
 
 # 專用執行緒池（放在模組頂部，確保所有函式可引用）
 _TRENDING_EXECUTOR = ThreadPoolExecutor(max_workers=12, thread_name_prefix="trending")
@@ -792,6 +828,10 @@ _TRENDING_MESSAGES: dict[str, dict[str, str]] = {
         "zh-TW": "未配置 LLM API 金鑰",
         "en": "No LLM API key configured.",
     },
+    "ai_rate_limit": {
+        "zh-TW": "AI 分析請求過於頻繁，請稍後再試",
+        "en": "Too many AI analysis requests. Please try again later.",
+    },
 }
 
 
@@ -910,11 +950,12 @@ def _generate_ai_analysis(market_context: str, lang: str) -> tuple[str, str, str
 
 
 @router.get("/trending/ai-analysis")
-async def get_ai_analysis(lang: str = "zh-TW"):
+async def get_ai_analysis(request: Request, lang: str = "zh-TW"):
     """取得 AI 市場趨勢分析（每 2 小時更新一次）
 
     使用 asyncio.Lock 保證同一時間只有一個 coroutine 執行 LLM 呼叫，
     後續請求會在鎖內做 double-check 快取，避免重複生成。
+    專屬速率限制：每 IP 5 次/60 秒（LLM 呼叫成本高，需嚴格控管）。
     """
     if lang not in ("zh-TW", "en"):
         lang = "zh-TW"
@@ -923,6 +964,20 @@ async def get_ai_analysis(lang: str = "zh-TW"):
     cached = _get_cached(cache_key, ttl=_AI_CACHE_TTL_SECONDS)
     if cached:
         return cached
+
+    # AI 分析專屬速率限制（比全域更嚴格）
+    if not _check_ai_rate_limit(request):
+        return JSONResponse(
+            status_code=429,
+            content={
+                "available": True,
+                "content": "",
+                "updated_at": "",
+                "provider": "",
+                "error": _t_trending("ai_rate_limit", lang),
+            },
+            headers={"Retry-After": str(_AI_RATE_LIMIT_WINDOW)},
+        )
 
     providers = _get_ai_providers()
     if not providers:
