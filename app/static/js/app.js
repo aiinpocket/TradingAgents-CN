@@ -87,8 +87,9 @@ function tradingApp() {
     // 個股快照
     stockContext: null,
     stockContextLoading: false,
-    // 前端個股快照快取（symbol -> {data, ts}），TTL 5 分鐘，避免重複請求
+    // 前端個股快照快取（symbol -> {data, ts}），TTL 5 分鐘，上限 50 筆
     _ctxCache: {},
+    _CTX_CACHE_MAX: 50,
     _ctxPending: {},  // 正在進行的請求去重（symbol -> Promise）
 
     // Markdown 渲染記憶化快取（text -> html），避免 Alpine 反應式更新重複解析
@@ -610,9 +611,12 @@ function tradingApp() {
             if (!this._scrollPending) {
               this._scrollPending = true;
               requestAnimationFrame(() => {
+                // 無論 DOM 是否存在，確保旗標重設（避免死鎖）
                 this._scrollPending = false;
-                const log = this.$refs.progressLog;
-                if (log) log.scrollTop = log.scrollHeight;
+                try {
+                  const log = this.$refs.progressLog;
+                  if (log) log.scrollTop = log.scrollHeight;
+                } catch {}
               });
             }
 
@@ -847,6 +851,17 @@ function tradingApp() {
             });
             if (res.ok) {
               const data = await res.json();
+              // 快取上限淘汰：超過 MAX 時移除最舊的條目
+              const keys = Object.keys(this._ctxCache);
+              if (keys.length >= this._CTX_CACHE_MAX) {
+                let oldest = keys[0], oldestTs = this._ctxCache[keys[0]].ts;
+                for (let k = 1; k < keys.length; k++) {
+                  if (this._ctxCache[keys[k]].ts < oldestTs) {
+                    oldest = keys[k]; oldestTs = this._ctxCache[keys[k]].ts;
+                  }
+                }
+                delete this._ctxCache[oldest];
+              }
               this._ctxCache[cacheKey] = { data, ts: Date.now() };
               return data;
             }

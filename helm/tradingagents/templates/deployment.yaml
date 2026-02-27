@@ -41,10 +41,9 @@ spec:
             capabilities:
               drop:
                 - ALL
-          # 使用 start-xvfb.sh 啟動虛擬顯示器（PDF 匯出功能需要）
-          command: ["/usr/local/bin/start-xvfb.sh"]
+          # 直接啟動 FastAPI（PDF 匯出已移除 xvfb 依賴）
+          command: ["python"]
           args:
-            - python
             - start_app.py
             - --host=0.0.0.0
             - --port=8501
