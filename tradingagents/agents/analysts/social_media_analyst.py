@@ -24,10 +24,11 @@ def create_social_media_analyst(llm, toolkit):
 
         from tradingagents.agents.utils.agent_utils import invoke_tools_direct
 
+        # 使用 Google News + Finnhub 情緒資料（無 LLM 呼叫，純 API）
         if toolkit.config["online_tools"]:
-            tools = [toolkit.get_stock_news_openai, toolkit.get_finnhub_sentiment_data]
+            tools = [toolkit.get_google_news, toolkit.get_finnhub_sentiment_data]
             tool_args = [
-                {"ticker": ticker, "curr_date": current_date},
+                {"query": f"{ticker} stock social media sentiment", "curr_date": current_date},
                 {"ticker": ticker, "curr_date": current_date},
             ]
         else:

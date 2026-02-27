@@ -95,49 +95,45 @@ class UnifiedNewsAnalyzer:
         return "美股"
     
     def _get_us_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
-        """取得美股新聞"""
+        """取得美股新聞（優先使用無 LLM 的資料來源）"""
         logger.info(f"[統一新聞工具] 取得美股 {stock_code} 新聞")
-        
-        # 取得當前日期
+
         curr_date = datetime.now().strftime("%Y-%m-%d")
-        
-        # 優先級1: OpenAI全球新聞
-        try:
-            if hasattr(self.toolkit, 'get_global_news_openai'):
-                logger.info("[統一新聞工具] 嘗試OpenAI美股新聞...")
-                # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
-                result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
-                if result and len(result.strip()) > 50:
-                    logger.info(f"[統一新聞工具] OpenAI美股新聞取得成功: {len(result)} 字元")
-                    return self._format_news_result(result, "OpenAI美股新聞", model_info)
-        except Exception as e:
-            logger.warning(f"[統一新聞工具] OpenAI美股新聞取得失敗: {e}")
-        
-        # 優先級2: Google新聞（英文搜索）
+
+        # 優先級1: Google 新聞 RSS（無 LLM，速度最快）
         try:
             if hasattr(self.toolkit, 'get_google_news'):
                 logger.info("[統一新聞工具] 嘗試Google美股新聞...")
                 query = f"{stock_code} stock news earnings financial"
-                # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
                 if result and len(result.strip()) > 50:
                     logger.info(f"[統一新聞工具] Google美股新聞取得成功: {len(result)} 字元")
                     return self._format_news_result(result, "Google美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] Google美股新聞取得失敗: {e}")
-        
-        # 優先級3: FinnHub新聞（如果可用）
+
+        # 優先級2: FinnHub 新聞 API（無 LLM）
         try:
             if hasattr(self.toolkit, 'get_finnhub_news'):
                 logger.info("[統一新聞工具] 嘗試FinnHub美股新聞...")
-                # 使用LangChain工具的正確呼叫方式：.invoke()方法和字典參數
                 result = self.toolkit.get_finnhub_news.invoke({"symbol": stock_code, "max_results": min(max_news, 50)})
                 if result and len(result.strip()) > 50:
                     logger.info(f"[統一新聞工具] FinnHub美股新聞取得成功: {len(result)} 字元")
                     return self._format_news_result(result, "FinnHub美股新聞", model_info)
         except Exception as e:
             logger.warning(f"[統一新聞工具] FinnHub美股新聞取得失敗: {e}")
-        
+
+        # 優先級3: OpenAI 全球新聞（LLM web_search，最後備選）
+        try:
+            if hasattr(self.toolkit, 'get_global_news_openai'):
+                logger.info("[統一新聞工具] Google/FinnHub 皆失敗，回退到OpenAI...")
+                result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
+                if result and len(result.strip()) > 50:
+                    logger.info(f"[統一新聞工具] OpenAI美股新聞取得成功: {len(result)} 字元")
+                    return self._format_news_result(result, "OpenAI美股新聞", model_info)
+        except Exception as e:
+            logger.warning(f"[統一新聞工具] OpenAI美股新聞取得失敗: {e}")
+
         return "無法取得美股新聞資料，所有新聞源均不可用"
     
     def _format_news_result(self, news_content: str, source: str, model_info: str = "") -> str:
@@ -190,9 +186,9 @@ def create_unified_news_tool(toolkit):
 
 功能:
 - 專注於美股新聞取得
-- 優先OpenAI -> Google英文 -> FinnHub
+- 優先 Google News RSS -> FinnHub API -> OpenAI（備選）
+- 預設使用無 LLM 呼叫的資料來源，加速資料取得
 - 返回格式化的新聞內容
-- 支援Google模型的特殊長度控制
 """
     
     return get_stock_news_unified

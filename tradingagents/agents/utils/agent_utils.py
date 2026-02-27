@@ -213,12 +213,13 @@ def prefetch_analyst_data(toolkit, ticker: str, trade_date: str):
     unified_news_tool.name = "get_stock_news_unified"
 
     # 收集 4 個分析師需要的所有 7 個不重複工具呼叫
+    # 全部使用純 API 呼叫（無 OpenAI web_search LLM），大幅縮短預載入時間
     tools = [
         # 市場分析師需要的 2 個工具
         toolkit.get_stock_market_data_unified,
         toolkit.get_finnhub_technical_signals,
-        # 社交媒體分析師需要的 2 個工具
-        toolkit.get_stock_news_openai,
+        # 社交媒體分析師需要的 2 個工具（Google News + Finnhub 情緒）
+        toolkit.get_google_news,
         toolkit.get_finnhub_sentiment_data,  # 新聞分析師也需要，會快取命中
         # 新聞分析師的統一新聞工具
         unified_news_tool,
@@ -230,7 +231,7 @@ def prefetch_analyst_data(toolkit, ticker: str, trade_date: str):
     tool_args = [
         {"ticker": ticker, "start_date": start_date, "end_date": trade_date},
         {"ticker": ticker},
-        {"ticker": ticker, "curr_date": trade_date},
+        {"query": f"{ticker} stock social media sentiment", "curr_date": trade_date},
         {"ticker": ticker, "curr_date": trade_date},
         {"stock_code": ticker, "max_news": 10, "model_info": ""},
         {"ticker": ticker, "start_date": start_date, "end_date": trade_date, "curr_date": trade_date},
@@ -638,7 +639,7 @@ class Toolkit:
         curr_date: Annotated[str, "當前日期，格式：YYYY-MM-DD"] = None
     ) -> str:
         """
-        統一的股票基本面分析工具，使用 OpenAI/Finnhub 資料來源
+        統一的股票基本面分析工具，使用 Finnhub API 資料來源
 
         Args:
             ticker: 股票代碼（如：AAPL、TSLA）
@@ -664,12 +665,12 @@ class Toolkit:
 
             result_data = []
 
-            # 使用 OpenAI/Finnhub 資料來源取得基本面資料
+            # 直接使用 Finnhub API 取得基本面資料（無 LLM 呼叫，速度快 5-10 倍）
             logger.info(f"[統一基本面工具] 處理美股資料: {ticker}")
 
             try:
-                from tradingagents.dataflows.interface import get_fundamentals_openai
-                us_data = get_fundamentals_openai(ticker, curr_date)
+                from tradingagents.dataflows.interface import get_fundamentals_finnhub
+                us_data = get_fundamentals_finnhub(ticker, curr_date)
                 result_data.append(f"## 基本面資料\n{us_data}")
             except Exception as e:
                 result_data.append(f"## 基本面資料\n取得失敗: {e}")
@@ -682,7 +683,7 @@ class Toolkit:
 {chr(10).join(result_data)}
 
 ---
-*資料來源: OpenAI / Finnhub API*
+*資料來源: Finnhub API*
 """
 
             logger.info(f"[統一基本面工具] 資料取得完成，總長度: {len(combined_result)}")
