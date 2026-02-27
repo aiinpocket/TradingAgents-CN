@@ -180,10 +180,6 @@ _STOCK_UNIVERSE = [
 ]
 
 
-
-# 台灣慣用術語校正：從 app.utils.tw_terminology 匯入 normalize_tw_terminology
-
-
 def _get_cached(key: str, ttl: int = _CACHE_TTL_SECONDS) -> Optional[dict]:
     """取得快取資料（如果未過期）"""
     with _cache_lock:
