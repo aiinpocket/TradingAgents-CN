@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 # 應用程式版本（唯一來源：FastAPI、health endpoint 共用）
 _APP_VERSION = "0.4.5"
 # 靜態檔案快取版本戳（唯一來源：CSS/JS 改動時遞增字母後綴以強制 CDN 更新）
-_CACHE_VERSION = "0.4.5z"
+_CACHE_VERSION = "0.5.0"
 
 # 專案根目錄
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -322,7 +322,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         elif path.startswith("/static/"):
             # 帶版本戳的靜態檔案可長期快取（URL 變化即失效）
             if request.url.query:
-                response.headers["Cache-Control"] = "public, max-age=2592000, immutable"
+                response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
             else:
                 response.headers["Cache-Control"] = "public, max-age=86400"
         # HSTS - 強制 HTTPS（部署在 TLS 後時生效）

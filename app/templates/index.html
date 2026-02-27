@@ -261,7 +261,7 @@
           </button>
         </div>
         <div class="watchlist-grid">
-          <template x-for="stock in getWatchlistStocks()" :key="stock.symbol">
+          <template x-for="stock in _watchlistStocks" :key="stock.symbol">
             <div class="watchlist-card" role="button" tabindex="0"
                  @click="quickAnalyze(stock.symbol)"
                  @keydown.enter="quickAnalyze(stock.symbol)"

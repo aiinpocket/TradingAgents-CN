@@ -97,6 +97,8 @@ function tradingApp() {
 
     // 追蹤清單（localStorage 持久化）
     watchlist: [],
+    _watchlistSet: new Set(),   // watchlist 的 Set 快取（O(1) 查詢）
+    _watchlistStocks: [],       // 追蹤清單股票行情預計算結果
     _clearConfirm: false,  // 清除追蹤清單的確認狀態
     _toastMsg: '',         // 輕量級 toast 訊息
 
@@ -134,11 +136,17 @@ function tradingApp() {
       await Promise.all([this.checkHealth(), this.loadModels()]);
       this.form.date = new Date().toISOString().split('T')[0];
 
-      // 股票查詢表快取：trendingData 變化時重建一次，供 _computeStockPreview / getWatchlistStocks 共用
+      // 股票查詢表快取：trendingData 變化時重建一次，供 _computeStockPreview / _watchlistStocks 共用
       this.$watch('trendingData', () => {
         this._rebuildStockMap();
         this.stockPreview = this._computeStockPreview();
         this._sentiment = this._computeSentiment();
+        this._watchlistStocks = this._buildWatchlistStocks();
+      });
+      // 追蹤清單變化時同步 Set 快取和行情預計算
+      this.$watch('watchlist', () => {
+        this._watchlistSet = new Set(this.watchlist);
+        this._watchlistStocks = this._buildWatchlistStocks();
       });
       this.$watch('form.symbol', () => {
         this.stockPreview = this._computeStockPreview();
@@ -304,8 +312,12 @@ function tradingApp() {
       this.trendingLoading = true;
       this.trendingError = false;
 
+      // 取消前一次未完成的請求（避免競態條件）
+      if (this._trendingAbort) this._trendingAbort.abort();
+      this._trendingAbort = new AbortController();
+
       try {
-        const res = await fetch('/api/trending/overview');
+        const res = await fetch('/api/trending/overview', { signal: this._trendingAbort.signal });
         if (res.ok) {
           this.trendingData = await res.json();
           this.trendingError = false;
@@ -315,6 +327,7 @@ function tradingApp() {
           this.trendingError = true;
         }
       } catch (e) {
+        if (e.name === 'AbortError') return;
         console.error('Failed to load trending:', e);
         this.trendingError = true;
       } finally {
@@ -435,6 +448,7 @@ function tradingApp() {
       } catch {
         this.watchlist = [];
       }
+      this._watchlistSet = new Set(this.watchlist);
     },
 
     _saveWatchlist() {
@@ -442,7 +456,7 @@ function tradingApp() {
     },
 
     isInWatchlist(symbol) {
-      return this.watchlist.includes(symbol);
+      return this._watchlistSet.has(symbol);
     },
 
     toggleWatchlist(symbol, event) {
@@ -474,8 +488,8 @@ function tradingApp() {
       this._clearConfirmTimer = setTimeout(() => { this._clearConfirm = false; }, 3000);
     },
 
-    // 取得追蹤清單中的股票行情（使用 _stockMap 快取查詢表）
-    getWatchlistStocks() {
+    // 建立追蹤清單股票行情（由 $watch 觸發，結果存入 _watchlistStocks）
+    _buildWatchlistStocks() {
       if (this.watchlist.length === 0) return [];
       return this.watchlist
         .map(sym => this._stockMap[sym] || { symbol: sym, name: '', price: null, change_pct: null })
@@ -578,8 +592,8 @@ function tradingApp() {
           if (data.type === 'progress') {
             this.progressMessages.push(data.message);
             // 限制進度訊息上限，避免長時間分析導致記憶體膨脹
-            // 每次刪 10 條（而非 50），減少 DOM 批量更新的卡頓
-            if (this.progressMessages.length > 200) this.progressMessages.splice(0, 10);
+            // 超過上限時一次性截斷（整體替換比 splice 對 Alpine 更友好）
+            if (this.progressMessages.length > 200) this.progressMessages = this.progressMessages.slice(-190);
             const stepMatch = data.message.match(/^\[(\d+)\/(\d+)\]/);
             if (stepMatch) {
               this.progressPercent = Math.min(CONFIG.PROGRESS_MAX_PERCENT, Math.round((parseInt(stepMatch[1]) / parseInt(stepMatch[2])) * CONFIG.PROGRESS_MAX_PERCENT));
