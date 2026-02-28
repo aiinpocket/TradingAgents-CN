@@ -774,12 +774,16 @@ async def _run_analysis(analysis_id: str):
 
     except asyncio.TimeoutError:
         timeout_min = _ANALYSIS_TIMEOUT_SECONDS // 60
+        timeout_err = {
+            "zh-TW": f"分析超時（超過 {timeout_min} 分鐘），已強制終止。建議降低研究深度後重試",
+            "en": f"Analysis timed out (exceeded {timeout_min} min). Try reducing research depth.",
+        }.get(lang, f"Analysis timed out ({timeout_min} min)")
         if data:
             data["progress"].append(_t_lang("analysis_error", lang))
         _update_analysis_state(
             analysis_id,
             status="failed",
-            error=_t_lang("internal_error", lang),
+            error=timeout_err,
         )
         logger.warning(f"分析 ...{analysis_id[-4:]} 超時（{timeout_min} 分鐘），已強制終止")
 
@@ -788,14 +792,19 @@ async def _run_analysis(analysis_id: str):
         logger.info(f"分析 ...{analysis_id[-4:]} 已被取消")
 
     except Exception as e:
+        # 提取例外類型與清理後的訊息，讓使用者能判斷錯誤原因
+        exc_type = type(e).__name__
+        raw_msg = str(e)[:300]
+        sanitized = _sanitize_error_message(raw_msg) if raw_msg else ""
+        user_error = _classify_analysis_error(exc_type, sanitized, lang)
         if data:
             data["progress"].append(_t_lang("analysis_error", lang))
         _update_analysis_state(
             analysis_id,
             status="failed",
-            error=_t_lang("internal_error", lang),
+            error=user_error,
         )
-        logger.error(f"分析 ...{analysis_id[-4:]} 異常: {e}", exc_info=True)
+        logger.error(f"分析 ...{analysis_id[-4:]} 異常 ({exc_type}): {e}", exc_info=True)
 
     finally:
         # 清理 asyncio.Task 引用，釋放記憶體
@@ -883,6 +892,62 @@ def _sanitize_error_message(raw_error: str, max_length: int = 200) -> str:
     # 移除疑似 API 金鑰（sk-xxx、key-xxx 等）
     msg = re.sub(r"\b(?:sk|key|token|api)[_-][\w]{8,}\b", "[redacted]", msg, flags=re.IGNORECASE)
     return msg
+
+
+def _classify_analysis_error(exc_type: str, sanitized_msg: str, lang: str = "zh-TW") -> str:
+    """根據例外類型分類錯誤訊息，回傳對使用者有意義的描述
+
+    常見錯誤類型與對應訊息：
+    - AuthenticationError / PermissionDenied: API 金鑰無效或過期
+    - RateLimitError: API 呼叫頻率超限
+    - InsufficientQuotaError: API 額度不足
+    - APIConnectionError / ConnectionError: 網路連線問題
+    - 其他: 顯示例外類型 + 清理後的訊息摘要
+    """
+    low_type = exc_type.lower()
+    low_msg = sanitized_msg.lower()
+
+    # API 認證問題
+    if "auth" in low_type or "permission" in low_type or "401" in low_msg or "incorrect api key" in low_msg:
+        return {
+            "zh-TW": "API 金鑰無效或已過期，請至 .env 檢查 OPENAI_API_KEY / ANTHROPIC_API_KEY 設定",
+            "en": "API key is invalid or expired. Please check OPENAI_API_KEY / ANTHROPIC_API_KEY in .env",
+        }.get(lang, "API key invalid or expired")
+
+    # 額度不足
+    if "quota" in low_type or "quota" in low_msg or "insufficient" in low_msg or "billing" in low_msg:
+        return {
+            "zh-TW": "API 額度不足或帳單問題，請確認 LLM 提供商帳戶餘額",
+            "en": "Insufficient API quota or billing issue. Please check your LLM provider account balance.",
+        }.get(lang, "Insufficient API quota")
+
+    # 頻率限制
+    if "ratelimit" in low_type or "rate_limit" in low_type or "rate limit" in low_msg or "429" in low_msg:
+        return {
+            "zh-TW": "API 呼叫頻率超限，請稍後再試",
+            "en": "API rate limit exceeded. Please try again later.",
+        }.get(lang, "API rate limit exceeded")
+
+    # 網路連線問題
+    if "connection" in low_type or "timeout" in low_type or "network" in low_msg:
+        return {
+            "zh-TW": f"網路連線失敗 ({exc_type})，請檢查網路或稍後再試",
+            "en": f"Network connection failed ({exc_type}). Please check network or try later.",
+        }.get(lang, f"Network error: {exc_type}")
+
+    # 模型不存在或不可用
+    if "notfound" in low_type or "model" in low_msg and ("not found" in low_msg or "does not exist" in low_msg):
+        return {
+            "zh-TW": f"模型不可用: {sanitized_msg[:80]}",
+            "en": f"Model not available: {sanitized_msg[:80]}",
+        }.get(lang, f"Model error: {sanitized_msg[:80]}")
+
+    # 通用 fallback：顯示例外類型 + 摘要（比「內部錯誤」有用）
+    brief = sanitized_msg[:100] if sanitized_msg else ""
+    return {
+        "zh-TW": f"分析失敗 ({exc_type}): {brief}" if brief else f"分析失敗 ({exc_type})",
+        "en": f"Analysis failed ({exc_type}): {brief}" if brief else f"Analysis failed ({exc_type})",
+    }.get(lang, f"Analysis failed ({exc_type})")
 
 
 # ---------------------------------------------------------------------------

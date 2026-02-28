@@ -99,6 +99,7 @@ function tradingApp() {
     _ctxCache: {},
     _CTX_CACHE_MAX: 50,
     _ctxPending: {},  // 正在進行的請求去重（symbol -> Promise）
+    _ctxDebounce: null,  // symbol 輸入 debounce 計時器
 
     // Markdown 渲染記憶化快取（text -> html），避免 Alpine 反應式更新重複解析
     _mdCache: new Map(),
@@ -160,10 +161,17 @@ function tradingApp() {
         this._watchlistSet = new Set(this.watchlist);
         this._watchlistStocks = this._buildWatchlistStocks();
       });
-      this.$watch('form.symbol', () => {
+      this.$watch('form.symbol', (val) => {
         this.stockPreview = this._computeStockPreview();
-        // 使用者修改股票代號時自動清除過時的錯誤訊息
         if (this.formError) this.formError = null;
+        // 輸入有效股票代號時 debounce 載入即時行情（避免打字中頻繁呼叫）
+        clearTimeout(this._ctxDebounce);
+        const sym = (val || '').trim().toUpperCase();
+        if (/^[A-Z]{1,5}$/.test(sym)) {
+          this._ctxDebounce = setTimeout(() => this.fetchStockContext(sym), 400);
+        } else {
+          this.stockContext = null;
+        }
       });
       // 分析結果變化時更新 decision 快取（避免模板中 7 次 getDecision() 重複呼叫+物件展開）
       this.$watch('result', () => { this._decision = this._computeDecision(); });
@@ -497,7 +505,8 @@ function tradingApp() {
       this.form.symbol = symbol;
       this.tab = 'analysis';
       window.scrollTo(0, 0);
-      // 預載個股即時行情，讓使用者進入分析頁時立即看到股價資訊
+      // 清除 $watch debounce 避免重複請求，直接載入（不等 400ms）
+      clearTimeout(this._ctxDebounce);
       this.fetchStockContext(symbol);
     },
 
@@ -917,6 +926,7 @@ function tradingApp() {
       this.pollRetryCount = 0;
       this.stockContext = null;
       this.stockContextLoading = false;
+      if (this._ctxDebounce) { clearTimeout(this._ctxDebounce); this._ctxDebounce = null; }
       this._cancelConfirm = false;
       if (this._cancelConfirmTimer) { clearTimeout(this._cancelConfirmTimer); this._cancelConfirmTimer = null; }
       this._stopElapsedTimer();
