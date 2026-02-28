@@ -12,7 +12,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional
 import json
-import toml
+try:
+    import tomllib  # Python 3.11+
+except ModuleNotFoundError:
+    try:
+        import tomli as tomllib  # pip install tomli（Python 3.10 相容）
+    except ModuleNotFoundError:
+        import toml as _toml_compat  # fallback: pip install toml
+        tomllib = None
 
 # 註意：這裡不能匯入自己，會造成迴圈匯入
 # 在日誌系統初始化前，使用標準庫自舉日誌器，避免未定義引用
@@ -139,8 +146,12 @@ class TradingAgentsLogger:
         for config_path in config_paths:
             if config_path and Path(config_path).exists():
                 try:
-                    with open(config_path, 'r', encoding='utf-8') as f:
-                        config_data = toml.load(f)
+                    if tomllib is not None:
+                        with open(config_path, 'rb') as f:
+                            config_data = tomllib.load(f)
+                    else:
+                        with open(config_path, 'r', encoding='utf-8') as f:
+                            config_data = _toml_compat.load(f)
 
                     # 轉換配置格式
                     return self._convert_toml_config(config_data)
