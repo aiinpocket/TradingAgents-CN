@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 # 應用程式版本（唯一來源：FastAPI、health endpoint 共用）
 _APP_VERSION = "0.5.0"
 # 靜態檔案快取版本戳（唯一來源：CSS/JS 改動時遞增字母後綴以強制 CDN 更新）
-_CACHE_VERSION = "0.5.1a"
+_CACHE_VERSION = "0.5.1b"
 
 # 專案根目錄
 PROJECT_ROOT = Path(__file__).parent.parent
